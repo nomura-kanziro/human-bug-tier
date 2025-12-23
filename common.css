@@ -1,0 +1,127 @@
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  color: #000000;
+}
+
+/* 상단바 */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  border-bottom: 1px solid #ddd;
+  position: sticky;
+  top: 0;
+  background: #fff;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.logo-img {
+  width: 32px;
+  margin-right: 8px;
+}
+
+.menu-btn {
+  font-size: 28px;
+  cursor: pointer;
+  user-select: none;
+}
+
+/* 사이드 메뉴 (기본 숨김) */
+.side-menu {
+  position: fixed;
+  top: 0;
+  right: -500px;   /* 기본은 화면 밖 */
+  width: 250px;
+  height: 100%;
+  background: #f9f9f9;
+  box-shadow: -2px 0 5px rgba(0,0,0,0.2);
+  transition: right 0.3s ease;
+  padding: 20px;
+  z-index: 1000;
+}
+
+/* 닫기 버튼 */
+.close-btn {
+  font-size: 28px;
+  font-weight: bold;
+  cursor: pointer;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  user-select: none;
+}
+
+.side-menu ul {
+  list-style: none;
+  padding: 0;
+  margin-top: 50px;
+}
+
+.side-menu ul li {
+  margin: 15px 0;
+}
+
+.side-menu ul li a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+}
+
+/* 소개 */
+.intro {
+  text-align: center; /* 안의 모든 내용을 가운데 정렬 */
+  margin: 20px auto;
+}
+
+/* 티어 카드 */
+.tiers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+
+.tier-card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  text-align: center;
+}
+
+.tier-card:hover {
+  transform: scale(1.05);
+}
+
+.tier-icon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 10px;
+}
+
+.tier-title {
+  font-weight: bold;
+  font-size: 18px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* 푸터 */
+footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-top: 1px solid #ddd;
+  font-size: 14px;
+}
