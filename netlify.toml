@@ -1,9 +1,7 @@
-[functions]
-  external_node_modules = ["firebase-admin"]
-  node_bundler = "esbuild"
+[build]
+  publish = "."
+  functions = "netlify/functions"
 
-
 [functions]
-  directory = "netlify/functions"
-  external_node_modules = ["firebase-admin"]
   node_bundler = "esbuild"
+  external_node_modules = ["firebase-admin"]
