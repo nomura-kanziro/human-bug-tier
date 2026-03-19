@@ -1,0 +1,96 @@
+.logo {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.logo-img {
+  width: 32px;
+  margin-right: 8px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+body {
+  background: #ffffff;
+  height: 100vh;
+
+  /* 🔥 중앙 정렬 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 🔥 전체 컨테이너 크기 제한 */
+.login-wrapper {
+  display: flex;
+  width: 800px;      /* ← 기존 대비 약 2.5배 축소 */
+  height: 450px;
+  background: #000;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+}
+
+/* 왼쪽 로그인 영역 */
+.login-box {
+  width: 50%;
+  background: #ffffff;
+  position: relative;   /* 🔥 필수 */
+  display: flex;
+  border: #000;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.login-box h2 {
+  color: #fff;
+  margin-bottom: 30px;
+}
+
+.login-box input {
+  width: 240px;
+  padding: 10px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.login-box button {
+  width: 240px;
+  padding: 12px;
+  background: #8faadc;
+  border: none;
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+/* 돌아가기 버튼 */
+.back-btn {
+  position: absolute;
+  bottom: 20px;
+  font-size: 26px;
+  color: #8faadc;
+  cursor: pointer;
+}
+
+/* 오른쪽 컬러 패널 */
+.side-panel {
+  width: 50%;
+  background: #8faadc;
+}

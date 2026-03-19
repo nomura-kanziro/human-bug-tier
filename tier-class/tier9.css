@@ -1,0 +1,160 @@
+body {
+  font-family: "Pretendard", sans-serif;
+  background-color: #e7e7e7;
+  color: #000000;
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  }
+/* 헤더 전체 */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #ffffff;
+  color: #000000;
+  padding: 10px 20px;
+  position: relative;
+}
+
+/* 로고 영역 */
+.logo {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.logo-img {
+  height: 32px;
+  margin-right: 8px;
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+/* 햄버거 버튼 */
+.menu-btn {
+  font-size: 26px;
+  cursor: pointer;
+}
+
+/* 사이드 메뉴 */
+.side-menu {
+  position: fixed;
+  top: 0;
+  right: -3000px;
+  width: 250px;
+  height: 100%;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  transition: right 0.3s ease-in-out;
+  padding: 20px;
+  z-index: 1000;
+}
+
+.side-menu.open {
+  right: 0;
+}
+
+.side-menu .close-btn {
+  font-size: 28px;
+  text-align: right;
+  cursor: pointer;
+}
+
+.side-menu ul {
+  list-style: none;
+  margin-top: 20px;
+  padding: 0;
+}
+
+.side-menu ul li {
+  margin: 15px 0;
+}
+
+.side-menu ul li a {
+  color: rgb(0, 0, 0);
+  text-decoration: none;
+  font-size: 18px;
+}
+
+main {
+  padding: 30px;
+}
+
+h2 {
+  font-size: 1.6rem;
+  margin-bottom: 30px;
+}
+
+.tier-table {
+  width: 95%;
+  margin: 0 auto;
+  border: 2px solid #000000;
+  background-color: #ffffff;
+  color: #000000;
+  padding: 10px;
+}
+
+.tier-row {
+  display: flex;
+  border-top: 1px solid #000000;
+}
+
+.char {
+      border: 1px solid #000000;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      padding: 2px;
+      text-align: center;
+      width: 100px;
+      font-size: xx-small;
+      display: inline-block;
+      text-align: center;
+    }
+
+.char img {
+  display: block;
+  margin: 0 auto 5px; /* 아래쪽 간격 */
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+.tier-label {
+  width: 80px;
+  background-color: #f1f1f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.tier-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 5px;
+  background-color: #f1f1f1;
+  justify-content: flex-start;
+}
+
+.tier-cards img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border: 1px solid #000000;
+  border-radius: 4px;
+}
+
+
+/* 푸터 */
+footer {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 20px;
+  border-top: 1px solid #ddd;
+  font-size: 14px;
+}

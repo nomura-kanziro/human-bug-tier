@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>휴버대 티어표</title>
+  <link rel="stylesheet" href="common-v2.css">
+  
+</head>
+<body>
+  <!-- 상단 네비게이션 -->
+  <header>
+    <div class="logo" onclick="goHome()">
+      <img src="../tier-image/logo.webp" alt="로고" class="logo-img">
+      휴버대 티어표
+    </div>
+    <div class="menu-btn" onclick="toggleMenu()">☰</div>
+    <nav id="sideMenu" class="side-menu">
+      <div class="close-btn" onclick="closeMenu()">×</div>
+      <ul>
+        <li><a href="../tier-class/tier1.html">1티어</a></li>
+        <li><a href="../tier-class/tier2.html">2티어</a></li>
+        <li><a href="../tier-class/tier3.html">3티어</a></li>
+        <li><a href="../tier-class/tier4.html">4티어</a></li>
+        <li><a href="../tier-class/tier5.html">5티어</a></li>
+        <li><a href="../tier-class/tier6.html">6티어</a></li>
+        <li><a href="../tier-class/tier7.html">7티어</a></li>
+        <li><a href="../tier-class/tier8.html">8티어</a></li>
+        <li><a href="../tier-class/tier9.html">9티어</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- ✅ 문의사항 본문 -->
+  <section class="contact">
+    
+    <h2>문의사항</h2>
+    <p class="desc">
+    파벨 관련 문제로 인한 티어 변동 문의나<br />
+    사이트 내 버그/오류 관련 제보를 남겨주세요.
+    </p>
+
+
+    <div class="form-box">
+      <div class="row">
+        <input type="text" id="name" placeholder="이름 (선택)" />
+        <input type="email" id="email" placeholder="이메일 (선택)" />
+      </div>
+      <textarea id="message" placeholder="댓글을 입력하세요."></textarea>
+      <button id="submitBtn">등록</button>
+    </div>
+
+
+    <div class="comment-list" id="commentList"></div>
+  </section>
+  <div class="admin-bar">
+    <button id="loginBtn" onclick="goAdminLogin()">관리자 로그인</button>
+    <button id="logoutBtn" onclick="adminLogout()">로그아웃</button>
+  </div>
+
+  <!-- 하단 -->
+  <footer>
+    <p>site version : 0.0.1</p>
+    <a href="#">문의하기</a>
+  </footer>
+  
+  <script src="common-v2.js"></script>
+</body>
+</html>
