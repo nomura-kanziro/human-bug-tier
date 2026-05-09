@@ -53,6 +53,18 @@
     <script src="comment-management.js"></script>
 
     <script>
+        // ★★★ 어드민 로그인 체크 (페이지 접근 차단) ★★★
+        function checkAdminAuth() {
+            if (localStorage.getItem("isAdmin") !== "true") {
+                alert("❌ 관리자 로그인이 필요합니다.");
+                window.location.href = "../admin-login.html";   // admin 폴더 기준
+                return false;
+            }
+            return true;
+        }
+    
+        // 페이지 로드되자마자 바로 체크
+        window.addEventListener('load', checkAdminAuth);
         // ========================================================
         // comment-management.html 전용 로드 스크립트
         // 역할: 

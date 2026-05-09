@@ -210,7 +210,7 @@ function renderUserProfile() {
   const profileHTML = `
     <div id="user-profile" style="
       margin-left: auto;           /* ← 오른쪽 끝으로 강제 밀기 */
-      margin-right: 12px;           /* 햄버거와 간격 */
+      margin-right: 20px;           /* 햄버거와 간격 */
       cursor: pointer; 
       display: flex; 
       align-items: center;
@@ -248,6 +248,13 @@ function renderUserProfile() {
 // ========================================================
 // 어드민 모달 (이름 + 파란 체크 + 공유 IP + 관리하기 버튼)
 // ========================================================
+function getAdminInfo() {
+  return {
+    name: localStorage.getItem("adminName") || "관리자",
+    ip: localStorage.getItem("adminIp") || "공유 IP"
+  };
+}
+
 function showAdminModal() {
   const admin = getAdminInfo();
 
@@ -262,35 +269,20 @@ function showAdminModal() {
           공유 IP: <strong>${admin.ip}</strong>
         </p>
         
-        <button onclick="goToAdminPage()" style="
-          width: 100%; 
-          padding: 14px; 
-          background: #007bff; 
-          color: white; 
-          border: none; 
-          border-radius: 8px; 
-          font-size: 16px; 
-          cursor: pointer;
-          margin-bottom: 12px;
-        ">
+        <button onclick="window.location.href='/admin/comments/comment-management.html'" style="
+          width: 100%; padding: 14px; background: #007bff; color: white; border: none; 
+          border-radius: 8px; font-size: 16px; cursor: pointer; margin-bottom: 12px;">
           📋 관리하기 (댓글 관리)
         </button>
         
         <button onclick="logoutAdmin()" style="
-          width: 100%; 
-          padding: 14px; 
-          background: #dc3545; 
-          color: white; 
-          border: none; 
-          border-radius: 8px; 
-          font-size: 16px; 
-          cursor: pointer;
-        ">
+          width: 100%; padding: 14px; background: #dc3545; color: white; border: none; 
+          border-radius: 8px; font-size: 16px; cursor: pointer; margin-bottom: 12px;">
           로그아웃
         </button>
         
         <div onclick="closeAdminModal()" style="margin-top: 20px; color: #999; cursor: pointer; font-size: 14px;">
-          닫기
+          ✕ 닫기
         </div>
       </div>
     </div>
@@ -304,9 +296,23 @@ function closeAdminModal() {
   if (modal) modal.remove();
 }
 
+function logoutAdmin() {
+  if (confirm("로그아웃 하시겠습니까?")) {
+    localStorage.removeItem("isAdmin");
+    localStorage.removeItem("adminName");
+    localStorage.removeItem("adminIp");
+    closeAdminModal();
+    location.reload();
+  }
+}
+
+// ========================================================
+// 백업용 goToAdminPage (모달에서 직접 href를 사용하므로 거의 호출 안 됨)
+// ========================================================
 function goToAdminPage() {
   closeAdminModal();
-  window.location.href = "./comments/comment-management.html";
+  window.location.href = "/admin/comments/comment-management.html";
+  console.log('✅ goToAdminPage 실행 → /admin/comments/comment-management.html');
 }
 
 function logoutAdmin() {
