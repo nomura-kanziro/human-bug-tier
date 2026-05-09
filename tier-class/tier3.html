@@ -5,30 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>3등급 - 톱 클래스 무투파 / 마스터 | 휴버대 티어표</title>
   <link rel="stylesheet" href="tier3.css">
-  <script defer src="tier3.js"></script>
+  <link rel="stylesheet" href="../Header_Footer.css">
+  <script src="../common.js"></script>
 </head>
 <body>
- <header>
-    <div class="logo" onclick="goHome()">
-      <img src="../tier-image/logo.webp" alt="로고" class="logo-img">
-      휴버대 티어표
-    </div>
-    <div class="menu-btn" onclick="toggleMenu()">☰</div>
-    <nav id="sideMenu" class="side-menu">
-      <div class="close-btn" onclick="closeMenu()">×</div>
-      <ul>
-        <li><a href="tier1.html">1티어</a></li>
-        <li><a href="tier2.html">2티어</a></li>
-        <li><a href="tier3.html">3티어</a></li>
-        <li><a href="tier4.html">4티어</a></li>
-        <li><a href="tier5.html">5티어</a></li>
-        <li><a href="tier6.html">6티어</a></li>
-        <li><a href="tier7.html">7티어</a></li>
-        <li><a href="tier8.html">8티어</a></li>
-        <li><a href="tier9.html">9티어</a></li>
-      </ul>
-    </nav>
-  </header>
+  <!-- 상단 네비게이션 -->
+  <div id="header-placeholder"></div>
 
   <main>
     <h2>3등급 - 톱 클래스 무투파 / 마스터</h2>
@@ -38,6 +20,10 @@
         <div class="tier-cards">
           <div class="char"><img src="../tier-image/3 tier/tatsumi haruki.jpg" alt="타츠미 하루키">
             <span>타츠미 하루키</span>
+          </div>
+          <div class="char">
+            <img src="../tier-image/3 tier/sorimachi koziro.jpg" alt="소라마치 코지로">
+            <span>소라마치 코지로</span>
           </div>
           <div class="char"><img src="../tier-image/3 tier/mori kohei.jpg" alt="모리 코헤이">
             <span>모리 코헤이</span>
@@ -63,10 +49,6 @@
             <span>아키모토 시로</span>
           </div>
           <div class="char">
-            <img src="../tier-image/3 tier/shinonome ryusei.jpg" alt="시노노메 류세이">
-            <span>시노노메 류세이</span>
-          </div>
-          <div class="char">
             <img src="../tier-image/3 tier/" alt="시노노메 류세이">
             <span>*우룡</span>
           </div>
@@ -74,7 +56,6 @@
             <img src="../tier-image/3 tier/" alt="시노노메 류세이">
             <span>*발로</span>
           </div>
-          <div style="flex-basis: 100%;"></div>
           <div  class="char">
             <img src="../tier-image/3 tier/inoue tsumugi.jpg" alt="이노우에 추무기">
             <span>이노우에 추무기</span>
@@ -82,26 +63,18 @@
           <div class="char">
             <img src="../tier-image/3 tier/mabuchi haruto.jpg" alt="마부치 하루토">
             <span>마부치 하루토</span>
-          </div>
+          </div>   
           <div class="char">
-            <img src="../tier-image/3 tier/hida kotetsuro.jpg" alt="히다 코테츠로"> 
-            <span>히다 코테츠로</span>
-          </div>
-          <div class="char">
-            <img src="../tier-image/3 tier/sorimachi koziro.jpg" alt="소라마치 코지로">
-            <span>소라마치 코지로</span>
+            <img src="../tier-image/3 tier/park seojun.jpg" alt="박서준">
+            <span>박서준</span>
           </div>
           <div class="char">
             <img src="../tier-image/3 tier/jeaf.jpg" alt="제프"> 
             <span>제프</span>
           </div>
           <div class="char">
-            <img src="../tier-image/3 tier/park seojun.jpg" alt="박서준">
-            <span>박서준</span>
-          </div>
-          <div class="char">
-            <img src="../tier-image/3 tier/sunaga hisaya.jpg" alt="스나가 히사야">
-            <span>스나가 히사야</span>
+            <img src="../tier-image/3 tier/shinonome ryusei.jpg" alt="시노노메 류세이">
+            <span>시노노메 류세이</span>
           </div>
           <div class="char">
             <img src="../tier-image/3 tier/ginda eikaku.jpg" alt="긴다 에이카쿠">
@@ -111,18 +84,28 @@
             <img src="../tier-image/3 tier/yakushimaru.jpg" alt="의수샛끼">
             <span>야쿠시마루 야키라</span>
           </div>
+          <div class="char">
+            <img src="../tier-image/3 tier/hida kotetsuro.jpg" alt="히다 코테츠로"> 
+            <span>히다 코테츠로</span>
+          </div>
         </div>
       </div>
 
       <div class="tier-row">
         <div class="tier-label">을급</div>
         <div class="tier-cards">
-          
+          <div class="char">
+            <img src="../tier-image/3 tier/sunaga hisaya.jpg" alt="스나가 히사야">
+            <span>스나가 히사야</span>
+          </div>
+          <div class="char">
+            <img src="../tier-image/3 tier/kuga kotetsu.jpg" alt="*시이나 카즈미">
+            <span>쿠가 코테츠</span>
+          </div>
           <div class="char">
             <img src="../tier-image/3 tier/hirose taisei.jpg" alt="히로세 타이세이">
             <span>히로세 타이세이</span>
           </div>
-          
           <div class="char">
             <img src="../tier-image/3 tier/shinjyo kyotaro.jpg" alt="전기톱">
             <span>신죠 쿄타로</span>
@@ -193,7 +176,10 @@
             <img src="../tier-image/3 tier/gihado.jpg" alt="누구?">
             <span>*기하드</span>
           </div>
-          <div style="flex-basis: 100%;"></div>
+          <div class="char">
+            <img src="../tier-image/3 tier/FREI.jpg" alt="전기 따잇 안아줘요!">
+            <span>*프레이</span>
+          </div>
           <div class="char">
             <img src="../tier-image/3 tier/kishibe.jpg" alt="아깝게 낭비된 단역">
             <span>*키시베</span>
@@ -202,11 +188,6 @@
             <img src="../tier-image/3 tier/mapi.jpg" alt="이새끼 진짜 뭐임?">
             <span>*마피</span>
           </div>
-          <div class="char">
-            <img src="../tier-image/3 tier/FREI.jpg" alt="전기 따잇 안아줘요!">
-            <span>*프레이</span>
-          </div>
-          
         </div>
       </div>
 
@@ -249,26 +230,21 @@
             <img src="../tier-image/3 tier/yoonje.jpg" alt="파블로">
             <span>*윤재</span>
           </div>
+          
           <div class="char">
-            <img src="../tier-image/3 tier/kuga kotetsu.jpg" alt="*시이나 카즈미">
-            <span>쿠가 코테츠</span>
+            <img src="../tier-image/3 tier/halbe.jpg" alt="크아아아악!!!소이치로!!!">
+            <span>할배는 제발 카토리부터</span>
           </div>
           <div class="char">
             <img src="../tier-image/3 tier/nagato aoi.jpg" alt="이누와시">
             <span>나가토 아오이</span>
-          </div>
-          <div class="char">
-            <img src="../tier-image/3 tier/halbe.jpg" alt="크아아아악!!!소이치로!!!">
-            <span>할배는 제발 카토리부터</span>
           </div>
         </div>
       </div>
     </section>
   </main>
 
-  <footer>
-    <p>site version : 0.0.1</p>
-    <a href="../Contact us/index.html">문의하기</a>
-  </footer>
+  <!-- 하단 -->
+  <div id="footer-placeholder"></div>
 </body>
 </html>

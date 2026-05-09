@@ -5,30 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>휴버대 티어표</title>
   <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" href="Header_Footer.css">
 </head>
 <body>
   <!-- 상단 네비게이션 -->
-  <header>
-    <div class="logo" onclick="goHome()">
-      <img src="tier-image/logo.webp" alt="로고" class="logo-img">
-      휴버대 티어표
-    </div>
-    <div class="menu-btn" onclick="toggleMenu()">☰</div>
-    <nav id="sideMenu" class="side-menu">
-      <div class="close-btn" onclick="closeMenu()">×</div>
-      <ul>
-        <li><a href="./tier-class/tier1.html">1티어</a></li>
-        <li><a href="./tier-class/tier2.html">2티어</a></li>
-        <li><a href="./tier-class/tier3.html">3티어</a></li>
-        <li><a href="./tier-class/tier4.html">4티어</a></li>
-        <li><a href="./tier-class/tier5.html">5티어</a></li>
-        <li><a href="./tier-class/tier6.html">6티어</a></li>
-        <li><a href="./tier-class/tier7.html">7티어</a></li>
-        <li><a href="./tier-class/tier8.html">8티어</a></li>
-        <li><a href="./tier-class/tier9.html">9티어</a></li>
-      </ul>
-    </nav>
-  </header>
+  <div id="header-placeholder"></div>
 
   <!-- 메인 소개 -->
    <section class="intro">
@@ -69,7 +50,7 @@
 
     <div id="tier5" class="tier-card" onclick="location.href='./tier-class/tier5.html'">
       <img src="./tier-image/logo2-5.png" alt="5티어 아이콘" class="tier-icon">
-      <span class="tier-title">5티어</span>
+      <span class="tier-title">5티어</span> 
       <p>중견급 무투파 or 탈사제 / 플래티넘</p>
     </div>
 
@@ -99,11 +80,8 @@
   </section>
 
   <!-- 하단 -->
-  <footer>
-    <p>site version : 0.0.1</p>
-    <a href="./Contact us/index.html">문의하기</a>
-  </footer>
+  <div id="footer-placeholder"></div>
 
-  <script src="script.js"></script>
+  <script src="common.js"></script>
 </body>
 </html>
