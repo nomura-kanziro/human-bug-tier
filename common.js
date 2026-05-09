@@ -2,7 +2,11 @@
 
 function getBasePath() {
   const path = window.location.pathname;
-  if (path.includes('/tier-class/') || path.includes('/tier-class\\')) {
+  // tier-class와 Contact_us 폴더 모두 ../ 처리
+  if (path.includes('/tier-class/') || 
+      path.includes('/tier-class\\') || 
+      path.includes('/Contact_us/') || 
+      path.includes('/Contact_us\\')) {
     return '../';
   }
   return './';
