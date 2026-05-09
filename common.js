@@ -2,6 +2,11 @@
 
 function getBasePath() {
   const path = window.location.pathname;
+
+  // ←←← 여기가 핵심 수정! admin 폴더 지원 추가
+  if (path.includes('/admin/') || path.includes('/admin\\')) {
+    return '../../';        // admin/comments/ → root까지 2단계 올라감
+  }
   // tier-class와 Contact_us 폴더 모두 ../ 처리
   if (path.includes('/tier-class/') || 
       path.includes('/tier-class\\') || 
@@ -14,7 +19,7 @@ function getBasePath() {
 
 function goHome() {
   const base = getBasePath();
-  if (base === '../') {
+  if (base === '../' || base === '../../') {
     window.location.href = base + 'home.html';
   } else {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -42,6 +47,7 @@ function fixImagePaths(base) {
   const logoImg = document.querySelector('#header-placeholder .logo-img');
   if (logoImg) {
     logoImg.src = base + 'tier-image/logo.webp';
+    console.log('✅ 로고 이미지 경로 보정 완료 →', logoImg.src);
   }
 
   // 필요하면 tier-card 아이콘들도 여기서 한 번에 고칠 수 있음
@@ -77,11 +83,23 @@ function loadCommon() {
 function attachHeaderEvents() {
   const menuBtn = document.getElementById('menuBtn');
   const closeBtn = document.getElementById('closeBtn');
-  const logo = document.getElementById('logo');
+
+  // [수정사항] id="logo" + class="logo" 둘 다 지원 (header.html 구조에 맞춤)
+  const logoById = document.getElementById('logo');
+  const logoByClass = document.querySelector('#header-placeholder .logo');
+
+  if (logoById) {
+    logoById.addEventListener('click', goHome);
+  }
+  if (logoByClass) {
+    logoByClass.style.cursor = 'pointer';
+    logoByClass.addEventListener('click', goHome);
+    console.log('✅ class="logo" 클릭 이벤트 정상 등록');
+  }
+
 
   if (menuBtn) menuBtn.addEventListener('click', toggleMenu);
   if (closeBtn) closeBtn.addEventListener('click', closeMenu);
-  if (logo) logo.addEventListener('click', goHome);
 }
 
 document.addEventListener('DOMContentLoaded', loadCommon);
@@ -94,3 +112,6 @@ function fixFooterLinks(base) {
     console.log('✅ 문의하기 링크 보정됨:', contactLink.href);
   }
 }
+
+// DOMContentLoaded에서 자동 실행 (다른 페이지들도 그대로 동작)
+document.addEventListener('DOMContentLoaded', loadCommon);

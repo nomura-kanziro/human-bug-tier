@@ -1,0 +1,44 @@
+.admin-main {
+    background-color: #ffffff;
+    padding: 40px 20px;
+    min-height: 80vh;
+}
+
+.page-title {
+    color: #333;
+    border-bottom: 3px solid #007bff;
+    padding-bottom: 10px;
+}
+
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background: #fff;
+}
+
+.admin-table th, .admin-table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+.admin-table tr:hover {
+    background-color: #f8f9fa;
+}
+
+.danger-btn {
+    background: #dc3545;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.block-section {
+    margin-top: 60px;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+}

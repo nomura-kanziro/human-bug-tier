@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>댓글 관리 - Admin</title>
+    
+    <!-- ★★★ 반드시 이렇게 불러와야 함 ★★★ -->
+    <link rel="stylesheet" href="../../Header_Footer.css">
+    <link rel="stylesheet" href="comment-management.css">
+</head>
+<body style="background-color: #ffffff;">
+
+    <!-- 헤더 자리 -->
+    <div id="header-placeholder"></div>
+
+    <main class="admin-main">
+        <h1 class="page-title">📋 전체 댓글 관리</h1>
+
+        <div class="control-bar">
+            <button id="delete-all-btn" class="danger-btn">🗑️ 모든 댓글 삭제</button>
+        </div>
+
+        <table id="comment-table" class="admin-table">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>작성자 ID</th>
+                    <th>IP</th>
+                    <th>댓글 내용</th>
+                    <th>작성일</th>
+                    <th>관리</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <section class="block-section">
+            <h2>🚫 사용자 / IP 차단 관리</h2>
+            <div class="block-input">
+                <input type="text" id="block-input" placeholder="차단할 ID 또는 IP 입력">
+                <button id="add-block-btn">차단 추가</button>
+            </div>
+            <ul id="block-list"></ul>
+        </section>
+    </main>
+
+    <!-- 푸터 자리 -->
+    <div id="footer-placeholder"></div>
+
+    <!-- 공통 JS (script.js로 수정!) -->
+    <script src="../../common.js"></script>
+    <script src="comment-management.js"></script>
+
+    <script>
+        window.addEventListener('load', async () => {
+            // 1. 기존 Contact_us에서 쓰는 공통 로드 함수 호출 (가장 안전)
+            if (typeof loadCommon === 'function') {
+                loadCommon();
+            }
+
+            // 2. 그래도 안 되면 직접 fetch (repo에 header.html이 없을 수도 있어서 안전장치)
+            try {
+                const headerRes = await fetch('../../header.html');
+                if (headerRes.ok) {
+                    document.getElementById('header-placeholder').innerHTML = await headerRes.text();
+                }
+            } catch(e) {}
+
+            try {
+                const footerRes = await fetch('../../footer.html');
+                if (footerRes.ok) {
+                    document.getElementById('footer-placeholder').innerHTML = await footerRes.text();
+                }
+            } catch(e) {}
+
+            // 3. 댓글 테이블 & 차단 목록 렌더링
+            // [★ 여기서 setTimeout 시작 ★]
+            // common.js의 비동기 작업이 끝날 때까지 조금 기다린 후 댓글 테이블 렌더링
+            setTimeout(() => {
+                if (typeof renderComments === 'function') {
+                    renderComments();
+                } else {
+                    console.error('❌ renderComments 함수가 아직 없어요. comment-management.js 확인!');
+                }
+                if (typeof renderBlockList === 'function') {
+                    renderBlockList();
+                }
+            }, 800);   // 800ms 대기 (안전하게)
+
+            console.log('✅ Admin 댓글 관리 페이지 완전 로드 완료');
+        });
+    </script>
+</body>
+</html>
