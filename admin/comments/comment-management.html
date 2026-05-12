@@ -17,6 +17,38 @@
     <main class="admin-main">
         <h1 class="page-title">📋 전체 댓글 관리</h1>
 
+        <!-- ==================== 파란색 네비게이션 ==================== -->
+        <div class="filter-nav">
+          <div class="filter-left">
+            <span class="filter-title">댓글 탐색 기능</span>
+            <button onclick="setTypeFilter('all')"     id="filter-all"     class="filter-btn active">전체 댓글</button>
+            <button onclick="setTypeFilter('user')"    id="filter-user"    class="filter-btn">일반유저 댓글</button>
+            <button onclick="setTypeFilter('admin')"   id="filter-admin"   class="filter-btn">관리자 댓글</button>
+            <button onclick="setTypeFilter('reported')" id="filter-reported" class="filter-btn">신고한 댓글</button>
+          </div>
+      
+            <div class="filter-right">
+              <div style="display:flex; gap:8px; align-items:center;">
+                <input type="text" id="search-input" placeholder="작성자ID 또는 내용 검색..." 
+                       onkeyup="if(event.key==='Enter') applyFilters()" 
+                       style="flex:1; padding:10px 14px; border:2px solid #fff; border-radius:6px; font-size:14px;">
+              
+                <button onclick="applyFilters()" 
+                        style="padding:10px 24px; background:#fff; color:#007bff; border:2px solid #fff; border-radius:6px; cursor:pointer; font-weight:700; white-space:nowrap;">
+                  🔍 검색
+                </button>
+              </div>
+        
+              <select id="report-filter" onchange="applyFilters()" style="padding:10px 12px; border:2px solid #fff; border-radius:6px; font-size:14px;">
+                <option value="">없음</option>
+                <option value="도배 및 테러행위">도배 및 테러행위</option>
+                <option value="비방 및 모욕행위">비방 및 모욕행위</option>
+                <option value="광고형 댓글">광고형 댓글</option>
+                <option value="기타">기타</option>
+              </select>
+            </div>
+        </div>
+        
         <div class="control-bar">
             <button id="delete-all-btn" class="danger-btn">🗑️ 모든 댓글 삭제</button>
         </div>

@@ -1,24 +1,72 @@
 let comments = JSON.parse(localStorage.getItem('comments')) || [];
 let blockedList = JSON.parse(localStorage.getItem('blocked')) || [];
 
+// ==================== 필터 상태 ====================
+let currentTypeFilter = 'all';        // all, user, admin, reported
+let currentReportFilter = '';         // 신고 사유 또는 빈 문자열
+
 // 테이블 렌더링
 function renderComments() {
     const tbody = document.querySelector('#comment-table tbody');
     if (!tbody) return;
     tbody.innerHTML = '';
 
-    comments.forEach((comment, index) => {
+    let filtered = comments.filter(comment => {
+        // 1. 타입 필터
+        if (currentTypeFilter === 'user') {
+            if (comment.isAdmin) return false;
+        }
+        if (currentTypeFilter === 'admin') {
+            if (!comment.isAdmin) return false;
+        }
+        if (currentTypeFilter === 'reported') {
+            if (!comment.reported) return false;
+        }
+
+        // 2. 신고 사유 필터
+        if (currentReportFilter) {
+            if (!comment.reported || comment.reportReason !== currentReportFilter) return false;
+        }
+
+        // 3. 검색어 필터
+        const searchTerm = document.getElementById('search-input').value.toLowerCase().trim();
+        if (searchTerm) {
+            const text = (comment.title + ' ' + comment.message + ' ' + (comment.userId || '')).toLowerCase();
+            if (!text.includes(searchTerm)) return false;
+        }
+
+        return true;
+    });
+
+    filtered.forEach((comment, index) => {
         const isBlocked = blockedList.includes(comment.userId || '') || blockedList.includes(comment.ip || '');
-        
+
+        let reportHTML = '';
+        if (comment.reported) {
+            const reason = comment.reportReason 
+                ? `${comment.reportReason} ${comment.reportDetail ? `(${comment.reportDetail})` : ''}` 
+                : '신고됨';
+            reportHTML = `
+                <span onclick="showReportTooltip(this, '${reason}')" 
+                      style="color:#dc3545; cursor:pointer; margin-left:6px; font-size:20px; font-weight:bold;">
+                    ⚠️
+                </span>`;
+        }
+
         const row = `
             <tr ${isBlocked ? 'style="background:#ffebee; opacity:0.7;"' : ''}>
                 <td>${index + 1}</td>
                 <td>${comment.userId || '익명'}</td>
                 <td>${comment.ip || 'Unknown'}</td>
-                <td style="text-align:left;">${comment.text || ''}</td>
+                <td style="text-align:center;">${comment.title ? `<strong>${comment.title}</strong><br>` : ''}${comment.message || ''}</td>
                 <td>${comment.date || 'N/A'}</td>
-                <td>
-                    <button onclick="deleteComment(${index})" class="danger-btn">삭제</button>
+                <td style="text-align: center; white-space: nowrap;">
+                    <button onclick="event.stopImmediatePropagation(); window.location.href='comment-detail.html?id=${comment.id}'" 
+                            style="background:#6c757d; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; margin-right:8px; font-size:13px; font-weight:600;">
+                        📋 상세
+                    </button>
+                    <button onclick="event.stopImmediatePropagation(); deleteComment(${index})" class="danger-btn">삭제</button>
+                    ${reportHTML}
                 </td>
             </tr>`;
         tbody.innerHTML += row;
@@ -78,4 +126,61 @@ window.onload = () => {
     // Header_Footer.css가 제대로 적용되면 header/footer 내용 채움 (기존 방식 그대로)
     renderComments();
     renderBlockList();
+};
+
+// 신고사유 팝업 (Contact-us 스타일)
+window.showReportTooltip = function(element, reason) {
+    // 이미 팝업이 열려있으면 닫고 끝 (토글!)
+    const existing = document.querySelector('.report-popup');
+    if (existing) {
+        existing.remove();
+        return;
+    }
+
+    // 팝업 생성
+    const popup = document.createElement('div');
+    popup.className = 'report-popup';
+    popup.innerHTML = `<strong>신고사유 : ${reason}</strong>`;
+
+    document.body.appendChild(popup);
+
+    // 위치 계산
+    const rect = element.getBoundingClientRect();
+    popup.style.left = `${rect.left + window.scrollX}px`;
+    popup.style.top = `${rect.bottom + window.scrollY + 8}px`;
+
+    // 다른 곳 클릭하면 사라지게
+    const hidePopup = (e) => {
+        if (!popup.contains(e.target)) {
+            popup.remove();
+            document.removeEventListener('click', hidePopup);
+        }
+    };
+    setTimeout(() => {
+        document.addEventListener('click', hidePopup);
+    }, 10);
+};
+
+// ========================================================
+// 상세 페이지로 이동하는 함수
+// ========================================================
+window.goToDetail = function(commentId) {
+    window.location.href = `comment-detail.html?id=${commentId}`;
+};
+
+// ==================== 필터 제어 함수 ====================
+window.setTypeFilter = function(type) {
+    currentTypeFilter = type;
+    
+    // 버튼 active 스타일 토글
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.id === `filter-${type}`);
+    });
+    
+    applyFilters();
+};
+
+window.applyFilters = function() {
+    currentReportFilter = document.getElementById('report-filter').value;
+    renderComments();
 };

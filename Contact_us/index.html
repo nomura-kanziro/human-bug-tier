@@ -12,32 +12,20 @@
   <!-- 상단 네비게이션 -->
   <div id="header-placeholder"></div>
 
-  <!-- ✅ 문의사항 본문 -->
+<!-- ==================== 문의사항 본문 ==================== -->
   <section class="contact">
-    
-    <h2>문의사항</h2>
+    <h1 class="page-title"><img src="/tier-image/HBU_Contact_Image.png" alt="로고" class="logo-img"> 문의사항</h1>
     <p class="desc">
-    파벨 관련 문제로 인한 티어 변동 문의나<br />
-    사이트 내 버그/오류 관련 제보를 남겨주세요.
+      파벨 관련 문제로 인한 티어 변동 문의나<br>
+      사이트 내 버그/오류 관련 제보를 남겨주세요.
     </p>
 
+    <!-- 로그인 상태에 따라 동적으로 바뀌는 영역 -->
+    <div id="inquiry-form-container"></div>
 
-    <div class="form-box">
-      <div class="row">
-        <input type="text" id="name" placeholder="이름 (선택)" />
-        <input type="email" id="email" placeholder="이메일 (선택)" />
-      </div>
-      <textarea id="message" placeholder="댓글을 입력하세요."></textarea>
-      <button id="submitBtn">등록</button>
-    </div>
-
-
+    <!-- 댓글 목록 (로그인 여부와 상관없이 항상 표시) -->
     <div class="comment-list" id="commentList"></div>
   </section>
-  <div class="admin-bar">
-    <button id="loginBtn" onclick="goAdminLogin()">관리자 로그인</button>
-    <button id="logoutBtn" onclick="adminLogout()">로그아웃</button>
-  </div>
 
   <!-- 하단 -->
   <div id="footer-placeholder"></div>
