@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>댓글 관리 - Admin</title>
+    
+    <!-- ★★★ 반드시 이렇게 불러와야 함 ★★★ -->
+    <link rel="stylesheet" href="../../Header_Footer.css">
+    <link rel="stylesheet" href="comment-management.css">
+</head>
+<body style="background-color: #ffffff;">
+
+    <!-- 헤더 자리 -->
+    <div id="header-placeholder"></div>
+
+    <main class="admin-main">
+        <h1 class="page-title">📋 전체 댓글 관리</h1>
+
+        <!-- ==================== 파란색 네비게이션 ==================== -->
+        <div class="filter-nav">
+          <div class="filter-left">
+            <span class="filter-title">댓글 탐색 기능</span>
+            <button onclick="setTypeFilter('all')"     id="filter-all"     class="filter-btn active">전체 댓글</button>
+            <button onclick="setTypeFilter('user')"    id="filter-user"    class="filter-btn">일반유저 댓글</button>
+            <button onclick="setTypeFilter('admin')"   id="filter-admin"   class="filter-btn">관리자 댓글</button>
+            <button onclick="setTypeFilter('reported')" id="filter-reported" class="filter-btn">신고한 댓글</button>
+          </div>
+      
+            <div class="filter-right">
+              <div style="display:flex; gap:8px; align-items:center;">
+                <input type="text" id="search-input" placeholder="작성자ID 또는 내용 검색..." 
+                       onkeyup="if(event.key==='Enter') applyFilters()" 
+                       style="flex:1; padding:10px 14px; border:2px solid #fff; border-radius:6px; font-size:14px;">
+              
+                <button onclick="applyFilters()" 
+                        style="padding:10px 24px; background:#fff; color:#007bff; border:2px solid #fff; border-radius:6px; cursor:pointer; font-weight:700; white-space:nowrap;">
+                  🔍 검색
+                </button>
+              </div>
+        
+              <select id="report-filter" onchange="applyFilters()" style="padding:10px 12px; border:2px solid #fff; border-radius:6px; font-size:14px;">
+                <option value="">없음</option>
+                <option value="도배 및 테러행위">도배 및 테러행위</option>
+                <option value="비방 및 모욕행위">비방 및 모욕행위</option>
+                <option value="광고형 댓글">광고형 댓글</option>
+                <option value="기타">기타</option>
+              </select>
+            </div>
+        </div>
+        
+        <div class="control-bar">
+            <button id="delete-all-btn" class="danger-btn">🗑️ 모든 댓글 삭제</button>
+        </div>
+
+        <table id="comment-table" class="admin-table">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>작성자 ID</th>
+                    <th>IP</th>
+                    <th>댓글 내용</th>
+                    <th>작성일</th>
+                    <th>관리</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <section class="block-section">
+            <h2>🚫 사용자 / IP 차단 관리</h2>
+            <div class="block-input">
+                <input type="text" id="block-input" placeholder="차단할 ID 또는 IP 입력">
+                <button id="add-block-btn">차단 추가</button>
+            </div>
+            <ul id="block-list"></ul>
+        </section>
+    </main>
+
+    <!-- 푸터 자리 -->
+    <div id="footer-placeholder"></div>
+
+    <!-- 공통 JS (script.js로 수정!) -->
+    <script src="../../common.js"></script>
+    <script src="comment-management.js"></script>
+
+    <script>
+        // ★★★ 어드민 로그인 체크 (페이지 접근 차단) ★★★
+        function checkAdminAuth() {
+            if (localStorage.getItem("isAdmin") !== "true") {
+                alert("❌ 관리자 로그인이 필요합니다.");
+                window.location.href = "../admin-login.html";   // admin 폴더 기준
+                return false;
+            }
+            return true;
+        }
+    
+        // 페이지 로드되자마자 바로 체크
+        window.addEventListener('load', checkAdminAuth);
+        // ========================================================
+        // comment-management.html 전용 로드 스크립트
+        // 역할: 
+        //   1. common.js의 loadCommon() 호출 → header/footer + 이벤트(로고 클릭, 메뉴, 푸터 링크) 모두 처리
+        //   2. renderComments / renderBlockList 안전하게 호출
+        // ========================================================
+        window.addEventListener('load', () => {
+            console.log('🚀 comment-management.html 로드 시작');
+
+            // common.js의 모든 기능(로고 클릭, 사이드메뉴, 푸터 문의하기) 먼저 실행
+            if (typeof loadCommon === 'function') {
+                loadCommon();
+            }
+
+            // common.js의 비동기 fetch가 끝날 때까지 살짝 기다린 후 테이블 렌더링
+            setTimeout(() => {
+                if (typeof renderComments === 'function') {
+                    renderComments();
+                    console.log('✅ renderComments 실행 완료');
+                }
+                if (typeof renderBlockList === 'function') {
+                    renderBlockList();
+                    console.log('✅ renderBlockList 실행 완료');
+                }
+            }, 700);
+
+            console.log('✅ comment-management.html 완전 로드 완료');
+        });
+    </script>
+</body>
+</html>
