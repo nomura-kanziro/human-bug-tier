@@ -25,6 +25,12 @@
             <button onclick="setTypeFilter('user')"    id="filter-user"    class="filter-btn">일반유저 댓글</button>
             <button onclick="setTypeFilter('admin')"   id="filter-admin"   class="filter-btn">관리자 댓글</button>
             <button onclick="setTypeFilter('reported')" id="filter-reported" class="filter-btn">신고한 댓글</button>
+
+            <!-- 새로 추가: 정렬 select -->
+            <select id="sort-select" onchange="applyFilters()" style="padding:8px 12px; border:2px solid #fff; border-radius:6px; font-size:14px; margin-left:12px;">
+              <option value="newest">최신순</option>
+              <option value="oldest">오래된순</option>
+            </select>
           </div>
       
             <div class="filter-right">
@@ -66,6 +72,11 @@
             </thead>
             <tbody></tbody>
         </table>
+
+        <!-- ==================== 페이지네이션 ==================== -->
+        <div id="pagination" style="margin: 25px 0; text-align: center; display: flex; justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap;">
+          <!-- JS에서 동적으로 채워짐 -->
+        </div>
 
         <section class="block-section">
             <h2>🚫 사용자 / IP 차단 관리</h2>

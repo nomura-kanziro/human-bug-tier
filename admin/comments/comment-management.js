@@ -4,6 +4,11 @@ let blockedList = JSON.parse(localStorage.getItem('blocked')) || [];
 // ==================== 필터 상태 ====================
 let currentTypeFilter = 'all';        // all, user, admin, reported
 let currentReportFilter = '';         // 신고 사유 또는 빈 문자열
+let currentSort = 'newest';   // newest or oldest
+
+// ==================== 페이지네이션 ====================
+const ITEMS_PER_PAGE = 25;
+let currentPage = 1;
 
 // 테이블 렌더링
 function renderComments() {
@@ -13,19 +18,13 @@ function renderComments() {
 
     let filtered = comments.filter(comment => {
         // 1. 타입 필터
-        if (currentTypeFilter === 'user') {
-            if (comment.isAdmin) return false;
-        }
-        if (currentTypeFilter === 'admin') {
-            if (!comment.isAdmin) return false;
-        }
-        if (currentTypeFilter === 'reported') {
-            if (!comment.reported) return false;
-        }
+        if (currentTypeFilter === 'user' && comment.isAdmin) return false;
+        if (currentTypeFilter === 'admin' && !comment.isAdmin) return false;
+        if (currentTypeFilter === 'reported' && !comment.reported) return false;
 
         // 2. 신고 사유 필터
-        if (currentReportFilter) {
-            if (!comment.reported || comment.reportReason !== currentReportFilter) return false;
+        if (currentReportFilter && (!comment.reported || comment.reportReason !== currentReportFilter)) {
+            return false;
         }
 
         // 3. 검색어 필터
@@ -34,11 +33,26 @@ function renderComments() {
             const text = (comment.title + ' ' + comment.message + ' ' + (comment.userId || '')).toLowerCase();
             if (!text.includes(searchTerm)) return false;
         }
-
         return true;
     });
 
-    filtered.forEach((comment, index) => {
+    // ==================== 정렬 ====================
+    if (currentSort === 'newest') {
+        filtered.sort((a, b) => parseInt(b.id) - parseInt(a.id));
+    } else {
+        filtered.sort((a, b) => parseInt(a.id) - parseInt(b.id));
+    }
+
+    // ==================== 페이지네이션 ====================
+    const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
+    currentPage = Math.max(1, Math.min(currentPage, totalPages));
+
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    const paginated = filtered.slice(start, start + ITEMS_PER_PAGE);
+
+    // ==================== 테이블 행 생성 ====================
+    paginated.forEach((comment, idx) => {
+        const realIndex = start + idx;   // 삭제할 때 정확한 index 사용
         const isBlocked = blockedList.includes(comment.userId || '') || blockedList.includes(comment.ip || '');
 
         let reportHTML = '';
@@ -48,14 +62,14 @@ function renderComments() {
                 : '신고됨';
             reportHTML = `
                 <span onclick="showReportTooltip(this, '${reason}')" 
-                      style="color:#dc3545; cursor:pointer; margin-left:6px; font-size:20px; font-weight:bold;">
+                      style="color:#dc3545; cursor:pointer; margin-left:8px; font-size:20px; font-weight:bold;">
                     ⚠️
                 </span>`;
         }
 
         const row = `
             <tr ${isBlocked ? 'style="background:#ffebee; opacity:0.7;"' : ''}>
-                <td>${index + 1}</td>
+                <td>${realIndex + 1}</td>
                 <td>${comment.userId || '익명'}</td>
                 <td>${comment.ip || 'Unknown'}</td>
                 <td style="text-align:center;">${comment.title ? `<strong>${comment.title}</strong><br>` : ''}${comment.message || ''}</td>
@@ -65,12 +79,14 @@ function renderComments() {
                             style="background:#6c757d; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; margin-right:8px; font-size:13px; font-weight:600;">
                         📋 상세
                     </button>
-                    <button onclick="event.stopImmediatePropagation(); deleteComment(${index})" class="danger-btn">삭제</button>
+                    <button onclick="event.stopImmediatePropagation(); deleteComment(${realIndex})" class="danger-btn">삭제</button>
                     ${reportHTML}
                 </td>
             </tr>`;
         tbody.innerHTML += row;
     });
+
+    renderPagination(totalPages);
 }
 
 // 댓글 삭제
@@ -182,5 +198,46 @@ window.setTypeFilter = function(type) {
 
 window.applyFilters = function() {
     currentReportFilter = document.getElementById('report-filter').value;
+    currentSort = document.getElementById('sort-select').value;
     renderComments();
+};
+
+// ========================================================
+// 페이지네이션 UI 렌더링 (항상 보이게 + 1페이지일 때도 표시)
+// ========================================================
+function renderPagination(totalPages) {
+  const container = document.getElementById('pagination');
+  if (!container) return;
+
+  let html = `<span style="margin-right:15px; color:#555; font-size:14px;">총 ${totalPages}페이지</span>`;
+
+  // 이전 버튼
+  html += `<button onclick="goToPage(${currentPage - 1})" 
+                    style="padding:8px 16px; margin:0 4px; background:#007bff; color:white; border:none; border-radius:6px; cursor:pointer;"
+                    ${currentPage === 1 ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : ''}>◀ 이전</button>`;
+
+  // 페이지 번호
+  const startPage = Math.max(1, currentPage - 3);
+  const endPage = Math.min(totalPages, currentPage + 3);
+
+  for (let i = startPage; i <= endPage; i++) {
+    html += `<button onclick="goToPage(${i})" 
+                      style="padding:8px 16px; margin:0 4px; background:${i === currentPage ? '#007bff' : '#f0f0f0'}; 
+                             color:${i === currentPage ? 'white' : '#333'}; border:none; border-radius:6px; cursor:pointer; font-weight:${i === currentPage ? '700' : '400'};">
+              ${i}
+            </button>`;
+  }
+
+  // 다음 버튼
+  html += `<button onclick="goToPage(${currentPage + 1})" 
+                    style="padding:8px 16px; margin:0 4px; background:#007bff; color:white; border:none; border-radius:6px; cursor:pointer;"
+                    ${currentPage === totalPages ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : ''}>다음 ▶</button>`;
+
+  container.innerHTML = html;
+}
+
+// 페이지 이동
+window.goToPage = function(page) {
+  currentPage = page;
+  renderComments();
 };
