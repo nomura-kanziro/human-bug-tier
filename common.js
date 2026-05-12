@@ -4,9 +4,9 @@
 // 목적: 
 //   1. header.html / footer.html 동적 로드
 //   2. admin/comments, Contact_us, tier-class 등 모든 하위 폴더에서 경로 자동 보정
-//   3. 로고/제목 클릭 → home.html 이동
+//   3. 로고/제목 클릭 → [home.html -> index.html] 이동
 //   4. 네비게이션(햄버거) 버튼 → 사이드 메뉴 열기/닫기
-//   5. 푸터 '문의하기' 링크 → Contact_us/index.html 이동
+//   5. 푸터 '문의하기' 링크 → Contact_us/[index.html -> contact_us.html] 이동
 // ========================================================
 
 function getBasePath() {
@@ -34,7 +34,7 @@ function goHome() {
   
   // admin, Contact_us 모두 정상 이동
   if (base === '../' || base === '../../') {
-    window.location.href = base + 'home.html';
+    window.location.href = base + 'index.html';
   } else {
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
@@ -163,7 +163,7 @@ function attachHeaderEvents() {
 function fixFooterLinks(base) {
   const contactLink = document.getElementById('contact-link');
   if (contactLink) {
-    contactLink.href = base + 'Contact_us/index.html';
+    contactLink.href = base + 'Contact_us/contact_us.html';
     console.log('✅ [common.js] 문의하기 링크 보정 완료 →', contactLink.href);
   }
 }
