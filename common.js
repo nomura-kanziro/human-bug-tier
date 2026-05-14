@@ -17,9 +17,10 @@ function getBasePath() {
   if (path.includes('/admin/') || path.includes('/admin\\')) {
     return '../../';
   }
-  // Contact_us, tier-class 폴더 처리
+  // ←←← 여기 추가!!!
   if (path.includes('/tier-class/') || path.includes('/tier-class\\') || 
-      path.includes('/Contact_us/') || path.includes('/Contact_us\\')) {
+      path.includes('/Contact_us/') || path.includes('/Contact_us\\') ||
+      path.includes('/custom-maker/') || path.includes('/custom-maker\\')) {   // ← 이 줄 추가
     return '../';
   }
   return './';

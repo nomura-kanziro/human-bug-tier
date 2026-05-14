@@ -1,0 +1,547 @@
+// custom-maker/custom-maker.js
+let currentTierIndex = 0;
+
+// ─── 전역 상태 ───────────────────────────────────────────────
+let tierState = {};
+const STORAGE_KEY = 'customMakerTierState';
+
+function saveToLocalStorage() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(tierState));
+}
+
+function loadFromLocalStorage() {
+  const saved = localStorage.getItem(STORAGE_KEY);
+  if (saved) {
+    tierState = JSON.parse(saved);
+    console.log('🔄 localStorage에서 tier 상태 복원 완료');
+  }
+}
+
+// DOM → 데이터: 현재 tier의 드롭존 상태를 tierState에 저장
+function saveCurrentTierState() {
+  const container = document.getElementById('tier-list');
+  if (!container) return;
+
+  // 현재 tierIndex에 해당하는 키를 먼저 전부 삭제
+  Object.keys(tierState).forEach(key => {
+    if (key.startsWith(`${currentTierIndex}_`)) delete tierState[key];
+  });
+
+  container.querySelectorAll('.characters').forEach(zone => {
+    const subTierName = zone.getAttribute('data-tier');
+    const storageKey = `${currentTierIndex}_${subTierName}`;
+    tierState[storageKey] = [];
+
+    zone.querySelectorAll('.char').forEach(charEl => {
+      const img = charEl.querySelector('img');
+      const nameEl = charEl.querySelector('p') || charEl.querySelector('span');
+      if (img && nameEl) {
+        tierState[storageKey].push({
+          id: charEl.dataset.id,
+          name: nameEl.textContent.trim(),
+          img: img.src
+        });
+      }
+    });
+  });
+
+  saveToLocalStorage();
+}
+
+// 데이터 → DOM: 저장된 캐릭터를 현재 tier 드롭존에 복원
+// ✅ BUG2 FIX: 존을 먼저 비운 후 append해서 중복 방지
+function loadTierStateToDOM() {
+  const container = document.getElementById('tier-list');
+  if (!container) return;
+
+  container.querySelectorAll('.characters').forEach(zone => {
+    // 항상 먼저 비움 (이전 tier 잔재 + 새로고침 중복 방지)
+    zone.innerHTML = '';
+
+    const subTierName = zone.getAttribute('data-tier');
+    const storageKey = `${currentTierIndex}_${subTierName}`;
+    const savedData = tierState[storageKey];
+
+    if (!savedData || savedData.length === 0) return;
+
+    savedData.forEach(data => {
+      const original = allCharacters.find(c => c.id === data.id);
+      if (original) {
+        const div = createCharElement(original);
+        zone.appendChild(div);
+      }
+    });
+  });
+}
+
+// ─── 티어 데이터 ─────────────────────────────────────────────
+const tierData = [
+  { id: 1, title: "1등급 - 신계 / 슈퍼 그랜드 마스터",         subTiers: ["갑급", "을급", "병급", "정급"] },
+  { id: 2, title: "2등급 - 뒷세계의 전설 / 그랜드 마스터",     subTiers: ["갑급", "을급", "병급", "정급"] },
+  { id: 3, title: "3등급 - 톱 클래스 무투파 / 마스터",         subTiers: ["갑급", "을급", "병급", "정급"] },
+  { id: 4, title: "4등급 - 준 톱클래스 무투파 / 다이아몬드",   subTiers: ["갑급", "을급", "병급", "정급"] },
+  { id: 5, title: "5등급 - 중견급 무투파 & 탈사제급 / 플레티넘", subTiers: ["갑급", "을급", "병급"] },
+  { id: 6, title: "6등급 - 중하위권 무투파 or 정예 사제 / 골드", subTiers: ["갑급", "을급", "병급"] },
+  { id: 7, title: "7등급 - 하위권 무투파 or 우수한 사제 / 실버", subTiers: ["갑급", "을급", "병급"] },
+  { id: 8, title: "8등급 - 평범한 사제 수준의 전투력 / 브론즈",  subTiers: ["갑급", "을급", "병급"] },
+  { id: 9, title: "9등급 - 비전투원 또는 전투력 측정 단서 없음 / 언랭크", subTiers: ["미묘사 인원들"] }
+];
+
+let allCharacters = [];
+
+// ─── 캐릭터 엘리먼트 생성 헬퍼 ──────────────────────────────
+// ✅ 공통 함수로 분리: createCharElement
+// 이벤트는 enableDragAndDrop()에서 한 번에 위임하므로 여기선 draggable만 설정
+function createCharElement(char) {
+  const div = document.createElement('div');
+  div.className = 'char';
+  div.draggable = true;
+  div.dataset.id = char.id;
+  div.innerHTML = `
+    <img src="${char.img}" alt="${char.name}">
+    <p>${char.name}</p>
+  `;
+  return div;
+}
+
+// ─── tier-class에서 캐릭터 로드 ──────────────────────────────
+async function loadCharactersFromTierClass() {
+  console.log('🔄 tier-class 1~9 전체 캐릭터 불러오는 중...');
+  allCharacters = [];
+
+  for (let i = 1; i <= 9; i++) {
+    try {
+      const response = await fetch(`../tier-class/tier${i}.html`);
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+      const htmlText = await response.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlText, 'text/html');
+
+      doc.querySelectorAll('.char').forEach(charEl => {
+        const img = charEl.querySelector('img');
+        const p = charEl.querySelector('p');
+        const span = charEl.querySelector('span');
+        let name = p ? p.textContent.trim()
+                 : span ? span.textContent.trim()
+                 : img ? (img.getAttribute('alt') || '이름 없음') : '';
+
+        if (img && name) {
+          allCharacters.push({
+            id: `char-${i}-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+            name,
+            img: img.src.replace(window.location.origin, '..')
+          });
+        }
+      });
+
+      console.log(`✅ tier${i} 로드 완료`);
+    } catch (err) {
+      console.warn(`⚠️ tier${i}.html 불러오기 실패`, err);
+    }
+  }
+
+  // 중복 제거
+  const seen = new Set();
+  allCharacters = allCharacters.filter(c => seen.has(c.name) ? false : (seen.add(c.name), true));
+
+  console.log(`🎉 총 ${allCharacters.length}개 고유 캐릭터 로드 완료`);
+}
+
+// ─── 렌더링 ──────────────────────────────────────────────────
+function renderTier() {
+  const container = document.getElementById('tier-list');
+  const current = tierData[currentTierIndex];
+
+  document.getElementById('tier-title').textContent = current.title;
+
+  let html = '';
+  current.subTiers.forEach(subName => {
+    html += `
+      <div class="tier">
+        <div class="tier-name">${subName}</div>
+        <div class="characters drop-zone" data-tier="${subName}"></div>
+      </div>`;
+  });
+  container.innerHTML = html;
+
+  loadTierStateToDOM();  // ✅ 비우고 복원
+  // 이벤트는 위임 방식이므로 re-register 불필요 (단, 풀 교체 시엔 필요)
+}
+
+function renderCharacterPool() {
+  const pool = document.getElementById('character-pool');
+  pool.innerHTML = '';
+
+  // tierState에 배치된 캐릭터는 풀에서 제외
+  const placedIds = new Set();
+  Object.values(tierState).forEach(arr => {
+    if (Array.isArray(arr)) arr.forEach(c => placedIds.add(c.id));
+  });
+
+  allCharacters.forEach(char => {
+    if (placedIds.has(char.id)) return;
+    pool.appendChild(createCharElement(char));
+  });
+}
+
+// ─── 드래그 앤 드롭 (이벤트 위임 방식) ──────────────────────
+// ✅ BUG1 FIX: 같은 존 내 이동도 허용 (parentNode 조건 제거)
+// ✅ BUG3 FIX: cloneNode 대신 위임 방식 사용 → 초기화 후에도 정상 동작
+// ✅ BUG4 FIX: 풀에도 dragover/drop 이벤트 등록 → 풀로 되돌리기 가능
+
+let draggedId = null;    // 드래그 중인 캐릭터 ID
+let dragSource = null;   // 'pool' | 'tier'
+
+function enableDragAndDrop() {
+  const tierList = document.getElementById('tier-list');
+  const pool = document.getElementById('character-pool');
+
+  // ── dragstart / dragend: document 위임 ──────────────────────
+  // 이미 등록된 리스너와 중복되지 않도록 once 패턴 대신 flag 사용
+  if (!document._dndBound) {
+    document._dndBound = true;
+
+    document.addEventListener('dragstart', (e) => {
+      const char = e.target.closest('.char');
+      if (!char) return;
+
+      draggedId = char.dataset.id;
+      dragSource = char.closest('#character-pool') ? 'pool' : 'tier';
+      char.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/plain', draggedId);
+    });
+
+    document.addEventListener('dragend', (e) => {
+      const char = e.target.closest('.char');
+      if (char) char.classList.remove('dragging');
+      draggedId = null;
+      dragSource = null;
+    });
+  }
+
+  // ── 티어 테이블 드롭존 ───────────────────────────────────────
+  // tierList는 renderTier()마다 innerHTML이 교체되므로 위임으로 처리
+  if (tierList && !tierList._dndBound) {
+    tierList._dndBound = true;
+
+    tierList.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      const zone = e.target.closest('.characters');
+      if (!zone) return;
+
+      zone.style.borderColor = '#ffcc00';
+
+      const dragging = document.querySelector('.char.dragging');
+      if (!dragging) return;
+
+      // ✅ BUG1 FIX: 같은 존 내 이동도 처리 (조건 없이 삽입 위치 계산)
+      const afterElement = getDragAfterElement(zone, e.clientX, e.clientY);
+      if (afterElement == null) {
+        zone.appendChild(dragging);
+      } else if (afterElement !== dragging) {
+        zone.insertBefore(dragging, afterElement);
+      }
+    });
+
+    tierList.addEventListener('dragleave', (e) => {
+      const zone = e.target.closest('.characters');
+      if (zone && !zone.contains(e.relatedTarget)) {
+        zone.style.borderColor = 'rgba(255, 204, 0, 0.3)';
+      }
+    });
+
+    tierList.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const zone = e.target.closest('.characters');
+      if (zone) zone.style.borderColor = 'rgba(255, 204, 0, 0.3)';
+      saveCurrentTierState();
+      renderCharacterPool(); // 풀에서 이 카드 제거
+    });
+  }
+
+  // ── 풀 드롭존 ────────────────────────────────────────────────
+  // ✅ BUG4 FIX: 풀에 drop 이벤트 등록 → 티어 → 풀 이동 가능
+  // ✅ BUG3 FIX: cloneNode 제거, pool 자체에 직접 위임 등록 (초기화 후에도 유지)
+  if (pool && !pool._dndBound) {
+    pool._dndBound = true;
+
+    pool.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      pool.style.outline = '2px dashed #ffcc00';
+
+      const dragging = document.querySelector('.char.dragging');
+      if (!dragging) return;
+
+      // 이미 풀에 있는 카드면 위치 재정렬
+      if (dragging.parentNode === pool) {
+        const afterElement = getDragAfterElement(pool, e.clientX, e.clientY);
+        if (afterElement == null) pool.appendChild(dragging);
+        else if (afterElement !== dragging) pool.insertBefore(dragging, afterElement);
+      }
+    });
+
+    pool.addEventListener('dragleave', (e) => {
+      if (!pool.contains(e.relatedTarget)) {
+        pool.style.outline = '';
+      }
+    });
+
+    pool.addEventListener('drop', (e) => {
+      e.preventDefault();
+      pool.style.outline = '';
+
+      const dragging = document.querySelector('.char.dragging');
+      if (!dragging) return;
+
+      // 티어에서 풀로 이동하는 경우만 처리
+      if (dragging.parentNode !== pool) {
+        // tierState에서 해당 캐릭터 제거
+        const id = dragging.dataset.id;
+        Object.keys(tierState).forEach(key => {
+          if (Array.isArray(tierState[key])) {
+            tierState[key] = tierState[key].filter(c => c.id !== id);
+          }
+        });
+        saveToLocalStorage();
+
+        // 원래 순서에 맞게 풀에 삽입
+        insertCharBackToPoolInOrder(dragging);
+      }
+    });
+  }
+}
+
+// ── 삽입 위치 계산 (가로+세로 복합) ─────────────────────────
+function getDragAfterElement(container, x, y) {
+  const elements = [...container.querySelectorAll('.char:not(.dragging)')];
+
+  return elements.reduce((closest, child) => {
+    const box = child.getBoundingClientRect();
+    const cx = box.left + box.width / 2;
+    const cy = box.top + box.height / 2;
+    const sameRow = Math.abs(y - cy) < box.height * 0.75;
+    const isBefore = sameRow ? (x < cx) : (y < cy);
+    if (!isBefore) return closest;
+    const dist = Math.hypot(x - cx, y - cy);
+    return dist < closest.dist ? { dist, element: child } : closest;
+  }, { dist: Infinity }).element;
+}
+
+// ── 자동 스크롤 ──────────────────────────────────────────────
+(function initAutoScroll() {
+  let scrollInterval;
+  document.addEventListener('dragover', (e) => {
+    const threshold = 80;
+    if (e.clientY < threshold) {
+      if (!scrollInterval) scrollInterval = setInterval(() => window.scrollBy(0, -15), 16);
+    } else if (e.clientY > window.innerHeight - threshold) {
+      if (!scrollInterval) scrollInterval = setInterval(() => window.scrollBy(0, 15), 16);
+    } else {
+      clearInterval(scrollInterval);
+      scrollInterval = null;
+    }
+  });
+  document.addEventListener('dragend', () => {
+    clearInterval(scrollInterval);
+    scrollInterval = null;
+  });
+})();
+
+// ─── 화살표 버튼 ─────────────────────────────────────────────
+document.getElementById('prev-btn').addEventListener('click', () => {
+  saveCurrentTierState();
+  currentTierIndex = (currentTierIndex - 1 + tierData.length) % tierData.length;
+  renderTier();
+});
+
+document.getElementById('next-btn').addEventListener('click', () => {
+  saveCurrentTierState();
+  currentTierIndex = (currentTierIndex + 1) % tierData.length;
+  renderTier();
+});
+
+// ─── 초기화 ──────────────────────────────────────────────────
+// ✅ BUG3 FIX: resetAll에서 enableDragAndDrop 재호출 불필요
+// (위임 방식이라 DOM 교체 후에도 tierList._dndBound / pool._dndBound 유지)
+async function resetAll() {
+  tierState = {};
+  localStorage.removeItem(STORAGE_KEY);
+
+  // tier-list 내부 초기화 (renderTier가 innerHTML 교체하므로 사실상 자동)
+  renderTier();
+
+  if (allCharacters.length === 0) {
+    await loadCharactersFromTierClass();
+  }
+
+  renderCharacterPool();
+  console.log('🔄 전체 초기화 완료');
+}
+
+document.getElementById('reset-btn').addEventListener('click', () => {
+  if (confirm('정말 모든 티어 배치를 초기화할까요?')) resetAll();
+});
+
+// ─── 풀에 원래 순서로 삽입 ───────────────────────────────────
+function insertCharBackToPoolInOrder(charElement) {
+  const pool = document.getElementById('character-pool');
+  const allPoolChars = Array.from(pool.children);
+  const originalIndex = allCharacters.findIndex(c => c.id === charElement.dataset.id);
+
+  let inserted = false;
+  for (const existing of allPoolChars) {
+    const existingIndex = allCharacters.findIndex(c => c.id === existing.dataset.id);
+    if (existingIndex > originalIndex) {
+      pool.insertBefore(charElement, existing);
+      inserted = true;
+      break;
+    }
+  }
+  if (!inserted) pool.appendChild(charElement);
+}
+
+// ─── 다운로드 ────────────────────────────────────────────────
+const downloadBtn = document.getElementById('download-btn');
+const downloadMenu = document.getElementById('download-menu');
+
+if (downloadBtn && downloadMenu) {
+  downloadBtn.addEventListener('click', (e) => {
+    e.stopImmediatePropagation();
+    downloadMenu.classList.toggle('show');
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!downloadMenu.contains(e.target) && !downloadBtn.contains(e.target)) {
+      downloadMenu.classList.remove('show');
+    }
+  });
+}
+
+document.querySelectorAll('.dropdown-item').forEach(item => {
+  item.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const type = item.getAttribute('data-type');
+    document.getElementById('download-menu')?.classList.remove('show');
+
+    if (type === 'png') downloadAllTiersAsPNG();
+    else if (type === 'pdf') downloadAllTiersAsPDF();
+    else if (type === 'json') downloadAllTiersAsJSON();   // ← JSON 함수 호출;
+  });
+});
+
+// ─── PNG 다운로드 ─────────────────────────────────────────────
+async function downloadAllTiersAsPNG() {
+  saveCurrentTierState();
+  const originalTierIndex = currentTierIndex;
+  const tierListElement = document.getElementById('tier-list');
+  if (!tierListElement) { alert('티어 테이블을 찾을 수 없습니다.'); return; }
+
+  for (let i = 0; i < tierData.length; i++) {
+    currentTierIndex = i;
+    renderTier();
+    await new Promise(r => setTimeout(r, 450));
+
+    try {
+      const canvas = await html2canvas(tierListElement, { scale: 2, backgroundColor: '#111111', logging: false });
+      const link = document.createElement('a');
+      link.download = `tier-${i + 1}.png`;
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+      await new Promise(r => setTimeout(r, 650));
+    } catch (err) {
+      console.error(`❌ tier-${i + 1} 캡처 실패:`, err);
+    }
+  }
+
+  currentTierIndex = originalTierIndex;
+  renderTier();
+}
+
+// ─── PDF 다운로드 ─────────────────────────────────────────────
+async function downloadAllTiersAsPDF() {
+  saveCurrentTierState();
+  const { jsPDF } = window.jspdf;
+  const pdf = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+  const originalTierIndex = currentTierIndex;
+  const tierListElement = document.getElementById('tier-capture-area');
+  if (!tierListElement) { alert('티어 테이블을 찾을 수 없습니다.'); return; }
+
+  for (let i = 0; i < tierData.length; i++) {
+    currentTierIndex = i;
+    renderTier();
+    await new Promise(r => setTimeout(r, 450));
+
+    try {
+      const titleText = document.getElementById('tier-title').textContent;
+      const tempTitle = document.createElement('h2');
+      tempTitle.textContent = titleText;
+      tempTitle.style.cssText = 'color:#ffcc00; text-align:center; margin:0 0 10px; font-size:1.1rem; padding:10px 0;';
+      tierListElement.insertBefore(tempTitle, tierListElement.firstChild);
+
+      const canvas = await html2canvas(tierListElement, { scale: 2, backgroundColor: '#111111', logging: false });
+      tierListElement.removeChild(tempTitle);
+
+      const imgData = canvas.toDataURL('image/png');
+      const imgWidth = 210;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      if (i > 0) pdf.addPage();
+      pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+    } catch (err) {
+      console.error(`❌ tier-${i + 1} PDF 캡처 실패:`, err);
+    }
+  }
+
+  pdf.save('all-tiers.pdf');
+  currentTierIndex = originalTierIndex;
+  renderTier();
+}
+
+// ─── 페이지 초기 로드 ────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadCharactersFromTierClass();
+  loadFromLocalStorage();
+  renderTier();
+  renderCharacterPool();
+  enableDragAndDrop();   // pool / tierList에 위임 리스너 등록
+  console.log('✅ custom-maker: 초기 로드 완료');
+});
+
+// ============================================================
+// JSON 다운로드 (사용자가 원하는 정확한 형식)
+// ============================================================
+function downloadAllTiersAsJSON() {
+  const result = {
+    "티어표 명단 목록": {}
+  };
+
+  // 1~9티어까지 순회
+  for (let i = 0; i < tierData.length; i++) {
+    const tierNum = i + 1;
+    const tierKey = `${tierNum}티어`;
+    result["티어표 명단 목록"][tierKey] = {};
+
+    // 해당 tier의 subTiers (갑급, 을급 등)
+    const tierIndex = i;
+    tierData[i].subTiers.forEach(subName => {
+      const storageKey = `${tierIndex}_${subName}`;
+      const chars = tierState[storageKey] || [];
+      
+      // 이름만 배열로 저장
+      result["티어표 명단 목록"][tierKey][subName] = chars.map(c => c.name);
+    });
+  }
+
+  // JSON 문자열로 변환 (예쁘게 들여쓰기)
+  const jsonString = JSON.stringify(result, null, 2);
+  
+  // 다운로드
+  const blob = new Blob([jsonString], { type: 'application/json' });
+  const link = document.createElement('a');
+  link.download = 'human-bug-tier-custom.json';
+  link.href = URL.createObjectURL(blob);
+  link.click();
+
+  console.log('✅ JSON 다운로드 완료');
+}
