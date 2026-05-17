@@ -1,7 +1,65 @@
-  <!-- 하단 -->
-  <footer>
-    <p>site version : 0.0.1</p>
-    <a href="#" id="contact-link">문의하기</a>
-  </footer>
+<!-- footer.html -->
+<!-- 위치: /home/workdir/artifacts/footer.html -->
 
-  
+<footer class="bg-zinc-900 border-t border-zinc-800 mt-20">
+  <div class="max-w-7xl mx-auto px-6 py-16">
+    <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-y-12">
+      
+      <!-- Brand -->
+      <div class="max-w-xs">
+        <div class="flex items-center gap-x-3 mb-5">
+          <div class="w-9 h-9 rounded-2xl bg-gradient-to-br from-indigo-500 via-violet-500 to-fuchsia-500 flex items-center justify-center">
+            <span class="text-white text-xl font-bold">H</span>
+          </div>
+          <span class="font-semibold text-xl">휴버대 티어표</span>
+        </div>
+        <div class="text-sm text-zinc-500 leading-relaxed">
+          ULverse의 모든 캐릭터를<br>
+          전투력 순위로 정리한 공식 기록입니다.
+        </div>
+      </div>
+
+      <!-- Links -->
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-x-16 gap-y-10 text-sm">
+        
+        <div>
+          <div class="font-semibold mb-4 text-xs tracking-widest text-zinc-500">EXPLORE</div>
+          <div class="flex flex-col gap-y-[13px] text-zinc-400">
+            <a href="index.html" class="hover:text-white transition">홈</a>
+            <a href="#tiers" class="hover:text-white transition">티어 목록</a>
+            <a href="./tier-class/tier1.html" class="hover:text-white transition">1티어 상세</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="font-semibold mb-4 text-xs tracking-widest text-zinc-500">RESOURCES</div>
+          <div class="flex flex-col gap-y-[13px] text-zinc-400">
+            <a href="./Contact_us/index.html" class="hover:text-white transition">문의하기</a>
+            <a href="#" class="hover:text-white transition">개발자 노트</a>
+            <a href="https://github.com/nomura-kanziro/human-bug-tier" target="_blank" class="hover:text-white transition">GitHub</a>
+          </div>
+        </div>
+
+        <div>
+          <div class="font-semibold mb-4 text-xs tracking-widest text-zinc-500">LEGAL</div>
+          <div class="flex flex-col gap-y-[13px] text-zinc-400">
+            <a href="#" class="hover:text-white transition">이용약관</a>
+            <a href="#" class="hover:text-white transition">개인정보처리방침</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bottom Bar -->
+  <div class="border-t border-zinc-800">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between text-xs text-zinc-500">
+      <div>© 2026 ULverse. All Rights Reserved.</div>
+      <div class="flex items-center gap-x-5">
+        <span>site version : 0.0.1</span>
+        <span class="hidden md:inline">•</span>
+        <span class="hidden md:inline">Made with ❤️ by nomura-kanziro</span>
+      </div>
+    </div>
+  </div>
+</footer>

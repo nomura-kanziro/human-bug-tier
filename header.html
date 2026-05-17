@@ -1,25 +1,65 @@
-<!-- 상단 네비게이션 -->
 <!-- header.html -->
-<header>
-  <div class="logo" id="logo">   <!-- onclick 제거 -->
-    <img src="tier-image/logo.webp" alt="로고" class="logo-img">
-    휴버대 티어표
+<!-- 위치: /home/workdir/artifacts/header.html -->
+
+<header class="bg-zinc-900/95 backdrop-blur-xl border-b border-zinc-800 sticky top-0 z-50">
+  <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+    
+    <!-- Logo -->
+    <div id="logo" class="flex items-center gap-x-3 cursor-pointer group">
+      <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-indigo-500 via-violet-500 to-fuchsia-500 flex items-center justify-center group-active:scale-95 transition">
+        <span class="text-white text-2xl font-bold tracking-tighter">H</span>
+      </div>
+      <div>
+        <div class="font-semibold text-xl tracking-tight">휴버대 티어표</div>
+        <div class="text-[10px] text-zinc-500 -mt-1">ULverse Official</div>
+      </div>
+    </div>
+
+    <!-- Desktop Navigation -->
+    <nav class="hidden md:flex items-center gap-x-9 text-sm">
+      <a href="index.html" class="hover:text-white transition-colors text-zinc-400">홈</a>
+      <a href="#tiers" class="hover:text-white transition-colors text-zinc-400">티어 목록</a>
+      <a href="./Contact_us/index.html" class="hover:text-white transition-colors text-zinc-400">문의하기</a>
+    </nav>
+
+    <!-- Right Side -->
+    <div class="flex items-center gap-x-3">
+      
+      <!-- Search (Desktop) -->
+      <div class="hidden md:block relative w-72">
+        <input type="text" 
+               id="global-search"
+               placeholder="캐릭터 또는 티어 검색..." 
+               class="w-full bg-zinc-900 border border-zinc-800 focus:border-indigo-500 text-sm rounded-2xl py-2 pl-10 pr-4 outline-none placeholder:text-zinc-500">
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 absolute left-4 top-3 text-zinc-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <div id="menuBtn" 
+           class="md:hidden w-11 h-11 flex items-center justify-center text-3xl cursor-pointer active:bg-zinc-800 rounded-2xl transition">
+        ☰
+      </div>
+    </div>
   </div>
-  
-  <div class="menu-btn" id="menuBtn">☰</div>   <!-- onclick 제거 -->
-  
-  <nav id="sideMenu" class="side-menu">
-    <div class="close-btn" id="closeBtn">×</div>
-    <ul>
-      <li><a href="/tier-class/tier1.html">1티어</a></li>
-      <li><a href="/tier-class/tier2.html">2티어</a></li>
-      <li><a href="/tier-class/tier3.html">3티어</a></li>
-      <li><a href="/tier-class/tier4.html">4티어</a></li>
-      <li><a href="/tier-class/tier5.html">5티어</a></li>
-      <li><a href="/tier-class/tier6.html">6티어</a></li>
-      <li><a href="/tier-class/tier7.html">7티어</a></li>
-      <li><a href="/tier-class/tier8.html">8티어</a></li>
-      <li><a href="/tier-class/tier9.html">9티어</a></li>
-    </ul>
+
+  <!-- Mobile Sidebar Menu -->
+  <nav id="sideMenu" 
+       class="fixed top-0 right-0 h-full w-72 bg-zinc-900 border-l border-zinc-800 p-8 transform translate-x-full transition-transform duration-300 z-[60] md:hidden">
+    
+    <div class="flex justify-between items-center mb-10">
+      <div class="font-semibold">메뉴</div>
+      <div id="closeBtn" class="text-4xl cursor-pointer text-zinc-400 hover:text-white">×</div>
+    </div>
+
+    <div class="flex flex-col gap-y-2 text-lg">
+      <a href="index.html" class="py-3 px-4 hover:bg-white/5 rounded-2xl transition">홈</a>
+      <a href="#tiers" class="py-3 px-4 hover:bg-white/5 rounded-2xl transition">티어 목록</a>
+      <a href="./Contact_us/index.html" class="py-3 px-4 hover:bg-white/5 rounded-2xl transition">문의하기</a>
+      <div class="h-px bg-white/10 my-3"></div>
+      <a href="#" class="py-3 px-4 hover:bg-white/5 rounded-2xl transition text-sm text-zinc-400">GitHub</a>
+      <a href="#" class="py-3 px-4 hover:bg-white/5 rounded-2xl transition text-sm text-zinc-400">개발자 노트</a>
+    </div>
   </nav>
 </header>

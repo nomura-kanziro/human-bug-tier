@@ -3,85 +3,374 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>휴버대 티어표</title>
-  <link rel="stylesheet" href="common.css">
+  <title>휴버대 티어표 • ULverse</title>
+  <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="Header_Footer.css">
+  <link rel="stylesheet" href="common.css">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&amp;family=Space+Grotesk:wght@500;600&amp;display=swap');
+    
+    :root {
+      --primary: #6366f1;
+    }
+    
+    body {
+      font-family: 'Inter', system_ui, sans-serif;
+    }
+    
+    .font-display {
+      font-family: 'Space Grotesk', 'Inter', system_ui, sans-serif;
+      font-weight: 600;
+    }
+
+    .tier-card {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .tier-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    }
+
+    .section-header {
+      font-size: 2.25rem;
+      line-height: 2.5rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+    }
+
+    .glass {
+      background: rgba(255,255,255,0.08);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+  </style>
 </head>
-<body>
-  <!-- 상단 네비게이션 -->
+<body class="bg-zinc-950 text-white">
+  <!-- Header -->
   <div id="header-placeholder"></div>
 
-  <!-- 메인 소개 -->
-   <section class="intro">
-      <h1>
-        <img src="tier-image/logo.webp" alt="로고" class="logo-img">
-        휴버대 티어표
-      </h1>
-    <p>
-      휴버대 티어표는 ‘휴먼버그대학교’ 시리즈의 캐릭터들의 전투력 순위 및 관련 정보를 보여주기 위한 미니 웹 사이트입니다.
-    </p>
-  </section>
+  <!-- Hero Section -->
+  <div class="max-w-7xl mx-auto px-6 pt-16 pb-12">
+    <div class="flex flex-col items-center text-center">
+      <div class="flex items-center gap-x-4 mb-6">
+        <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-500 flex items-center justify-center">
+          <span class="text-white text-4xl font-bold">H</span>
+        </div>
+        <div>
+          <h1 class="text-7xl font-display tracking-tighter">휴버대<br>티어표</h1>
+        </div>
+      </div>
+      
+      <p class="max-w-2xl text-xl text-zinc-400 mb-10">
+        ULverse의 모든 캐릭터를 <span class="text-white font-medium">전투력 순위</span>로 정리한<br>
+        공식 미니 티어표입니다.
+      </p>
+      
+      <div class="flex items-center gap-x-3">
+        <a href="#tiers" 
+           class="inline-flex items-center justify-center px-8 py-3.5 bg-white text-zinc-950 font-semibold rounded-2xl hover:bg-zinc-100 transition-colors">
+          티어 둘러보기
+        </a>
+        <a href="./Contact_us/index.html" 
+           class="inline-flex items-center justify-center px-6 py-3.5 border border-white/30 hover:bg-white/5 rounded-2xl transition-colors font-medium">
+          문의하기
+        </a>
+      </div>
+    </div>
+  </div>
 
-  <!-- 티어 카드 목록 -->
-  <section class="tiers">
-    <div id="tier1" class="tier-card" onclick="location.href='./tier-class/tier1.html'">
-      <img src="./tier-image/logo2-1.png" alt="1티어 아이콘" class="tier-icon">
-      <span class="tier-title">1티어</span>
-      <p>신계 / 슈퍼 그랜드 마스터</p>
+  <!-- Stats Bar -->
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="glass rounded-3xl p-1">
+      <div class="flex items-center justify-between px-8 py-4 rounded-[22px]">
+        <div class="flex items-center gap-x-8">
+          <div>
+            <div class="text-3xl font-semibold tabular-nums">247</div>
+            <div class="text-sm text-zinc-500">등록된 캐릭터</div>
+          </div>
+          <div>
+            <div class="text-3xl font-semibold tabular-nums">9</div>
+            <div class="text-sm text-zinc-500">티어 구분</div>
+          </div>
+          <div>
+            <div class="text-3xl font-semibold tabular-nums">4.8</div>
+            <div class="text-sm text-zinc-500">평균 만족도</div>
+          </div>
+        </div>
+        <div class="text-right">
+          <div class="inline-flex items-center gap-x-2 text-sm bg-emerald-950 text-emerald-400 px-3.5 py-1 rounded-full">
+            <div class="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></div>
+            <span>실시간 업데이트 중</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tiers Section -->
+  <div id="tiers" class="max-w-7xl mx-auto px-6 py-20">
+    <div class="flex items-end justify-between mb-10">
+      <div>
+        <div class="uppercase tracking-[2px] text-xs font-mono text-zinc-500 mb-2">THE ULTIMATE TIER LIST</div>
+        <h2 class="section-header">티어 목록</h2>
+      </div>
+      <a href="#" class="text-sm text-zinc-400 hover:text-white flex items-center gap-x-1 group">
+        전체 순위 보기 
+        <span class="group-hover:translate-x-0.5 transition">→</span>
+      </a>
     </div>
 
-    <div id="tier2" class="tier-card" onclick="location.href='./tier-class/tier2.html'">
-      <img src="./tier-image/logo2-2.png" alt="2티어 아이콘" class="tier-icon">
-      <span class="tier-title">2티어</span>
-      <p>뒷세계 전설들 / 그랜드 마스터</p>
-    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <!-- Tier 1 -->
+      <div onclick="location.href='./tier-class/tier1.html'" 
+           class="tier-card group bg-zinc-900 border border-zinc-800 hover:border-zinc-700 rounded-3xl p-7 cursor-pointer">
+        <div class="flex items-start justify-between mb-6">
+          <div>
+            <div class="text-xs tracking-widest text-emerald-400 font-mono">TIER 01</div>
+            <div class="text-4xl font-semibold mt-1">1티어</div>
+          </div>
+          <div class="text-right">
+            <div class="text-emerald-400 text-xs font-medium">신계</div>
+            <div class="text-xs text-zinc-500">슈퍼 그랜드 마스터</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-x-3">
+          <div class="flex -space-x-2">
+            <div class="w-8 h-8 rounded-full bg-zinc-700 border-2 border-zinc-900 overflow-hidden">
+              <img src="tier-image/logo2-1.png" class="w-full h-full object-cover">
+            </div>
+            <div class="w-8 h-8 rounded-full bg-zinc-700 border-2 border-zinc-900 overflow-hidden">
+              <img src="tier-image/logo2-1.png" class="w-full h-full object-cover">
+            </div>
+          </div>
+          <div class="text-sm text-zinc-400">+28명</div>
+        </div>
+      </div>
 
-    <div id="tier3" class="tier-card" onclick="location.href='./tier-class/tier3.html'">
-      <img src="./tier-image/logo2-3.png" alt="3티어 아이콘" class="tier-icon">
-      <span class="tier-title">3티어</span>
-      <p>톱 클래스 무투파 / 마스터</p>
-    </div>
+      <!-- Tier 2 -->
+      <div onclick="location.href='./tier-class/tier2.html'" 
+           class="tier-card group bg-zinc-900 border border-zinc-800 hover:border-zinc-700 rounded-3xl p-7 cursor-pointer">
+        <div class="flex items-start justify-between mb-6">
+          <div>
+            <div class="text-xs tracking-widest text-sky-400 font-mono">TIER 02</div>
+            <div class="text-4xl font-semibold mt-1">2티어</div>
+          </div>
+          <div class="text-right">
+            <div class="text-sky-400 text-xs font-medium">뒷세계 전설</div>
+            <div class="text-xs text-zinc-500">그랜드 마스터</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-x-3">
+          <div class="flex -space-x-2">
+            <div class="w-8 h-8 rounded-full bg-zinc-700 border-2 border-zinc-900 overflow-hidden">
+              <img src="tier-image/logo2-2.png" class="w-full h-full object-cover">
+            </div>
+            <div class="w-8 h-8 rounded-full bg-zinc-700 border-2 border-zinc-900 overflow-hidden">
+              <img src="tier-image/logo2-2.png" class="w-full h-full object-cover">
+            </div>
+          </div>
+          <div class="text-sm text-zinc-400">+41명</div>
+        </div>
+      </div>
 
-    <div id="tier4" class="tier-card" onclick="location.href='./tier-class/tier4.html'">
-      <img src="./tier-image/logo2-4.png" alt="4티어 아이콘" class="tier-icon">
-      <span class="tier-title">4티어</span>
-      <p>준 톱클래스 무투파 / 다이아몬드</p>
-    </div>
+      <!-- Tier 3 -->
+      <div onclick="location.href='./tier-class/tier3.html'" 
+           class="tier-card group bg-zinc-900 border border-zinc-800 hover:border-zinc-700 rounded-3xl p-7 cursor-pointer">
+        <div class="flex items-start justify-between mb-6">
+          <div>
+            <div class="text-xs tracking-widest text-violet-400 font-mono">TIER 03</div>
+            <div class="text-4xl font-semibold mt-1">3티어</div>
+          </div>
+          <div class="text-right">
+            <div class="text-violet-400 text-xs font-medium">톱 클래스</div>
+            <div class="text-xs text-zinc-500">마스터</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-x-3">
+          <div class="flex -space-x-2">
+            <div class="w-8 h-8 rounded-full bg-zinc-700 border-2 border-zinc-900 overflow-hidden">
+              <img src="tier-image/logo2-3.png" class="w-full h-full object-cover">
+            </div>
+            <div class="w-8 h-8 rounded-full bg-zinc-700 border-2 border-zinc-900 overflow-hidden">
+              <img src="tier-image/logo2-3.png" class="w-full h-full object-cover">
+            </div>
+          </div>
+          <div class="text-sm text-zinc-400">+37명</div>
+        </div>
+      </div>
 
-    <div id="tier5" class="tier-card" onclick="location.href='./tier-class/tier5.html'">
-      <img src="./tier-image/logo2-5.png" alt="5티어 아이콘" class="tier-icon">
-      <span class="tier-title">5티어</span> 
-      <p>중견급 무투파 or 탈사제 / 플래티넘</p>
-    </div>
+      <!-- Tier 4 -->
+      <div onclick="location.href='./tier-class/tier4.html'" 
+           class="tier-card group bg-zinc-900 border border-zinc-800 hover:border-zinc-700 rounded-3xl p-7 cursor-pointer">
+        <div class="flex items-start justify-between mb-6">
+          <div>
+            <div class="text-xs tracking-widest text-amber-400 font-mono">TIER 04</div>
+            <div class="text-4xl font-semibold mt-1">4티어</div>
+          </div>
+          <div class="text-right">
+            <div class="text-amber-400 text-xs font-medium">준 톱클래스</div>
+            <div class="text-xs text-zinc-500">다이아몬드</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-x-3">
+          <div class="flex -space-x-2">
+            <div class="w-8 h-8 rounded-full bg-zinc-700 border-2 border-zinc-900 overflow-hidden">
+              <img src="tier-image/logo2-4.png" class="w-full h-full object-cover">
+            </div>
+            <div class="w-8 h-8 rounded-full bg-zinc-700 border-2 border-zinc-900 overflow-hidden">
+              <img src="tier-image/logo2-4.png" class="w-full h-full object-cover">
+            </div>
+          </div>
+          <div class="text-sm text-zinc-400">+52명</div>
+        </div>
+      </div>
 
-    <div id="tier6" class="tier-card" onclick="location.href='./tier-class/tier6.html'">
-      <img src="./tier-image/logo2-6.png" alt="6티어 아이콘" class="tier-icon">
-      <span class="tier-title">6티어</span>
-      <p>중하위권 무투파 or 정예 사제 / 골드</p>
-    </div>
+      <!-- Tier 5 -->
+      <div onclick="location.href='./tier-class/tier5.html'" 
+           class="tier-card group bg-zinc-900 border border-zinc-800 hover:border-zinc-700 rounded-3xl p-7 cursor-pointer">
+        <div class="flex items-start justify-between mb-6">
+          <div>
+            <div class="text-xs tracking-widest text-rose-400 font-mono">TIER 05</div>
+            <div class="text-4xl font-semibold mt-1">5티어</div>
+          </div>
+          <div class="text-right">
+            <div class="text-rose-400 text-xs font-medium">중견급</div>
+            <div class="text-xs text-zinc-500">플래티넘</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-x-3">
+          <div class="flex -space-x-2">
+            <div class="w-8 h-8 rounded-full bg-zinc-700 border-2 border-zinc-900 overflow-hidden">
+              <img src="tier-image/logo2-5.png" class="w-full h-full object-cover">
+            </div>
+            <div class="w-8 h-8 rounded-full bg-zinc-700 border-2 border-zinc-900 overflow-hidden">
+              <img src="tier-image/logo2-5.png" class="w-full h-full object-cover">
+            </div>
+          </div>
+          <div class="text-sm text-zinc-400">+63명</div>
+        </div>
+      </div>
 
-    <div id="tier7" class="tier-card" onclick="location.href='./tier-class/tier7.html'">
-      <img src="./tier-image/logo2-7.png" alt="7티어 아이콘" class="tier-icon">
-      <span class="tier-title">7티어</span>
-      <p>하위권 무투파 or 우수한 사제 / 실버</p>
-    </div>
+      <!-- Tier 6 -->
+      <div onclick="location.href='./tier-class/tier6.html'" 
+           class="tier-card group bg-zinc-900 border border-zinc-800 hover:border-zinc-700 rounded-3xl p-7 cursor-pointer">
+        <div class="flex items-start justify-between mb-6">
+          <div>
+            <div class="text-xs tracking-widest text-orange-400 font-mono">TIER 06</div>
+            <div class="text-4xl font-semibold mt-1">6티어</div>
+          </div>
+          <div class="text-right">
+            <div class="text-orange-400 text-xs font-medium">중하위권</div>
+            <div class="text-xs text-zinc-500">골드</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-x-3">
+          <div class="flex -space-x-2">
+            <div class="w-8 h-8 rounded-full bg-zinc-700 border-2 border-zinc-900 overflow-hidden">
+              <img src="tier-image/logo2-6.png" class="w-full h-full object-cover">
+            </div>
+            <div class="w-8 h-8 rounded-full bg-zinc-700 border-2 border-zinc-900 overflow-hidden">
+              <img src="tier-image/logo2-6.png" class="w-full h-full object-cover">
+            </div>
+          </div>
+          <div class="text-sm text-zinc-400">+58명</div>
+        </div>
+      </div>
 
-    <div id="tier8" class="tier-card" onclick="location.href='./tier-class/tier8.html'">
-      <img src="./tier-image/logo2-8.png" alt="8티어 아이콘" class="tier-icon">
-      <span class="tier-title">8티어</span>
-      <p>평범한 사제 수준의 전투력 / 브론즈</p>
-    </div>
+      <!-- Tier 7 -->
+      <div onclick="location.href='./tier-class/tier7.html'" 
+           class="tier-card group bg-zinc-900 border border-zinc-800 hover:border-zinc-700 rounded-3xl p-7 cursor-pointer">
+        <div class="flex items-start justify-between mb-6">
+          <div>
+            <div class="text-xs tracking-widest text-yellow-400 font-mono">TIER 07</div>
+            <div class="text-4xl font-semibold mt-1">7티어</div>
+          </div>
+          <div class="text-right">
+            <div class="text-yellow-400 text-xs font-medium">하위권</div>
+            <div class="text-xs text-zinc-500">실버</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-x-3">
+          <div class="flex -space-x-2">
+            <div class="w-8 h-8 rounded-full bg-zinc-700 border-2 border-zinc-900 overflow-hidden">
+              <img src="tier-image/logo2-7.png" class="w-full h-full object-cover">
+            </div>
+            <div class="w-8 h-8 rounded-full bg-zinc-700 border-2 border-zinc-900 overflow-hidden">
+              <img src="tier-image/logo2-7.png" class="w-full h-full object-cover">
+            </div>
+          </div>
+          <div class="text-sm text-zinc-400">+44명</div>
+        </div>
+      </div>
 
-    <div id="tier9" class="tier-card" onclick="location.href='./tier-class/tier9.html'">
-      <img src="./tier-image/logo2-9.png" alt="9티어 아이콘" class="tier-icon">
-      <span class="tier-title">9티어</span>
-      <p>비전투원 또는 전투력 측정 단서 없음 / 언랭크</p>
-    </div>
-  </section>
+      <!-- Tier 8 -->
+      <div onclick="location.href='./tier-class/tier8.html'" 
+           class="tier-card group bg-zinc-900 border border-zinc-800 hover:border-zinc-700 rounded-3xl p-7 cursor-pointer">
+        <div class="flex items-start justify-between mb-6">
+          <div>
+            <div class="text-xs tracking-widest text-stone-400 font-mono">TIER 08</div>
+            <div class="text-4xl font-semibold mt-1">8티어</div>
+          </div>
+          <div class="text-right">
+            <div class="text-stone-400 text-xs font-medium">평범한</div>
+            <div class="text-xs text-zinc-500">브론즈</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-x-3">
+          <div class="flex -space-x-2">
+            <div class="w-8 h-8 rounded-full bg-zinc-700 border-2 border-zinc-900 overflow-hidden">
+              <img src="tier-image/logo2-8.png" class="w-full h-full object-cover">
+            </div>
+            <div class="w-8 h-8 rounded-full bg-zinc-700 border-2 border-zinc-900 overflow-hidden">
+              <img src="tier-image/logo2-8.png" class="w-full h-full object-cover">
+            </div>
+          </div>
+          <div class="text-sm text-zinc-400">+71명</div>
+        </div>
+      </div>
 
-  <!-- 하단 -->
+      <!-- Tier 9 -->
+      <div onclick="location.href='./tier-class/tier9.html'" 
+           class="tier-card group bg-zinc-900 border border-zinc-800 hover:border-zinc-700 rounded-3xl p-7 cursor-pointer">
+        <div class="flex items-start justify-between mb-6">
+          <div>
+            <div class="text-xs tracking-widest text-zinc-400 font-mono">TIER 09</div>
+            <div class="text-4xl font-semibold mt-1">9티어</div>
+          </div>
+          <div class="text-right">
+            <div class="text-zinc-400 text-xs font-medium">비전투원</div>
+            <div class="text-xs text-zinc-500">언랭크</div>
+          </div>
+        </div>
+        <div class="flex items-center gap-x-3">
+          <div class="flex -space-x-2">
+            <div class="w-8 h-8 rounded-full bg-zinc-700 border-2 border-zinc-900 overflow-hidden">
+              <img src="tier-image/logo2-9.png" class="w-full h-full object-cover">
+            </div>
+            <div class="w-8 h-8 rounded-full bg-zinc-700 border-2 border-zinc-900 overflow-hidden">
+              <img src="tier-image/logo2-9.png" class="w-full h-full object-cover">
+            </div>
+          </div>
+          <div class="text-sm text-zinc-400">+89명</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
   <div id="footer-placeholder"></div>
 
   <script src="common.js"></script>
+  <script>
+    // Tailwind script
+    function initializeTailwind() {
+      document.documentElement.style.setProperty('--accent', '#6366f1');
+    }
+    
+    window.onload = function() {
+      initializeTailwind();
+    }
+  </script>
 </body>
 </html>
