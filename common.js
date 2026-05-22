@@ -75,6 +75,56 @@ function fixImagePaths(base) {
 }
 
 // ========================================================
+// 공지사항 모달 열기
+// ========================================================
+function showNoticeModal(id) {
+  const modal = document.getElementById('notice-modal');
+  const titleEl = document.getElementById('notice-modal-title');
+  const dateEl = document.getElementById('notice-modal-date');
+  const contentEl = document.getElementById('notice-modal-content');
+
+  // 간단한 하드코딩 데이터 (나중에 JSON이나 DB로 교체 가능)
+  const notices = {
+    1: {
+      title: "v1.3.0 업데이트 안내",
+      date: "2026.05.19",
+      content: "새로운 티어 계산 로직이 적용되었습니다.\n- 전투력 산정 기준 변경\n- UI/UX 전반적인 개선\n- 모바일 대응 강화"
+    },
+    2: {
+      title: "이미지 로딩 최적화 완료",
+      date: "2026.05.16",
+      content: "티어 카드와 캐릭터 이미지 로딩 속도가 크게 개선되었습니다.\n이제 더 빠르고 쾌적하게 이용하실 수 있습니다."
+    },
+    3: {
+      title: "커스텀 메이커 제작 이벤트 오픈",
+      date: "2026.05.21",
+      content: "커스텀 메이커를 이용해 나만의 티어를 만들고 공유해보세요!\n이벤트 참여자 전원에게 특별 뱃지가 지급됩니다."
+    },
+    4: {
+      title: "행운 뽑기 2배 이벤트 진행 중",
+      date: "2026.05.18",
+      content: "이벤트 기간 동안 행운의 티어 뽑기 보상이 2배로 지급됩니다.\n지금 바로 도전해보세요!"
+    }
+  };
+
+  const notice = notices[id];
+  if (!notice) return;
+
+  titleEl.textContent = notice.title;
+  dateEl.textContent = notice.date;
+  contentEl.textContent = notice.content;
+
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+}
+
+function closeNoticeModal() {
+  const modal = document.getElementById('notice-modal');
+  modal.classList.remove('flex');
+  modal.classList.add('hidden');
+}
+
+// ========================================================
 // header / footer 실제 로드 + 이벤트 부착
 // ========================================================
 function loadCommon() {
@@ -103,6 +153,8 @@ function loadCommon() {
 
     // ★★★ 여기 추가 ★★★
     renderUserProfile();     // ← 프로필 아이콘 표시
+
+    initSideMenuDropdowns();     // ← 이 줄이 있어야 합니다
 
     console.log('✅ [common.js] Header & Footer + 모든 이벤트 완전 로드 완료!');
   })
@@ -331,3 +383,33 @@ function logoutAdmin() {
 // ========================================================
 // loadCommon()의 .then() 블록 맨 마지막에 아래 한 줄 추가:
     // renderAdminProfile();   // ← 이 줄 추가
+
+
+
+// ========================================================
+// 사이드 메뉴 드롭다운 클릭 토글 (모바일용)
+// ========================================================
+function initSideMenuDropdowns() {
+  const toggles = document.querySelectorAll('.side-dropdown .dropdown-toggle');
+  
+  toggles.forEach(toggle => {
+    toggle.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopImmediatePropagation();   // ← 호버 이벤트 차단 강화
+      
+      const parent = this.parentElement;
+      
+      // 다른 드롭다운 모두 닫기
+      document.querySelectorAll('.side-dropdown').forEach(item => {
+        if (item !== parent) item.classList.remove('active');
+      });
+      
+      // 현재 항목 토글
+      parent.classList.toggle('active');
+    });
+  });
+}
+
+// loadCommon() 함수의 .then() 블록 안에 아래 한 줄 추가
+// attachHeaderEvents(); 아래에 넣어주세요
+    // initSideMenuDropdowns();

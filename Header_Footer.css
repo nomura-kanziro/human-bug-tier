@@ -11,6 +11,12 @@ header {
   z-index: 100;
 }
 
+.left-group {
+  display: flex;
+  align-items: center;
+  gap: 40px;           /* 로고와 메뉴 사이 간격 */
+}
+
 .logo {
   display: flex;
   align-items: center;
@@ -22,17 +28,33 @@ header {
   margin-right: 8px;
 }
 
+/* ====================== 로고 텍스트 강조 ====================== */
+.logo-text {
+  font-weight: 700;           /* 진하게 (700~900 사이로 조정 가능) */
+  font-size: 1.35rem;         /* 글자 크기 (원하는 크기로 조정) */
+  letter-spacing: -0.02em;    /* 자간 살짝 좁혀서 세련되게 */
+  color: #111;                /* 필요하면 색상 변경 */
+  white-space: nowrap;        /* 줄바꿈 방지 */
+}
+
+/* 모바일에서도 잘 보이게 */
+@media (max-width: 768px) {
+  .logo-text {
+    font-size: 1.45rem;       /* 모바일에서는 조금 작게 */
+  }
+}
+
 .menu-btn {
   font-size: 28px;
   cursor: pointer;
   user-select: none;
 }
 
-/* 사이드 메뉴 (기본 숨김) */
+/* ====================== 사이드 메뉴 ====================== */
 .side-menu {
   position: fixed;
   top: 0;
-  right: -500px;   /* 기본은 화면 밖 */
+  right: -500px;
   width: 250px;
   height: 100%;
   background: #f9f9f9;
@@ -42,7 +64,6 @@ header {
   z-index: 1000;
 }
 
-/* 닫기 버튼 */
 .close-btn {
   font-size: 28px;
   font-weight: bold;
@@ -69,7 +90,113 @@ header {
   font-weight: bold;
 }
 
+/* ====================== 드롭다운 네비게이션 ====================== */
+.desktop-nav {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 15px;        /* 로고 바로 오른쪽 */
+}
 
+.nav-item {
+  position: relative;
+}
+
+.nav-item > a {
+  color: #333;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 500;
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s ease;
+}
+
+.nav-item > a:hover {
+  color: #111;
+}
+
+.arrow {
+  font-size: 12px;
+  transition: transform 0.3s ease;
+}
+
+.nav-item:hover .arrow {
+  transform: rotate(180deg);
+}
+
+/* 드롭다운 */
+.dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  min-width: 180px;
+  padding: 8px 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  z-index: 1000;
+}
+
+.nav-item:hover .dropdown {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(4px);
+}
+
+.dropdown a {
+  display: block;
+  padding: 10px 20px;
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.dropdown a:hover {
+  background: #f5f5f5;
+}
+
+/* ====================== 사이드 메뉴 드롭다운 (클릭 전용) ====================== */
+
+/* 사이드 드롭다운 기본: 숨김 */
+.side-menu .dropdown {
+  display: none;
+  position: static;   /* 데스크톱처럼 absolute 아님 */
+  box-shadow: none;
+  border: none;
+  border-radius: 0;
+  margin-top: 0;    /* ← 이걸 추가 */
+  padding: 0;
+  padding-top: 0;
+  opacity: 1;
+  visibility: visible;
+  background: transparent;
+}
+
+.side-menu .dropdown li:first-child {
+  margin-top: 0;
+}
+
+/* active 클래스 붙을 때만 펼침 */
+.side-menu .side-dropdown.active .dropdown {
+  display: block;
+}
+
+/* 화살표 회전 */
+.side-menu .dropdown-toggle .arrow {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+
+.side-menu .side-dropdown.active .dropdown-toggle .arrow {
+  transform: rotate(180deg);
+}
 
 /* 푸터 */
 footer {
@@ -78,4 +205,24 @@ footer {
   padding: 10px 20px;
   border-top: 1px solid #ddd;
   font-size: 14px;
+}
+
+.fot-text {
+  font-weight: 2000;           /* 진하게 (700~900 사이로 조정 가능) */
+  font-size: 1.05rem;         /* 글자 크기 (원하는 크기로 조정) */
+  letter-spacing: -0.02em;    /* 자간 살짝 좁혀서 세련되게 */
+  color: #000000;                /* 필요하면 색상 변경 */
+  white-space: nowrap;        /* 줄바꿈 방지 */
+}
+
+/* 푸터 문의하기 링크 밑줄 제거 */
+footer a,
+#contact-link {
+  text-decoration: none !important;
+}
+
+/* hover 시에도 밑줄 안 생기게 */
+footer a:hover,
+#contact-link:hover {
+  text-decoration: none !important;
 }

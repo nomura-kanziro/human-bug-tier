@@ -46,3 +46,213 @@ body {
   margin-bottom: 8px;
 }
 
+/* ====================== 3개 큰 상자 (Quick Nav) ====================== */
+.quick-nav {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.quick-card {
+  flex: 1;
+  min-width: 280px;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 16px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.quick-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+.quick-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 16px;
+  text-align: center;
+  color: #111;
+}
+
+/* 서브 메뉴 애니메이션 */
+.sub-menu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.quick-card:hover .sub-menu {
+  max-height: 400px;
+  opacity: 1;
+}
+
+.sub-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.sub-grid a,
+.sub-menu a {
+  display: block;
+  padding: 10px 12px;
+  background: #f8f8f8;
+  border-radius: 8px;
+  text-decoration: none;
+  color: #333;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.sub-grid a:hover,
+.sub-menu a:hover {
+  background: #111;
+  color: white;
+}
+
+/* 공지사항 아이템 호버 효과 강화 (선택) */
+.notice-item {
+  transition: all 0.2s ease;
+}
+
+.notice-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+/* 모달 내용 가독성 */
+#notice-modal-content {
+  line-height: 1.7;
+}
+
+/* ====================== 공지사항 섹션 ====================== */
+.notice-section {
+  margin-bottom: 48px; /* 티어 섹션과 여백 통일 */
+}
+
+.notice-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.notice-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.notice-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 1024px) {
+  .notice-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.notice-column {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* 살짝만 그림자 */
+}
+
+.notice-column-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.notice-item {
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid #f3f4f6;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.notice-item:hover {
+  border-color: #d1d5db;
+  background: #fafafa;
+}
+
+.notice-item:last-child {
+  margin-bottom: 0;
+}
+
+.notice-item .title {
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notice-item .date {
+  font-size: 12px;
+  color: #9ca3af;
+  white-space: nowrap;
+}
+
+.notice-item .desc {
+  font-size: 14px;
+  color: #6b7280;
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+/* 공지사항 레이아웃 강제 정렬 (대칭 맞춤) */
+.notice-section {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+  margin-bottom: 60px;
+}
+
+.notice-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .notice-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.notice-column {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+/* 공지사항 상자 살짝 더 넓게 */
+.notice-section {
+  max-width: 1520px;   /* 기존 7xl(1280px)보다 조금 더 넓게 */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}

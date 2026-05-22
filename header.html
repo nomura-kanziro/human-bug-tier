@@ -1,25 +1,86 @@
-<!-- 상단 네비게이션 -->
 <!-- header.html -->
 <header>
-  <div class="logo" id="logo">   <!-- onclick 제거 -->
-    <img src="tier-image/logo.webp" alt="로고" class="logo-img">
-    휴버대 티어표
+  <!-- 왼쪽 그룹: 로고 + 3개 메뉴 -->
+  <div class="left-group">
+    <div class="logo" id="logo">
+      <img src="tier-image/logo.webp" alt="로고" class="logo-img">
+      <!-- ★★★ 여기서 텍스트를 span으로 감싸기 ★★★ -->
+      <span class="logo-text">휴버대 티어표</span>
+    </div>
+
+    <!-- 데스크톱 네비게이션 -->
+    <nav class="desktop-nav">
+      <div class="nav-item">
+        <a href="#">티어표 <span class="arrow">▼</span></a>
+        <div class="dropdown">
+          <a href="/tier-class/tier1.html">1티어</a>
+          <a href="/tier-class/tier2.html">2티어</a>
+          <a href="/tier-class/tier3.html">3티어</a>
+          <a href="/tier-class/tier4.html">4티어</a>
+          <a href="/tier-class/tier5.html">5티어</a>
+          <a href="/tier-class/tier6.html">6티어</a>
+          <a href="/tier-class/tier7.html">7티어</a>
+          <a href="/tier-class/tier8.html">8티어</a>
+          <a href="/tier-class/tier9.html">9티어</a>
+        </div>
+      </div>
+
+      <div class="nav-item">
+        <a href="#">커스텀 메이커 <span class="arrow">▼</span></a>
+        <div class="dropdown">
+          <a href="\custom-maker\custom-maker.html">• 제작하기</a>
+          <a href="#">• 게시판</a>
+          <a href="#">• 공유 티어 보기</a>
+        </div>
+      </div>
+
+      <div class="nav-item">
+        <a href="#">행운 뽑기 <span class="arrow">▼</span></a>
+        <div class="dropdown">
+          <a href="#">• 오늘의 행운 티어</a>
+          <a href="#">• 랜덤 뽑기</a>
+        </div>
+      </div>
+    </nav>
   </div>
+
+  <div class="menu-btn" id="menuBtn">☰</div>
   
-  <div class="menu-btn" id="menuBtn">☰</div>   <!-- onclick 제거 -->
-  
+  <!-- 사이드 메뉴 -->
   <nav id="sideMenu" class="side-menu">
     <div class="close-btn" id="closeBtn">×</div>
     <ul>
-      <li><a href="/tier-class/tier1.html">1티어</a></li>
-      <li><a href="/tier-class/tier2.html">2티어</a></li>
-      <li><a href="/tier-class/tier3.html">3티어</a></li>
-      <li><a href="/tier-class/tier4.html">4티어</a></li>
-      <li><a href="/tier-class/tier5.html">5티어</a></li>
-      <li><a href="/tier-class/tier6.html">6티어</a></li>
-      <li><a href="/tier-class/tier7.html">7티어</a></li>
-      <li><a href="/tier-class/tier8.html">8티어</a></li>
-      <li><a href="/tier-class/tier9.html">9티어</a></li>
+      <li class="nav-item side-dropdown">
+        <a href="#" class="dropdown-toggle">티어표 <span class="arrow">▼</span></a>
+        <ul class="dropdown">
+          <li><a href="/tier-class/tier1.html">1티어</a></li>
+          <li><a href="/tier-class/tier2.html">2티어</a></li>
+          <li><a href="/tier-class/tier3.html">3티어</a></li>
+          <li><a href="/tier-class/tier4.html">4티어</a></li>
+          <li><a href="/tier-class/tier5.html">5티어</a></li>
+          <li><a href="/tier-class/tier6.html">6티어</a></li>
+          <li><a href="/tier-class/tier7.html">7티어</a></li>
+          <li><a href="/tier-class/tier8.html">8티어</a></li>
+          <li><a href="/tier-class/tier9.html">9티어</a></li>
+        </ul>
+      </li>
+
+      <li class="nav-item side-dropdown">
+        <a href="#" class="dropdown-toggle">커스텀 메이커 <span class="arrow">▼</span></a>
+        <ul class="dropdown">
+          <li><a href="\custom-maker\custom-maker.html">• 제작하기</a></li>
+          <li><a href="#">• 게시판</a></li>
+          <li><a href="#">• 공유 티어 보기</a></li>
+        </ul>
+      </li>
+
+      <li class="nav-item side-dropdown">
+        <a href="#" class="dropdown-toggle">행운 뽑기 <span class="arrow">▼</span></a>
+        <ul class="dropdown">
+          <li><a href="#">• 오늘의 행운 티어</a></li>
+          <li><a href="#">• 랜덤 뽑기</a></li>
+        </ul>
+      </li>
     </ul>
   </nav>
 </header>
