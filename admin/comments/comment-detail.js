@@ -11,14 +11,22 @@ function nl2br(text) {
 // 댓글 상세 관리 페이지 (comment-detail.html 전용)
 // ========================================================
 
+// ==================== 필터 상태 (최상단 선언 필수) ====================
+let detailTypeFilter = 'all';
+let detailReportFilter = '';
+
 document.addEventListener("DOMContentLoaded", () => {
   renderCommentDetail();
 });
 
 // URL에서 commentId 가져오기
 function getCommentIdFromURL() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get('id');
+  // npx serve가 .html을 제거해도 동작하도록 전체 href에서 파싱
+  const href = window.location.href;
+  const match = href.match(/[?&]id=([^&]+)/);
+  const id = match ? match[1] : null;
+  console.log('🔍 [debug] 현재 URL의 id 값:', id);
+  return id;
 }
 
 // ==================== 상세 페이지 렌더링 ====================
@@ -30,7 +38,7 @@ function renderCommentDetail() {
     let comments = JSON.parse(localStorage.getItem("comments")) || [];
     let listHTML = comments.map(c => `
       <div style="border:3px solid #111; border-radius:12px; padding:20px; margin-bottom:15px; cursor:pointer;" 
-           onclick="window.location.href='comment-detail.html?id=${c.id}'">
+           onclick="window.location.href='comment-detail?id=${c.id}'">
         <strong>No.${c.id.slice(-4)}</strong> | 
         작성자: ${c.userId} 
         <span style="color:#007bff">[${c.isAdmin ? 'Admin' : 'NR User'}]</span><br>
@@ -40,13 +48,18 @@ function renderCommentDetail() {
     `).join('');
 
     document.getElementById('comment-detail').innerHTML = `
-      <h2 style="color:#dc3545;">📌 테스트 모드</h2>
-      <p>아래 댓글 중 하나를 클릭하면 상세 페이지로 이동합니다.</p>
-      <div style="max-width:900px;">${listHTML || '<p>아직 댓글이 없습니다.</p>'}</div>
-      <button onclick="window.location.href='comment-management.html'" style="margin-top:30px; padding:14px 30px; background:#111; color:white; border:none; border-radius:8px; cursor:pointer;">
-        ← 관리 목록으로 돌아가기
-      </button>
-    `;
+      <div style="text-align:center; padding:120px 40px; color:#dc3545;">
+        <h2 style="margin-bottom:20px;">❌ 잘못된 접근입니다.</h2>
+        <p style="font-size:17px; line-height:1.6;">
+          관리자 댓글 목록에서<br>
+          원하는 댓글의 <strong style="color:#111;">📋 상세</strong> 버튼을 클릭해주세요.
+        </p>
+        <button onclick="window.location.href='comment-management'" 
+                style="margin-top:40px; padding:14px 36px; background:#007bff; color:white; border:none; 
+                       border-radius:8px; font-size:16px; cursor:pointer;">
+          ← 관리 목록으로 돌아가기
+        </button>
+      </div>`;
     return;
   }
 
@@ -193,7 +206,7 @@ function renderCommentDetail() {
       <button onclick="deleteWholeComment('${commentId}')" style="background:#dc3545;color:white;border:none;padding:16px 40px;font-size:17px;font-weight:700;border-radius:8px;cursor:pointer;margin-right:15px;">
         🗑️ 이 댓글 전체 삭제
       </button>
-      <button onclick="window.location.href='comment-management.html'" style="background:#111;color:white;border:none;padding:16px 40px;font-size:17px;font-weight:700;border-radius:8px;cursor:pointer;">
+      <button onclick="window.location.href='comment-management'" style="background:#111;color:white;border:none;padding:16px 40px;font-size:17px;font-weight:700;border-radius:8px;cursor:pointer;">
         ← 목록으로 돌아가기
       </button>
     </div>
@@ -232,7 +245,7 @@ window.deleteWholeComment = function(commentId) {
   comments = comments.filter(c => c.id !== commentId);
   localStorage.setItem("comments", JSON.stringify(comments));
   alert("✅ 댓글이 전체 삭제되었습니다.");
-  window.location.href = "comment-management.html";
+  window.location.href = "comment-management";
 };
 
 // ========================================================
@@ -290,8 +303,6 @@ window.toggleDetailAnswers = function(commentId) {
 };
 
 // ==================== 상세 페이지 필터 함수 ====================
-let detailTypeFilter = 'all';
-let detailReportFilter = '';
 
 window.setDetailTypeFilter = function(type) {
   detailTypeFilter = type;

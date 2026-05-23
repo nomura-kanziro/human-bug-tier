@@ -28,7 +28,7 @@ function renderComments() {
         }
 
         // 3. 검색어 필터
-        const searchTerm = document.getElementById('search-input').value.toLowerCase().trim();
+        const searchTerm = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
         if (searchTerm) {
             const text = (comment.title + ' ' + comment.message + ' ' + (comment.userId || '')).toLowerCase();
             if (!text.includes(searchTerm)) return false;
@@ -75,11 +75,11 @@ function renderComments() {
                 <td style="text-align:center;">${comment.title ? `<strong>${comment.title}</strong><br>` : ''}${comment.message || ''}</td>
                 <td>${comment.date || 'N/A'}</td>
                 <td style="text-align: center; white-space: nowrap;">
-                    <button onclick="event.stopImmediatePropagation(); window.location.href='comment-detail.html?id=${comment.id}'" 
+                    <button onclick="goToDetail('${comment.id}')" 
                             style="background:#6c757d; color:white; border:none; padding:8px 16px; border-radius:6px; cursor:pointer; margin-right:8px; font-size:13px; font-weight:600;">
                         📋 상세
                     </button>
-                    <button onclick="event.stopImmediatePropagation(); deleteComment(${realIndex})" class="danger-btn">삭제</button>
+                    <button onclick="event.stopImmediatePropagation(); deleteComment('${comment.id}')" class="danger-btn">삭제</button>
                     ${reportHTML}
                 </td>
             </tr>`;
@@ -90,32 +90,39 @@ function renderComments() {
 }
 
 // 댓글 삭제
-window.deleteComment = function(index) {
+window.deleteComment = function(commentId) {
     if (confirm('정말 이 댓글을 삭제하시겠습니까?')) {
-        comments.splice(index, 1);
+        comments = comments.filter(c => c.id !== commentId);
         localStorage.setItem('comments', JSON.stringify(comments));
         renderComments();
     }
 };
 
-// 모든 댓글 삭제
-document.getElementById('delete-all-btn').addEventListener('click', () => {
-    if(confirm('⚠️ 정말 모든 댓글을 삭제하시겠습니까? (복구 불가)')) {
-        comments = [];
-        localStorage.setItem('comments', JSON.stringify(comments));
-        renderComments();
+// 모든 댓글 삭제 + 차단 추가 — DOM 준비 후 이벤트 등록
+document.addEventListener('DOMContentLoaded', () => {
+    const deleteAllBtn = document.getElementById('delete-all-btn');
+    if (deleteAllBtn) {
+        deleteAllBtn.addEventListener('click', () => {
+            if(confirm('⚠️ 정말 모든 댓글을 삭제하시겠습니까? (복구 불가)')) {
+                comments = [];
+                localStorage.setItem('comments', JSON.stringify(comments));
+                renderComments();
+            }
+        });
     }
-});
 
-// 차단 추가
-document.getElementById('add-block-btn').addEventListener('click', () => {
-    const value = document.getElementById('block-input').value.trim();
-    if(value && !blockedList.includes(value)) {
-        blockedList.push(value);
-        localStorage.setItem('blocked', JSON.stringify(blockedList));
-        renderBlockList();
-        renderComments();   // 테이블도 바로 업데이트
-        document.getElementById('block-input').value = '';
+    const addBlockBtn = document.getElementById('add-block-btn');
+    if (addBlockBtn) {
+        addBlockBtn.addEventListener('click', () => {
+            const value = document.getElementById('block-input').value.trim();
+            if(value && !blockedList.includes(value)) {
+                blockedList.push(value);
+                localStorage.setItem('blocked', JSON.stringify(blockedList));
+                renderBlockList();
+                renderComments();
+                document.getElementById('block-input').value = '';
+            }
+        });
     }
 });
 
@@ -137,12 +144,7 @@ window.unblock = function(i) {
     renderComments();
 };
 
-// 페이지 로드 시 실행
-window.onload = () => {
-    // Header_Footer.css가 제대로 적용되면 header/footer 내용 채움 (기존 방식 그대로)
-    renderComments();
-    renderBlockList();
-};
+// window.onload는 comment-management.html에서 처리
 
 // 신고사유 팝업 (Contact-us 스타일)
 window.showReportTooltip = function(element, reason) {
@@ -181,7 +183,7 @@ window.showReportTooltip = function(element, reason) {
 // 상세 페이지로 이동하는 함수
 // ========================================================
 window.goToDetail = function(commentId) {
-    window.location.href = `comment-detail.html?id=${commentId}`;
+    window.location.href = `comment-detail?id=${commentId}`;
 };
 
 // ==================== 필터 제어 함수 ====================
