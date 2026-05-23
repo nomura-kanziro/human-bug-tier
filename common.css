@@ -367,3 +367,17 @@ body {
 .modal-close-button:hover {
   background: #000;
 }
+
+/* 공지사항 헤더와 상자 사이 간격 벌리기 */
+.notice-section .notice-header {
+  margin-bottom: 32px;     /* ← 이 숫자를 조정하면 됩니다 */
+}
+
+/* 필요하면 더 벌리고 싶을 때 */
+.notice-section .notice-grid {
+  margin-top: 8px;         /* 추가 여백 */
+}
+
+.notice-column-header {
+  margin-bottom: 28px !important;
+}
