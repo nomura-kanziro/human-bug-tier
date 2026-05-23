@@ -176,20 +176,19 @@
   </section>
 
   <!-- 공지사항 상세 모달 -->
-  <div id="notice-modal" class="hidden fixed inset-0 bg-black/70 flex items-center justify-center z-[100]">
-    <div class="bg-zinc-900 border border-zinc-700 rounded-3xl p-8 max-w-lg w-full mx-4">
-      <div class="flex justify-between items-center mb-6">
-        <h3 id="notice-modal-title" class="text-2xl font-semibold"></h3>
-        <button onclick="closeNoticeModal()" class="text-3xl text-zinc-400 hover:text-white">×</button>
+  <div id="notice-modal" class="notice-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="notice-modal-title" class="modal-title"></h3>
+        <button onclick="closeNoticeModal()" class="modal-close-btn">×</button>
       </div>
-
-      <div id="notice-modal-date" class="text-sm text-zinc-500 mb-4"></div>
-      <div id="notice-modal-content" class="text-zinc-300 leading-relaxed mb-8 whitespace-pre-line"></div>
-
-      <button onclick="closeNoticeModal()" 
-              class="w-full py-3.5 bg-zinc-800 hover:bg-zinc-700 rounded-2xl font-medium transition-colors">
-        닫기
-      </button>
+      
+      <div id="notice-modal-date" class="modal-date"></div>
+      <div id="notice-modal-content" class="modal-body"></div>
+      
+      <div class="modal-footer">
+        <button onclick="closeNoticeModal()" class="modal-close-button">닫기</button>
+      </div>
     </div>
   </div>
 

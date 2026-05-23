@@ -256,3 +256,114 @@ body {
   padding-left: 24px;
   padding-right: 24px;
 }
+
+/* 전체 공지 보기 링크 - 검은색 고정 */
+.notice-section a {
+  color: #111111 !important;           /* 항상 검은색 */
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.notice-section a:hover,
+.notice-section a:active,
+.notice-section a:focus {
+  color: #111111 !important;           /* hover, click, focus 모두 검은색 유지 */
+}
+
+/* ====================== 공지사항 모달 ====================== */
+.notice-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+
+.notice-modal.show {
+  display: flex;
+}
+
+.modal-content {
+  background: #fff;
+  width: 100%;
+  max-width: 520px;
+  margin: 20px;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 24px 28px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.modal-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111;
+  margin: 0;
+}
+
+.modal-close-btn {
+  width: 36px;
+  height: 36px;
+  font-size: 28px;
+  line-height: 1;
+  color: #999;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close-btn:hover {
+  color: #333;
+}
+
+.modal-date {
+  padding: 0 28px;
+  font-size: 13px;
+  color: #888;
+  margin-top: 8px;
+}
+
+.modal-body {
+  padding: 8px 28px 28px;
+  font-size: 15.5px;
+  line-height: 1.7;
+  color: #444;
+  white-space: pre-line;
+}
+
+.modal-footer {
+  padding: 20px 28px 28px;
+  border-top: 1px solid #f1f1f1;
+  text-align: right;
+}
+
+.modal-close-button {
+  padding: 12px 32px;
+  background: #222;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-close-button:hover {
+  background: #000;
+}

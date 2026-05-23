@@ -74,54 +74,39 @@ function fixImagePaths(base) {
   }
 }
 
-// ========================================================
-// 공지사항 모달 열기
-// ========================================================
+// ====================== 공지사항 모달 (common.js로 이동) ======================
 function showNoticeModal(id) {
   const modal = document.getElementById('notice-modal');
+  if (!modal) {
+    console.error('❌ notice-modal 요소를 찾을 수 없습니다.');
+    return;
+  }
+
   const titleEl = document.getElementById('notice-modal-title');
   const dateEl = document.getElementById('notice-modal-date');
   const contentEl = document.getElementById('notice-modal-content');
 
-  // 간단한 하드코딩 데이터 (나중에 JSON이나 DB로 교체 가능)
   const notices = {
-    1: {
-      title: "v1.3.0 업데이트 안내",
-      date: "2026.05.19",
-      content: "새로운 티어 계산 로직이 적용되었습니다.\n- 전투력 산정 기준 변경\n- UI/UX 전반적인 개선\n- 모바일 대응 강화"
-    },
-    2: {
-      title: "이미지 로딩 최적화 완료",
-      date: "2026.05.16",
-      content: "티어 카드와 캐릭터 이미지 로딩 속도가 크게 개선되었습니다.\n이제 더 빠르고 쾌적하게 이용하실 수 있습니다."
-    },
-    3: {
-      title: "커스텀 메이커 제작 이벤트 오픈",
-      date: "2026.05.21",
-      content: "커스텀 메이커를 이용해 나만의 티어를 만들고 공유해보세요!\n이벤트 참여자 전원에게 특별 뱃지가 지급됩니다."
-    },
-    4: {
-      title: "행운 뽑기 2배 이벤트 진행 중",
-      date: "2026.05.18",
-      content: "이벤트 기간 동안 행운의 티어 뽑기 보상이 2배로 지급됩니다.\n지금 바로 도전해보세요!"
-    }
+    1: { title: "v1.3.0 업데이트 안내", date: "2일 전", content: "새로운 티어 계산 로직 적용 및 전체 UI/UX 개선 작업이 완료되었습니다." },
+    2: { title: "이미지 로딩 최적화 완료", date: "5일 전", content: "티어 카드 및 캐릭터 이미지 로딩 속도가 크게 개선되었습니다." },
+    3: { title: "커스텀 메이커 제작 이벤트 오픈", date: "오늘", content: "나만의 티어를 만들어 공유하고 특별 뱃지를 받아보세요!" },
+    4: { title: "행운 뽑기 2배 이벤트 진행 중", date: "3일 전", content: "이벤트 기간 동안 행운의 티어 뽑기 보상이 2배로 지급됩니다." }
   };
 
   const notice = notices[id];
-  if (!notice) return;
+  if (notice) {
+    titleEl.textContent = notice.title;
+    dateEl.textContent = notice.date;
+    contentEl.textContent = notice.content;
+  }
 
-  titleEl.textContent = notice.title;
-  dateEl.textContent = notice.date;
-  contentEl.textContent = notice.content;
-
-  modal.classList.remove('hidden');
-  modal.classList.add('flex');
+  modal.style.display = 'flex';   // ← 모달 표시
+  console.log('✅ 모달 열림 (id:', id, ')');
 }
 
 function closeNoticeModal() {
   const modal = document.getElementById('notice-modal');
-  modal.classList.remove('flex');
-  modal.classList.add('hidden');
+  if (modal) modal.style.display = 'none';
 }
 
 // ========================================================
