@@ -17,17 +17,23 @@
     }
     
     .board-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
+      text-align: center;           /* ← 이 한 줄이 핵심 */
+      margin-bottom: 30px;
     }
-    
+
     .board-header h1 {
-      font-size: 28px;
-      color: #ffcc00;
+      font-size: 32px;
+      color: #000000;
+      margin: 0;
+      font-weight: 700;
     }
     
+    .eyes_icon {
+      background-color: transparent #fff;
+      width: 35px;
+      height: 35px;
+    }
+
     .board-controls {
       display: flex;
       gap: 10px;
@@ -45,7 +51,7 @@
     
     .board-controls button {
       padding: 10px 20px;
-      background: #ffcc00;
+      background: #ffc400;
       color: #111;
       border: none;
       border-radius: 6px;
@@ -99,8 +105,8 @@
 
   <main>
     <div class="board-container">
-      <div class="board-header">
-        <h1>커스텀 티어 게시판</h1>
+      <div class="board-header">        
+        <h1><img src="..\..\tier-image\human_bug_eyes_icon.gif" class="eyes_icon"> 커스텀 티어 게시판</h1>
       </div>
 
       <!-- 검색 + 글쓰기 영역 -->
