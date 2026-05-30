@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>커스텀 티어 게시판 - Human Bug Tier</title>
+  
+  <!-- 공통 CSS -->
+  <link rel="stylesheet" href="custom-maker_post.css">
+  <link rel="stylesheet" href="../../Header_Footer.css">
+  
+  <style>
+    .board-container {
+      max-width: 1750px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    
+    .board-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .board-header h1 {
+      font-size: 28px;
+      color: #ffcc00;
+    }
+    
+    .board-controls {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .board-controls input {
+      flex: 1;
+      padding: 10px;
+      border: 2px solid #444;
+      background: #1a1a1a;
+      color: #fff;
+      border-radius: 6px;
+    }
+    
+    .board-controls button {
+      padding: 10px 20px;
+      background: #ffcc00;
+      color: #111;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .board-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: #1f1f1f;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    .board-table th,
+    .board-table td {
+      padding: 14px 16px;
+      text-align: left;
+      border-bottom: 1px solid #333;
+    }
+    
+    .board-table th {
+      background: #2a2a2a;
+      color: #ffcc00;
+    }
+    
+    .board-table tr:hover {
+      background: #2a2a2a;
+    }
+    
+    .post-title {
+      color: #fff;
+      text-decoration: none;
+    }
+    
+    .post-title:hover {
+      color: #ffcc00;
+    }
+    
+    .empty-message {
+      text-align: center;
+      padding: 60px 20px;
+      color: #888;
+    }
+  </style>
+</head>
+<body>
+  <!-- 헤더 (반드시 이 id로 작성) -->
+  <div id="header-placeholder"></div>
+
+  <main>
+    <div class="board-container">
+      <div class="board-header">
+        <h1>커스텀 티어 게시판</h1>
+      </div>
+
+      <!-- 검색 + 글쓰기 영역 -->
+      <div class="board-controls">
+        <input type="text" id="search-input" placeholder="제목 또는 작성자 검색">
+        <button onclick="searchPosts()">검색</button>
+        <button onclick="goWritePage()">직접 만들기</button>
+      </div>
+
+      <!-- 기존 더미 카드 부분을 아래로 교체 -->
+      <div class="post-grid" id="post-grid">
+      
+        <!-- 더미 카드 1 -->
+        <div class="post-card">
+          <div class="post-thumbnail">
+            <img src="../tier-image/sample1.webp" alt="썸네일">
+          </div>
+          <div class="post-info">
+            <h3 class="post-title">내 최애 캐릭터들로 만든 1티어</h3>
+            <div class="post-meta">
+              <span class="post-author">유저123</span>
+              <span class="post-date">2026.05.30</span>
+            </div>
+            <div class="post-stats">
+              <span>조회 142</span>
+              <span>추천 28</span>
+            </div>
+          </div>
+        </div>
+      
+        <!-- 더미 카드 2 (복사해서 테스트용으로 여러 개 만들어도 됩니다) -->
+        <div class="post-card">
+          <div class="post-thumbnail">
+            <img src="../tier-image/sample2.webp" alt="썸네일">
+          </div>
+          <div class="post-info">
+            <h3 class="post-title">2티어 최강자들 모음집</h3>
+            <div class="post-meta">
+              <span class="post-author">티어왕</span>
+              <span class="post-date">2026.05.29</span>
+            </div>
+            <div class="post-stats">
+              <span>조회 89</span>
+              <span>추천 15</span>
+            </div>
+          </div>
+        </div>
+      
+      </div>
+    </div>
+  </main>
+
+  <!-- 푸터 (반드시 이 id로 작성) -->
+  <div id="footer-placeholder"></div>
+
+  <!-- 공통 스크립트 + 게시판 전용 스크립트 -->
+  <script src="../../common.js"></script>
+  <script>
+    // 헤더/푸터 로드
+    document.addEventListener('DOMContentLoaded', function() {
+      loadCommon();
+      
+      // 나중에 여기에 게시글 목록 불러오는 함수 호출 예정
+      // loadPostList();
+    });
+
+    // 글쓰기 페이지로 이동 (나중에 작성 페이지 만들 때 연결)
+    function goWritePage() {
+      alert('글쓰기 페이지는 아직 준비 중입니다. (나중에 연결 예정)');
+      // location.href = 'write.html';  // 나중에 작성 페이지 만들면 이걸로 변경
+    }
+
+    // 검색 기능 (임시)
+    function searchPosts() {
+      const keyword = document.getElementById('search-input').value.trim();
+      if (!keyword) {
+        alert('검색어를 입력해주세요.');
+        return;
+      }
+      alert('"' + keyword + '" 검색 기능은 백엔드 연동 후 구현 예정입니다.');
+    }
+  </script>
+</body>
+</html>
