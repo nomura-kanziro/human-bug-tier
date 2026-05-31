@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>커스텀 티어 상세 - Human Bug Tier</title>
+
+  <!-- 공통 스타일 -->
+  <link rel="stylesheet" href="../common.css">
+  <link rel="stylesheet" href="../../Header_Footer.css">
+  <link rel="stylesheet" href="/custom-maker/custom-maker.css">
+
+  <!-- 게시판 공통 + 상세 페이지 전용 -->
+  <link rel="stylesheet" href="custom-maker_post.css">
+  <link rel="stylesheet" href="post_detail.css">
+</head>
+<body>
+  <!-- 헤더 -->
+  <div id="header-placeholder"></div>
+
+  <main class="post-detail-container">
+
+    <!-- 게시글 헤더 -->
+    <div class="post-header">
+
+        <!-- 1번째 줄: 프로필 정보 -->
+        <div class="post-author-profile">
+            <img src="https://via.placeholder.com/40" alt="프로필" class="profile-img">
+            <span class="author-name">유저123</span>
+        </div>
+
+        <!-- 2번째 줄: 메타 정보 -->
+        <div class="post-meta-row">
+
+            <!-- 왼쪽 -->
+            <div class="post-left">
+            <button class="user-posts-btn" onclick="goToUserPosts()">유저관련 게시글 보기</button>
+            <span class="post-date" id="post-date">2026.05.30 14:30:25</span>
+            </div>
+
+            <!-- 오른쪽 -->
+            <div class="post-right">
+            <span class="stat">조회 <strong id="post-views">342</strong></span>
+            <span class="stat">추천 <strong id="post-likes">47</strong></span>
+            <span class="stat comment-link" onclick="scrollToComments()">
+                댓글 <strong id="comment-count">12</strong>
+            </span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- 제목 -->
+    <h1 class="post-title">내 최애 캐릭터들로 만든 신계 1티어</h1>
+
+    <!-- 티어 테이블 영역 -->
+    <div id="tier-section">
+      <div class="tier-nav">
+        <button id="prev-btn">← 이전 티어</button>
+        <h2 id="tier-title">1등급 - 신계 / 슈퍼 그랜드 마스터</h2>
+        <button id="next-btn">다음 티어 →</button>
+      </div>
+
+      <div id="tier-list" class="tier-list">
+        <!-- JS에서 동적으로 생성될 예정 -->
+        <!-- #tier-list 안에 아래 코드 넣기 -->
+        <div class="tier">
+          <div class="tier-name">갑급</div>
+          <div class="characters drop-zone" data-tier="갑급">
+            <!-- JS로 저장된 캐릭터가 들어갈 자리 -->
+          </div>
+        </div>
+        
+        <div class="tier">
+          <div class="tier-name">을급</div>
+          <div class="characters drop-zone" data-tier="을급">
+            <!-- JS로 저장된 캐릭터가 들어갈 자리 -->
+          </div>
+        </div>
+        
+        <div class="tier">
+          <div class="tier-name">병급</div>
+          <div class="characters drop-zone" data-tier="병급">
+            <!-- JS로 저장된 캐릭터가 들어갈 자리 -->
+          </div>
+        </div>
+        
+        <div class="tier">
+          <div class="tier-name">정급</div>
+          <div class="characters drop-zone" data-tier="정급">
+            <!-- JS로 저장된 캐릭터가 들어갈 자리 -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 액션 버튼 -->
+    <div class="post-action">
+      <button id="like-btn" class="action-btn like-btn">
+        ❤️ 추천하기 <span id="like-count">47</span>
+      </button>
+      <button id="share-btn" class="action-btn">🔗 공유하기</button>
+      <button id="event-btn" class="action-btn">🎉 이벤트 참여</button>
+    </div>
+
+    <!-- 댓글 섹션 -->
+    <div class="comment-section">
+      <h3>댓글 <span id="comment-count">(12)</span></h3>
+
+      <!-- 댓글 작성 -->
+      <div class="comment-form">
+        <textarea id="comment-input" placeholder="댓글을 입력하세요"></textarea>
+        <button onclick="submitComment()">등록</button>
+      </div>
+
+      <!-- 댓글 목록 -->
+      <div id="comment-list">
+        <!-- JS로 동적 생성 -->
+      </div>
+    </div>
+
+  </main>
+
+  <!-- 푸터 -->
+  <div id="footer-placeholder"></div>
+
+  <!-- 스크립트 -->
+  <script src="../../common.js"></script>
+  <script src="custom-maker_post.js"></script>
+  <script src="post_detail.js"></script>
+</body>
+</html>
