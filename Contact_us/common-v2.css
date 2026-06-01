@@ -79,6 +79,7 @@ body {
   font-weight: 700;
 }
 
+/* 잘하면 폐기할 수 있는 것 */
 .form-card input[type="text"],
 .form-card textarea {
   width: 100%;
@@ -95,6 +96,42 @@ body {
   resize: vertical;
 }
 
+/* ================================= */
+
+/* ========================================================
+   contenteditable 댓글/답변 입력창 스타일 (Contact_us 전용)
+   ======================================================== */
+.comment-input-box {
+  flex: 1;
+  min-height: 80px;
+  max-height: 200px;
+  padding: 12px 14px;
+  border: 3px solid #111;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #111; /* 텍스트는 검정으로 고정 */
+  font-size: 0.95rem;
+  line-height: 1.5;
+  overflow-y: auto;
+  outline: none;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* placeholder */
+.comment-input-box:empty:before {
+  content: attr(data-placeholder);
+  color: #888;
+  pointer-events: none;
+}
+
+/* focus */
+.comment-input-box:focus {
+  border-color: #111; /* 포커스 시에도 검정 테두리 유지 */
+  background: #ffffff; /* 배경은 항상 흰색 유지 */
+  margin-bottom: 10px; /* 입력창 아래 여백 추가 */
+}
+
 .form-card button {
   width: 100%;
   padding: 16px;
@@ -105,6 +142,7 @@ body {
   font-size: 17px;
   font-weight: 700;
   cursor: pointer;
+  margin-top: 10px; /* 버튼 위 여백 추가 */
 }
 
 .form-card button:hover {
@@ -140,9 +178,9 @@ body {
 /* ==================== 댓글 목록 ==================== */
 .comment-list {
   max-width: 825px;
-  width: 100%;           /* ← 추가 */
+  width: 100%;
   margin: 0 auto;
-  padding: 0;            /* ← 추가 (여백 제거) */
+  padding: 0;
 }
 
 .comment {
@@ -152,22 +190,14 @@ body {
   padding: 22px;
   margin-bottom: 24px;
   box-shadow: 6px 6px 0 #111;
-  max-width: 825px;        /* ← 폼과 완전 동일 */
+  max-width: 825px;
   width: 100%;
   box-sizing: border-box;
-}
-
-.comment .name {
-  font-weight: 800;
-  font-size: 15px;
-  margin-bottom: 10px;
 }
 
 /* ========================================================
    제목 스타일 (요청사항 적용)
    ======================================================== */
-
-/* 제목 스타일 (중복 제거 + 크기 키움) */
 .comment .title {
   font-size: 18px;
   font-weight: 800;
@@ -206,11 +236,7 @@ body {
 .report-btn { border-color: #dc3545; color: #dc3545; }
 .report-btn:hover { background: #dc3545; color: #fff; }
 
-/* ========================================================
-   프로필 배지 + 댓글 액션 버튼 스타일
-   (common-v2.css 맨 아래에 추가하세요)
-   ======================================================== */
-
+/* 프로필 배지 */
 .user-badge {
   margin-left: auto;
   padding: 4px 12px;
@@ -229,108 +255,34 @@ body {
   color: #fff;
 }
 
-/* 댓글 액션 버튼 (답변 / 신고 / 삭제) */
-.comment-actions {
-  margin-top: 16px;
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-
-.comment-actions button {
-  padding: 6px 14px;
-  font-size: 13px;
-  border: 2px solid #111;
-  background: #fff;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.comment-actions button:hover {
-  background: #111;
-  color: #fff;
-}
-
-.report-btn {
-  border-color: #dc3545;
-  color: #dc3545;
-}
-
-.report-btn:hover {
-  background: #dc3545;
-  color: #fff;
-}
-
 /* ========================================================
-   답변 입력 상자 스타일 (튀어나옴 완전 해결)
+   답변/수정 상자 스타일 (하얀색 배경 + 검정 테두리 고정)
    ======================================================== */
-
-.reply-box {
-  margin-top: 20px;
-  padding: 20px;
-  border: 3px solid #111;
-  border-radius: 12px;
-  background: #fafafa;
-  width: 100%;                 /* 부모 너비에 꽉 차게 */
-  box-sizing: border-box;      /* 핵심! */
-}
-
-.reply-box textarea {
-  width: 100%;
-  min-height: 120px;
-  padding: 14px;
-  border: 3px solid #111;
-  border-radius: 8px;
-  resize: vertical;
-  box-sizing: border-box;
-  font-size: 15px;
-}
-
-.reply-box .button-group {
-  margin-top: 12px;
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-}
-
-/* ========================================================
-   수정 상자 스타일 (답변 상자와 동일한 스타일)
-   ======================================================== */
-
-.edit-box {
-  margin-top: 20px;
-  padding: 20px;
-  border: 3px solid #111;
-  border-radius: 12px;
-  background: #fafafa;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-/* ========================================================
-   공통 액션 상자 스타일 (답변, 수정 모두 적용)
-   ======================================================== */
-
+.reply-box,
+.edit-box,
 .action-box {
   margin-top: 20px;
   padding: 20px;
   border: 3px solid #111;
   border-radius: 12px;
-  background: #fafafa;
+  background: #ffffff;           /* 하얀색 고정 */
+  box-shadow: 6px 6px 0 #111;
   width: 100%;
   box-sizing: border-box;
 }
 
-.action-box textarea,
-.action-box input {
-  width: 100%;
-  padding: 14px;
-  border: 3px solid #111;
-  border-radius: 8px;
-  box-sizing: border-box;
-  margin-bottom: 12px;
+/* reply/edit/action 박스 내 입력창: 배경/테두리/텍스트 색상은 전역 설정을 따르고,
+   여기서는 높이만 조정하여 중복 스타일을 제거합니다. */
+.reply-box .comment-input-box,
+.edit-box .comment-input-box,
+.action-box .comment-input-box {
+  min-height: 120px;
+  max-height: 200px;
 }
 
+/* 버튼 그룹 */
+.reply-box .button-group,
+.edit-box .button-group,
 .action-box .button-group {
   margin-top: 12px;
   display: flex;
@@ -339,17 +291,17 @@ body {
 }
 
 /* ========================================================
-   답변 상자 스타일 (Contact-us 전용) - 문제 해결 버전
+   답변 상자 스타일 (Contact-us 전용)
    ======================================================== */
 .answer {
-  margin: 30px 0 0 45px;           /* ← 더 아래로 밀고 왼쪽 들여쓰기 강화 */
+  margin: 30px 0 0 45px;
   padding: 22px 24px;
   border: 3px solid #111;
   border-radius: 12px;
   background: #fafafa;
   box-shadow: 6px 6px 0 #111;
-  width: 100%;                      /* ← 부모 너비에 딱 맞춤 */
-  max-width: calc(100% - 45px);    /* ← 오른쪽 튀어나감 완전 차단 */
+  width: 100%;
+  max-width: calc(100% - 45px);
   box-sizing: border-box;
 }
 
@@ -387,18 +339,15 @@ body {
   color: #222;
 }
 
-/* 버튼들도 답변 상자 안에 들어가게 */
 .answer .comment-actions {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
 }
 
-/* ========================================================
-   [수정사항] 답변 안의 "답변" 버튼 클릭 시 나오는 인용 블록
-   ======================================================== */
+/* 인용 블록 */
 .answer-quote {
-  background: #f0f0f0;           /* 진한 회색 배경 */
+  background: #f0f0f0;
   border: 3px solid #666;
   border-radius: 8px;
   padding: 16px;
