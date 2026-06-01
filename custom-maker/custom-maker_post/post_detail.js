@@ -115,9 +115,18 @@ function loadComments() {
 }
 
 function submitComment() {
-  const input = document.getElementById('comment-input');
-  if (input && input.value.trim() !== '') {
-    alert('댓글 등록 기능은 추후 백엔드 연동 후 구현 예정입니다.');
-    input.value = '';
+  const inputBox = document.getElementById('comment-input');
+  if (!inputBox) return;
+
+  const text = inputBox.innerText.trim();
+  if (text === '') {
+    alert('댓글 내용을 입력해주세요.');
+    return;
   }
+
+  // 나중에 실제 댓글 등록 로직으로 교체 예정
+  alert('댓글 등록 기능은 추후 백엔드 연동 후 구현 예정입니다.\n\n입력 내용: ' + text);
+
+  // 입력창 비우기
+  inputBox.innerHTML = '';
 }
