@@ -92,15 +92,17 @@
 /* 제목 */
 .post-title {
   font-size: 1.6rem;
-  margin: 10px 0 20px;
+  margin: 10px auto 20px;
   color: #000000;
+  text-align: center;
 }
 
 /* 액션 버튼 */
 .post-action {
   display: flex;
   gap: 10px;
-  margin: 20px 0;
+  margin: 20px auto;
+  justify-content: center;
 }
 
 .action-btn {
