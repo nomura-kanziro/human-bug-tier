@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>회원가입</title>
+  <link rel="stylesheet" href="sign_up.css" />   <!-- 같은 디자인 재사용 -->
+</head>
+<body>
+
+  <div class="logo" onclick="goHome()">
+      <img src="../tier-image/logo.webp" alt="로고" class="logo-img">
+      휴버대 티어표
+  </div>
+
+  <div class="login-wrapper">
+    <div class="login-box">
+      <h2 style="color:#000;">회원가입</h2>
+
+      <input type="text" id="userId" placeholder="아이디" />
+      <input type="password" id="userPw" placeholder="비밀번호" />
+      <input type="password" id="userPwConfirm" placeholder="비밀번호 확인" />
+      <input type="email" id="userEmail" placeholder="이메일 (선택)" />
+
+      <button onclick="signUp()" style="width:240px; margin-top:10px;">회원가입</button>
+
+      <!-- 이미 계정이 있으신가요? -->
+      <div class="find-btn" onclick="goToLogin()" style="margin-top:15px; text-decoration:none; color:#555;">
+        이미 계정이 있으신가요? 로그인하기
+      </div>
+
+      <!-- 돌아가기 -->
+      <div class="back-btn" onclick="goBack()">⟳</div>
+    </div>
+
+    <div class="side-panel"></div>
+  </div>
+
+  <script src="sign_up.js"></script>
+</body>
+</html>

@@ -1,0 +1,139 @@
+.logo {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.logo-img {
+  width: 32px;
+  margin-right: 8px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: sans-serif;
+}
+
+body {
+  background: #ffffff;
+  height: 100vh;
+
+  /* 중앙 정렬 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 전체 컨테이너 크기 제한 */
+.login-wrapper {
+  display: flex;
+  width: 800px;
+  height: 450px;
+  background: #000;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
+}
+
+/* 왼쪽 로그인 영역 */
+.login-box {
+  width: 50%;
+  background: #ffffff;
+  position: relative;
+  display: flex;
+  border: #000;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.login-box h2 {
+  color: #fff;
+  margin-bottom: 30px;
+}
+
+.login-box input {
+  width: 240px;
+  padding: 10px;
+  margin-bottom: 12px;
+  font-size: 14px;
+}
+
+.login-box button {
+  width: 240px;
+  padding: 12px;
+  background: #8faadc;
+  border: none;
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+/* 돌아가기 버튼 */
+.back-btn {
+  position: absolute;
+  bottom: 20px;
+  font-size: 26px;
+  color: #8faadc;
+  cursor: pointer;
+}
+
+/* 오른쪽 컬러 패널 */
+.side-panel {
+  width: 50%;
+  background: #8faadc;
+}
+
+/* ================================================================= */
+
+/* === 로그인/회원가입 두 갈래 버튼 (추가) === */
+.button-row {
+  display: flex;
+  gap: 12px;
+  width: 240px;
+  margin-bottom: 10px;
+}
+
+.button-row button {
+  flex: 1;
+  width: auto;           /* 기존 240px 규칙 무시 */
+  padding: 12px 0;
+  font-size: 15px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  background: #8faadc;
+}
+
+/* 회원가입 버튼만 살짝 다르게 하고 싶으면 아래 주석 해제 */
+/* .button-row .btn-secondary {
+  background: #fff;
+  color: #8faadc;
+  border: 1px solid #8faadc;
+} */
+
+/* 아이디/비밀번호 찾기 */
+.find-btn {
+  width: 240px;
+  text-align: center;
+  font-size: 13px;
+  color: #8faadc;
+  cursor: pointer;
+  margin-top: 6px;
+  text-decoration: underline;
+}
+
+.find-btn:hover {
+  color: #6b8bc7;
+}

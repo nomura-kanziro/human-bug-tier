@@ -25,6 +25,19 @@ function getCurrentUserName() {
   return localStorage.getItem("adminName") || "익명 사용자";
 }
 
+// 페이지 내 인라인 버튼에서 호출되는 전역 로그인 이동 함수
+// Contact_us 폴더에서 호출되는 경우 상위 폴더의 admin 로그인 페이지로 이동하도록 처리
+window.goToLogin = function() {
+  const path = window.location.pathname || '';
+  // Contact_us 폴더 경로일 때는 상대 경로로 상위(admin) 폴더로 이동
+  if (path.includes('/Contact_us/') || path.includes('\\Contact_us\\')) {
+    window.location.href = '../user_login/login.html';
+    return;
+  }
+  // 그 외의 경우 루트 기반 admin 경로로 이동
+  window.location.href = '/user_login/login.html';
+};
+
 // ==================== 상단 폼 ====================
 function renderInquiryForm() {
   const container = document.getElementById("inquiry-form-container");
@@ -56,7 +69,7 @@ function renderInquiryForm() {
     container.innerHTML = `
       <div class="login-required">
         <p>🚫 이용하시려면 로그인이 필요합니다.</p>
-        <button onclick="goAdminLogin()">로그인 하러 가기</button>
+        <button onclick="goToLogin()">로그인 하러 가기</button>
       </div>
     `;
   }
