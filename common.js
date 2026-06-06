@@ -20,7 +20,11 @@ function getBasePath() {
   // ←←← 여기 추가!!!
   if (path.includes('/tier-class/') || path.includes('/tier-class\\') || 
       path.includes('/Contact_us/') || path.includes('/Contact_us\\') ||
-      path.includes('/custom-maker/') || path.includes('/custom-maker\\')) {   // ← 이 줄 추가
+      path.includes('/custom-maker/') || path.includes('/custom-maker\\') ||
+      path.includes('/notice/') || path.includes('/notice\\') ||
+      path.includes('/all_notices/') || path.includes('/all_notices\\') ||
+      path.includes('/news/') || path.includes('/news\\')
+    ) {
     return '../../';
   }
   return './';
