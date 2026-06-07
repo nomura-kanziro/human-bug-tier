@@ -15,6 +15,11 @@ function goToSignup() {
   window.location.href = "sign_up.html";
 }
 
+// 회원 계정 찾기
+function findAccount() {
+  window.location.href = "find_account.html";
+}
+
 // 로그인 처리 (현재는 프론트엔드 검증만)
 function login() {
   const userId = document.getElementById('userId').value.trim();

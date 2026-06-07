@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <title>아이디/비밀번호 찾기</title>
+  <link rel="stylesheet" href="find_account.css" />
+</head>
+<body>
+
+  <div class="logo" onclick="goHome()">
+      <img src="../tier-image/logo.webp" alt="로고" class="logo-img">
+      휴버대 티어표
+  </div>
+
+  <div class="login-wrapper">
+    <div class="login-box">
+      <h2 style="color:#000;">아이디 / 비밀번호 찾기</h2>
+
+      <!-- 탭 -->
+      <div class="tab-container">
+        <button onclick="showTab(0)" class="tab-btn active" id="tab-id">아이디 찾기</button>
+        <button onclick="showTab(1)" class="tab-btn" id="tab-pw">비밀번호 찾기</button>
+      </div>
+
+      <!-- 아이디 찾기 폼 -->
+      <div id="id-form" class="form-tab">
+        <input type="email" id="findEmail" placeholder="가입한 이메일 주소" />
+        <button onclick="findId()" style="width:240px; margin-top:15px;">아이디 찾기</button>
+      </div>
+
+      <!-- 비밀번호 찾기 폼 -->
+      <div id="pw-form" class="form-tab" style="display:none;">
+        <input type="text" id="findUserId" placeholder="아이디" />
+        <input type="email" id="findPwEmail" placeholder="가입한 이메일 주소" />
+        <button onclick="findPassword()" style="width:240px; margin-top:15px;">비밀번호 재설정 링크 받기</button>
+      </div>
+
+      <!-- 로그인으로 돌아가기 -->
+      <div class="find-btn" onclick="goToLogin()" style="margin-top:25px;">
+        로그인 페이지로 돌아가기
+      </div>
+
+      <!-- 돌아가기 -->
+      <div class="back-btn" onclick="goBack()">⟳</div>
+    </div>
+
+    <div class="side-panel"></div>
+  </div>
+
+  <script src="find_account.js"></script>
+</body>
+</html>
