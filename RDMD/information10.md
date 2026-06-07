@@ -185,4 +185,32 @@ human_bug_tier/
 
 ---
 
-**작성 일시**: 2026년 6월 6일
+## 📌 추가 커밋: 공지 목록 UI 개선 (commit: dadb2d9)
+
+### 커밋 개요
+- **커밋 ID (요약)**: dadb2d9e1fb18dad756a19f61de72bf911496f5d
+- **주제**: 공지 목록 UI 개선 및 전체/새소식 목록 페이지 스타일 정리
+
+### 주요 변경사항 요약
+- `notice/notice.css`의 구조 및 스타일 전면 개편
+  - `.notice-header`에 마진/정렬 추가로 제목과 뒤로가기 사이 여백 확보
+  - `.notice-full-list`를 카드형 리스트로 전환하고 항목간 gap 및 카드 패딩을 조정하여 리스트를 더 컴팩트하게 표현
+  - `.notice-item`에 배경, 테두리, border-radius, box-shadow 적용 및 `white-space: pre-wrap`, `word-break: break-word` 적용으로 긴 텍스트의 가독성 보장
+  - 일부 페이지(전체/새소식)에서 `notice.css`를 직접 로드하도록 링크 경로 조정
+
+- HTML 변경
+  - `notice/all_notices.html`, `notice/news.html`에서 `notice.css`를 로드하도록 수정 또는 새로 추가됨
+
+### 변경 파일 (요약)
+- Modified: `notice/notice.css` (레이아웃·간격·카드스타일 조정)
+- Modified/Added: `notice/all_notices.html`, `notice/news.html` (스타일시트 링크 정리 및 카드형 리스트 구조)
+
+### 검증 체크리스트
+1. `notice/notice.html` 열기 → 공지 메인 레이아웃(전체/새소식)이 정상 표시되는지 확인
+2. `notice/all_notices.html` / `notice/news.html` 열기 → 각 항목이 카드형으로 보이고, 항목간 간격이 적용되었는지 확인
+3. 긴 본문을 가진 공지에서 줄바꿈/단어 분할 처리로 내용이 잘리지 않는지 확인
+4. 창 크기를 줄여 모바일 레이아웃(1단)으로 자연스럽게 전환되는지 확인
+
+### 비고 / 권장 개선
+- 카드 패딩과 글자 크기 조정으로 항목 높이를 크게 줄였음. 너무 빡빡하면 가독성이 떨어질 수 있으니 필요 시 `padding`/`line-height`를 소폭 늘리길 권장.
+- 이후 단계: 공지 데이터를 JSON/API로 전환하고 목록과 상세 페이지를 동적으로 연동할 것.
