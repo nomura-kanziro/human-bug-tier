@@ -64,3 +64,9 @@ process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
   server.close(() => process.exit(1));
 });
+
+// 기존 코드 위쪽에 (dotenv.config() 이후쯤)
+const tierRoutes = require('./routes/tierRoutes');
+
+// 미들웨어 아래쪽에 라우터 연결
+app.use('/api/tierlists', tierRoutes);
