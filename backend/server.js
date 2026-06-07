@@ -70,3 +70,9 @@ const tierRoutes = require('./routes/tierRoutes');
 
 // 미들웨어 아래쪽에 라우터 연결
 app.use('/api/tierlists', tierRoutes);
+
+// 상단 require 부분에 추가
+const authRoutes = require('./routes/authRoutes');
+
+// 미들웨어 아래쪽에 추가
+app.use('/api/auth', authRoutes);
