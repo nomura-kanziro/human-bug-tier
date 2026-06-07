@@ -1,14 +1,44 @@
-/* ====================== 공지사항 페이지 ====================== */
+/* ====================== 전체 공지 / 새 소식 페이지 너비 조절 ====================== */
 .notice-page {
-  max-width: 1200px;
+  max-width: 1100px;     /* 너비 조절 */
   margin: 0 auto;
-  padding: 60px 20px;
+  padding: 60px 40px;    /* 좌우 여백 증가 */
+}
+
+/* 헤더(제목 + 뒤로가기)와 목록 사이 간격 확보 */
+.notice-header {
+  margin-bottom: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.notice-full-list {
+  max-width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* 항목간 간격 - 더 작게 조정 */
+}
+
+/* 카드형 공지 항목 - 내부 여백을 충분히 주고 배경/경계 적용
+   .notice-full-list 아래의 .notice-item에만 적용하여 기존 리스트 스타일과 충돌 방지 */
+.notice-full-list .notice-item {
+  padding: 5px 10px; /* 세로 패딩을 더 줄여 전체 높이를 약 2배 축소 */
+  background: #fafafa;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+  overflow: visible; /* 내부 내용 전부 표시 */
+  white-space: pre-wrap; /* 줄바꿈 유지 */
+  word-break: break-word;
 }
 
 .notice-title {
   font-size: 32px;
   font-weight: 700;
-  margin-bottom: 40px;
+  margin-bottom: 0; /* 헤더에서 간격 제어 */
 }
 
 .notice-grid {
@@ -38,14 +68,9 @@
   gap: 28px;
 }
 
-.notice-item {
-  padding-bottom: 20px;
-  border-bottom: 1px solid #f0f0f0;
-}
-
-.notice-item:last-child {
-  border-bottom: none;
-  padding-bottom: 0;
+/* 기존 .notice-item의 하단 구분선은 전체 목록 페이지(.notice-full-list)에서는 사용하지 않음 */
+.notice-full-list .notice-item:last-child {
+  margin-bottom: 0;
 }
 
 .notice-link {
@@ -53,7 +78,7 @@
   color: #111;
   text-decoration: none;
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 4px; /* 타이틀-설명 간격 축소 */
 }
 
 .notice-link:hover {
@@ -61,10 +86,11 @@
 }
 
 .notice-desc {
-  font-size: 15px;
+  font-size: 14px; /* 약간 작게 하여 공간 절약 */
   color: #555;
-  line-height: 1.5;
-  margin: 6px 0 8px;
+  line-height: 1.35; /* 줄간격 축소 */
+  margin: 4px 0 4px; /* 위아래 여백 축소 */
+  white-space: pre-wrap; /* 줄바꿈을 보존하여 전체 텍스트가 보이도록 함 */
 }
 
 .notice-date {
