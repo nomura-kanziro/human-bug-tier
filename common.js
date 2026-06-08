@@ -230,29 +230,33 @@ function getAdminInfo() {
 }
 
 // ========================================================
-// 헤더에 프로필 아이콘 동적으로 추가
+// 로그인한 사용자 프로필 아이콘 표시 (일반 유저 + 어드민 공통)
 // ========================================================
 function renderUserProfile() {
-  if (localStorage.getItem("isAdmin") !== "true") return;
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const isAdmin = localStorage.getItem("isAdmin") === "true";
+
+  // 로그인하지 않았으면 표시 안 함
+  if (!user || !user.nickname) return;
 
   const header = document.getElementById('header-placeholder');
   if (!header) return;
 
-  // 햄버거 메뉴 버튼 찾기 (여러 클래스명 대비)
+  // 햄버거 메뉴 버튼 찾기
   const menuBtn = header.querySelector('#menuBtn') || 
                   header.querySelector('.menu-btn') || 
-                  header.querySelector('.menu-button') ||
                   header.querySelector('button[onclick*="toggleMenu"]');
 
   if (!menuBtn) {
-    console.warn('⚠️ 햄버거 메뉴 버튼을 찾지 못했습니다. header.html 구조 확인 필요');
+    console.warn('햄버거 메뉴 버튼을 찾을 수 없습니다.');
     return;
   }
 
+  // 프로필 아이콘 HTML (어드민은 👑 제거)
   const profileHTML = `
     <div id="user-profile" style="
-      margin-left: auto;           /* ← 오른쪽 끝으로 강제 밀기 */
-      margin-right: 20px;           /* 햄버거와 간격 */
+      margin-left: auto;
+      margin-right: 20px;
       cursor: pointer; 
       display: flex; 
       align-items: center;
@@ -267,24 +271,144 @@ function renderUserProfile() {
         align-items: center; 
         justify-content: center; 
         color: white; 
-        font-size: 20px; 
+        font-size: 18px; 
         box-shadow: 0 3px 10px rgba(0,123,255,0.4);
         border: 2px solid #fff;
+        overflow: hidden;
       ">
-        👑
+        <img id="profile-img" 
+             src="${localStorage.getItem('profileImage') || 'https://via.placeholder.com/36'}" 
+             style="width: 100%; height: 100%; object-fit: cover;">
       </div>
     </div>
   `;
 
-  // 햄버거 버튼 바로 앞에 삽입 → 오른쪽 끝에 정확히 고정
+  // 햄버거 버튼 앞에 삽입
   menuBtn.insertAdjacentHTML('beforebegin', profileHTML);
 
-  // 클릭 이벤트 연결
+  // 클릭 이벤트
   const profileEl = document.getElementById('user-profile');
   if (profileEl) {
-    profileEl.addEventListener('click', showAdminModal);
-    console.log('✅ 👑 프로필 아이콘 → 햄버거 메뉴 바로 왼쪽에 정확히 배치 완료!');
+    profileEl.addEventListener('click', () => {
+      if (isAdmin) {
+        showAdminModal();      // 어드민 전용 모달
+      } else {
+        showUserModal();       // 일반 유저 모달
+      }
+    });
   }
+}
+
+
+// 일반 유저 프로필 모달
+function showUserModal() {
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+  const modalHTML = `
+    <div id="user-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; display: flex; align-items: center; justify-content: center;">
+      <div style="background: white; width: 360px; border-radius: 16px; padding: 30px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+        
+        <!-- 프로필 사진 -->
+        <div style="margin-bottom: 20px;">
+          <img id="modal-profile-img" 
+               src="${localStorage.getItem('profileImage') || 'https://via.placeholder.com/80'}" 
+               style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #8faadc;">
+        </div>
+
+        <h2 style="margin: 0 0 8px 0; color: #333;">${user.nickname || '사용자'}</h2>
+        <p style="color: #666; font-size: 14px; margin-bottom: 25px;">${user.email || ''}</p>
+
+        <button onclick="goToCustomBoard()" style="
+          width: 100%; padding: 14px; background: #8faadc; color: white; border: none; 
+          border-radius: 8px; font-size: 16px; cursor: pointer; margin-bottom: 12px;">
+          📋 커스텀 게시판 보기
+        </button>
+
+        <button onclick="changeProfileImage()" style="
+          width: 100%; padding: 14px; background: #6c757d; color: white; border: none; 
+          border-radius: 8px; font-size: 16px; cursor: pointer; margin-bottom: 12px;">
+          📷 프로필 사진 변경
+        </button>
+
+        <button onclick="logout()" style="
+          width: 100%; padding: 14px; background: #dc3545; color: white; border: none; 
+          border-radius: 8px; font-size: 16px; cursor: pointer;">
+          로그아웃
+        </button>
+
+        <div onclick="closeUserModal()" style="margin-top: 20px; color: #999; cursor: pointer; font-size: 14px;">
+          ✕ 닫기
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+}
+
+function closeUserModal() {
+  const modal = document.getElementById('user-modal');
+  if (modal) modal.remove();
+}
+
+// 커스텀 게시판으로 이동 (나중에 페이지 만들면 경로 수정)
+function goToCustomBoard() {
+  closeUserModal();
+  window.location.href = "../custom-maker/custom_maker.html";   // 경로 맞게 수정하세요
+}
+
+// 프로필 사진 변경
+function changeProfileImage() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+
+  input.onchange = function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(ev) {
+      const base64 = ev.target.result;
+      localStorage.setItem('profileImage', base64);
+
+      // 현재 보이는 프로필 이미지 즉시 변경
+      const img = document.getElementById('profile-img');
+      if (img) img.src = base64;
+
+      // 모달 안의 이미지들도 변경
+      const modalImg = document.getElementById('modal-profile-img');
+      if (modalImg) modalImg.src = base64;
+
+      closeUserModal();
+    };
+    reader.readAsDataURL(file);
+  };
+
+  input.click();
+}
+
+// 로그아웃
+function logout() {
+  if (confirm("정말 로그아웃 하시겠습니까?")) {
+    localStorage.removeItem("user");
+    localStorage.removeItem("isAdmin");
+    localStorage.removeItem("adminName");
+    localStorage.removeItem("adminIp");
+    localStorage.removeItem("profileImage");
+    closeUserModal();
+    location.reload();
+  }
+}
+
+if (response.ok && data.success) {
+  localStorage.setItem('user', JSON.stringify(data.user));
+  alert('로그인 성공!');
+  
+  // 프로필 즉시 렌더링 후 이동 (선택)
+  // renderUserProfile(); // 필요하면 추가
+  
+  window.location.href = "../index.html";
 }
 
 // ========================================================

@@ -48,9 +48,28 @@ const register = async (req, res) => {
       subject: 'human-bug-tier 회원가입 인증 메일',
       html: `
         <h2>회원가입 인증</h2>
-        <p>아래 버튼을 클릭하여 회원가입을 완료해주세요.</p>
-        <a href="${verificationUrl}" style="padding:10px 20px; background:#007bff; color:white; text-decoration:none;">가입 완료</a>
-        <p>링크는 1시간 후에 만료됩니다.</p>
+          
+        <p style="margin-bottom: 20px; font-size: 15px; line-height: 1.6;">
+          아래 버튼을 클릭하여 회원가입을 완료해주세요.
+        </p>
+          
+        <div style="margin: 30px 0;">
+          <a href="${verificationUrl}" 
+             style="display: inline-block; 
+                    padding: 14px 32px; 
+                    background-color: #007bff; 
+                    color: white; 
+                    text-decoration: none; 
+                    border-radius: 6px; 
+                    font-size: 16px; 
+                    font-weight: bold;">
+            가입 완료
+          </a>
+        </div>
+          
+        <p style="color: #666; font-size: 14px;">
+          링크는 1시간 후에 만료됩니다.
+        </p>
       `
     });
 
@@ -94,3 +113,45 @@ const verifyEmail = async (req, res) => {
 };
 
 module.exports = { register, verifyEmail };
+
+// 로그인
+const login = async (req, res) => {
+  try {
+    const { userId, password } = req.body; // userId = nickname
+
+    // 아이디로 사용자 찾기
+    const user = await User.findOne({ nickname: userId });
+
+    if (!user) {
+      return res.status(400).json({ error: '존재하지 않는 아이디입니다.' });
+    }
+
+    // 비밀번호 비교
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ error: '비밀번호가 일치하지 않습니다.' });
+    }
+
+    // 이메일 인증 여부 확인 (선택)
+    if (!user.isVerified) {
+      return res.status(403).json({ error: '이메일 인증이 완료되지 않았습니다.' });
+    }
+
+    // 로그인 성공 (간단하게 user 정보 반환)
+    res.json({
+      success: true,
+      message: '로그인 성공',
+      user: {
+        nickname: user.nickname,
+        email: user.email,
+        _id: user._id
+      }
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: '로그인 처리 중 오류가 발생했습니다.' });
+  }
+};
+
+module.exports = { register, verifyEmail, login };

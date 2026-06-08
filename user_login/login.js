@@ -1,5 +1,5 @@
 // ============================================
-// login.js - 로그인 프론트엔드 로직
+// login.js - 로그인 (백엔드 연동 버전)
 // ============================================
 
 function goHome() {
@@ -10,18 +10,15 @@ function goBack() {
   window.history.back();
 }
 
-// 회원가입 페이지로 이동
 function goToSignup() {
   window.location.href = "sign_up.html";
 }
 
-// 회원 계정 찾기
 function findAccount() {
   window.location.href = "find_account.html";
 }
 
-// 로그인 처리 (현재는 프론트엔드 검증만)
-function login() {
+async function login() {
   const userId = document.getElementById('userId').value.trim();
   const userPw = document.getElementById('userPw').value.trim();
 
@@ -30,22 +27,32 @@ function login() {
     return;
   }
 
-  // TODO: 나중에 backend (Express + MongoDB) 연동 시 fetch로 교체 예정
-  console.log('🔐 로그인 시도:', {
-    userId,
-    timestamp: new Date().toISOString()
-  });
+  try {
+    const response = await fetch('http://localhost:5000/api/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userId: userId,     // nickname
+        password: userPw
+      })
+    });
 
-  alert('로그인 기능은 아직 backend와 연결되지 않았습니다.\n(추후 login.js + backend 라우터에서 구현 예정)');
-}
+    const data = await response.json();
 
-// 페이지 로드 시 실행
-window.addEventListener('load', () => {
-  // 첫 번째 입력창에 자동 포커스 (UX 개선)
-  const idInput = document.getElementById('userId');
-  if (idInput) {
-    idInput.focus();
+    if (response.ok && data.success) {
+      // 로그인 성공 처리
+      alert('로그인 성공!');
+
+      // 사용자 정보 저장 (나중에 사용)
+      localStorage.setItem('user', JSON.stringify(data.user));
+
+      // 메인 페이지로 이동 (원하는 페이지로 변경 가능)
+      window.location.href = "../index.html";
+    } else {
+      alert('❌ ' + (data.error || '로그인에 실패했습니다.'));
+    }
+  } catch (err) {
+    console.error(err);
+    alert('❌ 서버와 연결할 수 없습니다.');
   }
-
-  console.log('✅ login.js 로드 완료 - 로그인 프론트엔드 준비됨');
-});
+}
