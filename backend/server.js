@@ -76,3 +76,7 @@ const authRoutes = require('./routes/authRoutes');
 
 // 미들웨어 아래쪽에 추가
 app.use('/api/auth', authRoutes);
+
+// 기존 라우터들 아래에 추가
+const inquiryRoutes = require('./routes/inquiryRoutes');
+app.use('/api/inquiries', inquiryRoutes);
