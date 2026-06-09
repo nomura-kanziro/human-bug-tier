@@ -8,8 +8,9 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function isLoggedIn() {
+  // 기존 admin 체크 + 새로 만든 user 체크 병행
   return localStorage.getItem("isAdmin") === "true" || 
-         !!localStorage.getItem("currentUser");
+         !!localStorage.getItem("user");
 }
 
 function nl2br(text) {
@@ -22,7 +23,13 @@ function isAdminUser() {
 }
 
 function getCurrentUserName() {
-  return localStorage.getItem("adminName") || "익명 사용자";
+  // adminName 우선, 없으면 user.nickname 사용
+  if (localStorage.getItem("isAdmin") === "true") {
+    return localStorage.getItem("adminName") || "관리자";
+  }
+
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  return user.nickname || "익명 사용자";
 }
 
 // 페이지 내 인라인 버튼에서 호출되는 전역 로그인 이동 함수
@@ -75,7 +82,7 @@ function renderInquiryForm() {
   }
 }
 
-// ==================== 댓글 등록 ====================
+// ==================== 댓글 등록 (백엔드 연동) ====================
 async function addComment() {
   const title = document.getElementById("inquiry-title")?.value.trim() || "제목 없음";
   const message = document.getElementById("message").innerText.trim();
@@ -85,83 +92,103 @@ async function addComment() {
     return;
   }
 
-  let comments = JSON.parse(localStorage.getItem("comments")) || [];
-  
-  const newComment = {
-    id: Date.now().toString(),
-    userId: getCurrentUserName(),
-    isAdmin: isAdminUser(),
-    title: title,
-    message: message,
-    date: new Date().toLocaleString('ko-KR'),
-    answers: [],
-    reported: false,
-    reportReason: "",
-    reportDetail: ""
-  };
+  try {
+    const response = await fetch('http://localhost:5000/api/inquiries', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        title: title,
+        message: message,
+        userId: getCurrentUserName()   // 현재 로그인한 유저 이름
+      })
+    });
 
-  comments.unshift(newComment);
-  localStorage.setItem("comments", JSON.stringify(comments));
+    const data = await response.json();
 
-  alert("✅ 문의사항이 등록되었습니다.");
-  document.getElementById("message").innerHTML = "";
-  if (document.getElementById("inquiry-title")) document.getElementById("inquiry-title").value = "";
-
-  loadComments();
+    if (response.ok && data.success) {
+      alert("✅ 문의사항이 등록되었습니다.");
+      document.getElementById("message").innerHTML = "";
+      if (document.getElementById("inquiry-title")) {
+        document.getElementById("inquiry-title").value = "";
+      }
+      loadComments(); // 목록 새로고침
+    } else {
+      alert("❌ 등록 실패: " + (data.error || "알 수 없는 오류"));
+    }
+  } catch (err) {
+    console.error(err);
+    alert("❌ 서버와 연결할 수 없습니다.");
+  }
 }
 
-// ==================== 댓글 목록 ====================
-function loadComments() {
+// ==================== 댓글 목록 (백엔드 연동) ====================
+async function loadComments() {
   const listEl = document.getElementById("commentList");
-  let comments = JSON.parse(localStorage.getItem("comments")) || [];
 
-  listEl.innerHTML = comments.map(c => {
-    const isMyComment = c.userId === getCurrentUserName();
-    const canAnswer = isAdminUser();
-    const canDelete = isMyComment;
-    const canEdit = isMyComment;
+  try {
+    const response = await fetch('http://localhost:5000/api/inquiries');
+    const inquiries = await response.json();
 
-    let answersHTML = '';
-    const answerCount = c.answers ? c.answers.length : 0;
-
-    if (answerCount > 0) {
-      const answersList = c.answers.map(answer => 
-        renderAnswer(answer, c.id)
-      ).join('');
-
-      answersHTML = `
-        <div class="answer-toggle-header" onclick="toggleAnswers('${c.id}')">
-          <span>📬 답변 보기 (${answerCount}개)</span>
-          <span class="toggle-arrow" id="arrow-${c.id}">▼</span>
-        </div>
-        <div class="answers-container" id="answers-${c.id}" style="display: none;">
-          ${answersList}
-        </div>
-      `;
+    if (!Array.isArray(inquiries)) {
+      listEl.innerHTML = '<p>문의사항을 불러오는데 실패했습니다.</p>';
+      return;
     }
 
-    return `
-      <div class="comment" data-id="${c.id}">
-        <div class="name">
-          ${c.userId} 
-          ${c.isAdmin ? '<span style="color:#007bff">Admin</span>' : ''}
-        </div>
-        
-        <div class="title">${c.title}</div>
-        
-        <div class="msg">${nl2br(c.message)}</div>
-        
-        ${answersHTML}
+    listEl.innerHTML = inquiries.map(c => {
+      const currentUser = getCurrentUserName();
+      const isMyComment = c.userId === currentUser;
+      const canAnswer = isAdminUser();
+      const canDelete = isMyComment;
+      const canEdit = isMyComment;
 
-        <div class="comment-actions">
-          ${canAnswer ? `<button onclick="replyComment('${c.id}')">답변</button>` : ""}
-          ${isLoggedIn() ? `<button onclick="reportComment('${c.id}')" class="report-btn">신고</button>` : ""}
-          ${canEdit ? `<button onclick="editComment('${c.id}')">수정</button>` : ""}
-          ${canDelete ? `<button onclick="deleteComment('${c.id}')">삭제</button>` : ""}
+      let answersHTML = '';
+      const answerCount = c.answers ? c.answers.length : 0;
+
+      if (answerCount > 0) {
+        const answersList = c.answers.map(answer => 
+          renderAnswer(answer, c._id)   // ← _id 사용 (MongoDB)
+        ).join('');
+
+        answersHTML = `
+          <div class="answer-toggle-header" onclick="toggleAnswers('${c._id}')">
+            <span>📬 답변 보기 (${answerCount}개)</span>
+            <span class="toggle-arrow" id="arrow-${c._id}">▼</span>
+          </div>
+          <div class="answers-container" id="answers-${c._id}" style="display: none;">
+            ${answersList}
+          </div>
+        `;
+      }
+
+      return `
+        <div class="comment" data-id="${c._id}">
+          <div class="name">
+            ${c.userId} 
+            ${c.isAdmin ? '<span style="color:#007bff">Admin</span>' : ''}
+          </div>
+          
+          <div class="title">${c.title}</div>
+          
+          <div class="msg">${nl2br(c.message)}</div>
+          
+          ${answersHTML}
+
+          <div class="comment-actions">
+            ${canAnswer ? `<button onclick="replyComment('${c._id}')">답변</button>` : ""}
+            ${isLoggedIn() ? `<button onclick="reportComment('${c._id}')" class="report-btn">신고</button>` : ""}
+            ${canEdit ? `<button onclick="editComment('${c._id}')">수정</button>` : ""}
+            ${canDelete ? `<button onclick="deleteComment('${c._id}')">삭제</button>` : ""}
+          </div>
         </div>
-      </div>
-    `;
-  }).join('');
+      `;
+    }).join('');
+
+  } catch (err) {
+    console.error(err);
+    listEl.innerHTML = '<p>서버와 연결할 수 없습니다.</p>';
+  }
 }
 
 // ========================================================
