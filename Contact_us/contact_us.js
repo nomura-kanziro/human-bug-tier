@@ -32,6 +32,10 @@ function getCurrentUserName() {
   return user.nickname || "익명 사용자";
 }
 
+function getAnswerId(answer) {
+  return answer._id || answer.id;
+}
+
 // 페이지 내 인라인 버튼에서 호출되는 전역 로그인 이동 함수
 // Contact_us 폴더에서 호출되는 경우 상위 폴더의 admin 로그인 페이지로 이동하도록 처리
 window.goToLogin = function() {
@@ -284,6 +288,7 @@ window.submitReply = function(commentId) {
 // renderAnswer
 // ========================================================
 function renderAnswer(answer, parentCommentId) {
+  const answerId = getAnswerId(answer);
   const isMyAnswer = answer.userId === getCurrentUserName();
   const canDelete = isMyAnswer || isAdminUser();
 
@@ -299,12 +304,12 @@ function renderAnswer(answer, parentCommentId) {
     if (answer.reported) {
       reportHTML = `<button class="report-btn" disabled style="background:#ccc; color:#666; cursor:not-allowed;">신고됨</button>`;
     } else {
-      reportHTML = `<button onclick="reportAnswer('${answer.id}', '${parentCommentId}')" class="report-btn">신고</button>`;
+      reportHTML = `<button onclick="reportAnswer('${answerId}', '${parentCommentId}')" class="report-btn">신고</button>`;
     }
   }
 
   return `
-    <div class="answer" data-id="${answer.id}" data-parent="${parentCommentId}">
+    <div class="answer" data-id="${answerId}" data-parent="${parentCommentId}">
       <div class="user-info">
         <div class="user-avatar">👤</div>
         <div class="user-name">${answer.userId || '관리자'}</div>
@@ -318,22 +323,89 @@ function renderAnswer(answer, parentCommentId) {
       <div class="answer-text">${nl2br(answer.message)}</div>
 
       <div class="comment-actions">
-        ${isLoggedIn() ? `<button onclick="replyToAnswer('${answer.id}', '${parentCommentId}')">답변</button>` : ""}
+        ${isLoggedIn() ? `<button onclick="replyToAnswer('${answerId}', '${parentCommentId}')">답변</button>` : ""}
         ${reportHTML}
-        ${isMyAnswer ? `<button onclick="editAnswer('${answer.id}', '${parentCommentId}')">수정</button>` : ''}
-        ${canDelete ? `<button onclick="deleteAnswer('${answer.id}', '${parentCommentId}')">삭제</button>` : ''}
+        ${isMyAnswer ? `<button onclick="editAnswer('${answerId}', '${parentCommentId}')">수정</button>` : ''}
+        ${canDelete ? `<button onclick="deleteAnswer('${answerId}', '${parentCommentId}')">삭제</button>` : ''}
       </div>
     </div>
   `;
 }
 
 // ========================================================
-// 신고 기능 (생략 - 기존과 동일)
+// 신고 기능 (생략 - 기존과 동일) (백엔드 연동)
 // ========================================================
-window.reportComment = function(commentId) { /* 기존 코드 유지 */ };
-window.selectReason = function(reason, commentId) { /* 기존 코드 유지 */ };
-function submitReport(commentId, reason, detail) { /* 기존 코드 유지 */ };
-function closeReportModal() { /* 기존 코드 유지 */ };
+window.reportComment = function(commentId) {
+  const reasons = ["도배 및 테러행위", "비방 및 모욕행위", "광고형 댓글", "기타"];
+  
+  const modalHTML = `
+    <div id="report-modal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; display:flex; align-items:center; justify-content:center;">
+      <div style="background:white; width:420px; border-radius:12px; padding:30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+        <h3 style="margin-bottom:20px; font-weight:700;">신고 사유 선택</h3>
+        
+        ${reasons.map(r => `
+          <button onclick="selectReason('${r}', '${commentId}')" 
+                  style="width:100%; margin:6px 0; padding:14px; border:2px solid #111; background:white; border-radius:8px; font-size:15px; cursor:pointer;">
+            ${r}
+          </button>
+        `).join('')}
+        
+        <button onclick="closeReportModal()" 
+                style="margin-top:20px; width:100%; padding:14px; background:#dc3545; color:white; border:none; border-radius:8px; font-size:15px;">
+          취소
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+};
+
+window.selectReason = function(reason, commentId) {
+  if (reason === "기타") {
+    const detail = prompt("기타 사유를 입력해주세요:");
+    if (!detail) {
+      closeReportModal();
+      return;
+    }
+    submitReport(commentId, reason, detail);
+  } else {
+    submitReport(commentId, reason, "");
+  }
+  closeReportModal();
+};
+
+async function submitReport(commentId, reason, detail) {
+  try {
+    const response = await fetch(`http://localhost:5000/api/inquiries/${commentId}/report`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        reason: reason,
+        detail: detail
+      })
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      alert("✅ 신고가 접수되었습니다.");
+      loadComments();
+    } else {
+      alert("❌ 신고 실패: " + (data.error || "알 수 없는 오류"));
+    }
+  } catch (err) {
+    console.error(err);
+    alert("❌ 서버와 연결할 수 없습니다.");
+  }
+}
+
+function closeReportModal() {
+  const modal = document.getElementById('report-modal');
+  if (modal) modal.remove();
+}
 
 // ========================================================
 // editComment (contenteditable 버전)
@@ -350,24 +422,28 @@ window.editComment = function(commentId) {
 
   closeAllActionBoxes();
 
-  let comments = JSON.parse(localStorage.getItem("comments")) || [];
-  const comment = comments.find(c => c.id === commentId);
-  if (!comment) return;
+  const title = commentEl.querySelector('.title')?.textContent?.trim() || '';
+  const message = commentEl.querySelector('.msg')?.innerText?.trim() || '';
 
   const box = document.createElement('div');
   box.className = 'action-box edit-box';
 
-  box.innerHTML = `
-    <input type="text" id="edit-title-${commentId}" 
-           value="${comment.title || ''}" 
-           placeholder="제목을 입력하세요"
-           style="width:100%; padding:12px; border:3px solid #111; border-radius:8px; margin-bottom:12px; box-sizing:border-box;">
-    
-    <div id="edit-message-${commentId}" 
-         class="comment-input-box" 
-         contenteditable="true"
-         data-placeholder="내용을 입력하세요">${comment.message}</div>
-  `;
+  const titleInput = document.createElement('input');
+  titleInput.type = 'text';
+  titleInput.id = `edit-title-${commentId}`;
+  titleInput.value = title;
+  titleInput.placeholder = '제목을 입력하세요';
+  titleInput.style.cssText = 'width:100%; padding:12px; border:3px solid #111; border-radius:8px; margin-bottom:12px; box-sizing:border-box;';
+
+  const messageInput = document.createElement('div');
+  messageInput.id = `edit-message-${commentId}`;
+  messageInput.className = 'comment-input-box';
+  messageInput.contentEditable = 'true';
+  messageInput.dataset.placeholder = '내용을 입력하세요';
+  messageInput.textContent = message;
+
+  box.appendChild(titleInput);
+  box.appendChild(messageInput);
 
   const btnGroup = document.createElement('div');
   btnGroup.style.cssText = 'margin-top:12px; display:flex; justify-content:flex-end; gap:10px;';
@@ -396,43 +472,86 @@ window.cancelEdit = function(commentId) {
   if (box) box.remove();
 };
 
-window.submitEdit = function(commentId) {
+// ==================== 댓글 수정 완료 (백엔드 연동) ====================
+window.submitEdit = async function(commentId) {
+  console.log("✅ submitEdit 호출됨 - commentId:", commentId);
+
   const titleInput = document.getElementById(`edit-title-${commentId}`);
   const messageInput = document.getElementById(`edit-message-${commentId}`);
 
-  if (!titleInput || !messageInput) return;
+  console.log("titleInput 존재 여부:", !!titleInput);
+  console.log("messageInput 존재 여부:", !!messageInput);
+
+  if (!titleInput || !messageInput) {
+    alert("입력창을 찾을 수 없습니다. (ID 문제)");
+    return;
+  }
 
   const newTitle = titleInput.value.trim();
   const newMessage = messageInput.innerText.trim();
+
+  console.log("newTitle:", newTitle);
+  console.log("newMessage:", newMessage);
 
   if (!newMessage) {
     alert("내용을 입력해주세요.");
     return;
   }
 
-  let comments = JSON.parse(localStorage.getItem("comments")) || [];
-  const comment = comments.find(c => c.id === commentId);
+  try {
+    console.log("fetch 시작...");
+    const response = await fetch(`http://localhost:5000/api/inquiries/${commentId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        title: newTitle || "제목 없음",
+        message: newMessage
+      })
+    });
 
-  if (comment) {
-    comment.title = newTitle || "제목 없음";
-    comment.message = newMessage;
-    localStorage.setItem("comments", JSON.stringify(comments));
-    loadComments();
-    alert("✅ 수정이 완료되었습니다.");
+    console.log("fetch 응답 상태:", response.status);
+
+    const data = await response.json();
+    console.log("서버 응답 데이터:", data);
+
+    if (response.ok && data.success) {
+      alert("✅ 수정이 완료되었습니다.");
+      loadComments();
+    } else {
+      alert("❌ 수정 실패: " + (data.error || "알 수 없는 오류"));
+    }
+  } catch (err) {
+    console.error("catch 에러:", err);
+    alert("❌ 서버 통신 중 에러 발생 (콘솔 확인)");
   }
 };
 
 // ========================================================
-// deleteComment (기존 유지)
+// deleteComment (기존 유지) 
+// 댓글 삭제 (백엔드 연동)
 // ========================================================
-window.deleteComment = function(commentId) {
+window.deleteComment = async function(commentId) {
   if (!confirm("정말 이 댓글을 삭제하시겠습니까?")) return;
 
-  let comments = JSON.parse(localStorage.getItem("comments")) || [];
-  comments = comments.filter(c => c.id !== commentId);
-  localStorage.setItem("comments", JSON.stringify(comments));
-  loadComments();
-  alert("✅ 댓글이 삭제되었습니다.");
+  try {
+    const response = await fetch(`http://localhost:5000/api/inquiries/${commentId}`, {
+      method: 'DELETE'
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      alert("✅ 댓글이 삭제되었습니다.");
+      loadComments(); // 목록 새로고침
+    } else {
+      alert("❌ 삭제 실패: " + (data.error || "알 수 없는 오류"));
+    }
+  } catch (err) {
+    console.error(err);
+    alert("❌ 서버와 연결할 수 없습니다.");
+  }
 };
 
 // ========================================================
@@ -548,22 +667,19 @@ window.editAnswer = function(answerId, parentCommentId) {
 
   closeAllActionBoxes();
 
-  let comments = JSON.parse(localStorage.getItem("comments")) || [];
-  const comment = comments.find(c => c.id === parentCommentId);
-  if (!comment) return;
-
-  const answer = comment.answers.find(a => a.id === answerId);
-  if (!answer) return;
+  const message = answerEl.querySelector('.answer-text')?.innerText?.trim() || '';
 
   const box = document.createElement('div');
   box.className = 'action-box edit-box';
 
-  box.innerHTML = `
-    <div id="edit-answer-${answerId}" 
-         class="comment-input-box" 
-         contenteditable="true"
-         data-placeholder="내용을 입력하세요">${answer.message}</div>
-  `;
+  const messageInput = document.createElement('div');
+  messageInput.id = `edit-answer-${answerId}`;
+  messageInput.className = 'comment-input-box';
+  messageInput.contentEditable = 'true';
+  messageInput.dataset.placeholder = '내용을 입력하세요';
+  messageInput.textContent = message;
+
+  box.appendChild(messageInput);
 
   const btnGroup = document.createElement('div');
   btnGroup.style.cssText = 'margin-top:12px; display:flex; justify-content:flex-end; gap:10px;';
@@ -593,7 +709,7 @@ window.cancelEditForAnswer = function(answerId) {
   }
 };
 
-window.submitEditForAnswer = function(answerId, parentCommentId) {
+window.submitEditForAnswer = async function(answerId, parentCommentId) {
   const textarea = document.getElementById(`edit-answer-${answerId}`);
   if (!textarea) return;
 
@@ -603,16 +719,26 @@ window.submitEditForAnswer = function(answerId, parentCommentId) {
     return;
   }
 
-  let comments = JSON.parse(localStorage.getItem("comments")) || [];
-  const comment = comments.find(c => c.id === parentCommentId);
-  if (!comment) return;
+  try {
+    const response = await fetch(`http://localhost:5000/api/inquiries/${parentCommentId}/answers/${answerId}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ message: newMessage })
+    });
 
-  const answer = comment.answers.find(a => a.id === answerId);
-  if (answer) {
-    answer.message = newMessage;
-    localStorage.setItem("comments", JSON.stringify(comments));
-    loadComments();
-    alert("✅ 답변 수정이 완료되었습니다.");
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      alert("✅ 답변 수정이 완료되었습니다.");
+      loadComments();
+    } else {
+      alert("❌ 답변 수정 실패: " + (data.error || "알 수 없는 오류"));
+    }
+  } catch (err) {
+    console.error(err);
+    alert("❌ 서버와 연결할 수 없습니다.");
   }
 };
 

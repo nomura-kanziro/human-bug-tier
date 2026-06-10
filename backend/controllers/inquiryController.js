@@ -85,6 +85,32 @@ exports.deleteInquiry = async (req, res) => {
   }
 };
 
+// 답변 수정
+exports.updateAnswer = async (req, res) => {
+  try {
+    const { id, answerId } = req.params;
+    const { message } = req.body;
+
+    if (!message) {
+      return res.status(400).json({ error: '내용은 필수입니다.' });
+    }
+
+    const inquiry = await Inquiry.findById(id);
+    if (!inquiry) return res.status(404).json({ error: '문의를 찾을 수 없습니다.' });
+
+    const answer = inquiry.answers.id(answerId);
+    if (!answer) return res.status(404).json({ error: '답변을 찾을 수 없습니다.' });
+
+    answer.message = message;
+    await inquiry.save();
+
+    res.json({ success: true, inquiry });
+  } catch (err) {
+    console.error('답변 수정 에러:', err);
+    res.status(500).json({ error: '답변 수정 실패' });
+  }
+};
+
 // 답변 등록
 exports.addAnswer = async (req, res) => {
   try {
@@ -108,4 +134,35 @@ exports.addAnswer = async (req, res) => {
   }
 };
 
-module.exports = exports;
+// 신고하기
+exports.reportInquiry = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { reason, detail } = req.body;
+
+    const inquiry = await Inquiry.findById(id);
+    if (!inquiry) {
+      return res.status(404).json({ error: '문의를 찾을 수 없습니다.' });
+    }
+
+    inquiry.reported = true;
+    inquiry.reportReason = reason || '';
+    inquiry.reportDetail = detail || '';
+    await inquiry.save();
+
+    res.json({ success: true, message: '신고가 접수되었습니다.' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: '신고 처리 실패' });
+  }
+};
+
+module.exports = {
+  createInquiry: exports.createInquiry,
+  getInquiries: exports.getInquiries,
+  updateInquiry: exports.updateInquiry,
+  deleteInquiry: exports.deleteInquiry,
+  updateAnswer: exports.updateAnswer,
+  addAnswer: exports.addAnswer,
+  reportInquiry: exports.reportInquiry,
+};
