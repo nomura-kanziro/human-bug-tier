@@ -236,8 +236,8 @@ function renderUserProfile() {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const isAdmin = localStorage.getItem("isAdmin") === "true";
 
-  // 로그인하지 않았으면 표시 안 함
-  if (!user || !user.nickname) return;
+  // 로그인하지 않았으면 표시 안 함 (일반 유저 또는 관리자)
+  if (!user.nickname && !isAdmin) return;
 
   const header = document.getElementById('header-placeholder');
   if (!header) return;
@@ -401,15 +401,6 @@ function logout() {
   }
 }
 
-if (response.ok && data.success) {
-  localStorage.setItem('user', JSON.stringify(data.user));
-  alert('로그인 성공!');
-  
-  // 프로필 즉시 렌더링 후 이동 (선택)
-  // renderUserProfile(); // 필요하면 추가
-  
-  window.location.href = "../index.html";
-}
 
 // ========================================================
 // 어드민 모달 (이름 + 파란 체크 + 공유 IP + 관리하기 버튼)

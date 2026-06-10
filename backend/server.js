@@ -4,6 +4,7 @@ const cors = require('cors');
 
 // db 연결 함수 불러오기
 const connectDB = require('./config/db');
+const { seedAdmin } = require('./controllers/adminController');
 
 // 환경변수 로드
 dotenv.config();
@@ -14,9 +15,16 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB 연결 (실패해도 서버는 계속 실행)
-connectDB().then((connected) => {
+connectDB().then(async (connected) => {
   if (!connected) {
     console.log('ℹ️  DB 연결 없이 서버가 시작되었습니다.');
+    return;
+  }
+
+  try {
+    await seedAdmin();
+  } catch (err) {
+    console.error('관리자 계정 초기화 실패:', err.message);
   }
 });
 
@@ -80,3 +88,6 @@ app.use('/api/auth', authRoutes);
 // 기존 라우터들 아래에 추가
 const inquiryRoutes = require('./routes/inquiryRoutes');
 app.use('/api/inquiries', inquiryRoutes);
+
+const adminRoutes = require('./routes/adminRoutes');
+app.use('/api/admin', adminRoutes);
