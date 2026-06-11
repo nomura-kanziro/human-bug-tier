@@ -181,7 +181,11 @@ async function loadComments() {
 
           <div class="comment-actions">
             ${canAnswer ? `<button onclick="replyComment('${c._id}')">답변</button>` : ""}
-            ${isLoggedIn() ? `<button onclick="reportComment('${c._id}')" class="report-btn">신고</button>` : ""}
+            ${isLoggedIn() ? (
+              c.reported
+                ? `<button class="report-btn" disabled style="background:#ccc; color:#666; cursor:not-allowed;">신고됨</button>`
+                : `<button onclick="reportComment('${c._id}')" class="report-btn">신고</button>`
+            ) : ""}
             ${canEdit ? `<button onclick="editComment('${c._id}')">수정</button>` : ""}
             ${canDelete ? `<button onclick="deleteComment('${c._id}')">삭제</button>` : ""}
           </div>
@@ -248,7 +252,7 @@ window.cancelReply = function(commentId) {
 };
 
 // ==================== 답변 등록 ====================
-window.submitReply = function(commentId) {
+window.submitReply = async function(commentId) {
   const input = document.getElementById(`reply-input-${commentId}`);
   if (!input) {
     alert("입력창을 찾을 수 없습니다.");
@@ -261,26 +265,38 @@ window.submitReply = function(commentId) {
     return;
   }
 
-  let comments = JSON.parse(localStorage.getItem("comments")) || [];
-  const comment = comments.find(c => c.id === commentId);
+  try {
+    const response = await fetch(`http://localhost:5000/api/inquiries/${commentId}/answers`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: replyText,
+        userId: getCurrentUserName(),
+        isAdmin: isAdminUser()
+      })
+    });
 
-  if (comment) {
-    if (!comment.answers) comment.answers = [];
-    
-    const newAnswer = {
-      id: Date.now().toString(),
-      userId: getCurrentUserName(),
-      isAdmin: isAdminUser(),
-      message: replyText,
-      date: new Date().toLocaleString('ko-KR'),
-      replies: []
-    };
+    const data = await response.json();
 
-    comment.answers.push(newAnswer);
-    localStorage.setItem("comments", JSON.stringify(comments));
-    
-    loadComments();
-    alert("✅ 답변이 등록되었습니다.");
+    if (response.ok && data.success) {
+      alert("✅ 답변이 등록되었습니다.");
+
+      // reply-box 닫기
+      const commentEl = document.querySelector(`.comment[data-id="${commentId}"]`);
+      if (commentEl) {
+        const box = commentEl.querySelector('.reply-box');
+        if (box) box.remove();
+      }
+
+      loadComments(); // 목록 새로고침
+    } else {
+      alert("❌ 답변 등록 실패: " + (data.error || "알 수 없는 오류"));
+    }
+  } catch (err) {
+    console.error(err);
+    alert("❌ 서버와 연결할 수 없습니다. (백엔드에 POST /answers 라우트가 있는지 확인 필요)");
   }
 };
 
@@ -613,44 +629,113 @@ window.replyToAnswer = function(answerId, parentCommentId) {
   answerEl.appendChild(box);
 };
 
-window.submitReplyToAnswer = function(answerId, parentCommentId) {
+window.submitReplyToAnswer = async function(answerId, parentCommentId) {
   const input = document.getElementById(`sub-reply-input-${answerId}`);
   if (!input) { alert("입력창을 찾을 수 없습니다."); return; }
 
   const replyText = input.innerText.trim();
   if (!replyText) { alert("내용을 입력해주세요."); return; }
 
-  let comments = JSON.parse(localStorage.getItem("comments")) || [];
-  const comment = comments.find(c => c.id === parentCommentId);
-  if (!comment) return;
+  const answerEl = document.querySelector(`.answer[data-id="${answerId}"]`);
+  const quotedUser = answerEl?.querySelector('.user-name')?.textContent?.trim() || '';
+  const quotedMessage = answerEl?.querySelector('.answer-text')?.innerText?.trim() || '';
 
-  const answer = comment.answers.find(a => a.id === answerId);
-  if (!answer) return;
+  try {
+    const response = await fetch(`http://localhost:5000/api/inquiries/${parentCommentId}/answers`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        message: replyText,
+        userId: getCurrentUserName(),
+        isAdmin: isAdminUser(),
+        quotedUser,
+        quotedMessage
+      })
+    });
 
-  const newSubReply = {
-    id: Date.now().toString(),
-    userId: getCurrentUserName(),
-    isAdmin: isAdminUser(),
-    message: replyText,
-    date: new Date().toLocaleString('ko-KR'),
-    quotedUser: answer.userId,
-    quotedMessage: answer.message,
-    replies: []
-  };
+    const data = await response.json();
 
-  comment.answers.push(newSubReply);
-  localStorage.setItem("comments", JSON.stringify(comments));
-
-  loadComments();
-  alert("✅ 답변이 등록되었습니다.");
+    if (response.ok && data.success) {
+      alert("✅ 답변이 등록되었습니다.");
+      loadComments();
+    } else {
+      alert("❌ 답변 등록 실패: " + (data.error || "알 수 없는 오류"));
+    }
+  } catch (err) {
+    console.error(err);
+    alert("❌ 서버와 연결할 수 없습니다.");
+  }
 };
 
 // ========================================================
 // reportAnswer (기존 유지)
 // ========================================================
-window.reportAnswer = function(answerId, parentCommentId) { /* 기존 코드 유지 */ };
-window.selectReasonForAnswer = function(reason, answerId, parentCommentId) { /* 기존 코드 유지 */ };
-function submitReportForAnswer(answerId, parentCommentId, reason, detail) { /* 기존 코드 유지 */ };
+window.reportAnswer = function(answerId, parentCommentId) {
+  const reasons = ["도배 및 테러행위", "비방 및 모욕행위", "광고형 댓글", "기타"];
+
+  const modalHTML = `
+    <div id="report-modal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; display:flex; align-items:center; justify-content:center;">
+      <div style="background:white; width:420px; border-radius:12px; padding:30px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+        <h3 style="margin-bottom:20px; font-weight:700;">신고 사유 선택</h3>
+        ${reasons.map(r => `
+          <button onclick="selectReasonForAnswer('${r}', '${answerId}', '${parentCommentId}')"
+                  style="width:100%; margin:6px 0; padding:14px; border:2px solid #111; background:white; border-radius:8px; font-size:15px; cursor:pointer;">
+            ${r}
+          </button>
+        `).join('')}
+        <button onclick="closeReportModal()"
+                style="margin-top:20px; width:100%; padding:14px; background:#dc3545; color:white; border:none; border-radius:8px; font-size:15px;">
+          취소
+        </button>
+      </div>
+    </div>
+  `;
+
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+};
+
+window.selectReasonForAnswer = function(reason, answerId, parentCommentId) {
+  if (reason === "기타") {
+    const detail = prompt("기타 사유를 입력해주세요:");
+    if (!detail) {
+      closeReportModal();
+      return;
+    }
+    submitReportForAnswer(answerId, parentCommentId, reason, detail);
+  } else {
+    submitReportForAnswer(answerId, parentCommentId, reason, "");
+  }
+  closeReportModal();
+};
+
+async function submitReportForAnswer(answerId, parentCommentId, reason, detail) {
+  try {
+    const response = await fetch(`http://localhost:5000/api/inquiries/${parentCommentId}/answers/${answerId}/report`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        reason: reason,
+        detail: detail
+      })
+    });
+
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      alert("✅ 답변이 신고되었습니다.");
+      loadComments();
+    } else {
+      alert("❌ 신고 실패: " + (data.error || "알 수 없는 오류"));
+    }
+  } catch (err) {
+    console.error(err);
+    alert("❌ 서버와 연결할 수 없습니다.");
+  }
+}
 
 // ========================================================
 // editAnswer (contenteditable 버전)
@@ -745,17 +830,26 @@ window.submitEditForAnswer = async function(answerId, parentCommentId) {
 // ========================================================
 // deleteAnswer (기존 유지)
 // ========================================================
-window.deleteAnswer = function(answerId, parentCommentId) {
+window.deleteAnswer = async function(answerId, parentCommentId) {
   if (!confirm("정말 이 답변을 삭제하시겠습니까?")) return;
 
-  let comments = JSON.parse(localStorage.getItem("comments")) || [];
-  const comment = comments.find(c => c.id === parentCommentId);
-  if (!comment || !comment.answers) return;
+  try {
+    const response = await fetch(`http://localhost:5000/api/inquiries/${parentCommentId}/answers/${answerId}`, {
+      method: 'DELETE'
+    });
 
-  comment.answers = comment.answers.filter(a => a.id !== answerId);
-  localStorage.setItem("comments", JSON.stringify(comments));
-  loadComments();
-  alert("✅ 답변이 삭제되었습니다.");
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      alert("✅ 답변이 삭제되었습니다.");
+      loadComments();
+    } else {
+      alert("❌ 삭제 실패: " + (data.error || "알 수 없는 오류"));
+    }
+  } catch (err) {
+    console.error(err);
+    alert("❌ 서버와 연결할 수 없습니다.");
+  }
 };
 
 // ========================================================
