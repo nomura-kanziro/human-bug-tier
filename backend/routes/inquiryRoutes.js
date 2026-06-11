@@ -20,6 +20,12 @@ router.post('/:id/answers', inquiryController.addAnswer);
 // 답변 수정
 router.put('/:id/answers/:answerId', inquiryController.updateAnswer);
 
+// 답변 삭제
+router.delete('/:id/answers/:answerId', inquiryController.deleteAnswer);
+
+// 답변 신고
+router.post('/:id/answers/:answerId/report', inquiryController.reportAnswer);
+
 // 신고 하기
 router.post('/:id/report', inquiryController.reportInquiry);
 

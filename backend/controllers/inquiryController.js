@@ -115,22 +115,82 @@ exports.updateAnswer = async (req, res) => {
 exports.addAnswer = async (req, res) => {
   try {
     const { id } = req.params;
-    const { message } = req.body;
-    const user = req.user;
+    const {
+      message,
+      userId = '익명',
+      isAdmin = false,
+      quotedUser,
+      quotedMessage,
+    } = req.body;
+
+    if (!message) {
+      return res.status(400).json({ error: '답변 내용은 필수입니다.' });
+    }
 
     const inquiry = await Inquiry.findById(id);
     if (!inquiry) return res.status(404).json({ error: '문의를 찾을 수 없습니다.' });
 
-    inquiry.answers.push({
-      userId: user.nickname,
-      isAdmin: user.isAdmin || false,
+    const answer = {
+      userId,
+      isAdmin: Boolean(isAdmin),
       message,
-    });
+    };
+
+    if (quotedUser) answer.quotedUser = quotedUser;
+    if (quotedMessage) answer.quotedMessage = quotedMessage;
+
+    inquiry.answers.push(answer);
 
     await inquiry.save();
     res.json({ success: true, inquiry });
   } catch (err) {
+    console.error('답변 등록 에러:', err);
     res.status(500).json({ error: '답변 등록 실패' });
+  }
+};
+
+// 답변 삭제
+exports.deleteAnswer = async (req, res) => {
+  try {
+    const { id, answerId } = req.params;
+
+    const inquiry = await Inquiry.findById(id);
+    if (!inquiry) return res.status(404).json({ error: '문의를 찾을 수 없습니다.' });
+
+    const answer = inquiry.answers.id(answerId);
+    if (!answer) return res.status(404).json({ error: '답변을 찾을 수 없습니다.' });
+
+    inquiry.answers.pull(answerId);
+    await inquiry.save();
+
+    res.json({ success: true, inquiry });
+  } catch (err) {
+    console.error('답변 삭제 에러:', err);
+    res.status(500).json({ error: '답변 삭제 실패' });
+  }
+};
+
+// 답변 신고
+exports.reportAnswer = async (req, res) => {
+  try {
+    const { id, answerId } = req.params;
+    const { reason, detail } = req.body;
+
+    const inquiry = await Inquiry.findById(id);
+    if (!inquiry) return res.status(404).json({ error: '문의를 찾을 수 없습니다.' });
+
+    const answer = inquiry.answers.id(answerId);
+    if (!answer) return res.status(404).json({ error: '답변을 찾을 수 없습니다.' });
+
+    answer.reported = true;
+    answer.reportReason = reason || '';
+    answer.reportDetail = detail || '';
+    await inquiry.save();
+
+    res.json({ success: true, message: '신고가 접수되었습니다.' });
+  } catch (err) {
+    console.error('답변 신고 에러:', err);
+    res.status(500).json({ error: '신고 처리 실패' });
   }
 };
 
@@ -164,5 +224,7 @@ module.exports = {
   deleteInquiry: exports.deleteInquiry,
   updateAnswer: exports.updateAnswer,
   addAnswer: exports.addAnswer,
+  deleteAnswer: exports.deleteAnswer,
+  reportAnswer: exports.reportAnswer,
   reportInquiry: exports.reportInquiry,
 };

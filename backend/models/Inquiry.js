@@ -7,6 +7,9 @@ const answerSchema = new mongoose.Schema({
   date: { type: String, default: () => new Date().toLocaleString('ko-KR') },
   quotedUser: String,
   quotedMessage: String,
+  reported: { type: Boolean, default: false },
+  reportReason: { type: String, default: '' },
+  reportDetail: { type: String, default: '' },
 }, { _id: true });
 
 const inquirySchema = new mongoose.Schema({
