@@ -152,15 +152,14 @@ async function reportPost(postId) {
 
   openReportModal('게시글 신고 사유 선택', async (reason, detail) => {
     try {
+      const headers = typeof getAuthHeaders === 'function'
+        ? getAuthHeaders()
+        : { 'Content-Type': 'application/json' };
+
       const response = await fetch(`${getTierApiBase()}/api/tierlists/${encodeURIComponent(postId)}/report`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          reason,
-          detail,
-          author: user.nickname,
-          authorEmail: user.email || '',
-        }),
+        headers,
+        body: JSON.stringify({ reason, detail }),
       });
       const data = await response.json();
 

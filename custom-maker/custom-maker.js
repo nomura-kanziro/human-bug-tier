@@ -656,9 +656,13 @@ async function uploadToBoard() {
   const description = prompt('간단한 설명을 입력해주세요. (선택, 취소 가능)', '') || '';
 
   try {
+    const headers = typeof getAuthHeaders === 'function'
+      ? getAuthHeaders()
+      : { 'Content-Type': 'application/json' };
+
     const response = await fetch(`${getTierApiBase()}/api/tierlists`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers,
       body: JSON.stringify(buildUploadPayload(title, description, user)),
     });
 

@@ -9,6 +9,14 @@
 //   5. 푸터 '문의하기' 링크 → Contact_us/[index.html -> contact_us.html] 이동
 // ========================================================
 
+function getAuthHeaders(extraHeaders = {}) {
+  const headers = { ...extraHeaders };
+  const token = localStorage.getItem('authToken');
+  if (token) headers.Authorization = `Bearer ${token}`;
+  if (!headers['Content-Type']) headers['Content-Type'] = 'application/json';
+  return headers;
+}
+
 function getBasePath() {
   const path = window.location.pathname;
   console.log('📍 [common.js] 현재 페이지 경로:', path);
@@ -411,6 +419,7 @@ function changeProfileImage() {
 function logout() {
   if (confirm("정말 로그아웃 하시겠습니까?")) {
     localStorage.removeItem("user");
+    localStorage.removeItem("authToken");
     localStorage.removeItem("isAdmin");
     localStorage.removeItem("adminName");
     localStorage.removeItem("adminIp");
@@ -474,6 +483,7 @@ function closeAdminModal() {
 
 function logoutAdmin() {
   if (confirm("로그아웃 하시겠습니까?")) {
+    localStorage.removeItem("authToken");
     localStorage.removeItem("isAdmin");
     localStorage.removeItem("adminName");
     localStorage.removeItem("adminIp");
@@ -493,6 +503,7 @@ function goToAdminPage() {
 
 function logoutAdmin() {
   if (confirm("로그아웃 하시겠습니까?")) {
+    localStorage.removeItem("authToken");
     localStorage.removeItem("isAdmin");
     localStorage.removeItem("adminName");
     localStorage.removeItem("adminIp");

@@ -26,6 +26,11 @@ function getTierApiBase() {
   return `${protocol}//${hostname || 'localhost'}:5000`;
 }
 
+function apiHeaders(extra = {}) {
+  if (typeof getAuthHeaders === 'function') return getAuthHeaders(extra);
+  return { 'Content-Type': 'application/json', ...extra };
+}
+
 function isAdminLoggedIn() {
   return localStorage.getItem('isAdmin') === 'true';
 }
@@ -186,7 +191,9 @@ function syncPostIdToUrl(postId) {
 }
 
 async function fetchPostDetail(id) {
-  const response = await fetch(`${getTierApiBase()}/api/tierlists/${encodeURIComponent(id)}`);
+  const response = await fetch(`${getTierApiBase()}/api/tierlists/${encodeURIComponent(id)}`, {
+    headers: apiHeaders(),
+  });
   if (!response.ok) throw new Error('게시글 조회 실패');
   return response.json();
 }
@@ -397,6 +404,7 @@ function updatePostActions() {
   const user = getLoggedInUser();
   const isOwner = isPostOwner(currentPost, user);
   const deleteBtn = document.getElementById('delete-btn');
+  const eventBtn = document.getElementById('event-btn');
   const reportBtn = document.getElementById('report-post-btn');
 
   if (deleteBtn) deleteBtn.hidden = !isOwner;
@@ -406,6 +414,35 @@ function updatePostActions() {
     reportBtn.hidden = !canReport;
     reportBtn.disabled = Boolean(currentPost?.reported);
     reportBtn.textContent = currentPost?.reported ? '신고됨' : '🚨 신고하기';
+  }
+
+  updateEventButtonVisibility();
+  updateLikeButtonState();
+}
+
+function updateEventButtonVisibility() {
+  const eventBtn = document.getElementById('event-btn');
+  const user = getLoggedInUser();
+  if (!eventBtn) return;
+
+  const isOwner = isPostOwner(currentPost, user);
+  eventBtn.hidden = !isOwner;
+  if (isOwner) {
+    eventBtn.disabled = false;
+    eventBtn.textContent = '🎉 이벤트 참여';
+  }
+}
+
+function updateLikeButtonState() {
+  const likeBtn = document.getElementById('like-btn');
+  if (!likeBtn || !currentPost) return;
+
+  if (currentPost.likedByMe) {
+    likeBtn.disabled = true;
+    likeBtn.title = '이미 추천한 게시글입니다.';
+  } else {
+    likeBtn.disabled = false;
+    likeBtn.title = '';
   }
 }
 
@@ -430,13 +467,8 @@ async function handleReportPost() {
       try {
         const response = await fetch(`${getTierApiBase()}/api/tierlists/${encodeURIComponent(postId)}/report`, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            reason,
-            detail,
-            author: user.nickname,
-            authorEmail: user.email || '',
-          }),
+          headers: apiHeaders(),
+          body: JSON.stringify({ reason, detail }),
         });
         const data = await response.json();
 
@@ -478,11 +510,8 @@ async function handleDeletePost() {
   try {
     const response = await fetch(`${getTierApiBase()}/api/tierlists/${encodeURIComponent(id)}`, {
       method: 'DELETE',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        author: user.nickname,
-        authorEmail: user.email || '',
-      }),
+      headers: apiHeaders(),
+      body: JSON.stringify({}),
     });
     const data = await response.json();
 
@@ -499,20 +528,41 @@ async function handleDeletePost() {
   }
 }
 
+function handleEventParticipation() {
+  alert('이벤트 기능은 준비 중입니다.');
+}
+
 async function handleLike() {
   if (!currentPost) return;
+
+  const user = getLoggedInUser();
+  if (!user) {
+    requireLoggedIn('추천하려면 로그인이 필요합니다.');
+    return;
+  }
 
   const id = currentPost._id || currentPost.id;
   try {
     const response = await fetch(`${getTierApiBase()}/api/tierlists/${encodeURIComponent(id)}/like`, {
       method: 'PATCH',
+      headers: apiHeaders(),
     });
     const data = await response.json();
 
     if (response.ok && data.success) {
       currentPost.likeCount = data.likeCount;
+      currentPost.likedByMe = true;
       document.getElementById('post-likes').textContent = data.likeCount;
       document.getElementById('like-count').textContent = data.likeCount;
+      updateLikeButtonState();
+      return;
+    }
+
+    if (data.likedByMe || /이미 추천/.test(data.error || '')) {
+      currentPost.likedByMe = true;
+      updateLikeButtonState();
+      alert(data.error || '이미 추천한 게시글입니다.');
+      return;
     }
   } catch (err) {
     console.error(err);
@@ -539,11 +589,7 @@ function setupActionButtons() {
     });
   }
 
-  if (eventBtn) {
-    eventBtn.addEventListener('click', () => {
-      alert('이벤트 참여 기능은 준비 중입니다.');
-    });
-  }
+  if (eventBtn) eventBtn.addEventListener('click', handleEventParticipation);
 }
 
 function updateCommentFormState() {
@@ -718,11 +764,9 @@ async function submitReply(parentCommentId) {
   try {
     const response = await fetch(`${getTierApiBase()}/api/tierlists/${encodeURIComponent(postId)}/comments`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: apiHeaders(),
       body: JSON.stringify({
         content: text,
-        author: user.nickname,
-        authorEmail: user.email || '',
         parentCommentId,
         quotedUser: parentData?.author || '',
         quotedMessage: snippet,
@@ -770,12 +814,8 @@ async function submitEdit(commentId) {
       `${getTierApiBase()}/api/tierlists/${encodeURIComponent(postId)}/comments/${encodeURIComponent(commentId)}`,
       {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          content: text,
-          author: user.nickname,
-          authorEmail: user.email || '',
-        }),
+        headers: apiHeaders(),
+        body: JSON.stringify({ content: text }),
       },
     );
     const data = await response.json();
@@ -806,13 +846,8 @@ function reportComment(commentId) {
           `${getTierApiBase()}/api/tierlists/${encodeURIComponent(postId)}/comments/${encodeURIComponent(commentId)}/report`,
           {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              reason,
-              detail,
-              author: user.nickname,
-              authorEmail: user.email || '',
-            }),
+            headers: apiHeaders(),
+            body: JSON.stringify({ reason, detail }),
           },
         );
         const data = await response.json();
@@ -882,12 +917,8 @@ async function submitComment() {
   try {
     const response = await fetch(`${getTierApiBase()}/api/tierlists/${encodeURIComponent(postId)}/comments`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        content: text,
-        author: user.nickname,
-        authorEmail: user.email || '',
-      }),
+      headers: apiHeaders(),
+      body: JSON.stringify({ content: text }),
     });
     const data = await response.json();
 
@@ -923,11 +954,8 @@ async function deleteComment(commentId) {
       `${getTierApiBase()}/api/tierlists/${encodeURIComponent(postId)}/comments/${encodeURIComponent(commentId)}`,
       {
         method: 'DELETE',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          author: user.nickname,
-          authorEmail: user.email || '',
-        }),
+        headers: apiHeaders(),
+        body: JSON.stringify({}),
       },
     );
     const data = await response.json();

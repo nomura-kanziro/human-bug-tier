@@ -27,6 +27,7 @@ async function login() {
             localStorage.setItem("isAdmin", "true");
             localStorage.setItem("adminName", data.admin.name || "관리자");
             localStorage.setItem("adminIp", data.admin.ip || "unknown");
+            if (data.token) localStorage.setItem("authToken", data.token);
 
             alert("✅ 관리자 로그인 성공!");
             window.location.href = "/admin/comments/comment-management.html";

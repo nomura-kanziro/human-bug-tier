@@ -2,8 +2,10 @@
 // find_account.js - 아이디/비밀번호 찾기
 // ============================================
 
+const AUTH_API_BASE = 'http://localhost:5000/api/auth';
+
 function goHome() {
-  window.location.href = "../index.html";
+  window.location.href = '../index.html';
 }
 
 function goBack() {
@@ -11,10 +13,9 @@ function goBack() {
 }
 
 function goToLogin() {
-  window.location.href = "login.html";
+  window.location.href = 'login.html';
 }
 
-// 탭 전환
 function showTab(tabIndex) {
   document.getElementById('id-form').style.display = tabIndex === 0 ? 'flex' : 'none';
   document.getElementById('pw-form').style.display = tabIndex === 1 ? 'flex' : 'none';
@@ -24,8 +25,7 @@ function showTab(tabIndex) {
   });
 }
 
-// 아이디 찾기
-function findId() {
+async function findId() {
   const email = document.getElementById('findEmail').value.trim();
 
   if (!email) {
@@ -33,12 +33,27 @@ function findId() {
     return;
   }
 
-  console.log('🔍 아이디 찾기 시도:', { email });
-  alert('입력하신 이메일로 아이디 정보를 발송했습니다.\n(프론트엔드 데모)');
+  try {
+    const response = await fetch(`${AUTH_API_BASE}/find-id`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    });
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      alert(data.message || '입력하신 정보가 등록되어 있다면 이메일로 안내를 발송했습니다.');
+      return;
+    }
+
+    alert(data.error || '아이디 찾기에 실패했습니다.');
+  } catch (err) {
+    console.error(err);
+    alert('서버와 연결할 수 없습니다. backend에서 npm start를 실행해주세요.');
+  }
 }
 
-// 비밀번호 찾기
-function findPassword() {
+async function findPassword() {
   const userId = document.getElementById('findUserId').value.trim();
   const email = document.getElementById('findPwEmail').value.trim();
 
@@ -47,13 +62,26 @@ function findPassword() {
     return;
   }
 
-  console.log('🔑 비밀번호 찾기 시도:', { userId, email });
-  alert('입력하신 이메일로 비밀번호 재설정 링크를 발송했습니다.\n(프론트엔드 데모)');
+  try {
+    const response = await fetch(`${AUTH_API_BASE}/forgot-password`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nickname: userId, email }),
+    });
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      alert(data.message || '입력하신 정보가 등록되어 있다면 이메일로 재설정 링크를 발송했습니다.');
+      return;
+    }
+
+    alert(data.error || '비밀번호 찾기에 실패했습니다.');
+  } catch (err) {
+    console.error(err);
+    alert('서버와 연결할 수 없습니다. backend에서 npm start를 실행해주세요.');
+  }
 }
 
-// 페이지 로드
 window.addEventListener('load', () => {
-  // 기본으로 아이디 찾기 탭 표시
   showTab(0);
-  console.log('✅ find_account.js 로드 완료 - 아이디/비밀번호 찾기 준비됨');
 });

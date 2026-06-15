@@ -1,4 +1,8 @@
 const TierList = require('../models/TierList');
+const TierLike = require('../models/TierLike');
+const TierPostComment = require('../models/TierPostComment');
+const { getActor } = require('../utils/jwtAuth');
+const { isTierListOwner, getVoterKey } = require('../utils/ownership');
 
 const getAllTierLists = async (req, res) => {
   try {
@@ -36,7 +40,17 @@ const getTierListById = async (req, res) => {
     tierList.viewCount += 1;
     await tierList.save();
 
-    res.json(tierList);
+    const actor = getActor(req);
+    let likedByMe = false;
+    if (actor?.nickname) {
+      const voterKey = getVoterKey(actor);
+      likedByMe = Boolean(await TierLike.findOne({ tierListId: tierList._id, voterKey }));
+    }
+
+    const payload = tierList.toObject();
+    payload.likedByMe = likedByMe;
+
+    res.json(payload);
   } catch (err) {
     console.error('티어 리스트 상세 조회 실패:', err);
     res.status(500).json({ error: '티어 리스트 조회 실패' });
@@ -45,12 +59,15 @@ const getTierListById = async (req, res) => {
 
 const createTierList = async (req, res) => {
   try {
+    const actor = getActor(req);
+    if (!actor?.nickname) {
+      return res.status(401).json({ error: '로그인이 필요합니다.' });
+    }
+
     const {
       title,
       description = '',
       tierData,
-      author = 'anonymous',
-      authorEmail = '',
       thumbnail = '',
       isPublic = true,
       tags = [],
@@ -68,8 +85,8 @@ const createTierList = async (req, res) => {
       title: title.trim(),
       description: description.trim(),
       tierData,
-      author: author.trim() || 'anonymous',
-      authorEmail: authorEmail.trim(),
+      author: actor.nickname,
+      authorEmail: actor.email || '',
       thumbnail,
       isPublic,
       tags,
@@ -85,48 +102,60 @@ const createTierList = async (req, res) => {
 
 const likeTierList = async (req, res) => {
   try {
+    const actor = getActor(req);
+    if (!actor?.nickname) {
+      return res.status(401).json({ error: '로그인이 필요합니다.' });
+    }
+
     const tierList = await TierList.findById(req.params.id);
     if (!tierList) {
       return res.status(404).json({ error: '게시글을 찾을 수 없습니다.' });
     }
 
+    const voterKey = getVoterKey(actor);
+    const existingLike = await TierLike.findOne({ tierListId: tierList._id, voterKey });
+
+    if (existingLike) {
+      return res.status(400).json({
+        error: '이미 추천한 게시글입니다.',
+        likeCount: tierList.likeCount,
+        likedByMe: true,
+      });
+    }
+
+    await TierLike.create({ tierListId: tierList._id, voterKey });
     tierList.likeCount += 1;
     await tierList.save();
 
-    res.json({ success: true, likeCount: tierList.likeCount });
+    res.json({ success: true, likeCount: tierList.likeCount, likedByMe: true });
   } catch (err) {
     console.error('티어 리스트 추천 실패:', err);
     res.status(500).json({ error: '추천 처리 실패' });
   }
 };
 
-function isTierListOwner(tierList, { authorEmail = '', author = '' }) {
-  const postEmail = (tierList.authorEmail || '').trim().toLowerCase();
-  const requestEmail = (authorEmail || '').trim().toLowerCase();
-
-  if (postEmail && requestEmail) {
-    return postEmail === requestEmail;
-  }
-
-  const postAuthor = (tierList.author || '').trim();
-  const requestAuthor = (author || '').trim();
-  return Boolean(postAuthor && requestAuthor && postAuthor === requestAuthor);
-}
-
 const deleteTierList = async (req, res) => {
   try {
-    const { authorEmail = '', author = '' } = req.body || {};
-    const tierList = await TierList.findById(req.params.id);
+    const actor = getActor(req);
+    if (!actor?.nickname) {
+      return res.status(401).json({ error: '로그인이 필요합니다.' });
+    }
 
+    const tierList = await TierList.findById(req.params.id);
     if (!tierList) {
       return res.status(404).json({ error: '게시글을 찾을 수 없습니다.' });
     }
 
-    if (!isTierListOwner(tierList, { authorEmail, author })) {
+    if (!isTierListOwner(tierList, actor)) {
       return res.status(403).json({ error: '본인 게시글만 삭제할 수 있습니다.' });
     }
 
-    await TierList.findByIdAndDelete(req.params.id);
+    await Promise.all([
+      TierList.findByIdAndDelete(req.params.id),
+      TierPostComment.deleteMany({ tierListId: req.params.id }),
+      TierLike.deleteMany({ tierListId: req.params.id }),
+    ]);
+
     res.json({ success: true });
   } catch (err) {
     console.error('티어 리스트 삭제 실패:', err);
@@ -136,14 +165,19 @@ const deleteTierList = async (req, res) => {
 
 const reportTierList = async (req, res) => {
   try {
-    const { reason = '', detail = '', author = '', authorEmail = '' } = req.body || {};
+    const actor = getActor(req);
+    if (!actor?.nickname) {
+      return res.status(401).json({ error: '로그인이 필요합니다.' });
+    }
+
+    const { reason = '', detail = '' } = req.body || {};
     const tierList = await TierList.findById(req.params.id);
 
     if (!tierList) {
       return res.status(404).json({ error: '게시글을 찾을 수 없습니다.' });
     }
 
-    if (isTierListOwner(tierList, { authorEmail, author })) {
+    if (isTierListOwner(tierList, actor)) {
       return res.status(400).json({ error: '본인 게시글은 신고할 수 없습니다.' });
     }
 

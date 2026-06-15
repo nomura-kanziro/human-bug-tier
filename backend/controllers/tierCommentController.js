@@ -3,19 +3,8 @@ const TierList = require('../models/TierList');
 const TierPostComment = require('../models/TierPostComment');
 const getClientIp = require('../utils/getClientIp');
 const { isUserBlocked } = require('../utils/checkBlocked');
-
-function isCommentOwner(comment, { authorEmail = '', author = '' }) {
-  const commentEmail = (comment.authorEmail || '').trim().toLowerCase();
-  const requestEmail = (authorEmail || '').trim().toLowerCase();
-
-  if (commentEmail && requestEmail) {
-    return commentEmail === requestEmail;
-  }
-
-  const commentAuthor = (comment.author || '').trim();
-  const requestAuthor = (author || '').trim();
-  return Boolean(commentAuthor && requestAuthor && commentAuthor === requestAuthor);
-}
+const { getActor } = require('../utils/jwtAuth');
+const { isCommentOwner } = require('../utils/ownership');
 
 const getTierComments = async (req, res) => {
   try {
@@ -40,10 +29,14 @@ const getTierComments = async (req, res) => {
 const createTierComment = async (req, res) => {
   try {
     const { id } = req.params;
+    const actor = getActor(req);
+
+    if (!actor?.nickname) {
+      return res.status(401).json({ error: '로그인이 필요합니다.' });
+    }
+
     const {
       content,
-      author,
-      authorEmail = '',
       parentCommentId = null,
       quotedUser = '',
       quotedMessage = '',
@@ -54,12 +47,6 @@ const createTierComment = async (req, res) => {
     }
 
     const trimmedContent = (content || '').trim();
-    const trimmedAuthor = (author || '').trim();
-
-    if (!trimmedAuthor) {
-      return res.status(400).json({ error: '로그인이 필요합니다.' });
-    }
-
     if (!trimmedContent) {
       return res.status(400).json({ error: '댓글 내용을 입력해주세요.' });
     }
@@ -85,7 +72,7 @@ const createTierComment = async (req, res) => {
     }
 
     const clientIp = getClientIp(req);
-    const block = await isUserBlocked(trimmedAuthor, clientIp);
+    const block = await isUserBlocked(actor.nickname, clientIp);
     if (block) {
       return res.status(403).json({
         error: '관리자로 인해 차단당했습니다.',
@@ -95,8 +82,8 @@ const createTierComment = async (req, res) => {
 
     const comment = await TierPostComment.create({
       tierListId: id,
-      author: trimmedAuthor,
-      authorEmail: (authorEmail || '').trim(),
+      author: actor.nickname,
+      authorEmail: actor.email || '',
       content: trimmedContent,
       ip: clientIp,
       parentCommentId: parentCommentId || null,
@@ -114,13 +101,17 @@ const createTierComment = async (req, res) => {
 const updateTierComment = async (req, res) => {
   try {
     const { id, commentId } = req.params;
-    const { content, author, authorEmail = '' } = req.body || {};
+    const actor = getActor(req);
+
+    if (!actor?.nickname) {
+      return res.status(401).json({ error: '로그인이 필요합니다.' });
+    }
 
     if (!mongoose.Types.ObjectId.isValid(id) || !mongoose.Types.ObjectId.isValid(commentId)) {
       return res.status(400).json({ error: '유효하지 않은 ID입니다.' });
     }
 
-    const trimmedContent = (content || '').trim();
+    const trimmedContent = (req.body?.content || '').trim();
     if (!trimmedContent) {
       return res.status(400).json({ error: '댓글 내용을 입력해주세요.' });
     }
@@ -134,7 +125,7 @@ const updateTierComment = async (req, res) => {
       return res.status(404).json({ error: '댓글을 찾을 수 없습니다.' });
     }
 
-    if (!isCommentOwner(comment, { authorEmail, author })) {
+    if (!isCommentOwner(comment, actor)) {
       return res.status(403).json({ error: '본인 댓글만 수정할 수 있습니다.' });
     }
 
@@ -151,7 +142,11 @@ const updateTierComment = async (req, res) => {
 const deleteTierComment = async (req, res) => {
   try {
     const { id, commentId } = req.params;
-    const { author, authorEmail = '' } = req.body || {};
+    const actor = getActor(req);
+
+    if (!actor?.nickname) {
+      return res.status(401).json({ error: '로그인이 필요합니다.' });
+    }
 
     if (!mongoose.Types.ObjectId.isValid(id) || !mongoose.Types.ObjectId.isValid(commentId)) {
       return res.status(400).json({ error: '유효하지 않은 ID입니다.' });
@@ -162,7 +157,7 @@ const deleteTierComment = async (req, res) => {
       return res.status(404).json({ error: '댓글을 찾을 수 없습니다.' });
     }
 
-    if (!isCommentOwner(comment, { authorEmail, author })) {
+    if (!isCommentOwner(comment, actor)) {
       return res.status(403).json({ error: '본인 댓글만 삭제할 수 있습니다.' });
     }
 
@@ -181,7 +176,13 @@ const deleteTierComment = async (req, res) => {
 const reportTierComment = async (req, res) => {
   try {
     const { id, commentId } = req.params;
-    const { reason = '', detail = '', author = '', authorEmail = '' } = req.body || {};
+    const actor = getActor(req);
+
+    if (!actor?.nickname) {
+      return res.status(401).json({ error: '로그인이 필요합니다.' });
+    }
+
+    const { reason = '', detail = '' } = req.body || {};
 
     if (!mongoose.Types.ObjectId.isValid(id) || !mongoose.Types.ObjectId.isValid(commentId)) {
       return res.status(400).json({ error: '유효하지 않은 ID입니다.' });
@@ -192,7 +193,7 @@ const reportTierComment = async (req, res) => {
       return res.status(404).json({ error: '댓글을 찾을 수 없습니다.' });
     }
 
-    if (isCommentOwner(comment, { authorEmail, author })) {
+    if (isCommentOwner(comment, actor)) {
       return res.status(400).json({ error: '본인 댓글은 신고할 수 없습니다.' });
     }
 

@@ -1,9 +1,12 @@
 const User = require('../models/User');
 const getClientIp = require('../utils/getClientIp');
 const { isUserBlocked } = require('../utils/checkBlocked');
+const { signUserToken, getJwtSecret } = require('../utils/jwtAuth');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+
+const GENERIC_EMAIL_MSG = '입력하신 정보가 등록되어 있다면 이메일로 안내를 발송했습니다.';
 
 // 이메일 전송 설정 (Gmail 예시)
 const transporter = nodemailer.createTransport({
@@ -29,7 +32,7 @@ const register = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // 인증 토큰 생성
-    const verificationToken = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const verificationToken = jwt.sign({ email }, getJwtSecret(), { expiresIn: '1h' });
 
     const newUser = new User({
       email,
@@ -88,7 +91,7 @@ const verifyEmail = async (req, res) => {
   try {
     const { token } = req.params;
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, getJwtSecret());
     const user = await User.findOne({ email: decoded.email, verificationToken: token });
 
     if (!user) {
@@ -115,9 +118,6 @@ const verifyEmail = async (req, res) => {
   }
 };
 
-module.exports = { register, verifyEmail };
-
-// 로그인
 const login = async (req, res) => {
   try {
     const { userId, password } = req.body; // userId = nickname
@@ -150,21 +150,131 @@ const login = async (req, res) => {
       });
     }
 
-    // 로그인 성공 (간단하게 user 정보 반환)
+    const token = signUserToken(user);
+
     res.json({
       success: true,
       message: '로그인 성공',
+      token,
       user: {
         nickname: user.nickname,
         email: user.email,
-        _id: user._id
-      }
+        _id: user._id,
+      },
     });
-
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: '로그인 처리 중 오류가 발생했습니다.' });
   }
 };
 
-module.exports = { register, verifyEmail, login };
+const findId = async (req, res) => {
+  try {
+    const email = (req.body?.email || '').trim().toLowerCase();
+    if (!email) {
+      return res.status(400).json({ error: '이메일을 입력해주세요.' });
+    }
+
+    const user = await User.findOne({ email, isVerified: true });
+    if (user && process.env.EMAIL_USER && process.env.EMAIL_APP_PASSWORD) {
+      await transporter.sendMail({
+        from: `"휴먼버그티어" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: '아이디 찾기 안내',
+        html: `<h2>아이디 찾기 결과</h2><p>회원님의 아이디는 <strong>${user.nickname}</strong> 입니다.</p>`,
+      });
+    }
+
+    res.json({ success: true, message: GENERIC_EMAIL_MSG });
+  } catch (err) {
+    console.error('아이디 찾기 실패:', err);
+    res.status(500).json({ error: '아이디 찾기 처리 중 오류가 발생했습니다.' });
+  }
+};
+
+const forgotPassword = async (req, res) => {
+  try {
+    const nickname = (req.body?.nickname || req.body?.userId || '').trim();
+    const email = (req.body?.email || '').trim().toLowerCase();
+
+    if (!nickname || !email) {
+      return res.status(400).json({ error: '아이디와 이메일을 모두 입력해주세요.' });
+    }
+
+    const user = await User.findOne({ nickname, email, isVerified: true });
+    if (user) {
+      const resetToken = jwt.sign({ email: user.email, purpose: 'reset' }, getJwtSecret(), { expiresIn: '1h' });
+      user.resetPasswordToken = resetToken;
+      user.resetPasswordExpires = Date.now() + 3600000;
+      await user.save();
+
+      if (process.env.EMAIL_USER && process.env.EMAIL_APP_PASSWORD) {
+        const resetUrl = `http://localhost:5000/user_login/reset_password.html?token=${encodeURIComponent(resetToken)}`;
+        await transporter.sendMail({
+          from: `"휴먼버그티어" <${process.env.EMAIL_USER}>`,
+          to: email,
+          subject: '비밀번호 재설정 안내',
+          html: `
+            <h2>비밀번호 재설정</h2>
+            <p>아래 버튼을 클릭해 새 비밀번호를 설정해주세요.</p>
+            <a href="${resetUrl}" style="display:inline-block;padding:12px 24px;background:#007bff;color:#fff;text-decoration:none;border-radius:6px;">비밀번호 재설정</a>
+            <p style="color:#666;font-size:14px;">링크는 1시간 후 만료됩니다.</p>`,
+        });
+      }
+    }
+
+    res.json({ success: true, message: GENERIC_EMAIL_MSG });
+  } catch (err) {
+    console.error('비밀번호 찾기 실패:', err);
+    res.status(500).json({ error: '비밀번호 찾기 처리 중 오류가 발생했습니다.' });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  try {
+    const token = (req.body?.token || '').trim();
+    const password = (req.body?.password || '').trim();
+
+    if (!token || !password) {
+      return res.status(400).json({ error: '토큰과 새 비밀번호가 필요합니다.' });
+    }
+
+    if (password.length < 4) {
+      return res.status(400).json({ error: '비밀번호는 4자 이상이어야 합니다.' });
+    }
+
+    const decoded = jwt.verify(token, getJwtSecret());
+    if (decoded.purpose !== 'reset') {
+      return res.status(400).json({ error: '유효하지 않은 재설정 토큰입니다.' });
+    }
+
+    const user = await User.findOne({
+      email: decoded.email,
+      resetPasswordToken: token,
+      resetPasswordExpires: { $gt: Date.now() },
+    });
+
+    if (!user) {
+      return res.status(400).json({ error: '만료되었거나 유효하지 않은 링크입니다.' });
+    }
+
+    user.password = await bcrypt.hash(password, 10);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    res.json({ success: true, message: '비밀번호가 변경되었습니다. 로그인해주세요.' });
+  } catch (err) {
+    console.error('비밀번호 재설정 실패:', err);
+    res.status(400).json({ error: '만료되었거나 유효하지 않은 링크입니다.' });
+  }
+};
+
+module.exports = {
+  register,
+  verifyEmail,
+  login,
+  findId,
+  forgotPassword,
+  resetPassword,
+};

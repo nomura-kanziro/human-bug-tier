@@ -327,8 +327,124 @@ async function deleteAdminNotice(noticeId) {
   }
 }
 
+let reportedTierPosts = [];
+let reportedTierComments = [];
+
+function getAdminAuthHeaders() {
+  if (typeof getAuthHeaders === 'function') return getAuthHeaders();
+  const token = localStorage.getItem('authToken');
+  const headers = { 'Content-Type': 'application/json' };
+  if (token) headers.Authorization = `Bearer ${token}`;
+  return headers;
+}
+
+async function loadTierReports() {
+  try {
+    const [postsRes, commentsRes] = await Promise.all([
+      fetch(`${API_BASE}/api/admin/tier-reports/posts`, { headers: getAdminAuthHeaders() }),
+      fetch(`${API_BASE}/api/admin/tier-reports/comments`, { headers: getAdminAuthHeaders() }),
+    ]);
+
+    if (postsRes.ok) reportedTierPosts = await postsRes.json();
+    if (commentsRes.ok) reportedTierComments = await commentsRes.json();
+
+    renderTierReports();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function renderTierReports() {
+  const postsBody = document.getElementById('tier-report-posts-body');
+  const commentsBody = document.getElementById('tier-report-comments-body');
+  if (!postsBody || !commentsBody) return;
+
+  if (!reportedTierPosts.length) {
+    postsBody.innerHTML = '<tr class="empty-row"><td colspan="6">신고된 게시글이 없습니다.</td></tr>';
+  } else {
+    postsBody.innerHTML = reportedTierPosts.map((post, idx) => {
+      const id = post._id || post.id;
+      const reason = [post.reportReason, post.reportDetail].filter(Boolean).join(' / ') || '-';
+      return `
+        <tr>
+          <td>${idx + 1}</td>
+          <td>${escapeHtml(post.title)}</td>
+          <td>${escapeHtml(post.author || '-')}</td>
+          <td>${escapeHtml(reason)}</td>
+          <td>${formatDate(post.updatedAt || post.createdAt)}</td>
+          <td>
+            <button onclick="dismissTierPostReport('${id}')">해제</button>
+            <button onclick="deleteTierPostReport('${id}')" class="danger-btn-inline">삭제</button>
+          </td>
+        </tr>`;
+    }).join('');
+  }
+
+  if (!reportedTierComments.length) {
+    commentsBody.innerHTML = '<tr class="empty-row"><td colspan="6">신고된 댓글이 없습니다.</td></tr>';
+  } else {
+    commentsBody.innerHTML = reportedTierComments.map((comment, idx) => {
+      const id = comment._id || comment.id;
+      const reason = [comment.reportReason, comment.reportDetail].filter(Boolean).join(' / ') || '-';
+      const snippet = (comment.content || '').length > 80 ? `${comment.content.slice(0, 80)}...` : (comment.content || '');
+      return `
+        <tr>
+          <td>${idx + 1}</td>
+          <td>${escapeHtml(String(comment.tierListId || '-'))}</td>
+          <td>${escapeHtml(comment.author || '-')}</td>
+          <td>${escapeHtml(snippet)}</td>
+          <td>${escapeHtml(reason)}</td>
+          <td>
+            <button onclick="dismissTierCommentReport('${id}')">해제</button>
+            <button onclick="deleteTierCommentReport('${id}')" class="danger-btn-inline">삭제</button>
+          </td>
+        </tr>`;
+    }).join('');
+  }
+}
+
+window.dismissTierPostReport = async function(id) {
+  if (!confirm('이 게시글 신고를 해제할까요?')) return;
+  const response = await fetch(`${API_BASE}/api/admin/tier-reports/posts/${id}/dismiss`, {
+    method: 'PATCH',
+    headers: getAdminAuthHeaders(),
+  });
+  if (response.ok) loadTierReports();
+  else alert('신고 해제에 실패했습니다.');
+};
+
+window.deleteTierPostReport = async function(id) {
+  if (!confirm('이 게시글을 삭제할까요?')) return;
+  const response = await fetch(`${API_BASE}/api/admin/tier-reports/posts/${id}`, {
+    method: 'DELETE',
+    headers: getAdminAuthHeaders(),
+  });
+  if (response.ok) loadTierReports();
+  else alert('게시글 삭제에 실패했습니다.');
+};
+
+window.dismissTierCommentReport = async function(id) {
+  if (!confirm('이 댓글 신고를 해제할까요?')) return;
+  const response = await fetch(`${API_BASE}/api/admin/tier-reports/comments/${id}/dismiss`, {
+    method: 'PATCH',
+    headers: getAdminAuthHeaders(),
+  });
+  if (response.ok) loadTierReports();
+  else alert('신고 해제에 실패했습니다.');
+};
+
+window.deleteTierCommentReport = async function(id) {
+  if (!confirm('이 댓글을 삭제할까요?')) return;
+  const response = await fetch(`${API_BASE}/api/admin/tier-reports/comments/${id}`, {
+    method: 'DELETE',
+    headers: getAdminAuthHeaders(),
+  });
+  if (response.ok) loadTierReports();
+  else alert('댓글 삭제에 실패했습니다.');
+};
+
 async function initAdminData() {
-  await Promise.all([loadComments(), loadBlocks(), loadUsers(), loadNotices()]);
+  await Promise.all([loadComments(), loadBlocks(), loadUsers(), loadNotices(), loadTierReports()]);
 }
 
 function renderComments() {

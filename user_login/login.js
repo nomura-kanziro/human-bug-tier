@@ -42,6 +42,7 @@ async function login() {
     if (response.ok && data.success) {
       alert('로그인 성공!');
       localStorage.setItem('user', JSON.stringify(data.user));
+      if (data.token) localStorage.setItem('authToken', data.token);
       window.location.href = "../index.html";
     } else if (data.blocked) {
       alert('🚫 관리자로 인해 차단당했습니다.');

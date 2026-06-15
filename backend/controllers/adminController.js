@@ -1,6 +1,7 @@
 const bcrypt = require('bcryptjs');
 const Admin = require('../models/Admin');
 const User = require('../models/User');
+const { signAdminToken } = require('../utils/jwtAuth');
 
 const seedAdmin = async () => {
   const loginId = process.env.ADMIN_INPUT_ID;
@@ -42,9 +43,12 @@ const login = async (req, res) => {
       return res.status(400).json({ error: '아이디 또는 비밀번호가 틀렸습니다.' });
     }
 
+    const token = signAdminToken(admin);
+
     res.json({
       success: true,
       message: '관리자 로그인 성공',
+      token,
       admin: {
         name: admin.name,
         loginId: admin.loginId,

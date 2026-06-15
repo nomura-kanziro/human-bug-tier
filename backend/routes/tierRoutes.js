@@ -15,6 +15,9 @@ const {
   deleteTierComment,
   reportTierComment,
 } = require('../controllers/tierCommentController');
+const { optionalAuth } = require('../utils/jwtAuth');
+
+router.use(optionalAuth);
 
 router.get('/', getAllTierLists);
 router.get('/:id/comments', getTierComments);
