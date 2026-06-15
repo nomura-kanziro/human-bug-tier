@@ -19,6 +19,148 @@
     border-top: 3px solid #dc3545;
 }
 
+.notice-admin-section {
+    margin-top: 60px;
+    padding: 28px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+}
+
+.notice-section-title {
+    border-top: 3px solid #10b981;
+    padding-top: 20px;
+    margin-top: 0;
+}
+
+.notice-filter-nav {
+    background: linear-gradient(135deg, #10b981, #059669);
+}
+
+.notice-list-filter-nav {
+    background: linear-gradient(135deg, #059669, #047857);
+    margin-bottom: 12px;
+}
+
+.notice-filter-left {
+    width: 100%;
+}
+
+.notice-form-card {
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.notice-form-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+}
+
+.notice-form-input:focus,
+.notice-form-textarea:focus {
+    outline: none;
+    border-color: #10b981;
+}
+
+.notice-form-textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 12px 14px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 14px;
+    resize: vertical;
+    box-sizing: border-box;
+    font-family: inherit;
+    line-height: 1.6;
+}
+
+.notice-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 4px;
+}
+
+.notice-post-btn {
+    padding: 12px 28px;
+    background: #10b981;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.notice-post-btn:hover {
+    background: #059669;
+}
+
+.badge-notice {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-news {
+    background: #ede9fe;
+    color: #5b21b6;
+}
+
+.notice-pin-count {
+    font-size: 14px;
+    font-weight: 600;
+    color: #059669;
+    margin-left: 8px;
+}
+
+.pin-btn {
+    background: #f59e0b;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.pin-btn:hover {
+    background: #d97706;
+}
+
+.pin-btn.unpin {
+    background: #6c757d;
+}
+
+.pin-btn.unpin:hover {
+    background: #5a6268;
+}
+
+.badge-pinned {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.notice-admin-table td:nth-child(4),
+.notice-admin-table td:nth-child(5) {
+    text-align: left;
+    max-width: 220px;
+    word-break: break-word;
+}
+
+tr.row-pinned {
+    background: #fffbeb;
+}
+
 .subsection-title {
     margin: 32px 0 12px;
     font-size: 17px;

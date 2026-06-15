@@ -1,6 +1,8 @@
 const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const path = require('path');
+const fs = require('fs');
 
 // db 연결 함수 불러오기
 const connectDB = require('./config/db');
@@ -50,7 +52,35 @@ app.get('/health', (req, res) => {
   });
 });
 
-// 기본 에러 핸들러
+const tierRoutes = require('./routes/tierRoutes');
+const authRoutes = require('./routes/authRoutes');
+const inquiryRoutes = require('./routes/inquiryRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const noticeRoutes = require('./routes/noticeRoutes');
+
+app.use('/api/tierlists', tierRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/inquiries', inquiryRoutes);
+app.use('/api/admin', adminRoutes);
+app.use('/api/notices', noticeRoutes);
+
+const projectRoot = path.join(__dirname, '..');
+app.use(express.static(projectRoot));
+
+app.use((req, res, next) => {
+  if (req.method !== 'GET' && req.method !== 'HEAD') return next();
+  if (req.path.startsWith('/api/')) return next();
+
+  const cleanPath = req.path.replace(/\/$/, '') || '/index';
+  const htmlCandidate = path.join(projectRoot, `${cleanPath}.html`);
+
+  if (fs.existsSync(htmlCandidate)) {
+    return res.sendFile(htmlCandidate);
+  }
+
+  next();
+});
+
 app.use((err, req, res, next) => {
   console.error('서버 에러:', err);
   res.status(500).json({ error: '서버 내부 오류가 발생했습니다.' });
@@ -61,9 +91,9 @@ const server = app.listen(PORT, () => {
   console.log(`🚀 서버가 포트 ${PORT}에서 실행 중입니다.`);
   console.log(`   - http://localhost:${PORT}`);
   console.log(`   - Health check: http://localhost:${PORT}/health`);
+  console.log(`   - 프론트엔드: http://localhost:${PORT}/notice/notice-detail.html`);
 });
 
-// 프로세스 레벨 에러 핸들링
 process.on('unhandledRejection', (reason) => {
   console.error('Unhandled Rejection:', reason);
 });
@@ -72,22 +102,3 @@ process.on('uncaughtException', (err) => {
   console.error('Uncaught Exception:', err);
   server.close(() => process.exit(1));
 });
-
-// 기존 코드 위쪽에 (dotenv.config() 이후쯤)
-const tierRoutes = require('./routes/tierRoutes');
-
-// 미들웨어 아래쪽에 라우터 연결
-app.use('/api/tierlists', tierRoutes);
-
-// 상단 require 부분에 추가
-const authRoutes = require('./routes/authRoutes');
-
-// 미들웨어 아래쪽에 추가
-app.use('/api/auth', authRoutes);
-
-// 기존 라우터들 아래에 추가
-const inquiryRoutes = require('./routes/inquiryRoutes');
-app.use('/api/inquiries', inquiryRoutes);
-
-const adminRoutes = require('./routes/adminRoutes');
-app.use('/api/admin', adminRoutes);

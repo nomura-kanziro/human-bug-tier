@@ -12,50 +12,19 @@
 
   <div class="notice-page">
     <div class="notice-header">
-      <h1 class="notice-title">새 소식</h1>
+      <h1 class="notice-title">
+        <span class="notice-dot" style="background:#8b5cf6;"></span>
+        새 소식
+      </h1>
       <a href="notice.html" class="back-link">← 공지사항 메인으로</a>
     </div>
 
-    <div class="notice-full-list">
-      
-      <div class="notice-item">
-        <a href="#" class="notice-link">[이벤트] 커스텀 메이커 제작 이벤트 오픈</a>
-        <p class="notice-desc">나만의 티어를 만들어 공유하고 특별 뱃지를 받아보세요!</p>
-        <span class="notice-date">2026.05.21</span>
-      </div>
-
-      <div class="notice-item">
-        <a href="#" class="notice-link">[이벤트] 행운 뽑기 2배 이벤트 진행 중</a>
-        <p class="notice-desc">이벤트 기간 동안 행운의 티어 뽑기 보상이 2배로 지급됩니다.</p>
-        <span class="notice-date">2026.05.18</span>
-      </div>
-
-      <div class="notice-item">
-        <a href="#" class="notice-link">[업데이트] iOS 지원 중단 버전 안내</a>
-        <span class="notice-date">2024.11.01</span>
-      </div>
-
-      <div class="notice-item">
-        <a href="#" class="notice-link">[이벤트] 잘찰 프로젝트 #9 피싱 피해 예방 가이드</a>
-        <span class="notice-date">2026.04.15</span>
-      </div>
-
-      <div class="notice-item">
-        <a href="#" class="notice-link">[업데이트] 잘찰 프로젝트 #8 로그인 더 쉽고 빠르게</a>
-        <span class="notice-date">2026.03.28</span>
-      </div>
-
-      <!-- 더 많은 새 소식 추가 가능 -->
-
-    </div>
-
-    <!-- 페이지네이션 -->
-    <div class="pagination" style="margin-top: 40px; text-align: center;">
-      <span>1 / 4</span>
-    </div>
+    <div id="notice-full-list" class="notice-full-list"></div>
+    <div id="notice-pagination" class="pagination"></div>
   </div>
 
   <div id="footer-placeholder"></div>
   <script src="../common.js"></script>
+  <script src="notice.js"></script>
 </body>
 </html>

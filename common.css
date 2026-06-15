@@ -257,17 +257,32 @@ body {
   padding-right: 24px;
 }
 
-/* 전체 공지 보기 링크 - 검은색 고정 */
-.notice-section a {
-  color: #111111 !important;           /* 항상 검은색 */
+.notice-section .notice-view-all {
+  font-size: 14px;
+  color: #6b7280 !important;
   text-decoration: none;
   font-weight: 500;
 }
 
-.notice-section a:hover,
-.notice-section a:active,
-.notice-section a:focus {
-  color: #111111 !important;           /* hover, click, focus 모두 검은색 유지 */
+.notice-section .notice-view-all:hover {
+  color: #111111 !important;
+}
+
+.notice-section .notice-item-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.notice-section .notice-item-title {
+  font-weight: 600;
+  color: #111;
+}
+
+.notice-section .notice-empty {
+  color: #9ca3af;
+  font-size: 14px;
+  padding: 12px 0;
 }
 
 /* ====================== 공지사항 모달 ====================== */

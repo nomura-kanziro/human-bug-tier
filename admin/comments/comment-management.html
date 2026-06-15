@@ -69,6 +69,59 @@
 
         <div id="pagination" class="pagination"></div>
 
+        <!-- ==================== 공지 올리기 섹션 ==================== -->
+        <section class="notice-admin-section">
+            <h2 class="page-title notice-section-title">📢 공지 올리기</h2>
+
+            <div class="filter-nav notice-filter-nav">
+              <div class="filter-left notice-filter-left">
+                <span class="filter-title">공지 작성</span>
+                <select id="notice-category" class="filter-select">
+                  <option value="notice">전체 공지</option>
+                  <option value="news">새 소식</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="notice-form-card">
+              <input type="text" id="notice-title-input" class="notice-form-input" placeholder="공지 제목을 입력하세요">
+              <input type="text" id="notice-summary-input" class="notice-form-input" placeholder="요약 (선택, 목록에 표시됩니다)">
+              <textarea id="notice-content-input" class="notice-form-textarea" placeholder="공지 내용을 입력하세요"></textarea>
+              <div class="notice-form-actions">
+                <button id="post-notice-btn" class="notice-post-btn">📢 공지 등록</button>
+              </div>
+            </div>
+
+            <h3 class="subsection-title">📋 등록된 공지 목록 <span id="notice-pin-count" class="notice-pin-count"></span></h3>
+
+            <div class="filter-nav notice-list-filter-nav">
+              <div class="filter-left notice-filter-left">
+                <span class="filter-title">공지 분류</span>
+                <select id="notice-list-filter" class="filter-select">
+                  <option value="all">전체</option>
+                  <option value="notice">전체 공지</option>
+                  <option value="news">새 소식</option>
+                </select>
+              </div>
+            </div>
+
+            <table id="admin-notice-table" class="admin-table notice-admin-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>고정</th>
+                        <th>분류</th>
+                        <th>제목</th>
+                        <th>요약</th>
+                        <th>작성일</th>
+                        <th>관리</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-notice-list"></tbody>
+            </table>
+            <div id="notice-pagination" class="pagination"></div>
+        </section>
+
         <!-- ==================== 차단 관리 섹션 ==================== -->
         <section class="block-section">
             <h2 class="page-title section-title">🚫 사용자 / IP 차단 관리</h2>

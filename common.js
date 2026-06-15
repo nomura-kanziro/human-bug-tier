@@ -30,6 +30,20 @@ function getBasePath() {
   return './';
 }
 
+function getProfileImageSrc() {
+  const stored = localStorage.getItem('profileImage');
+  if (stored) return stored;
+  return getBasePath() + 'tier-image/logo.webp';
+}
+
+function bindProfileImageFallback(img) {
+  if (!img) return;
+  const fallback = getBasePath() + 'tier-image/logo.webp';
+  img.addEventListener('error', () => {
+    if (img.src !== fallback) img.src = fallback;
+  }, { once: true });
+}
+
 // ========================================================
 // 홈 이동 함수 (로고 + 제목 클릭용)
 // ========================================================
@@ -277,7 +291,8 @@ function renderUserProfile() {
         overflow: hidden;
       ">
         <img id="profile-img" 
-             src="${localStorage.getItem('profileImage') || 'https://via.placeholder.com/36'}" 
+             src="${getProfileImageSrc()}" 
+             alt="프로필"
              style="width: 100%; height: 100%; object-fit: cover;">
       </div>
     </div>
@@ -285,6 +300,8 @@ function renderUserProfile() {
 
   // 햄버거 버튼 앞에 삽입
   menuBtn.insertAdjacentHTML('beforebegin', profileHTML);
+
+  bindProfileImageFallback(document.getElementById('profile-img'));
 
   // 클릭 이벤트
   const profileEl = document.getElementById('user-profile');
@@ -311,7 +328,8 @@ function showUserModal() {
         <!-- 프로필 사진 -->
         <div style="margin-bottom: 20px;">
           <img id="modal-profile-img" 
-               src="${localStorage.getItem('profileImage') || 'https://via.placeholder.com/80'}" 
+               src="${getProfileImageSrc()}" 
+               alt="프로필"
                style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #8faadc;">
         </div>
 
@@ -344,6 +362,7 @@ function showUserModal() {
   `;
 
   document.body.insertAdjacentHTML('beforeend', modalHTML);
+  bindProfileImageFallback(document.getElementById('modal-profile-img'));
 }
 
 function closeUserModal() {

@@ -3,6 +3,28 @@ const API_BASE = 'http://localhost:5000';
 let comments = [];
 let blockedList = [];
 let registeredUsers = [];
+let adminNotices = [];
+
+const NOTICE_CATEGORY_LABELS = {
+  notice: '전체 공지',
+  news: '새 소식',
+};
+
+const MAX_PINNED_NOTICES = 5;
+
+function sortAdminNotices(notices) {
+  return [...notices].sort((a, b) => {
+    if (a.isPinned !== b.isPinned) return b.isPinned - a.isPinned;
+    const aPin = new Date(a.pinnedAt || 0);
+    const bPin = new Date(b.pinnedAt || 0);
+    if (aPin !== bPin) return bPin - aPin;
+    return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+  });
+}
+
+function getPinnedCount() {
+  return adminNotices.filter(n => n.isPinned).length;
+}
 
 let currentTypeFilter = 'all';
 let currentReportFilter = '';
@@ -10,6 +32,21 @@ let currentSort = 'newest';
 
 const ITEMS_PER_PAGE = 25;
 let currentPage = 1;
+
+const NOTICE_ITEMS_PER_PAGE = 10;
+let currentNoticePage = 1;
+let currentNoticeFilter = 'all';
+
+function getFilteredAdminNotices() {
+  if (currentNoticeFilter === 'all') return adminNotices;
+  return adminNotices.filter(n => n.category === currentNoticeFilter);
+}
+
+function getNoticeEmptyMessage() {
+  if (currentNoticeFilter === 'notice') return '전체 공지 항목이 없습니다.';
+  if (currentNoticeFilter === 'news') return '새 소식 항목이 없습니다.';
+  return '등록된 공지가 없습니다.';
+}
 
 function getCommentId(comment) {
   return comment._id || comment.id;
@@ -137,8 +174,161 @@ async function loadUsers() {
   }
 }
 
+async function loadNotices() {
+  try {
+    const response = await fetch(`${API_BASE}/api/notices`);
+    if (!response.ok) throw new Error('공지 목록 조회 실패');
+    adminNotices = await response.json();
+    renderAdminNoticeList();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function renderAdminNoticeList() {
+  const tbody = document.getElementById('admin-notice-list');
+  const pinCountEl = document.getElementById('notice-pin-count');
+  if (!tbody) return;
+
+  const pinnedCount = getPinnedCount();
+  if (pinCountEl) {
+    pinCountEl.textContent = `(고정 ${pinnedCount}/${MAX_PINNED_NOTICES})`;
+  }
+
+  const sorted = sortAdminNotices(getFilteredAdminNotices());
+  const totalPages = Math.ceil(sorted.length / NOTICE_ITEMS_PER_PAGE) || 1;
+  currentNoticePage = Math.max(1, Math.min(currentNoticePage, totalPages));
+
+  const start = (currentNoticePage - 1) * NOTICE_ITEMS_PER_PAGE;
+  const paginated = sorted.slice(start, start + NOTICE_ITEMS_PER_PAGE);
+
+  if (!paginated.length) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="7">${getNoticeEmptyMessage()}</td></tr>`;
+    renderNoticePagination(totalPages);
+    return;
+  }
+
+  tbody.innerHTML = paginated.map((notice, idx) => {
+    const id = notice._id || notice.id;
+    const isNews = notice.category === 'news';
+    const canPin = pinnedCount < MAX_PINNED_NOTICES;
+    const rowNo = start + idx + 1;
+
+    return `
+      <tr class="${notice.isPinned ? 'row-pinned' : ''}">
+        <td>${rowNo}</td>
+        <td>${notice.isPinned
+          ? '<span class="badge badge-pinned">📌 고정</span>'
+          : '<span style="color:#ccc;">-</span>'}</td>
+        <td><span class="badge ${isNews ? 'badge-news' : 'badge-notice'}">${NOTICE_CATEGORY_LABELS[notice.category] || notice.category}</span></td>
+        <td><strong>${escapeHtml(notice.title)}</strong></td>
+        <td>${escapeHtml(notice.summary || '-')}</td>
+        <td>${formatDate(notice.createdAt)}</td>
+        <td style="white-space:nowrap;">
+          ${notice.isPinned
+            ? `<button class="pin-btn unpin" data-pin-id="${id}">고정 해제</button>`
+            : `<button class="pin-btn" data-pin-id="${id}" ${canPin ? '' : 'disabled style="opacity:0.4;cursor:not-allowed;"'}>📌 고정</button>`
+          }
+          <button class="danger-btn" data-notice-id="${id}">삭제</button>
+        </td>
+      </tr>`;
+  }).join('');
+
+  tbody.querySelectorAll('[data-notice-id]').forEach(btn => {
+    btn.addEventListener('click', () => deleteAdminNotice(btn.dataset.noticeId));
+  });
+
+  tbody.querySelectorAll('[data-pin-id]').forEach(btn => {
+    if (!btn.disabled) {
+      btn.addEventListener('click', () => toggleAdminNoticePin(btn.dataset.pinId));
+    }
+  });
+
+  renderNoticePagination(totalPages);
+}
+
+async function toggleAdminNoticePin(noticeId) {
+  try {
+    const response = await fetch(`${API_BASE}/api/notices/${noticeId}/pin`, { method: 'PATCH' });
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      const index = adminNotices.findIndex(n => (n._id || n.id) === noticeId);
+      if (index !== -1) adminNotices[index] = data.notice;
+      renderAdminNoticeList();
+    } else {
+      alert('❌ ' + (data.error || '고정 처리 실패'));
+    }
+  } catch (err) {
+    console.error(err);
+    alert('❌ 서버와 연결할 수 없습니다.');
+  }
+}
+
+async function postAdminNotice() {
+  const title = document.getElementById('notice-title-input')?.value.trim();
+  const summary = document.getElementById('notice-summary-input')?.value.trim();
+  const content = document.getElementById('notice-content-input')?.value.trim();
+  const category = document.getElementById('notice-category')?.value || 'notice';
+
+  if (!title || !content) {
+    alert('제목과 내용을 입력해주세요.');
+    return;
+  }
+
+  try {
+    const response = await fetch(`${API_BASE}/api/notices`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title,
+        summary,
+        content,
+        category,
+        author: localStorage.getItem('adminName') || '관리자',
+      }),
+    });
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      adminNotices.unshift(data.notice);
+      currentNoticePage = 1;
+      renderAdminNoticeList();
+      document.getElementById('notice-title-input').value = '';
+      document.getElementById('notice-summary-input').value = '';
+      document.getElementById('notice-content-input').value = '';
+      alert(`✅ ${NOTICE_CATEGORY_LABELS[category]} 공지가 등록되었습니다.`);
+    } else {
+      alert('❌ ' + (data.error || '공지 등록 실패'));
+    }
+  } catch (err) {
+    console.error(err);
+    alert('❌ 서버와 연결할 수 없습니다.');
+  }
+}
+
+async function deleteAdminNotice(noticeId) {
+  if (!confirm('이 공지를 삭제하시겠습니까?')) return;
+
+  try {
+    const response = await fetch(`${API_BASE}/api/notices/${noticeId}`, { method: 'DELETE' });
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      adminNotices = adminNotices.filter(n => (n._id || n.id) !== noticeId);
+      renderAdminNoticeList();
+      alert('✅ 공지가 삭제되었습니다.');
+    } else {
+      alert('❌ ' + (data.error || '삭제 실패'));
+    }
+  } catch (err) {
+    console.error(err);
+    alert('❌ 서버와 연결할 수 없습니다.');
+  }
+}
+
 async function initAdminData() {
-  await Promise.all([loadComments(), loadBlocks(), loadUsers()]);
+  await Promise.all([loadComments(), loadBlocks(), loadUsers(), loadNotices()]);
 }
 
 function renderComments() {
@@ -266,7 +456,23 @@ document.addEventListener('DOMContentLoaded', () => {
   if (addBlockBtn) {
     addBlockBtn.addEventListener('click', () => addBlockFromInput());
   }
+
+  const postNoticeBtn = document.getElementById('post-notice-btn');
+  if (postNoticeBtn) {
+    postNoticeBtn.addEventListener('click', postAdminNotice);
+  }
+
+  const noticeListFilter = document.getElementById('notice-list-filter');
+  if (noticeListFilter) {
+    noticeListFilter.addEventListener('change', applyNoticeFilter);
+  }
 });
+
+window.applyNoticeFilter = function() {
+  currentNoticeFilter = document.getElementById('notice-list-filter')?.value || 'all';
+  currentNoticePage = 1;
+  renderAdminNoticeList();
+};
 
 async function addBlockFromInput(value, durationDays) {
   const inputValue = (value ?? document.getElementById('block-input')?.value ?? '').trim();
@@ -452,37 +658,53 @@ window.applyFilters = function() {
   renderComments();
 };
 
-function renderPagination(totalPages) {
-  const container = document.getElementById('pagination');
-  if (!container) return;
-
+function buildPaginationHtml(totalPages, page, prevFn, nextFn, goFn) {
   let html = `<span style="margin-right:15px; color:#555; font-size:14px;">총 ${totalPages}페이지</span>`;
 
-  html += `<button onclick="goToPage(${currentPage - 1})"
+  html += `<button onclick="${prevFn}(${page - 1})"
                     style="padding:8px 16px; margin:0 4px; background:#007bff; color:white; border:none; border-radius:6px; cursor:pointer;"
-                    ${currentPage === 1 ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : ''}>◀ 이전</button>`;
+                    ${page === 1 ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : ''}>◀ 이전</button>`;
 
-  const startPage = Math.max(1, currentPage - 3);
-  const endPage = Math.min(totalPages, currentPage + 3);
+  const startPage = Math.max(1, page - 3);
+  const endPage = Math.min(totalPages, page + 3);
 
   for (let i = startPage; i <= endPage; i++) {
-    html += `<button onclick="goToPage(${i})"
-                      style="padding:8px 16px; margin:0 4px; background:${i === currentPage ? '#007bff' : '#f0f0f0'};
-                             color:${i === currentPage ? 'white' : '#333'}; border:none; border-radius:6px; cursor:pointer; font-weight:${i === currentPage ? '700' : '400'};">
+    html += `<button onclick="${goFn}(${i})"
+                      style="padding:8px 16px; margin:0 4px; background:${i === page ? '#007bff' : '#f0f0f0'};
+                             color:${i === page ? 'white' : '#333'}; border:none; border-radius:6px; cursor:pointer; font-weight:${i === page ? '700' : '400'};">
               ${i}
             </button>`;
   }
 
-  html += `<button onclick="goToPage(${currentPage + 1})"
+  html += `<button onclick="${nextFn}(${page + 1})"
                     style="padding:8px 16px; margin:0 4px; background:#007bff; color:white; border:none; border-radius:6px; cursor:pointer;"
-                    ${currentPage === totalPages ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : ''}>다음 ▶</button>`;
+                    ${page === totalPages ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : ''}>다음 ▶</button>`;
 
-  container.innerHTML = html;
+  return html;
+}
+
+function renderPagination(totalPages) {
+  const container = document.getElementById('pagination');
+  if (!container) return;
+  container.innerHTML = buildPaginationHtml(totalPages, currentPage, 'goToPage', 'goToPage', 'goToPage');
+}
+
+function renderNoticePagination(totalPages) {
+  const container = document.getElementById('notice-pagination');
+  if (!container) return;
+  container.innerHTML = buildPaginationHtml(totalPages, currentNoticePage, 'goToNoticePage', 'goToNoticePage', 'goToNoticePage');
 }
 
 window.goToPage = function(page) {
   currentPage = page;
   renderComments();
+};
+
+window.goToNoticePage = function(page) {
+  const totalPages = Math.ceil(getFilteredAdminNotices().length / NOTICE_ITEMS_PER_PAGE) || 1;
+  if (page < 1 || page > totalPages) return;
+  currentNoticePage = page;
+  renderAdminNoticeList();
 };
 
 window.renderComments = renderComments;
