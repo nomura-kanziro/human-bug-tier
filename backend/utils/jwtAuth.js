@@ -89,6 +89,7 @@ function getActor(req) {
 }
 
 module.exports = {
+  getJwtSecret,
   signUserToken,
   signAdminToken,
   verifyToken,
