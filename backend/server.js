@@ -30,6 +30,10 @@ connectDB().then(async (connected) => {
   }
 });
 
+app.get('/favicon.ico', (req, res) => {
+  res.sendFile(path.join(__dirname, '..', 'tier-image', 'logo.webp'));
+});
+
 // 테스트용 라우트
 app.get('/', (req, res) => {
   res.json({ message: 'human-bug-tier 백엔드 서버가 정상 실행 중입니다.' });

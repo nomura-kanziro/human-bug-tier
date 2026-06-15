@@ -7,13 +7,44 @@
   padding: 20px 0;
 }
 
+.post-card-wrapper {
+  position: relative;
+}
+
+.post-card-wrapper .post-card-report-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  padding: 4px 10px;
+  border: 1px solid #6b4e16;
+  border-radius: 6px;
+  background: rgba(42, 34, 16, 0.92);
+  color: #ffd76a;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.post-card-wrapper .post-card-report-btn:hover:not(:disabled) {
+  background: #3d3115;
+  color: #fff;
+}
+
+.post-card-wrapper .post-card-report-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
 .post-card {
+  display: block;
   background-color: #1f1f1f;
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid #333;
   transition: transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
+  text-decoration: none;
+  color: inherit;
 }
 
 .post-card:hover {
@@ -79,4 +110,71 @@
   gap: 12px;
   font-size: 0.8rem;
   color: #aaa;
+}
+
+.empty-message {
+  grid-column: 1 / -1;
+  width: 100%;
+  text-align: center;
+  padding: 60px 20px;
+  color: #888;
+  line-height: 1.6;
+}
+
+.report-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.report-modal-card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.report-modal-card h3 {
+  margin: 0 0 18px;
+  font-size: 1.1rem;
+  color: #111;
+}
+
+.report-modal-reasons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.report-reason-btn,
+.report-modal-cancel {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.report-reason-btn {
+  border: 2px solid #111;
+  background: #fff;
+  color: #111;
+}
+
+.report-reason-btn:hover {
+  background: #f5f5f5;
+}
+
+.report-modal-cancel {
+  margin-top: 16px;
+  border: none;
+  background: #dc3545;
+  color: #fff;
 }

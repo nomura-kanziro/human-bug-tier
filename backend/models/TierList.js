@@ -4,34 +4,61 @@ const tierListSchema = new mongoose.Schema({
   title: {
     type: String,
     required: true,
-    trim: true
+    trim: true,
   },
   description: {
     type: String,
-    trim: true
+    trim: true,
+    default: '',
   },
   tierData: {
-    type: Object,           // 프론트에서 보내는 전체 티어 데이터 (S, A, B, C... + 항목들)
-    required: true
+    type: Object,
+    required: true,
   },
   author: {
-    type: String,           // 나중에 사용자 인증 넣을 때 username 또는 userId
-    default: 'anonymous'
+    type: String,
+    default: 'anonymous',
+  },
+  authorEmail: {
+    type: String,
+    default: '',
+  },
+  thumbnail: {
+    type: String,
+    default: '',
   },
   isPublic: {
     type: Boolean,
-    default: true
+    default: true,
   },
   tags: [{
     type: String,
-    trim: true
+    trim: true,
   }],
   likeCount: {
     type: Number,
-    default: 0
-  }
+    default: 0,
+  },
+  viewCount: {
+    type: Number,
+    default: 0,
+  },
+  reported: {
+    type: Boolean,
+    default: false,
+  },
+  reportReason: {
+    type: String,
+    default: '',
+    trim: true,
+  },
+  reportDetail: {
+    type: String,
+    default: '',
+    trim: true,
+  },
 }, {
-  timestamps: true          // createdAt, updatedAt 자동 생성
+  timestamps: true,
 });
 
 const TierList = mongoose.model('TierList', tierListSchema);

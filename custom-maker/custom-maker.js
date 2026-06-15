@@ -505,6 +505,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderTier();
   renderCharacterPool();
   enableDragAndDrop();   // pool / tierList에 위임 리스너 등록
+  updateUploadButtonState();
   console.log('✅ custom-maker: 초기 로드 완료');
 });
 
@@ -544,4 +545,151 @@ function downloadAllTiersAsJSON() {
   link.click();
 
   console.log('✅ JSON 다운로드 완료');
+}
+
+// ============================================================
+// 게시판 업로드 (로그인 필수)
+// ============================================================
+function getTierApiBase() {
+  const { protocol, hostname, port } = window.location;
+  if (port === '5000') return '';
+  return `${protocol}//${hostname || 'localhost'}:5000`;
+}
+
+function isAdminLoggedIn() {
+  return localStorage.getItem('isAdmin') === 'true';
+}
+
+function getLoggedInUser() {
+  if (isAdminLoggedIn()) {
+    return {
+      nickname: localStorage.getItem('adminName') || '관리자',
+      email: '',
+      isAdmin: true,
+    };
+  }
+
+  const user = JSON.parse(localStorage.getItem('user') || 'null');
+  if (user?.nickname) {
+    return { ...user, isAdmin: false };
+  }
+  return null;
+}
+
+function hasPlacedCharacters() {
+  return Object.values(tierState).some(arr => Array.isArray(arr) && arr.length > 0);
+}
+
+function getThumbnailFromState() {
+  for (const arr of Object.values(tierState)) {
+    if (!Array.isArray(arr)) continue;
+    for (const char of arr) {
+      if (char?.img) return char.img;
+    }
+  }
+  return '../tier-image/logo.webp';
+}
+
+function normalizeImgForBoard(img) {
+  if (!img) return '/tier-image/logo.webp';
+
+  try {
+    if (img.startsWith('http')) {
+      return new URL(img).pathname;
+    }
+  } catch (err) {
+    console.warn('이미지 URL 정규화 실패:', img);
+  }
+
+  if (img.startsWith('/')) return img;
+  if (img.startsWith('../')) return '/' + img.replace(/^\.\.\//, '');
+  return '/' + img;
+}
+
+function normalizeTierStateForUpload(state) {
+  const normalized = {};
+  Object.entries(state).forEach(([key, chars]) => {
+    normalized[key] = (chars || []).map(c => ({
+      ...c,
+      img: normalizeImgForBoard(c.img),
+    }));
+  });
+  return normalized;
+}
+
+function buildUploadPayload(title, description, user) {
+  const normalizedState = normalizeTierStateForUpload(tierState);
+
+  return {
+    title: title.trim(),
+    description: (description || '').trim(),
+    tierData: {
+      tierState: normalizedState,
+      tierDefinitions: tierData.map(t => ({ id: t.id, title: t.title, subTiers: t.subTiers })),
+    },
+    author: user.nickname,
+    authorEmail: user.email || '',
+    thumbnail: normalizeImgForBoard(getThumbnailFromState()),
+    isPublic: true,
+  };
+}
+
+async function uploadToBoard() {
+  const user = getLoggedInUser();
+  if (!user) {
+    if (confirm('게시판에 업로드하려면 로그인이 필요합니다.\n로그인 페이지로 이동할까요?')) {
+      window.location.href = '../user_login/login.html';
+    }
+    return;
+  }
+
+  saveCurrentTierState();
+
+  if (!hasPlacedCharacters()) {
+    alert('티어에 배치된 캐릭터가 없습니다.\n캐릭터를 배치한 후 업로드해주세요.');
+    return;
+  }
+
+  const title = prompt('게시판에 올릴 제목을 입력해주세요.', `${user.nickname}의 커스텀 티어표`);
+  if (!title?.trim()) return;
+
+  const description = prompt('간단한 설명을 입력해주세요. (선택, 취소 가능)', '') || '';
+
+  try {
+    const response = await fetch(`${getTierApiBase()}/api/tierlists`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(buildUploadPayload(title, description, user)),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      alert('❌ ' + (data.error || '업로드에 실패했습니다.'));
+      return;
+    }
+
+    if (confirm('✅ 게시판에 업로드되었습니다!\n게시판으로 이동할까요?')) {
+      window.location.href = 'custom-maker_post/custom-maker_post.html';
+    }
+  } catch (err) {
+    console.error(err);
+    alert('❌ 서버에 연결할 수 없습니다. backend에서 npm start를 실행해주세요.');
+  }
+}
+
+function updateUploadButtonState() {
+  const uploadBtn = document.getElementById('upload-btn');
+  if (!uploadBtn) return;
+
+  const user = getLoggedInUser();
+  uploadBtn.title = user
+    ? `${user.nickname} 계정으로 게시판에 업로드합니다.`
+    : '로그인 후 게시판에 업로드할 수 있습니다.';
+  uploadBtn.disabled = false;
+}
+
+const uploadBtnEl = document.getElementById('upload-btn');
+if (uploadBtnEl) {
+  uploadBtnEl.addEventListener('click', uploadToBoard);
 }

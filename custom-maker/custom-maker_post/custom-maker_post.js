@@ -1,145 +1,335 @@
 // custom-maker_post/custom-maker_post.js
 
-// ─── 더미 게시글 데이터 (백엔드 연동 전 테스트용) ─────────────────────
-const dummyPosts = [
-  {
-    id: 1,
-    title: "내 최애 캐릭터들로 만든 신계 1티어",
-    author: "유저123",
-    date: "2026.05.30",
-    views: 342,
-    likes: 47,
-    thumbnail: "../tier-image/sample1.webp"
-  },
-  {
-    id: 2,
-    title: "2티어 최강 무투파 조합 추천합니다",
-    author: "티어왕",
-    date: "2026.05.29",
-    views: 189,
-    likes: 32,
-    thumbnail: "../tier-image/sample2.webp"
-  },
-  {
-    id: 3,
-    title: "3티어에서 1티어로 올라간 캐릭터 분석",
-    author: "분석가",
-    date: "2026.05.28",
-    views: 256,
-    likes: 19,
-    thumbnail: "../tier-image/sample3.webp"
-  },
-  {
-    id: 4,
-    title: "나만의 5티어 커스텀 티어 공유해요",
-    author: "초보티어",
-    date: "2026.05.27",
-    views: 98,
-    likes: 12,
-    thumbnail: "../tier-image/sample1.webp"
-  },
-  {
-    id: 5,
-    title: "9티어 비전투원들로 만든 재미있는 티어",
-    author: "재미쟁이",
-    date: "2026.05.26",
-    views: 145,
-    likes: 8,
-    thumbnail: "../tier-image/sample2.webp"
-  }
-];
+let allPosts = [];
+const POST_ID_STORAGE_KEY = 'selectedPostId';
+const REPORT_REASONS = ['도배 및 테러행위', '비방 및 모욕행위', '광고형 댓글', '기타'];
 
-// ─── 카드 하나를 생성하는 헬퍼 함수 ─────────────────────────────
+function getTierApiBase() {
+  const { protocol, hostname, port } = window.location;
+  if (port === '5000') return '';
+  return `${protocol}//${hostname || 'localhost'}:5000`;
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function formatPostDate(dateStr) {
+  const d = new Date(dateStr);
+  if (Number.isNaN(d.getTime())) return '';
+  return d.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\. /g, '.').replace(/\.$/, '');
+}
+
+function getPostId(post) {
+  if (!post) return '';
+  const raw = post._id ?? post.id;
+  if (!raw) return '';
+  if (typeof raw === 'object') {
+    if (raw.$oid) return String(raw.$oid);
+    if (typeof raw.toString === 'function') return raw.toString();
+  }
+  return String(raw);
+}
+
+function isValidPostId(id) {
+  return typeof id === 'string' && /^[a-fA-F0-9]{24}$/.test(id);
+}
+
+function getPostDetailUrl(id) {
+  const safeId = encodeURIComponent(id);
+
+  if (window.location.protocol === 'file:') {
+    const path = window.location.pathname || '';
+    if (path.includes('custom-maker_post') || path.includes('custom-maker\\custom-maker_post')) {
+      return `post_detail.html?id=${safeId}`;
+    }
+    return `custom-maker/custom-maker_post/post_detail.html?id=${safeId}`;
+  }
+
+  return `/custom-maker/custom-maker_post/post_detail.html?id=${safeId}`;
+}
+
+function rememberPostId(id) {
+  if (!isValidPostId(id)) return;
+  sessionStorage.setItem(POST_ID_STORAGE_KEY, id);
+}
+
+function goToPostDetail(id) {
+  const postId = typeof id === 'object' ? getPostId(id) : String(id || '');
+  if (!isValidPostId(postId)) return;
+  rememberPostId(postId);
+  window.location.href = getPostDetailUrl(postId);
+}
+
+function getLoggedInUser() {
+  try {
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
+    if (user?.nickname) return user;
+  } catch (err) {
+    console.warn('로그인 정보 파싱 실패:', err);
+  }
+  return null;
+}
+
+function isPostOwner(post, user) {
+  if (!post || !user) return false;
+
+  const postEmail = (post.authorEmail || '').trim().toLowerCase();
+  const userEmail = (user.email || '').trim().toLowerCase();
+  if (postEmail && userEmail) return postEmail === userEmail;
+
+  return (post.author || '').trim() === (user.nickname || '').trim();
+}
+
+function closeReportModal() {
+  document.getElementById('report-modal')?.remove();
+}
+
+function openReportModal(title, onSubmit) {
+  closeReportModal();
+
+  const modalHTML = `
+    <div id="report-modal" class="report-modal-overlay">
+      <div class="report-modal-card">
+        <h3>${escapeHtml(title)}</h3>
+        <div class="report-modal-reasons">
+          ${REPORT_REASONS.map(reason => `
+            <button type="button" class="report-reason-btn" data-reason="${escapeHtml(reason)}">${escapeHtml(reason)}</button>
+          `).join('')}
+        </div>
+        <button type="button" class="report-modal-cancel" id="report-modal-cancel">취소</button>
+      </div>
+    </div>`;
+
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+  const modal = document.getElementById('report-modal');
+  modal.querySelector('#report-modal-cancel')?.addEventListener('click', closeReportModal);
+  modal.querySelectorAll('.report-reason-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      let reason = btn.dataset.reason || '';
+      let detail = '';
+
+      if (reason === '기타') {
+        detail = prompt('기타 사유를 입력해주세요:') || '';
+        if (!detail.trim()) {
+          closeReportModal();
+          return;
+        }
+      }
+
+      closeReportModal();
+      await onSubmit(reason, detail.trim());
+    });
+  });
+}
+
+async function reportPost(postId) {
+  const user = getLoggedInUser();
+  if (!user) {
+    if (confirm('게시글을 신고하려면 로그인이 필요합니다.\n로그인 페이지로 이동할까요?')) {
+      window.location.href = '/user_login/login.html';
+    }
+    return;
+  }
+
+  const post = allPosts.find(item => getPostId(item) === postId);
+  if (post && isPostOwner(post, user)) {
+    alert('본인 게시글은 신고할 수 없습니다.');
+    return;
+  }
+
+  if (post?.reported) {
+    alert('이미 신고된 게시글입니다.');
+    return;
+  }
+
+  openReportModal('게시글 신고 사유 선택', async (reason, detail) => {
+    try {
+      const response = await fetch(`${getTierApiBase()}/api/tierlists/${encodeURIComponent(postId)}/report`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          reason,
+          detail,
+          author: user.nickname,
+          authorEmail: user.email || '',
+        }),
+      });
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        if (post) post.reported = true;
+        loadPosts();
+        alert('신고가 접수되었습니다.');
+        return;
+      }
+
+      alert(data.error || '신고에 실패했습니다.');
+    } catch (err) {
+      console.error(err);
+      alert('서버에 연결할 수 없습니다.');
+    }
+  });
+}
+
+function getThumbnail(post) {
+  if (post.thumbnail) return resolveAssetPath(post.thumbnail);
+  const firstChar = post.tierData?.tierState
+    ? Object.values(post.tierData.tierState).flat().find(c => c?.img)
+    : null;
+  return resolveAssetPath(firstChar?.img);
+}
+
+function resolveAssetPath(path) {
+  if (!path) return '../../tier-image/logo.webp';
+  if (path.startsWith('http') || path.startsWith('/')) return path;
+  if (path.startsWith('../')) return '..' + path;
+  return '../../' + path;
+}
+
+async function fetchPosts(search, author) {
+  const params = new URLSearchParams();
+  if (search) params.set('search', search);
+  if (author) params.set('author', author);
+
+  const query = params.toString();
+  const response = await fetch(`${getTierApiBase()}/api/tierlists${query ? `?${query}` : ''}`);
+  if (!response.ok) throw new Error('게시글 목록 조회 실패');
+  return response.json();
+}
+
 function createPostCard(post) {
-  const card = document.createElement('div');
+  const id = getPostId(post);
+  if (!isValidPostId(id)) return null;
+
+  const wrapper = document.createElement('div');
+  wrapper.className = 'post-card-wrapper';
+
+  const card = document.createElement('a');
   card.className = 'post-card';
+  card.href = getPostDetailUrl(id);
+  card.dataset.postId = id;
   card.innerHTML = `
     <div class="post-thumbnail">
-      <img src="${post.thumbnail}" alt="${post.title}">
+      <img src="${escapeHtml(getThumbnail(post))}" alt="${escapeHtml(post.title)}" onerror="this.src='../../tier-image/logo.webp'">
     </div>
     <div class="post-info">
-      <h3 class="post-title">${post.title}</h3>
+      <h3 class="post-title">${escapeHtml(post.title)}</h3>
       <div class="post-meta">
-        <span class="post-author">${post.author}</span>
-        <span class="post-date">${post.date}</span>
+        <span class="post-author">${escapeHtml(post.author || '익명')}</span>
+        <span class="post-date">${formatPostDate(post.createdAt)}</span>
       </div>
       <div class="post-stats">
-        <span>조회 ${post.views}</span>
-        <span>추천 ${post.likes}</span>
+        <span>조회 ${post.viewCount || 0}</span>
+        <span>추천 ${post.likeCount || 0}</span>
       </div>
     </div>
   `;
 
-  // 카드 클릭 → 상세 페이지 이동 (나중에 post.html?id=1 형태로 연결)
-  card.addEventListener('click', () => {
-    window.location.href = `post.html?id=${post.id}`;
-    // 현재는 post.html이 없으므로 아래 alert로 테스트
-    // alert(`게시글 "${post.title}" 상세 페이지로 이동합니다.`);
-  });
+  wrapper.appendChild(card);
 
-  return card;
+  const user = getLoggedInUser();
+  if (user && !isPostOwner(post, user)) {
+    const reportBtn = document.createElement('button');
+    reportBtn.type = 'button';
+    reportBtn.className = 'post-card-report-btn';
+    reportBtn.textContent = post.reported ? '신고됨' : '신고';
+    reportBtn.disabled = Boolean(post.reported);
+    reportBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      reportPost(id);
+    });
+    wrapper.appendChild(reportBtn);
+  }
+
+  return wrapper;
 }
 
-// ─── 게시글 렌더링 함수 ─────────────────────────────
+function setupPostLinkDelegation() {
+  document.addEventListener('click', (event) => {
+    const link = event.target.closest('[data-post-id]');
+    if (!link?.dataset.postId) return;
+    if (!isValidPostId(link.dataset.postId)) return;
+    rememberPostId(link.dataset.postId);
+  });
+}
+
 function loadPosts(filteredPosts = null) {
   const grid = document.getElementById('post-grid');
   if (!grid) return;
 
   grid.innerHTML = '';
 
-  const postsToShow = filteredPosts || dummyPosts;
+  const postsToShow = filteredPosts || allPosts;
 
-  if (postsToShow.length === 0) {
-    grid.innerHTML = `<div class="empty-message">검색 결과가 없습니다.<br>다른 검색어로 시도해보세요.</div>`;
+  if (!postsToShow.length) {
+    grid.innerHTML = '<div class="empty-message">등록된 게시글이 없습니다.<br>커스텀 메이커에서 티어표를 만들어 업로드해보세요!</div>';
     return;
   }
 
   postsToShow.forEach(post => {
     const card = createPostCard(post);
-    grid.appendChild(card);
+    if (card) grid.appendChild(card);
   });
 }
 
-// ─── 검색 기능 ─────────────────────────────
-function searchPosts() {
-  const keyword = document.getElementById('search-input').value.toLowerCase().trim();
+async function searchPosts() {
+  const keyword = document.getElementById('search-input')?.value.trim() || '';
 
-  if (!keyword) {
-    loadPosts();           // 검색어 없으면 전체 표시
-    return;
+  try {
+    allPosts = await fetchPosts(keyword);
+    loadPosts();
+  } catch (err) {
+    console.error(err);
+    alert('게시글을 불러올 수 없습니다. 백엔드 서버를 확인해주세요.');
   }
-
-  const filtered = dummyPosts.filter(post =>
-    post.title.toLowerCase().includes(keyword) ||
-    post.author.toLowerCase().includes(keyword)
-  );
-
-  loadPosts(filtered);
 }
 
-// ─── 페이지 로드 시 초기화 ─────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  console.log('✅ custom-maker_post.js 로드 완료');
+function goWritePage() {
+  window.location.href = '../custom-maker.html';
+}
 
-  // 헤더 + 푸터 로드
-  if (typeof loadCommon === 'function') {
-    loadCommon();
+async function initBoard() {
+  const urlAuthor = new URLSearchParams(window.location.search).get('author');
+  if (urlAuthor) {
+    const searchInput = document.getElementById('search-input');
+    if (searchInput) searchInput.value = urlAuthor;
   }
 
-  // 게시글 카드 렌더링
-  loadPosts();
+  try {
+    allPosts = await fetchPosts('', urlAuthor || '');
+    loadPosts();
+  } catch (err) {
+    console.error(err);
+    const grid = document.getElementById('post-grid');
+    if (grid) {
+      grid.innerHTML = '<div class="empty-message">게시글을 불러올 수 없습니다.<br>backend에서 npm start를 실행해주세요.</div>';
+    }
+  }
+}
 
-  // 검색 입력창 엔터키 지원
+document.addEventListener('DOMContentLoaded', () => {
+  if (typeof loadCommon === 'function') loadCommon();
+  setupPostLinkDelegation();
+  initBoard();
+
   const searchInput = document.getElementById('search-input');
   if (searchInput) {
     searchInput.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') searchPosts();
     });
   }
-
-  console.log('✅ 게시판 초기화 완료');
 });
 
-// 전역에서 사용할 수 있게 export
 window.loadPosts = loadPosts;
 window.searchPosts = searchPosts;
+window.goWritePage = goWritePage;
+window.goToPostDetail = goToPostDetail;

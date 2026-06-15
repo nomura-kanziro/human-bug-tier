@@ -119,15 +119,63 @@
   background: #333;
 }
 
-/* 댓글 섹션 */
-.comment-section {
-  margin-top: 40px;
+.delete-btn {
+  border-color: #8b2e2e;
+  background: #3a1a1a;
+  color: #ffb4b4;
+}
+
+.delete-btn:hover {
+  background: #5c2020;
+  color: #fff;
+}
+
+.report-btn {
+  border-color: #6b4e16;
+  background: #2a2210;
+  color: #ffd76a;
+}
+
+.report-btn:hover:not(:disabled) {
+  background: #3d3115;
+  color: #fff;
+}
+
+.report-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 댓글 섹션 — 티어표(.tier-list)와 동일한 가로 폭 */
+.post-detail-container .comment-section {
+  width: 95%;
+  max-width: 2800px;
+  margin: 40px auto 0;
+  padding: 0 20px 20px;
+  box-sizing: border-box;
+}
+
+.comment-section h3 {
+  margin: 0 0 16px;
+  color: #111;
+}
+
+.comment-login-hint {
+  margin: 0 0 12px;
+  color: #888;
+  font-size: 0.9rem;
 }
 
 .comment-form {
   display: flex;
   gap: 10px;
   margin-bottom: 20px;
+  align-items: stretch;
+}
+
+.comment-form button {
+  flex-shrink: 0;
+  align-self: stretch;
 }
 
 /* contenteditable 댓글 입력창 스타일 */
@@ -163,10 +211,215 @@
 
 .comment-form button {
   padding: 0 20px;
+  min-width: 72px;
   background: #ffc400;
   color: #111;
   border: none;
   border-radius: 8px;
   font-weight: bold;
   cursor: pointer;
+}
+
+.comment-form button:disabled {
+  background: #555;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.comment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.post-comment-item {
+  padding: 14px 16px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background: #1a1a1a;
+}
+
+.post-comment-item.is-reply {
+  margin-left: 28px;
+  border-color: #2a2a2a;
+  background: #151515;
+}
+
+.post-comment-quote {
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  border-left: 3px solid #ffc400;
+  background: rgba(255, 196, 0, 0.08);
+  color: #ccc;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.post-comment-quote strong {
+  color: #ffc400;
+}
+
+.post-comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.post-comment-author {
+  font-weight: 600;
+  color: #ffc400;
+  font-size: 0.92rem;
+}
+
+.post-comment-date {
+  color: #888;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.post-comment-body {
+  color: #eee;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.post-comment-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.post-comment-action-btn {
+  padding: 4px 10px;
+  border: 1px solid #666;
+  border-radius: 6px;
+  background: transparent;
+  color: #ccc;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.post-comment-action-btn:hover:not(:disabled) {
+  background: #2a2a2a;
+  color: #fff;
+}
+
+.post-comment-action-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.post-comment-action-btn.danger:hover:not(:disabled) {
+  border-color: #8b2e2e;
+  color: #ffb4b4;
+}
+
+.post-comment-action-box {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #333;
+}
+
+.post-comment-action-box .comment-input-box {
+  min-height: 72px;
+}
+
+.post-comment-action-btns {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.post-comment-action-btns button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.post-comment-action-btns .cancel-btn {
+  border: 1px solid #666;
+  background: transparent;
+  color: #ccc;
+}
+
+.post-comment-action-btns .submit-btn {
+  border: none;
+  background: #ffc400;
+  color: #111;
+  font-weight: 700;
+}
+
+.comment-empty,
+.comment-loading,
+.comment-error {
+  padding: 24px 12px;
+  text-align: center;
+  color: #888;
+  font-size: 0.92rem;
+}
+
+.report-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.report-modal-card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.report-modal-card h3 {
+  margin: 0 0 18px;
+  font-size: 1.1rem;
+  color: #111;
+}
+
+.report-modal-reasons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.report-reason-btn,
+.report-modal-cancel {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.report-reason-btn {
+  border: 2px solid #111;
+  background: #fff;
+  color: #111;
+}
+
+.report-reason-btn:hover {
+  background: #f5f5f5;
+}
+
+.report-modal-cancel {
+  margin-top: 16px;
+  border: none;
+  background: #dc3545;
+  color: #fff;
 }
