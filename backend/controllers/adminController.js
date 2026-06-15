@@ -1,5 +1,6 @@
 const bcrypt = require('bcryptjs');
 const Admin = require('../models/Admin');
+const User = require('../models/User');
 
 const seedAdmin = async () => {
   const loginId = process.env.ADMIN_INPUT_ID;
@@ -56,4 +57,17 @@ const login = async (req, res) => {
   }
 };
 
-module.exports = { seedAdmin, login };
+const getUsers = async (req, res) => {
+  try {
+    const users = await User.find()
+      .select('nickname email ip isVerified createdAt')
+      .sort({ createdAt: -1 });
+
+    res.json(users);
+  } catch (err) {
+    console.error('사용자 목록 조회 에러:', err);
+    res.status(500).json({ error: '사용자 목록 조회 실패' });
+  }
+};
+
+module.exports = { seedAdmin, login, getUsers };

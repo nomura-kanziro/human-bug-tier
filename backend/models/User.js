@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  ip: {
+    type: String,
+    default: 'unknown'
+  },
   isVerified: {
     type: Boolean,
     default: false

@@ -40,14 +40,11 @@ async function login() {
     const data = await response.json();
 
     if (response.ok && data.success) {
-      // 로그인 성공 처리
       alert('로그인 성공!');
-
-      // 사용자 정보 저장 (나중에 사용)
       localStorage.setItem('user', JSON.stringify(data.user));
-
-      // 메인 페이지로 이동 (원하는 페이지로 변경 가능)
       window.location.href = "../index.html";
+    } else if (data.blocked) {
+      alert('🚫 관리자로 인해 차단당했습니다.');
     } else {
       alert('❌ ' + (data.error || '로그인에 실패했습니다.'));
     }

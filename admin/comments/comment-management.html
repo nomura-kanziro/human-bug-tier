@@ -5,19 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>댓글 관리 - Admin</title>
     
-    <!-- ★★★ 반드시 이렇게 불러와야 함 ★★★ -->
     <link rel="stylesheet" href="../../Header_Footer.css">
     <link rel="stylesheet" href="comment-management.css">
 </head>
 <body style="background-color: #ffffff;">
 
-    <!-- 헤더 자리 -->
     <div id="header-placeholder"></div>
 
     <main class="admin-main">
         <h1 class="page-title">📋 전체 댓글 관리</h1>
 
-        <!-- ==================== 파란색 네비게이션 ==================== -->
         <div class="filter-nav">
           <div class="filter-left">
             <span class="filter-title">댓글 탐색 기능</span>
@@ -26,26 +23,23 @@
             <button onclick="setTypeFilter('admin')"   id="filter-admin"   class="filter-btn">관리자 댓글</button>
             <button onclick="setTypeFilter('reported')" id="filter-reported" class="filter-btn">신고한 댓글</button>
 
-            <!-- 새로 추가: 정렬 select -->
-            <select id="sort-select" onchange="applyFilters()" style="padding:8px 12px; border:2px solid #fff; border-radius:6px; font-size:14px; margin-left:12px;">
+            <select id="sort-select" onchange="applyFilters()" class="filter-select">
               <option value="newest">최신순</option>
               <option value="oldest">오래된순</option>
             </select>
           </div>
       
             <div class="filter-right">
-              <div style="display:flex; gap:8px; align-items:center;">
+              <div class="search-group">
                 <input type="text" id="search-input" placeholder="작성자ID 또는 내용 검색..." 
-                       onkeyup="if(event.key==='Enter') applyFilters()" 
-                       style="flex:1; padding:10px 14px; border:2px solid #fff; border-radius:6px; font-size:14px;">
+                       onkeyup="if(event.key==='Enter') applyFilters()">
               
-                <button onclick="applyFilters()" 
-                        style="padding:10px 24px; background:#fff; color:#007bff; border:2px solid #fff; border-radius:6px; cursor:pointer; font-weight:700; white-space:nowrap;">
+                <button onclick="applyFilters()" class="search-btn">
                   🔍 검색
                 </button>
               </div>
         
-              <select id="report-filter" onchange="applyFilters()" style="padding:10px 12px; border:2px solid #fff; border-radius:6px; font-size:14px;">
+              <select id="report-filter" onchange="applyFilters()" class="filter-select">
                 <option value="">없음</option>
                 <option value="도배 및 테러행위">도배 및 테러행위</option>
                 <option value="비방 및 모욕행위">비방 및 모욕행위</option>
@@ -64,7 +58,7 @@
                 <tr>
                     <th>No</th>
                     <th>작성자 ID</th>
-                    <th>IP</th>
+                    <th>이메일</th>
                     <th>댓글 내용</th>
                     <th>작성일</th>
                     <th>관리</th>
@@ -73,68 +67,91 @@
             <tbody></tbody>
         </table>
 
-        <!-- ==================== 페이지네이션 ==================== -->
-        <div id="pagination" style="margin: 25px 0; text-align: center; display: flex; justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap;">
-          <!-- JS에서 동적으로 채워짐 -->
-        </div>
+        <div id="pagination" class="pagination"></div>
 
+        <!-- ==================== 차단 관리 섹션 ==================== -->
         <section class="block-section">
-            <h2>🚫 사용자 / IP 차단 관리</h2>
-            <div class="block-input">
-                <input type="text" id="block-input" placeholder="차단할 ID 또는 IP 입력">
-                <button id="add-block-btn">차단 추가</button>
+            <h2 class="page-title section-title">🚫 사용자 / IP 차단 관리</h2>
+
+            <div class="filter-nav block-filter-nav">
+              <div class="filter-left block-filter-left">
+                <span class="filter-title">차단 추가</span>
+                <input type="text" id="block-input" class="block-text-input" placeholder="차단할 ID 또는 IP 입력">
+                <select id="block-duration-select" class="filter-select block-duration-select">
+                  <option value="1">1일</option>
+                  <option value="3">3일</option>
+                  <option value="7">7일</option>
+                  <option value="14">14일</option>
+                  <option value="30">30일</option>
+                  <option value="90">90일</option>
+                  <option value="custom">관리자 지정</option>
+                </select>
+                <input type="number" id="block-custom-days" class="block-custom-days" min="1" max="9999" placeholder="일수 (최대 9999)">
+                <button id="add-block-btn" class="block-add-btn">🚫 차단 추가</button>
+              </div>
             </div>
-            <ul id="block-list"></ul>
+
+            <h3 class="subsection-title">👥 등록된 사용자 (회원가입)</h3>
+            <table id="user-table" class="admin-table block-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>닉네임</th>
+                        <th>이메일</th>
+                        <th>인증</th>
+                        <th>상태</th>
+                        <th>관리</th>
+                    </tr>
+                </thead>
+                <tbody id="user-list"></tbody>
+            </table>
+
+            <h3 class="subsection-title">🚫 차단 목록</h3>
+            <table id="block-table" class="admin-table block-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>대상</th>
+                        <th>유형</th>
+                        <th>차단 기간</th>
+                        <th>차단일</th>
+                        <th>만료일</th>
+                        <th>남은 기간</th>
+                        <th>관리</th>
+                    </tr>
+                </thead>
+                <tbody id="block-list"></tbody>
+            </table>
         </section>
     </main>
 
-    <!-- 푸터 자리 -->
     <div id="footer-placeholder"></div>
 
-    <!-- 공통 JS (script.js로 수정!) -->
     <script src="../../common.js"></script>
     <script src="comment-management.js"></script>
 
     <script>
-        // ★★★ 어드민 로그인 체크 (페이지 접근 차단) ★★★
         function checkAdminAuth() {
             if (localStorage.getItem("isAdmin") !== "true") {
                 alert("❌ 관리자 로그인이 필요합니다.");
-                window.location.href = "../admin-login.html";   // admin 폴더 기준
+                window.location.href = "../admin-login.html";
                 return false;
             }
             return true;
         }
     
-        // 페이지 로드되자마자 바로 체크
         window.addEventListener('load', checkAdminAuth);
-        // ========================================================
-        // comment-management.html 전용 로드 스크립트
-        // 역할: 
-        //   1. common.js의 loadCommon() 호출 → header/footer + 이벤트(로고 클릭, 메뉴, 푸터 링크) 모두 처리
-        //   2. renderComments / renderBlockList 안전하게 호출
-        // ========================================================
-        window.addEventListener('load', () => {
-            console.log('🚀 comment-management.html 로드 시작');
 
-            // common.js의 모든 기능(로고 클릭, 사이드메뉴, 푸터 문의하기) 먼저 실행
+        window.addEventListener('load', () => {
             if (typeof loadCommon === 'function') {
                 loadCommon();
             }
 
-            // common.js의 비동기 fetch가 끝날 때까지 살짝 기다린 후 테이블 렌더링
             setTimeout(() => {
-                if (typeof renderComments === 'function') {
-                    renderComments();
-                    console.log('✅ renderComments 실행 완료');
-                }
-                if (typeof renderBlockList === 'function') {
-                    renderBlockList();
-                    console.log('✅ renderBlockList 실행 완료');
+                if (typeof initAdminData === 'function') {
+                    initAdminData();
                 }
             }, 700);
-
-            console.log('✅ comment-management.html 완전 로드 완료');
         });
     </script>
 </body>

@@ -8,6 +8,12 @@ router.post('/', inquiryController.createInquiry);
 // 전체 문의 목록 조회
 router.get('/', inquiryController.getInquiries);
 
+// 전체 문의 삭제 (관리자용)
+router.delete('/', inquiryController.deleteAllInquiries);
+
+// 단일 문의 조회
+router.get('/:id', inquiryController.getInquiryById);
+
 // 문의 수정
 router.put('/:id', inquiryController.updateInquiry);
 

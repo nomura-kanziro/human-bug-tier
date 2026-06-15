@@ -1,4 +1,6 @@
 const User = require('../models/User');
+const getClientIp = require('../utils/getClientIp');
+const { isUserBlocked } = require('../utils/checkBlocked');
 const nodemailer = require('nodemailer');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
@@ -33,6 +35,7 @@ const register = async (req, res) => {
       email,
       password: hashedPassword,
       nickname,
+      ip: getClientIp(req),
       verificationToken,
       verificationTokenExpires: Date.now() + 3600000 // 1시간
     });
@@ -135,6 +138,16 @@ const login = async (req, res) => {
     // 이메일 인증 여부 확인 (선택)
     if (!user.isVerified) {
       return res.status(403).json({ error: '이메일 인증이 완료되지 않았습니다.' });
+    }
+
+    const clientIp = getClientIp(req);
+    const block = await isUserBlocked(user.nickname, clientIp);
+    if (block) {
+      return res.status(403).json({
+        error: '관리자로 인해 차단당했습니다.',
+        blocked: true,
+        expiresAt: block.expiresAt,
+      });
     }
 
     // 로그인 성공 (간단하게 user 정보 반환)

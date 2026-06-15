@@ -1,4 +1,6 @@
 const Inquiry = require('../models/Inquiry');
+const getClientIp = require('../utils/getClientIp');
+const { isUserBlocked } = require('../utils/checkBlocked');
 
 // 문의 등록 (테스트용 임시 버전)
 exports.createInquiry = async (req, res) => {
@@ -9,8 +11,18 @@ exports.createInquiry = async (req, res) => {
       return res.status(400).json({ error: "제목과 내용은 필수입니다." });
     }
 
+    const clientIp = getClientIp(req);
+    const block = await isUserBlocked(userId, clientIp);
+    if (block) {
+      return res.status(403).json({
+        error: '관리자로 인해 차단당했습니다.',
+        blocked: true,
+      });
+    }
+
     const newInquiry = new Inquiry({
       userId: userId,
+      ip: clientIp,
       isAdmin: false,
       title,
       message,
@@ -43,6 +55,19 @@ exports.createInquiry = async (req, res) => {
 //     res.status(500).json({ error: '문의 등록 실패' });
 //   }
 // };
+
+// 단일 문의 조회
+exports.getInquiryById = async (req, res) => {
+  try {
+    const inquiry = await Inquiry.findById(req.params.id);
+    if (!inquiry) {
+      return res.status(404).json({ error: '문의를 찾을 수 없습니다.' });
+    }
+    res.json(inquiry);
+  } catch (err) {
+    res.status(500).json({ error: '문의 조회 실패' });
+  }
+};
 
 // 전체 문의 목록 조회
 exports.getInquiries = async (req, res) => {
@@ -82,6 +107,16 @@ exports.deleteInquiry = async (req, res) => {
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: '삭제 실패' });
+  }
+};
+
+// 전체 문의 삭제 (관리자용)
+exports.deleteAllInquiries = async (req, res) => {
+  try {
+    await Inquiry.deleteMany({});
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: '전체 삭제 실패' });
   }
 };
 
@@ -219,9 +254,11 @@ exports.reportInquiry = async (req, res) => {
 
 module.exports = {
   createInquiry: exports.createInquiry,
+  getInquiryById: exports.getInquiryById,
   getInquiries: exports.getInquiries,
   updateInquiry: exports.updateInquiry,
   deleteInquiry: exports.deleteInquiry,
+  deleteAllInquiries: exports.deleteAllInquiries,
   updateAnswer: exports.updateAnswer,
   addAnswer: exports.addAnswer,
   deleteAnswer: exports.deleteAnswer,

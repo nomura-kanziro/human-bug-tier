@@ -14,6 +14,7 @@ const answerSchema = new mongoose.Schema({
 
 const inquirySchema = new mongoose.Schema({
   userId: { type: String, required: true },           // 작성자 닉네임
+  ip: { type: String, default: 'unknown' },
   isAdmin: { type: Boolean, default: false },
   title: { type: String, required: true },
   message: { type: String, required: true },
