@@ -378,10 +378,23 @@ function closeUserModal() {
   if (modal) modal.remove();
 }
 
-// 커스텀 게시판으로 이동 (나중에 페이지 만들면 경로 수정)
 function goToCustomBoard() {
   closeUserModal();
-  window.location.href = "../custom-maker/custom_maker.html";   // 경로 맞게 수정하세요
+
+  let user = null;
+  try {
+    user = JSON.parse(localStorage.getItem('user') || 'null');
+  } catch (err) {
+    user = null;
+  }
+
+  if (!user?.nickname) {
+    alert('내 게시글을 보려면 로그인이 필요합니다.');
+    window.location.href = `${getBasePath()}user_login/login.html`;
+    return;
+  }
+
+  window.location.href = '/custom-maker/custom-maker_post/custom-maker_post.html?mine=1';
 }
 
 // 프로필 사진 변경

@@ -102,14 +102,16 @@
   <main>
     <div class="board-container">
       <div class="board-header">        
-        <h1><img src="..\..\tier-image\human_bug_eyes_icon.gif" class="eyes_icon"> 커스텀 티어 게시판</h1>
+        <h1 id="board-title"><img src="..\..\tier-image\human_bug_eyes_icon.gif" class="eyes_icon"> 커스텀 티어 게시판</h1>
+        <p id="board-subtitle" class="board-subtitle" hidden></p>
       </div>
 
       <!-- 검색 + 글쓰기 영역 -->
       <div class="board-controls">
         <input type="text" id="search-input" placeholder="제목 또는 작성자 검색">
-        <button onclick="searchPosts()">검색</button>
-        <button onclick="goWritePage()">직접 만들기</button>
+        <button type="button" onclick="searchPosts()">검색</button>
+        <button type="button" id="view-all-board-btn" onclick="goAllPosts()" hidden>전체 게시판</button>
+        <button type="button" onclick="goWritePage()">직접 만들기</button>
       </div>
 
       <!-- 기존 더미 카드 부분을 아래로 교체 -->

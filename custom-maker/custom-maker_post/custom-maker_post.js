@@ -77,6 +77,53 @@ function getLoggedInUser() {
   return null;
 }
 
+function isMineMode() {
+  return new URLSearchParams(window.location.search).get('mine') === '1';
+}
+
+function getActiveAuthorFilter() {
+  if (isMineMode()) {
+    return getLoggedInUser()?.nickname || '';
+  }
+  return new URLSearchParams(window.location.search).get('author') || '';
+}
+
+function updateBoardHeader() {
+  const subtitle = document.getElementById('board-subtitle');
+  const viewAllBtn = document.getElementById('view-all-board-btn');
+  const searchInput = document.getElementById('search-input');
+  const user = getLoggedInUser();
+
+  if (isMineMode()) {
+    if (subtitle) {
+      subtitle.hidden = false;
+      subtitle.textContent = user?.nickname
+        ? `${user.nickname}님이 작성한 게시글`
+        : '내 게시글';
+    }
+    if (viewAllBtn) viewAllBtn.hidden = false;
+    if (searchInput) searchInput.placeholder = '내 게시글 제목 검색';
+    return;
+  }
+
+  const urlAuthor = new URLSearchParams(window.location.search).get('author');
+  if (subtitle) {
+    if (urlAuthor) {
+      subtitle.hidden = false;
+      subtitle.textContent = `${urlAuthor}님의 게시글`;
+    } else {
+      subtitle.hidden = true;
+      subtitle.textContent = '';
+    }
+  }
+  if (viewAllBtn) viewAllBtn.hidden = !urlAuthor;
+  if (searchInput) searchInput.placeholder = '제목 또는 작성자 검색';
+}
+
+function goAllPosts() {
+  window.location.href = '/custom-maker/custom-maker_post/custom-maker_post.html';
+}
+
 function isPostOwner(post, user) {
   if (!post || !user) return false;
 
@@ -270,7 +317,10 @@ function loadPosts(filteredPosts = null) {
   const postsToShow = filteredPosts || allPosts;
 
   if (!postsToShow.length) {
-    grid.innerHTML = '<div class="empty-message">등록된 게시글이 없습니다.<br>커스텀 메이커에서 티어표를 만들어 업로드해보세요!</div>';
+    const emptyMessage = isMineMode()
+      ? '아직 작성한 게시글이 없습니다.<br>커스텀 메이커에서 티어표를 만들어 업로드해보세요!'
+      : '등록된 게시글이 없습니다.<br>커스텀 메이커에서 티어표를 만들어 업로드해보세요!';
+    grid.innerHTML = `<div class="empty-message">${emptyMessage}</div>`;
     return;
   }
 
@@ -282,9 +332,10 @@ function loadPosts(filteredPosts = null) {
 
 async function searchPosts() {
   const keyword = document.getElementById('search-input')?.value.trim() || '';
+  const author = getActiveAuthorFilter();
 
   try {
-    allPosts = await fetchPosts(keyword);
+    allPosts = await fetchPosts(keyword, author);
     loadPosts();
   } catch (err) {
     console.error(err);
@@ -297,14 +348,24 @@ function goWritePage() {
 }
 
 async function initBoard() {
-  const urlAuthor = new URLSearchParams(window.location.search).get('author');
-  if (urlAuthor) {
-    const searchInput = document.getElementById('search-input');
-    if (searchInput) searchInput.value = urlAuthor;
+  if (isMineMode()) {
+    const user = getLoggedInUser();
+    if (!user?.nickname) {
+      if (confirm('내 게시글을 보려면 로그인이 필요합니다.\n로그인 페이지로 이동할까요?')) {
+        window.location.href = '/user_login/login.html';
+      } else {
+        window.location.href = '/custom-maker/custom-maker_post/custom-maker_post.html';
+      }
+      return;
+    }
   }
 
+  const authorFilter = getActiveAuthorFilter();
+
+  updateBoardHeader();
+
   try {
-    allPosts = await fetchPosts('', urlAuthor || '');
+    allPosts = await fetchPosts('', authorFilter);
     loadPosts();
   } catch (err) {
     console.error(err);
@@ -331,4 +392,5 @@ document.addEventListener('DOMContentLoaded', () => {
 window.loadPosts = loadPosts;
 window.searchPosts = searchPosts;
 window.goWritePage = goWritePage;
+window.goAllPosts = goAllPosts;
 window.goToPostDetail = goToPostDetail;
