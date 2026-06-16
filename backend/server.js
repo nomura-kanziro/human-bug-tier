@@ -61,12 +61,14 @@ const authRoutes = require('./routes/authRoutes');
 const inquiryRoutes = require('./routes/inquiryRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const noticeRoutes = require('./routes/noticeRoutes');
+const notificationRoutes = require('./routes/notificationRoutes');
 
 app.use('/api/tierlists', tierRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/inquiries', inquiryRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/notices', noticeRoutes);
+app.use('/api/notifications', notificationRoutes);
 
 const projectRoot = path.join(__dirname, '..');
 app.use(express.static(projectRoot));

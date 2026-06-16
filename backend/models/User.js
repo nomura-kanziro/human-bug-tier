@@ -29,6 +29,12 @@ const userSchema = new mongoose.Schema({
   verificationTokenExpires: Date,
   resetPasswordToken: String,
   resetPasswordExpires: Date,
+  notificationSettings: {
+    enabled: { type: Boolean, default: true },
+    tierBoard: { type: Boolean, default: true },
+    inquiry: { type: Boolean, default: true },
+    noticeNews: { type: Boolean, default: true },
+  },
 }, {
   timestamps: true
 });
