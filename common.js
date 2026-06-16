@@ -9,6 +9,9 @@
 //   5. 푸터 '문의하기' 링크 → Contact_us/[index.html -> contact_us.html] 이동
 // ========================================================
 
+const API_BASE = 'http://localhost:5000';
+let notificationPollTimer = null;
+
 function getAuthHeaders(extraHeaders = {}) {
   const headers = { ...extraHeaders };
   const token = localStorage.getItem('authToken');
@@ -22,10 +25,15 @@ function getBasePath() {
   console.log('📍 [common.js] 현재 페이지 경로:', path);
 
   // [admin/comments 폴더 전용 처리] → root까지 2단계 올라감
-  if (path.includes('/admin/') || path.includes('/admin\\')) {
+  if (path.includes('/admin/comments/') || path.includes('/admin\\comments\\')) {
     return '../../';
   }
-  // ←←← 여기 추가!!!
+  if (path.includes('/admin/') || path.includes('/admin\\')) {
+    return '../';
+  }
+  if (path.includes('/user_login/') || path.includes('/user_login\\')) {
+    return '../';
+  }
   if (path.includes('/tier-class/') || path.includes('/tier-class\\') || 
       path.includes('/Contact_us/') || path.includes('/Contact_us\\') ||
       path.includes('/custom-maker/') || path.includes('/custom-maker\\') ||
@@ -37,6 +45,147 @@ function getBasePath() {
   }
   return './';
 }
+
+function isUserLoggedIn() {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  return !!user.nickname || localStorage.getItem('isAdmin') === 'true';
+}
+
+function buildTierPostDetailUrl(postId, commentId = null) {
+  const safeId = encodeURIComponent(String(postId || '').trim());
+  if (!safeId) return null;
+
+  let query = `id=${safeId}`;
+  if (commentId) {
+    query += `&comment=${encodeURIComponent(String(commentId))}`;
+  }
+
+  if (window.location.protocol === 'file:') {
+    const path = window.location.pathname || '';
+    if (path.includes('custom-maker_post') || path.includes('custom-maker\\custom-maker_post')) {
+      return `post_detail.html?${query}`;
+    }
+    return `${getBasePath()}custom-maker/custom-maker_post/post_detail.html?${query}`;
+  }
+
+  return `/custom-maker/custom-maker_post/post_detail.html?${query}`;
+}
+
+function resolveNotificationLink(link) {
+  if (!link) return null;
+
+  const trimmed = String(link).trim();
+  if (!trimmed) return null;
+
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+
+  const tierMatch = trimmed.match(/post_detail\.html\?([^#]+)/i);
+  if (tierMatch?.[1]) {
+    const params = new URLSearchParams(tierMatch[1]);
+    const postId = params.get('id');
+    if (postId) {
+      const resolved = buildTierPostDetailUrl(postId, params.get('comment'));
+      if (resolved.startsWith('/') && window.location.protocol.startsWith('http')) {
+        return `${window.location.origin}${resolved}`;
+      }
+      return resolved;
+    }
+  }
+
+  if (trimmed.startsWith('/')) {
+    if (window.location.protocol.startsWith('http')) {
+      return `${window.location.origin}${trimmed}`;
+    }
+    return `${getBasePath()}${trimmed.slice(1)}`;
+  }
+
+  return `${getBasePath()}${trimmed}`;
+}
+
+const NOTIFICATION_SCROLL_KEY = 'notificationScrollTarget';
+
+function rememberTierPostIdFromLink(link) {
+  const resolved = resolveNotificationLink(link);
+  if (!resolved) return;
+
+  const match = resolved.match(/[?&]id=([a-fA-F0-9]{24})/i);
+  if (match?.[1]) {
+    sessionStorage.setItem('selectedPostId', match[1]);
+  }
+}
+
+function enrichNotificationUrl(link, resourceId, resourceType) {
+  const resolved = resolveNotificationLink(link);
+  if (!resolved) return null;
+
+  try {
+    const url = new URL(resolved, window.location.href);
+
+    if (url.pathname.includes('post_detail')) {
+      if (!url.searchParams.get('comment') && resourceType === 'tierComment' && resourceId) {
+        url.searchParams.set('comment', String(resourceId));
+      }
+    } else if (url.pathname.includes('contact_us')) {
+      if (!url.searchParams.get('inquiry') && resourceType === 'inquiry' && resourceId) {
+        url.searchParams.set('inquiry', String(resourceId));
+      }
+      if (!url.searchParams.get('answer') && resourceType === 'inquiryAnswer' && resourceId) {
+        url.searchParams.set('answer', String(resourceId));
+      }
+    }
+
+    if (url.origin === window.location.origin || window.location.protocol.startsWith('http')) {
+      return `${url.origin}${url.pathname}${url.search}`;
+    }
+    return `${url.pathname}${url.search}`;
+  } catch (err) {
+    return resolved;
+  }
+}
+
+function storeNotificationScrollTarget(link, resourceId, resourceType) {
+  const targetUrl = enrichNotificationUrl(link, resourceId, resourceType) || resolveNotificationLink(link);
+  if (!targetUrl) return null;
+
+  try {
+    const url = new URL(targetUrl, window.location.href);
+    const payload = { page: null };
+
+    if (url.pathname.includes('post_detail')) {
+      payload.page = 'tierPost';
+      payload.postId = url.searchParams.get('id') || '';
+      payload.commentId = url.searchParams.get('comment')
+        || (resourceType === 'tierComment' ? String(resourceId || '') : '');
+    } else if (url.pathname.includes('contact_us')) {
+      payload.page = 'inquiry';
+      payload.inquiryId = url.searchParams.get('inquiry')
+        || (resourceType === 'inquiry' ? String(resourceId || '') : '');
+      payload.answerId = url.searchParams.get('answer')
+        || (resourceType === 'inquiryAnswer' ? String(resourceId || '') : '');
+    }
+
+    if (payload.page) {
+      sessionStorage.setItem(NOTIFICATION_SCROLL_KEY, JSON.stringify(payload));
+    }
+  } catch (err) {
+    console.warn('알림 스크롤 타겟 저장 실패:', err);
+  }
+
+  return targetUrl;
+}
+
+window.getNotificationScrollTarget = function getNotificationScrollTarget() {
+  try {
+    const raw = sessionStorage.getItem(NOTIFICATION_SCROLL_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch (err) {
+    return null;
+  }
+};
+
+window.clearNotificationScrollTarget = function clearNotificationScrollTarget() {
+  sessionStorage.removeItem(NOTIFICATION_SCROLL_KEY);
+};
 
 function getProfileImageSrc() {
   const stored = localStorage.getItem('profileImage');
@@ -162,8 +311,9 @@ function loadCommon() {
     fixImagePaths(base);
     fixFooterLinks(base);
 
-    // ★★★ 여기 추가 ★★★
-    renderUserProfile();     // ← 프로필 아이콘 표시
+    renderUserProfile();
+    renderNotificationBell();
+    renderHeaderLoginButton();
 
     initSideMenuDropdowns();     // ← 이 줄이 있어야 합니다
 
@@ -189,8 +339,9 @@ function fallbackLoadHeaderFooter(base) {
     fixImagePaths(base);
     fixFooterLinks(base);
 
-    // [★ 여기 추가 ★] ←←← 프로필 아이콘 렌더링
-    renderAdminProfile();
+    renderUserProfile();
+    renderNotificationBell();
+    renderHeaderLoginButton();
 
     console.log('✅ Header & Footer + 모든 이벤트 완전 로드 완료!');
   })
@@ -251,6 +402,19 @@ function getAdminInfo() {
   };
 }
 
+function renderHeaderLoginButton() {
+  const loginBtn = document.querySelector('#header-placeholder #header-login-btn');
+  if (!loginBtn) return;
+
+  if (isUserLoggedIn()) {
+    loginBtn.hidden = true;
+    return;
+  }
+
+  loginBtn.hidden = false;
+  loginBtn.href = `${getBasePath()}user_login/login.html`;
+}
+
 // ========================================================
 // 로그인한 사용자 프로필 아이콘 표시 (일반 유저 + 어드민 공통)
 // ========================================================
@@ -258,7 +422,6 @@ function renderUserProfile() {
   const user = JSON.parse(localStorage.getItem("user") || "{}");
   const isAdmin = localStorage.getItem("isAdmin") === "true";
 
-  // 로그인하지 않았으면 표시 안 함 (일반 유저 또는 관리자)
   if (!user.nickname && !isAdmin) return;
 
   const header = document.getElementById('header-placeholder');
@@ -274,39 +437,18 @@ function renderUserProfile() {
     return;
   }
 
-  // 프로필 아이콘 HTML (어드민은 👑 제거)
   const profileHTML = `
-    <div id="user-profile" style="
-      margin-left: auto;
-      margin-right: 20px;
-      cursor: pointer; 
-      display: flex; 
-      align-items: center;
-      flex-shrink: 0;
-    ">
-      <div style="
-        width: 36px; 
-        height: 36px; 
-        background: linear-gradient(135deg, #007bff, #8faadc); 
-        border-radius: 50%; 
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
-        color: white; 
-        font-size: 18px; 
-        box-shadow: 0 3px 10px rgba(0,123,255,0.4);
-        border: 2px solid #fff;
-        overflow: hidden;
-      ">
-        <img id="profile-img" 
-             src="${getProfileImageSrc()}" 
-             alt="프로필"
-             style="width: 100%; height: 100%; object-fit: cover;">
+    <div id="header-user-actions" class="header-user-actions">
+      <div id="user-profile" class="user-profile-btn">
+        <div class="user-profile-avatar">
+          <img id="profile-img"
+               src="${getProfileImageSrc()}"
+               alt="프로필">
+        </div>
       </div>
     </div>
   `;
 
-  // 햄버거 버튼 앞에 삽입
   menuBtn.insertAdjacentHTML('beforebegin', profileHTML);
 
   bindProfileImageFallback(document.getElementById('profile-img'));
@@ -321,6 +463,359 @@ function renderUserProfile() {
         showUserModal();       // 일반 유저 모달
       }
     });
+  }
+}
+
+function escapeNotificationHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+const NOTIFICATION_LABELS = {
+  tier_post_comment: '메이커 게시판',
+  tier_comment_reply: '메이커 게시판',
+  tier_comment_mention: '메이커 게시판',
+  inquiry_answer: '문의사항',
+  inquiry_mention: '문의사항',
+  notice: '공지사항',
+  news: '새 소식',
+};
+
+function formatNotificationTime(dateStr) {
+  const date = new Date(dateStr);
+  if (Number.isNaN(date.getTime())) return '';
+  const diff = Date.now() - date.getTime();
+  const minutes = Math.floor(diff / 60000);
+  if (minutes < 1) return '방금 전';
+  if (minutes < 60) return `${minutes}분 전`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}시간 전`;
+  const days = Math.floor(hours / 24);
+  if (days < 7) return `${days}일 전`;
+  return date.toLocaleDateString('ko-KR');
+}
+
+function renderNotificationBell() {
+  if (!isUserLoggedIn()) return;
+
+  const profileEl = document.getElementById('user-profile');
+  if (!profileEl) return;
+
+  if (document.getElementById('notification-bell')) return;
+
+  const bellHTML = `
+    <div id="notification-bell" class="notification-bell">
+      <button type="button" id="notification-bell-btn" class="notification-bell-btn" aria-label="알림">
+        <span class="notification-bell-icon">🔔</span>
+        <span id="notification-badge" class="notification-badge" hidden>0</span>
+      </button>
+      <div id="notification-panel" class="notification-panel">
+        <div class="notification-panel-header">
+          <strong>알림</strong>
+          <button type="button" id="notification-settings-btn" class="notification-settings-btn" aria-label="알림 설정">⚙</button>
+        </div>
+        <div id="notification-list" class="notification-list">
+          <div class="notification-empty">알림을 불러오는 중...</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  profileEl.insertAdjacentHTML('beforebegin', bellHTML);
+
+  const bellBtn = document.getElementById('notification-bell-btn');
+  const panel = document.getElementById('notification-panel');
+  const settingsBtn = document.getElementById('notification-settings-btn');
+
+  bellBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleNotificationPanel();
+  });
+
+  settingsBtn?.addEventListener('click', (e) => {
+    e.stopPropagation();
+    openNotificationSettingsModal();
+  });
+
+  document.addEventListener('click', closeNotificationPanelOnOutsideClick);
+  refreshNotificationBadge();
+  startNotificationPolling();
+}
+
+function isNotificationPanelOpen() {
+  return document.getElementById('notification-panel')?.classList.contains('is-open') ?? false;
+}
+
+function toggleNotificationPanel() {
+  const panel = document.getElementById('notification-panel');
+  if (!panel) return;
+
+  const willOpen = !panel.classList.contains('is-open');
+  panel.classList.toggle('is-open', willOpen);
+
+  if (willOpen) {
+    loadNotificationList();
+  }
+}
+
+function closeNotificationPanel() {
+  const panel = document.getElementById('notification-panel');
+  if (panel) panel.classList.remove('is-open');
+}
+
+function closeNotificationPanelOnOutsideClick(e) {
+  const bell = document.getElementById('notification-bell');
+  const panel = document.getElementById('notification-panel');
+  if (!bell || !panel || !isNotificationPanelOpen()) return;
+  if (!bell.contains(e.target)) {
+    closeNotificationPanel();
+  }
+}
+
+async function refreshNotificationBadge() {
+  const badge = document.getElementById('notification-badge');
+  if (!badge || !isUserLoggedIn()) return;
+
+  try {
+    const response = await fetch(`${API_BASE}/api/notifications/unread-count`, {
+      headers: getAuthHeaders(),
+    });
+    if (!response.ok) return;
+
+    const data = await response.json();
+    const count = data.count || 0;
+    if (count > 0) {
+      badge.textContent = count > 99 ? '99+' : String(count);
+      badge.hidden = false;
+    } else {
+      badge.hidden = true;
+    }
+  } catch (err) {
+    console.error('알림 배지 갱신 실패:', err);
+  }
+}
+
+async function loadNotificationList() {
+  const listEl = document.getElementById('notification-list');
+  if (!listEl) return;
+
+  listEl.innerHTML = '<div class="notification-empty">알림을 불러오는 중...</div>';
+
+  try {
+    const response = await fetch(`${API_BASE}/api/notifications?limit=50`, {
+      headers: getAuthHeaders(),
+    });
+    if (!response.ok) throw new Error('알림 목록 조회 실패');
+
+    const notifications = await response.json();
+    if (!notifications.length) {
+      listEl.innerHTML = '<div class="notification-empty">새 알림이 없습니다.</div>';
+      return;
+    }
+
+    listEl.innerHTML = notifications.map((item) => {
+      const id = item._id || item.id;
+      const label = NOTIFICATION_LABELS[item.type] || '알림';
+      const actor = item.actorNickname ? `${item.actorNickname} · ` : '';
+      return `
+        <button type="button" class="notification-item ${item.read ? '' : 'unread'}"
+                data-notification-id="${id}"
+                data-link="${escapeNotificationHtml(item.link || '')}"
+                data-resource-id="${item.resourceId || ''}"
+                data-resource-type="${escapeNotificationHtml(item.resourceType || '')}">
+          <div class="notification-item-top">
+            <span class="notification-item-label">${label}</span>
+            <span class="notification-item-time">${formatNotificationTime(item.createdAt)}</span>
+          </div>
+          <div class="notification-item-title">${escapeNotificationHtml(item.title || '')}</div>
+          <div class="notification-item-message">${escapeNotificationHtml(actor)}${escapeNotificationHtml(item.message || '')}</div>
+        </button>
+      `;
+    }).join('');
+
+    listEl.querySelectorAll('[data-notification-id]').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        handleNotificationClick(
+          btn.getAttribute('data-notification-id'),
+          btn.getAttribute('data-link'),
+          btn.getAttribute('data-resource-id'),
+          btn.getAttribute('data-resource-type'),
+        );
+      });
+    });
+  } catch (err) {
+    console.error(err);
+    listEl.innerHTML = '<div class="notification-empty">알림을 불러올 수 없습니다.</div>';
+  }
+}
+
+async function handleNotificationClick(notificationId, link, resourceId, resourceType) {
+  closeNotificationPanel();
+
+  fetch(`${API_BASE}/api/notifications/${notificationId}/read`, {
+    method: 'PATCH',
+    headers: getAuthHeaders(),
+  }).catch((err) => console.error('알림 읽음 처리 실패:', err));
+
+  const targetUrl = storeNotificationScrollTarget(link, resourceId, resourceType);
+  if (targetUrl) {
+    rememberTierPostIdFromLink(targetUrl);
+    window.location.href = targetUrl;
+    return;
+  }
+
+  refreshNotificationBadge();
+}
+
+function startNotificationPolling() {
+  if (notificationPollTimer) clearInterval(notificationPollTimer);
+  if (!isUserLoggedIn()) return;
+
+  notificationPollTimer = setInterval(() => {
+    refreshNotificationBadge();
+  }, 60000);
+}
+
+async function openNotificationSettingsModal() {
+  closeNotificationPanel();
+
+  let settings = {
+    enabled: true,
+    tierBoard: true,
+    inquiry: true,
+    noticeNews: true,
+  };
+
+  try {
+    const response = await fetch(`${API_BASE}/api/notifications/settings`, {
+      headers: getAuthHeaders(),
+    });
+    if (response.ok) {
+      settings = await response.json();
+    }
+  } catch (err) {
+    console.error('알림 설정 조회 실패:', err);
+  }
+
+  const existing = document.getElementById('notification-settings-modal');
+  if (existing) existing.remove();
+
+  const modalHTML = `
+    <div id="notification-settings-modal" class="notification-settings-modal">
+      <div class="notification-settings-backdrop"></div>
+      <div class="notification-settings-card">
+        <div class="notification-settings-header">
+          <h3>알림 설정</h3>
+          <button type="button" class="notification-settings-close" aria-label="닫기">×</button>
+        </div>
+        <label class="notification-setting-row master">
+          <span>알림 받기</span>
+          <input type="checkbox" id="notif-setting-enabled" ${settings.enabled ? 'checked' : ''}>
+        </label>
+        <button type="button" id="notif-specific-toggle" class="notification-specific-toggle">
+          특정 알림만 받기 <span class="arrow">▼</span>
+        </button>
+        <div id="notif-specific-list" class="notification-specific-list" hidden>
+          <label class="notification-setting-row">
+            <span>메이커 게시판</span>
+            <input type="checkbox" id="notif-setting-tierBoard" ${settings.tierBoard ? 'checked' : ''}>
+          </label>
+          <label class="notification-setting-row">
+            <span>문의사항 댓글</span>
+            <input type="checkbox" id="notif-setting-inquiry" ${settings.inquiry ? 'checked' : ''}>
+          </label>
+          <label class="notification-setting-row">
+            <span>공지사항 &amp; 새소식</span>
+            <input type="checkbox" id="notif-setting-noticeNews" ${settings.noticeNews ? 'checked' : ''}>
+          </label>
+        </div>
+        <button type="button" id="notif-settings-save" class="notification-settings-save">저장</button>
+        <div class="notification-settings-divider"></div>
+        <button type="button" id="notif-settings-delete" class="notification-settings-delete">알림 기록 삭제</button>
+      </div>
+    </div>
+  `;
+
+  document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+  const modal = document.getElementById('notification-settings-modal');
+  const specificToggle = document.getElementById('notif-specific-toggle');
+  const specificList = document.getElementById('notif-specific-list');
+
+  modal.querySelector('.notification-settings-close')?.addEventListener('click', closeNotificationSettingsModal);
+  modal.querySelector('.notification-settings-backdrop')?.addEventListener('click', closeNotificationSettingsModal);
+
+  specificToggle?.addEventListener('click', () => {
+    const isHidden = specificList.hidden;
+    specificList.hidden = !isHidden;
+    specificToggle.classList.toggle('open', isHidden);
+  });
+
+  document.getElementById('notif-settings-save')?.addEventListener('click', saveNotificationSettings);
+  document.getElementById('notif-settings-delete')?.addEventListener('click', deleteNotificationHistory);
+}
+
+function closeNotificationSettingsModal() {
+  document.getElementById('notification-settings-modal')?.remove();
+}
+
+async function deleteNotificationHistory() {
+  if (!confirm('모든 알림 기록을 삭제할까요?\n삭제한 기록은 복구할 수 없습니다.')) return;
+
+  try {
+    const response = await fetch(`${API_BASE}/api/notifications`, {
+      method: 'DELETE',
+      headers: getAuthHeaders(),
+    });
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      const listEl = document.getElementById('notification-list');
+      if (listEl) {
+        listEl.innerHTML = '<div class="notification-empty">새 알림이 없습니다.</div>';
+      }
+      refreshNotificationBadge();
+      alert('알림 기록이 삭제되었습니다.');
+      closeNotificationSettingsModal();
+    } else {
+      alert('❌ ' + (data.error || '알림 기록 삭제에 실패했습니다.'));
+    }
+  } catch (err) {
+    console.error(err);
+    alert('❌ 서버와 연결할 수 없습니다.');
+  }
+}
+
+async function saveNotificationSettings() {
+  const payload = {
+    enabled: document.getElementById('notif-setting-enabled')?.checked ?? true,
+    tierBoard: document.getElementById('notif-setting-tierBoard')?.checked ?? true,
+    inquiry: document.getElementById('notif-setting-inquiry')?.checked ?? true,
+    noticeNews: document.getElementById('notif-setting-noticeNews')?.checked ?? true,
+  };
+
+  try {
+    const response = await fetch(`${API_BASE}/api/notifications/settings`, {
+      method: 'PATCH',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(payload),
+    });
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      alert('알림 설정이 저장되었습니다.');
+      closeNotificationSettingsModal();
+    } else {
+      alert('❌ ' + (data.error || '설정 저장에 실패했습니다.'));
+    }
+  } catch (err) {
+    console.error(err);
+    alert('❌ 서버와 연결할 수 없습니다.');
   }
 }
 
