@@ -1,6 +1,10 @@
 const Inquiry = require('../models/Inquiry');
 const getClientIp = require('../utils/getClientIp');
 const { isUserBlocked } = require('../utils/checkBlocked');
+const {
+  notifyInquiryAnswer,
+  notifyInquiryMention,
+} = require('../utils/notificationService');
 
 // 문의 등록 (테스트용 임시 버전)
 exports.createInquiry = async (req, res) => {
@@ -177,6 +181,18 @@ exports.addAnswer = async (req, res) => {
     inquiry.answers.push(answer);
 
     await inquiry.save();
+
+    const savedAnswer = inquiry.answers[inquiry.answers.length - 1];
+    const answerId = savedAnswer?._id || null;
+    const actor = { nickname: (userId || '').trim(), email: '' };
+    const quoted = (quotedUser || '').trim();
+
+    if (quoted) {
+      notifyInquiryMention(quoted, actor, message, inquiry._id, answerId).catch(() => {});
+    } else {
+      notifyInquiryAnswer(inquiry, actor, message, answerId).catch(() => {});
+    }
+
     res.json({ success: true, inquiry });
   } catch (err) {
     console.error('답변 등록 에러:', err);

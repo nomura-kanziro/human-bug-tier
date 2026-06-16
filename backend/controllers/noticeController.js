@@ -1,4 +1,5 @@
 const Notice = require('../models/Notice');
+const { broadcastNoticeNotification } = require('../utils/notificationService');
 
 const MAX_PINNED = 5;
 
@@ -60,6 +61,10 @@ const createNotice = async (req, res) => {
       summary: (summary || content).trim().slice(0, 200),
       category,
       author: author || '관리자',
+    });
+
+    broadcastNoticeNotification(notice).catch((err) => {
+      console.error('공지 알림 발송 실패:', err.message);
     });
 
     res.status(201).json({ success: true, notice });

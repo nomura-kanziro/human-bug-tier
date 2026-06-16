@@ -5,6 +5,11 @@ const getClientIp = require('../utils/getClientIp');
 const { isUserBlocked } = require('../utils/checkBlocked');
 const { getActor } = require('../utils/jwtAuth');
 const { isCommentOwner } = require('../utils/ownership');
+const {
+  notifyTierPostComment,
+  notifyTierCommentReply,
+  notifyTierCommentMention,
+} = require('../utils/notificationService');
 
 const getTierComments = async (req, res) => {
   try {
@@ -65,8 +70,8 @@ const createTierComment = async (req, res) => {
         return res.status(400).json({ error: '유효하지 않은 부모 댓글 ID입니다.' });
       }
 
-      const parentComment = await TierPostComment.findOne({ _id: parentCommentId, tierListId: id });
-      if (!parentComment) {
+      const existingParent = await TierPostComment.findOne({ _id: parentCommentId, tierListId: id });
+      if (!existingParent) {
         return res.status(404).json({ error: '답변할 댓글을 찾을 수 없습니다.' });
       }
     }
@@ -90,6 +95,21 @@ const createTierComment = async (req, res) => {
       quotedUser: (quotedUser || '').trim(),
       quotedMessage: (quotedMessage || '').trim(),
     });
+
+    const quoted = (quotedUser || '').trim();
+    const parentComment = parentCommentId
+      ? await TierPostComment.findOne({ _id: parentCommentId, tierListId: id })
+      : null;
+
+    if (quoted) {
+      notifyTierCommentMention(quoted, actor, trimmedContent, id, comment._id).catch(() => {});
+    }
+
+    if (parentComment) {
+      notifyTierCommentReply(parentComment, actor, trimmedContent, id, comment._id).catch(() => {});
+    } else {
+      notifyTierPostComment(tierList, actor, trimmedContent, comment._id).catch(() => {});
+    }
 
     res.status(201).json({ success: true, comment });
   } catch (err) {
