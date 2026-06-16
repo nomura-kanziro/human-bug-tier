@@ -314,7 +314,7 @@ async function loadPostDetail() {
     updateCommentFormState();
     renderReadOnlyTier();
     setupTierNavigation();
-    loadComments();
+    await loadComments();
     sessionStorage.removeItem(POST_ID_STORAGE_KEY);
   } catch (err) {
     console.error(err);
@@ -334,6 +334,66 @@ function scrollToComments() {
   const commentSection = document.querySelector('.comment-section');
   if (commentSection) {
     commentSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+}
+
+function resolveCommentScrollTarget() {
+  try {
+    const params = new URLSearchParams(window.location.search || '');
+    const fromUrl = (params.get('comment') || '').trim();
+    if (fromUrl) return fromUrl;
+  } catch (err) {
+    console.warn('댓글 스크롤 URL 파싱 실패:', err);
+  }
+
+  const stored = typeof getNotificationScrollTarget === 'function'
+    ? getNotificationScrollTarget()
+    : null;
+  if (stored?.page === 'tierPost' && stored.commentId) {
+    return String(stored.commentId).trim();
+  }
+  return '';
+}
+
+function highlightScrollTarget(element) {
+  if (!element) return;
+  element.classList.add('notification-scroll-highlight');
+  element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(() => element.classList.remove('notification-scroll-highlight'), 2800);
+}
+
+function scrollToCommentTarget(commentId, retries = 40) {
+  if (!commentId) return;
+
+  const safeId = CSS.escape(String(commentId));
+  const element = document.querySelector(`.post-comment-item[data-comment-id="${safeId}"]`);
+
+  if (element) {
+    const section = document.querySelector('.comment-section');
+    if (section) {
+      section.scrollIntoView({ behavior: 'auto', block: 'start' });
+    }
+
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        highlightScrollTarget(element);
+        if (typeof clearNotificationScrollTarget === 'function') {
+          clearNotificationScrollTarget();
+        }
+      });
+    });
+    return;
+  }
+
+  if (retries > 0) {
+    setTimeout(() => scrollToCommentTarget(commentId, retries - 1), 150);
+  }
+}
+
+function runNotificationCommentScroll() {
+  const commentTarget = resolveCommentScrollTarget();
+  if (commentTarget) {
+    scrollToCommentTarget(commentTarget);
   }
 }
 
@@ -885,6 +945,8 @@ async function loadComments() {
 
     list.innerHTML = comments.map(renderCommentItem).join('');
     setupCommentListActions();
+
+    runNotificationCommentScroll();
   } catch (err) {
     console.error(err);
     updateCommentCount(0);
@@ -1005,6 +1067,12 @@ function initPostDetailPage() {
 
 document.addEventListener('DOMContentLoaded', () => {
   initPostDetailPage();
+});
+
+window.addEventListener('load', () => {
+  if (resolveCommentScrollTarget()) {
+    setTimeout(runNotificationCommentScroll, 400);
+  }
 });
 
 window.initPostDetailPage = initPostDetailPage;

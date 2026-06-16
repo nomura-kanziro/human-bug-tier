@@ -259,6 +259,13 @@
   color: #ffc400;
 }
 
+.notification-scroll-highlight {
+  outline: 3px solid #2563eb;
+  outline-offset: 3px;
+  background: rgba(37, 99, 235, 0.08);
+  transition: outline-color 0.3s ease, background 0.3s ease;
+}
+
 .post-comment-header {
   display: flex;
   justify-content: space-between;
