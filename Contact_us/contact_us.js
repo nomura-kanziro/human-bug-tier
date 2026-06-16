@@ -7,6 +7,105 @@ document.addEventListener("DOMContentLoaded", () => {
   loadComments();
 });
 
+window.addEventListener('load', () => {
+  const target = resolveInquiryScrollTarget();
+  if (target.inquiryId) {
+    setTimeout(runNotificationInquiryScroll, 400);
+  }
+});
+
+function resolveInquiryScrollTarget() {
+  let inquiryId = '';
+  let answerId = '';
+
+  try {
+    const params = new URLSearchParams(window.location.search || '');
+    inquiryId = (params.get('inquiry') || '').trim();
+    answerId = (params.get('answer') || '').trim();
+  } catch (err) {
+    console.warn('문의 스크롤 URL 파싱 실패:', err);
+  }
+
+  const stored = typeof getNotificationScrollTarget === 'function'
+    ? getNotificationScrollTarget()
+    : null;
+  if (stored?.page === 'inquiry') {
+    if (!inquiryId && stored.inquiryId) inquiryId = String(stored.inquiryId).trim();
+    if (!answerId && stored.answerId) answerId = String(stored.answerId).trim();
+  }
+
+  return { inquiryId, answerId };
+}
+
+function highlightScrollTarget(element) {
+  if (!element) return;
+  element.classList.add('notification-scroll-highlight');
+  element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(() => element.classList.remove('notification-scroll-highlight'), 2800);
+}
+
+function openAnswersPanel(inquiryId) {
+  const container = document.getElementById(`answers-${inquiryId}`);
+  const arrow = document.getElementById(`arrow-${inquiryId}`);
+  if (container) container.style.display = 'block';
+  if (arrow) arrow.textContent = '▲';
+}
+
+function scrollToInquiryTarget(inquiryId, answerId, retries = 40) {
+  if (!inquiryId) return;
+
+  const safeInquiryId = CSS.escape(String(inquiryId));
+  const inquiryEl = document.querySelector(`.comment[data-id="${safeInquiryId}"]`);
+  if (!inquiryEl) {
+    if (retries > 0) {
+      setTimeout(() => scrollToInquiryTarget(inquiryId, answerId, retries - 1), 150);
+    }
+    return;
+  }
+
+  openAnswersPanel(inquiryId);
+
+  if (answerId) {
+    const safeAnswerId = CSS.escape(String(answerId));
+    const answerEl = document.querySelector(`.answer[data-id="${safeAnswerId}"]`);
+    if (answerEl) {
+      inquiryEl.scrollIntoView({ behavior: 'auto', block: 'start' });
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          highlightScrollTarget(answerEl);
+          if (typeof clearNotificationScrollTarget === 'function') {
+            clearNotificationScrollTarget();
+          }
+        });
+      });
+      return;
+    }
+    if (retries > 0) {
+      setTimeout(() => scrollToInquiryTarget(inquiryId, answerId, retries - 1), 150);
+      return;
+    }
+  }
+
+  const answers = inquiryEl.querySelectorAll('.answer');
+  const fallbackAnswer = answers.length ? answers[answers.length - 1] : null;
+  if (fallbackAnswer) {
+    highlightScrollTarget(fallbackAnswer);
+  } else {
+    highlightScrollTarget(inquiryEl);
+  }
+
+  if (typeof clearNotificationScrollTarget === 'function') {
+    clearNotificationScrollTarget();
+  }
+}
+
+function runNotificationInquiryScroll() {
+  const target = resolveInquiryScrollTarget();
+  if (target.inquiryId) {
+    scrollToInquiryTarget(target.inquiryId, target.answerId);
+  }
+}
+
 function isLoggedIn() {
   // 기존 admin 체크 + 새로 만든 user 체크 병행
   return localStorage.getItem("isAdmin") === "true" || 
@@ -193,6 +292,7 @@ async function loadComments() {
       `;
     }).join('');
 
+    runNotificationInquiryScroll();
   } catch (err) {
     console.error(err);
     listEl.innerHTML = '<p>서버와 연결할 수 없습니다.</p>';

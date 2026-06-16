@@ -388,6 +388,13 @@ body {
   transition: transform 0.2s;
 }
 
+.notification-scroll-highlight {
+  outline: 3px solid #2563eb;
+  outline-offset: 3px;
+  background: rgba(37, 99, 235, 0.08);
+  transition: outline-color 0.3s ease, background 0.3s ease;
+}
+
 /* 답변 컨테이너 */
 .answers-container {
   margin-left: 45px;
