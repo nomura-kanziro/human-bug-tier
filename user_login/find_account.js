@@ -82,6 +82,15 @@ async function findPassword() {
   }
 }
 
+function goToAdminLogin() {
+  window.location.href = '../admin/admin-login.html';
+}
+
 window.addEventListener('load', () => {
   showTab(0);
+
+  const title = document.getElementById('find-account-title');
+  if (title) {
+    title.addEventListener('click', goToAdminLogin);
+  }
 });
