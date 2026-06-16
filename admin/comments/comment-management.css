@@ -488,7 +488,32 @@ tr.row-pinned {
     color: #c0392b;
 }
 
-.tier-report-section .subsection-title {
+.tier-maker-section .subsection-title {
     margin: 18px 0 10px;
     font-size: 1.05rem;
+}
+
+.tier-section-title {
+    border-top: 3px solid #6366f1;
+    padding-top: 20px;
+    margin-top: 0;
+}
+
+.tier-filter-nav {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    margin-bottom: 12px;
+}
+
+.badge-tier-normal {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+.badge-tier-reported {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.tier-maker-section .row-reported {
+    background: #fff5f5;
 }

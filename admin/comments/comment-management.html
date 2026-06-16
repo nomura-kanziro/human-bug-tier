@@ -69,32 +69,50 @@
 
         <div id="pagination" class="pagination"></div>
 
-        <!-- ==================== 커스텀 메이커 신고 관리 ==================== -->
-        <section class="notice-admin-section tier-report-section">
-            <h2 class="page-title notice-section-title">🚨 커스텀 메이커 신고 관리</h2>
+        <!-- ==================== 커스텀 메이커 관리 ==================== -->
+        <section class="notice-admin-section tier-maker-section">
+            <h2 class="page-title tier-section-title">📋 커스텀 메이커 관리</h2>
 
-            <h3 class="subsection-title">신고된 게시글</h3>
-            <table id="tier-report-posts-table" class="admin-table">
+            <h3 class="subsection-title">게시글</h3>
+            <div class="filter-nav tier-filter-nav">
+              <div class="filter-left">
+                <span class="filter-title">분류</span>
+                <button onclick="setTierPostFilter('all')" id="tier-post-filter-all" class="filter-btn active">전체</button>
+                <button onclick="setTierPostFilter('normal')" id="tier-post-filter-normal" class="filter-btn">일반</button>
+                <button onclick="setTierPostFilter('reported')" id="tier-post-filter-reported" class="filter-btn">신고</button>
+              </div>
+            </div>
+            <table id="tier-posts-table" class="admin-table">
                 <thead>
                     <tr>
                         <th>No</th>
+                        <th>분류</th>
                         <th>제목</th>
                         <th>작성자</th>
                         <th>신고 사유</th>
-                        <th>신고일</th>
+                        <th>작성일</th>
                         <th>관리</th>
                     </tr>
                 </thead>
-                <tbody id="tier-report-posts-body">
-                    <tr class="empty-row"><td colspan="6">불러오는 중...</td></tr>
+                <tbody id="tier-posts-body">
+                    <tr class="empty-row"><td colspan="7">불러오는 중...</td></tr>
                 </tbody>
             </table>
 
-            <h3 class="subsection-title" style="margin-top:28px;">신고된 댓글</h3>
-            <table id="tier-report-comments-table" class="admin-table">
+            <h3 class="subsection-title" style="margin-top:28px;">댓글</h3>
+            <div class="filter-nav tier-filter-nav">
+              <div class="filter-left">
+                <span class="filter-title">분류</span>
+                <button onclick="setTierCommentFilter('all')" id="tier-comment-filter-all" class="filter-btn active">전체</button>
+                <button onclick="setTierCommentFilter('normal')" id="tier-comment-filter-normal" class="filter-btn">일반</button>
+                <button onclick="setTierCommentFilter('reported')" id="tier-comment-filter-reported" class="filter-btn">신고</button>
+              </div>
+            </div>
+            <table id="tier-comments-table" class="admin-table">
                 <thead>
                     <tr>
                         <th>No</th>
+                        <th>분류</th>
                         <th>게시글 ID</th>
                         <th>작성자</th>
                         <th>내용</th>
@@ -102,8 +120,8 @@
                         <th>관리</th>
                     </tr>
                 </thead>
-                <tbody id="tier-report-comments-body">
-                    <tr class="empty-row"><td colspan="6">불러오는 중...</td></tr>
+                <tbody id="tier-comments-body">
+                    <tr class="empty-row"><td colspan="7">불러오는 중...</td></tr>
                 </tbody>
             </table>
         </section>

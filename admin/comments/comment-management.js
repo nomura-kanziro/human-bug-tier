@@ -327,8 +327,10 @@ async function deleteAdminNotice(noticeId) {
   }
 }
 
-let reportedTierPosts = [];
-let reportedTierComments = [];
+let tierPosts = [];
+let tierComments = [];
+let currentTierPostFilter = 'all';
+let currentTierCommentFilter = 'all';
 
 function getAdminAuthHeaders() {
   if (typeof getAuthHeaders === 'function') return getAuthHeaders();
@@ -338,64 +340,97 @@ function getAdminAuthHeaders() {
   return headers;
 }
 
-async function loadTierReports() {
+function getTierStatusBadge(reported) {
+  return reported
+    ? '<span class="badge badge-tier-reported">신고</span>'
+    : '<span class="badge badge-tier-normal">일반</span>';
+}
+
+function filterTierItems(items, filter) {
+  if (filter === 'normal') return items.filter(item => !item.reported);
+  if (filter === 'reported') return items.filter(item => item.reported);
+  return items;
+}
+
+function getTierPostEmptyMessage() {
+  if (currentTierPostFilter === 'normal') return '일반 게시글이 없습니다.';
+  if (currentTierPostFilter === 'reported') return '신고된 게시글이 없습니다.';
+  return '등록된 게시글이 없습니다.';
+}
+
+function getTierCommentEmptyMessage() {
+  if (currentTierCommentFilter === 'normal') return '일반 댓글이 없습니다.';
+  if (currentTierCommentFilter === 'reported') return '신고된 댓글이 없습니다.';
+  return '등록된 댓글이 없습니다.';
+}
+
+async function loadTierMakerData() {
   try {
     const [postsRes, commentsRes] = await Promise.all([
       fetch(`${API_BASE}/api/admin/tier-reports/posts`, { headers: getAdminAuthHeaders() }),
       fetch(`${API_BASE}/api/admin/tier-reports/comments`, { headers: getAdminAuthHeaders() }),
     ]);
 
-    if (postsRes.ok) reportedTierPosts = await postsRes.json();
-    if (commentsRes.ok) reportedTierComments = await commentsRes.json();
+    if (postsRes.ok) tierPosts = await postsRes.json();
+    if (commentsRes.ok) tierComments = await commentsRes.json();
 
-    renderTierReports();
+    renderTierMaker();
   } catch (err) {
     console.error(err);
   }
 }
 
-function renderTierReports() {
-  const postsBody = document.getElementById('tier-report-posts-body');
-  const commentsBody = document.getElementById('tier-report-comments-body');
+function renderTierMaker() {
+  const postsBody = document.getElementById('tier-posts-body');
+  const commentsBody = document.getElementById('tier-comments-body');
   if (!postsBody || !commentsBody) return;
 
-  if (!reportedTierPosts.length) {
-    postsBody.innerHTML = '<tr class="empty-row"><td colspan="6">신고된 게시글이 없습니다.</td></tr>';
+  const filteredPosts = filterTierItems(tierPosts, currentTierPostFilter);
+  const filteredComments = filterTierItems(tierComments, currentTierCommentFilter);
+
+  if (!filteredPosts.length) {
+    postsBody.innerHTML = `<tr class="empty-row"><td colspan="7">${getTierPostEmptyMessage()}</td></tr>`;
   } else {
-    postsBody.innerHTML = reportedTierPosts.map((post, idx) => {
+    postsBody.innerHTML = filteredPosts.map((post, idx) => {
       const id = post._id || post.id;
-      const reason = [post.reportReason, post.reportDetail].filter(Boolean).join(' / ') || '-';
+      const reason = post.reported
+        ? [post.reportReason, post.reportDetail].filter(Boolean).join(' / ') || '-'
+        : '-';
       return `
-        <tr>
+        <tr class="${post.reported ? 'row-reported' : ''}">
           <td>${idx + 1}</td>
+          <td>${getTierStatusBadge(post.reported)}</td>
           <td>${escapeHtml(post.title)}</td>
           <td>${escapeHtml(post.author || '-')}</td>
           <td>${escapeHtml(reason)}</td>
           <td>${formatDate(post.updatedAt || post.createdAt)}</td>
           <td>
-            <button onclick="dismissTierPostReport('${id}')">해제</button>
+            ${post.reported ? `<button onclick="dismissTierPostReport('${id}')">해제</button>` : ''}
             <button onclick="deleteTierPostReport('${id}')" class="danger-btn-inline">삭제</button>
           </td>
         </tr>`;
     }).join('');
   }
 
-  if (!reportedTierComments.length) {
-    commentsBody.innerHTML = '<tr class="empty-row"><td colspan="6">신고된 댓글이 없습니다.</td></tr>';
+  if (!filteredComments.length) {
+    commentsBody.innerHTML = `<tr class="empty-row"><td colspan="7">${getTierCommentEmptyMessage()}</td></tr>`;
   } else {
-    commentsBody.innerHTML = reportedTierComments.map((comment, idx) => {
+    commentsBody.innerHTML = filteredComments.map((comment, idx) => {
       const id = comment._id || comment.id;
-      const reason = [comment.reportReason, comment.reportDetail].filter(Boolean).join(' / ') || '-';
+      const reason = comment.reported
+        ? [comment.reportReason, comment.reportDetail].filter(Boolean).join(' / ') || '-'
+        : '-';
       const snippet = (comment.content || '').length > 80 ? `${comment.content.slice(0, 80)}...` : (comment.content || '');
       return `
-        <tr>
+        <tr class="${comment.reported ? 'row-reported' : ''}">
           <td>${idx + 1}</td>
+          <td>${getTierStatusBadge(comment.reported)}</td>
           <td>${escapeHtml(String(comment.tierListId || '-'))}</td>
           <td>${escapeHtml(comment.author || '-')}</td>
           <td>${escapeHtml(snippet)}</td>
           <td>${escapeHtml(reason)}</td>
           <td>
-            <button onclick="dismissTierCommentReport('${id}')">해제</button>
+            ${comment.reported ? `<button onclick="dismissTierCommentReport('${id}')">해제</button>` : ''}
             <button onclick="deleteTierCommentReport('${id}')" class="danger-btn-inline">삭제</button>
           </td>
         </tr>`;
@@ -403,13 +438,31 @@ function renderTierReports() {
   }
 }
 
+window.setTierPostFilter = function(filter) {
+  currentTierPostFilter = filter;
+  ['all', 'normal', 'reported'].forEach(type => {
+    const btn = document.getElementById(`tier-post-filter-${type}`);
+    if (btn) btn.classList.toggle('active', type === filter);
+  });
+  renderTierMaker();
+};
+
+window.setTierCommentFilter = function(filter) {
+  currentTierCommentFilter = filter;
+  ['all', 'normal', 'reported'].forEach(type => {
+    const btn = document.getElementById(`tier-comment-filter-${type}`);
+    if (btn) btn.classList.toggle('active', type === filter);
+  });
+  renderTierMaker();
+};
+
 window.dismissTierPostReport = async function(id) {
   if (!confirm('이 게시글 신고를 해제할까요?')) return;
   const response = await fetch(`${API_BASE}/api/admin/tier-reports/posts/${id}/dismiss`, {
     method: 'PATCH',
     headers: getAdminAuthHeaders(),
   });
-  if (response.ok) loadTierReports();
+  if (response.ok) loadTierMakerData();
   else alert('신고 해제에 실패했습니다.');
 };
 
@@ -419,7 +472,7 @@ window.deleteTierPostReport = async function(id) {
     method: 'DELETE',
     headers: getAdminAuthHeaders(),
   });
-  if (response.ok) loadTierReports();
+  if (response.ok) loadTierMakerData();
   else alert('게시글 삭제에 실패했습니다.');
 };
 
@@ -429,7 +482,7 @@ window.dismissTierCommentReport = async function(id) {
     method: 'PATCH',
     headers: getAdminAuthHeaders(),
   });
-  if (response.ok) loadTierReports();
+  if (response.ok) loadTierMakerData();
   else alert('신고 해제에 실패했습니다.');
 };
 
@@ -439,12 +492,12 @@ window.deleteTierCommentReport = async function(id) {
     method: 'DELETE',
     headers: getAdminAuthHeaders(),
   });
-  if (response.ok) loadTierReports();
+  if (response.ok) loadTierMakerData();
   else alert('댓글 삭제에 실패했습니다.');
 };
 
 async function initAdminData() {
-  await Promise.all([loadComments(), loadBlocks(), loadUsers(), loadNotices(), loadTierReports()]);
+  await Promise.all([loadComments(), loadBlocks(), loadUsers(), loadNotices(), loadTierMakerData()]);
 }
 
 function renderComments() {

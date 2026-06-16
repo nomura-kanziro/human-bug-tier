@@ -3,25 +3,25 @@ const TierPostComment = require('../models/TierPostComment');
 
 const getReportedPosts = async (req, res) => {
   try {
-    const posts = await TierList.find({ reported: true })
+    const posts = await TierList.find({})
       .sort({ updatedAt: -1 })
-      .select('title author authorEmail reportReason reportDetail createdAt updatedAt viewCount likeCount');
+      .select('title author authorEmail reported reportReason reportDetail createdAt updatedAt viewCount likeCount');
     res.json(posts);
   } catch (err) {
-    console.error('신고 게시글 목록 조회 실패:', err);
-    res.status(500).json({ error: '신고 게시글 목록 조회 실패' });
+    console.error('커스텀 메이커 게시글 목록 조회 실패:', err);
+    res.status(500).json({ error: '게시글 목록 조회 실패' });
   }
 };
 
 const getReportedComments = async (req, res) => {
   try {
-    const comments = await TierPostComment.find({ reported: true })
+    const comments = await TierPostComment.find({})
       .sort({ updatedAt: -1 })
-      .select('tierListId author authorEmail content reportReason reportDetail createdAt updatedAt');
+      .select('tierListId author authorEmail content reported reportReason reportDetail createdAt updatedAt');
     res.json(comments);
   } catch (err) {
-    console.error('신고 댓글 목록 조회 실패:', err);
-    res.status(500).json({ error: '신고 댓글 목록 조회 실패' });
+    console.error('커스텀 메이커 댓글 목록 조회 실패:', err);
+    res.status(500).json({ error: '댓글 목록 조회 실패' });
   }
 };
 
