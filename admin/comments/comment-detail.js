@@ -1,5 +1,3 @@
-const API_BASE = 'http://localhost:5000';
-
 function nl2br(text) {
   if (!text) return '';
   return text.replace(/\n/g, '<br>');
@@ -30,7 +28,7 @@ function getCommentIdFromURL() {
 }
 
 async function fetchComment(commentId) {
-  const response = await fetch(`${API_BASE}/api/inquiries/${commentId}`);
+  const response = await fetch(`${getApiBase()}/api/inquiries/${commentId}`);
   if (!response.ok) return null;
   return response.json();
 }
@@ -219,7 +217,7 @@ window.deleteAnswer = async function(answerId, commentId) {
   if (!confirm('정말 이 답변을 삭제하시겠습니까?')) return;
 
   try {
-    const response = await fetch(`${API_BASE}/api/inquiries/${commentId}/answers/${answerId}`, {
+    const response = await fetch(`${getApiBase()}/api/inquiries/${commentId}/answers/${answerId}`, {
       method: 'DELETE',
     });
     const data = await response.json();
@@ -240,7 +238,7 @@ window.deleteWholeComment = async function(commentId) {
   if (!confirm('⚠️ 이 댓글과 모든 답변을 완전히 삭제하시겠습니까?')) return;
 
   try {
-    const response = await fetch(`${API_BASE}/api/inquiries/${commentId}`, { method: 'DELETE' });
+    const response = await fetch(`${getApiBase()}/api/inquiries/${commentId}`, { method: 'DELETE' });
     const data = await response.json();
 
     if (response.ok && data.success) {

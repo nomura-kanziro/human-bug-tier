@@ -928,6 +928,7 @@ function logout() {
   if (confirm("정말 로그아웃 하시겠습니까?")) {
     localStorage.removeItem("user");
     localStorage.removeItem("authToken");
+    localStorage.removeItem("adminAuthToken");
     localStorage.removeItem("isAdmin");
     localStorage.removeItem("adminName");
     localStorage.removeItem("adminIp");
@@ -992,6 +993,7 @@ function closeAdminModal() {
 function logoutAdmin() {
   if (confirm("로그아웃 하시겠습니까?")) {
     localStorage.removeItem("authToken");
+    localStorage.removeItem("adminAuthToken");
     localStorage.removeItem("isAdmin");
     localStorage.removeItem("adminName");
     localStorage.removeItem("adminIp");
@@ -1012,6 +1014,7 @@ function goToAdminPage() {
 function logoutAdmin() {
   if (confirm("로그아웃 하시겠습니까?")) {
     localStorage.removeItem("authToken");
+    localStorage.removeItem("adminAuthToken");
     localStorage.removeItem("isAdmin");
     localStorage.removeItem("adminName");
     localStorage.removeItem("adminIp");

@@ -41,6 +41,10 @@ async function login() {
 
     if (response.ok && data.success) {
       alert('로그인 성공!');
+      localStorage.removeItem('isAdmin');
+      localStorage.removeItem('adminAuthToken');
+      localStorage.removeItem('adminName');
+      localStorage.removeItem('adminIp');
       localStorage.setItem('user', JSON.stringify(data.user));
       if (data.token) localStorage.setItem('authToken', data.token);
       window.location.href = "../index.html";

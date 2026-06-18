@@ -238,30 +238,34 @@
     <div id="footer-placeholder"></div>
 
     <script src="../../common.js"></script>
+    <script src="../admin_api.js"></script>
     <script src="comment-management.js"></script>
 
     <script>
         function checkAdminAuth() {
-            if (localStorage.getItem("isAdmin") !== "true") {
+            const hasAdminFlag = localStorage.getItem("isAdmin") === "true";
+            const hasAdminToken = !!getAdminAuthToken();
+
+            if (!hasAdminFlag || !hasAdminToken) {
                 alert("❌ 관리자 로그인이 필요합니다.");
+                localStorage.removeItem("isAdmin");
+                localStorage.removeItem("adminAuthToken");
                 window.location.href = "../admin-login.html";
                 return false;
             }
             return true;
         }
-    
-        window.addEventListener('load', checkAdminAuth);
 
         window.addEventListener('load', () => {
+            if (!checkAdminAuth()) return;
+
             if (typeof loadCommon === 'function') {
                 loadCommon();
             }
 
-            setTimeout(() => {
-                if (typeof initAdminData === 'function') {
-                    initAdminData();
-                }
-            }, 700);
+            if (typeof initAdminData === 'function') {
+                initAdminData();
+            }
         });
     </script>
 </body>

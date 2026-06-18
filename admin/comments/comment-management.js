@@ -1,5 +1,3 @@
-const API_BASE = 'http://localhost:5000';
-
 let comments = [];
 let blockedList = [];
 let registeredUsers = [];
@@ -139,7 +137,7 @@ function setupDurationSelect() {
 
 async function loadComments() {
   try {
-    const response = await fetch(`${API_BASE}/api/inquiries`);
+    const response = await fetch(`${getApiBase()}/api/inquiries`);
     if (!response.ok) throw new Error('댓글 목록 조회 실패');
     comments = await response.json();
     renderComments();
@@ -151,7 +149,7 @@ async function loadComments() {
 
 async function loadBlocks() {
   try {
-    const response = await fetch(`${API_BASE}/api/admin/blocks`);
+    const response = await fetch(`${getApiBase()}/api/admin/blocks`);
     if (!response.ok) throw new Error('차단 목록 조회 실패');
     blockedList = await response.json();
     renderBlockList();
@@ -164,7 +162,7 @@ async function loadBlocks() {
 
 async function loadUsers() {
   try {
-    const response = await fetch(`${API_BASE}/api/admin/users`);
+    const response = await fetch(`${getApiBase()}/api/admin/users`);
     if (!response.ok) throw new Error('사용자 목록 조회 실패');
     registeredUsers = await response.json();
     renderUserList();
@@ -176,7 +174,7 @@ async function loadUsers() {
 
 async function loadNotices() {
   try {
-    const response = await fetch(`${API_BASE}/api/notices`);
+    const response = await fetch(`${getApiBase()}/api/notices`);
     if (!response.ok) throw new Error('공지 목록 조회 실패');
     adminNotices = await response.json();
     renderAdminNoticeList();
@@ -249,7 +247,7 @@ function renderAdminNoticeList() {
 
 async function toggleAdminNoticePin(noticeId) {
   try {
-    const response = await fetch(`${API_BASE}/api/notices/${noticeId}/pin`, { method: 'PATCH' });
+    const response = await fetch(`${getApiBase()}/api/notices/${noticeId}/pin`, { method: 'PATCH' });
     const data = await response.json();
 
     if (response.ok && data.success) {
@@ -277,7 +275,7 @@ async function postAdminNotice() {
   }
 
   try {
-    const response = await fetch(`${API_BASE}/api/notices`, {
+    const response = await fetch(`${getApiBase()}/api/notices`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
@@ -311,7 +309,7 @@ async function deleteAdminNotice(noticeId) {
   if (!confirm('이 공지를 삭제하시겠습니까?')) return;
 
   try {
-    const response = await fetch(`${API_BASE}/api/notices/${noticeId}`, { method: 'DELETE' });
+    const response = await fetch(`${getApiBase()}/api/notices/${noticeId}`, { method: 'DELETE' });
     const data = await response.json();
 
     if (response.ok && data.success) {
@@ -331,14 +329,6 @@ let tierPosts = [];
 let tierComments = [];
 let currentTierPostFilter = 'all';
 let currentTierCommentFilter = 'all';
-
-function getAdminAuthHeaders() {
-  if (typeof getAuthHeaders === 'function') return getAuthHeaders();
-  const token = localStorage.getItem('authToken');
-  const headers = { 'Content-Type': 'application/json' };
-  if (token) headers.Authorization = `Bearer ${token}`;
-  return headers;
-}
 
 function getTierStatusBadge(reported) {
   return reported
@@ -367,16 +357,29 @@ function getTierCommentEmptyMessage() {
 async function loadTierMakerData() {
   try {
     const [postsRes, commentsRes] = await Promise.all([
-      fetch(`${API_BASE}/api/admin/tier-reports/posts`, { headers: getAdminAuthHeaders() }),
-      fetch(`${API_BASE}/api/admin/tier-reports/comments`, { headers: getAdminAuthHeaders() }),
+      fetch(`${getApiBase()}/api/admin/tier-reports/posts`),
+      fetch(`${getApiBase()}/api/admin/tier-reports/comments`),
     ]);
 
-    if (postsRes.ok) tierPosts = await postsRes.json();
-    if (commentsRes.ok) tierComments = await commentsRes.json();
+    if (postsRes.ok) {
+      tierPosts = await postsRes.json();
+    } else {
+      console.error('커스텀 메이커 게시글 조회 실패:', postsRes.status);
+      const fallback = await fetch(`${getApiBase()}/api/tierlists`);
+      tierPosts = fallback.ok ? await fallback.json() : [];
+    }
+
+    if (commentsRes.ok) {
+      tierComments = await commentsRes.json();
+    } else {
+      console.error('커스텀 메이커 댓글 조회 실패:', commentsRes.status);
+      tierComments = [];
+    }
 
     renderTierMaker();
   } catch (err) {
     console.error(err);
+    alert('커스텀 메이커 데이터를 불러오지 못했습니다. backend에서 npm start를 실행해주세요.');
   }
 }
 
@@ -458,7 +461,7 @@ window.setTierCommentFilter = function(filter) {
 
 window.dismissTierPostReport = async function(id) {
   if (!confirm('이 게시글 신고를 해제할까요?')) return;
-  const response = await fetch(`${API_BASE}/api/admin/tier-reports/posts/${id}/dismiss`, {
+  const response = await fetch(`${getApiBase()}/api/admin/tier-reports/posts/${id}/dismiss`, {
     method: 'PATCH',
     headers: getAdminAuthHeaders(),
   });
@@ -468,7 +471,7 @@ window.dismissTierPostReport = async function(id) {
 
 window.deleteTierPostReport = async function(id) {
   if (!confirm('이 게시글을 삭제할까요?')) return;
-  const response = await fetch(`${API_BASE}/api/admin/tier-reports/posts/${id}`, {
+  const response = await fetch(`${getApiBase()}/api/admin/tier-reports/posts/${id}`, {
     method: 'DELETE',
     headers: getAdminAuthHeaders(),
   });
@@ -478,7 +481,7 @@ window.deleteTierPostReport = async function(id) {
 
 window.dismissTierCommentReport = async function(id) {
   if (!confirm('이 댓글 신고를 해제할까요?')) return;
-  const response = await fetch(`${API_BASE}/api/admin/tier-reports/comments/${id}/dismiss`, {
+  const response = await fetch(`${getApiBase()}/api/admin/tier-reports/comments/${id}/dismiss`, {
     method: 'PATCH',
     headers: getAdminAuthHeaders(),
   });
@@ -488,7 +491,7 @@ window.dismissTierCommentReport = async function(id) {
 
 window.deleteTierCommentReport = async function(id) {
   if (!confirm('이 댓글을 삭제할까요?')) return;
-  const response = await fetch(`${API_BASE}/api/admin/tier-reports/comments/${id}`, {
+  const response = await fetch(`${getApiBase()}/api/admin/tier-reports/comments/${id}`, {
     method: 'DELETE',
     headers: getAdminAuthHeaders(),
   });
@@ -581,7 +584,7 @@ window.deleteComment = async function(commentId) {
   if (!confirm('정말 이 댓글을 삭제하시겠습니까?')) return;
 
   try {
-    const response = await fetch(`${API_BASE}/api/inquiries/${commentId}`, { method: 'DELETE' });
+    const response = await fetch(`${getApiBase()}/api/inquiries/${commentId}`, { method: 'DELETE' });
     const data = await response.json();
 
     if (response.ok && data.success) {
@@ -605,7 +608,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!confirm('⚠️ 정말 모든 댓글을 삭제하시겠습니까? (복구 불가)')) return;
 
       try {
-        const response = await fetch(`${API_BASE}/api/inquiries`, { method: 'DELETE' });
+        const response = await fetch(`${getApiBase()}/api/inquiries`, { method: 'DELETE' });
         const data = await response.json();
 
         if (response.ok && data.success) {
@@ -654,7 +657,7 @@ async function addBlockFromInput(value, durationDays) {
   if (!days) return;
 
   try {
-    const response = await fetch(`${API_BASE}/api/admin/blocks`, {
+    const response = await fetch(`${getApiBase()}/api/admin/blocks`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ value: inputValue, durationDays: days }),
@@ -760,7 +763,7 @@ async function unblock(blockId) {
   if (!confirm('관리자 재량으로 이 차단을 해제하시겠습니까?')) return;
 
   try {
-    const response = await fetch(`${API_BASE}/api/admin/blocks/${blockId}`, { method: 'DELETE' });
+    const response = await fetch(`${getApiBase()}/api/admin/blocks/${blockId}`, { method: 'DELETE' });
     const data = await response.json();
 
     if (response.ok && data.success) {

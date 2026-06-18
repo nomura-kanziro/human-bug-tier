@@ -12,7 +12,7 @@ async function login() {
     }
 
     try {
-        const response = await fetch("http://localhost:5000/api/admin/login", {
+        const response = await fetch(`${getApiBase()}/api/admin/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -24,10 +24,14 @@ async function login() {
         const data = await response.json();
 
         if (response.ok && data.success) {
+            localStorage.removeItem("user");
             localStorage.setItem("isAdmin", "true");
             localStorage.setItem("adminName", data.admin.name || "관리자");
             localStorage.setItem("adminIp", data.admin.ip || "unknown");
-            if (data.token) localStorage.setItem("authToken", data.token);
+            if (data.token) {
+                localStorage.setItem("adminAuthToken", data.token);
+                localStorage.setItem("authToken", data.token);
+            }
 
             alert("✅ 관리자 로그인 성공!");
             window.location.href = "/admin/comments/comment-management.html";
