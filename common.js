@@ -9,6 +9,7 @@
 //   5. 푸터 '문의하기' 링크 → Contact_us/[index.html -> contact_us.html] 이동
 // ========================================================
 
+const API_BASE = 'http://localhost:5000';
 let notificationPollTimer = null;
 
 function getAuthHeaders(extraHeaders = {}) {
@@ -17,6 +18,32 @@ function getAuthHeaders(extraHeaders = {}) {
   if (token) headers.Authorization = `Bearer ${token}`;
   if (!headers['Content-Type']) headers['Content-Type'] = 'application/json';
   return headers;
+}
+
+function getBasePath() {
+  const path = window.location.pathname;
+  console.log('📍 [common.js] 현재 페이지 경로:', path);
+
+  // [admin/comments 폴더 전용 처리] → root까지 2단계 올라감
+  if (path.includes('/admin/comments/') || path.includes('/admin\\comments\\')) {
+    return '../../';
+  }
+  if (path.includes('/admin/') || path.includes('/admin\\')) {
+    return '../';
+  }
+  if (path.includes('/user_login/') || path.includes('/user_login\\')) {
+    return '../';
+  }
+  if (path.includes('/tier-class/') || path.includes('/tier-class\\') || 
+      path.includes('/Contact_us/') || path.includes('/Contact_us\\') ||
+      path.includes('/custom-maker/') || path.includes('/custom-maker\\') ||
+      path.includes('/notice/') || path.includes('/notice\\') ||
+      path.includes('/all_notices/') || path.includes('/all_notices\\') ||
+      path.includes('/news/') || path.includes('/news\\')
+    ) {
+    return '../../';
+  }
+  return './';
 }
 
 function isUserLoggedIn() {
@@ -41,7 +68,7 @@ function buildTierPostDetailUrl(postId, commentId = null) {
     return `${getBasePath()}custom-maker/custom-maker_post/post_detail.html?${query}`;
   }
 
-  return siteUrl(`custom-maker/custom-maker_post/post_detail.html?${query}`);
+  return `/custom-maker/custom-maker_post/post_detail.html?${query}`;
 }
 
 function resolveNotificationLink(link) {
@@ -178,16 +205,15 @@ function bindProfileImageFallback(img) {
 // 홈 이동 함수 (로고 + 제목 클릭용)
 // ========================================================
 function goHome() {
-  const indexPath = siteUrl('index.html');
-  const current = window.location.pathname;
-  const root = getSiteRoot();
-
-  if (current === indexPath || current === root || current === root.replace(/\/$/, '')) {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    return;
+  const base = getBasePath();
+  console.log('🏠 [common.js] goHome 실행 → base:', base);
+  
+  // admin, Contact_us 모두 정상 이동
+  if (base === '../' || base === '../../') {
+    window.location.href = base + 'index.html';
+  } else {
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
-
-  window.location.href = indexPath;
 }
 
 // ========================================================
@@ -215,10 +241,10 @@ function closeMenu() {
 // ========================================================
 // 이미지 경로 자동 보정 (로고 404 해결)
 // ========================================================
-function fixImagePaths() {
+function fixImagePaths(base) {
   const logoImg = document.querySelector('#header-placeholder .logo-img');
   if (logoImg) {
-    logoImg.src = siteUrl('tier-image/logo.webp');
+    logoImg.src = base + 'tier-image/logo.webp';
     console.log('✅ [common.js] 로고 이미지 경로 보정 완료 →', logoImg.src);
   }
 }
@@ -261,45 +287,29 @@ function closeNoticeModal() {
 // ========================================================
 // header / footer 실제 로드 + 이벤트 부착
 // ========================================================
-function fixHeaderLinks() {
-  document.querySelectorAll('#header-placeholder a[href]').forEach((anchor) => {
-    const href = anchor.getAttribute('href');
-    if (!href || href === '#' || /^https?:\/\//i.test(href)) return;
-
-    const normalized = href.replace(/\\/g, '/');
-    if (normalized.startsWith('/')) {
-      anchor.href = siteUrl(normalized.slice(1));
-      return;
-    }
-
-    if (!normalized.startsWith('../') && !normalized.startsWith('./')) {
-      anchor.href = siteUrl(normalized);
-    }
-  });
-}
-
 function loadCommon() {
-  const base = getSiteRoot();
+  const base = getBasePath();
   console.log('🔄 [common.js] loadCommon 시작 - base:', base);
 
   Promise.all([
-    fetch(siteUrl('header.html')).then(r => {
-      if (!r.ok) throw new Error('header.html 404');
-      return r.text();
+    fetch(base + 'header.html').then(r => { 
+      if (!r.ok) throw new Error('header.html 404'); 
+      return r.text(); 
     }),
-    fetch(siteUrl('footer.html')).then(r => {
-      if (!r.ok) throw new Error('footer.html 404');
-      return r.text();
-    }),
+    fetch(base + 'footer.html').then(r => { 
+      if (!r.ok) throw new Error('footer.html 404'); 
+      return r.text(); 
+    })
   ])
   .then(([headerHTML, footerHTML]) => {
+    // HTML 삽입
     document.getElementById('header-placeholder').innerHTML = headerHTML;
     document.getElementById('footer-placeholder').innerHTML = footerHTML;
 
+    // ★★★ 핵심: 이벤트 부착 + 이미지 보정 + 푸터 링크 보정
     attachHeaderEvents();
-    fixImagePaths();
-    fixHeaderLinks();
-    fixFooterLinks();
+    fixImagePaths(base);
+    fixFooterLinks(base);
 
     renderUserProfile();
     renderNotificationBell();
@@ -319,16 +329,15 @@ function loadCommon() {
 // fallback (fetch가 실패했을 때 안전장치)
 function fallbackLoadHeaderFooter(base) {
   Promise.all([
-    fetch(siteUrl('header.html')).then(r => r.text()),
-    fetch(siteUrl('footer.html')).then(r => r.text()),
+    fetch(base + 'header.html').then(r => r.text()),
+    fetch(base + 'footer.html').then(r => r.text())
   ]).then(([headerHTML, footerHTML]) => {
     document.getElementById('header-placeholder').innerHTML = headerHTML;
     document.getElementById('footer-placeholder').innerHTML = footerHTML;
-
+    
     attachHeaderEvents();
-    fixImagePaths();
-    fixHeaderLinks();
-    fixFooterLinks();
+    fixImagePaths(base);
+    fixFooterLinks(base);
 
     renderUserProfile();
     renderNotificationBell();
@@ -366,10 +375,10 @@ function attachHeaderEvents() {
 // ========================================================
 // 푸터 '문의하기' 링크 보정
 // ========================================================
-function fixFooterLinks() {
+function fixFooterLinks(base) {
   const contactLink = document.getElementById('contact-link');
   if (contactLink) {
-    contactLink.href = siteUrl('Contact_us/contact_us.html');
+    contactLink.href = base + 'Contact_us/contact_us.html';
     console.log('✅ [common.js] 문의하기 링크 보정 완료 →', contactLink.href);
   }
 }
@@ -403,7 +412,7 @@ function renderHeaderLoginButton() {
   }
 
   loginBtn.hidden = false;
-  loginBtn.href = siteUrl('user_login/login.html');
+  loginBtn.href = `${getBasePath()}user_login/login.html`;
 }
 
 // ========================================================
@@ -573,7 +582,7 @@ async function refreshNotificationBadge() {
   if (!badge || !isUserLoggedIn()) return;
 
   try {
-    const response = await fetch(`${getApiBase()}/api/notifications/unread-count`, {
+    const response = await fetch(`${API_BASE}/api/notifications/unread-count`, {
       headers: getAuthHeaders(),
     });
     if (!response.ok) return;
@@ -598,7 +607,7 @@ async function loadNotificationList() {
   listEl.innerHTML = '<div class="notification-empty">알림을 불러오는 중...</div>';
 
   try {
-    const response = await fetch(`${getApiBase()}/api/notifications?limit=50`, {
+    const response = await fetch(`${API_BASE}/api/notifications?limit=50`, {
       headers: getAuthHeaders(),
     });
     if (!response.ok) throw new Error('알림 목록 조회 실패');
@@ -648,7 +657,7 @@ async function loadNotificationList() {
 async function handleNotificationClick(notificationId, link, resourceId, resourceType) {
   closeNotificationPanel();
 
-  fetch(`${getApiBase()}/api/notifications/${notificationId}/read`, {
+  fetch(`${API_BASE}/api/notifications/${notificationId}/read`, {
     method: 'PATCH',
     headers: getAuthHeaders(),
   }).catch((err) => console.error('알림 읽음 처리 실패:', err));
@@ -683,7 +692,7 @@ async function openNotificationSettingsModal() {
   };
 
   try {
-    const response = await fetch(`${getApiBase()}/api/notifications/settings`, {
+    const response = await fetch(`${API_BASE}/api/notifications/settings`, {
       headers: getAuthHeaders(),
     });
     if (response.ok) {
@@ -759,7 +768,7 @@ async function deleteNotificationHistory() {
   if (!confirm('모든 알림 기록을 삭제할까요?\n삭제한 기록은 복구할 수 없습니다.')) return;
 
   try {
-    const response = await fetch(`${getApiBase()}/api/notifications`, {
+    const response = await fetch(`${API_BASE}/api/notifications`, {
       method: 'DELETE',
       headers: getAuthHeaders(),
     });
@@ -791,7 +800,7 @@ async function saveNotificationSettings() {
   };
 
   try {
-    const response = await fetch(`${getApiBase()}/api/notifications/settings`, {
+    const response = await fetch(`${API_BASE}/api/notifications/settings`, {
       method: 'PATCH',
       headers: getAuthHeaders(),
       body: JSON.stringify(payload),
@@ -876,11 +885,11 @@ function goToCustomBoard() {
 
   if (!user?.nickname) {
     alert('내 게시글을 보려면 로그인이 필요합니다.');
-    window.location.href = siteUrl('user_login/login.html');
+    window.location.href = `${getBasePath()}user_login/login.html`;
     return;
   }
 
-  window.location.href = siteUrl('custom-maker/custom-maker_post/custom-maker_post.html?mine=1');
+  window.location.href = '/custom-maker/custom-maker_post/custom-maker_post.html?mine=1';
 }
 
 // 프로필 사진 변경
@@ -954,7 +963,7 @@ function showAdminModal() {
           공유 IP: <strong>${admin.ip}</strong>
         </p>
         
-        <button onclick="window.location.href=siteUrl('admin/comments/comment-management.html')" style="
+        <button onclick="window.location.href='/admin/comments/comment-management.html'" style="
           width: 100%; padding: 14px; background: #007bff; color: white; border: none; 
           border-radius: 8px; font-size: 16px; cursor: pointer; margin-bottom: 12px;">
           📋 관리하기 (댓글 관리)
@@ -998,7 +1007,8 @@ function logoutAdmin() {
 // ========================================================
 function goToAdminPage() {
   closeAdminModal();
-  window.location.href = siteUrl('admin/comments/comment-management.html');
+  window.location.href = "/admin/comments/comment-management.html";
+  console.log('✅ goToAdminPage 실행 → /admin/comments/comment-management.html');
 }
 
 function logoutAdmin() {

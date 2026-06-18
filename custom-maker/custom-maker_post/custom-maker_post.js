@@ -5,7 +5,9 @@ const POST_ID_STORAGE_KEY = 'selectedPostId';
 const REPORT_REASONS = ['도배 및 테러행위', '비방 및 모욕행위', '광고형 댓글', '기타'];
 
 function getTierApiBase() {
-  return typeof getApiBase === 'function' ? getApiBase() : '';
+  const { protocol, hostname, port } = window.location;
+  if (port === '5000') return '';
+  return `${protocol}//${hostname || 'localhost'}:5000`;
 }
 
 function escapeHtml(str) {
@@ -119,7 +121,7 @@ function updateBoardHeader() {
 }
 
 function goAllPosts() {
-  window.location.href = siteUrl('custom-maker/custom-maker_post/custom-maker_post.html');
+  window.location.href = '/custom-maker/custom-maker_post/custom-maker_post.html';
 }
 
 function isPostOwner(post, user) {
@@ -179,7 +181,7 @@ async function reportPost(postId) {
   const user = getLoggedInUser();
   if (!user) {
     if (confirm('게시글을 신고하려면 로그인이 필요합니다.\n로그인 페이지로 이동할까요?')) {
-      window.location.href = siteUrl('user_login/login.html');
+      window.location.href = '/user_login/login.html';
     }
     return;
   }
@@ -350,9 +352,9 @@ async function initBoard() {
     const user = getLoggedInUser();
     if (!user?.nickname) {
       if (confirm('내 게시글을 보려면 로그인이 필요합니다.\n로그인 페이지로 이동할까요?')) {
-        window.location.href = siteUrl('user_login/login.html');
+        window.location.href = '/user_login/login.html';
       } else {
-        window.location.href = siteUrl('custom-maker/custom-maker_post/custom-maker_post.html');
+        window.location.href = '/custom-maker/custom-maker_post/custom-maker_post.html';
       }
       return;
     }

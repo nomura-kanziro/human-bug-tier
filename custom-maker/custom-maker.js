@@ -551,7 +551,9 @@ function downloadAllTiersAsJSON() {
 // 게시판 업로드 (로그인 필수)
 // ============================================================
 function getTierApiBase() {
-  return typeof getApiBase === 'function' ? getApiBase() : '';
+  const { protocol, hostname, port } = window.location;
+  if (port === '5000') return '';
+  return `${protocol}//${hostname || 'localhost'}:5000`;
 }
 
 function isAdminLoggedIn() {

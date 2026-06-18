@@ -65,7 +65,7 @@ const register = async (req, res) => {
     await newUser.save();
 
     // 인증 이메일 발송
-    const verificationUrl = `${getAppBaseUrl(req)}/api/auth/verify/${verificationToken}`;
+    const verificationUrl = `http://localhost:5000/api/auth/verify/${verificationToken}`;
 
     await transporter.sendMail({
       from: '"휴먼버그티어" <' + process.env.EMAIL_USER + '>',
@@ -128,7 +128,7 @@ const verifyEmail = async (req, res) => {
       <p>로그인 페이지로 이동합니다...</p>
       <script>
         setTimeout(() => {
-          window.location.href = '/user_login/login.html';
+          window.location.href = '/login.html';  // 실제 로그인 페이지 경로로 변경
         }, 2000);
       </script>
     `);
