@@ -13,7 +13,17 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin(origin, callback) {
+    if (!origin) return callback(null, true);
+    const allowed =
+      /^https?:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/i.test(origin) ||
+      /^https:\/\/[a-z0-9-]+\.github\.io$/i.test(origin) ||
+      (process.env.APP_URL && origin === process.env.APP_URL.replace(/\/$/, ''));
+    callback(null, allowed);
+  },
+  credentials: true,
+}));
 app.use(express.json());
 
 // MongoDB 연결 (실패해도 서버는 계속 실행)

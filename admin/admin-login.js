@@ -34,7 +34,7 @@ async function login() {
             }
 
             alert("✅ 관리자 로그인 성공!");
-            window.location.href = "/admin/comments/comment-management.html";
+            window.location.href = siteUrl('admin/comments/comment-management.html');
         } else {
             alert("❌ " + (data.error || "아이디 또는 비밀번호가 틀렸습니다."));
         }

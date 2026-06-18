@@ -28,7 +28,13 @@ async function login() {
   }
 
   try {
-    const response = await fetch('http://localhost:5000/api/auth/login', {
+    const apiBase = typeof getApiBase === 'function' ? getApiBase() : '';
+    if (!apiBase) {
+      alert('API 서버가 설정되지 않았습니다. backend를 실행하거나 배포 URL을 설정해주세요.');
+      return;
+    }
+
+    const response = await fetch(`${apiBase}/api/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

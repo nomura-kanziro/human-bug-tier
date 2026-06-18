@@ -3,9 +3,7 @@
 // ========================================================
 
 function getNoticeApiBase() {
-  const { protocol, hostname, port } = window.location;
-  if (port === '5000') return '';
-  return `${protocol}//${hostname || 'localhost'}:5000`;
+  return typeof getApiBase === 'function' ? getApiBase() : '';
 }
 
 const CATEGORY_LABELS = {

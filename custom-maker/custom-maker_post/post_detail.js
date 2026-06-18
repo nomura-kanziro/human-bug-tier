@@ -21,9 +21,7 @@ let tierDefinitions = DEFAULT_TIER_DEFINITIONS;
 let savedTierState = {};
 
 function getTierApiBase() {
-  const { protocol, hostname, port } = window.location;
-  if (port === '5000') return '';
-  return `${protocol}//${hostname || 'localhost'}:5000`;
+  return typeof getApiBase === 'function' ? getApiBase() : '';
 }
 
 function apiHeaders(extra = {}) {
@@ -290,7 +288,7 @@ function showPostError(message) {
   container.innerHTML = `
     <div class="empty-message" style="padding:120px 20px;text-align:center;">
       <h2>${escapeHtml(message)}</h2>
-      <p style="margin-top:12px;"><a href="/custom-maker/custom-maker_post/custom-maker_post.html">← 게시판으로 돌아가기</a></p>
+      <p style="margin-top:12px;"><a href="${siteUrl('custom-maker/custom-maker_post/custom-maker_post.html')}">← 게시판으로 돌아가기</a></p>
     </div>`;
 }
 
@@ -402,7 +400,7 @@ function requireLoggedIn(message) {
   if (user) return user;
 
   if (confirm(`${message}\n로그인 페이지로 이동할까요?`)) {
-    window.location.href = '/user_login/login.html';
+    window.location.href = siteUrl('user_login/login.html');
   }
   return null;
 }
@@ -554,7 +552,7 @@ async function handleDeletePost() {
   const user = getLoggedInUser();
   if (!user) {
     if (confirm('삭제하려면 로그인이 필요합니다.\n로그인 페이지로 이동할까요?')) {
-      window.location.href = '/user_login/login.html';
+      window.location.href = siteUrl('user_login/login.html');
     }
     return;
   }
@@ -577,7 +575,7 @@ async function handleDeletePost() {
 
     if (response.ok && data.success) {
       alert('게시글이 삭제되었습니다.');
-      window.location.href = '/custom-maker/custom-maker_post/custom-maker_post.html';
+      window.location.href = siteUrl('custom-maker/custom-maker_post/custom-maker_post.html');
       return;
     }
 
