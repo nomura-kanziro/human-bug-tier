@@ -2,8 +2,6 @@
 // find_account.js - 아이디/비밀번호 찾기
 // ============================================
 
-const AUTH_API_BASE = 'http://localhost:5000/api/auth';
-
 function goHome() {
   window.location.href = '../index.html';
 }
@@ -34,7 +32,7 @@ async function findId() {
   }
 
   try {
-    const response = await fetch(`${AUTH_API_BASE}/find-id`, {
+    const response = await fetch(`${getAuthApiBase()}/find-id`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email }),
@@ -63,7 +61,7 @@ async function findPassword() {
   }
 
   try {
-    const response = await fetch(`${AUTH_API_BASE}/forgot-password`, {
+    const response = await fetch(`${getAuthApiBase()}/forgot-password`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ nickname: userId, email }),
