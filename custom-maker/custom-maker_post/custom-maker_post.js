@@ -166,7 +166,7 @@ function updateBoardHeader() {
 }
 
 function goAllPosts() {
-  window.location.href = '/custom-maker/custom-maker_post/custom-maker_post.html';
+  window.location.href = getBasePath() + 'custom-maker/custom-maker_post/custom-maker_post.html';
 }
 
 function isPostOwner(post, user) {
@@ -226,7 +226,7 @@ async function reportPost(postId) {
   const user = getLoggedInUser();
   if (!user) {
     if (confirm('게시글을 신고하려면 로그인이 필요합니다.\n로그인 페이지로 이동할까요?')) {
-      window.location.href = '/user_login/login.html';
+      window.location.href = getBasePath() + 'user_login/login.html';
     }
     return;
   }
@@ -279,10 +279,15 @@ function getThumbnail(post) {
 }
 
 function resolveAssetPath(path) {
-  if (!path) return '../../tier-image/logo.webp';
-  if (path.startsWith('http') || path.startsWith('/')) return path;
-  if (path.startsWith('../')) return '..' + path;
-  return '../../' + path;
+  if (!path) return getBasePath() + 'tier-image/logo.webp';
+  if (path.startsWith('http')) return path;
+  if (path.startsWith('/')) {
+    return getBasePath() + path.slice(1);
+  }
+  if (path.startsWith('../')) {
+    return getBasePath() + path.replace(/^\.\.\//, '');
+  }
+  return getBasePath() + path;
 }
 
 async function fetchPosts(search, author) {
@@ -422,9 +427,9 @@ async function initBoard() {
     const user = getLoggedInUser();
     if (!user?.nickname) {
       if (confirm('내 게시글을 보려면 로그인이 필요합니다.\n로그인 페이지로 이동할까요?')) {
-        window.location.href = '/user_login/login.html';
+        window.location.href = getBasePath() + 'user_login/login.html';
       } else {
-        window.location.href = '/custom-maker/custom-maker_post/custom-maker_post.html';
+        window.location.href = getBasePath() + 'custom-maker/custom-maker_post/custom-maker_post.html';
       }
       return;
     }

@@ -157,7 +157,7 @@ window.goToLogin = function() {
     return;
   }
   // 그 외의 경우 루트 기반 admin 경로로 이동
-  window.location.href = '/user_login/login.html';
+  window.location.href = getBasePath() + 'user_login/login.html';
 };
 
 // ==================== 상단 폼 ====================

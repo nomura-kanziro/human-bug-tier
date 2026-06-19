@@ -97,8 +97,19 @@ function createCharElement(char) {
   div.className = 'char';
   div.draggable = true;
   div.dataset.id = char.id;
+
+  let imgSrc = char.img || '';
+  const base = (typeof getBasePath === 'function') ? getBasePath() : '';
+  if (imgSrc.startsWith('/')) {
+    imgSrc = base + imgSrc.slice(1);
+  } else if (imgSrc.startsWith('http')) {
+    // keep
+  } else if (imgSrc && !imgSrc.startsWith('.') && !imgSrc.startsWith('http')) {
+    imgSrc = base + imgSrc;
+  }
+
   div.innerHTML = `
-    <img src="${char.img}" alt="${char.name}">
+    <img src="${imgSrc}" alt="${char.name}">
     <p>${char.name}</p>
   `;
   return div;

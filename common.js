@@ -31,29 +31,57 @@ function getAuthHeaders(extraHeaders = {}) {
 }
 
 function getBasePath() {
-  const path = window.location.pathname;
-  console.log('📍 [common.js] 현재 페이지 경로:', path);
+  let pathname = window.location.pathname;
+  console.log('📍 [common.js] 현재 페이지 경로:', pathname);
 
-  // [admin/comments 폴더 전용 처리] → root까지 2단계 올라감
-  if (path.includes('/admin/comments/') || path.includes('/admin\\comments\\')) {
-    return '../../';
+  // Remove filename if present to get directory
+  if (pathname.includes('.')) {
+    pathname = pathname.substring(0, pathname.lastIndexOf('/') + 1);
   }
-  if (path.includes('/admin/') || path.includes('/admin\\')) {
-    return '../';
+
+  const segments = pathname.split('/').filter(Boolean);
+  const isGitHubPages = /\.github\.io$/i.test(window.location.hostname);
+
+  let ups;
+  if (isGitHubPages && segments.length > 0) {
+    // GitHub Pages project site: first segment is repo name, treat as site root
+    // ups = total segments after repo = segments.length - 1
+    ups = Math.max(0, segments.length - 1);
+  } else {
+    // Local / root deploy / custom domain: segments are the depth
+    ups = segments.length;
   }
-  if (path.includes('/user_login/') || path.includes('/user_login\\')) {
-    return '../';
-  }
-  if (path.includes('/tier-class/') || path.includes('/tier-class\\') || 
-      path.includes('/Contact_us/') || path.includes('/Contact_us\\') ||
-      path.includes('/custom-maker/') || path.includes('/custom-maker\\') ||
-      path.includes('/notice/') || path.includes('/notice\\') ||
-      path.includes('/all_notices/') || path.includes('/all_notices\\') ||
-      path.includes('/news/') || path.includes('/news\\')
-    ) {
-    return '../../';
-  }
-  return './';
+
+  return ups > 0 ? '../'.repeat(ups) : './';
+}
+
+// Fix root-absolute internal links (href starting with /) by prefixing getBasePath()
+// This is critical for GitHub Pages project sites and sub-directory deploys.
+function fixRootLinksInElement(container) {
+  if (!container) return;
+  const base = getBasePath();
+  // Fix anchors
+  container.querySelectorAll('a[href]').forEach(link => {
+    let href = link.getAttribute('href');
+    if (!href || href.startsWith('http') || href.startsWith('#') || href.startsWith('javascript:')) return;
+    if (href.startsWith('/')) {
+      link.setAttribute('href', base + href.substring(1));
+    } else if (!href.startsWith('.') && !href.startsWith('/') && !href.includes(':')) {
+      link.setAttribute('href', base + href);
+    }
+  });
+  // Fix images and other assets that may use root-relative paths without leading /
+  container.querySelectorAll('img[src], link[href]').forEach(el => {
+    const attr = el.hasAttribute('src') ? 'src' : 'href';
+    let val = el.getAttribute(attr);
+    if (!val || val.startsWith('http') || val.startsWith('#') || val.startsWith('data:') || val.startsWith('../') || val.startsWith('./')) return;
+    if (val.startsWith('/')) {
+      el.setAttribute(attr, base + val.substring(1));
+    } else if (!val.includes('/')) {
+      // e.g. "tier-image/xx.png" or just "logo.webp" treat as root relative
+      el.setAttribute(attr, base + val);
+    }
+  });
 }
 
 function isUserLoggedIn() {
@@ -78,7 +106,8 @@ function buildTierPostDetailUrl(postId, commentId = null) {
     return `${getBasePath()}custom-maker/custom-maker_post/post_detail.html?${query}`;
   }
 
-  return `/custom-maker/custom-maker_post/post_detail.html?${query}`;
+  // Use getBasePath() so it works on GitHub Pages project sites (subpath) and root deploys.
+  return `${getBasePath()}custom-maker/custom-maker_post/post_detail.html?${query}`;
 }
 
 function resolveNotificationLink(link) {
@@ -316,6 +345,10 @@ function loadCommon() {
     document.getElementById('header-placeholder').innerHTML = headerHTML;
     document.getElementById('footer-placeholder').innerHTML = footerHTML;
 
+    // Fix any root-absolute links in the loaded header/footer for GitHub Pages / subpath deploys
+    fixRootLinksInElement(document.getElementById('header-placeholder'));
+    fixRootLinksInElement(document.getElementById('footer-placeholder'));
+
     // ★★★ 핵심: 이벤트 부착 + 이미지 보정 + 푸터 링크 보정
     attachHeaderEvents();
     fixImagePaths(base);
@@ -344,6 +377,9 @@ function fallbackLoadHeaderFooter(base) {
   ]).then(([headerHTML, footerHTML]) => {
     document.getElementById('header-placeholder').innerHTML = headerHTML;
     document.getElementById('footer-placeholder').innerHTML = footerHTML;
+
+    fixRootLinksInElement(document.getElementById('header-placeholder'));
+    fixRootLinksInElement(document.getElementById('footer-placeholder'));
     
     attachHeaderEvents();
     fixImagePaths(base);
@@ -900,7 +936,7 @@ function goToCustomBoard() {
   }
 
   const nickname = encodeURIComponent(user.nickname);
-  window.location.href = `/custom-maker/custom-maker_post/custom-maker_post.html?search=@${nickname}`;
+  window.location.href = getBasePath() + `custom-maker/custom-maker_post/custom-maker_post.html?search=@${nickname}`;
 }
 
 // 프로필 사진 변경
@@ -974,7 +1010,7 @@ function showAdminModal() {
           공유 IP: <strong>${admin.ip}</strong>
         </p>
         
-        <button onclick="window.location.href='/admin/comments/comment-management.html'" style="
+        <button onclick="window.location.href=getBasePath() + 'admin/comments/comment-management.html'" style="
           width: 100%; padding: 14px; background: #007bff; color: white; border: none; 
           border-radius: 8px; font-size: 16px; cursor: pointer; margin-bottom: 12px;">
           📋 관리하기 (댓글 관리)
@@ -1018,8 +1054,8 @@ function logoutAdmin() {
 // ========================================================
 function goToAdminPage() {
   closeAdminModal();
-  window.location.href = "/admin/comments/comment-management.html";
-  console.log('✅ goToAdminPage 실행 → /admin/comments/comment-management.html');
+  window.location.href = getBasePath() + "admin/comments/comment-management.html";
+  console.log('✅ goToAdminPage 실행 → admin/comments/comment-management.html');
 }
 
 function logoutAdmin() {

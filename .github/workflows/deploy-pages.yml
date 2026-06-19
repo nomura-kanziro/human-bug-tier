@@ -1,0 +1,54 @@
+name: Deploy to GitHub Pages (static frontend)
+
+on:
+  push:
+    branches: ["master", "main"]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare clean static frontend only (exclude backend, node_modules, etc.)
+        run: |
+          mkdir -p ./gh-pages-deploy
+          # Copy root static files
+          cp -f index.html common.css Header_Footer.css .nojekyll ./gh-pages-deploy/ 2>/dev/null || true
+          cp -f header.html footer.html ./gh-pages-deploy/ 2>/dev/null || true
+          # Copy all frontend asset directories (no backend/)
+          for d in tier-class tier-image tier-media notice custom-maker Contact_us user_login admin RDMD; do
+            if [ -d "$d" ]; then
+              cp -r "$d" ./gh-pages-deploy/
+            fi
+          done
+          # Remove any accidentally copied heavy or private things (defensive)
+          rm -rf ./gh-pages-deploy/backend ./gh-pages-deploy/node_modules ./gh-pages-deploy/.git ./gh-pages-deploy/terminals ./gh-pages-deploy/mcps 2>/dev/null || true
+          echo "Prepared deploy dir:"
+          ls -la ./gh-pages-deploy/
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./gh-pages-deploy
+
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

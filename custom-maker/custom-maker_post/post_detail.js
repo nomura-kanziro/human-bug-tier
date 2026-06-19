@@ -205,10 +205,17 @@ async function fetchPostDetail(id) {
 }
 
 function resolveAssetPath(path) {
-  if (!path) return '../../tier-image/logo.webp';
-  if (path.startsWith('http') || path.startsWith('/')) return path;
-  if (path.startsWith('../')) return '..' + path;
-  return '../../' + path;
+  if (!path) return getBasePath() + 'tier-image/logo.webp';
+  if (path.startsWith('http')) return path;
+  if (path.startsWith('/')) {
+    // GH Pages subpath or root deploys: prefix correctly
+    return getBasePath() + path.slice(1);
+  }
+  if (path.startsWith('../')) {
+    // strip leading ../ and let getBasePath handle depth
+    return getBasePath() + path.replace(/^\.\.\//, '');
+  }
+  return getBasePath() + path;
 }
 
 function createReadOnlyCharElement(char) {
@@ -216,7 +223,7 @@ function createReadOnlyCharElement(char) {
   div.className = 'char';
   const imgSrc = resolveAssetPath(char.img);
   div.innerHTML = `
-    <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(char.name)}" onerror="this.src='../../tier-image/logo.webp'">
+    <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(char.name)}" onerror="this.src=(window.getBasePath ? getBasePath() : '../../') + 'tier-image/logo.webp'">
     <p>${escapeHtml(char.name)}</p>
   `;
   return div;
@@ -296,7 +303,7 @@ function showPostError(message) {
   container.innerHTML = `
     <div class="empty-message" style="padding:120px 20px;text-align:center;">
       <h2>${escapeHtml(message)}</h2>
-      <p style="margin-top:12px;"><a href="/custom-maker/custom-maker_post/custom-maker_post.html">← 게시판으로 돌아가기</a></p>
+      <p style="margin-top:12px;"><a href="${getBasePath()}custom-maker/custom-maker_post/custom-maker_post.html">← 게시판으로 돌아가기</a></p>
     </div>`;
 }
 
@@ -333,7 +340,8 @@ async function loadPostDetail() {
 
 function goToUserPosts() {
   if (!currentPost?.author) return;
-  window.location.href = `/custom-maker/custom-maker_post/custom-maker_post.html?author=${encodeURIComponent(currentPost.author)}`;
+  // Use getBasePath() to support GitHub Pages subpath deploys (/repo-name/...)
+  window.location.href = `${getBasePath()}custom-maker/custom-maker_post/custom-maker_post.html?author=${encodeURIComponent(currentPost.author)}`;
 }
 
 function scrollToComments() {
@@ -408,7 +416,7 @@ function requireLoggedIn(message) {
   if (user) return user;
 
   if (confirm(`${message}\n로그인 페이지로 이동할까요?`)) {
-    window.location.href = '/user_login/login.html';
+    window.location.href = getBasePath() + 'user_login/login.html';
   }
   return null;
 }
@@ -560,7 +568,7 @@ async function handleDeletePost() {
   const user = getLoggedInUser();
   if (!user) {
     if (confirm('삭제하려면 로그인이 필요합니다.\n로그인 페이지로 이동할까요?')) {
-      window.location.href = '/user_login/login.html';
+      window.location.href = getBasePath() + 'user_login/login.html';
     }
     return;
   }
@@ -583,7 +591,7 @@ async function handleDeletePost() {
 
     if (response.ok && data.success) {
       alert('게시글이 삭제되었습니다.');
-      window.location.href = '/custom-maker/custom-maker_post/custom-maker_post.html';
+      window.location.href = getBasePath() + 'custom-maker/custom-maker_post/custom-maker_post.html';
       return;
     }
 
