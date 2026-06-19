@@ -1,6 +1,10 @@
 function getAuthApiBase() {
   const { protocol, hostname, port } = window.location;
 
+  if (/\.github\.io$/i.test(hostname)) {
+    return 'GITHUB_STATIC';
+  }
+
   // 로컬 파일 또는 로컬 전용 개발 서버
   if (
     protocol === 'file:' ||

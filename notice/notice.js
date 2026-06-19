@@ -5,6 +5,10 @@
 function getNoticeApiBase() {
   const { protocol, hostname, port } = window.location;
 
+  if (/\.github\.io$/i.test(hostname)) {
+    return 'GITHUB_STATIC';
+  }
+
   // file:// 또는 일반 로컬 개발 서버(5500, 3000, Vite 등)에서 여는 경우
   // → 별도 실행 중인 백엔드(localhost:5000)로 요청
   if (

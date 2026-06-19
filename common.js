@@ -11,6 +11,12 @@
 
 function getApiBase() {
   const { protocol, hostname, port } = window.location;
+
+  // GitHub Pages (static preview only - no backend)
+  if (/\.github\.io$/i.test(hostname)) {
+    return 'GITHUB_STATIC';
+  }
+
   if (
     protocol === 'file:' ||
     port === '5500' || port === '3000' || port === '5173' ||
@@ -19,6 +25,10 @@ function getApiBase() {
     return 'http://localhost:5000';
   }
   return '';
+}
+
+function isGitHubPagesPreview() {
+  return /\.github\.io$/i.test(window.location.hostname);
 }
 let notificationPollTimer = null;
 
@@ -548,6 +558,7 @@ function formatNotificationTime(dateStr) {
 
 function renderNotificationBell() {
   if (!isUserLoggedIn()) return;
+  if (isGitHubPagesPreview && isGitHubPagesPreview()) return; // static preview has no backend
 
   const profileEl = document.getElementById('user-profile');
   if (!profileEl) return;
@@ -626,9 +637,13 @@ function closeNotificationPanelOnOutsideClick(e) {
 async function refreshNotificationBadge() {
   const badge = document.getElementById('notification-badge');
   if (!badge || !isUserLoggedIn()) return;
+  if (isGitHubPagesPreview && isGitHubPagesPreview()) return;
+
+  const apiBase = getApiBase();
+  if (apiBase === 'GITHUB_STATIC') return;
 
   try {
-    const response = await fetch(`${getApiBase()}/api/notifications/unread-count`, {
+    const response = await fetch(`${apiBase}/api/notifications/unread-count`, {
       headers: getAuthHeaders(),
     });
     if (!response.ok) return;

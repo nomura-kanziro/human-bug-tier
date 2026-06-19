@@ -4,6 +4,11 @@
 
 function getContactApiBase() {
   const { protocol, hostname, port } = window.location;
+
+  if (/\.github\.io$/i.test(hostname)) {
+    return 'GITHUB_STATIC';
+  }
+
   if (
     protocol === 'file:' ||
     port === '5500' || port === '3000' || port === '5173' ||
@@ -207,8 +212,14 @@ async function addComment() {
     return;
   }
 
+  const apiBase = getContactApiBase();
+  if (apiBase === 'GITHUB_STATIC' || isGitHubPagesPreview?.()) {
+    alert("GitHub Pages 정적 배포에서는 문의 등록 기능이 지원되지 않습니다.\n전체 기능을 사용하려면 Render 배포를 이용해주세요.");
+    return;
+  }
+
   try {
-    const response = await fetch(`${getContactApiBase()}/api/inquiries`, {
+    const response = await fetch(`${apiBase}/api/inquiries`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -242,8 +253,14 @@ async function addComment() {
 async function loadComments() {
   const listEl = document.getElementById("commentList");
 
+  const apiBase = getContactApiBase();
+  if (apiBase === 'GITHUB_STATIC' || (typeof isGitHubPagesPreview === 'function' && isGitHubPagesPreview())) {
+    listEl.innerHTML = '<p style="color:#666; padding:20px; text-align:center;">GitHub Pages 정적 배포에서는 문의사항을 불러올 수 없습니다.<br>전체 기능을 사용하려면 Render 배포 주소를 이용해주세요.</p>';
+    return;
+  }
+
   try {
-    const response = await fetch(`${getContactApiBase()}/api/inquiries`);
+    const response = await fetch(`${apiBase}/api/inquiries`);
     const inquiries = await response.json();
 
     if (!Array.isArray(inquiries)) {

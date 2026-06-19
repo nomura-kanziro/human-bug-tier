@@ -1,6 +1,10 @@
 function getApiBase() {
   const { protocol, hostname, port } = window.location;
 
+  if (/\.github\.io$/i.test(hostname)) {
+    return 'GITHUB_STATIC';
+  }
+
   if (
     protocol === 'file:' ||
     port === '5500' || port === '3000' || port === '5173' ||
