@@ -899,7 +899,8 @@ function goToCustomBoard() {
     return;
   }
 
-  window.location.href = '/custom-maker/custom-maker_post/custom-maker_post.html?mine=1';
+  const nickname = encodeURIComponent(user.nickname);
+  window.location.href = `/custom-maker/custom-maker_post/custom-maker_post.html?search=@${nickname}`;
 }
 
 // 프로필 사진 변경

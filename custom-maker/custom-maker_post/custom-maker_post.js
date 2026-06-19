@@ -91,7 +91,35 @@ function getActiveAuthorFilter() {
   if (isMineMode()) {
     return getLoggedInUser()?.nickname || '';
   }
-  return new URLSearchParams(window.location.search).get('author') || '';
+  const params = new URLSearchParams(window.location.search);
+  let author = params.get('author') || '';
+  if (!author) {
+    const searchParam = params.get('search') || '';
+    const parsed = parseSearchForAuthor(searchParam);
+    author = parsed.author || '';
+  }
+  return author;
+}
+
+// Parse @username from search input. Returns { searchKeyword, author }
+function parseSearchForAuthor(input) {
+  const trimmed = (input || '').trim();
+  if (!trimmed) return { searchKeyword: '', author: '' };
+
+  // Match @username (until whitespace, supports Korean etc.)
+  const atMatch = trimmed.match(/@(\S+)/);
+  if (atMatch) {
+    const extractedAuthor = atMatch[1];
+    // Remove the @username part from keyword
+    let remaining = trimmed.replace(atMatch[0], '').trim();
+    remaining = remaining.replace(/\s*@\s*/, ' ').trim();
+    return {
+      searchKeyword: remaining,
+      author: extractedAuthor
+    };
+  }
+
+  return { searchKeyword: trimmed, author: '' };
 }
 
 function updateBoardHeader() {
@@ -108,11 +136,14 @@ function updateBoardHeader() {
         : '내 게시글';
     }
     if (viewAllBtn) viewAllBtn.hidden = false;
-    if (searchInput) searchInput.placeholder = '내 게시글 제목 검색';
+    if (searchInput) {
+      searchInput.placeholder = '제목 검색 (또는 @작성자)';
+    }
     return;
   }
 
-  const urlAuthor = new URLSearchParams(window.location.search).get('author');
+  const urlAuthor = getActiveAuthorFilter();
+  console.log('[custom board] updateBoardHeader urlAuthor:', urlAuthor);
   if (subtitle) {
     if (urlAuthor) {
       subtitle.hidden = false;
@@ -123,7 +154,15 @@ function updateBoardHeader() {
     }
   }
   if (viewAllBtn) viewAllBtn.hidden = !urlAuthor;
-  if (searchInput) searchInput.placeholder = '제목 또는 작성자 검색';
+  if (searchInput) {
+    searchInput.placeholder = '제목 또는 @작성자 검색';
+    const urlSearch = new URLSearchParams(window.location.search).get('search') || '';
+    if (urlSearch) {
+      searchInput.value = urlSearch;
+    } else if (urlAuthor && !searchInput.value) {
+      searchInput.value = `@${urlAuthor} `;
+    }
+  }
 }
 
 function goAllPosts() {
@@ -337,8 +376,16 @@ function loadPosts(filteredPosts = null) {
 }
 
 async function searchPosts() {
-  const keyword = document.getElementById('search-input')?.value.trim() || '';
-  const author = getActiveAuthorFilter();
+  const rawInput = document.getElementById('search-input')?.value || '';
+  const parsed = parseSearchForAuthor(rawInput);
+
+  // Priority: URL author (from ?author or ?mine) > parsed from @ in search
+  let author = getActiveAuthorFilter();
+  let keyword = parsed.searchKeyword;
+
+  if (!author && parsed.author) {
+    author = parsed.author;
+  }
 
   try {
     allPosts = await fetchPosts(keyword, author);
@@ -354,6 +401,23 @@ function goWritePage() {
 }
 
 async function initBoard() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const urlSearch = urlParams.get('search') || '';
+  const parsed = parseSearchForAuthor(urlSearch);
+
+  // Force set the search input value immediately for ?search=@name links (from profile)
+  const earlyInput = document.getElementById('search-input');
+  if (earlyInput && urlSearch) {
+    earlyInput.value = urlSearch;
+  }
+
+  console.log('[custom board] initBoard urlSearch:', urlSearch, 'parsed:', parsed);
+
+  // Support legacy ?mine=1 or ?author=
+  const authorFromUrl = getActiveAuthorFilter();
+  let initialAuthor = parsed.author || authorFromUrl;
+  let initialKeyword = parsed.searchKeyword || '';
+
   if (isMineMode()) {
     const user = getLoggedInUser();
     if (!user?.nickname) {
@@ -364,14 +428,20 @@ async function initBoard() {
       }
       return;
     }
+    // For mine, force author to current user
+    initialAuthor = user.nickname;
+    // If no specific search, prefill with @name
+    if (!initialKeyword) {
+      initialKeyword = `@${user.nickname}`;
+    }
   }
 
-  const authorFilter = getActiveAuthorFilter();
+  console.log('[custom board] initialAuthor:', initialAuthor, 'initialKeyword:', initialKeyword);
 
   updateBoardHeader();
 
   try {
-    allPosts = await fetchPosts('', authorFilter);
+    allPosts = await fetchPosts(initialKeyword, initialAuthor);
     loadPosts();
   } catch (err) {
     console.error(err);
@@ -382,7 +452,7 @@ async function initBoard() {
   }
 }
 
-document.addEventListener('DOMContentLoaded', () => {
+function initCustomBoard() {
   if (typeof loadCommon === 'function') loadCommon();
   setupPostLinkDelegation();
   initBoard();
@@ -393,10 +463,81 @@ document.addEventListener('DOMContentLoaded', () => {
       if (e.key === 'Enter') searchPosts();
     });
   }
-});
+
+  // Extra safeguard: if ?search param exists (e.g. from profile ?search=@name), ensure input has the value
+  const urlSearchForInput = new URLSearchParams(window.location.search).get('search');
+  if (searchInput && urlSearchForInput) {
+    searchInput.value = urlSearchForInput;
+  }
+
+  // One more direct set right after DOM ready logic
+  const directSearch = new URLSearchParams(window.location.search).get('search');
+  if (directSearch) {
+    const inp = document.getElementById('search-input');
+    if (inp) inp.value = directSearch;
+  }
+}
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initCustomBoard);
+} else {
+  initCustomBoard();
+}
 
 window.loadPosts = loadPosts;
 window.searchPosts = searchPosts;
 window.goWritePage = goWritePage;
 window.goAllPosts = goAllPosts;
 window.goToPostDetail = goToPostDetail;
+
+// 강제 프리필: 프로필에서 ?search=@닉네임 으로 왔을 때 검색창에 @ASD 가 입력되도록
+// 스크립트가 HTML 끝에서 로드되므로 DOM이 준비된 상태
+(function forcePrefillSearchFromProfile() {
+  const params = new URLSearchParams(window.location.search);
+  const searchVal = params.get('search');
+  if (searchVal && searchVal.startsWith('@')) {
+    const input = document.getElementById('search-input');
+    if (input) {
+      input.value = searchVal;
+      // 필터링이 이미 init에서 되었지만, 확실히 하기 위해 한 번 더
+      // (필요 시 searchPosts() 호출 가능하지만 초기 로드는 이미 author 필터 적용됨)
+    } else {
+      // 극단적 타이밍 대비
+      setTimeout(() => {
+        const i = document.getElementById('search-input');
+        if (i) i.value = searchVal;
+      }, 50);
+    }
+  }
+})();
+
+// Robust immediate prefill from ?search param (script is at end of HTML so DOM is ready)
+(function () {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    const searchVal = params.get('search');
+    if (searchVal) {
+      const input = document.getElementById('search-input');
+      if (input) {
+        input.value = searchVal;
+      }
+    }
+  } catch (e) {}
+})();
+
+// Immediate prefill for search input if ?search param is present (runs as soon as script executes at bottom of HTML)
+(function prefillSearchFromUrl() {
+  const params = new URLSearchParams(window.location.search);
+  const s = params.get('search');
+  if (s) {
+    const setValue = () => {
+      const input = document.getElementById('search-input');
+      if (input) {
+        input.value = s;
+      } else {
+        setTimeout(setValue, 30);
+      }
+    };
+    setValue();
+  }
+})();

@@ -23,6 +23,7 @@ services:
         sync: false
       - key: EMAIL_APP_PASSWORD
         sync: false
-      # 필요시 APP_URL 수동 설정 (Render가 자동으로 처리해주지만 원하면 아래처럼)
+      # 배포 후 선택적으로 설정 (이메일 링크 생성에 도움)
       # - key: APP_URL
       #   value: https://your-app.onrender.com
+      # 자세한 설명은 backend/.env.example 참조

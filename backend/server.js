@@ -16,6 +16,38 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// 정적 프론트엔드 파일 서빙 (루트의 index.html, 하위 폴더, 에셋 등)
+// 이 서버를 실행하면 frontend + API가 모두 같은 포트(기본 5000)에서 제공됨.
+// 
+// 로컬 개발 추천 방법 (5000 통일):
+//   cd backend
+//   npm start
+//   → http://localhost:5000 에서 전체 앱 (프론트 + API) 사용
+// 
+// npx serve . 는 비추천 (주요 개발 방법으로):
+//   - 5000으로 실행하면 백엔드와 포트 충돌
+//   - 별도 포트(예: 3000)로 하면 API는 localhost:5000을 바라보게 되지만,
+//     백엔드 기능(클린 URL, /health 등)을 잃고 두 프로세스를 관리해야 함
+//   - 프로젝트는 백엔드가 프론트를 함께 서빙하는 구조로 설계됨
+const projectRoot = path.join(__dirname, '..');
+app.use(express.static(projectRoot));
+
+// 깔끔한 URL 대응 (예: /notice → notice.html, /api/* 는 제외)
+
+app.use((req, res, next) => {
+  if (req.method !== 'GET' && req.method !== 'HEAD') return next();
+  if (req.path.startsWith('/api/')) return next();
+
+  const cleanPath = req.path.replace(/\/$/, '') || '/index';
+  const htmlCandidate = path.join(projectRoot, `${cleanPath}.html`);
+
+  if (fs.existsSync(htmlCandidate)) {
+    return res.sendFile(htmlCandidate);
+  }
+
+  next();
+});
+
 // MongoDB 연결 (실패해도 서버는 계속 실행)
 connectDB().then(async (connected) => {
   if (!connected) {
@@ -32,11 +64,6 @@ connectDB().then(async (connected) => {
 
 app.get('/favicon.ico', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'tier-image', 'logo.webp'));
-});
-
-// 테스트용 라우트
-app.get('/', (req, res) => {
-  res.json({ message: 'human-bug-tier 백엔드 서버가 정상 실행 중입니다.' });
 });
 
 // 헬스 체크 (DB 연결 상태 포함)
@@ -70,23 +97,6 @@ app.use('/api/admin', adminRoutes);
 app.use('/api/notices', noticeRoutes);
 app.use('/api/notifications', notificationRoutes);
 
-const projectRoot = path.join(__dirname, '..');
-app.use(express.static(projectRoot));
-
-app.use((req, res, next) => {
-  if (req.method !== 'GET' && req.method !== 'HEAD') return next();
-  if (req.path.startsWith('/api/')) return next();
-
-  const cleanPath = req.path.replace(/\/$/, '') || '/index';
-  const htmlCandidate = path.join(projectRoot, `${cleanPath}.html`);
-
-  if (fs.existsSync(htmlCandidate)) {
-    return res.sendFile(htmlCandidate);
-  }
-
-  next();
-});
-
 app.use((err, req, res, next) => {
   console.error('서버 에러:', err);
   res.status(500).json({ error: '서버 내부 오류가 발생했습니다.' });
@@ -96,7 +106,7 @@ const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => {
   console.log(`🚀 서버가 포트 ${PORT}에서 실행 중입니다.`);
   console.log(`   Health check: /health`);
-  console.log(`   프론트엔드 예시: /notice/notice.html`);
+  console.log(`   프론트엔드: / (index.html) + /notice/notice.html 등`);
 });
 
 process.on('unhandledRejection', (reason) => {
