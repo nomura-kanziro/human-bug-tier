@@ -33,17 +33,56 @@
     margin-top: 0;
 }
 
-.notice-filter-nav {
-    background: linear-gradient(135deg, #10b981, #059669);
+.filter-nav.notice-filter-nav {
+    background: #10b981;
 }
 
-.notice-list-filter-nav {
-    background: linear-gradient(135deg, #059669, #047857);
+.filter-nav.notice-list-filter-nav {
+    background: #10b981;
     margin-bottom: 12px;
 }
 
 .notice-filter-left {
     width: 100%;
+    background: #10b981;
+}
+
+/* 공지 분류 select 틀을 공지 등록 버튼(#10b981) 색과 동일하게 */
+#notice-category {
+    border: 2px solid #10b981;
+    background: white;
+    color: #333;
+}
+
+#notice-category:focus {
+    border-color: #059669;
+    outline: none;
+}
+
+/* 공지 분류 (목록) select 틀도 초록으로 */
+#notice-list-filter {
+    border: 2px solid #10b981;
+    background: white;
+    color: #333;
+}
+
+#notice-list-filter:focus {
+    border-color: #059669;
+    outline: none;
+}
+
+
+
+/* 공지 분류 (목록) select 틀도 초록으로 */
+#notice-list-filter {
+    border: 2px solid #10b981;
+    background: white;
+    color: #333;
+}
+
+#notice-list-filter:focus {
+    border-color: #059669;
+    outline: none;
 }
 
 .notice-form-card {

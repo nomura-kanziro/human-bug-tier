@@ -149,7 +149,9 @@ async function loadComments() {
 
 async function loadBlocks() {
   try {
-    const response = await fetch(`${getApiBase()}/api/admin/blocks`);
+    const response = await fetch(`${getApiBase()}/api/admin/blocks`, {
+      headers: getAdminAuthHeaders()
+    });
     if (!response.ok) throw new Error('차단 목록 조회 실패');
     blockedList = await response.json();
     renderBlockList();
@@ -162,7 +164,9 @@ async function loadBlocks() {
 
 async function loadUsers() {
   try {
-    const response = await fetch(`${getApiBase()}/api/admin/users`);
+    const response = await fetch(`${getApiBase()}/api/admin/users`, {
+      headers: getAdminAuthHeaders()
+    });
     if (!response.ok) throw new Error('사용자 목록 조회 실패');
     registeredUsers = await response.json();
     renderUserList();
@@ -247,7 +251,10 @@ function renderAdminNoticeList() {
 
 async function toggleAdminNoticePin(noticeId) {
   try {
-    const response = await fetch(`${getApiBase()}/api/notices/${noticeId}/pin`, { method: 'PATCH' });
+    const response = await fetch(`${getApiBase()}/api/notices/${noticeId}/pin`, { 
+      method: 'PATCH',
+      headers: getAdminAuthHeaders()
+    });
     const data = await response.json();
 
     if (response.ok && data.success) {
@@ -277,7 +284,7 @@ async function postAdminNotice() {
   try {
     const response = await fetch(`${getApiBase()}/api/notices`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAdminAuthHeaders(),
       body: JSON.stringify({
         title,
         summary,
@@ -309,7 +316,10 @@ async function deleteAdminNotice(noticeId) {
   if (!confirm('이 공지를 삭제하시겠습니까?')) return;
 
   try {
-    const response = await fetch(`${getApiBase()}/api/notices/${noticeId}`, { method: 'DELETE' });
+    const response = await fetch(`${getApiBase()}/api/notices/${noticeId}`, { 
+      method: 'DELETE',
+      headers: getAdminAuthHeaders()
+    });
     const data = await response.json();
 
     if (response.ok && data.success) {
@@ -356,9 +366,10 @@ function getTierCommentEmptyMessage() {
 
 async function loadTierMakerData() {
   try {
+    const headers = getAdminAuthHeaders();
     const [postsRes, commentsRes] = await Promise.all([
-      fetch(`${getApiBase()}/api/admin/tier-reports/posts`),
-      fetch(`${getApiBase()}/api/admin/tier-reports/comments`),
+      fetch(`${getApiBase()}/api/admin/tier-reports/posts`, { headers }),
+      fetch(`${getApiBase()}/api/admin/tier-reports/comments`, { headers }),
     ]);
 
     if (postsRes.ok) {
@@ -584,7 +595,10 @@ window.deleteComment = async function(commentId) {
   if (!confirm('정말 이 댓글을 삭제하시겠습니까?')) return;
 
   try {
-    const response = await fetch(`${getApiBase()}/api/inquiries/${commentId}`, { method: 'DELETE' });
+    const response = await fetch(`${getApiBase()}/api/inquiries/${commentId}`, { 
+      method: 'DELETE',
+      headers: getAdminAuthHeaders()
+    });
     const data = await response.json();
 
     if (response.ok && data.success) {
@@ -608,7 +622,10 @@ document.addEventListener('DOMContentLoaded', () => {
       if (!confirm('⚠️ 정말 모든 댓글을 삭제하시겠습니까? (복구 불가)')) return;
 
       try {
-        const response = await fetch(`${getApiBase()}/api/inquiries`, { method: 'DELETE' });
+        const response = await fetch(`${getApiBase()}/api/inquiries`, { 
+          method: 'DELETE',
+          headers: getAdminAuthHeaders()
+        });
         const data = await response.json();
 
         if (response.ok && data.success) {
@@ -659,7 +676,7 @@ async function addBlockFromInput(value, durationDays) {
   try {
     const response = await fetch(`${getApiBase()}/api/admin/blocks`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: getAdminAuthHeaders(),
       body: JSON.stringify({ value: inputValue, durationDays: days }),
     });
     const data = await response.json();
@@ -763,7 +780,10 @@ async function unblock(blockId) {
   if (!confirm('관리자 재량으로 이 차단을 해제하시겠습니까?')) return;
 
   try {
-    const response = await fetch(`${getApiBase()}/api/admin/blocks/${blockId}`, { method: 'DELETE' });
+    const response = await fetch(`${getApiBase()}/api/admin/blocks/${blockId}`, { 
+      method: 'DELETE',
+      headers: getAdminAuthHeaders()
+    });
     const data = await response.json();
 
     if (response.ok && data.success) {
