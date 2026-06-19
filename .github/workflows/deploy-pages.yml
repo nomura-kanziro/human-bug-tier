@@ -23,9 +23,8 @@ jobs:
       - name: Prepare clean static frontend only (exclude backend, node_modules, etc.)
         run: |
           mkdir -p ./gh-pages-deploy
-          # Copy root static files
-          cp -f index.html common.css Header_Footer.css .nojekyll ./gh-pages-deploy/ 2>/dev/null || true
-          cp -f header.html footer.html ./gh-pages-deploy/ 2>/dev/null || true
+          # Copy root static files (critical: common.js is required for dynamic header/footer loading)
+          cp -f index.html common.js common.css Header_Footer.css header.html footer.html .nojekyll ./gh-pages-deploy/ 2>/dev/null || true
           # Copy all frontend asset directories (no backend/)
           for d in tier-class tier-image tier-media notice custom-maker Contact_us user_login admin RDMD; do
             if [ -d "$d" ]; then
