@@ -4,8 +4,20 @@
 
 function getNoticeApiBase() {
   const { protocol, hostname, port } = window.location;
-  if (port === '5000') return '';
-  return `${protocol}//${hostname || 'localhost'}:5000`;
+
+  // file:// 또는 일반 로컬 개발 서버(5500, 3000, Vite 등)에서 여는 경우
+  // → 별도 실행 중인 백엔드(localhost:5000)로 요청
+  if (
+    protocol === 'file:' ||
+    port === '5500' || port === '3000' || port === '5173' ||
+    port === '8080' || port === '4200' || port === '8000'
+  ) {
+    return 'http://localhost:5000';
+  }
+
+  // 그 외 모든 경우 (백엔드가 직접 서빙하는 경우, Render.com, 프로덕션 등)
+  // → 같은 오리진 상대 경로 사용 (가장 안전)
+  return '';
 }
 
 const CATEGORY_LABELS = {

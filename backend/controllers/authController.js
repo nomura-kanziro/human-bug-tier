@@ -65,7 +65,7 @@ const register = async (req, res) => {
     await newUser.save();
 
     // 인증 이메일 발송
-    const verificationUrl = `http://localhost:5000/api/auth/verify/${verificationToken}`;
+    const verificationUrl = `${getAppBaseUrl(req)}/api/auth/verify/${verificationToken}`;
 
     await transporter.sendMail({
       from: '"휴먼버그티어" <' + process.env.EMAIL_USER + '>',

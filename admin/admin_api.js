@@ -1,15 +1,14 @@
 function getApiBase() {
   const { protocol, hostname, port } = window.location;
 
-  if (port === '5000') {
-    return `${protocol}//${hostname || 'localhost'}:5000`;
+  if (
+    protocol === 'file:' ||
+    port === '5500' || port === '3000' || port === '5173' ||
+    port === '8080' || port === '4200' || port === '8000'
+  ) {
+    return 'http://localhost:5000';
   }
-
-  if (!port || port === '80' || port === '443') {
-    return `${protocol}//${hostname}`;
-  }
-
-  return `${protocol}//${hostname || 'localhost'}:5000`;
+  return '';
 }
 
 function isAdminJwt(token) {

@@ -22,8 +22,14 @@ let savedTierState = {};
 
 function getTierApiBase() {
   const { protocol, hostname, port } = window.location;
-  if (port === '5000') return '';
-  return `${protocol}//${hostname || 'localhost'}:5000`;
+  if (
+    protocol === 'file:' ||
+    port === '5500' || port === '3000' || port === '5173' ||
+    port === '8080' || port === '4200' || port === '8000'
+  ) {
+    return 'http://localhost:5000';
+  }
+  return '';
 }
 
 function apiHeaders(extra = {}) {

@@ -2,6 +2,18 @@
 // common-v2.js - Contact_us 전용 스크립트 (contenteditable 버전)
 // ========================================================
 
+function getContactApiBase() {
+  const { protocol, hostname, port } = window.location;
+  if (
+    protocol === 'file:' ||
+    port === '5500' || port === '3000' || port === '5173' ||
+    port === '8080' || port === '4200' || port === '8000'
+  ) {
+    return 'http://localhost:5000';
+  }
+  return '';
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   renderInquiryForm();
   loadComments();
@@ -196,7 +208,7 @@ async function addComment() {
   }
 
   try {
-    const response = await fetch('http://localhost:5000/api/inquiries', {
+    const response = await fetch(`${getContactApiBase()}/api/inquiries`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -231,7 +243,7 @@ async function loadComments() {
   const listEl = document.getElementById("commentList");
 
   try {
-    const response = await fetch('http://localhost:5000/api/inquiries');
+    const response = await fetch(`${getContactApiBase()}/api/inquiries`);
     const inquiries = await response.json();
 
     if (!Array.isArray(inquiries)) {
@@ -366,7 +378,7 @@ window.submitReply = async function(commentId) {
   }
 
   try {
-    const response = await fetch(`http://localhost:5000/api/inquiries/${commentId}/answers`, {
+    const response = await fetch(`${getContactApiBase()}/api/inquiries/${commentId}/answers`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -493,7 +505,7 @@ window.selectReason = function(reason, commentId) {
 
 async function submitReport(commentId, reason, detail) {
   try {
-    const response = await fetch(`http://localhost:5000/api/inquiries/${commentId}/report`, {
+    const response = await fetch(`${getContactApiBase()}/api/inquiries/${commentId}/report`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -616,7 +628,7 @@ window.submitEdit = async function(commentId) {
 
   try {
     console.log("fetch 시작...");
-    const response = await fetch(`http://localhost:5000/api/inquiries/${commentId}`, {
+    const response = await fetch(`${getContactApiBase()}/api/inquiries/${commentId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -652,7 +664,7 @@ window.deleteComment = async function(commentId) {
   if (!confirm("정말 이 댓글을 삭제하시겠습니까?")) return;
 
   try {
-    const response = await fetch(`http://localhost:5000/api/inquiries/${commentId}`, {
+    const response = await fetch(`${getContactApiBase()}/api/inquiries/${commentId}`, {
       method: 'DELETE'
     });
 
@@ -741,7 +753,7 @@ window.submitReplyToAnswer = async function(answerId, parentCommentId) {
   const quotedMessage = answerEl?.querySelector('.answer-text')?.innerText?.trim() || '';
 
   try {
-    const response = await fetch(`http://localhost:5000/api/inquiries/${parentCommentId}/answers`, {
+    const response = await fetch(`${getContactApiBase()}/api/inquiries/${parentCommentId}/answers`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -812,7 +824,7 @@ window.selectReasonForAnswer = function(reason, answerId, parentCommentId) {
 
 async function submitReportForAnswer(answerId, parentCommentId, reason, detail) {
   try {
-    const response = await fetch(`http://localhost:5000/api/inquiries/${parentCommentId}/answers/${answerId}/report`, {
+    const response = await fetch(`${getContactApiBase()}/api/inquiries/${parentCommentId}/answers/${answerId}/report`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -905,7 +917,7 @@ window.submitEditForAnswer = async function(answerId, parentCommentId) {
   }
 
   try {
-    const response = await fetch(`http://localhost:5000/api/inquiries/${parentCommentId}/answers/${answerId}`, {
+    const response = await fetch(`${getContactApiBase()}/api/inquiries/${parentCommentId}/answers/${answerId}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'
@@ -934,7 +946,7 @@ window.deleteAnswer = async function(answerId, parentCommentId) {
   if (!confirm("정말 이 답변을 삭제하시겠습니까?")) return;
 
   try {
-    const response = await fetch(`http://localhost:5000/api/inquiries/${parentCommentId}/answers/${answerId}`, {
+    const response = await fetch(`${getContactApiBase()}/api/inquiries/${parentCommentId}/answers/${answerId}`, {
       method: 'DELETE'
     });
 

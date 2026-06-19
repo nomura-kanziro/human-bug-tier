@@ -9,7 +9,17 @@
 //   5. 푸터 '문의하기' 링크 → Contact_us/[index.html -> contact_us.html] 이동
 // ========================================================
 
-const API_BASE = 'http://localhost:5000';
+function getApiBase() {
+  const { protocol, hostname, port } = window.location;
+  if (
+    protocol === 'file:' ||
+    port === '5500' || port === '3000' || port === '5173' ||
+    port === '8080' || port === '4200' || port === '8000'
+  ) {
+    return 'http://localhost:5000';
+  }
+  return '';
+}
 let notificationPollTimer = null;
 
 function getAuthHeaders(extraHeaders = {}) {
@@ -582,7 +592,7 @@ async function refreshNotificationBadge() {
   if (!badge || !isUserLoggedIn()) return;
 
   try {
-    const response = await fetch(`${API_BASE}/api/notifications/unread-count`, {
+    const response = await fetch(`${getApiBase()}/api/notifications/unread-count`, {
       headers: getAuthHeaders(),
     });
     if (!response.ok) return;
@@ -607,7 +617,7 @@ async function loadNotificationList() {
   listEl.innerHTML = '<div class="notification-empty">알림을 불러오는 중...</div>';
 
   try {
-    const response = await fetch(`${API_BASE}/api/notifications?limit=50`, {
+    const response = await fetch(`${getApiBase()}/api/notifications?limit=50`, {
       headers: getAuthHeaders(),
     });
     if (!response.ok) throw new Error('알림 목록 조회 실패');
@@ -657,7 +667,7 @@ async function loadNotificationList() {
 async function handleNotificationClick(notificationId, link, resourceId, resourceType) {
   closeNotificationPanel();
 
-  fetch(`${API_BASE}/api/notifications/${notificationId}/read`, {
+  fetch(`${getApiBase()}/api/notifications/${notificationId}/read`, {
     method: 'PATCH',
     headers: getAuthHeaders(),
   }).catch((err) => console.error('알림 읽음 처리 실패:', err));
@@ -692,7 +702,7 @@ async function openNotificationSettingsModal() {
   };
 
   try {
-    const response = await fetch(`${API_BASE}/api/notifications/settings`, {
+    const response = await fetch(`${getApiBase()}/api/notifications/settings`, {
       headers: getAuthHeaders(),
     });
     if (response.ok) {
@@ -768,7 +778,7 @@ async function deleteNotificationHistory() {
   if (!confirm('모든 알림 기록을 삭제할까요?\n삭제한 기록은 복구할 수 없습니다.')) return;
 
   try {
-    const response = await fetch(`${API_BASE}/api/notifications`, {
+    const response = await fetch(`${getApiBase()}/api/notifications`, {
       method: 'DELETE',
       headers: getAuthHeaders(),
     });
@@ -800,7 +810,7 @@ async function saveNotificationSettings() {
   };
 
   try {
-    const response = await fetch(`${API_BASE}/api/notifications/settings`, {
+    const response = await fetch(`${getApiBase()}/api/notifications/settings`, {
       method: 'PATCH',
       headers: getAuthHeaders(),
       body: JSON.stringify(payload),
