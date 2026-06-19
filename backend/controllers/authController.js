@@ -64,41 +64,58 @@ const register = async (req, res) => {
 
     await newUser.save();
 
-    // 인증 이메일 발송
-    const verificationUrl = `${getAppBaseUrl(req)}/api/auth/verify/${verificationToken}`;
+    const hasEmailCreds = process.env.EMAIL_USER && process.env.EMAIL_APP_PASSWORD;
 
-    await transporter.sendMail({
-      from: '"휴먼버그티어" <' + process.env.EMAIL_USER + '>',
-      to: email,
-      subject: 'human-bug-tier 회원가입 인증 메일',
-      html: `
-        <h2>회원가입 인증</h2>
-          
-        <p style="margin-bottom: 20px; font-size: 15px; line-height: 1.6;">
-          아래 버튼을 클릭하여 회원가입을 완료해주세요.
-        </p>
-          
-        <div style="margin: 30px 0;">
-          <a href="${verificationUrl}" 
-             style="display: inline-block; 
-                    padding: 14px 32px; 
-                    background-color: #007bff; 
-                    color: white; 
-                    text-decoration: none; 
-                    border-radius: 6px; 
-                    font-size: 16px; 
-                    font-weight: bold;">
-            가입 완료
-          </a>
-        </div>
-          
-        <p style="color: #666; font-size: 14px;">
-          링크는 1시간 후에 만료됩니다.
-        </p>
-      `
-    });
+    if (hasEmailCreds) {
+      // 인증 이메일 발송
+      const verificationUrl = `${getAppBaseUrl(req)}/api/auth/verify/${verificationToken}`;
 
-    res.status(201).json({ message: '인증 메일이 발송되었습니다. 메일을 확인해주세요.' });
+      try {
+        await transporter.sendMail({
+          from: '"휴먼버그티어" <' + process.env.EMAIL_USER + '>',
+          to: email,
+          subject: 'human-bug-tier 회원가입 인증 메일',
+          html: `
+            <h2>회원가입 인증</h2>
+              
+            <p style="margin-bottom: 20px; font-size: 15px; line-height: 1.6;">
+              아래 버튼을 클릭하여 회원가입을 완료해주세요.
+            </p>
+              
+            <div style="margin: 30px 0;">
+              <a href="${verificationUrl}" 
+                 style="display: inline-block; 
+                        padding: 14px 32px; 
+                        background-color: #007bff; 
+                        color: white; 
+                        text-decoration: none; 
+                        border-radius: 6px; 
+                        font-size: 16px; 
+                        font-weight: bold;">
+                가입 완료
+              </a>
+            </div>
+              
+            <p style="color: #666; font-size: 14px;">
+              링크는 1시간 후에 만료됩니다.
+            </p>
+          `
+        });
+        res.status(201).json({ message: '인증 메일이 발송되었습니다. 메일을 확인해주세요.' });
+      } catch (emailErr) {
+        console.error('이메일 발송 실패:', emailErr);
+        // 사용자 생성은 성공했지만 메일 실패 → 안내
+        res.status(201).json({ message: '회원가입은 완료되었으나 인증 메일 발송에 실패했습니다. 관리자에게 문의해주세요.' });
+      }
+    } else {
+      // 이메일 설정이 없으면 바로 인증 처리 (선택적 사용 시)
+      newUser.isVerified = true;
+      newUser.verificationToken = undefined;
+      newUser.verificationTokenExpires = undefined;
+      await newUser.save();
+
+      res.status(201).json({ message: '회원가입이 완료되었습니다. (이메일 인증 생략됨)' });
+    }
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: '회원가입 처리 중 오류가 발생했습니다.' });
@@ -128,7 +145,7 @@ const verifyEmail = async (req, res) => {
       <p>로그인 페이지로 이동합니다...</p>
       <script>
         setTimeout(() => {
-          window.location.href = '/login.html';  // 실제 로그인 페이지 경로로 변경
+          window.location.href = '/user_login/login.html';
         }, 2000);
       </script>
     `);

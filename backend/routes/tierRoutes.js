@@ -15,7 +15,7 @@ const {
   deleteTierComment,
   reportTierComment,
 } = require('../controllers/tierCommentController');
-const { optionalAuth } = require('../utils/jwtAuth');
+const { optionalAuth } = require('../middleware/auth');
 
 router.use(optionalAuth);
 
