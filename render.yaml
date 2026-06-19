@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: human-bug-tier
+    env: node
+    # backend 폴더를 루트로 설정 (추천)
+    # frontend 정적 파일은 backend/server.js에서 __dirname 기준 상위로 서빙함
+    rootDir: backend
+    buildCommand: npm install
+    startCommand: npm start
+    plan: free
+    autoDeploy: true
+    envVars:
+      - key: MONGO_URI
+        sync: false
+      - key: ADMIN_INPUT_ID
+        sync: false
+      - key: ADMIN_INPUT_PW
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+        generateValue: true
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_APP_PASSWORD
+        sync: false
+      # 필요시 APP_URL 수동 설정 (Render가 자동으로 처리해주지만 원하면 아래처럼)
+      # - key: APP_URL
+      #   value: https://your-app.onrender.com
