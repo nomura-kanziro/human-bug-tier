@@ -46,7 +46,8 @@ async function login() {
 
 // 돌아가기 버튼
 function goBack() {
-    window.location.href = "../home.html";
+    const base = (typeof getBasePath === 'function') ? getBasePath() : '../';
+    window.location.href = base + 'home.html';
 }
 
 // 엔터키 지원

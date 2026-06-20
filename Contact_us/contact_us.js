@@ -397,9 +397,7 @@ window.submitReply = async function(commentId) {
   try {
     const response = await fetch(`${getContactApiBase()}/api/inquiries/${commentId}/answers`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify({
         message: replyText,
         userId: getCurrentUserName(),
@@ -647,9 +645,7 @@ window.submitEdit = async function(commentId) {
     console.log("fetch 시작...");
     const response = await fetch(`${getContactApiBase()}/api/inquiries/${commentId}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify({
         title: newTitle || "제목 없음",
         message: newMessage
@@ -682,7 +678,8 @@ window.deleteComment = async function(commentId) {
 
   try {
     const response = await fetch(`${getContactApiBase()}/api/inquiries/${commentId}`, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: getAuthHeaders()
     });
 
     const data = await response.json();
@@ -772,9 +769,7 @@ window.submitReplyToAnswer = async function(answerId, parentCommentId) {
   try {
     const response = await fetch(`${getContactApiBase()}/api/inquiries/${parentCommentId}/answers`, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify({
         message: replyText,
         userId: getCurrentUserName(),
@@ -936,9 +931,7 @@ window.submitEditForAnswer = async function(answerId, parentCommentId) {
   try {
     const response = await fetch(`${getContactApiBase()}/api/inquiries/${parentCommentId}/answers/${answerId}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify({ message: newMessage })
     });
 
@@ -964,7 +957,8 @@ window.deleteAnswer = async function(answerId, parentCommentId) {
 
   try {
     const response = await fetch(`${getContactApiBase()}/api/inquiries/${parentCommentId}/answers/${answerId}`, {
-      method: 'DELETE'
+      method: 'DELETE',
+      headers: getAuthHeaders()
     });
 
     const data = await response.json();

@@ -595,7 +595,7 @@ window.deleteComment = async function(commentId) {
   if (!confirm('정말 이 댓글을 삭제하시겠습니까?')) return;
 
   try {
-    const response = await fetch(`${getApiBase()}/api/inquiries/${commentId}`, { 
+    const response = await fetch(`${getApiBase()}/api/inquiries/${commentId}`, {
       method: 'DELETE',
       headers: getAdminAuthHeaders()
     });

@@ -219,6 +219,7 @@ window.deleteAnswer = async function(answerId, commentId) {
   try {
     const response = await fetch(`${getApiBase()}/api/inquiries/${commentId}/answers/${answerId}`, {
       method: 'DELETE',
+      headers: getAdminAuthHeaders()
     });
     const data = await response.json();
 
@@ -238,7 +239,10 @@ window.deleteWholeComment = async function(commentId) {
   if (!confirm('⚠️ 이 댓글과 모든 답변을 완전히 삭제하시겠습니까?')) return;
 
   try {
-    const response = await fetch(`${getApiBase()}/api/inquiries/${commentId}`, { method: 'DELETE' });
+    const response = await fetch(`${getApiBase()}/api/inquiries/${commentId}`, {
+      method: 'DELETE',
+      headers: getAdminAuthHeaders()
+    });
     const data = await response.json();
 
     if (response.ok && data.success) {

@@ -30,12 +30,14 @@
     <div class="side-panel"></div>
   </div>
 
+  <script src="../common.js"></script>
   <script src="admin_api.js"></script>
   <script src="admin-login.js"></script>
   <script>
     // admin-login.html 전용 스크립트
     function goHome() {
-      window.location.href = "../home.html";
+      const base = (typeof getBasePath === 'function') ? getBasePath() : '../';
+      window.location.href = base + 'home.html';
     }
 
     // 페이지 로드 시 로그인 상태 초기화 (필요시)
