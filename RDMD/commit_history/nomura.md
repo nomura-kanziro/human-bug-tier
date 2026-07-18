@@ -127,7 +127,7 @@
 | 96 | 2026-07-18 | [`fe9ade9`](#fe9ade9) | docs(RDMD): restructure frontend work logs into feature folders |
 | 97 | 2026-07-18 | [`026a38a`](#026a38a) | docs(RDMD): restructure backend work logs into feature folders |
 | 98 | 2026-07-18 | [`0f3c4ac`](#0f3c4ac) | docs(RDMD): add features, guides, and summary documentation |
-| 99 | 2026-07-18 | [`pending-99`](#pending-99) | docs(RDMD): add commit_history author log and mandatory pre-commit rule |
+| 99 | 2026-07-18 | [`6e05d23`](#6e05d23) | docs(RDMD): add commit_history author log and mandatory pre-commit rule |
 | 100 | 2026-07-18 | [`pending-100`](#pending-100) | docs(agents): add .agents common rules and canonical feature skills |
 | 101 | 2026-07-18 | [`pending-101`](#pending-101) | docs(team): add human worker rules for vibe and hardcoding |
 | 102 | 2026-07-18 | [`pending-102`](#pending-102) | docs(claude): add CLAUDE.md and .claude feature skills |
@@ -1902,12 +1902,12 @@
 
 ---
 
-<a id="pending-99"></a>
+<a id="6e05d23"></a>
 
-### 99. 2026-07-18 — `pending-99`
+### 99. 2026-07-18 — `6e05d23`
 
-- **hash (short)**: `pending-99`
-- **hash (full)**: `pending`
+- **hash (short)**: `6e05d23`
+- **hash (full)**: `6e05d2373e6ed0e1feee189565f5282a0634cae1`
 - **author**: nomura
 - **message**: docs(RDMD): add commit_history author log and mandatory pre-commit rule
 - **git**: `git show pending-99`
