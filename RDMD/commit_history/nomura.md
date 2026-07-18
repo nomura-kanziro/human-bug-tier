@@ -135,7 +135,7 @@
 | 104 | 2026-07-18 | [`fc6c611`](#fc6c611) | docs(codex): add Codex skills, root AGENTS.md, and README map |
 | 105 | 2026-07-18 | [`0ec285b`](#0ec285b) | fix(ui): mobile responsive layout for header auth board inquiry |
 | 106 | 2026-07-18 | [`25c3e8c`](#25c3e8c) | feat(pwa): add web manifest, service worker, and install icons |
-| 107 | 2026-07-18 | [`pending-107`](#pending-107) | docs(RDMD): add mobile and PWA usage guide |
+| 107 | 2026-07-18 | [`7a6b1d5`](#7a6b1d5) | docs(RDMD): add mobile and PWA usage guide |
 
 ---
 
@@ -2049,12 +2049,12 @@
 
 ---
 
-<a id="pending-107"></a>
+<a id="7a6b1d5"></a>
 
-### 107. 2026-07-18 — `pending-107`
+### 107. 2026-07-18 — `7a6b1d5`
 
-- **hash (short)**: `pending-107`
-- **hash (full)**: `pending`
+- **hash (short)**: `7a6b1d5`
+- **hash (full)**: `7a6b1d5b8f693669e2d5be29e48017f8ae2aef53`
 - **author**: nomura
 - **message**: docs(RDMD): add mobile and PWA usage guide
 - **git**: `git show 0ec285b`
