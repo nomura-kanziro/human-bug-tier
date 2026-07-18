@@ -138,7 +138,7 @@
 | 107 | 2026-07-18 | [`7a6b1d5`](#7a6b1d5) | docs(RDMD): add mobile and PWA usage guide |
 | 108 | 2026-07-18 | [`28b4d6d`](#28b4d6d) | docs(env): add root and backend .env.example with dual dotenv load |
 | 109 | 2026-07-18 | [`d43cf11`](#d43cf11) | feat(custom-maker): mobile tap-to-place characters and maker layout |
-| 110 | 2026-07-18 | [`pending-mobile2-2`](#pending-mobile2-2) | fix(ui): goHome always to index, tier mobile CSS, coming-soon nav |
+| 110 | 2026-07-18 | [`7fa3438`](#7fa3438) | fix(ui): goHome always to index, tier mobile CSS, coming-soon nav |
 
 ---
 
@@ -2106,12 +2106,12 @@
 
 ---
 
-<a id="pending-mobile2-2"></a>
+<a id="7fa3438"></a>
 
-### 110. 2026-07-18 — `pending-mobile2-2`
+### 110. 2026-07-18 — `7fa3438`
 
-- **hash (short)**: `pending-mobile2-2`
-- **hash (full)**: `pending`
+- **hash (short)**: `7fa3438`
+- **hash (full)**: `7fa34381662f6081ff7e6b53833f5f347521cee8`
 - **author**: nomura
 - **message**: fix(ui): goHome always to index, tier mobile CSS, coming-soon nav
 - **git**: `git show pending-mobile2-2`
