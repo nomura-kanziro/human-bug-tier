@@ -129,7 +129,7 @@
 | 98 | 2026-07-18 | [`0f3c4ac`](#0f3c4ac) | docs(RDMD): add features, guides, and summary documentation |
 | 99 | 2026-07-18 | [`6e05d23`](#6e05d23) | docs(RDMD): add commit_history author log and mandatory pre-commit rule |
 | 100 | 2026-07-18 | [`c6f862e`](#c6f862e) | docs(agents): add .agents common rules and canonical feature skills |
-| 101 | 2026-07-18 | [`pending-101`](#pending-101) | docs(team): add human worker rules for vibe and hardcoding |
+| 101 | 2026-07-18 | [`a1c43f8`](#a1c43f8) | docs(team): add human worker rules for vibe and hardcoding |
 | 102 | 2026-07-18 | [`pending-102`](#pending-102) | docs(claude): add CLAUDE.md and .claude feature skills |
 | 103 | 2026-07-18 | [`pending-103`](#pending-103) | docs(groks): add Grok Admin AI skill pack |
 | 104 | 2026-07-18 | [`pending-104`](#pending-104) | docs(codex): add Codex skills, root AGENTS.md, and README map |
@@ -1938,12 +1938,12 @@
 
 ---
 
-<a id="pending-101"></a>
+<a id="a1c43f8"></a>
 
-### 101. 2026-07-18 — `pending-101`
+### 101. 2026-07-18 — `a1c43f8`
 
-- **hash (short)**: `pending-101`
-- **hash (full)**: `pending`
+- **hash (short)**: `a1c43f8`
+- **hash (full)**: `a1c43f870c19f7be335fcb79624b515222db7cb8`
 - **author**: nomura
 - **message**: docs(team): add human worker rules for vibe and hardcoding
 - **git**: `git show pending-101`
