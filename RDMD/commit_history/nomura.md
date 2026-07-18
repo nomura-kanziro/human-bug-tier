@@ -136,7 +136,7 @@
 | 105 | 2026-07-18 | [`0ec285b`](#0ec285b) | fix(ui): mobile responsive layout for header auth board inquiry |
 | 106 | 2026-07-18 | [`25c3e8c`](#25c3e8c) | feat(pwa): add web manifest, service worker, and install icons |
 | 107 | 2026-07-18 | [`7a6b1d5`](#7a6b1d5) | docs(RDMD): add mobile and PWA usage guide |
-| 108 | 2026-07-18 | [`pending-env-root`](#pending-env-root) | docs(env): add root and backend .env.example with dual dotenv load |
+| 108 | 2026-07-18 | [`28b4d6d`](#28b4d6d) | docs(env): add root and backend .env.example with dual dotenv load |
 
 ---
 
@@ -2068,12 +2068,12 @@
 
 ---
 
-<a id="pending-env-root"></a>
+<a id="28b4d6d"></a>
 
-### 108. 2026-07-18 — `pending-env-root`
+### 108. 2026-07-18 — `28b4d6d`
 
-- **hash (short)**: `pending-env-root`
-- **hash (full)**: `pending`
+- **hash (short)**: `28b4d6d`
+- **hash (full)**: `28b4d6d9b9d5cbcd4906c575f5ec7992e27d5254`
 - **author**: nomura
 - **message**: docs(env): add root and backend .env.example with dual dotenv load
 - **git**: `git show pending-env-root`
