@@ -274,17 +274,23 @@ function toggleMenu() {
     console.warn('⚠️ sideMenu 요소를 찾지 못했습니다.');
     return;
   }
-  // 현재 상태에 따라 열기/닫기
-  if (menu.style.right === "0px" || menu.style.right === "") {
-    menu.style.right = "-100%";   // 닫기
+  // 인라인 style이 비어 있으면 CSS 기본(닫힘)으로 보고 연다
+  const isOpen = menu.style.right === "0px" || menu.classList.contains("is-open");
+  if (isOpen) {
+    menu.style.right = "-100%";
+    menu.classList.remove("is-open");
   } else {
-    menu.style.right = "0px";     // 열기
+    menu.style.right = "0px";
+    menu.classList.add("is-open");
   }
 }
 
 function closeMenu() {
   const menu = document.getElementById("sideMenu");
-  if (menu) menu.style.right = "-100%";
+  if (menu) {
+    menu.style.right = "-100%";
+    menu.classList.remove("is-open");
+  }
 }
 
 // ========================================================
@@ -370,6 +376,8 @@ function loadCommon() {
 
     initSideMenuDropdowns();     // ← 이 줄이 있어야 합니다
 
+    ensurePwaAssets(base);
+
     console.log('✅ [common.js] Header & Footer + 모든 이벤트 완전 로드 완료!');
   })
   .catch(err => {
@@ -437,6 +445,59 @@ function fixFooterLinks(base) {
     contactLink.href = base + 'Contact_us/contact_us.html';
     console.log('✅ [common.js] 문의하기 링크 보정 완료 →', contactLink.href);
   }
+}
+
+// ========================================================
+// PWA: manifest 링크 + Service Worker 등록
+// ========================================================
+function ensurePwaAssets(base) {
+  try {
+    if (!document.querySelector('meta[name="theme-color"]')) {
+      const theme = document.createElement('meta');
+      theme.name = 'theme-color';
+      theme.content = '#111111';
+      document.head.appendChild(theme);
+    }
+
+    if (!document.querySelector('link[rel="manifest"]')) {
+      const link = document.createElement('link');
+      link.rel = 'manifest';
+      link.href = base + 'manifest.webmanifest';
+      document.head.appendChild(link);
+    }
+
+    if (!document.querySelector('link[rel="apple-touch-icon"]')) {
+      const apple = document.createElement('link');
+      apple.rel = 'apple-touch-icon';
+      apple.href = base + 'tier-image/pwa/icon-192.png';
+      document.head.appendChild(apple);
+    }
+
+    registerServiceWorker(base);
+  } catch (e) {
+    console.warn('[PWA] ensurePwaAssets failed', e);
+  }
+}
+
+function registerServiceWorker(base) {
+  if (!('serviceWorker' in navigator)) return;
+  // file:// 또는 GitHub Pages 정적 프리뷰(API 없음)에서도 SW는 등록 가능하나,
+  // API 의존 기능은 여전히 백엔드 배포 URL 사용을 권장.
+  if (window.location.protocol === 'file:') return;
+
+  const swUrl = new URL((base || './') + 'sw.js', window.location.href);
+  const scopeUrl = new URL(base || './', window.location.href);
+
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register(swUrl.href, { scope: scopeUrl.href })
+      .then((reg) => {
+        console.log('[PWA] SW registered', reg.scope);
+      })
+      .catch((err) => {
+        console.warn('[PWA] SW register failed', err);
+      });
+  });
 }
 
 // 페이지 로드되면 자동 실행

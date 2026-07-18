@@ -215,3 +215,34 @@
   border: 2px solid #ffcc00;  /* ← 테두리 여기로 이동 */
   padding: 16px;               /* ← 16px → 0으로 변경 */
 }
+/* ====================== 모바일 제작 화면 ====================== */
+@media (max-width: 768px) {
+  .tier-list {
+    width: 100%;
+    max-width: 100%;
+    padding: 12px;
+    box-sizing: border-box;
+  }
+
+  .tier {
+    flex-direction: column;
+    min-height: 0;
+    margin-bottom: 14px;
+  }
+
+  .tier-name {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 8px;
+  }
+
+  .characters {
+    gap: 8px;
+  }
+
+  .character,
+  .characters img,
+  .char-card {
+    max-width: 72px;
+  }
+}

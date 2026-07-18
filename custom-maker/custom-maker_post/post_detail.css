@@ -209,6 +209,81 @@
   background: #222;
 }
 
+/* ====================== 모바일 상세 ====================== */
+@media (max-width: 768px) {
+  .post-detail-container {
+    padding: 0 12px 24px;
+    box-sizing: border-box;
+  }
+
+  .post-title {
+    font-size: 1.25rem;
+    margin: 12px 0 16px;
+    word-break: keep-all;
+  }
+
+  .post-meta-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .post-left,
+  .post-right {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .post-action {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .action-btn {
+    flex: 1 1 calc(50% - 8px);
+    min-height: 44px;
+    text-align: center;
+  }
+
+  .post-detail-container .comment-section {
+    width: 100%;
+    padding: 0 0 20px;
+  }
+
+  .comment-form {
+    flex-direction: column;
+  }
+
+  .comment-form button {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 16px;
+  }
+
+  .comment-input-box {
+    font-size: 16px;
+    min-height: 72px;
+  }
+
+  .tier-list {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 12px !important;
+    overflow-x: auto;
+  }
+
+  .tier {
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .tier-name {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 8px;
+  }
+}
+
 .comment-form button {
   padding: 0 20px;
   min-width: 72px;

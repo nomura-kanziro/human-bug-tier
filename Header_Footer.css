@@ -108,6 +108,16 @@ header {
   font-size: 28px;
   cursor: pointer;
   user-select: none;
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.menu-btn:active {
+  background: #f3f4f6;
 }
 
 /* ====================== 알림 ====================== */
@@ -582,4 +592,103 @@ footer a,
 footer a:hover,
 #contact-link:hover {
   text-decoration: none !important;
+}
+
+/* ====================== 모바일 헤더/레이아웃 ====================== */
+@media (max-width: 768px) {
+  header {
+    padding: 8px 12px;
+    gap: 8px;
+  }
+
+  .left-group {
+    gap: 8px;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .desktop-nav {
+    display: none !important;
+  }
+
+  .logo-img {
+    width: 28px;
+    margin-right: 6px;
+  }
+
+  .header-right {
+    gap: 6px;
+  }
+
+  .header-user-actions {
+    margin-right: 4px;
+    gap: 6px;
+  }
+
+  .header-login-btn {
+    padding: 8px 10px;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .user-profile-avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .notification-bell-btn {
+    width: 44px;
+    height: 44px;
+  }
+
+  .side-menu {
+    width: min(86vw, 300px);
+    right: -100%;
+    padding: 16px;
+    padding-top: 48px;
+  }
+
+  .side-menu.open,
+  .side-menu.active {
+    right: 0;
+  }
+
+  .side-menu ul li a,
+  .side-menu .dropdown-toggle {
+    display: block;
+    padding: 12px 8px;
+    min-height: 44px;
+    line-height: 1.3;
+  }
+
+  .close-btn {
+    min-width: 44px;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  footer {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-start;
+    padding: 12px 16px;
+  }
+
+  .fot-text {
+    white-space: normal;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-text {
+    font-size: 1.1rem;
+  }
+
+  .header-login-btn {
+    padding: 8px;
+    font-size: 12px;
+  }
 }

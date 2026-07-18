@@ -47,6 +47,51 @@ body {
   align-items: center;
 }
 
+/* ====================== 모바일 ====================== */
+@media (max-width: 768px) {
+  body {
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    align-items: flex-start;
+    padding: 16px;
+    padding-top: max(16px, env(safe-area-inset-top));
+    padding-bottom: max(24px, env(safe-area-inset-bottom));
+  }
+
+  .logo {
+    position: static;
+    margin: 0 auto 16px;
+    justify-content: center;
+  }
+
+  .login-wrapper {
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    flex-direction: column;
+  }
+
+  .login-box {
+    width: 100%;
+    padding: 28px 20px 24px;
+    box-sizing: border-box;
+  }
+
+  .side-panel {
+    display: none;
+  }
+
+  .login-box input,
+  .login-box button {
+    width: 100%;
+    max-width: 320px;
+    font-size: 16px;
+    min-height: 44px;
+    box-sizing: border-box;
+  }
+}
+
 .login-box h2 {
   color: #000;
   margin-bottom: 30px;
