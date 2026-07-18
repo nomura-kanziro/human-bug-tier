@@ -128,7 +128,7 @@
 | 97 | 2026-07-18 | [`026a38a`](#026a38a) | docs(RDMD): restructure backend work logs into feature folders |
 | 98 | 2026-07-18 | [`0f3c4ac`](#0f3c4ac) | docs(RDMD): add features, guides, and summary documentation |
 | 99 | 2026-07-18 | [`6e05d23`](#6e05d23) | docs(RDMD): add commit_history author log and mandatory pre-commit rule |
-| 100 | 2026-07-18 | [`pending-100`](#pending-100) | docs(agents): add .agents common rules and canonical feature skills |
+| 100 | 2026-07-18 | [`c6f862e`](#c6f862e) | docs(agents): add .agents common rules and canonical feature skills |
 | 101 | 2026-07-18 | [`pending-101`](#pending-101) | docs(team): add human worker rules for vibe and hardcoding |
 | 102 | 2026-07-18 | [`pending-102`](#pending-102) | docs(claude): add CLAUDE.md and .claude feature skills |
 | 103 | 2026-07-18 | [`pending-103`](#pending-103) | docs(groks): add Grok Admin AI skill pack |
@@ -1920,12 +1920,12 @@
 
 ---
 
-<a id="pending-100"></a>
+<a id="c6f862e"></a>
 
-### 100. 2026-07-18 — `pending-100`
+### 100. 2026-07-18 — `c6f862e`
 
-- **hash (short)**: `pending-100`
-- **hash (full)**: `pending`
+- **hash (short)**: `c6f862e`
+- **hash (full)**: `c6f862e65c85e6c2d00d5ee5ecef046fe904569d`
 - **author**: nomura
 - **message**: docs(agents): add .agents common rules and canonical feature skills
 - **git**: `git show pending-100`
