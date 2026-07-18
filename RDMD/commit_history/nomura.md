@@ -130,7 +130,7 @@
 | 99 | 2026-07-18 | [`6e05d23`](#6e05d23) | docs(RDMD): add commit_history author log and mandatory pre-commit rule |
 | 100 | 2026-07-18 | [`c6f862e`](#c6f862e) | docs(agents): add .agents common rules and canonical feature skills |
 | 101 | 2026-07-18 | [`a1c43f8`](#a1c43f8) | docs(team): add human worker rules for vibe and hardcoding |
-| 102 | 2026-07-18 | [`pending-102`](#pending-102) | docs(claude): add CLAUDE.md and .claude feature skills |
+| 102 | 2026-07-18 | [`717afd1`](#717afd1) | docs(claude): add CLAUDE.md and .claude feature skills |
 | 103 | 2026-07-18 | [`pending-103`](#pending-103) | docs(groks): add Grok Admin AI skill pack |
 | 104 | 2026-07-18 | [`pending-104`](#pending-104) | docs(codex): add Codex skills, root AGENTS.md, and README map |
 
@@ -1956,12 +1956,12 @@
 
 ---
 
-<a id="pending-102"></a>
+<a id="717afd1"></a>
 
-### 102. 2026-07-18 — `pending-102`
+### 102. 2026-07-18 — `717afd1`
 
-- **hash (short)**: `pending-102`
-- **hash (full)**: `pending`
+- **hash (short)**: `717afd1`
+- **hash (full)**: `717afd10e29d248ce857462dc3bc3066259b5a52`
 - **author**: nomura
 - **message**: docs(claude): add CLAUDE.md and .claude feature skills
 - **git**: `git show pending-102`
