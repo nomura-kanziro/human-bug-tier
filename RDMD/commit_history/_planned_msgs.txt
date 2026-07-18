@@ -1,0 +1,9 @@
+docs(RDMD): restructure frontend work logs into feature folders
+docs(RDMD): restructure backend work logs into feature folders
+docs(RDMD): add features, guides, and summary documentation
+docs(RDMD): add commit_history author log and mandatory pre-commit rule
+docs(agents): add .agents common rules and canonical feature skills
+docs(team): add human worker rules for vibe and hardcoding
+docs(claude): add CLAUDE.md and .claude feature skills
+docs(groks): add Grok Admin AI skill pack
+docs(codex): add Codex skills, root AGENTS.md, and README map

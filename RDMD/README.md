@@ -1,136 +1,234 @@
-# RDMD - 개발 기록 일지
+# RDMD — 휴버대 티어표 개발 기록실
 
-RDMD(RD + MD)는 **휴버대 티어표** 프로젝트의 개발 과정을 기록한 문서 저장소입니다.
+**RDMD** = **R**ecor**d** + **MD** (Markdown).  
+휴버대 티어표(`human-bug-tier`) 프로젝트의 **작업 이력 · 기능 설명 · 개발 가이드**를 모아 둔 문서 폴더입니다.
 
-주요 커밋 작업을 체계적으로 정리하여, 프론트엔드와 백엔드 변경 사항을 분리해서 기록합니다.
-
-## 📌 목적
-- 커밋 단위로 작업 내용을 빠르게 파악
-- 프론트엔드와 백엔드 변경을 명확히 구분
-- 향후 유지보수 및 팀원 온보딩에 활용
-
-## 📁 파일 구성
-
-- **프론트엔드 기록**: `informationN.md` (1 ~ 29)
-- **백엔드 기록**: `backend_N.md` (0 ~ 14, 25 ~ 29)
-
-> 번호가 일치하는 파일(`information25.md` ↔ `backend_25.md`)은 **같은 커밋 작업**을 프론트/백으로 나눠 기록한 것입니다.
+코드 옆에 흩어진 메모 대신, 여기서 프로젝트의 “왜 이렇게 됐는지”와 “어떻게 고칠지”를 찾으면 됩니다.
 
 ---
 
-## 기록 일지 분류
+## 이 폴더는 무엇을 담나요?
 
-### 1. 초기 구조 및 공통 기능 (information1 ~ information10 / backend_0 ~ backend_10)
+| 구분 | 폴더 | 한 줄 설명 |
+|------|------|------------|
+| 요약 | [`summary/`](./summary/) | 지금까지 한 일을 Phase·타임라인으로 정리 |
+| 기능 설명 | [`features/`](./features/) | 각 기능이 무엇인지, 어디에 코드가 있는지 |
+| 가이드 | [`guides/`](./guides/) | 로컬 실행, 경로/API, 보안, 배포, 기록 방법 |
+| 프론트 일지 | [`frontend/`](./frontend/) | 프론트엔드 커밋·작업 상세 기록 (기능별) |
+| 백엔드 일지 | [`backend/`](./backend/) | 백엔드 커밋·작업 상세 기록 (기능 폴더 + `*-record.md`) |
+| **작성자 커밋 로그** | [`commit_history/`](./commit_history/) | **사람별** 커밋 타임라인 (과거→현재, 목차 포함 · 예: `nomura.md`) |
 
-**주요 주제**: 프로젝트 초기 세팅, 공통 헤더/푸터, 경로 처리, 기본 CRUD
-
-#### 프론트엔드
-- `information1.md`: Header/Footer 공통화, `getBasePath()` 경로 자동 보정, 이벤트 처리 개선
-- `information2~5.md`: 기본 페이지 구조 정리, CSS 분리, 티어 페이지 초기 작업
-- `information10.md`: 커스텀 메이커 초기 구조 및 게시판 연동 준비
-
-#### 백엔드
-- `backend_0.md`: Node.js 기본 환경, Express + Mongoose 세팅 가이드
-- `backend_1~5.md`: TierList 모델, 기본 CRUD, DB 연결
-- `backend_10.md`: TierList 삭제·신고·좋아요 기능 확장
-
----
-
-### 2. 인증 시스템 (Auth)
-
-**주요 주제**: 회원가입, 로그인, JWT, 비밀번호 재설정
-
-#### 프론트엔드
-- `information23.md`: 로그인·회원가입·비밀번호 재설정 프론트 연동
-- `information25.md`: 비밀번호 재설정 페이지 개선 (랜덤 토큰 방식, `auth_api.js` 추가)
-
-#### 백엔드
-- `backend_23.md` / `backend_25.md`: `authController.js`에서 JWT 대신 안전한 랜덤 토큰 + SHA256 해시 사용, `appUrl.js` 유틸 추가, `validate-reset-token` / `reset-password` API 구현
+> 예전에 루트에 있던 `information1.md` ~ `information29.md` 는  
+> 모두 **`frontend/` 기능 폴더**로 옮긴 뒤 **삭제**되었습니다.  
+> 프론트 기록은 이제 `frontend/` 만 보면 됩니다.
 
 ---
 
-### 3. 공지사항 및 알림 시스템
+## 처음 보는 분 — 읽는 순서
 
-**주요 주제**: 공지 작성, 분류(전체 공지 / 새 소식), 핀 기능, 알림
+```
+1. 이 README (지금 문서)
+2. summary/work-history.md     ← 프로젝트 히스토리 한 바퀴
+3. features/overview.md        ← 기능·폴더 지도
+4. guides/path-and-api.md      ← 경로·API 함정 (필수)
+5. 담당 영역
+   · 기능 이해 → features/<이름>.md
+   · 상세 이력 → frontend/ 또는 backend/
+   · 작업 규칙 → guides/
+```
 
-#### 프론트엔드
-- `information10~12.md` 부근: notice 폴더 구조 완성, 공지 목록/상세 페이지 개발
-- `information18~19.md`: 알림 기능 UI 연동
-
-#### 백엔드
-- `backend_10~12.md`: Notice 모델 및 컨트롤러, 카테고리 분리
-- Notification 관련 라우트 및 서비스 로직
-
----
-
-### 4. 커스텀 메이커 및 게시판 (Custom Maker + Tier Posts)
-
-**주요 주제**: 티어 제작, 업로드, 댓글, 좋아요, 신고
-
-#### 프론트엔드
-- `information15~20.md`: 커스텀 메이커 게시판, `post_detail` 상세 페이지 (티어 렌더링, 댓글 CRUD, 신고, 좋아요)
-- `information26.md`: 관리자에서 커스텀 게시글/댓글 표시 문제 수정
-
-#### 백엔드
-- `backend_10.md`, `backend_15~20.md`: TierList / TierPostComment 모델 확장 (신고, 좋아요, 댓글 연쇄 삭제)
-- `backend_26.md`: tier-reports 조회용 API 일부 인증 완화 (조회용)
+로컬 실행·시연은 저장소 루트 [`../README.md`](../README.md) 를 참고하세요.  
+권장: `cd backend && npm start` → `http://localhost:5000`
 
 ---
 
-### 5. 관리자 시스템 및 신고 관리 (Admin)
+## 폴더 상세 소개
 
-**주요 주제**: 관리자 로그인, 댓글/문의/신고 관리, 차단
+### 1. `summary/` — 작업 정리
 
-#### 프론트엔드
-- `information24.md`: 관리자 JWT 로그인 + 티어 신고 관리 UI
-- `information26.md`: 어드민 커스텀 메이커 표시 문제 수정 + `admin_api.js` 분리
-- `information29.md`: 관리자 댓글/공지 관리 페이지 UI 강화 (필터 색상 통일, 헤더 적용)
+| 파일 | 내용 |
+|------|------|
+| [summary/work-history.md](./summary/work-history.md) | Phase별 성과, 완성 기능 체크리스트 |
+| [summary/timeline.md](./summary/timeline.md) | 개발 흐름 타임라인 |
+| [summary/README.md](./summary/README.md) | 요약 폴더 안내 |
 
-#### 백엔드
-- `backend_14.md`: adminTierReportController (신고된 게시글/댓글 조회·해제·삭제)
-- `backend_24.md`, `backend_26.md`: admin 라우트 보호 강화
-- `backend_28.md`: `requireAdmin` 미들웨어 도입 및 전면 적용
+**언제 보나?** 온보딩, “지금까지 뭐 했지?” 할 때.
 
 ---
 
-### 6. 배포 및 환경 통합 (Deploy - GitHub Pages + Render)
+### 2. `features/` — 기능 설명서
 
-**주요 주제**: 경로 문제 해결, API 베이스 통일, Render 배포 준비
+현재 사이트에 있는 기능을 **역할·권한·코드 위치** 중심으로 설명합니다.
 
-#### 프론트엔드
-- `information27.md`: `getBasePath()` 개선, `fixRootLinksInElement` 추가, header/footer 404 해결, 상대 경로 정리, GitHub Pages 서브패스 대응
-- `information28.md`: API Base 로직 통합 (`get*ApiBase()`)
+| 문서 | 주제 |
+|------|------|
+| [overview.md](./features/overview.md) | 전체 맵 · 사용자 여정 · 권한 표 |
+| [common-infra.md](./features/common-infra.md) | common.js, Header/Footer, 경로·API Base |
+| [tier-class.md](./features/tier-class.md) | 공식 1~9 티어표 |
+| [custom-maker.md](./features/custom-maker.md) | 커스텀 제작 · 게시판 · 댓글 |
+| [auth.md](./features/auth.md) | 회원가입 · 로그인 · 비번 재설정 |
+| [notice.md](./features/notice.md) | 공지 · 새 소식 · 핀 |
+| [inquiry.md](./features/inquiry.md) | 문의하기 · 답변 |
+| [admin.md](./features/admin.md) | 관리자 대시보드 |
+| [notifications.md](./features/notifications.md) | 헤더 알림 |
+| [backend-api.md](./features/backend-api.md) | API 그룹 · 모델 · 미들웨어 |
 
-#### 백엔드
-- `backend_27.md`: `render.yaml`, `DEPLOY.md`, `backend/.env.example` 작성, `server.js` 정적 파일 서빙 + clean URL 미들웨어 강화, `appUrl.js` 연동
-- `backend_25.md`: 배포 환경에서의 절대 링크 생성 지원
+인덱스: [features/README.md](./features/README.md)
 
----
-
-### 7. 최근 작업 정리 (information25 ~ 29 / backend_25 ~ 29)
-
-| 번호 | 프론트엔드 (information) | 백엔드 (backend_) | 주요 내용 |
-|------|---------------------------|-------------------|----------|
-| 25   | 비밀번호 재설정 페이지, auth_api.js | 랜덤 토큰 방식 + appUrl 유틸 | 보안 강화 |
-| 26   | admin_api.js, 커스텀 표시 문제 수정 | tier-reports 라우트 일부 조정 | 관리자 연동 |
-| 27   | getBasePath + fixRootLinks, 상대경로 정리 | render.yaml, server.js 정적 서빙, DEPLOY.md | GH Pages + Render 대응 |
-| 28   | - (주로 백엔드) | requireAdmin 미들웨어, 모든 관리자 라우트 보호 | 보안 |
-| 29   | 댓글/공지 관리 UI 강화 (CSS 색상, getAdminAuthHeaders) | (직접 변경 적음, 이전 미들웨어 기반) | 관리자 UX 개선 |
+**언제 보나?** 기능을 고치기 전 “이게 원래 어떻게 동작하지?” 할 때.
 
 ---
 
-## 사용 방법
+### 3. `guides/` — 개발 가이드라인
 
-- 특정 기능의 변경 이력을 찾고 싶을 때 → 해당 번호 파일 확인
-- 프론트만 보고 싶으면 `informationN.md`
-- 백엔드만 보고 싶으면 `backend_N.md`
-- 같은 번호 파일을 함께 보면 전체 작업 흐름 파악 가능
+팀이 같은 방식으로 코드를 건드리고 배포하기 위한 규칙입니다.
+
+| 문서 | 내용 |
+|------|------|
+| [development.md](./guides/development.md) | 로컬 실행, 작업 흐름 |
+| [coding-conventions.md](./guides/coding-conventions.md) | 프론트·백 코딩 규칙 |
+| [path-and-api.md](./guides/path-and-api.md) | getBasePath / getApiBase / 인증 헤더 |
+| [security.md](./guides/security.md) | JWT, Admin, 토큰, env |
+| [deploy-checklist.md](./guides/deploy-checklist.md) | Render · GH Pages 체크리스트 |
+| [rdmd-writing.md](./guides/rdmd-writing.md) | RDMD에 기록 남기는 방법 |
+| [new-feature-checklist.md](./guides/new-feature-checklist.md) | 새 기능 추가 체크리스트 |
+
+인덱스: [guides/README.md](./guides/README.md)
+
+**언제 보나?** 새 페이지·API·배포·보안 관련 작업을 시작하기 전.
 
 ---
 
-## 참고
-- 이 기록들은 실제 커밋 메시지와 변경 파일을 기반으로 작성되었습니다.
-- 15~24번 구간은 초기 작업이 1~14번에 집중되어 있으며, 25번부터는 별도 큰 주제로 재정리되었습니다.
-- 더 자세한 내용은 각 `.md` 파일 본문을 참고하세요.
+### 4. `frontend/` — 프론트엔드 작업 일지
 
-**마지막 업데이트**: 2026-06-20
+커밋/작업 단위 상세 기록입니다. **기능별 하위 폴더**로 나뉩니다.
+
+```
+frontend/
+├── README.md              ← 파일 목록 · 요약 표
+├── 01-common/             공통 UI · JWT 유틸
+├── 02-tier-class/         공식 티어 관련
+├── 03-custom-maker/       제작 · 게시판 · 상세
+├── 04-notice/             공지
+├── 05-auth/               로그인 · 가입 · 재설정
+├── 06-inquiry/            문의
+├── 07-admin/              관리자 UI
+├── 08-notifications/      알림
+└── 09-deploy-path/        경로 · API Base · 배포 프론트
+```
+
+- 파일명: `{순서}-{키워드}-record.md`  
+- 예: `05-auth/04-password-reset-frontend-record.md`  
+- 상세 목록: [frontend/README.md](./frontend/README.md)
+
+**언제 보나?** “이 화면은 언제 어떻게 바뀌었지?” 커밋 단위로 볼 때.
+
+---
+
+### 5. `backend/` — 백엔드 작업 일지
+
+Express · MongoDB · 미들웨어 · 배포 서버 쪽 **상세 일지**입니다.  
+`frontend/` 와 같이 **기능 폴더 + 순서 번호 + `*-record.md`** 입니다.
+
+```
+backend/
+├── README.md              ← 파일 목록 · legacy 대응표
+├── 01-setup/              Node · DB 연결
+├── 02-tierlists/          게시글 · 댓글 · 좋아요 · 신고
+├── 03-auth/               User · JWT · 비번 재설정
+├── 04-notice/             공지 API
+├── 05-inquiry/            문의 · 답변
+├── 06-admin/              관리자 · Block · requireAdmin
+└── 07-deploy/             Render · 정적 서빙
+```
+
+- 예: `03-auth/04-password-reset-token-hash-record.md`
+- 상세 목록: [backend/README.md](./backend/README.md)
+
+**언제 보나?** API·모델·권한·서버 변경 이력을 찾을 때.
+
+---
+
+## 한눈에 보는 전체 트리
+
+```
+RDMD/
+├── README.md                 ← 지금 이 소개 문서
+├── summary/                  작업 요약 · 타임라인
+├── features/                 기능 설명 (what)
+├── guides/                   개발 규칙 (how)
+├── frontend/                 프론트 상세 일지
+│   ├── 01-common/ … 09-deploy-path/
+│   └── *-record.md
+├── backend/                  백엔드 상세 일지
+│   ├── 01-setup/ … 07-deploy/
+│   └── *-record.md
+└── commit_history/           작성자별 커밋 로그
+    ├── README.md
+    └── nomura.md             ← 창시자 nomura
+```
+
+---
+
+## 에이전트 · 팀 · 규칙 계층
+
+| 대상 | 위치 |
+|------|------|
+| **사람 규칙** | [`../team/`](../team/README.md) |
+| **AI 공통 룰** (Grok Admin) | [`../.agents/`](../.agents/README.md) |
+| Claude | [`CLAUDE.md`](../CLAUDE.md), [`.claude/skills/`](../.claude/README.md) |
+| Grok | [`groks/`](../groks/README.md) |
+| Codex | [`AGENTS.md`](../AGENTS.md), [`codex/`](../codex/README.md) |
+| 배포 | [`../DEPLOY.md`](../DEPLOY.md) |
+
+충돌 시: 사람 지시 → `.agents` → 에이전트 스킬 → RDMD 이력.
+
+---
+
+## 새 기록을 남길 때
+
+### ★ 커밋·푸시 전 (사람 · 필수)
+
+1. **`commit_history/{본인이름}.md`** 에 이번 커밋 내용을 **먼저** 작성  
+   - 목차 **맨 아래** 행 + 상세 **맨 아래** 블록  
+   - 정렬: **위=과거, 아래=최신** · 메시지는 실제 `git commit -m` 과 동일  
+2. 그 md 를 `git add` 에 포함 → **`git commit` → `git push`**  
+3. nomura: [commit_history/nomura.md](./commit_history/nomura.md)  
+4. 절차 전문: [commit_history/README.md](./commit_history/README.md)  
+5. **로그 없이 커밋·푸시 금지** (`team/04-prohibitions.md`)
+
+### 기능 상세 일지 (권장)
+
+1. **프론트** → `frontend/<기능-폴더>/NN-키워드-record.md`  
+2. **백엔드** → `backend/<기능-폴더>/NN-키워드-record.md`  
+3. 큰 변화면 `summary/work-history.md` · 해당 `features/*.md` · 각 폴더 README 표 갱신  
+4. 작성법: [guides/rdmd-writing.md](./guides/rdmd-writing.md)
+
+---
+
+## 절대 넣지 말 것
+
+- `.env` 실값, DB 비밀번호, JWT 시크릿, 관리자 비밀번호  
+- 개인 토큰 · 메일 앱 비밀번호  
+
+환경 변수 **이름**만 적어도 됩니다 (`MONGO_URI`, `ADMIN_INPUT_ID` 등).
+
+---
+
+## 관련 링크 모음
+
+| 목적 | 링크 |
+|------|------|
+| 프로젝트 시연 | [../README.md](../README.md) |
+| 작업 이력 요약 | [summary/work-history.md](./summary/work-history.md) |
+| 기능 맵 | [features/overview.md](./features/overview.md) |
+| 경로·API 가이드 | [guides/path-and-api.md](./guides/path-and-api.md) |
+| 프론트 일지 인덱스 | [frontend/README.md](./frontend/README.md) |
+| 백엔드 일지 인덱스 | [backend/README.md](./backend/README.md) |
+| 작성자 커밋 (nomura) | [commit_history/nomura.md](./commit_history/nomura.md) |
+| 배포 | [../DEPLOY.md](../DEPLOY.md) |
+
+---
+
+**마지막 업데이트**: 2026-07-18  
+`backend/` 기능 폴더 재배치 · frontend 와 동일 규칙 적용

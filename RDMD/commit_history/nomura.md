@@ -126,7 +126,7 @@
 | 95 | 2026-06-25 | [`c80f16e`](#c80f16e) | Merge branch 'master' of https://github.com/nomura-kanziro/human-bug-tier |
 | 96 | 2026-07-18 | [`fe9ade9`](#fe9ade9) | docs(RDMD): restructure frontend work logs into feature folders |
 | 97 | 2026-07-18 | [`026a38a`](#026a38a) | docs(RDMD): restructure backend work logs into feature folders |
-| 98 | 2026-07-18 | [`pending-98`](#pending-98) | docs(RDMD): add features, guides, and summary documentation |
+| 98 | 2026-07-18 | [`0f3c4ac`](#0f3c4ac) | docs(RDMD): add features, guides, and summary documentation |
 | 99 | 2026-07-18 | [`pending-99`](#pending-99) | docs(RDMD): add commit_history author log and mandatory pre-commit rule |
 | 100 | 2026-07-18 | [`pending-100`](#pending-100) | docs(agents): add .agents common rules and canonical feature skills |
 | 101 | 2026-07-18 | [`pending-101`](#pending-101) | docs(team): add human worker rules for vibe and hardcoding |
@@ -1884,12 +1884,12 @@
 
 ---
 
-<a id="pending-98"></a>
+<a id="0f3c4ac"></a>
 
-### 98. 2026-07-18 — `pending-98`
+### 98. 2026-07-18 — `0f3c4ac`
 
-- **hash (short)**: `pending-98`
-- **hash (full)**: `pending`
+- **hash (short)**: `0f3c4ac`
+- **hash (full)**: `0f3c4aca91e60c27124ac83416c9c17bcdd9467a`
 - **author**: nomura
 - **message**: docs(RDMD): add features, guides, and summary documentation
 - **git**: `git show pending-98`
