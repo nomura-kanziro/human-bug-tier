@@ -137,7 +137,7 @@
 | 106 | 2026-07-18 | [`25c3e8c`](#25c3e8c) | feat(pwa): add web manifest, service worker, and install icons |
 | 107 | 2026-07-18 | [`7a6b1d5`](#7a6b1d5) | docs(RDMD): add mobile and PWA usage guide |
 | 108 | 2026-07-18 | [`28b4d6d`](#28b4d6d) | docs(env): add root and backend .env.example with dual dotenv load |
-| 109 | 2026-07-18 | [`pending-mobile2-1`](#pending-mobile2-1) | feat(custom-maker): mobile tap-to-place characters and maker layout |
+| 109 | 2026-07-18 | [`d43cf11`](#d43cf11) | feat(custom-maker): mobile tap-to-place characters and maker layout |
 | 110 | 2026-07-18 | [`pending-mobile2-2`](#pending-mobile2-2) | fix(ui): goHome always to index, tier mobile CSS, coming-soon nav |
 
 ---
@@ -2088,12 +2088,12 @@
 
 ---
 
-<a id="pending-mobile2-1"></a>
+<a id="d43cf11"></a>
 
-### 109. 2026-07-18 — `pending-mobile2-1`
+### 109. 2026-07-18 — `d43cf11`
 
-- **hash (short)**: `pending-mobile2-1`
-- **hash (full)**: `pending`
+- **hash (short)**: `d43cf11`
+- **hash (full)**: `d43cf11877adb6e8a5204d6499aba57ae94c1042`
 - **author**: nomura
 - **message**: feat(custom-maker): mobile tap-to-place characters and maker layout
 - **git**: `git show pending-mobile2-1`

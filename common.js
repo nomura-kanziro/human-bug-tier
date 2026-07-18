@@ -256,13 +256,8 @@ function bindProfileImageFallback(img) {
 function goHome() {
   const base = getBasePath();
   console.log('🏠 [common.js] goHome 실행 → base:', base);
-  
-  // admin, Contact_us 모두 정상 이동
-  if (base === '../' || base === '../../') {
-    window.location.href = base + 'index.html';
-  } else {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }
+  // 루트·하위 폴더 모두 index.html 로 이동 (루트에서 스크롤만 하던 분기 제거)
+  window.location.href = base + 'index.html';
 }
 
 // ========================================================

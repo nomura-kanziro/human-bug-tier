@@ -692,3 +692,11 @@ footer a:hover,
     font-size: 12px;
   }
 }
+
+/* 미구현 메뉴 */
+.nav-soon,
+a.nav-soon {
+  opacity: 0.55;
+  cursor: not-allowed;
+  font-style: italic;
+}
