@@ -18,7 +18,9 @@
   <div id="header-placeholder"></div>
 
   <div class="maker-container">
-    <h1><img src="..\tier-image\human_bug_eyes_icon.gif" class="eyes_icon"> 커스텀 티어 메이커</h1>
+    <h1><img src="../tier-image/human_bug_eyes_icon.gif" class="eyes_icon" alt=""> 커스텀 티어 메이커</h1>
+    <p class="mobile-maker-help">모바일: 캐릭터를 <strong>탭</strong>해 선택한 뒤, 위 티어 칸을 <strong>탭</strong>하면 배치됩니다. (PC는 드래그도 가능)</p>
+    <div id="mobile-place-hint" class="mobile-place-hint" hidden></div>
     
 
     <!-- tier-class 스타일 그대로 + 화살표 -->
@@ -67,7 +69,7 @@
 
     <!-- 아래쪽 캐릭터 목록 (드래그 가능) -->
     <div class="character-pool">
-      <h3>📦 전체 캐릭터 풀 (드래그해서 위로 옮기세요)</h3>
+      <h3>📦 전체 캐릭터 풀 <span class="pool-hint-pc">(드래그해서 위로)</span><span class="pool-hint-mobile">(탭으로 선택)</span></h3>
       <div id="character-pool" class="characters-pool"></div>
     </div>
   </div>

@@ -324,6 +324,84 @@ function enableDragAndDrop() {
   }
 }
 
+// ─── 모바일/터치: 탭 선택 후 티어 칸 탭으로 배치 ───────────────
+// HTML5 DnD 는 모바일에서 불안정하므로, 클릭/탭으로도 배치 가능하게 함.
+let selectedCharEl = null;
+
+function clearCharSelection() {
+  document.querySelectorAll('.char.selected').forEach((el) => el.classList.remove('selected'));
+  selectedCharEl = null;
+  document.body.classList.remove('char-selected-mode');
+  const hint = document.getElementById('mobile-place-hint');
+  if (hint) hint.hidden = true;
+}
+
+function setCharSelection(char) {
+  clearCharSelection();
+  selectedCharEl = char;
+  char.classList.add('selected');
+  document.body.classList.add('char-selected-mode');
+  const hint = document.getElementById('mobile-place-hint');
+  if (hint) {
+    const name = char.querySelector('p')?.textContent?.trim() || '캐릭터';
+    hint.hidden = false;
+    hint.textContent = `「${name}」 선택됨 → 티어 칸을 탭하세요 (풀을 탭하면 되돌림)`;
+  }
+}
+
+function enableTapToPlace() {
+  if (document._tapPlaceBound) return;
+  document._tapPlaceBound = true;
+
+  document.addEventListener('click', (e) => {
+    // 다운로드 메뉴 등 버튼은 무시
+    if (e.target.closest('button, a, .btn, .dropdown-menu, .dropdown-item')) return;
+
+    const char = e.target.closest('.char');
+    const zone = e.target.closest('.characters.drop-zone, .characters');
+    const pool = e.target.closest('#character-pool');
+
+    // 1) 캐릭터 탭: 선택 / 같은 것 다시 탭 시 해제
+    if (char) {
+      e.preventDefault();
+      if (selectedCharEl === char) {
+        clearCharSelection();
+        return;
+      }
+      setCharSelection(char);
+      return;
+    }
+
+    // 2) 선택 후 티어 존 탭 → 배치
+    if (selectedCharEl && zone) {
+      e.preventDefault();
+      zone.appendChild(selectedCharEl);
+      clearCharSelection();
+      saveCurrentTierState();
+      if (typeof renderCharacterPool === 'function') renderCharacterPool();
+      return;
+    }
+
+    // 3) 선택 후 풀 탭 → 풀로 복귀
+    if (selectedCharEl && pool) {
+      e.preventDefault();
+      const id = selectedCharEl.dataset.id;
+      Object.keys(tierState).forEach((key) => {
+        if (Array.isArray(tierState[key])) {
+          tierState[key] = tierState[key].filter((c) => c.id !== id);
+        }
+      });
+      saveToLocalStorage();
+      insertCharBackToPoolInOrder(selectedCharEl);
+      clearCharSelection();
+      return;
+    }
+
+    // 4) 바깥 탭 → 선택 해제
+    if (selectedCharEl) clearCharSelection();
+  }, true);
+}
+
 // ── 삽입 위치 계산 (가로+세로 복합) ─────────────────────────
 function getDragAfterElement(container, x, y) {
   const elements = [...container.querySelectorAll('.char:not(.dragging)')];
@@ -516,6 +594,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderTier();
   renderCharacterPool();
   enableDragAndDrop();   // pool / tierList에 위임 리스너 등록
+  enableTapToPlace();    // 모바일: 탭 선택 → 티어 칸 탭 배치
   updateUploadButtonState();
   console.log('✅ custom-maker: 초기 로드 완료');
 });

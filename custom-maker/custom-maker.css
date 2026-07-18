@@ -215,8 +215,84 @@
   border: 2px solid #ffcc00;  /* ← 테두리 여기로 이동 */
   padding: 16px;               /* ← 16px → 0으로 변경 */
 }
-/* ====================== 모바일 제작 화면 ====================== */
+
+
+/* 선택(탭) 상태 */
+.char.selected {
+  outline: 3px solid #ffcc00;
+  box-shadow: 0 0 0 3px rgba(255, 204, 0, 0.35), 0 0 18px #ffcc00;
+  transform: scale(1.04);
+}
+
+body.char-selected-mode .characters {
+  border-color: #ffcc00 !important;
+  background: rgba(255, 204, 0, 0.06);
+}
+
+.mobile-maker-help {
+  display: none;
+  margin: 0 auto 12px;
+  max-width: 520px;
+  padding: 0 12px;
+  color: #ccc;
+  font-size: 0.9rem;
+  line-height: 1.45;
+}
+
+.mobile-place-hint {
+  position: sticky;
+  top: 56px;
+  z-index: 50;
+  margin: 0 auto 12px;
+  max-width: 560px;
+  padding: 10px 14px;
+  background: #ffcc00;
+  color: #111;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.pool-hint-mobile { display: none; }
+.pool-hint-pc { display: inline; }
+
+/* 모바일 제작 화면 보강 */
 @media (max-width: 768px) {
+  .mobile-maker-help { display: block; }
+  .pool-hint-mobile { display: inline; }
+  .pool-hint-pc { display: none; }
+
+  .maker-container {
+    padding: 12px 8px 28px;
+  }
+
+  .maker-container h1 {
+    font-size: 1.25rem;
+    line-height: 1.3;
+  }
+
+  .tier-nav {
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .tier-nav button {
+    min-height: 44px;
+    padding: 10px 14px;
+    font-size: 0.95rem;
+    flex: 1 1 40%;
+  }
+
+  #tier-title {
+    width: 100%;
+    order: -1;
+    font-size: 0.95rem;
+    margin: 0 0 4px;
+    line-height: 1.35;
+  }
+
   .tier-list {
     width: 100%;
     max-width: 100%;
@@ -234,15 +310,52 @@
     width: 100%;
     margin-right: 0;
     margin-bottom: 8px;
+    min-height: 40px;
   }
 
   .characters {
+    min-height: 100px;
     gap: 8px;
+    padding: 8px;
   }
 
-  .character,
-  .characters img,
-  .char-card {
-    max-width: 72px;
+  .char {
+    width: 78px;
+    cursor: pointer;
+  }
+
+  .char img {
+    height: 78px;
+  }
+
+  .char p {
+    font-size: 0.72rem;
+  }
+
+  .characters:empty::after {
+    content: "탭해서 캐릭터 배치";
+    font-size: 0.85rem;
+  }
+
+  .action-bar {
+    gap: 10px;
+    margin: 16px 0;
+  }
+
+  .btn {
+    min-height: 48px;
+    flex: 1 1 40%;
+  }
+
+  .character-pool {
+    margin-top: 20px;
+  }
+
+  .characters-pool {
+    padding: 12px;
+    gap: 8px;
+    max-height: 42vh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
   }
 }

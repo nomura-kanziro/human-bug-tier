@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 108 |
+| **커밋 수** | 110 |
 | **기간** | 2026-03-20 ~ 2026-07-18|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -137,6 +137,8 @@
 | 106 | 2026-07-18 | [`25c3e8c`](#25c3e8c) | feat(pwa): add web manifest, service worker, and install icons |
 | 107 | 2026-07-18 | [`7a6b1d5`](#7a6b1d5) | docs(RDMD): add mobile and PWA usage guide |
 | 108 | 2026-07-18 | [`28b4d6d`](#28b4d6d) | docs(env): add root and backend .env.example with dual dotenv load |
+| 109 | 2026-07-18 | [`pending-mobile2-1`](#pending-mobile2-1) | feat(custom-maker): mobile tap-to-place characters and maker layout |
+| 110 | 2026-07-18 | [`pending-mobile2-2`](#pending-mobile2-2) | fix(ui): goHome always to index, tier mobile CSS, coming-soon nav |
 
 ---
 
@@ -2081,6 +2083,42 @@
 - **요약**: 루트·backend용 .env.example을 정리하고, server.js가 루트 .env 후 backend/.env를 로드하도록 했다. DEPLOY/README/팀 규칙에 설정 절차를 반영함. 실 .env는 gitignore 유지.
 - **주요 파일**: `.env.example`, `backend/.env.example`, `backend/server.js`, `README.md`, `DEPLOY.md`, `CLAUDE.md`, `team/01-rules.md`
 - **관련 RDMD**: _(환경변수 문서)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-mobile2-1"></a>
+
+### 109. 2026-07-18 — `pending-mobile2-1`
+
+- **hash (short)**: `pending-mobile2-1`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(custom-maker): mobile tap-to-place characters and maker layout
+- **git**: `git show pending-mobile2-1`
+- **범위**: frontend / custom-maker / mobile
+- **요약**: 모바일에서 DnD 대신 캐릭터 탭 선택 후 티어 칸 탭으로 배치·풀 복귀가 되게 했다. 제작 화면 안내 문구·선택 하이라이트·레이아웃을 보강하고 이미지 경로 슬래시를 고쳤다.
+- **주요 파일**: `custom-maker/custom-maker.js`, `custom-maker.html`, `custom-maker.css`, `custom-maker_post.html`
+- **관련 RDMD**: [guides/mobile-pwa.md](../guides/mobile-pwa.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-mobile2-2"></a>
+
+### 110. 2026-07-18 — `pending-mobile2-2`
+
+- **hash (short)**: `pending-mobile2-2`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: fix(ui): goHome always to index, tier mobile CSS, coming-soon nav
+- **git**: `git show pending-mobile2-2`
+- **범위**: frontend / mobile / common
+- **요약**: goHome을 항상 index.html로 통일하고, 공식 티어 페이지 공통 모바일 CSS를 적용했다. 미구현 메뉴(이벤트·행운 뽑기)는 준비 중으로 표시해 빈 # 링크 혼란을 줄였다.
+- **주요 파일**: `common.js`, `header.html`, `index.html`, `Header_Footer.css`, `tier-class/tier-responsive.css`, `tier1-9.html`
+- **관련 RDMD**: [guides/mobile-pwa.md](../guides/mobile-pwa.md)
 
 [▲ 목차로](#목차)
 
