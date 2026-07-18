@@ -1856,7 +1856,7 @@
 - **hash (full)**: `fe9ade916afa3ee63e56ecb43ac0101f34d1686e`
 - **author**: nomura
 - **message**: docs(RDMD): restructure frontend work logs into feature folders
-- **git**: `git show pending-96`
+- **git**: `git show fe9ade9`
 - **범위**: docs / RDMD / frontend
 - **요약**: 루트 information1~29 일지를 삭제하고 RDMD/frontend 아래 기능 폴더·순서 번호 *-record.md 구조로 재배치했다. 프론트 작업 이력을 기능 단위로 찾도록 정리함.
 - **주요 파일**: `RDMD/frontend/`, `RDMD/information*.md`(삭제)
@@ -1874,7 +1874,7 @@
 - **hash (full)**: `026a38a96089da36de048dcf536a9c592f1e58dd`
 - **author**: nomura
 - **message**: docs(RDMD): restructure backend work logs into feature folders
-- **git**: `git show pending-97`
+- **git**: `git show 026a38a`
 - **범위**: docs / RDMD / backend
 - **요약**: backend_0~29 평면 일지를 삭제하고 RDMD/backend 아래 01-setup~07-deploy 기능 폴더와 *-record.md, README 인덱스로 재구성했다.
 - **주요 파일**: `RDMD/backend/01-setup/` ~ `07-deploy/`, `RDMD/backend/README.md`, `RDMD/backend/backend_*.md`(삭제)
@@ -1892,7 +1892,7 @@
 - **hash (full)**: `0f3c4aca91e60c27124ac83416c9c17bcdd9467a`
 - **author**: nomura
 - **message**: docs(RDMD): add features, guides, and summary documentation
-- **git**: `git show pending-98`
+- **git**: `git show 0f3c4ac`
 - **범위**: docs / RDMD
 - **요약**: 온보딩용 features(기능 설명), guides(개발 규칙), summary(작업 이력·타임라인) 문서를 추가해 프로젝트 이해와 유지보수 가이드를 분리했다.
 - **주요 파일**: `RDMD/features/`, `RDMD/guides/`, `RDMD/summary/`
@@ -1910,7 +1910,7 @@
 - **hash (full)**: `6e05d2373e6ed0e1feee189565f5282a0634cae1`
 - **author**: nomura
 - **message**: docs(RDMD): add commit_history author log and mandatory pre-commit rule
-- **git**: `git show pending-99`
+- **git**: `git show 6e05d23`
 - **범위**: docs / RDMD / commit_history
 - **요약**: 작성자별 커밋 타임라인 폴더를 만들고 nomura.md에 전체 git 이력을 수록했다. 커밋·푸시 전 본인 md 작성 필수 규칙과 목차·과거→현재 정렬 명세를 README에 정의함.
 - **주요 파일**: `RDMD/commit_history/`
@@ -1928,7 +1928,7 @@
 - **hash (full)**: `c6f862e65c85e6c2d00d5ee5ecef046fe904569d`
 - **author**: nomura
 - **message**: docs(agents): add .agents common rules and canonical feature skills
-- **git**: `git show pending-100`
+- **git**: `git show c6f862e`
 - **범위**: docs / agents
 - **요약**: 모든 AI 공통 정본(.agents)에 hierarchy·common-rules·권한 매트릭스와 기능별 skill.md를 추가했다. Grok을 Admin AI로 두고 번외 AI도 동일 스킬을 쓰도록 함.
 - **주요 파일**: `.agents/`
@@ -1946,7 +1946,7 @@
 - **hash (full)**: `a1c43f870c19f7be335fcb79624b515222db7cb8`
 - **author**: nomura
 - **message**: docs(team): add human worker rules for vibe and hardcoding
-- **git**: `git show pending-101`
+- **git**: `git show a1c43f8`
 - **범위**: docs / team
 - **요약**: 창시자·팀원용 team/ 규칙(공통 룰, 워크플로, 코딩 스타일, 금지, 가이드, 체크리스트)을 추가했다. 커밋 전 commit_history 작성 의무를 포함함.
 - **주요 파일**: `team/`
@@ -1964,7 +1964,7 @@
 - **hash (full)**: `717afd10e29d248ce857462dc3bc3066259b5a52`
 - **author**: nomura
 - **message**: docs(claude): add CLAUDE.md and .claude feature skills
-- **git**: `git show pending-102`
+- **git**: `git show 717afd1`
 - **범위**: docs / claude
 - **요약**: Claude Code 진입용 CLAUDE.md와 .claude/skills 기능별 SKILL.md·handoff 온보딩 스킬을 추가했다. .agents 정본을 우선 따르도록 연결함.
 - **주요 파일**: `CLAUDE.md`, `.claude/`
@@ -1982,7 +1982,7 @@
 - **hash (full)**: `14b3c2969f3fa2672e1b5eab8e2868cc9627d8d5`
 - **author**: nomura
 - **message**: docs(groks): add Grok Admin AI skill pack
-- **git**: `git show pending-103`
+- **git**: `git show 14b3c29`
 - **범위**: docs / groks
 - **요약**: Grok 전용 .groks 스킬 팩과 AGENTS.md를 추가해 Admin AI로서 공통 룰 수호·기능 작업 절차를 정의했다.
 - **주요 파일**: `.groks/`
@@ -2000,7 +2000,7 @@
 - **hash (full)**: `fc6c611b29234d51e666d05b65668bab0f4b5d06`
 - **author**: nomura
 - **message**: docs(codex): add Codex skills, root AGENTS.md, and README map
-- **git**: `git show pending-104`
+- **git**: `git show fc6c611`
 - **범위**: docs / codex
 - **요약**: Codex용 .codex 기능 skill.md와 루트 AGENTS.md를 추가하고, 루트 README에 team/.agents/주 골격 AI/RDMD 진입 지도를 반영했다.
 - **주요 파일**: `.codex/`, `AGENTS.md`, `README.md`
@@ -2036,4 +2036,4 @@
 
 ---
 
-**마지막 갱신**: 2026-07-18 · 총 104 항목 · 배치 커밋 pending-96~104 · 정렬 = 과거→현재
+**마지막 갱신**: 2026-07-18 · 총 104 항목 · 배치 커밋 #96~104 (+hash 보정) · 정렬 = 과거→현재
