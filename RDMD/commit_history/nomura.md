@@ -125,7 +125,7 @@
 | 94 | 2026-06-25 | [`9112e56`](#9112e56) | fix : goHome() << 메인 파일 이름이 변경 됨으로써 home.html -> index.html 변경하여 홈 페이지 접근 문제 해결 |
 | 95 | 2026-06-25 | [`c80f16e`](#c80f16e) | Merge branch 'master' of https://github.com/nomura-kanziro/human-bug-tier |
 | 96 | 2026-07-18 | [`fe9ade9`](#fe9ade9) | docs(RDMD): restructure frontend work logs into feature folders |
-| 97 | 2026-07-18 | [`pending-97`](#pending-97) | docs(RDMD): restructure backend work logs into feature folders |
+| 97 | 2026-07-18 | [`026a38a`](#026a38a) | docs(RDMD): restructure backend work logs into feature folders |
 | 98 | 2026-07-18 | [`pending-98`](#pending-98) | docs(RDMD): add features, guides, and summary documentation |
 | 99 | 2026-07-18 | [`pending-99`](#pending-99) | docs(RDMD): add commit_history author log and mandatory pre-commit rule |
 | 100 | 2026-07-18 | [`pending-100`](#pending-100) | docs(agents): add .agents common rules and canonical feature skills |
@@ -1866,12 +1866,12 @@
 
 ---
 
-<a id="pending-97"></a>
+<a id="026a38a"></a>
 
-### 97. 2026-07-18 — `pending-97`
+### 97. 2026-07-18 — `026a38a`
 
-- **hash (short)**: `pending-97`
-- **hash (full)**: `pending`
+- **hash (short)**: `026a38a`
+- **hash (full)**: `026a38a96089da36de048dcf536a9c592f1e58dd`
 - **author**: nomura
 - **message**: docs(RDMD): restructure backend work logs into feature folders
 - **git**: `git show pending-97`
