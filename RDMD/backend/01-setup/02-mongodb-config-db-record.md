@@ -1,3 +1,13 @@
+---
+source: RDMD/backend/backend_1.md
+legacy_id: backend_1
+area: backend
+---
+
+> **원본 일지**: `backend_1.md` → 기능 폴더 재배치본  
+> **순서 번호**: 파일명 앞 숫자 = 해당 기능 내 기록 순서
+
+---
 # backend/config/db.js 작업 내역 (커밋: 345a4d6)
 
 ## 주요 변경점
