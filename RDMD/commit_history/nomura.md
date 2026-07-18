@@ -132,7 +132,7 @@
 | 101 | 2026-07-18 | [`a1c43f8`](#a1c43f8) | docs(team): add human worker rules for vibe and hardcoding |
 | 102 | 2026-07-18 | [`717afd1`](#717afd1) | docs(claude): add CLAUDE.md and .claude feature skills |
 | 103 | 2026-07-18 | [`14b3c29`](#14b3c29) | docs(groks): add Grok Admin AI skill pack |
-| 104 | 2026-07-18 | [`pending-104`](#pending-104) | docs(codex): add Codex skills, root AGENTS.md, and README map |
+| 104 | 2026-07-18 | [`fc6c611`](#fc6c611) | docs(codex): add Codex skills, root AGENTS.md, and README map |
 
 ---
 
@@ -1992,12 +1992,12 @@
 
 ---
 
-<a id="pending-104"></a>
+<a id="fc6c611"></a>
 
-### 104. 2026-07-18 — `pending-104`
+### 104. 2026-07-18 — `fc6c611`
 
-- **hash (short)**: `pending-104`
-- **hash (full)**: `pending`
+- **hash (short)**: `fc6c611`
+- **hash (full)**: `fc6c611b29234d51e666d05b65668bab0f4b5d06`
 - **author**: nomura
 - **message**: docs(codex): add Codex skills, root AGENTS.md, and README map
 - **git**: `git show pending-104`
