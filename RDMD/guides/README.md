@@ -14,6 +14,7 @@
 | [deploy-checklist.md](./deploy-checklist.md) | Render · GH Pages 배포 전 확인 |
 | [rdmd-writing.md](./rdmd-writing.md) | RDMD 기록 작성 방법 |
 | [new-feature-checklist.md](./new-feature-checklist.md) | 새 기능 추가 체크리스트 |
+| [mobile-pwa.md](./mobile-pwa.md) | 모바일 반응형 · PWA 설치·검증 |
 
 ## 5분 온보딩
 

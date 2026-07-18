@@ -134,7 +134,7 @@
 | 103 | 2026-07-18 | [`14b3c29`](#14b3c29) | docs(groks): add Grok Admin AI skill pack |
 | 104 | 2026-07-18 | [`fc6c611`](#fc6c611) | docs(codex): add Codex skills, root AGENTS.md, and README map |
 | 105 | 2026-07-18 | [`0ec285b`](#0ec285b) | fix(ui): mobile responsive layout for header auth board inquiry |
-| 106 | 2026-07-18 | [`pending-106`](#pending-106) | feat(pwa): add web manifest, service worker, and install icons |
+| 106 | 2026-07-18 | [`25c3e8c`](#25c3e8c) | feat(pwa): add web manifest, service worker, and install icons |
 | 107 | 2026-07-18 | [`pending-107`](#pending-107) | docs(RDMD): add mobile and PWA usage guide |
 
 ---
@@ -2031,12 +2031,12 @@
 
 ---
 
-<a id="pending-106"></a>
+<a id="25c3e8c"></a>
 
-### 106. 2026-07-18 — `pending-106`
+### 106. 2026-07-18 — `25c3e8c`
 
-- **hash (short)**: `pending-106`
-- **hash (full)**: `pending`
+- **hash (short)**: `25c3e8c`
+- **hash (full)**: `25c3e8c859ede26ded416b66c35f6f4f66e0bd93`
 - **author**: nomura
 - **message**: feat(pwa): add web manifest, service worker, and install icons
 - **git**: `git show 0ec285b`
