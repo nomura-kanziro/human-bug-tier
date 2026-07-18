@@ -133,7 +133,7 @@
 | 102 | 2026-07-18 | [`717afd1`](#717afd1) | docs(claude): add CLAUDE.md and .claude feature skills |
 | 103 | 2026-07-18 | [`14b3c29`](#14b3c29) | docs(groks): add Grok Admin AI skill pack |
 | 104 | 2026-07-18 | [`fc6c611`](#fc6c611) | docs(codex): add Codex skills, root AGENTS.md, and README map |
-| 105 | 2026-07-18 | [`pending-105`](#pending-105) | fix(ui): mobile responsive layout for header auth board inquiry |
+| 105 | 2026-07-18 | [`0ec285b`](#0ec285b) | fix(ui): mobile responsive layout for header auth board inquiry |
 | 106 | 2026-07-18 | [`pending-106`](#pending-106) | feat(pwa): add web manifest, service worker, and install icons |
 | 107 | 2026-07-18 | [`pending-107`](#pending-107) | docs(RDMD): add mobile and PWA usage guide |
 
@@ -2013,15 +2013,15 @@
 
 ---
 
-<a id="pending-105"></a>
+<a id="0ec285b"></a>
 
-### 105. 2026-07-18 — `pending-105`
+### 105. 2026-07-18 — `0ec285b`
 
-- **hash (short)**: `pending-105`
-- **hash (full)**: `pending`
+- **hash (short)**: `0ec285b`
+- **hash (full)**: `0ec285b4bf1613b2f08a05352f8c13984ccdd677`
 - **author**: nomura
 - **message**: fix(ui): mobile responsive layout for header auth board inquiry
-- **git**: `git show pending-105`
+- **git**: `git show 0ec285b`
 - **범위**: frontend / mobile
 - **요약**: 헤더·메인·로그인/가입·게시판·문의 화면에 모바일 미디어쿼리와 터치 영역을 적용하고, 사이드 메뉴 토글 첫 탭 열림 버그를 수정했다.
 - **주요 파일**: `Header_Footer.css`, `common.css`, `common.js`, `user_login/*.css`, `Contact_us/contact_us.css`, `custom-maker*/*.css`
@@ -2039,7 +2039,7 @@
 - **hash (full)**: `pending`
 - **author**: nomura
 - **message**: feat(pwa): add web manifest, service worker, and install icons
-- **git**: `git show pending-106`
+- **git**: `git show 0ec285b`
 - **범위**: frontend / pwa
 - **요약**: manifest·sw.js·PWA 아이콘을 추가하고 common.js/로그인 페이지에서 서비스 워커를 등록해 홈 화면 설치가 가능하게 했다. API는 네트워크 우선이다.
 - **주요 파일**: `manifest.webmanifest`, `sw.js`, `pwa-register.js`, `tier-image/pwa/*`, `common.js`, `user_login/*.html`
@@ -2057,7 +2057,7 @@
 - **hash (full)**: `pending`
 - **author**: nomura
 - **message**: docs(RDMD): add mobile and PWA usage guide
-- **git**: `git show pending-107`
+- **git**: `git show 0ec285b`
 - **범위**: docs / RDMD
 - **요약**: 모바일 반응형·PWA 설치 방법과 검증 체크리스트를 RDMD/guides/mobile-pwa.md 로 문서화했다.
 - **주요 파일**: `RDMD/guides/mobile-pwa.md`, `RDMD/guides/README.md`
