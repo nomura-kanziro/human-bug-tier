@@ -5,7 +5,18 @@
 - Render.com account
 
 ## 1. Prepare Environment Variables
-Copy `backend/.env.example` to `backend/.env` for local testing and fill values.
+For local testing, set env in either place (backend overrides root for the same key):
+
+```bash
+# 루트 (권장 공유 키)
+copy .env.example .env
+
+# 또는 backend 전용
+cd backend
+copy .env.example .env
+```
+
+See root `.env.example` and `backend/.env.example`.
 
 For Render:
 Set these in the Render dashboard (Environment Variables):

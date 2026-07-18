@@ -128,16 +128,20 @@ npm start
 - `npx serve .` 는 API가 분리되므로 추천하지 않음
 
 ### 2. 환경 변수 관리
-`backend/.env.example`을 복사하여 `.env` 생성
+환경변수 (예시만 커밋, 실값은 커밋 금지):
 
-필수:
-- `MONGO_URI`
-- `ADMIN_INPUT_ID`, `ADMIN_INPUT_PW`
+```bash
+# 루트
+copy .env.example .env
 
-권장:
-- `JWT_SECRET`
-- `EMAIL_USER` + `EMAIL_APP_PASSWORD` (이메일 기능)
-- `APP_URL`
+# backend (선택 — 루트와 동일 키면 backend/.env 가 우선)
+cd backend
+copy .env.example .env
+```
+
+필수: `MONGO_URI`, `ADMIN_INPUT_ID`, `ADMIN_INPUT_PW`  
+권장: `JWT_SECRET`, `EMAIL_USER` + `EMAIL_APP_PASSWORD`, `APP_URL`  
+서버 로드: 루트 `.env` → `backend/.env` (후자가 덮어씀)
 
 ### 3. 배포 방법
 - **Render.com**: `render.yaml` 사용 (권장)

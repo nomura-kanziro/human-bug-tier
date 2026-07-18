@@ -20,12 +20,14 @@
 ```bash
 cd backend
 npm install
-cp .env.example .env   # Windows: copy .env.example .env
-# .env 에 MONGO_URI, ADMIN_INPUT_ID, ADMIN_INPUT_PW 등 설정
+# 루트 또는 backend 에 env 설정 (example 복사)
+# Windows: copy .env.example .env  (루트) / cd backend & copy .env.example .env
+# 필수: MONGO_URI, ADMIN_INPUT_ID, ADMIN_INPUT_PW
 npm start
 ```
 
-→ **http://localhost:5000/** (프론트 정적 + API 통합)
+→ **http://localhost:5000/** (프론트 정적 + API 통합)  
+env 로드: 루트 `.env` 후 `backend/.env` (동일 키는 backend 우선)
 
 `file://` 직접 열기 / GH Pages 만으로는 로그인·게시판 등 API가 동작하지 않습니다.
 

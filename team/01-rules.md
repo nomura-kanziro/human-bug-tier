@@ -18,7 +18,8 @@ AI 쪽 대응 문서: [`.agents/common-rules.md`](../.agents/common-rules.md)
 
 ## 2. 비밀 · 보안
 
-- **`backend/.env` 커밋 금지** — `.env.example` 만 공유  
+- **루트 `.env` / `backend/.env` 커밋 금지** — `.env.example` 만 공유  
+- 로컬: 루트 `.env.example` → `.env`, 필요 시 `backend/.env.example` → `backend/.env`  
 - 채팅·이슈·스크린샷에 비밀번호·Mongo URI·JWT 실값 올리지 말 것  
 - 관리자 비밀번호는 팀 채널이 아닌 안전한 방식으로만 공유  
 

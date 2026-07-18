@@ -9,7 +9,9 @@ const connectDB = require('./config/db');
 const { seedAdmin } = require('./controllers/adminController');
 
 // 환경변수 로드
-dotenv.config();
+// 1) 프로젝트 루트 .env  2) backend/.env (동일 키는 backend가 덮어씀)
+dotenv.config({ path: path.join(__dirname, '..', '.env') });
+dotenv.config({ path: path.join(__dirname, '.env') });
 
 const app = express();
 

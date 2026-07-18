@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 107 |
+| **커밋 수** | 108 |
 | **기간** | 2026-03-20 ~ 2026-07-18|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -136,6 +136,7 @@
 | 105 | 2026-07-18 | [`0ec285b`](#0ec285b) | fix(ui): mobile responsive layout for header auth board inquiry |
 | 106 | 2026-07-18 | [`25c3e8c`](#25c3e8c) | feat(pwa): add web manifest, service worker, and install icons |
 | 107 | 2026-07-18 | [`7a6b1d5`](#7a6b1d5) | docs(RDMD): add mobile and PWA usage guide |
+| 108 | 2026-07-18 | [`pending-env-root`](#pending-env-root) | docs(env): add root and backend .env.example with dual dotenv load |
 
 ---
 
@@ -2062,6 +2063,24 @@
 - **요약**: 모바일 반응형·PWA 설치 방법과 검증 체크리스트를 RDMD/guides/mobile-pwa.md 로 문서화했다.
 - **주요 파일**: `RDMD/guides/mobile-pwa.md`, `RDMD/guides/README.md`
 - **관련 RDMD**: [guides/mobile-pwa.md](../guides/mobile-pwa.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-env-root"></a>
+
+### 108. 2026-07-18 — `pending-env-root`
+
+- **hash (short)**: `pending-env-root`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(env): add root and backend .env.example with dual dotenv load
+- **git**: `git show pending-env-root`
+- **범위**: docs / backend / env
+- **요약**: 루트·backend용 .env.example을 정리하고, server.js가 루트 .env 후 backend/.env를 로드하도록 했다. DEPLOY/README/팀 규칙에 설정 절차를 반영함. 실 .env는 gitignore 유지.
+- **주요 파일**: `.env.example`, `backend/.env.example`, `backend/server.js`, `README.md`, `DEPLOY.md`, `CLAUDE.md`, `team/01-rules.md`
+- **관련 RDMD**: _(환경변수 문서)_
 
 [▲ 목차로](#목차)
 
