@@ -182,6 +182,20 @@ npm start
 
 ---
 
-**만든 사람들을 위한 기록**: RDMD 폴더에 작업별 상세 커밋 로그가 정리되어 있습니다.
+**만든 사람들을 위한 기록**: RDMD 폴더에 작업별 상세 커밋 로그·기능 설명·가이드가 정리되어 있습니다.
+
+### 규칙 · 에이전트 · 팀
+
+| 주체 | 위치 |
+|------|------|
+| **사람** (창시자·팀원) | [`team/`](./team/README.md) |
+| **AI 공통 정본** (룰 + 기능 skill, 번외 AI 포함) | [`.agents/`](./.agents/README.md) |
+| **Grok** (Admin · 주 골격) | [`groks/`](./groks/README.md) |
+| **Claude** (주 골격) | [`CLAUDE.md`](./CLAUDE.md) + [`.claude/skills/`](./.claude/README.md) |
+| **Codex** (주 골격) | [`AGENTS.md`](./AGENTS.md) + [`codex/`](./codex/README.md) |
+| 개발 이력·기능 설명 | [`RDMD/`](./RDMD/README.md) |
+
+> 주 골격 3종만 전용 skill 팩이 있는 이유: 가장 많이 쓰는 AI이고 도구별 로드 형식이 다름.  
+> 그 외 AI는 `.agents/<기능>/skill.md` 만 보면 됨.
 
 즐거운 티어링 되세요! 🔥
