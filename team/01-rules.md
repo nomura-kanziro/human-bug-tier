@@ -52,14 +52,15 @@ AI 쪽 대응 문서: [`.agents/common-rules.md`](../.agents/common-rules.md)
    - 목차 행(맨 아래) + 상세 블록(맨 아래)  
    - 정렬: 위=과거, 아래=최신  
 2. 커밋 메시지·요약·범위를 확정 (실제 `git commit -m` 과 동일)  
-   - **커밋 메시지는 한국어** (영어 전용 메시지 금지) — [04-prohibitions](./04-prohibitions.md)  
+   - 형식: **`type(scope): 한국어 설명`** — type은 `feat`/`fix`/`docs` 등 **영어**, 콜론 뒤는 **한국어**  
+   - [04-prohibitions](./04-prohibitions.md)  
 3. 그 md 파일을 **스테이징에 포함**한 뒤 커밋  
 4. 푸시  
 
 - nomura → `RDMD/commit_history/nomura.md`  
 - 절차 상세 → [RDMD/commit_history/README.md](../RDMD/commit_history/README.md)  
 - **로그 없이 커밋·푸시 = 규칙 위반**  
-- **영어 전용 커밋 메시지 = 규칙 위반**
+- **콜론 뒤 설명만 영어 = 규칙 위반**
 
 ### 6-2. 기능 일지 (권장)
 

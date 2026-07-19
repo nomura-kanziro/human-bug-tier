@@ -98,7 +98,7 @@ git rev-parse HEAD
 | 필드 | 필수 | 설명 |
 |------|:----:|------|
 | date | ✅ 커밋 전 | `YYYY-MM-DD` |
-| **message** | ✅ 커밋 전 | **`git commit -m` 원문 그대로** (제목 문자열). **한국어 필수** — 영어 전용 메시지 금지 ([team/04-prohibitions](../../team/04-prohibitions.md)) |
+| **message** | ✅ 커밋 전 | **`git commit -m` 원문 그대로**. 형식: **`type(scope): 한국어 설명`** — type은 영어(`feat`/`fix`/`docs`…), 콜론 뒤는 한국어 ([team/04-prohibitions](../../team/04-prohibitions.md)) |
 | author | ✅ 커밋 전 | 본인 git 이름 |
 | 범위 | ✅ 커밋 전 | frontend / backend / docs / deploy … |
 | **요약** | ✅ 커밋 전 | **그 커밋이 한 일을 사람이 읽게 풀어 쓴 설명** (1~2문장, **한국어**). message 복붙 금지. 무엇을/어디를/왜 중심으로. |
@@ -111,12 +111,15 @@ git rev-parse HEAD
 
 | 필드 | 역할 | 예 |
 |------|------|-----|
-| **message** | 깃에 남은 커밋 한 줄 (**한국어**) | `수정(인증): 비밀번호 재설정 링크 만료 오류 수정` |
+| **message** | 깃 한 줄 — **type 영어 + 콜론 뒤 한국어** | `fix(auth): 비밀번호 재설정 링크 만료 오류 수정` |
 | **요약** | 작업 내용 설명 (**한국어**) | `재설정 토큰 방식을 바꿔 만료·링크 오류를 줄이고, 배포 URL에서도 메일이 맞게 가도록 수정함.` |
 
-> **언어**: 커밋 메시지·요약을 영어 문장으로만 쓰지 않는다.  
-> 금지 예: `feat(admin): add notice edit on management page`  
-> 허용 예: `기능(관리자): 공지 관리 페이지에 수정 기능 추가`
+> **언어**  
+> - type/scope: `feat` `fix` `docs` `chore` … (**영어**)  
+> - `:` 뒤 설명: **한국어** (고유 명사·API 이름은 영어 가능)  
+> - 금지: `feat(admin): add notice edit on management page` (설명 전부 영어)  
+> - 금지: `기능(관리자): 공지 수정 추가` (type을 한국어로 바꿈)  
+> - 허용: `feat(admin): 공지 관리 페이지에 수정 기능 추가`
 
 ---
 

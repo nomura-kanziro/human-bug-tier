@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 116 |
+| **커밋 수** | 117 |
 | **기간** | 2026-03-20 ~ 2026-07-19|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -145,6 +145,7 @@
 | 114 | 2026-07-19 | [`f883c33`](#f883c33) | feat(admin): add notice edit (PUT/PATCH) on management page |
 | 115 | 2026-07-19 | [`d9a4666`](#d9a4666) | 문서(규칙): 커밋 메시지 한국어 필수·영어 전용 작성 금지 |
 | 116 | 2026-07-19 | [`ef43300`](#ef43300) | feat(custom-maker): 본인 게시글 수정(PUT) 및 상세·메이커 연동 |
+| 117 | 2026-07-19 | [`pending`](#pending) | docs(rules): 커밋 메시지 type 영어·콜론 뒤 한국어로 정리 |
 
 ---
 
@@ -2235,6 +2236,24 @@
 - **요약**: 커스텀 메이커 게시판에서 작성자만 게시글을 수정할 수 있게 했다. 상세의 이벤트·삭제 사이에 수정 버튼을 두고, 메이커 ?edit= 로 배치를 불러 PUT 저장한다.
 - **주요 파일**: `backend/controllers/tierController.js`, `backend/routes/tierRoutes.js`, `custom-maker/custom-maker.js`, `custom-maker_post/post_detail.*`
 - **관련 RDMD**: _(custom-maker 게시글 수정)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending"></a>
+
+### 117. 2026-07-19 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(rules): 커밋 메시지 type 영어·콜론 뒤 한국어로 정리
+- **git**: `git show pending`
+- **범위**: docs / team / .agents
+- **요약**: 커밋 메시지 규칙을 type(scope)는 영어(feat/fix/docs 등), 콜론 뒤 설명은 한국어로 명확히 했다. team·.agents·commit_history·development 가이드 예시를 맞췄다.
+- **주요 파일**: `team/04-prohibitions.md`, `team/01-rules.md`, `team/03-coding-style.md`, `team/05-guidelines.md`, `team/06-checklist.md`, `.agents/common-rules.md`, `RDMD/commit_history/README.md`, `RDMD/guides/development.md`
+- **관련 RDMD**: _(팀 커밋 규칙)_
 
 [▲ 목차로](#목차)
 

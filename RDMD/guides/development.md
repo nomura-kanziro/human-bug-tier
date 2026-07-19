@@ -61,14 +61,15 @@ MongoDB는 로컬 또는 Atlas. 네트워크 IP 허용 확인.
 
 ### 커밋 메시지 스타일 (팀 규칙)
 
-- **한국어 필수** — 영어 전용 커밋 메시지 금지 (`team/04-prohibitions.md`)
-- 권장 형태: `종류(범위): 한 줄 설명` (종류·설명 모두 한국어)
+- 형태: **`type(scope): 한국어 설명`** (`team/04-prohibitions.md`)
+- **type / scope = 영어** (`feat`, `fix`, `docs`, `chore` …)
+- **콜론 뒤 = 한국어** (설명만 영어 문장 금지)
 
 ```
-기능(관리자): 댓글·티어 게시판 관리 기능 강화
-수정(배포): get*ApiBase() 로컬·Render 동작 통일
-설정(배포): Render.com 용 render.yaml 추가
-문서(커밋이력): 해시 기입
+feat(admin): 댓글·티어 게시판 관리 기능 강화
+fix(deploy): get*ApiBase() 로컬·Render 동작 통일
+chore(deploy): Render.com 용 render.yaml 추가
+docs(commit_history): 커밋 해시 기입
 ```
 
 ---

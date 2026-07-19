@@ -12,7 +12,7 @@
 - 들여쓰기: 기존 파일 스타일 따르기 (섞지 말 것)  
 - 의미 있는 이름: `getAdminAuthHeaders`, `loadNotices`  
 - 주석은 “왜” 위주 (자명한 코드에 장문 주석 지양)  
-- 커밋 메시지: **한국어** (영어 전용 금지). 예: `기능(관리자): ...` / `수정(경로): ...`  
+- 커밋 메시지: `feat(admin): ...` / `fix(path): ...` — **type·scope 영어**, **콜론 뒤 한국어**  
   - 상세: [04-prohibitions.md](./04-prohibitions.md) · [commit_history README](../RDMD/commit_history/README.md)
 
 ## HTML

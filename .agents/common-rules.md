@@ -60,7 +60,7 @@ Grok은 이 문서의 **수호자(Admin AI)** 입니다.
 1. **사람 커밋·푸시 전 (필수, 팀이 지킬 규칙)**  
    - `RDMD/commit_history/{작성자}.md` 에 커밋 내용 작성 후 커밋·푸시  
    - 에이전트가 커밋을 **대신 제안·수행**할 때도 이 순서를 **상기·준수**  
-   - **커밋 메시지(`git commit -m`)·history `message` = 한국어** — 영어 전용 메시지 금지 (`team/04-prohibitions.md`)  
+   - **커밋 메시지**: `type(scope): 한국어 설명` — type은 `feat`/`fix`/`docs` 등 **영어**, 콜론 뒤는 **한국어** (`team/04-prohibitions.md`)  
    - 상세: `RDMD/commit_history/README.md`  
 2. 의미 있는 변경 → `RDMD/frontend|backend/<기능>/*-record.md` (해당 시)  
 3. 공통 룰 변경 → **`.agents` 먼저**, 그다음  
@@ -100,4 +100,4 @@ Grok은 이 문서의 **수호자(Admin AI)** 입니다.
 - ❌ 요청 없는 전 파일 리포맷  
 - ❌ 시크릿을 README/RDMD/스킬에 기록  
 - ❌ **commit_history 없이 커밋·푸시** (사람 필수; AI도 상기)  
-- ❌ **영어 전용 커밋 메시지** (한국어 필수; AI도 상기)  
+- ❌ **커밋 메시지 콜론 뒤를 영어 문장으로만 작성** (type은 영어, 설명은 한국어; AI도 상기)  
