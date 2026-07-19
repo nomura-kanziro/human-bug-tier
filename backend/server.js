@@ -71,8 +71,9 @@ app.get('/favicon.ico', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'tier-image', 'logo.webp'));
 });
 
-// 헬스 체크 (DB 연결 상태 포함)
+// 헬스 체크 (DB 연결 상태 포함 — 시크릿 값은 노출하지 않음)
 app.get('/health', (req, res) => {
+  const { hasEmailConfig } = require('./utils/mail');
   const dbState = require('mongoose').connection.readyState;
   const dbStatus = {
     0: 'disconnected',
@@ -84,6 +85,8 @@ app.get('/health', (req, res) => {
   res.json({
     status: 'ok',
     db: dbStatus,
+    emailConfigured: hasEmailConfig(),
+    appUrlConfigured: Boolean((process.env.APP_URL || '').trim()),
     timestamp: new Date().toISOString(),
   });
 });
@@ -111,6 +114,11 @@ const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => {
   console.log(`🚀 서버가 포트 ${PORT}에서 실행 중입니다.`);
   console.log(`   Health check: /health`);
+  try {
+    require('./utils/mail').logEmailConfigStatus();
+  } catch (e) {
+    /* ignore */
+  }
   console.log(`   프론트엔드: / (index.html) + /notice/notice.html 등`);
 });
 

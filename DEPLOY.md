@@ -28,8 +28,13 @@ Set these in the Render dashboard (Environment Variables):
 
 **Recommended:**
 - `JWT_SECRET` = strong random string
-- `EMAIL_USER` + `EMAIL_APP_PASSWORD` = Gmail + app password (for user signup emails)
-- `APP_URL` = https://your-app.onrender.com (after first deploy)
+- `APP_URL` = https://your-app.onrender.com (메일 재설정/인증 링크용, 배포 후 설정)
+
+**메일 발송 (아이디 찾기 · 비밀번호 재설정 · 가입 인증에 필요):**
+- `EMAIL_USER` = Gmail 주소
+- `EMAIL_APP_PASSWORD` = Google **앱 비밀번호** (일반 로그인 비밀번호 아님, 2단계 인증 필요)
+- 미설정 시: 가입은 “인증 생략”으로 완료되지만, **비밀번호/아이디 찾기 API는 503** 으로 안내합니다 (`/health` 의 `emailConfigured: false`).
+- 설정 후에도 메일이 없으면: 스팸함, Gmail 앱 비밀번호 오류(Render Logs의 `EMAIL_SEND_FAILED` / SMTP EAUTH), 아이디·이메일 일치 여부 확인.
 
 **Optional:**
 - `ADMIN_NAME`
@@ -91,10 +96,16 @@ Visit:
 - Free tier sleeps after inactivity.
 - First cold start may take 30-60s.
 - If no EMAIL_* set, user registration will complete without email verification.
+- Password / ID recovery **requires** EMAIL_* on Render (otherwise the UI shows a clear 503 message).
 - All frontend API calls use relative paths (works on Render).
 
 ## Troubleshooting
 - 500 on registration? Check EMAIL or MONGO.
+- **비밀번호 재설정 메일이 안 옴?**
+  1. `https://your-app.onrender.com/health` → `emailConfigured` 가 `true` 인지
+  2. Render Environment에 `EMAIL_USER`, `EMAIL_APP_PASSWORD`(앱 비밀번호), 권장 `APP_URL`
+  3. 찾기 요청 직후 Render **Logs** — `비밀번호 찾기 메일 실패` / `EAUTH` 이면 Gmail 설정 문제
+  4. 응답이 성공인데 메일 없음 → 아이디·이메일이 DB와 다르거나 스팸함 (계정 존재 여부는 보안상 숨김)
 - Admin can't create notices? Check ADMIN_ vars and admin token in localStorage.
 - Homepage shows JSON? Check if static serving is working (should be fixed).
 

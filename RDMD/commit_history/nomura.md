@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 112 |
+| **커밋 수** | 113 |
 | **기간** | 2026-03-20 ~ 2026-07-19|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -141,6 +141,7 @@
 | 110 | 2026-07-18 | [`7fa3438`](#7fa3438) | fix(ui): goHome always to index, tier mobile CSS, coming-soon nav |
 | 111 | 2026-07-19 | [`8aa6410`](#8aa6410) | fix(backend): load backend .env with override so MONGO_URI is not blanked by ... |
 | 112 | 2026-07-19 | [`361f2d6`](#361f2d6) | fix(auth): stack logo above login box on mobile portrait |
+| 113 | 2026-07-19 | [`pending`](#pending) | fix(auth): require email config for account recovery and surface send failures |
 
 ---
 
@@ -2159,6 +2160,24 @@
 - **요약**: 모바일 9:16(세로)에서 body 기본 flex-row 때문에 로고·제목과 로그인 상자가 한 단에 붙던 문제를 flex-direction:column과 gap으로 세로 분리했다. 로그인·회원가입·계정 찾기(재설정 포함) CSS에 동일 적용.
 - **주요 파일**: `user_login/login.css`, `user_login/sign_up.css`, `user_login/find_account.css`
 - **관련 RDMD**: _(auth 모바일 레이아웃)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending"></a>
+
+### 113. 2026-07-19 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: fix(auth): require email config for account recovery and surface send failures
+- **git**: `git show pending`
+- **범위**: backend / auth / frontend / deploy
+- **요약**: Render에서 비밀번호 찾기 메일이 안 오던 문제를 완화했다. EMAIL_* 미설정 시 가짜 성공 대신 503, SMTP 실패 시 502와 토큰 롤백, 미인증 계정도 재설정 허용(성공 시 인증 처리), 닉네임 대소문자 무시, /health·기동 로그·DEPLOY 안내를 보강했다.
+- **주요 파일**: `backend/utils/mail.js`, `backend/controllers/authController.js`, `backend/server.js`, `user_login/find_account.js`, `DEPLOY.md`, `render.yaml`
+- **관련 RDMD**: _(auth 메일 · 비밀번호 재설정)_
 
 [▲ 목차로](#목차)
 
