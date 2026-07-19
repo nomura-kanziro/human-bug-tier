@@ -143,7 +143,7 @@
 | 112 | 2026-07-19 | [`361f2d6`](#361f2d6) | fix(auth): stack logo above login box on mobile portrait |
 | 113 | 2026-07-19 | [`fa3de2d`](#fa3de2d) | fix(auth): require email config for account recovery and surface send failures |
 | 114 | 2026-07-19 | [`f883c33`](#f883c33) | feat(admin): add notice edit (PUT/PATCH) on management page |
-| 115 | 2026-07-19 | [`pending`](#pending) | 문서(규칙): 커밋 메시지 한국어 필수·영어 전용 작성 금지 |
+| 115 | 2026-07-19 | [`d9a4666`](#d9a4666) | 문서(규칙): 커밋 메시지 한국어 필수·영어 전용 작성 금지 |
 
 ---
 
@@ -2203,15 +2203,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="d9a4666"></a>
 
-### 115. 2026-07-19 — `pending`
+### 115. 2026-07-19 — `d9a4666`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `d9a4666`
+- **hash (full)**: `d9a46667efb99be3c303e51b7b522bf42b3958a1`
 - **author**: nomura
 - **message**: 문서(규칙): 커밋 메시지 한국어 필수·영어 전용 작성 금지
-- **git**: `git show pending`
+- **git**: `git show d9a4666`
 - **범위**: docs / team / .agents
 - **요약**: 팀·에이전트 규칙에 커밋 메시지와 commit_history message를 한국어로 쓰도록 명시했다. 영어 전용 메시지는 금지하고, team·.agents·commit_history·development 가이드 예시를 맞췄다.
 - **주요 파일**: `team/04-prohibitions.md`, `team/01-rules.md`, `team/03-coding-style.md`, `team/05-guidelines.md`, `team/06-checklist.md`, `.agents/common-rules.md`, `RDMD/commit_history/README.md`, `RDMD/guides/development.md`
