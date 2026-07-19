@@ -25,7 +25,8 @@
 ## 커밋 · 브랜치
 
 - 한 커밋 = 한 의도  
-- `feat` / `fix` / `docs` / `chore` 접두  
+- 접두 예: `기능` / `수정` / `문서` / `설정` (영문 `feat`/`fix` 전용 메시지 금지)  
+- **커밋 메시지 본문·한 줄 제목 = 한국어** ([04-prohibitions](./04-prohibitions.md))  
 - `main`/`master` 직푸시 자제 (팀 운영 시 PR)  
 - **필수**: 커밋·푸시 전 `RDMD/commit_history/{본인}.md` 작성  
   → [RDMD/commit_history/README.md](../RDMD/commit_history/README.md)

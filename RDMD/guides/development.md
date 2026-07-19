@@ -59,15 +59,17 @@ MongoDB는 로컬 또는 Atlas. 네트워크 IP 허용 확인.
 8. (권장) 큰 기능이면 frontend|backend `*-record.md`
 ```
 
-### 커밋 메시지 스타일 (기존 관례)
+### 커밋 메시지 스타일 (팀 규칙)
+
+- **한국어 필수** — 영어 전용 커밋 메시지 금지 (`team/04-prohibitions.md`)
+- 권장 형태: `종류(범위): 한 줄 설명` (종류·설명 모두 한국어)
 
 ```
-feat(admin): enhance admin comment and tier board management
-fix(deploy): unify get*ApiBase() logic for local + Render.com
-chore(deploy): add render.yaml for Render.com deployment
+기능(관리자): 댓글·티어 게시판 관리 기능 강화
+수정(배포): get*ApiBase() 로컬·Render 동작 통일
+설정(배포): Render.com 용 render.yaml 추가
+문서(커밋이력): 해시 기입
 ```
-
-`type(scope): summary` 형태를 유지하면 RDMD 요약이 쉽습니다.
 
 ---
 

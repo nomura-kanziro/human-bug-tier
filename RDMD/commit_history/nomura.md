@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 114 |
+| **커밋 수** | 115 |
 | **기간** | 2026-03-20 ~ 2026-07-19|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -143,6 +143,7 @@
 | 112 | 2026-07-19 | [`361f2d6`](#361f2d6) | fix(auth): stack logo above login box on mobile portrait |
 | 113 | 2026-07-19 | [`fa3de2d`](#fa3de2d) | fix(auth): require email config for account recovery and surface send failures |
 | 114 | 2026-07-19 | [`f883c33`](#f883c33) | feat(admin): add notice edit (PUT/PATCH) on management page |
+| 115 | 2026-07-19 | [`pending`](#pending) | 문서(규칙): 커밋 메시지 한국어 필수·영어 전용 작성 금지 |
 
 ---
 
@@ -2197,6 +2198,24 @@
 - **요약**: 관리자 공지 관리에 수정 기능을 추가했다. requireAdmin PUT/PATCH /api/notices/:id 로 제목·본문·요약·분류를 갱신하고, 목록의 수정 버튼으로 폼을 채워 저장·취소할 수 있게 했다.
 - **주요 파일**: `backend/controllers/noticeController.js`, `backend/routes/noticeRoutes.js`, `admin/comments/comment-management.js`, `comment-management.html`, `comment-management.css`
 - **관련 RDMD**: _(admin 공지 수정)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending"></a>
+
+### 115. 2026-07-19 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: 문서(규칙): 커밋 메시지 한국어 필수·영어 전용 작성 금지
+- **git**: `git show pending`
+- **범위**: docs / team / .agents
+- **요약**: 팀·에이전트 규칙에 커밋 메시지와 commit_history message를 한국어로 쓰도록 명시했다. 영어 전용 메시지는 금지하고, team·.agents·commit_history·development 가이드 예시를 맞췄다.
+- **주요 파일**: `team/04-prohibitions.md`, `team/01-rules.md`, `team/03-coding-style.md`, `team/05-guidelines.md`, `team/06-checklist.md`, `.agents/common-rules.md`, `RDMD/commit_history/README.md`, `RDMD/guides/development.md`
+- **관련 RDMD**: _(팀 커밋 규칙)_
 
 [▲ 목차로](#목차)
 
