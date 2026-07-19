@@ -144,7 +144,7 @@
 | 113 | 2026-07-19 | [`fa3de2d`](#fa3de2d) | fix(auth): require email config for account recovery and surface send failures |
 | 114 | 2026-07-19 | [`f883c33`](#f883c33) | feat(admin): add notice edit (PUT/PATCH) on management page |
 | 115 | 2026-07-19 | [`d9a4666`](#d9a4666) | 문서(규칙): 커밋 메시지 한국어 필수·영어 전용 작성 금지 |
-| 116 | 2026-07-19 | [`pending`](#pending) | feat(custom-maker): 본인 게시글 수정(PUT) 및 상세·메이커 연동 |
+| 116 | 2026-07-19 | [`ef43300`](#ef43300) | feat(custom-maker): 본인 게시글 수정(PUT) 및 상세·메이커 연동 |
 
 ---
 
@@ -2222,15 +2222,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="ef43300"></a>
 
-### 116. 2026-07-19 — `pending`
+### 116. 2026-07-19 — `ef43300`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `ef43300`
+- **hash (full)**: `ef43300e9da229e6ee9d76e92f096584ee58b441`
 - **author**: nomura
 - **message**: feat(custom-maker): 본인 게시글 수정(PUT) 및 상세·메이커 연동
-- **git**: `git show pending`
+- **git**: `git show ef43300`
 - **범위**: backend / frontend / custom-maker
 - **요약**: 커스텀 메이커 게시판에서 작성자만 게시글을 수정할 수 있게 했다. 상세의 이벤트·삭제 사이에 수정 버튼을 두고, 메이커 ?edit= 로 배치를 불러 PUT 저장한다.
 - **주요 파일**: `backend/controllers/tierController.js`, `backend/routes/tierRoutes.js`, `custom-maker/custom-maker.js`, `custom-maker_post/post_detail.*`
