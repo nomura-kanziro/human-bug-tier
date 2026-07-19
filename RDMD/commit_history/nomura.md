@@ -142,7 +142,7 @@
 | 111 | 2026-07-19 | [`8aa6410`](#8aa6410) | fix(backend): load backend .env with override so MONGO_URI is not blanked by ... |
 | 112 | 2026-07-19 | [`361f2d6`](#361f2d6) | fix(auth): stack logo above login box on mobile portrait |
 | 113 | 2026-07-19 | [`fa3de2d`](#fa3de2d) | fix(auth): require email config for account recovery and surface send failures |
-| 114 | 2026-07-19 | [`pending`](#pending) | feat(admin): add notice edit (PUT/PATCH) on management page |
+| 114 | 2026-07-19 | [`f883c33`](#f883c33) | feat(admin): add notice edit (PUT/PATCH) on management page |
 
 ---
 
@@ -2184,15 +2184,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="f883c33"></a>
 
-### 114. 2026-07-19 — `pending`
+### 114. 2026-07-19 — `f883c33`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `f883c33`
+- **hash (full)**: `f883c337534e8ebdd24b4b951a30d0f80a6279dd`
 - **author**: nomura
 - **message**: feat(admin): add notice edit (PUT/PATCH) on management page
-- **git**: `git show pending`
+- **git**: `git show f883c33`
 - **범위**: backend / admin / notice
 - **요약**: 관리자 공지 관리에 수정 기능을 추가했다. requireAdmin PUT/PATCH /api/notices/:id 로 제목·본문·요약·분류를 갱신하고, 목록의 수정 버튼으로 폼을 채워 저장·취소할 수 있게 했다.
 - **주요 파일**: `backend/controllers/noticeController.js`, `backend/routes/noticeRoutes.js`, `admin/comments/comment-management.js`, `comment-management.html`, `comment-management.css`
