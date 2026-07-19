@@ -141,7 +141,7 @@
 | 110 | 2026-07-18 | [`7fa3438`](#7fa3438) | fix(ui): goHome always to index, tier mobile CSS, coming-soon nav |
 | 111 | 2026-07-19 | [`8aa6410`](#8aa6410) | fix(backend): load backend .env with override so MONGO_URI is not blanked by ... |
 | 112 | 2026-07-19 | [`361f2d6`](#361f2d6) | fix(auth): stack logo above login box on mobile portrait |
-| 113 | 2026-07-19 | [`pending`](#pending) | fix(auth): require email config for account recovery and surface send failures |
+| 113 | 2026-07-19 | [`fa3de2d`](#fa3de2d) | fix(auth): require email config for account recovery and surface send failures |
 
 ---
 
@@ -2165,15 +2165,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="fa3de2d"></a>
 
-### 113. 2026-07-19 — `pending`
+### 113. 2026-07-19 — `fa3de2d`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `fa3de2d`
+- **hash (full)**: `fa3de2d9ceb80b3a1ad13490da63d429b2f50896`
 - **author**: nomura
 - **message**: fix(auth): require email config for account recovery and surface send failures
-- **git**: `git show pending`
+- **git**: `git show fa3de2d`
 - **범위**: backend / auth / frontend / deploy
 - **요약**: Render에서 비밀번호 찾기 메일이 안 오던 문제를 완화했다. EMAIL_* 미설정 시 가짜 성공 대신 503, SMTP 실패 시 502와 토큰 롤백, 미인증 계정도 재설정 허용(성공 시 인증 처리), 닉네임 대소문자 무시, /health·기동 로그·DEPLOY 안내를 보강했다.
 - **주요 파일**: `backend/utils/mail.js`, `backend/controllers/authController.js`, `backend/server.js`, `user_login/find_account.js`, `DEPLOY.md`, `render.yaml`
