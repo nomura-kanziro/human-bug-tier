@@ -126,13 +126,13 @@
             </table>
         </section>
 
-        <!-- ==================== 공지 올리기 섹션 ==================== -->
+        <!-- ==================== 공지 올리기 / 수정 섹션 ==================== -->
         <section class="notice-admin-section">
-            <h2 class="page-title notice-section-title">📢 공지 올리기</h2>
+            <h2 class="page-title notice-section-title" id="notice-section-heading">📢 공지 올리기</h2>
 
             <div class="filter-nav notice-filter-nav">
               <div class="filter-left notice-filter-left">
-                <span class="filter-title">공지 작성</span>
+                <span class="filter-title" id="notice-form-mode-label">공지 작성</span>
                 <select id="notice-category" class="filter-select">
                   <option value="notice">전체 공지</option>
                   <option value="news">새 소식</option>
@@ -140,12 +140,14 @@
               </div>
             </div>
 
-            <div class="notice-form-card">
+            <div class="notice-form-card" id="notice-form-card">
+              <input type="hidden" id="notice-edit-id" value="">
               <input type="text" id="notice-title-input" class="notice-form-input" placeholder="공지 제목을 입력하세요">
               <input type="text" id="notice-summary-input" class="notice-form-input" placeholder="요약 (선택, 목록에 표시됩니다)">
               <textarea id="notice-content-input" class="notice-form-textarea" placeholder="공지 내용을 입력하세요"></textarea>
               <div class="notice-form-actions">
-                <button id="post-notice-btn" class="notice-post-btn">📢 공지 등록</button>
+                <button type="button" id="cancel-notice-edit-btn" class="notice-cancel-btn" hidden>수정 취소</button>
+                <button type="button" id="post-notice-btn" class="notice-post-btn">📢 공지 등록</button>
               </div>
             </div>
 

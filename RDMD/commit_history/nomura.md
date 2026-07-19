@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 113 |
+| **커밋 수** | 114 |
 | **기간** | 2026-03-20 ~ 2026-07-19|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -142,6 +142,7 @@
 | 111 | 2026-07-19 | [`8aa6410`](#8aa6410) | fix(backend): load backend .env with override so MONGO_URI is not blanked by ... |
 | 112 | 2026-07-19 | [`361f2d6`](#361f2d6) | fix(auth): stack logo above login box on mobile portrait |
 | 113 | 2026-07-19 | [`fa3de2d`](#fa3de2d) | fix(auth): require email config for account recovery and surface send failures |
+| 114 | 2026-07-19 | [`pending`](#pending) | feat(admin): add notice edit (PUT/PATCH) on management page |
 
 ---
 
@@ -2178,6 +2179,24 @@
 - **요약**: Render에서 비밀번호 찾기 메일이 안 오던 문제를 완화했다. EMAIL_* 미설정 시 가짜 성공 대신 503, SMTP 실패 시 502와 토큰 롤백, 미인증 계정도 재설정 허용(성공 시 인증 처리), 닉네임 대소문자 무시, /health·기동 로그·DEPLOY 안내를 보강했다.
 - **주요 파일**: `backend/utils/mail.js`, `backend/controllers/authController.js`, `backend/server.js`, `user_login/find_account.js`, `DEPLOY.md`, `render.yaml`
 - **관련 RDMD**: _(auth 메일 · 비밀번호 재설정)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending"></a>
+
+### 114. 2026-07-19 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(admin): add notice edit (PUT/PATCH) on management page
+- **git**: `git show pending`
+- **범위**: backend / admin / notice
+- **요약**: 관리자 공지 관리에 수정 기능을 추가했다. requireAdmin PUT/PATCH /api/notices/:id 로 제목·본문·요약·분류를 갱신하고, 목록의 수정 버튼으로 폼을 채워 저장·취소할 수 있게 했다.
+- **주요 파일**: `backend/controllers/noticeController.js`, `backend/routes/noticeRoutes.js`, `admin/comments/comment-management.js`, `comment-management.html`, `comment-management.css`
+- **관련 RDMD**: _(admin 공지 수정)_
 
 [▲ 목차로](#목차)
 

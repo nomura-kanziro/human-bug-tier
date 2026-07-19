@@ -82,6 +82,58 @@ const createNotice = async (req, res) => {
   }
 };
 
+const updateNotice = async (req, res) => {
+  try {
+    const notice = await Notice.findById(req.params.id);
+    if (!notice) {
+      return res.status(404).json({ error: '공지를 찾을 수 없습니다.' });
+    }
+
+    const { title, content, summary, category } = req.body;
+
+    if (title !== undefined) {
+      const t = String(title).trim();
+      if (!t) {
+        return res.status(400).json({ error: '제목은 비울 수 없습니다.' });
+      }
+      notice.title = t;
+    }
+
+    if (content !== undefined) {
+      const c = String(content).trim();
+      if (!c) {
+        return res.status(400).json({ error: '내용은 비울 수 없습니다.' });
+      }
+      notice.content = c;
+    }
+
+    if (category !== undefined) {
+      if (!['notice', 'news'].includes(category)) {
+        return res.status(400).json({ error: '분류는 notice(전체 공지) 또는 news(새소식)여야 합니다.' });
+      }
+      notice.category = category;
+    }
+
+    if (summary !== undefined) {
+      const s = String(summary).trim();
+      if (s) {
+        notice.summary = s.slice(0, 200);
+      } else {
+        // 요약 비우면 본문 앞부분으로 대체
+        notice.summary = (notice.content || '').trim().slice(0, 200);
+      }
+    } else if (content !== undefined && !(notice.summary || '').trim()) {
+      notice.summary = notice.content.trim().slice(0, 200);
+    }
+
+    await notice.save();
+    res.json({ success: true, notice });
+  } catch (err) {
+    console.error('공지 수정 에러:', err);
+    res.status(500).json({ error: '공지 수정 실패' });
+  }
+};
+
 const togglePin = async (req, res) => {
   try {
     const notice = await Notice.findById(req.params.id);
@@ -121,4 +173,12 @@ const deleteNotice = async (req, res) => {
   }
 };
 
-module.exports = { getNotices, getNoticeById, createNotice, togglePin, deleteNotice, MAX_PINNED };
+module.exports = {
+  getNotices,
+  getNoticeById,
+  createNotice,
+  updateNotice,
+  togglePin,
+  deleteNotice,
+  MAX_PINNED,
+};
