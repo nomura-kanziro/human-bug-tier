@@ -146,7 +146,7 @@
 | 115 | 2026-07-19 | [`d9a4666`](#d9a4666) | 문서(규칙): 커밋 메시지 한국어 필수·영어 전용 작성 금지 |
 | 116 | 2026-07-19 | [`ef43300`](#ef43300) | feat(custom-maker): 본인 게시글 수정(PUT) 및 상세·메이커 연동 |
 | 117 | 2026-07-19 | [`603a962`](#603a962) | docs(rules): 커밋 메시지 type 영어·콜론 뒤 한국어로 정리 |
-| 118 | 2026-07-19 | [`pending`](#pending) | feat(custom-maker): 게시글 전용 수정 페이지와 수정완료 후 게시판 이동 |
+| 118 | 2026-07-19 | [`420b790`](#420b790) | feat(custom-maker): 게시글 전용 수정 페이지와 수정완료 후 게시판 이동 |
 
 ---
 
@@ -2260,15 +2260,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="420b790"></a>
 
-### 118. 2026-07-19 — `pending`
+### 118. 2026-07-19 — `420b790`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `420b790`
+- **hash (full)**: `420b7901466ec2e00ad32ce2fef7a36a2ec4b66c`
 - **author**: nomura
 - **message**: feat(custom-maker): 게시글 전용 수정 페이지와 수정완료 후 게시판 이동
-- **git**: `git show pending`
+- **git**: `git show 420b790`
 - **범위**: frontend / custom-maker
 - **요약**: 게시글 수정을 전용 post_edit 페이지로 분리하고, 게시된 티어표를 복원해 수정완료로 저장한다. 캐릭터 안정 id·이름 매칭으로 배치 복원을 고치고, 수정 성공 시 게시판 목록으로 이동한다.
 - **주요 파일**: `custom-maker/post_edit.html`, `custom-maker/custom-maker.js`, `custom-maker/custom-maker.css`, `custom-maker_post/post_detail.js`
