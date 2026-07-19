@@ -145,7 +145,7 @@
 | 114 | 2026-07-19 | [`f883c33`](#f883c33) | feat(admin): add notice edit (PUT/PATCH) on management page |
 | 115 | 2026-07-19 | [`d9a4666`](#d9a4666) | 문서(규칙): 커밋 메시지 한국어 필수·영어 전용 작성 금지 |
 | 116 | 2026-07-19 | [`ef43300`](#ef43300) | feat(custom-maker): 본인 게시글 수정(PUT) 및 상세·메이커 연동 |
-| 117 | 2026-07-19 | [`pending`](#pending) | docs(rules): 커밋 메시지 type 영어·콜론 뒤 한국어로 정리 |
+| 117 | 2026-07-19 | [`603a962`](#603a962) | docs(rules): 커밋 메시지 type 영어·콜론 뒤 한국어로 정리 |
 
 ---
 
@@ -2241,15 +2241,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="603a962"></a>
 
-### 117. 2026-07-19 — `pending`
+### 117. 2026-07-19 — `603a962`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `603a962`
+- **hash (full)**: `603a962d752dedcc30404cef03e389596c54e22d`
 - **author**: nomura
 - **message**: docs(rules): 커밋 메시지 type 영어·콜론 뒤 한국어로 정리
-- **git**: `git show pending`
+- **git**: `git show 603a962`
 - **범위**: docs / team / .agents
 - **요약**: 커밋 메시지 규칙을 type(scope)는 영어(feat/fix/docs 등), 콜론 뒤 설명은 한국어로 명확히 했다. team·.agents·commit_history·development 가이드 예시를 맞췄다.
 - **주요 파일**: `team/04-prohibitions.md`, `team/01-rules.md`, `team/03-coding-style.md`, `team/05-guidelines.md`, `team/06-checklist.md`, `.agents/common-rules.md`, `RDMD/commit_history/README.md`, `RDMD/guides/development.md`
