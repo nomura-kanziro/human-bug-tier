@@ -139,7 +139,7 @@
 | 108 | 2026-07-18 | [`28b4d6d`](#28b4d6d) | docs(env): add root and backend .env.example with dual dotenv load |
 | 109 | 2026-07-18 | [`d43cf11`](#d43cf11) | feat(custom-maker): mobile tap-to-place characters and maker layout |
 | 110 | 2026-07-18 | [`7fa3438`](#7fa3438) | fix(ui): goHome always to index, tier mobile CSS, coming-soon nav |
-| 111 | 2026-07-19 | [`pending-mongo-env`](#pending-mongo-env) | fix(backend): load backend .env with override so MONGO_URI is not blanked by ... |
+| 111 | 2026-07-19 | [`8aa6410`](#8aa6410) | fix(backend): load backend .env with override so MONGO_URI is not blanked by ... |
 
 ---
 
@@ -2125,12 +2125,12 @@
 
 ---
 
-<a id="pending-mongo-env"></a>
+<a id="8aa6410"></a>
 
-### 111. 2026-07-19 — `pending-mongo-env`
+### 111. 2026-07-19 — `8aa6410`
 
-- **hash (short)**: `pending-mongo-env`
-- **hash (full)**: `pending`
+- **hash (short)**: `8aa6410`
+- **hash (full)**: `8aa641065a25fd56ae9352031cb023655a827a0e`
 - **author**: nomura
 - **message**: fix(backend): load backend .env with override so MONGO_URI is not blanked by root
 - **git**: `git show pending-mongo-env`
