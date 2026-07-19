@@ -140,7 +140,7 @@
 | 109 | 2026-07-18 | [`d43cf11`](#d43cf11) | feat(custom-maker): mobile tap-to-place characters and maker layout |
 | 110 | 2026-07-18 | [`7fa3438`](#7fa3438) | fix(ui): goHome always to index, tier mobile CSS, coming-soon nav |
 | 111 | 2026-07-19 | [`8aa6410`](#8aa6410) | fix(backend): load backend .env with override so MONGO_URI is not blanked by ... |
-| 112 | 2026-07-19 | [`pending`](#pending) | fix(auth): stack logo above login box on mobile portrait |
+| 112 | 2026-07-19 | [`361f2d6`](#361f2d6) | fix(auth): stack logo above login box on mobile portrait |
 
 ---
 
@@ -2146,15 +2146,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="361f2d6"></a>
 
-### 112. 2026-07-19 — `pending`
+### 112. 2026-07-19 — `361f2d6`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `361f2d6`
+- **hash (full)**: `361f2d6c582edd5c5ee14cc7788ee1f5417c0b53`
 - **author**: nomura
 - **message**: fix(auth): stack logo above login box on mobile portrait
-- **git**: `git show pending`
+- **git**: `git show 361f2d6`
 - **범위**: frontend / auth / mobile
 - **요약**: 모바일 9:16(세로)에서 body 기본 flex-row 때문에 로고·제목과 로그인 상자가 한 단에 붙던 문제를 flex-direction:column과 gap으로 세로 분리했다. 로그인·회원가입·계정 찾기(재설정 포함) CSS에 동일 적용.
 - **주요 파일**: `user_login/login.css`, `user_login/sign_up.css`, `user_login/find_account.css`
