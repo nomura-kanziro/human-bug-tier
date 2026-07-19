@@ -48,21 +48,28 @@ body {
 }
 
 /* ====================== 모바일 ====================== */
+/* 9:16 세로: body 기본 flex-row → column 스택 (로고 / 가입 상자) */
 @media (max-width: 768px) {
   body {
     height: auto;
     min-height: 100vh;
     min-height: 100dvh;
-    align-items: flex-start;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 28px;
     padding: 16px;
-    padding-top: max(16px, env(safe-area-inset-top));
+    padding-top: max(24px, env(safe-area-inset-top));
     padding-bottom: max(24px, env(safe-area-inset-bottom));
   }
 
   .logo {
     position: static;
-    margin: 0 auto 16px;
+    margin: 0;
     justify-content: center;
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 420px;
   }
 
   .login-wrapper {
@@ -70,6 +77,7 @@ body {
     max-width: 420px;
     height: auto;
     flex-direction: column;
+    flex-shrink: 0;
   }
 
   .login-box {
