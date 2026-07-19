@@ -591,9 +591,27 @@ function handleEditPost() {
     return;
   }
 
-  // 메이커에서 배치·제목 수정 후 PUT 저장
+  // 메이커에서 원본 tierData를 바로 복원할 수 있도록 스냅샷 저장
+  try {
+    sessionStorage.setItem(
+      'customMakerEditPost',
+      JSON.stringify({
+        _id: id,
+        id,
+        title: currentPost.title || '',
+        description: currentPost.description || '',
+        author: currentPost.author || '',
+        authorEmail: currentPost.authorEmail || '',
+        tierData: currentPost.tierData || null,
+      })
+    );
+  } catch (err) {
+    console.warn('수정용 게시글 스냅샷 저장 실패:', err);
+  }
+
+  // 전용 수정 페이지로 이동 (게시 티어표 로드 → 수정완료)
   const base = typeof getBasePath === 'function' ? getBasePath() : '/';
-  window.location.href = `${base}custom-maker/custom-maker.html?edit=${encodeURIComponent(id)}`;
+  window.location.href = `${base}custom-maker/post_edit.html?id=${encodeURIComponent(id)}`;
 }
 
 async function handleDeletePost() {

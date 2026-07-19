@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 117 |
+| **커밋 수** | 118 |
 | **기간** | 2026-03-20 ~ 2026-07-19|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -146,6 +146,7 @@
 | 115 | 2026-07-19 | [`d9a4666`](#d9a4666) | 문서(규칙): 커밋 메시지 한국어 필수·영어 전용 작성 금지 |
 | 116 | 2026-07-19 | [`ef43300`](#ef43300) | feat(custom-maker): 본인 게시글 수정(PUT) 및 상세·메이커 연동 |
 | 117 | 2026-07-19 | [`603a962`](#603a962) | docs(rules): 커밋 메시지 type 영어·콜론 뒤 한국어로 정리 |
+| 118 | 2026-07-19 | [`pending`](#pending) | feat(custom-maker): 게시글 전용 수정 페이지와 수정완료 후 게시판 이동 |
 
 ---
 
@@ -2254,6 +2255,24 @@
 - **요약**: 커밋 메시지 규칙을 type(scope)는 영어(feat/fix/docs 등), 콜론 뒤 설명은 한국어로 명확히 했다. team·.agents·commit_history·development 가이드 예시를 맞췄다.
 - **주요 파일**: `team/04-prohibitions.md`, `team/01-rules.md`, `team/03-coding-style.md`, `team/05-guidelines.md`, `team/06-checklist.md`, `.agents/common-rules.md`, `RDMD/commit_history/README.md`, `RDMD/guides/development.md`
 - **관련 RDMD**: _(팀 커밋 규칙)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending"></a>
+
+### 118. 2026-07-19 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(custom-maker): 게시글 전용 수정 페이지와 수정완료 후 게시판 이동
+- **git**: `git show pending`
+- **범위**: frontend / custom-maker
+- **요약**: 게시글 수정을 전용 post_edit 페이지로 분리하고, 게시된 티어표를 복원해 수정완료로 저장한다. 캐릭터 안정 id·이름 매칭으로 배치 복원을 고치고, 수정 성공 시 게시판 목록으로 이동한다.
+- **주요 파일**: `custom-maker/post_edit.html`, `custom-maker/custom-maker.js`, `custom-maker/custom-maker.css`, `custom-maker_post/post_detail.js`
+- **관련 RDMD**: _(custom-maker 게시글 수정 페이지)_
 
 [▲ 목차로](#목차)
 
