@@ -7,8 +7,8 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 110 |
-| **기간** | 2026-03-20 ~ 2026-07-18|
+| **커밋 수** | 111 |
+| **기간** | 2026-03-20 ~ 2026-07-19|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
 > 폴더 안내: [README.md](./README.md)  ·  상세 기능 일지: [../frontend/](../frontend/README.md) · [../backend/](../backend/README.md)
@@ -139,6 +139,7 @@
 | 108 | 2026-07-18 | [`28b4d6d`](#28b4d6d) | docs(env): add root and backend .env.example with dual dotenv load |
 | 109 | 2026-07-18 | [`d43cf11`](#d43cf11) | feat(custom-maker): mobile tap-to-place characters and maker layout |
 | 110 | 2026-07-18 | [`7fa3438`](#7fa3438) | fix(ui): goHome always to index, tier mobile CSS, coming-soon nav |
+| 111 | 2026-07-19 | [`pending-mongo-env`](#pending-mongo-env) | fix(backend): load backend .env with override so MONGO_URI is not blanked by ... |
 
 ---
 
@@ -2119,6 +2120,24 @@
 - **요약**: goHome을 항상 index.html로 통일하고, 공식 티어 페이지 공통 모바일 CSS를 적용했다. 미구현 메뉴(이벤트·행운 뽑기)는 준비 중으로 표시해 빈 # 링크 혼란을 줄였다.
 - **주요 파일**: `common.js`, `header.html`, `index.html`, `Header_Footer.css`, `tier-class/tier-responsive.css`, `tier1-9.html`
 - **관련 RDMD**: [guides/mobile-pwa.md](../guides/mobile-pwa.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-mongo-env"></a>
+
+### 111. 2026-07-19 — `pending-mongo-env`
+
+- **hash (short)**: `pending-mongo-env`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: fix(backend): load backend .env with override so MONGO_URI is not blanked by root
+- **git**: `git show pending-mongo-env`
+- **범위**: backend / env
+- **요약**: 루트 .env 의 빈 MONGO_URI= 때문에 backend URI가 무시되던 dotenv 순서를 고쳤다. backend/.env 를 override로 우선 적용하고, DB 미연결 시 공지 API가 503으로 원인을 안내하도록 했다.
+- **주요 파일**: `backend/server.js`, `backend/controllers/noticeController.js`, `.env.example`, `backend/.env.example`
+- **관련 RDMD**: _(env 로드 · 공지 조회)_
 
 [▲ 목차로](#목차)
 

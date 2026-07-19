@@ -9,9 +9,12 @@ const connectDB = require('./config/db');
 const { seedAdmin } = require('./controllers/adminController');
 
 // 환경변수 로드
-// 1) 프로젝트 루트 .env  2) backend/.env (동일 키는 backend가 덮어씀)
+// 1) 프로젝트 루트 .env (기본값)
+// 2) backend/.env — 동일 키는 backend가 우선 (override: true)
+//    ※ dotenv 기본은 이미 있는 키를 덮어쓰지 않음.
+//       루트에 MONGO_URI= (빈 값)만 있으면 backend 값이 무시되어 DB 연결 실패함.
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
-dotenv.config({ path: path.join(__dirname, '.env') });
+dotenv.config({ path: path.join(__dirname, '.env'), override: true });
 
 const app = express();
 

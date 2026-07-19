@@ -7,6 +7,14 @@ const sortNotices = { isPinned: -1, pinnedAt: -1, createdAt: -1 };
 
 const getNotices = async (req, res) => {
   try {
+    const mongoose = require('mongoose');
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({
+        error: '데이터베이스에 연결되지 않았습니다. MONGO_URI 설정을 확인하세요.',
+        db: 'disconnected',
+      });
+    }
+
     const { category, limit } = req.query;
     const filter = {};
 
