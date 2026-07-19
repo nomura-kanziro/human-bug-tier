@@ -134,6 +134,72 @@ const likeTierList = async (req, res) => {
   }
 };
 
+/** 본인 게시글만 제목·설명·티어 배치·썸네일 수정 */
+const updateTierList = async (req, res) => {
+  try {
+    const actor = getActor(req);
+    if (!actor?.nickname) {
+      return res.status(401).json({ error: '로그인이 필요합니다.' });
+    }
+
+    const tierList = await TierList.findById(req.params.id);
+    if (!tierList) {
+      return res.status(404).json({ error: '게시글을 찾을 수 없습니다.' });
+    }
+
+    if (!isTierListOwner(tierList, actor)) {
+      return res.status(403).json({ error: '본인 게시글만 수정할 수 있습니다.' });
+    }
+
+    const {
+      title,
+      description,
+      tierData,
+      thumbnail,
+      isPublic,
+      tags,
+    } = req.body || {};
+
+    if (title !== undefined) {
+      const t = String(title).trim();
+      if (!t) {
+        return res.status(400).json({ error: '제목은 비울 수 없습니다.' });
+      }
+      tierList.title = t;
+    }
+
+    if (description !== undefined) {
+      tierList.description = String(description).trim();
+    }
+
+    if (tierData !== undefined) {
+      if (!tierData || typeof tierData !== 'object') {
+        return res.status(400).json({ error: '티어 데이터가 필요합니다.' });
+      }
+      tierList.tierData = tierData;
+    }
+
+    if (thumbnail !== undefined) {
+      tierList.thumbnail = String(thumbnail || '');
+    }
+
+    if (isPublic !== undefined) {
+      tierList.isPublic = Boolean(isPublic);
+    }
+
+    if (tags !== undefined) {
+      tierList.tags = Array.isArray(tags) ? tags : [];
+    }
+
+    // author / likeCount / viewCount / reported 는 유지
+    const saved = await tierList.save();
+    res.json({ success: true, tierList: saved });
+  } catch (err) {
+    console.error('티어 리스트 수정 실패:', err);
+    res.status(500).json({ error: '게시글 수정 실패' });
+  }
+};
+
 const deleteTierList = async (req, res) => {
   try {
     const actor = getActor(req);
@@ -201,6 +267,7 @@ module.exports = {
   getAllTierLists,
   getTierListById,
   createTierList,
+  updateTierList,
   likeTierList,
   deleteTierList,
   reportTierList,

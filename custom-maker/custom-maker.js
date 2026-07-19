@@ -590,7 +590,14 @@ async function downloadAllTiersAsPDF() {
 // ─── 페이지 초기 로드 ────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
   await loadCharactersFromTierClass();
-  loadFromLocalStorage();
+
+  const editId = getEditPostIdFromUrl();
+  if (editId) {
+    await enterEditMode(editId);
+  } else {
+    loadFromLocalStorage();
+  }
+
   renderTier();
   renderCharacterPool();
   enableDragAndDrop();   // pool / tierList에 위임 리스너 등록
@@ -638,9 +645,18 @@ function downloadAllTiersAsJSON() {
 }
 
 // ============================================================
-// 게시판 업로드 (로그인 필수)
+// 게시판 업로드 / 수정 (로그인 필수, 수정은 본인 글만)
 // ============================================================
+/** 수정 모드 게시글 id (null이면 신규 업로드) */
+let editingPostId = null;
+let editingDefaults = { title: '', description: '' };
+
 function getTierApiBase() {
+  if (typeof getApiBase === 'function') {
+    const base = getApiBase();
+    if (base === 'GITHUB_STATIC') return 'GITHUB_STATIC';
+    return base;
+  }
   const { protocol, hostname, port } = window.location;
   if (
     protocol === 'file:' ||
@@ -650,6 +666,14 @@ function getTierApiBase() {
     return 'http://localhost:5000';
   }
   return '';
+}
+
+function getEditPostIdFromUrl() {
+  try {
+    return new URLSearchParams(window.location.search).get('edit')?.trim() || '';
+  } catch (err) {
+    return '';
+  }
 }
 
 function isAdminLoggedIn() {
@@ -670,6 +694,91 @@ function getLoggedInUser() {
     return { ...user, isAdmin: false };
   }
   return null;
+}
+
+function isPostOwner(post, user) {
+  if (!post || !user) return false;
+  const recordEmail = (post.authorEmail || '').trim().toLowerCase();
+  const userEmail = (user.email || '').trim().toLowerCase();
+  if (recordEmail && userEmail) {
+    return recordEmail === userEmail;
+  }
+  return (post.author || '').trim() === (user.nickname || '').trim();
+}
+
+function clearEditModeFromUrl() {
+  try {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('edit');
+    window.history.replaceState({}, '', url.pathname + url.search + url.hash);
+  } catch (err) {
+    /* ignore */
+  }
+}
+
+async function enterEditMode(postId) {
+  const user = getLoggedInUser();
+  if (!user) {
+    if (confirm('게시글을 수정하려면 로그인이 필요합니다.\n로그인 페이지로 이동할까요?')) {
+      window.location.href = (typeof getBasePath === 'function' ? getBasePath() : '../') + 'user_login/login.html';
+    } else {
+      clearEditModeFromUrl();
+    }
+    return;
+  }
+
+  const apiBase = getTierApiBase();
+  if (apiBase === 'GITHUB_STATIC') {
+    alert('정적 호스팅에서는 게시글 수정을 할 수 없습니다. Render 등 API 서버 주소에서 이용해주세요.');
+    clearEditModeFromUrl();
+    return;
+  }
+
+  try {
+    const headers = typeof getAuthHeaders === 'function' ? getAuthHeaders() : {};
+    const response = await fetch(`${apiBase}/api/tierlists/${encodeURIComponent(postId)}`, {
+      headers,
+    });
+    const post = await response.json();
+
+    if (!response.ok) {
+      alert(post.error || '게시글을 불러오지 못했습니다.');
+      clearEditModeFromUrl();
+      loadFromLocalStorage();
+      return;
+    }
+
+    if (!isPostOwner(post, user)) {
+      alert('본인 게시글만 수정할 수 있습니다.');
+      clearEditModeFromUrl();
+      loadFromLocalStorage();
+      return;
+    }
+
+    editingPostId = String(post._id || post.id || postId);
+    editingDefaults = {
+      title: post.title || '',
+      description: post.description || '',
+    };
+
+    const state = post.tierData?.tierState;
+    if (state && typeof state === 'object') {
+      tierState = state;
+      saveToLocalStorage();
+    } else {
+      tierState = {};
+    }
+
+    const titleEl = document.querySelector('.maker-container h1');
+    if (titleEl) {
+      titleEl.innerHTML = `<img src="../tier-image/human_bug_eyes_icon.gif" class="eyes_icon" alt=""> 게시글 수정 중`;
+    }
+  } catch (err) {
+    console.error(err);
+    alert('게시글을 불러오지 못했습니다. 서버 연결을 확인해주세요.');
+    clearEditModeFromUrl();
+    loadFromLocalStorage();
+  }
 }
 
 function hasPlacedCharacters() {
@@ -733,31 +842,59 @@ function buildUploadPayload(title, description, user) {
 async function uploadToBoard() {
   const user = getLoggedInUser();
   if (!user) {
-    if (confirm('게시판에 업로드하려면 로그인이 필요합니다.\n로그인 페이지로 이동할까요?')) {
-      window.location.href = '../user_login/login.html';
+    if (confirm(
+      editingPostId
+        ? '게시글을 수정하려면 로그인이 필요합니다.\n로그인 페이지로 이동할까요?'
+        : '게시판에 업로드하려면 로그인이 필요합니다.\n로그인 페이지로 이동할까요?'
+    )) {
+      window.location.href = (typeof getBasePath === 'function' ? getBasePath() : '../') + 'user_login/login.html';
     }
+    return;
+  }
+
+  if (getTierApiBase() === 'GITHUB_STATIC') {
+    alert('정적 호스팅에서는 업로드·수정을 할 수 없습니다.');
     return;
   }
 
   saveCurrentTierState();
 
   if (!hasPlacedCharacters()) {
-    alert('티어에 배치된 캐릭터가 없습니다.\n캐릭터를 배치한 후 업로드해주세요.');
+    alert(
+      editingPostId
+        ? '티어에 배치된 캐릭터가 없습니다.\n캐릭터를 배치한 후 저장해주세요.'
+        : '티어에 배치된 캐릭터가 없습니다.\n캐릭터를 배치한 후 업로드해주세요.'
+    );
     return;
   }
 
-  const title = prompt('게시판에 올릴 제목을 입력해주세요.', `${user.nickname}의 커스텀 티어표`);
+  const defaultTitle = editingPostId
+    ? editingDefaults.title || `${user.nickname}의 커스텀 티어표`
+    : `${user.nickname}의 커스텀 티어표`;
+  const title = prompt(
+    editingPostId ? '수정할 제목을 입력해주세요.' : '게시판에 올릴 제목을 입력해주세요.',
+    defaultTitle
+  );
   if (!title?.trim()) return;
 
-  const description = prompt('간단한 설명을 입력해주세요. (선택, 취소 가능)', '') || '';
+  const description = prompt(
+    '간단한 설명을 입력해주세요. (선택, 취소 가능)',
+    editingPostId ? (editingDefaults.description || '') : ''
+  ) || '';
+
+  const isEdit = Boolean(editingPostId);
+  const url = isEdit
+    ? `${getTierApiBase()}/api/tierlists/${encodeURIComponent(editingPostId)}`
+    : `${getTierApiBase()}/api/tierlists`;
+  const method = isEdit ? 'PUT' : 'POST';
 
   try {
     const headers = typeof getAuthHeaders === 'function'
       ? getAuthHeaders()
       : { 'Content-Type': 'application/json' };
 
-    const response = await fetch(`${getTierApiBase()}/api/tierlists`, {
-      method: 'POST',
+    const response = await fetch(url, {
+      method,
       headers,
       body: JSON.stringify(buildUploadPayload(title, description, user)),
     });
@@ -765,7 +902,20 @@ async function uploadToBoard() {
     const data = await response.json();
 
     if (!response.ok) {
-      alert('❌ ' + (data.error || '업로드에 실패했습니다.'));
+      alert('❌ ' + (data.error || (isEdit ? '수정에 실패했습니다.' : '업로드에 실패했습니다.')));
+      return;
+    }
+
+    if (isEdit) {
+      editingDefaults = { title: title.trim(), description: (description || '').trim() };
+      const savedId = data.tierList?._id || data.tierList?.id || editingPostId;
+      if (confirm('✅ 게시글이 수정되었습니다!\n상세 페이지로 이동할까요?')) {
+        if (typeof buildTierPostDetailUrl === 'function') {
+          window.location.href = buildTierPostDetailUrl(savedId);
+        } else {
+          window.location.href = `custom-maker_post/post_detail.html?id=${encodeURIComponent(savedId)}`;
+        }
+      }
       return;
     }
 
@@ -783,9 +933,19 @@ function updateUploadButtonState() {
   if (!uploadBtn) return;
 
   const user = getLoggedInUser();
-  uploadBtn.title = user
-    ? `${user.nickname} 계정으로 게시판에 업로드합니다.`
-    : '로그인 후 게시판에 업로드할 수 있습니다.';
+  const textEl = uploadBtn.querySelector('.btn-text');
+
+  if (editingPostId) {
+    if (textEl) textEl.textContent = '수정 저장';
+    uploadBtn.title = user
+      ? `${user.nickname} 계정으로 이 게시글을 수정·저장합니다.`
+      : '로그인 후 게시글을 수정할 수 있습니다.';
+  } else {
+    if (textEl) textEl.textContent = '업로드';
+    uploadBtn.title = user
+      ? `${user.nickname} 계정으로 게시판에 업로드합니다.`
+      : '로그인 후 게시판에 업로드할 수 있습니다.';
+  }
   uploadBtn.disabled = false;
 }
 

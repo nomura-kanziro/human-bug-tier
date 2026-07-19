@@ -483,10 +483,12 @@ function updatePostActions() {
   const user = getLoggedInUser();
   const isOwner = isPostOwner(currentPost, user);
   const deleteBtn = document.getElementById('delete-btn');
+  const editBtn = document.getElementById('edit-btn');
   const eventBtn = document.getElementById('event-btn');
   const reportBtn = document.getElementById('report-post-btn');
 
   if (deleteBtn) deleteBtn.hidden = !isOwner;
+  if (editBtn) editBtn.hidden = !isOwner;
 
   if (reportBtn) {
     const canReport = Boolean(user && !isOwner && !currentPost?.reported);
@@ -565,6 +567,33 @@ async function handleReportPost() {
       }
     },
   });
+}
+
+function handleEditPost() {
+  if (!currentPost) return;
+
+  const user = getLoggedInUser();
+  if (!user) {
+    if (confirm('수정하려면 로그인이 필요합니다.\n로그인 페이지로 이동할까요?')) {
+      window.location.href = getBasePath() + 'user_login/login.html';
+    }
+    return;
+  }
+
+  if (!isPostOwner(currentPost, user)) {
+    alert('본인 게시글만 수정할 수 있습니다.');
+    return;
+  }
+
+  const id = getCurrentPostId();
+  if (!id) {
+    alert('게시글 정보를 확인할 수 없습니다.');
+    return;
+  }
+
+  // 메이커에서 배치·제목 수정 후 PUT 저장
+  const base = typeof getBasePath === 'function' ? getBasePath() : '/';
+  window.location.href = `${base}custom-maker/custom-maker.html?edit=${encodeURIComponent(id)}`;
 }
 
 async function handleDeletePost() {
@@ -653,9 +682,11 @@ function setupActionButtons() {
   const likeBtn = document.getElementById('like-btn');
   const shareBtn = document.getElementById('share-btn');
   const eventBtn = document.getElementById('event-btn');
+  const editBtn = document.getElementById('edit-btn');
   const deleteBtn = document.getElementById('delete-btn');
 
   if (likeBtn) likeBtn.addEventListener('click', handleLike);
+  if (editBtn) editBtn.addEventListener('click', handleEditPost);
   if (deleteBtn) deleteBtn.addEventListener('click', handleDeletePost);
 
   const reportPostBtn = document.getElementById('report-post-btn');
