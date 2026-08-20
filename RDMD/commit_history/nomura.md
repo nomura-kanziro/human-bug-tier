@@ -149,7 +149,7 @@
 | 118 | 2026-07-19 | [`420b790`](#420b790) | feat(custom-maker): 게시글 전용 수정 페이지와 수정완료 후 게시판 이동 |
 | 119 | 2026-08-18 | [`73dd9bd`](#73dd9bd) | feat(tier-class): 공식 6~9티어 캐릭터 이미지 추가 |
 | 120 | 2026-08-20 | [`13186fd`](#13186fd) | feat(tier-class): 6~9티어 이미지 연결 및 1·2티어 배치 변동 |
-| 121 | 2026-08-20 | [`pending`](#pending) | docs(RDMD): 현재 기능에 맞춰 features·README·일지 갱신 |
+| 121 | 2026-08-20 | [`b775584`](#b775584) | docs(RDMD): 현재 기능에 맞춰 features·README·일지 갱신 |
 
 ---
 
@@ -2317,15 +2317,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="b775584"></a>
 
-### 121. 2026-08-20 — `pending`
+### 121. 2026-08-20 — `b775584`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `b775584`
+- **hash (full)**: `b775584aa39c42e144ef945440293827779921d7`
 - **author**: nomura
 - **message**: docs(RDMD): 현재 기능에 맞춰 features·README·일지 갱신
-- **git**: `git show pending`
+- **git**: `git show b775584`
 - **범위**: docs / RDMD / README
 - **요약**: 공식 6~9티어 이미지, 1·2티어 재배치, 본인 게시글 수정, 모바일 탭·PWA, 공지 PUT을 features·루트 README·모듈 README·work-history와 일지에 반영했다. 코드 동작은 바꾸지 않았다.
 - **주요 파일**: `README.md`, `RDMD/features/`, `RDMD/summary/work-history.md`, `custom-maker/README.md`
