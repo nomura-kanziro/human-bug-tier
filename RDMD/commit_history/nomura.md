@@ -7,8 +7,8 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 119 |
-| **기간** | 2026-03-20 ~ 2026-08-18|
+| **커밋 수** | 120 |
+| **기간** | 2026-03-20 ~ 2026-08-20|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
 > 폴더 안내: [README.md](./README.md)  ·  상세 기능 일지: [../frontend/](../frontend/README.md) · [../backend/](../backend/README.md)
@@ -148,6 +148,7 @@
 | 117 | 2026-07-19 | [`603a962`](#603a962) | docs(rules): 커밋 메시지 type 영어·콜론 뒤 한국어로 정리 |
 | 118 | 2026-07-19 | [`420b790`](#420b790) | feat(custom-maker): 게시글 전용 수정 페이지와 수정완료 후 게시판 이동 |
 | 119 | 2026-08-18 | [`73dd9bd`](#73dd9bd) | feat(tier-class): 공식 6~9티어 캐릭터 이미지 추가 |
+| 120 | 2026-08-20 | [`pending`](#pending) | feat(tier-class): 6~9티어 이미지 연결 및 1·2티어 배치 변동 |
 
 ---
 
@@ -2297,6 +2298,24 @@
 
 ---
 
+<a id="pending"></a>
+
+### 120. 2026-08-20 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(tier-class): 6~9티어 이미지 연결 및 1·2티어 배치 변동
+- **git**: `git show pending`
+- **범위**: frontend / tier-class / tier-image
+- **요약**: 공식 6~9티어 페이지에 캐릭터 이미지를 연결하고, 우사미 쥰페이를 7티어에서 6티어로 올렸다. 1·2티어 배치(세르지오·누에 토모야·시덴·야마모토·헤이지, 미카도 2갑, 이쥬인 2을, 제이크·사이 1정)와 해당 이미지 폴더를 맞췄다.
+- **주요 파일**: `tier-class/tier1.html`, `tier2.html`, `tier6.html`~`tier9.html`, `tier-image/1 tier/`, `2 tier/`, `6 tier/`, `7 tier/`
+- **관련 RDMD**: [features/tier-class.md](../features/tier-class.md)
+
+[▲ 목차로](#목차)
+
+---
+
 ## 빈 템플릿 (이후 커밋 추가용)
 
 **최신 항목은 커밋 상세 구역의 맨 아래(이 템플릿 바로 위)** 에 붙인다.
@@ -2323,4 +2342,4 @@
 
 ---
 
-**마지막 갱신**: 2026-08-18 · 총 119 항목 · 공식 6~9티어 이미지 추가 · 정렬 = 과거→현재
+**마지막 갱신**: 2026-08-20 · 총 120 항목 · 6~9티어 이미지 연결·1·2티어 배치 · 정렬 = 과거→현재
