@@ -26,7 +26,7 @@ description: >
 3. 경로·API: `common` 스킬 + `RDMD/guides/path-and-api.md`
 4. 관리 API면 `requireAdmin` + `getAdminAuthHeaders()`
 5. 검증 기준: `cd backend && npm start` → `:5000`
-6. 큰 변경 후 RDMD · 모듈 README · (규칙 변경 시) `groks` · `codex` · `.claude` 동기화 제안
+6. 큰 변경 후 RDMD · 모듈 README · **`.agents/<기능>/skill.md` 현행화** · (규칙 변경 시) `.claude` 동기화
 7. 종료 시: 요약 + 수동 테스트 + 시크릿 점검
 
 ## Do not

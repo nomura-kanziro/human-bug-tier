@@ -24,13 +24,18 @@ description: >
 - `admin/README.md`
 - `RDMD/guides/security.md`
 
+## 현재 (작업 전 이해)
+
+- 공지는 작성뿐 아니라 **수정**(PUT/PATCH `/api/notices/:id`)도 관리 페이지에서 함
+- 티어 신고: `/api/admin/tier-reports/*`
+
 ## Do
 
 1. 모든 관리 fetch → **getAdminAuthHeaders()**
 2. 새 관리 라우트 → **requireAdmin**
 3. 토큰: `adminAuthToken` / `isAdmin` (유저 토큰 분리)
-4. UI 패턴: comment-management + 삭제 후 `load*()`
-5. 공지 필터 색 #10b981
+4. UI 패턴: comment-management + 삭제/저장 후 `load*()`
+5. 공지 필터 색 #10b981, 공지 수정 폼 저장/취소 유지
 6. 파괴 동작 confirm
 7. ADMIN_INPUT_* 값 출력 금지
 

@@ -1,7 +1,7 @@
 ---
 name: custom-maker
 description: >
-  커스텀 티어 제작, PNG/PDF, 게시판, post_detail, 댓글, 좋아요, 신고.
+  커스텀 티어 제작, PNG/PDF, 게시판, 본인 글 수정, post_detail, 댓글, 좋아요, 신고.
   Use when /custom-maker.
 ---
 
@@ -9,12 +9,13 @@ description: >
 
 ## When
 
-- DnD 제작 UI, 다운로드, 게시판, 댓글/좋아요/신고, 썸네일 경로
+- DnD/탭 제작 UI, 다운로드, 게시판, 본인 글 수정, 댓글/좋아요/신고, 썸네일 경로
 
 ## Code map
 
-- `custom-maker/custom-maker.*`
+- `custom-maker/custom-maker.*`, `post_edit.html`
 - `custom-maker/custom-maker_post/*`, `post_detail.*`
+- `PUT`/`PATCH` `/api/tierlists/:id` (작성자만)
 - `backend/controllers/tierController.js`, `tierCommentController.js`
 - `backend/models/TierList.js`, `TierPostComment.js`, `TierLike.js`
 - `backend/routes/tierRoutes.js`
@@ -24,15 +25,23 @@ description: >
 - `RDMD/features/custom-maker.md`
 - `custom-maker/README.md`
 
+## 현재 (작업 전 이해)
+
+- 풀 = `tier-class` HTML 파싱 (1~9)
+- 데스크톱 DnD, 모바일 **탭 선택 후 칸 탭**
+- 본인 글 수정: 상세 → `post_edit.html` → PUT → 게시판 목록
+- 캐릭터 id는 이름 기반 안정 id
+
 ## Do
 
-1. `tierState`/DnD·다운로드 회귀 방지
+1. `tierState` / DnD / **모바일 탭 배치** / 다운로드 회귀 방지
 2. 이미지: 저장 정규화 + 표시 시 getBasePath/resolveAssetPath
 3. API: getApiBase + 쓰기는 getAuthHeaders
-4. 댓글/좋아요/신고: 서버 권한과 UX 동기화
-5. 게시글 삭제 시 댓글 연쇄 삭제 유지
-6. 상세 URL: `buildTierPostDetailUrl` 재사용
-7. 신고 → admin tier-reports 연동 인지
+4. 글 수정은 작성자만. 타인 글에 수정 버튼 금지
+5. 댓글/좋아요/신고: 서버 권한과 UX 동기화
+6. 게시글 삭제 시 댓글 연쇄 삭제 유지
+7. 상세 URL: `buildTierPostDetailUrl` 재사용
+8. 신고 → admin tier-reports 연동 인지
 
 ## Do not
 
@@ -40,18 +49,21 @@ description: >
 - GH Pages 업로드 가능 가정
 - localhost URL을 DB에 저장
 - 관리 신고 API를 유저 토큰으로 호출
+- 매 로드 랜덤 캐릭터 id로 수정 복원 깨기
 
 ## Tasks
 
-**A. DnD 버그** — state/이벤트 최소 수정  
+**A. DnD/탭 버그** — state/이벤트 최소 수정  
 **B. PNG/PDF** — html2canvas/jsPDF, 캡처 영역  
 **C. 업로드/목록** — TierList 필드 일치, search  
-**D. 댓글·좋아요·신고** — 라우트·헤더·401  
-**E. 스키마** — backend 스킬 병행 + 프론트 동기화  
+**D. 본인 글 수정** — post_edit + PUT 작성자 검사  
+**E. 댓글·좋아요·신고** — 라우트·헤더·401  
+**F. 스키마** — backend 스킬 병행 + 프론트 동기화  
 
 ## Checklist
 
-- [ ] 제작·다운로드
+- [ ] 제작·다운로드·탭 배치
 - [ ] 업로드·상세·댓글
+- [ ] 본인 PUT 수정 / 타인 403
 - [ ] 이미지 경로
 - [ ] README/RDMD 여부

@@ -43,8 +43,8 @@ env 로드: 루트 `.env` 후 `backend/.env` (동일 키는 backend 우선)
 |------|-----------|----------------|
 | 전역/새기능 | `.claude/skills/project-wide/SKILL.md` | 전 저장소 |
 | 공통 경로·헤더 | `.claude/skills/common/SKILL.md` | `common.js`, `header.html` |
-| 공식 티어 | `.claude/skills/tier-class/SKILL.md` | `tier-class/`, `tier-image/` |
-| 커스텀·게시판 | `.claude/skills/custom-maker/SKILL.md` | `custom-maker/` |
+| 공식 티어 | `.claude/skills/tier-class/SKILL.md` | `tier-class/`, `tier-image/1`~`9 tier` |
+| 커스텀·게시판 | `.claude/skills/custom-maker/SKILL.md` | `custom-maker/` (`post_edit.html` 포함) |
 | 인증 | `.claude/skills/auth/SKILL.md` | `user_login/`, `backend` auth |
 | 공지 | `.claude/skills/notice/SKILL.md` | `notice/` |
 | 문의 | `.claude/skills/inquiry/SKILL.md` | `Contact_us/` |
@@ -89,9 +89,9 @@ env 로드: 루트 `.env` 후 `backend/.env` (동일 키는 backend 우선)
 ## 폴더 한눈에
 
 ```
-index.html, common.js, header/footer   # 공통
-tier-class/, tier-image/               # 공식 티어
-custom-maker/                          # 제작 + 게시판
+index.html, common.js, header/footer   # 공통 · PWA
+tier-class/, tier-image/1~9 tier/      # 공식 티어 (이미지 폴더=티어)
+custom-maker/                          # 제작 + 게시판 + post_edit
 user_login/                            # 인증
 notice/                                # 공지
 Contact_us/                            # 문의

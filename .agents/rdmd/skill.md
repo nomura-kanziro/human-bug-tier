@@ -31,8 +31,9 @@ description: >
 3. 백엔드: `backend/<기능>/NN-키워드-record.md` (큰 기능)
 4. 템플릿: 개요·커밋·파일·구현·전후·테스트·날짜
 5. 큰 변경: summary + features + guides + 폴더 README
-6. 시크릿 금지
-7. **규칙 변경 시 `.agents` 정본 먼저**, 그다음 주 골격 3팩 + `team`
+6. **유저 기능이 바뀌면** `RDMD/features/<기능>.md` 와 **`.agents/<기능>/skill.md`** 를 같이 갱신
+7. 시크릿 금지
+8. **규칙 변경 시 `.agents` 정본 먼저**, 그다음 주 골격 팩 + `team`
 
 ## Do not
 

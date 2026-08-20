@@ -17,6 +17,7 @@ description: >
 
 - `common.js`, `common.css`, `Header_Footer.css`
 - `header.html`, `footer.html`
+- `manifest.webmanifest`, `sw.js` (PWA, common.js에서 등록)
 
 ## Read first
 
@@ -32,12 +33,14 @@ description: >
 4. API base 분기 기존과 동일
 5. `addEventListener` 유지
 6. 검증: 루트, `tier-class/tier1`, `admin/comments/`, `:5000`
+7. `goHome`은 항상 `index.html`. 미구현 메뉴(이벤트·행운 뽑기)는 **준비 중** 표시
 
 ## Do not
 
 - 프로덕션에 `localhost:5000` 고정
 - GH Pages에서 API 동작 가정
 - header만 고치고 common 보정과 모순
+- 미구현 메뉴를 빈 `#` 링크로 되돌리기
 
 ## Tasks
 

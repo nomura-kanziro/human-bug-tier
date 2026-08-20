@@ -21,9 +21,15 @@ description: >
 - `RDMD/features/notice.md`
 - `notice/README.md`
 
+## 현재 (작업 전 이해)
+
+- 본문 수정: `PUT`/`PATCH` `/api/notices/:id` + requireAdmin
+- 핀: `PATCH` `/api/notices/:id/pin`
+- 관리 페이지 **수정** 버튼 → 폼 채움 → 저장
+
 ## Do
 
-1. GET 공개 / 쓰기·핀·삭제 = **requireAdmin**
+1. GET 공개 / 쓰기·수정·핀·삭제 = **requireAdmin**
 2. category `notice`|`news` — 확장 시 라벨·필터 동시 수정
 3. 정렬: pinned → pinnedAt → createdAt
 4. 관리 UI 색 #10b981, fetch는 **getAdminAuthHeaders()**
@@ -32,16 +38,16 @@ description: >
 ## Do not
 
 - 공지 쓰기를 일반 회원만으로 개방
-- 관리 삭제 시 헤더 누락
+- 관리 삭제/수정 시 헤더 누락
 
 ## Tasks
 
 **A. 유저 UI** — 목록/상세 GET  
 **B. 핀/카테고리** — PATCH + 메인 반영  
-**C. 관리 섹션** — admin 스킬 + create/delete/pin  
+**C. 관리 섹션** — admin 스킬 + create/**update**/delete/pin  
 
 ## Checklist
 
 - [ ] 비로그인 읽기
-- [ ] 비관리자 쓰기 거부
-- [ ] 관리자 CRUD·메인 미리보기
+- [ ] 비관리자 쓰기·수정 거부
+- [ ] 관리자 CRUD(수정 포함)·메인 미리보기

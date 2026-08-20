@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 121 |
+| **커밋 수** | 122 |
 | **기간** | 2026-03-20 ~ 2026-08-20|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -150,6 +150,7 @@
 | 119 | 2026-08-18 | [`73dd9bd`](#73dd9bd) | feat(tier-class): 공식 6~9티어 캐릭터 이미지 추가 |
 | 120 | 2026-08-20 | [`13186fd`](#13186fd) | feat(tier-class): 6~9티어 이미지 연결 및 1·2티어 배치 변동 |
 | 121 | 2026-08-20 | [`b775584`](#b775584) | docs(RDMD): 현재 기능에 맞춰 features·README·일지 갱신 |
+| 122 | 2026-08-20 | [`pending`](#pending) | docs(agents): 바뀐 기능을 에이전트 스킬에 반영 |
 
 ---
 
@@ -2335,6 +2336,24 @@
 
 ---
 
+<a id="pending"></a>
+
+### 122. 2026-08-20 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(agents): 바뀐 기능을 에이전트 스킬에 반영
+- **git**: `git show pending`
+- **범위**: docs / .agents / .claude
+- **요약**: 티어 이동(폴더+HTML), 본인 글 수정, 모바일 탭, 공지 PUT, 재설정 메일 실패 안내를 `.agents` 정본과 `.claude/skills`에 적어 다음 작업이 현재 기능을 기준으로 하게 했다.
+- **주요 파일**: `.agents/tier-class/skill.md`, `.agents/custom-maker/skill.md`, `.claude/skills/*/SKILL.md`
+- **관련 RDMD**: [features/overview.md](../features/overview.md)
+
+[▲ 목차로](#목차)
+
+---
+
 ## 빈 템플릿 (이후 커밋 추가용)
 
 **최신 항목은 커밋 상세 구역의 맨 아래(이 템플릿 바로 위)** 에 붙인다.
@@ -2361,4 +2380,4 @@
 
 ---
 
-**마지막 갱신**: 2026-08-20 · 총 121 항목 · 기능 문서 현행화 · 정렬 = 과거→현재
+**마지막 갱신**: 2026-08-20 · 총 122 항목 · 에이전트 스킬 현행화 · 정렬 = 과거→현재

@@ -29,7 +29,7 @@ description: >
 3. 경로·API: `.agents/common/skill.md` + `RDMD/guides/path-and-api.md`
 4. 관리 API → `requireAdmin` + `getAdminAuthHeaders()`
 5. 검증: `cd backend && npm start` → `:5000`
-6. 큰 변경: RDMD · 모듈 README · 규칙 변경 시 `.agents` 정본 후 주 골격 팩 동기화
+6. 큰 변경: RDMD · 모듈 README · **해당 `.agents/<기능>/skill.md` 현행화** · 규칙 변경 시 정본 후 주 골격 팩 동기화
 7. 종료: 요약 + 수동 테스트 + 시크릿 점검
 
 ## Do not

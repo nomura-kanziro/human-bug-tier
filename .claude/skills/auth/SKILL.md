@@ -31,14 +31,17 @@ description: >
 2. API base = auth_api / getApiBase 동일 규칙
 3. localStorage: `authToken`, `user` 키 유지
 4. `adminAuthToken` 과 섞지 말 것
-5. EMAIL 미설정 폴백 기존과 일치
-6. 차단 검사 유지, 메일 링크는 APP_URL/appUrl
+5. **가입** EMAIL 미설정 → 즉시 `isVerified` 폴백 유지
+6. **비번 찾기** 가짜 성공 금지: EMAIL 없으면 **503**, SMTP 실패 **502** + 토큰 롤백
+7. 미인증 계정도 재설정 가능, 성공 시 인증 처리
+8. 차단 검사 유지, 메일 링크는 APP_URL/appUrl
 
 ## Do not
 
 - 비밀번호·평문 토큰 로그/응답
 - `.env` 커밋
 - 일반 JWT에 isAdmin 임의 부여
+- 재설정 메일 실패를 성공처럼 안내
 
 ## Tasks
 
@@ -51,4 +54,5 @@ description: >
 
 - [ ] 가입→로그인→보호 API
 - [ ] 리셋 토큰 평문 DB 없음
+- [ ] 찾기 실패 시 유저에게 원인 안내
 - [ ] auth_api.js 로드 여부

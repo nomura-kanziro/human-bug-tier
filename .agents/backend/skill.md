@@ -23,6 +23,12 @@ middleware/auth.js, utils/
 - `backend/README.md` (코드 옆)
 - route → controller → model
 
+## 현재 (작업 전 이해)
+
+- `PUT`/`PATCH` `/api/tierlists/:id` — **작성자**만 (본인 커스텀 글 수정)
+- `PUT`/`PATCH` `/api/notices/:id` — **requireAdmin** (공지 본문 수정)
+- 핀은 `/api/notices/:id/pin`. 재설정 메일 실패는 503/502 (가짜 성공 금지)
+
 ## Do
 
 1. 레이어: routes → controllers → models

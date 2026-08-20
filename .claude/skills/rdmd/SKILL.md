@@ -29,8 +29,9 @@ description: >
 2. 백엔드: `backend/<기능>/NN-키워드-record.md` (해당 기능 폴더 안 다음 번호)
 3. 템플릿: 개요·커밋·파일·구현·전후·테스트·날짜
 4. 큰 변경: summary + features + guides + 폴더 README 표
-5. 시크릿 금지
-6. 규칙 변경 시 **`.claude/skills` · `groks` · `codex`** 갱신
+5. **유저 기능이 바뀌면** `RDMD/features/<기능>.md` 와 **`.agents/<기능>/skill.md`** (+ `.claude/skills`) 같이 갱신
+6. 시크릿 금지
+7. 규칙 변경 시 **`.agents` 정본 먼저**, 그다음 `.claude/skills`
 
 ## Do not
 

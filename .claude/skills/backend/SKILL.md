@@ -24,6 +24,12 @@ middleware/auth.js, utils/
 - `backend/README.md`
 - route → controller → model 순 읽기
 
+## 현재 (작업 전 이해)
+
+- `PUT`/`PATCH` `/api/tierlists/:id` — 작성자만
+- `PUT`/`PATCH` `/api/notices/:id` — requireAdmin
+- 재설정 메일 실패: 503/502 (가짜 성공 금지)
+
 ## Do
 
 1. 레이어: routes → controllers → models
