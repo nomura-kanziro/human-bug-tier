@@ -139,7 +139,7 @@
 | 108 | 2026-07-18 | [`28b4d6d`](#28b4d6d) | docs(env): add root and backend .env.example with dual dotenv load |
 | 109 | 2026-07-18 | [`d43cf11`](#d43cf11) | feat(custom-maker): mobile tap-to-place characters and maker layout |
 | 110 | 2026-07-18 | [`7fa3438`](#7fa3438) | fix(ui): goHome always to index, tier mobile CSS, coming-soon nav |
-| 111 | 2026-08-18 | [`pending`](#pending) | feat(tier-class): 공식 6~9티어 캐릭터 이미지 추가 |
+| 111 | 2026-08-18 | [`73dd9bd`](#73dd9bd) | feat(tier-class): 공식 6~9티어 캐릭터 이미지 추가 |
 
 ---
 
@@ -2125,15 +2125,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="73dd9bd"></a>
 
-### 111. 2026-08-18 — `pending`
+### 111. 2026-08-18 — `73dd9bd`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `73dd9bd`
+- **hash (full)**: `73dd9bd41cdb6173bfded59606090aa455846cce`
 - **author**: nomura
 - **message**: feat(tier-class): 공식 6~9티어 캐릭터 이미지 추가
-- **git**: `git show pending`
+- **git**: `git show 73dd9bd`
 - **범위**: frontend / tier-class / tier-image
 - **요약**: 공식 6~9티어 캐릭터 이미지 138장을 `tier-image/6 tier` ~ `9 tier`에 추가했다. 1~5티어와 같은 폴더 규칙으로 두어 티어 페이지에서 이미지를 쓸 수 있게 했다.
 - **주요 파일**: `tier-image/6 tier/`, `tier-image/7 tier/`, `tier-image/8 tier/`, `tier-image/9 tier/`
