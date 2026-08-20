@@ -150,7 +150,7 @@
 | 119 | 2026-08-18 | [`73dd9bd`](#73dd9bd) | feat(tier-class): 공식 6~9티어 캐릭터 이미지 추가 |
 | 120 | 2026-08-20 | [`13186fd`](#13186fd) | feat(tier-class): 6~9티어 이미지 연결 및 1·2티어 배치 변동 |
 | 121 | 2026-08-20 | [`b775584`](#b775584) | docs(RDMD): 현재 기능에 맞춰 features·README·일지 갱신 |
-| 122 | 2026-08-20 | [`pending`](#pending) | docs(agents): 바뀐 기능을 에이전트 스킬에 반영 |
+| 122 | 2026-08-20 | [`3be6903`](#3be6903) | docs(agents): 바뀐 기능을 에이전트 스킬에 반영 |
 
 ---
 
@@ -2336,15 +2336,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="3be6903"></a>
 
-### 122. 2026-08-20 — `pending`
+### 122. 2026-08-20 — `3be6903`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `3be6903`
+- **hash (full)**: `3be6903cc9bcd57e053302952166ce09363a1790`
 - **author**: nomura
 - **message**: docs(agents): 바뀐 기능을 에이전트 스킬에 반영
-- **git**: `git show pending`
+- **git**: `git show 3be6903`
 - **범위**: docs / .agents / .claude
 - **요약**: 티어 이동(폴더+HTML), 본인 글 수정, 모바일 탭, 공지 PUT, 재설정 메일 실패 안내를 `.agents` 정본과 `.claude/skills`에 적어 다음 작업이 현재 기능을 기준으로 하게 했다.
 - **주요 파일**: `.agents/tier-class/skill.md`, `.agents/custom-maker/skill.md`, `.claude/skills/*/SKILL.md`
