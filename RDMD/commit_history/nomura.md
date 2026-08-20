@@ -7,8 +7,8 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 110 |
-| **기간** | 2026-03-20 ~ 2026-07-18|
+| **커밋 수** | 111 |
+| **기간** | 2026-03-20 ~ 2026-08-18|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
 > 폴더 안내: [README.md](./README.md)  ·  상세 기능 일지: [../frontend/](../frontend/README.md) · [../backend/](../backend/README.md)
@@ -139,6 +139,7 @@
 | 108 | 2026-07-18 | [`28b4d6d`](#28b4d6d) | docs(env): add root and backend .env.example with dual dotenv load |
 | 109 | 2026-07-18 | [`d43cf11`](#d43cf11) | feat(custom-maker): mobile tap-to-place characters and maker layout |
 | 110 | 2026-07-18 | [`7fa3438`](#7fa3438) | fix(ui): goHome always to index, tier mobile CSS, coming-soon nav |
+| 111 | 2026-08-18 | [`pending`](#pending) | feat(tier-class): 공식 6~9티어 캐릭터 이미지 추가 |
 
 ---
 
@@ -2124,6 +2125,24 @@
 
 ---
 
+<a id="pending"></a>
+
+### 111. 2026-08-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(tier-class): 공식 6~9티어 캐릭터 이미지 추가
+- **git**: `git show pending`
+- **범위**: frontend / tier-class / tier-image
+- **요약**: 공식 6~9티어 캐릭터 이미지 138장을 `tier-image/6 tier` ~ `9 tier`에 추가했다. 1~5티어와 같은 폴더 규칙으로 두어 티어 페이지에서 이미지를 쓸 수 있게 했다.
+- **주요 파일**: `tier-image/6 tier/`, `tier-image/7 tier/`, `tier-image/8 tier/`, `tier-image/9 tier/`
+- **관련 RDMD**: [commit_history/README.md](./README.md)
+
+[▲ 목차로](#목차)
+
+---
+
 ## 빈 템플릿 (이후 커밋 추가용)
 
 **최신 항목은 커밋 상세 구역의 맨 아래(이 템플릿 바로 위)** 에 붙인다.
@@ -2150,4 +2169,4 @@
 
 ---
 
-**마지막 갱신**: 2026-07-18 · 총 104 항목 · 배치 커밋 #96~104 (+hash 보정) · 정렬 = 과거→현재
+**마지막 갱신**: 2026-08-18 · 총 111 항목 · 공식 6~9티어 이미지 추가 · 정렬 = 과거→현재
