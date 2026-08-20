@@ -7,6 +7,7 @@
 ```
 custom-maker/
 ├── custom-maker.html / .js / .css     # 제작 화면
+├── post_edit.html                     # 본인 게시글 수정 (제작 UI 재사용)
 └── custom-maker_post/
     ├── custom-maker_post.html / .js   # 게시판 목록
     ├── post_detail.html / .js         # 상세 + 댓글
@@ -21,7 +22,8 @@ custom-maker/
 
 | 기능 | 설명 |
 |------|------|
-| 드래그 앤 드롭 | 좌측 캐릭터 풀 ↔ 우측 티어 보드 (HTML5 DnD) |
+| 드래그 앤 드롭 | 데스크톱: 좌측 캐릭터 풀 ↔ 우측 티어 보드 (HTML5 DnD) |
+| 모바일 탭 배치 | 캐릭터 탭 선택 → 티어 칸 탭으로 배치 / 풀 탭으로 되돌리기 |
 | 티어 단계 | 1~9등급 보드 |
 | 상태 | `tierState` 객체로 배치 관리 |
 | 초기화 | 보드 비우기 |
@@ -47,6 +49,7 @@ custom-maker/
 POST /api/tierlists          → 업로드
 GET  /api/tierlists          → 목록
 GET  /api/tierlists/:id      → 상세
+PUT  /api/tierlists/:id      → 본인 글 수정 (PATCH 동일)
 ```
 
 ---
@@ -60,6 +63,7 @@ GET  /api/tierlists/:id      → 상세
 | 좋아요 | TierLike 연동 |
 | 신고 | 게시글·댓글 `reported` 플래그 |
 | 알림 딥링크 | `?id=&comment=` + `buildTierPostDetailUrl` |
+| 본인 글 수정 | 작성자만 **수정** → `post_edit.html` → 저장 후 게시판 목록 |
 
 ### 댓글 API (개요)
 
@@ -97,6 +101,8 @@ GET  /api/tierlists/:id      → 상세
 - [ ] 새 캐릭터 → `tier-image` + tier-class + 메이커 풀  
 - [ ] 업로드 후 목록/상세 썸네일 깨짐 여부  
 - [ ] 로그인 없이 댓글 시도 시 UX  
+- [ ] 본인 글만 수정 버튼·PUT 권한  
+- [ ] 모바일 탭 배치 / 데스크톱 DnD  
 - [ ] 관리자 신고 삭제 후 목록 갱신  
 - [ ] API Base (`getApiBase`) 로컬/Render 일치  
 
@@ -104,3 +110,4 @@ GET  /api/tierlists/:id      → 상세
 
 - information15~20, 26  
 - backend_10, 15~20, 26  
+- [07-post-edit-and-mobile-tap-record.md](../frontend/03-custom-maker/07-post-edit-and-mobile-tap-record.md)

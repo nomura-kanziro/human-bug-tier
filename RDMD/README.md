@@ -65,7 +65,7 @@
 | [overview.md](./features/overview.md) | 전체 맵 · 사용자 여정 · 권한 표 |
 | [common-infra.md](./features/common-infra.md) | common.js, Header/Footer, 경로·API Base |
 | [tier-class.md](./features/tier-class.md) | 공식 1~9 티어표 |
-| [custom-maker.md](./features/custom-maker.md) | 커스텀 제작 · 게시판 · 댓글 |
+| [custom-maker.md](./features/custom-maker.md) | 커스텀 제작 · 게시판 · 댓글 · 본인 글 수정 |
 | [auth.md](./features/auth.md) | 회원가입 · 로그인 · 비번 재설정 |
 | [notice.md](./features/notice.md) | 공지 · 새 소식 · 핀 |
 | [inquiry.md](./features/inquiry.md) | 문의하기 · 답변 |

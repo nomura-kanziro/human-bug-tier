@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 120 |
+| **커밋 수** | 121 |
 | **기간** | 2026-03-20 ~ 2026-08-20|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -149,6 +149,7 @@
 | 118 | 2026-07-19 | [`420b790`](#420b790) | feat(custom-maker): 게시글 전용 수정 페이지와 수정완료 후 게시판 이동 |
 | 119 | 2026-08-18 | [`73dd9bd`](#73dd9bd) | feat(tier-class): 공식 6~9티어 캐릭터 이미지 추가 |
 | 120 | 2026-08-20 | [`13186fd`](#13186fd) | feat(tier-class): 6~9티어 이미지 연결 및 1·2티어 배치 변동 |
+| 121 | 2026-08-20 | [`pending`](#pending) | docs(RDMD): 현재 기능에 맞춰 features·README·일지 갱신 |
 
 ---
 
@@ -2316,6 +2317,24 @@
 
 ---
 
+<a id="pending"></a>
+
+### 121. 2026-08-20 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(RDMD): 현재 기능에 맞춰 features·README·일지 갱신
+- **git**: `git show pending`
+- **범위**: docs / RDMD / README
+- **요약**: 공식 6~9티어 이미지, 1·2티어 재배치, 본인 게시글 수정, 모바일 탭·PWA, 공지 PUT을 features·루트 README·모듈 README·work-history와 일지에 반영했다. 코드 동작은 바꾸지 않았다.
+- **주요 파일**: `README.md`, `RDMD/features/`, `RDMD/summary/work-history.md`, `custom-maker/README.md`
+- **관련 RDMD**: [features/overview.md](../features/overview.md)
+
+[▲ 목차로](#목차)
+
+---
+
 ## 빈 템플릿 (이후 커밋 추가용)
 
 **최신 항목은 커밋 상세 구역의 맨 아래(이 템플릿 바로 위)** 에 붙인다.
@@ -2342,4 +2361,4 @@
 
 ---
 
-**마지막 갱신**: 2026-08-20 · 총 120 항목 · 6~9티어 이미지 연결·1·2티어 배치 · 정렬 = 과거→현재
+**마지막 갱신**: 2026-08-20 · 총 121 항목 · 기능 문서 현행화 · 정렬 = 과거→현재

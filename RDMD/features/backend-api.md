@@ -40,9 +40,9 @@ backend/
 | Base | 설명 | 인증 |
 |------|------|------|
 | `/api/auth` | 가입·로그인·비번재설정·이메일 | 공개 / 일부 토큰 |
-| `/api/tierlists` | 커스텀 게시글 CRUD·좋아요·신고 | 일부 JWT |
+| `/api/tierlists` | 커스텀 게시글 CRUD·좋아요·신고 | 일부 JWT. 수정은 작성자 PUT/PATCH `/:id` |
 | `/api/tierlists/:id/comments` | 댓글·대댓글 | 일부 JWT |
-| `/api/notices` | 공지 | GET 공개 / 쓰기 Admin |
+| `/api/notices` | 공지 | GET 공개 / 쓰기 Admin. 수정은 PUT/PATCH `/:id` |
 | `/api/inquiries` | 문의·답변·신고 | 쓰기 혼합 / 답변 Admin |
 | `/api/admin` | 유저·차단·티어 신고 등 | **requireAdmin** |
 | `/api/notifications` | 알림 | requireAuth |

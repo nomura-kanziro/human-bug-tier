@@ -28,6 +28,7 @@
 ### API
 - GET `/api/notices` — 전체 목록 (공개)
 - POST `/api/notices` — 작성 (Admin only)
+- PUT / PATCH `/api/notices/:id` — 제목·본문·요약·분류 수정 (Admin)
 - PATCH `/api/notices/:id/pin` — 고정 토글 (Admin)
 - DELETE `/api/notices/:id` — 삭제 (Admin)
 

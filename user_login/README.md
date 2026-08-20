@@ -24,6 +24,8 @@
 - `forgot-password` → DB에 `resetPasswordToken` (해시) + 만료시간 저장
 - 이메일로 `?token=xxx` 링크 전달
 - `validate-reset-token` → `reset-password` 순서로 처리
+- `EMAIL_*` 없으면 가짜 성공 없이 **503**, SMTP 실패 시 **502** + 토큰 롤백
+- 미인증 계정도 재설정 가능, 성공 시 인증 처리
 
 ### API 베이스 처리
 `auth_api.js`에서 환경에 따라 자동으로 API 주소를 결정:

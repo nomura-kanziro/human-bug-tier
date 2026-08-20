@@ -40,9 +40,9 @@ notice/
 |--------|------|------|
 | GET | `/api/notices` | 공개 |
 | POST | `/api/notices` | Admin |
+| PUT / PATCH | `/api/notices/:id` | Admin (제목·본문·요약·분류 수정) |
 | PATCH | `/api/notices/:id/pin` | Admin |
 | DELETE | `/api/notices/:id` | Admin |
-| (수정 엔드포인트) | 컨트롤러 기준 | Admin |
 
 보호: `requireAdmin` (`backend_28`)
 
@@ -67,3 +67,4 @@ notice/
 
 - information10~12, 29  
 - backend notice 관련 로그  
+- [02-notice-update-put-record.md](../backend/04-notice/02-notice-update-put-record.md)

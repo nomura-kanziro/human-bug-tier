@@ -11,6 +11,7 @@
 | `Header_Footer.css` | 헤더·푸터·사이드 메뉴 |
 | `header.html` | 네비게이션 마크업 (동적 주입) |
 | `footer.html` | 푸터·문의 링크 |
+| `manifest.webmanifest` / `sw.js` | PWA 홈 화면 설치 (API는 네트워크 우선) |
 
 ## 핵심 개념
 

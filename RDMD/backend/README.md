@@ -41,6 +41,7 @@ RDMD/backend/
 | [02-tier-post-comments-api-record.md](./02-tierlists/02-tier-post-comments-api-record.md) | 9 | TierPostComment · 댓글 API |
 | [03-tierlist-delete-report-like-record.md](./02-tierlists/03-tierlist-delete-report-like-record.md) | 10 | 삭제·신고·추천·연쇄 삭제 |
 | [04-tier-like-dedupe-record.md](./02-tierlists/04-tier-like-dedupe-record.md) | 12 | TierLike 중복 추천 방지 |
+| [05-tierlist-owner-put-record.md](./02-tierlists/05-tierlist-owner-put-record.md) | — | 작성자 PUT 게시글 수정 |
 
 ## 03-auth — 회원 인증
 
@@ -56,6 +57,7 @@ RDMD/backend/
 | 파일 | legacy | 요약 |
 |------|--------|------|
 | [01-notice-crud-static-serve-record.md](./04-notice/01-notice-crud-static-serve-record.md) | 8 | Notice CRUD · server 정적 서빙 |
+| [02-notice-update-put-record.md](./04-notice/02-notice-update-put-record.md) | — | 관리자 공지 PUT/PATCH 수정 |
 
 ## 05-inquiry — 문의
 

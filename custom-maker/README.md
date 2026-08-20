@@ -5,7 +5,8 @@
 ## 주요 기능
 
 ### 1. 커스텀 티어 제작 (custom-maker.html)
-- **드래그 앤 드롭**으로 캐릭터 배치
+- **드래그 앤 드롭**으로 캐릭터 배치 (데스크톱)
+- 휴대폰: **캐릭터 탭 → 티어 칸 탭**으로 배치, 풀 탭으로 되돌리기
 - 9개 티어 단계 지원 (1등급 ~ 9등급)
 - 좌측 캐릭터 풀 ↔ 우측 티어 보드
 - **초기화**, **다운로드** 기능
@@ -24,6 +25,12 @@
 - 티어 구성 전체 보기
 - 댓글 + 대댓글 작성
 - 작성자 게시글 필터 (`@작성자` 검색)
+- 본인 글 **수정** → `post_edit.html` (제작 UI 재사용, 저장 후 게시판 목록)
+
+### 4. 게시글 수정 (post_edit.html)
+- 작성자만 PUT `/api/tierlists/:id`
+- 저장된 `tierData`를 보드에 복원 후 다시 배치
+- 캐릭터는 이름 기반 안정 id로 매칭
 
 ## 작동 원리
 
@@ -52,12 +59,14 @@ pdf.addImage(imgData, 'PNG', ...);
 3. 게시판 목록: GET `/api/tierlists`
 4. 상세: GET `/api/tierlists/:id`
 5. 댓글: `/api/tierlists/:id/comments`
+6. 본인 수정: PUT `/api/tierlists/:id`
 
 ## 파일 구조
 
 ```
 custom-maker/
 ├── custom-maker.html / .js / .css     # 제작 화면
+├── post_edit.html                     # 본인 게시글 수정
 └── custom-maker_post/
     ├── custom-maker_post.html / .js   # 게시판 목록
     ├── post_detail.html / .js         # 상세 + 댓글

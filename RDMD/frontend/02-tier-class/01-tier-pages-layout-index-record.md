@@ -15,6 +15,7 @@ feature: tier-class
 |:----:|------|------|
 | 01 | [../01-common/01-header-footer-getbasepath-record.md](../01-common/01-header-footer-getbasepath-record.md) | Header/Footer 공통화, tier 페이지 경로·레이아웃 보정 |
 | 02 | [../01-common/02-project-structure-overview-record.md](../01-common/02-project-structure-overview-record.md) | 프로젝트 구조·tier-class 폴더 설명 |
+| 03 | [02-tier6-9-images-placement-record.md](./02-tier6-9-images-placement-record.md) | 6~9티어 이미지 · 1·2티어 재배치 |
 
 ## 코드 위치
 

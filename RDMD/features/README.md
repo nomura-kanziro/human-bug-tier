@@ -10,7 +10,7 @@
 | [overview.md](./overview.md) | 전체 기능 맵 · 폴더 대응 · 사용자 여정 |
 | [common-infra.md](./common-infra.md) | common.js, Header/Footer, 경로·API Base |
 | [tier-class.md](./tier-class.md) | 공식 1~9 티어표 |
-| [custom-maker.md](./custom-maker.md) | 커스텀 제작 · 게시판 · 댓글 |
+| [custom-maker.md](./custom-maker.md) | 커스텀 제작 · 게시판 · 댓글 · 본인 글 수정 |
 | [auth.md](./auth.md) | 회원가입 · 로그인 · 비번 재설정 |
 | [notice.md](./notice.md) | 공지 · 새 소식 · 핀 |
 | [inquiry.md](./inquiry.md) | 문의하기 · 답변 · 신고 |

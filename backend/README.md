@@ -58,8 +58,8 @@ backend/
 | 경로                  | 설명                     | 인증 |
 |-----------------------|--------------------------|------|
 | `/api/auth`           | 로그인, 회원가입, 비번재설정 | 공개/일부 JWT |
-| `/api/tierlists`      | 티어 게시글 CRUD, 좋아요, 신고 | 일부 JWT |
-| `/api/notices`        | 공지사항                 | GET 공개, 나머지 Admin |
+| `/api/tierlists`      | 티어 게시글 CRUD(본인 PUT 수정), 좋아요, 신고 | 일부 JWT |
+| `/api/notices`        | 공지사항 (Admin PUT 수정) | GET 공개, 나머지 Admin |
 | `/api/inquiries`      | 문의 + 답변              | 일부 Admin |
 | `/api/admin`          | 관리자 전용 (유저, 차단, 신고) | requireAdmin |
 | `/api/notifications`  | 알림                     | requireAuth |

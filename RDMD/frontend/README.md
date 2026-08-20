@@ -41,6 +41,7 @@ RDMD/frontend/
 | 파일 | legacy | 요약 |
 |------|--------|------|
 | [01-tier-pages-layout-index-record.md](./02-tier-class/01-tier-pages-layout-index-record.md) | 1 (교차) | 티어 페이지 레이아웃 관련 인덱스 |
+| [02-tier6-9-images-placement-record.md](./02-tier-class/02-tier6-9-images-placement-record.md) | — | 6~9티어 이미지 연결, 1·2티어 재배치 |
 
 ## 03-custom-maker
 
@@ -52,6 +53,7 @@ RDMD/frontend/
 | [04-board-api-search-report-record.md](./03-custom-maker/04-board-api-search-report-record.md) | 19 | 게시판 API·검색·신고 |
 | [05-post-detail-comments-likes-record.md](./03-custom-maker/05-post-detail-comments-likes-record.md) | 20 | 상세·댓글·좋아요 |
 | [06-maker-upload-to-board-record.md](./03-custom-maker/06-maker-upload-to-board-record.md) | 21 | 제작→게시판 업로드 |
+| [07-post-edit-and-mobile-tap-record.md](./03-custom-maker/07-post-edit-and-mobile-tap-record.md) | — | 본인 글 수정 · 모바일 탭 배치 |
 
 ## 04-notice
 
