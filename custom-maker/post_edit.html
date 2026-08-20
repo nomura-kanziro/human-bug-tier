@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>게시글 수정 - 커스텀 티어</title>
+  <link rel="icon" href="../tier-image/logo.webp" type="image/webp">
+  <link rel="stylesheet" href="../Header_Footer.css">
+  <link rel="stylesheet" href="custom-maker.css">
+  <script src="../common.js"></script>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body data-page="post-edit">
+
+  <div id="header-placeholder"></div>
+
+  <div class="maker-container maker-container--edit">
+    <h1 id="maker-page-title">
+      <img src="../tier-image/human_bug_eyes_icon.gif" class="eyes_icon" alt="">
+      게시글 수정
+    </h1>
+    <p class="mobile-maker-help">
+      게시된 티어표를 수정합니다. 모바일: 캐릭터를 <strong>탭</strong>해 선택한 뒤 티어 칸을 <strong>탭</strong>하세요.
+    </p>
+    <div id="edit-mode-banner" class="edit-mode-banner" hidden></div>
+    <div id="mobile-place-hint" class="mobile-place-hint" hidden></div>
+
+    <div class="tier-nav">
+      <button id="prev-btn" type="button">← 이전 티어</button>
+      <h2 id="tier-title">1등급 - 신계 / 슈퍼 그랜드 마스터</h2>
+      <button id="next-btn" type="button">다음 티어 →</button>
+    </div>
+
+    <div id="tier-capture-area">
+      <div id="tier-list" class="tier-list"></div>
+    </div>
+
+    <div class="action-bar">
+      <button id="reset-btn" class="btn btn-reset" type="button">
+        <span class="btn-text">초기화</span>
+        <span class="btn-icon">🗑️</span>
+      </button>
+
+      <div class="btn-dropdown">
+        <button id="download-btn" class="btn btn-download" type="button">
+          <span class="btn-text">다운로드</span>
+          <span class="btn-icon">⬇️</span>
+        </button>
+        <div class="dropdown-menu" id="download-menu">
+          <button class="dropdown-item" type="button" data-type="png">PNG로 저장</button>
+          <button class="dropdown-item" type="button" data-type="pdf">PDF로 저장</button>
+          <button class="dropdown-item" type="button" data-type="json">JSON으로 저장</button>
+        </div>
+      </div>
+
+      <!-- 업로드가 아닌 수정 전용 -->
+      <button id="upload-btn" class="btn btn-upload btn-edit-done" type="button">
+        <span class="btn-text">수정완료</span>
+        <span class="btn-icon">✓</span>
+      </button>
+    </div>
+
+    <div class="character-pool">
+      <h3>📦 전체 캐릭터 풀 <span class="pool-hint-pc">(드래그해서 위로)</span><span class="pool-hint-mobile">(탭으로 선택)</span></h3>
+      <div id="character-pool" class="characters-pool"></div>
+    </div>
+  </div>
+
+  <div id="footer-placeholder"></div>
+
+  <script src="custom-maker.js"></script>
+</body>
+</html>

@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 111 |
+| **커밋 수** | 119 |
 | **기간** | 2026-03-20 ~ 2026-08-18|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -139,7 +139,15 @@
 | 108 | 2026-07-18 | [`28b4d6d`](#28b4d6d) | docs(env): add root and backend .env.example with dual dotenv load |
 | 109 | 2026-07-18 | [`d43cf11`](#d43cf11) | feat(custom-maker): mobile tap-to-place characters and maker layout |
 | 110 | 2026-07-18 | [`7fa3438`](#7fa3438) | fix(ui): goHome always to index, tier mobile CSS, coming-soon nav |
-| 111 | 2026-08-18 | [`73dd9bd`](#73dd9bd) | feat(tier-class): 공식 6~9티어 캐릭터 이미지 추가 |
+| 111 | 2026-07-19 | [`8aa6410`](#8aa6410) | fix(backend): load backend .env with override so MONGO_URI is not blanked by ... |
+| 112 | 2026-07-19 | [`361f2d6`](#361f2d6) | fix(auth): stack logo above login box on mobile portrait |
+| 113 | 2026-07-19 | [`fa3de2d`](#fa3de2d) | fix(auth): require email config for account recovery and surface send failures |
+| 114 | 2026-07-19 | [`f883c33`](#f883c33) | feat(admin): add notice edit (PUT/PATCH) on management page |
+| 115 | 2026-07-19 | [`d9a4666`](#d9a4666) | 문서(규칙): 커밋 메시지 한국어 필수·영어 전용 작성 금지 |
+| 116 | 2026-07-19 | [`ef43300`](#ef43300) | feat(custom-maker): 본인 게시글 수정(PUT) 및 상세·메이커 연동 |
+| 117 | 2026-07-19 | [`603a962`](#603a962) | docs(rules): 커밋 메시지 type 영어·콜론 뒤 한국어로 정리 |
+| 118 | 2026-07-19 | [`420b790`](#420b790) | feat(custom-maker): 게시글 전용 수정 페이지와 수정완료 후 게시판 이동 |
+| 119 | 2026-08-18 | [`73dd9bd`](#73dd9bd) | feat(tier-class): 공식 6~9티어 캐릭터 이미지 추가 |
 
 ---
 
@@ -2125,9 +2133,155 @@
 
 ---
 
+<a id="8aa6410"></a>
+
+### 111. 2026-07-19 — `8aa6410`
+
+- **hash (short)**: `8aa6410`
+- **hash (full)**: `8aa641065a25fd56ae9352031cb023655a827a0e`
+- **author**: nomura
+- **message**: fix(backend): load backend .env with override so MONGO_URI is not blanked by root
+- **git**: `git show pending-mongo-env`
+- **범위**: backend / env
+- **요약**: 루트 .env 의 빈 MONGO_URI= 때문에 backend URI가 무시되던 dotenv 순서를 고쳤다. backend/.env 를 override로 우선 적용하고, DB 미연결 시 공지 API가 503으로 원인을 안내하도록 했다.
+- **주요 파일**: `backend/server.js`, `backend/controllers/noticeController.js`, `.env.example`, `backend/.env.example`
+- **관련 RDMD**: _(env 로드 · 공지 조회)_
+
+[▲ 목차로](#목차)
+
+---
+
+---
+
+<a id="361f2d6"></a>
+
+### 112. 2026-07-19 — `361f2d6`
+
+- **hash (short)**: `361f2d6`
+- **hash (full)**: `361f2d6c582edd5c5ee14cc7788ee1f5417c0b53`
+- **author**: nomura
+- **message**: fix(auth): stack logo above login box on mobile portrait
+- **git**: `git show 361f2d6`
+- **범위**: frontend / auth / mobile
+- **요약**: 모바일 9:16(세로)에서 body 기본 flex-row 때문에 로고·제목과 로그인 상자가 한 단에 붙던 문제를 flex-direction:column과 gap으로 세로 분리했다. 로그인·회원가입·계정 찾기(재설정 포함) CSS에 동일 적용.
+- **주요 파일**: `user_login/login.css`, `user_login/sign_up.css`, `user_login/find_account.css`
+- **관련 RDMD**: _(auth 모바일 레이아웃)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="fa3de2d"></a>
+
+### 113. 2026-07-19 — `fa3de2d`
+
+- **hash (short)**: `fa3de2d`
+- **hash (full)**: `fa3de2d9ceb80b3a1ad13490da63d429b2f50896`
+- **author**: nomura
+- **message**: fix(auth): require email config for account recovery and surface send failures
+- **git**: `git show fa3de2d`
+- **범위**: backend / auth / frontend / deploy
+- **요약**: Render에서 비밀번호 찾기 메일이 안 오던 문제를 완화했다. EMAIL_* 미설정 시 가짜 성공 대신 503, SMTP 실패 시 502와 토큰 롤백, 미인증 계정도 재설정 허용(성공 시 인증 처리), 닉네임 대소문자 무시, /health·기동 로그·DEPLOY 안내를 보강했다.
+- **주요 파일**: `backend/utils/mail.js`, `backend/controllers/authController.js`, `backend/server.js`, `user_login/find_account.js`, `DEPLOY.md`, `render.yaml`
+- **관련 RDMD**: _(auth 메일 · 비밀번호 재설정)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="f883c33"></a>
+
+### 114. 2026-07-19 — `f883c33`
+
+- **hash (short)**: `f883c33`
+- **hash (full)**: `f883c337534e8ebdd24b4b951a30d0f80a6279dd`
+- **author**: nomura
+- **message**: feat(admin): add notice edit (PUT/PATCH) on management page
+- **git**: `git show f883c33`
+- **범위**: backend / admin / notice
+- **요약**: 관리자 공지 관리에 수정 기능을 추가했다. requireAdmin PUT/PATCH /api/notices/:id 로 제목·본문·요약·분류를 갱신하고, 목록의 수정 버튼으로 폼을 채워 저장·취소할 수 있게 했다.
+- **주요 파일**: `backend/controllers/noticeController.js`, `backend/routes/noticeRoutes.js`, `admin/comments/comment-management.js`, `comment-management.html`, `comment-management.css`
+- **관련 RDMD**: _(admin 공지 수정)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="d9a4666"></a>
+
+### 115. 2026-07-19 — `d9a4666`
+
+- **hash (short)**: `d9a4666`
+- **hash (full)**: `d9a46667efb99be3c303e51b7b522bf42b3958a1`
+- **author**: nomura
+- **message**: 문서(규칙): 커밋 메시지 한국어 필수·영어 전용 작성 금지
+- **git**: `git show d9a4666`
+- **범위**: docs / team / .agents
+- **요약**: 팀·에이전트 규칙에 커밋 메시지와 commit_history message를 한국어로 쓰도록 명시했다. 영어 전용 메시지는 금지하고, team·.agents·commit_history·development 가이드 예시를 맞췄다.
+- **주요 파일**: `team/04-prohibitions.md`, `team/01-rules.md`, `team/03-coding-style.md`, `team/05-guidelines.md`, `team/06-checklist.md`, `.agents/common-rules.md`, `RDMD/commit_history/README.md`, `RDMD/guides/development.md`
+- **관련 RDMD**: _(팀 커밋 규칙)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="ef43300"></a>
+
+### 116. 2026-07-19 — `ef43300`
+
+- **hash (short)**: `ef43300`
+- **hash (full)**: `ef43300e9da229e6ee9d76e92f096584ee58b441`
+- **author**: nomura
+- **message**: feat(custom-maker): 본인 게시글 수정(PUT) 및 상세·메이커 연동
+- **git**: `git show ef43300`
+- **범위**: backend / frontend / custom-maker
+- **요약**: 커스텀 메이커 게시판에서 작성자만 게시글을 수정할 수 있게 했다. 상세의 이벤트·삭제 사이에 수정 버튼을 두고, 메이커 ?edit= 로 배치를 불러 PUT 저장한다.
+- **주요 파일**: `backend/controllers/tierController.js`, `backend/routes/tierRoutes.js`, `custom-maker/custom-maker.js`, `custom-maker_post/post_detail.*`
+- **관련 RDMD**: _(custom-maker 게시글 수정)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="603a962"></a>
+
+### 117. 2026-07-19 — `603a962`
+
+- **hash (short)**: `603a962`
+- **hash (full)**: `603a962d752dedcc30404cef03e389596c54e22d`
+- **author**: nomura
+- **message**: docs(rules): 커밋 메시지 type 영어·콜론 뒤 한국어로 정리
+- **git**: `git show 603a962`
+- **범위**: docs / team / .agents
+- **요약**: 커밋 메시지 규칙을 type(scope)는 영어(feat/fix/docs 등), 콜론 뒤 설명은 한국어로 명확히 했다. team·.agents·commit_history·development 가이드 예시를 맞췄다.
+- **주요 파일**: `team/04-prohibitions.md`, `team/01-rules.md`, `team/03-coding-style.md`, `team/05-guidelines.md`, `team/06-checklist.md`, `.agents/common-rules.md`, `RDMD/commit_history/README.md`, `RDMD/guides/development.md`
+- **관련 RDMD**: _(팀 커밋 규칙)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="420b790"></a>
+
+### 118. 2026-07-19 — `420b790`
+
+- **hash (short)**: `420b790`
+- **hash (full)**: `420b7901466ec2e00ad32ce2fef7a36a2ec4b66c`
+- **author**: nomura
+- **message**: feat(custom-maker): 게시글 전용 수정 페이지와 수정완료 후 게시판 이동
+- **git**: `git show 420b790`
+- **범위**: frontend / custom-maker
+- **요약**: 게시글 수정을 전용 post_edit 페이지로 분리하고, 게시된 티어표를 복원해 수정완료로 저장한다. 캐릭터 안정 id·이름 매칭으로 배치 복원을 고치고, 수정 성공 시 게시판 목록으로 이동한다.
+- **주요 파일**: `custom-maker/post_edit.html`, `custom-maker/custom-maker.js`, `custom-maker/custom-maker.css`, `custom-maker_post/post_detail.js`
+- **관련 RDMD**: _(custom-maker 게시글 수정 페이지)_
+
+[▲ 목차로](#목차)
+
+---
+
 <a id="73dd9bd"></a>
 
-### 111. 2026-08-18 — `73dd9bd`
+### 119. 2026-08-18 — `73dd9bd`
 
 - **hash (short)**: `73dd9bd`
 - **hash (full)**: `73dd9bd41cdb6173bfded59606090aa455846cce`
@@ -2169,4 +2323,4 @@
 
 ---
 
-**마지막 갱신**: 2026-08-18 · 총 111 항목 · 공식 6~9티어 이미지 추가 · 정렬 = 과거→현재
+**마지막 갱신**: 2026-08-18 · 총 119 항목 · 공식 6~9티어 이미지 추가 · 정렬 = 과거→현재

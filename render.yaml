@@ -19,11 +19,11 @@ services:
       - key: JWT_SECRET
         sync: false
         generateValue: true
+      # 비밀번호 찾기·가입 인증 메일용 (Gmail 앱 비밀번호). 미설정 시 찾기 API는 503.
       - key: EMAIL_USER
         sync: false
       - key: EMAIL_APP_PASSWORD
         sync: false
-      # 배포 후 선택적으로 설정 (이메일 링크 생성에 도움)
-      # - key: APP_URL
-      #   value: https://your-app.onrender.com
-      # 자세한 설명은 backend/.env.example 참조
+      # 메일 본문 절대 링크 (Render 공개 URL). 미설정 시 요청 Host로 생성.
+      - key: APP_URL
+        sync: false

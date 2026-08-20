@@ -25,7 +25,8 @@
 ## 커밋 · 브랜치
 
 - 한 커밋 = 한 의도  
-- `feat` / `fix` / `docs` / `chore` 접두  
+- 접두(type): **`feat` / `fix` / `docs` / `chore`** 등 **영어**  
+- 콜론 뒤 설명: **한국어** — 예: `feat(admin): 공지 수정 기능 추가` ([04-prohibitions](./04-prohibitions.md))  
 - `main`/`master` 직푸시 자제 (팀 운영 시 PR)  
 - **필수**: 커밋·푸시 전 `RDMD/commit_history/{본인}.md` 작성  
   → [RDMD/commit_history/README.md](../RDMD/commit_history/README.md)

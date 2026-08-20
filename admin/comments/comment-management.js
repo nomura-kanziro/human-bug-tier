@@ -34,6 +34,8 @@ let currentPage = 1;
 const NOTICE_ITEMS_PER_PAGE = 10;
 let currentNoticePage = 1;
 let currentNoticeFilter = 'all';
+/** 수정 중인 공지 id (null이면 신규 등록 모드) */
+let editingNoticeId = null;
 
 function getFilteredAdminNotices() {
   if (currentNoticeFilter === 'all') return adminNotices;
@@ -227,6 +229,7 @@ function renderAdminNoticeList() {
         <td>${escapeHtml(notice.summary || '-')}</td>
         <td>${formatDate(notice.createdAt)}</td>
         <td style="white-space:nowrap;">
+          <button type="button" class="notice-edit-btn" data-edit-id="${id}">수정</button>
           ${notice.isPinned
             ? `<button class="pin-btn unpin" data-pin-id="${id}">고정 해제</button>`
             : `<button class="pin-btn" data-pin-id="${id}" ${canPin ? '' : 'disabled style="opacity:0.4;cursor:not-allowed;"'}>📌 고정</button>`
@@ -235,6 +238,10 @@ function renderAdminNoticeList() {
         </td>
       </tr>`;
   }).join('');
+
+  tbody.querySelectorAll('[data-edit-id]').forEach(btn => {
+    btn.addEventListener('click', () => startEditAdminNotice(btn.dataset.editId));
+  });
 
   tbody.querySelectorAll('[data-notice-id]').forEach(btn => {
     btn.addEventListener('click', () => deleteAdminNotice(btn.dataset.noticeId));
@@ -247,6 +254,79 @@ function renderAdminNoticeList() {
   });
 
   renderNoticePagination(totalPages);
+}
+
+function clearNoticeFormFields() {
+  const titleEl = document.getElementById('notice-title-input');
+  const summaryEl = document.getElementById('notice-summary-input');
+  const contentEl = document.getElementById('notice-content-input');
+  const categoryEl = document.getElementById('notice-category');
+  if (titleEl) titleEl.value = '';
+  if (summaryEl) summaryEl.value = '';
+  if (contentEl) contentEl.value = '';
+  if (categoryEl) categoryEl.value = 'notice';
+}
+
+function updateNoticeFormModeUI() {
+  const isEdit = Boolean(editingNoticeId);
+  const heading = document.getElementById('notice-section-heading');
+  const modeLabel = document.getElementById('notice-form-mode-label');
+  const postBtn = document.getElementById('post-notice-btn');
+  const cancelBtn = document.getElementById('cancel-notice-edit-btn');
+  const formCard = document.getElementById('notice-form-card');
+  const editIdEl = document.getElementById('notice-edit-id');
+
+  if (editIdEl) editIdEl.value = editingNoticeId || '';
+  if (heading) heading.textContent = isEdit ? '✏️ 공지 수정' : '📢 공지 올리기';
+  if (modeLabel) modeLabel.textContent = isEdit ? '공지 수정 중' : '공지 작성';
+  if (postBtn) postBtn.textContent = isEdit ? '💾 수정 저장' : '📢 공지 등록';
+  if (cancelBtn) cancelBtn.hidden = !isEdit;
+  if (formCard) formCard.classList.toggle('is-editing', isEdit);
+}
+
+function cancelEditAdminNotice() {
+  editingNoticeId = null;
+  clearNoticeFormFields();
+  updateNoticeFormModeUI();
+}
+
+async function startEditAdminNotice(noticeId) {
+  let notice = adminNotices.find(n => String(n._id || n.id) === String(noticeId));
+
+  // 목록에 본문이 없거나 비어 있으면 상세 조회
+  if (!notice || !(notice.content || '').trim()) {
+    try {
+      const response = await fetch(`${getApiBase()}/api/notices/${noticeId}`);
+      if (!response.ok) throw new Error('공지 조회 실패');
+      notice = await response.json();
+      const index = adminNotices.findIndex(n => String(n._id || n.id) === String(noticeId));
+      if (index !== -1) adminNotices[index] = notice;
+      else adminNotices.unshift(notice);
+    } catch (err) {
+      console.error(err);
+      alert('❌ 공지 내용을 불러올 수 없습니다.');
+      return;
+    }
+  }
+
+  editingNoticeId = String(notice._id || notice.id);
+  const titleEl = document.getElementById('notice-title-input');
+  const summaryEl = document.getElementById('notice-summary-input');
+  const contentEl = document.getElementById('notice-content-input');
+  const categoryEl = document.getElementById('notice-category');
+
+  if (titleEl) titleEl.value = notice.title || '';
+  if (summaryEl) summaryEl.value = notice.summary || '';
+  if (contentEl) contentEl.value = notice.content || '';
+  if (categoryEl) categoryEl.value = notice.category === 'news' ? 'news' : 'notice';
+
+  updateNoticeFormModeUI();
+
+  const formCard = document.getElementById('notice-form-card');
+  if (formCard) {
+    formCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  if (titleEl) titleEl.focus();
 }
 
 async function toggleAdminNoticePin(noticeId) {
@@ -281,30 +361,49 @@ async function postAdminNotice() {
     return;
   }
 
-  try {
-    const response = await fetch(`${getApiBase()}/api/notices`, {
-      method: 'POST',
-      headers: getAdminAuthHeaders(),
-      body: JSON.stringify({
+  const isEdit = Boolean(editingNoticeId);
+  const url = isEdit
+    ? `${getApiBase()}/api/notices/${editingNoticeId}`
+    : `${getApiBase()}/api/notices`;
+  const method = isEdit ? 'PUT' : 'POST';
+  const body = isEdit
+    ? { title, summary, content, category }
+    : {
         title,
         summary,
         content,
         category,
         author: localStorage.getItem('adminName') || '관리자',
-      }),
+      };
+
+  try {
+    const response = await fetch(url, {
+      method,
+      headers: getAdminAuthHeaders(),
+      body: JSON.stringify(body),
     });
     const data = await response.json();
 
     if (response.ok && data.success) {
-      adminNotices.unshift(data.notice);
-      currentNoticePage = 1;
-      renderAdminNoticeList();
-      document.getElementById('notice-title-input').value = '';
-      document.getElementById('notice-summary-input').value = '';
-      document.getElementById('notice-content-input').value = '';
-      alert(`✅ ${NOTICE_CATEGORY_LABELS[category]} 공지가 등록되었습니다.`);
+      if (isEdit) {
+        const index = adminNotices.findIndex(
+          n => String(n._id || n.id) === String(editingNoticeId)
+        );
+        if (index !== -1) adminNotices[index] = data.notice;
+        else adminNotices.unshift(data.notice);
+        cancelEditAdminNotice();
+        renderAdminNoticeList();
+        alert(`✅ ${NOTICE_CATEGORY_LABELS[category] || category} 공지가 수정되었습니다.`);
+      } else {
+        adminNotices.unshift(data.notice);
+        currentNoticePage = 1;
+        clearNoticeFormFields();
+        updateNoticeFormModeUI();
+        renderAdminNoticeList();
+        alert(`✅ ${NOTICE_CATEGORY_LABELS[category]} 공지가 등록되었습니다.`);
+      }
     } else {
-      alert('❌ ' + (data.error || '공지 등록 실패'));
+      alert('❌ ' + (data.error || (isEdit ? '공지 수정 실패' : '공지 등록 실패')));
     }
   } catch (err) {
     console.error(err);
@@ -323,7 +422,10 @@ async function deleteAdminNotice(noticeId) {
     const data = await response.json();
 
     if (response.ok && data.success) {
-      adminNotices = adminNotices.filter(n => (n._id || n.id) !== noticeId);
+      adminNotices = adminNotices.filter(n => String(n._id || n.id) !== String(noticeId));
+      if (editingNoticeId && String(editingNoticeId) === String(noticeId)) {
+        cancelEditAdminNotice();
+      }
       renderAdminNoticeList();
       alert('✅ 공지가 삭제되었습니다.');
     } else {
@@ -650,6 +752,13 @@ document.addEventListener('DOMContentLoaded', () => {
   if (postNoticeBtn) {
     postNoticeBtn.addEventListener('click', postAdminNotice);
   }
+
+  const cancelNoticeEditBtn = document.getElementById('cancel-notice-edit-btn');
+  if (cancelNoticeEditBtn) {
+    cancelNoticeEditBtn.addEventListener('click', cancelEditAdminNotice);
+  }
+
+  updateNoticeFormModeUI();
 
   const noticeListFilter = document.getElementById('notice-list-filter');
   if (noticeListFilter) {

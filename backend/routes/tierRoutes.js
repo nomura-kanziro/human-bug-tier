@@ -4,6 +4,7 @@ const {
   getAllTierLists,
   getTierListById,
   createTierList,
+  updateTierList,
   likeTierList,
   deleteTierList,
   reportTierList,
@@ -29,6 +30,8 @@ router.post('/:id/report', reportTierList);
 router.get('/:id', getTierListById);
 router.post('/', createTierList);
 router.patch('/:id/like', likeTierList);
+router.put('/:id', updateTierList);
+router.patch('/:id', updateTierList);
 router.delete('/:id', deleteTierList);
 
 module.exports = router;

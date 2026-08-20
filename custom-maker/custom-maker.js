@@ -48,6 +48,51 @@ function saveCurrentTierState() {
   saveToLocalStorage();
 }
 
+/** 풀 카탈로그에서 저장 데이터와 캐릭터 매칭 (id 또는 이름 — 과거 랜덤 id 호환) */
+function resolveCharacterFromCatalog(data) {
+  if (!data) return null;
+  if (data.id != null && data.id !== '') {
+    const byId = allCharacters.find(c => String(c.id) === String(data.id));
+    if (byId) return byId;
+  }
+  const name = (data.name || '').trim();
+  if (name) {
+    const byName = allCharacters.find(c => c.name === name);
+    if (byName) return byName;
+  }
+  return null;
+}
+
+/** 게시글/로컬 저장 tierState를 현재 카탈로그 id로 재매핑 */
+function rematchTierStateToCatalog(state) {
+  const next = {};
+  Object.entries(state || {}).forEach(([key, chars]) => {
+    if (!Array.isArray(chars)) return;
+    next[key] = chars
+      .map((data) => {
+        const match = resolveCharacterFromCatalog(data);
+        if (match) {
+          return { id: match.id, name: match.name, img: match.img };
+        }
+        // 카탈로그에 없어도 게시 당시 데이터로 표시·편집 가능
+        if (data?.name) {
+          return {
+            id: data.id != null && data.id !== '' ? String(data.id) : stableCharId(data.name),
+            name: data.name,
+            img: data.img || '',
+          };
+        }
+        return null;
+      })
+      .filter(Boolean);
+  });
+  return next;
+}
+
+function stableCharId(name) {
+  return `char-${String(name || 'unknown').trim().replace(/\s+/g, '_')}`;
+}
+
 // 데이터 → DOM: 저장된 캐릭터를 현재 tier 드롭존에 복원
 // ✅ BUG2 FIX: 존을 먼저 비운 후 append해서 중복 방지
 function loadTierStateToDOM() {
@@ -65,10 +110,18 @@ function loadTierStateToDOM() {
     if (!savedData || savedData.length === 0) return;
 
     savedData.forEach(data => {
-      const original = allCharacters.find(c => c.id === data.id);
+      const original = resolveCharacterFromCatalog(data);
       if (original) {
-        const div = createCharElement(original);
-        zone.appendChild(div);
+        zone.appendChild(createCharElement(original));
+        return;
+      }
+      // 이름/이미지로 직접 복원 (수정 모드: 과거 게시 데이터)
+      if (data?.name) {
+        zone.appendChild(createCharElement({
+          id: data.id != null && data.id !== '' ? String(data.id) : stableCharId(data.name),
+          name: data.name,
+          img: data.img || '',
+        }));
       }
     });
   });
@@ -116,13 +169,18 @@ function createCharElement(char) {
 }
 
 // ─── tier-class에서 캐릭터 로드 ──────────────────────────────
+function getTierClassHtmlUrl(tierNum) {
+  const base = typeof getBasePath === 'function' ? getBasePath() : '../';
+  return `${base}tier-class/tier${tierNum}.html`;
+}
+
 async function loadCharactersFromTierClass() {
   console.log('🔄 tier-class 1~9 전체 캐릭터 불러오는 중...');
   allCharacters = [];
 
   for (let i = 1; i <= 9; i++) {
     try {
-      const response = await fetch(`../tier-class/tier${i}.html`);
+      const response = await fetch(getTierClassHtmlUrl(i));
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
 
       const htmlText = await response.text();
@@ -138,8 +196,9 @@ async function loadCharactersFromTierClass() {
                  : img ? (img.getAttribute('alt') || '이름 없음') : '';
 
         if (img && name) {
+          // 이름 기반 안정 id — 매 로드 랜덤 id면 게시글 수정 시 배치 복원 불가
           allCharacters.push({
-            id: `char-${i}-${Date.now()}-${Math.random().toString(36).substr(2, 5)}`,
+            id: stableCharId(name),
             name,
             img: img.src.replace(window.location.origin, '..')
           });
@@ -184,14 +243,19 @@ function renderCharacterPool() {
   const pool = document.getElementById('character-pool');
   pool.innerHTML = '';
 
-  // tierState에 배치된 캐릭터는 풀에서 제외
+  // tierState에 배치된 캐릭터는 풀에서 제외 (id + 이름 — 수정 모드 재매칭 호환)
   const placedIds = new Set();
+  const placedNames = new Set();
   Object.values(tierState).forEach(arr => {
-    if (Array.isArray(arr)) arr.forEach(c => placedIds.add(c.id));
+    if (!Array.isArray(arr)) return;
+    arr.forEach((c) => {
+      if (c?.id != null) placedIds.add(String(c.id));
+      if (c?.name) placedNames.add(String(c.name).trim());
+    });
   });
 
   allCharacters.forEach(char => {
-    if (placedIds.has(char.id)) return;
+    if (placedIds.has(String(char.id)) || placedNames.has(char.name)) return;
     pool.appendChild(createCharElement(char));
   });
 }
@@ -589,14 +653,46 @@ async function downloadAllTiersAsPDF() {
 
 // ─── 페이지 초기 로드 ────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
+  // 구 링크 custom-maker.html?edit=ID → 전용 수정 페이지로 이동
+  if (!isPostEditPage()) {
+    const legacyEdit = new URLSearchParams(window.location.search).get('edit');
+    if (legacyEdit?.trim()) {
+      const base = typeof getBasePath === 'function' ? getBasePath() : '';
+      window.location.replace(
+        `${base}custom-maker/post_edit.html?id=${encodeURIComponent(legacyEdit.trim())}`
+      );
+      return;
+    }
+  }
+
   await loadCharactersFromTierClass();
-  loadFromLocalStorage();
+
+  if (isPostEditPage()) {
+    const editId = getEditPostIdFromUrl() || getEditPostIdFromSession();
+    if (!editId) {
+      alert('수정할 게시글이 지정되지 않았습니다.');
+      window.location.href =
+        (typeof getBasePath === 'function' ? getBasePath() : '') +
+        'custom-maker/custom-maker_post/custom-maker_post.html';
+      return;
+    }
+    const ok = await enterEditMode(editId);
+    if (!ok) {
+      // 전용 수정 페이지에서는 빈 메이커로 두지 않고 게시판으로 복귀
+      window.location.href = getCustomMakerBoardUrl();
+      return;
+    }
+  } else {
+    loadFromLocalStorage();
+  }
+
   renderTier();
   renderCharacterPool();
   enableDragAndDrop();   // pool / tierList에 위임 리스너 등록
   enableTapToPlace();    // 모바일: 탭 선택 → 티어 칸 탭 배치
   updateUploadButtonState();
-  console.log('✅ custom-maker: 초기 로드 완료');
+  updateEditModeChrome();
+  console.log('✅ custom-maker: 초기 로드 완료', editingPostId ? `(수정 ${editingPostId})` : '(신규)');
 });
 
 // ============================================================
@@ -638,10 +734,30 @@ function downloadAllTiersAsJSON() {
 }
 
 // ============================================================
-// 게시판 업로드 (로그인 필수)
+// 게시판 업로드 / 수정 (로그인 필수, 수정은 본인 글만)
 // ============================================================
+/** 수정 모드 게시글 id (null이면 신규 업로드) */
+let editingPostId = null;
+let editingDefaults = { title: '', description: '' };
+const EDIT_POST_SESSION_KEY = 'customMakerEditPost';
+
+/** 전용 수정 페이지(post_edit.html) 여부 */
+function isPostEditPage() {
+  if (document.body?.dataset?.page === 'post-edit') return true;
+  try {
+    return /post_edit\.html/i.test(window.location.pathname || '');
+  } catch (err) {
+    return false;
+  }
+}
+
 function getTierApiBase() {
-  const { protocol, hostname, port } = window.location;
+  if (typeof getApiBase === 'function') {
+    const base = getApiBase();
+    if (base === 'GITHUB_STATIC') return 'GITHUB_STATIC';
+    return base;
+  }
+  const { protocol, port } = window.location;
   if (
     protocol === 'file:' ||
     port === '5500' || port === '3000' || port === '5173' ||
@@ -652,11 +768,63 @@ function getTierApiBase() {
   return '';
 }
 
+function getEditPostIdFromUrl() {
+  try {
+    const params = new URLSearchParams(window.location.search);
+    // 전용 수정 페이지: ?id=  /  구 메이커: ?edit=
+    return (params.get('id') || params.get('edit') || '').trim();
+  } catch (err) {
+    return '';
+  }
+}
+
+function getEditPostIdFromSession() {
+  try {
+    const raw = sessionStorage.getItem(EDIT_POST_SESSION_KEY);
+    if (!raw) return '';
+    const data = JSON.parse(raw);
+    return String(data?._id || data?.id || '').trim();
+  } catch (err) {
+    return '';
+  }
+}
+
+function readEditPostFromSession(postId) {
+  try {
+    const raw = sessionStorage.getItem(EDIT_POST_SESSION_KEY);
+    if (!raw) return null;
+    const data = JSON.parse(raw);
+    const sid = String(data?._id || data?.id || '');
+    if (postId && sid && sid !== String(postId)) return null;
+    return data;
+  } catch (err) {
+    return null;
+  }
+}
+
+function clearEditPostSession() {
+  try {
+    sessionStorage.removeItem(EDIT_POST_SESSION_KEY);
+  } catch (err) {
+    /* ignore */
+  }
+}
+
 function isAdminLoggedIn() {
   return localStorage.getItem('isAdmin') === 'true';
 }
 
 function getLoggedInUser() {
+  // 일반 회원 세션 우선 (관리자 로그인이 있어도 본인 글 수정 가능하도록)
+  try {
+    const user = JSON.parse(localStorage.getItem('user') || 'null');
+    if (user?.nickname) {
+      return { ...user, isAdmin: false };
+    }
+  } catch (err) {
+    /* ignore */
+  }
+
   if (isAdminLoggedIn()) {
     return {
       nickname: localStorage.getItem('adminName') || '관리자',
@@ -665,11 +833,167 @@ function getLoggedInUser() {
     };
   }
 
-  const user = JSON.parse(localStorage.getItem('user') || 'null');
-  if (user?.nickname) {
-    return { ...user, isAdmin: false };
-  }
   return null;
+}
+
+function isPostOwner(post, user) {
+  if (!post || !user) return false;
+  const recordEmail = (post.authorEmail || '').trim().toLowerCase();
+  const userEmail = (user.email || '').trim().toLowerCase();
+  if (recordEmail && userEmail) {
+    return recordEmail === userEmail;
+  }
+  return (post.author || '').trim() === (user.nickname || '').trim();
+}
+
+function clearEditModeFromUrl() {
+  try {
+    const url = new URL(window.location.href);
+    url.searchParams.delete('edit');
+    window.history.replaceState({}, '', url.pathname + url.search + url.hash);
+  } catch (err) {
+    /* ignore */
+  }
+}
+
+function updateEditModeChrome() {
+  const titleEl = document.querySelector('.maker-container h1');
+  let banner = document.getElementById('edit-mode-banner');
+  const detailHref =
+    typeof buildTierPostDetailUrl === 'function'
+      ? buildTierPostDetailUrl(editingPostId)
+      : `custom-maker_post/post_detail.html?id=${encodeURIComponent(editingPostId || '')}`;
+
+  if (!editingPostId) {
+    if (banner) banner.hidden = true;
+    if (titleEl && titleEl.dataset.editTitle === '1' && !isPostEditPage()) {
+      titleEl.innerHTML = `<img src="../tier-image/human_bug_eyes_icon.gif" class="eyes_icon" alt=""> 커스텀 티어 메이커`;
+      delete titleEl.dataset.editTitle;
+    }
+    if (!isPostEditPage()) document.title = '커스텀 티어 메이커';
+    return;
+  }
+
+  if (titleEl) {
+    titleEl.dataset.editTitle = '1';
+    titleEl.innerHTML = `<img src="../tier-image/human_bug_eyes_icon.gif" class="eyes_icon" alt=""> 게시글 수정`;
+  }
+  document.title = `게시글 수정 - ${editingDefaults.title || '커스텀 티어'}`;
+
+  if (!banner) {
+    banner = document.createElement('div');
+    banner.id = 'edit-mode-banner';
+    banner.className = 'edit-mode-banner';
+    const help = document.querySelector('.mobile-maker-help');
+    if (help?.parentNode) {
+      help.parentNode.insertBefore(banner, help.nextSibling);
+    } else {
+      document.querySelector('.maker-container')?.prepend(banner);
+    }
+  }
+  banner.hidden = false;
+  banner.innerHTML = `
+    <strong>✏️ 게시글 수정</strong>
+    <span>「${escapeHtmlLite(editingDefaults.title || '제목 없음')}」 게시 티어표를 불러왔습니다. 수정 후 <b>수정완료</b>를 누르세요.</span>
+    <a href="${detailHref}">← 상세로</a>
+  `;
+}
+
+function escapeHtmlLite(str) {
+  return String(str || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+/**
+ * 게시글 데이터를 메이커 상태에 반영
+ * @returns {boolean} 성공 여부
+ */
+async function enterEditMode(postId) {
+  const user = getLoggedInUser();
+  if (!user) {
+    if (confirm('게시글을 수정하려면 로그인이 필요합니다.\n로그인 페이지로 이동할까요?')) {
+      window.location.href = (typeof getBasePath === 'function' ? getBasePath() : '../') + 'user_login/login.html';
+    } else {
+      clearEditModeFromUrl();
+      clearEditPostSession();
+    }
+    return false;
+  }
+
+  const apiBase = getTierApiBase();
+  if (apiBase === 'GITHUB_STATIC') {
+    alert('정적 호스팅에서는 게시글 수정을 할 수 없습니다. Render 등 API 서버 주소에서 이용해주세요.');
+    clearEditModeFromUrl();
+    clearEditPostSession();
+    return false;
+  }
+
+  let post = null;
+
+  // 1) 상세에서 넘긴 스냅샷 (즉시 복원, 네트워크 실패 대비)
+  const cached = readEditPostFromSession(postId);
+  if (cached?.tierData) {
+    post = cached;
+  }
+
+  // 2) 서버에서 최신본 조회 (성공 시 덮어씀)
+  try {
+    const headers = typeof getAuthHeaders === 'function' ? getAuthHeaders() : {};
+    const response = await fetch(`${apiBase}/api/tierlists/${encodeURIComponent(postId)}`, {
+      headers,
+    });
+    const data = await response.json().catch(() => ({}));
+    if (response.ok && data) {
+      post = data;
+    } else if (!post) {
+      alert(data.error || '게시글을 불러오지 못했습니다.');
+      clearEditModeFromUrl();
+      clearEditPostSession();
+      return false;
+    }
+  } catch (err) {
+    console.error(err);
+    if (!post) {
+      alert('게시글을 불러오지 못했습니다. 서버 연결을 확인해주세요.');
+      clearEditModeFromUrl();
+      clearEditPostSession();
+      return false;
+    }
+  }
+
+  if (!isPostOwner(post, user)) {
+    alert('본인 게시글만 수정할 수 있습니다.');
+    clearEditModeFromUrl();
+    clearEditPostSession();
+    return false;
+  }
+
+  editingPostId = String(post._id || post.id || postId);
+  editingDefaults = {
+    title: post.title || '',
+    description: post.description || '',
+  };
+
+  const rawState = post.tierData?.tierState;
+  if (rawState && typeof rawState === 'object') {
+    // 과거 랜덤 id로 저장된 배치 → 이름 기준으로 카탈로그 id에 재매핑
+    tierState = rematchTierStateToCatalog(rawState);
+    saveToLocalStorage();
+  } else {
+    tierState = {};
+  }
+
+  const placedCount = Object.values(tierState).reduce(
+    (n, arr) => n + (Array.isArray(arr) ? arr.length : 0),
+    0
+  );
+  console.log(`✏️ 수정 모드: id=${editingPostId}, 배치 캐릭터 ${placedCount}명`);
+
+  updateEditModeChrome();
+  return true;
 }
 
 function hasPlacedCharacters() {
@@ -733,31 +1057,63 @@ function buildUploadPayload(title, description, user) {
 async function uploadToBoard() {
   const user = getLoggedInUser();
   if (!user) {
-    if (confirm('게시판에 업로드하려면 로그인이 필요합니다.\n로그인 페이지로 이동할까요?')) {
-      window.location.href = '../user_login/login.html';
+    if (confirm(
+      editingPostId
+        ? '게시글을 수정하려면 로그인이 필요합니다.\n로그인 페이지로 이동할까요?'
+        : '게시판에 업로드하려면 로그인이 필요합니다.\n로그인 페이지로 이동할까요?'
+    )) {
+      window.location.href = (typeof getBasePath === 'function' ? getBasePath() : '../') + 'user_login/login.html';
     }
+    return;
+  }
+
+  if (getTierApiBase() === 'GITHUB_STATIC') {
+    alert('정적 호스팅에서는 업로드·수정을 할 수 없습니다.');
     return;
   }
 
   saveCurrentTierState();
 
   if (!hasPlacedCharacters()) {
-    alert('티어에 배치된 캐릭터가 없습니다.\n캐릭터를 배치한 후 업로드해주세요.');
+    alert(
+      editingPostId
+        ? '티어에 배치된 캐릭터가 없습니다.\n캐릭터를 배치한 후 저장해주세요.'
+        : '티어에 배치된 캐릭터가 없습니다.\n캐릭터를 배치한 후 업로드해주세요.'
+    );
     return;
   }
 
-  const title = prompt('게시판에 올릴 제목을 입력해주세요.', `${user.nickname}의 커스텀 티어표`);
+  const defaultTitle = editingPostId
+    ? editingDefaults.title || `${user.nickname}의 커스텀 티어표`
+    : `${user.nickname}의 커스텀 티어표`;
+  const title = prompt(
+    editingPostId || isPostEditPage()
+      ? '수정 완료할 제목을 입력해주세요.'
+      : '게시판에 올릴 제목을 입력해주세요.',
+    defaultTitle
+  );
   if (!title?.trim()) return;
 
-  const description = prompt('간단한 설명을 입력해주세요. (선택, 취소 가능)', '') || '';
+  const description = prompt(
+    editingPostId || isPostEditPage()
+      ? '설명을 수정해주세요. (선택)'
+      : '간단한 설명을 입력해주세요. (선택, 취소 가능)',
+    editingPostId ? (editingDefaults.description || '') : ''
+  ) || '';
+
+  const isEdit = Boolean(editingPostId);
+  const url = isEdit
+    ? `${getTierApiBase()}/api/tierlists/${encodeURIComponent(editingPostId)}`
+    : `${getTierApiBase()}/api/tierlists`;
+  const method = isEdit ? 'PUT' : 'POST';
 
   try {
     const headers = typeof getAuthHeaders === 'function'
       ? getAuthHeaders()
       : { 'Content-Type': 'application/json' };
 
-    const response = await fetch(`${getTierApiBase()}/api/tierlists`, {
-      method: 'POST',
+    const response = await fetch(url, {
+      method,
       headers,
       body: JSON.stringify(buildUploadPayload(title, description, user)),
     });
@@ -765,12 +1121,21 @@ async function uploadToBoard() {
     const data = await response.json();
 
     if (!response.ok) {
-      alert('❌ ' + (data.error || '업로드에 실패했습니다.'));
+      alert('❌ ' + (data.error || (isEdit ? '수정에 실패했습니다.' : '업로드에 실패했습니다.')));
+      return;
+    }
+
+    if (isEdit) {
+      editingDefaults = { title: title.trim(), description: (description || '').trim() };
+      clearEditPostSession();
+      // 상세 URL 조합 오류로 "잘못된 접근입니다"가 뜨지 않도록 게시판 목록으로 이동
+      alert('✅ 게시글 수정이 완료되었습니다.');
+      window.location.href = getCustomMakerBoardUrl();
       return;
     }
 
     if (confirm('✅ 게시판에 업로드되었습니다!\n게시판으로 이동할까요?')) {
-      window.location.href = 'custom-maker_post/custom-maker_post.html';
+      window.location.href = getCustomMakerBoardUrl();
     }
   } catch (err) {
     console.error(err);
@@ -778,14 +1143,36 @@ async function uploadToBoard() {
   }
 }
 
+/** 커스텀 메이커 게시판 목록 URL (현재 경로 깊이에 맞게) */
+function getCustomMakerBoardUrl() {
+  const base = typeof getBasePath === 'function' ? getBasePath() : '';
+  return `${base}custom-maker/custom-maker_post/custom-maker_post.html`;
+}
+
 function updateUploadButtonState() {
   const uploadBtn = document.getElementById('upload-btn');
   if (!uploadBtn) return;
 
   const user = getLoggedInUser();
-  uploadBtn.title = user
-    ? `${user.nickname} 계정으로 게시판에 업로드합니다.`
-    : '로그인 후 게시판에 업로드할 수 있습니다.';
+  const textEl = uploadBtn.querySelector('.btn-text');
+  const iconEl = uploadBtn.querySelector('.btn-icon');
+
+  // 전용 수정 페이지 또는 수정 모드: 항상 「수정완료」
+  if (editingPostId || isPostEditPage()) {
+    if (textEl) textEl.textContent = '수정완료';
+    if (iconEl) iconEl.textContent = '✓';
+    uploadBtn.classList.add('btn-edit-done');
+    uploadBtn.title = user
+      ? `${user.nickname} 계정으로 이 게시글 수정을 완료합니다.`
+      : '로그인 후 게시글을 수정할 수 있습니다.';
+  } else {
+    if (textEl) textEl.textContent = '업로드';
+    if (iconEl) iconEl.textContent = '🔗';
+    uploadBtn.classList.remove('btn-edit-done');
+    uploadBtn.title = user
+      ? `${user.nickname} 계정으로 게시판에 업로드합니다.`
+      : '로그인 후 게시판에 업로드할 수 있습니다.';
+  }
   uploadBtn.disabled = false;
 }
 
