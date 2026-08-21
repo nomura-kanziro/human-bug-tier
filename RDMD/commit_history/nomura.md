@@ -154,7 +154,7 @@
 | 123 | 2026-08-21 | [`f9ec591`](#f9ec591) | docs(commit_history): 에이전트 스킬 반영 커밋 해시 기입 |
 | 124 | 2026-08-22 | [`42ce137`](#42ce137) | feat(tier-class): 2티어에 키타 킨타로 추가 |
 | 125 | 2026-08-22 | [`a70defd`](#a70defd) | docs(commit_history): 키타 킨타로 추가 커밋 해시 기입 |
-| 126 | 2026-08-22 | [`pending`](#pending-126) | docs(commit_history): 키타 킨타로 문서 커밋 해시 반영 |
+| 126 | 2026-08-22 | [`07104d3`](#07104d3) | docs(commit_history): 키타 킨타로 문서 커밋 해시 반영 |
 
 ---
 
@@ -2411,24 +2411,24 @@
 [▲ 목차로](#목차)
 
 ---
-<a id="pending-126"></a>
 
-### 126. 2026-08-22 — `pending`
+<a id="07104d3"></a>
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
-- **author**: nomura키타 킨타로 문서 커밋 해시 반영
-- **git**: `git show pending`
+### 126. 2026-08-22 — `07104d3`
+
+- **hash (short)**: `07104d3`
+- **hash (full)**: `07104d300abb3415152b4953a9e9bf056b2c311b`
+- **author**: nomura
+- **message**: docs(commit_history): 키타 킨타로 문서 커밋 해시 반영
+- **git**: `git show 07104d3`
 - **범위**: docs / commit_history
-- **요약**: 문서 커밋 `a70defd`의 short/full 해시를 목차와 상세
-- **요약**: 직전 문서 커밋 `a70defd`의 short/full 해시를 목차와 상세 블록에 넣어 로그와 git을 맞췄다. 코드 동작은 바꾸지 않았다.
+- **요약**: 문서 커밋 `a70defd`의 short/full 해시를 목차와 상세에 넣어 로그와 git을 맞췄다. 코드 동작은 바꾸지 않았다.
 - **주요 파일**: `RDMD/commit_history/nomura.md`
 - **관련 RDMD**: [commit_history/README.md](./README.md)
 
 [▲ 목차로](#목차)
 
 ---
-
 
 ## 빈 템플릿 (이후 커밋 추가용)
 
