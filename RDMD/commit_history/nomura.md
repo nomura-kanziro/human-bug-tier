@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 124 |
+| **커밋 수** | 125 |
 | **기간** | 2026-03-20 ~ 2026-08-22|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -152,7 +152,8 @@
 | 121 | 2026-08-20 | [`b775584`](#b775584) | docs(RDMD): 현재 기능에 맞춰 features·README·일지 갱신 |
 | 122 | 2026-08-20 | [`3be6903`](#3be6903) | docs(agents): 바뀐 기능을 에이전트 스킬에 반영 |
 | 123 | 2026-08-21 | [`f9ec591`](#f9ec591) | docs(commit_history): 에이전트 스킬 반영 커밋 해시 기입 |
-| 124 | 2026-08-22 | [`pending`](#pending) | feat(tier-class): 2티어에 키타 킨타로 추가 |
+| 124 | 2026-08-22 | [`42ce137`](#42ce137) | feat(tier-class): 2티어에 키타 킨타로 추가 |
+| 125 | 2026-08-22 | [`pending`](#pending-hash) | docs(commit_history): 키타 킨타로 추가 커밋 해시 기입 |
 
 ---
 
@@ -2374,15 +2375,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="42ce137"></a>
 
-### 124. 2026-08-22 — `pending`
+### 124. 2026-08-22 — `42ce137`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `42ce137`
+- **hash (full)**: `42ce137e61fe9bcbde86563964666b99a12c9c7d`
 - **author**: nomura
 - **message**: feat(tier-class): 2티어에 키타 킨타로 추가
-- **git**: `git show pending`
+- **git**: `git show 42ce137`
 - **범위**: frontend / tier-class
 - **요약**: 공식 2티어 병급에 키타 킨타로 카드를 넣고, 같은 이름의 이미지를 `tier-image/2 tier`에 추가해 티어표와 메이커 풀이 같은 캐릭터를 보게 했다.
 - **주요 파일**: `tier-class/tier2.html`, `tier-image/2 tier/kita kintaro.jpg`
@@ -2391,6 +2392,22 @@
 [▲ 목차로](#목차)
 
 ---
+
+<a id="pending-hash"></a>
+
+### 125. 2026-08-22 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(commit_history): 키타 킨타로 추가 커밋 해시 기입
+- **git**: `git show pending`
+- **범위**: docs / commit_history
+- **요약**: 2티어 키타 킨타로 추가 커밋의 short/full 해시를 `nomura.md`와 기능 일지에 채워 git 이력과 로그를 맞췄다. 코드 동작은 바꾸지 않았다.
+- **주요 파일**: `RDMD/commit_history/nomura.md`, `RDMD/frontend/02-tier-class/03-kita-kintaro-2tier-record.md`
+- **관련 RDMD**: [commit_history/README.md](./README.md)
+
+[▲ 목차로](#목차)
 
 ---
 
@@ -2420,4 +2437,4 @@
 
 ---
 
-**마지막 갱신**: 2026-08-20 · 총 122 항목 · 에이전트 스킬 현행화 · 정렬 = 과거→현재
+**마지막 갱신**: 2026-08-22 · 총 125 항목 · 2티어 키타 킨타로 추가 · 정렬 = 과거→현재

@@ -9,7 +9,7 @@ feature: tier-class
 공식 2티어 페이지에 캐릭터 **키타 킨타로**를 추가했다. 이미지 폴더와 HTML 카드를 같이 넣어, 티어표와 커스텀 메이커 풀이 같은 정본을 쓰게 했다.
 
 ## 관련 커밋
-- **pending** — `feat(tier-class): 2티어에 키타 킨타로 추가`
+- **42ce137** — `feat(tier-class): 2티어에 키타 킨타로 추가`
 
 ## 변경된 파일
 - Modified: `tier-class/tier2.html`
