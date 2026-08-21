@@ -42,6 +42,7 @@ RDMD/frontend/
 |------|--------|------|
 | [01-tier-pages-layout-index-record.md](./02-tier-class/01-tier-pages-layout-index-record.md) | 1 (교차) | 티어 페이지 레이아웃 관련 인덱스 |
 | [02-tier6-9-images-placement-record.md](./02-tier-class/02-tier6-9-images-placement-record.md) | — | 6~9티어 이미지 연결, 1·2티어 재배치 |
+| [03-kita-kintaro-2tier-record.md](./02-tier-class/03-kita-kintaro-2tier-record.md) | — | 2티어 키타 킨타로 추가 |
 
 ## 03-custom-maker
 
