@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 125 |
+| **커밋 수** | 126 |
 | **기간** | 2026-03-20 ~ 2026-08-22|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -153,7 +153,8 @@
 | 122 | 2026-08-20 | [`3be6903`](#3be6903) | docs(agents): 바뀐 기능을 에이전트 스킬에 반영 |
 | 123 | 2026-08-21 | [`f9ec591`](#f9ec591) | docs(commit_history): 에이전트 스킬 반영 커밋 해시 기입 |
 | 124 | 2026-08-22 | [`42ce137`](#42ce137) | feat(tier-class): 2티어에 키타 킨타로 추가 |
-| 125 | 2026-08-22 | [`pending`](#pending-hash) | docs(commit_history): 키타 킨타로 추가 커밋 해시 기입 |
+| 125 | 2026-08-22 | [`a70defd`](#a70defd) | docs(commit_history): 키타 킨타로 추가 커밋 해시 기입 |
+| 126 | 2026-08-22 | [`pending`](#pending-126) | docs(commit_history): 키타 킨타로 문서 커밋 해시 반영 |
 
 ---
 
@@ -2393,15 +2394,15 @@
 
 ---
 
-<a id="pending-hash"></a>
+<a id="a70defd"></a>
 
-### 125. 2026-08-22 — `pending`
+### 125. 2026-08-22 — `a70defd`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `a70defd`
+- **hash (full)**: `a70defddb279f273af796229ea9c4feff7192053`
 - **author**: nomura
 - **message**: docs(commit_history): 키타 킨타로 추가 커밋 해시 기입
-- **git**: `git show pending`
+- **git**: `git show a70defd`
 - **범위**: docs / commit_history
 - **요약**: 2티어 키타 킨타로 추가 커밋의 short/full 해시를 `nomura.md`와 기능 일지에 채워 git 이력과 로그를 맞췄다. 코드 동작은 바꾸지 않았다.
 - **주요 파일**: `RDMD/commit_history/nomura.md`, `RDMD/frontend/02-tier-class/03-kita-kintaro-2tier-record.md`
@@ -2410,6 +2411,24 @@
 [▲ 목차로](#목차)
 
 ---
+<a id="pending-126"></a>
+
+### 126. 2026-08-22 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura키타 킨타로 문서 커밋 해시 반영
+- **git**: `git show pending`
+- **범위**: docs / commit_history
+- **요약**: 문서 커밋 `a70defd`의 short/full 해시를 목차와 상세
+- **요약**: 직전 문서 커밋 `a70defd`의 short/full 해시를 목차와 상세 블록에 넣어 로그와 git을 맞췄다. 코드 동작은 바꾸지 않았다.
+- **주요 파일**: `RDMD/commit_history/nomura.md`
+- **관련 RDMD**: [commit_history/README.md](./README.md)
+
+[▲ 목차로](#목차)
+
+---
+
 
 ## 빈 템플릿 (이후 커밋 추가용)
 
@@ -2437,4 +2456,4 @@
 
 ---
 
-**마지막 갱신**: 2026-08-22 · 총 125 항목 · 2티어 키타 킨타로 추가 · 정렬 = 과거→현재
+**마지막 갱신**: 2026-08-22 · 총 126 항목 · 2티어 키타 킨타로 추가 · 정렬 = 과거→현재
