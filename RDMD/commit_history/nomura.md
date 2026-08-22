@@ -156,7 +156,7 @@
 | 125 | 2026-08-22 | [`a70defd`](#a70defd) | docs(commit_history): 키타 킨타로 추가 커밋 해시 기입 |
 | 126 | 2026-08-22 | [`07104d3`](#07104d3) | docs(commit_history): 키타 킨타로 문서 커밋 반영 |
 | 127 | 2026-08-23 | [`ad2aef0`](#ad2aef0) | feat(custom-maker): 모바일 탭 배치 시 빈 칸(고스트 슬롯) 추가 |
-| 128 | 2026-08-23 | [`pending`](#pending-128) | feat(tier-class): 2티어 배치 변동 (하카마다·햐쿠타·다비츠 재배치) |
+| 128 | 2026-08-23 | [`afa7cbf`](#afa7cbf) | feat(tier-class): 2티어 배치 변동 (하카마다·햐쿠타·다비츠 재배치) |
 
 ---
 
@@ -2449,15 +2449,15 @@
 
 ---
 
-<a id="pending-128"></a>
+<a id="afa7cbf"></a>
 
-### 128. 2026-08-23 — `pending`
+### 128. 2026-08-23 — `afa7cbf`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `afa7cbf`
+- **hash (full)**: `afa7cbf22fe79b9fda615a5bafcd41e4444291be`
 - **author**: nomura
 - **message**: feat(tier-class): 2티어 배치 변동 (하카마다·햐쿠타·다비츠 재배치)
-- **git**: `git show pending`
+- **git**: `git show afa7cbf`
 - **범위**: frontend / tier-class / HTML
 - **요약**: 2티어 갑·을 구간 내에서 세 캐릭터를 재배치했다. 하카마다 히데코는 갑급 2번 위치(미카도 바로 오른쪽)로, 햐쿠타 고로는 을급 1번 위치(토가리 겐야 바로 왼쪽)로, 다비츠는 갑급 맨 오른쪽 위치로 이동했다. 티어 이동(갑↔을↔병) 없이 같은 등급 내 순서 변동만 반영했다.
 - **주요 파일**: `tier-class/tier2.html`
