@@ -132,6 +132,20 @@
     flex-wrap: wrap;
 }
 
+.notice-format-hint {
+    margin: 8px 0 0;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.notice-format-hint code {
+    background: #f3f4f6;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 12px;
+    color: #111827;
+}
+
 .notice-form-card.is-editing {
     border-color: #10b981;
     box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15);

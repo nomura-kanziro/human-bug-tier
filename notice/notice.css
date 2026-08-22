@@ -299,8 +299,33 @@
   font-size: 16px;
   line-height: 1.85;
   color: #1f2937;
-  white-space: pre-wrap;
   word-break: break-word;
+}
+
+.notice-detail-content p {
+  margin: 0 0 18px;
+}
+
+.notice-detail-content p:last-child {
+  margin-bottom: 0;
+}
+
+.notice-detail-content ul {
+  margin: 0 0 18px;
+  padding-left: 22px;
+}
+
+.notice-detail-content li {
+  margin-bottom: 6px;
+}
+
+.notice-detail-content strong {
+  font-weight: 700;
+  color: #111827;
+}
+
+.notice-detail-content em {
+  font-style: italic;
 }
 
 .notice-detail-footer {

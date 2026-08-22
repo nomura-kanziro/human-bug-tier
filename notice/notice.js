@@ -52,6 +52,57 @@ function nl2br(text) {
   return escapeHtml(text).replace(/\n/g, '<br>');
 }
 
+// **굵게**, 줄 앞 '- '(또는 '* ') 목록, 빈 줄 문단 구분을 지원하는 경량 서식 렌더러.
+// 입력은 먼저 escapeHtml로 이스케이프한 뒤 문법 기호만 치환하므로 안전하다.
+function applyInlineNoticeFormatting(escapedLine) {
+  return escapedLine
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/(^|[^*])\*(?!\*)([^*]+?)\*(?!\*)/g, '$1<em>$2</em>');
+}
+
+function renderNoticeContent(text) {
+  if (!text) return '';
+
+  const lines = escapeHtml(text).split(/\r?\n/);
+  const blocks = [];
+  let paragraph = [];
+  let list = [];
+
+  const flushParagraph = () => {
+    if (paragraph.length) {
+      blocks.push(`<p>${paragraph.join('<br>')}</p>`);
+      paragraph = [];
+    }
+  };
+  const flushList = () => {
+    if (list.length) {
+      blocks.push(`<ul>${list.map(item => `<li>${item}</li>`).join('')}</ul>`);
+      list = [];
+    }
+  };
+
+  for (const rawLine of lines) {
+    const line = rawLine.trim();
+    if (!line) {
+      flushParagraph();
+      flushList();
+      continue;
+    }
+    const bulletMatch = line.match(/^[-*]\s+(.*)/);
+    if (bulletMatch) {
+      flushParagraph();
+      list.push(applyInlineNoticeFormatting(bulletMatch[1]));
+      continue;
+    }
+    flushList();
+    paragraph.push(applyInlineNoticeFormatting(line));
+  }
+  flushParagraph();
+  flushList();
+
+  return blocks.join('');
+}
+
 function formatDate(dateStr) {
   const d = new Date(dateStr);
   if (Number.isNaN(d.getTime())) return '';
@@ -294,7 +345,7 @@ async function renderNoticeDetailPage() {
 
           ${summary ? `<div class="notice-detail-summary ${isNews ? 'news-summary' : ''}">${escapeHtml(summary)}</div>` : ''}
 
-          <div class="notice-detail-content">${nl2br(notice.content)}</div>
+          <div class="notice-detail-content">${renderNoticeContent(notice.content)}</div>
 
           <div class="notice-detail-footer">
             <a href="${backLink}" class="notice-detail-list-btn">${CATEGORY_LABELS[notice.category]} 목록 보기</a>
