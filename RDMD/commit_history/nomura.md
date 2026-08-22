@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 127 |
+| **커밋 수** | 128 |
 | **기간** | 2026-03-20 ~ 2026-08-23|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -156,6 +156,7 @@
 | 125 | 2026-08-22 | [`a70defd`](#a70defd) | docs(commit_history): 키타 킨타로 추가 커밋 해시 기입 |
 | 126 | 2026-08-22 | [`07104d3`](#07104d3) | docs(commit_history): 키타 킨타로 문서 커밋 반영 |
 | 127 | 2026-08-23 | [`ad2aef0`](#ad2aef0) | feat(custom-maker): 모바일 탭 배치 시 빈 칸(고스트 슬롯) 추가 |
+| 128 | 2026-08-23 | [`pending`](#pending-128) | feat(tier-class): 2티어 배치 변동 (하카마다·햐쿠타·다비츠 재배치) |
 
 ---
 
@@ -2448,6 +2449,24 @@
 
 ---
 
+<a id="pending-128"></a>
+
+### 128. 2026-08-23 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(tier-class): 2티어 배치 변동 (하카마다·햐쿠타·다비츠 재배치)
+- **git**: `git show pending`
+- **범위**: frontend / tier-class / HTML
+- **요약**: 2티어 갑·을 구간 내에서 세 캐릭터를 재배치했다. 하카마다 히데코는 갑급 2번 위치(미카도 바로 오른쪽)로, 햐쿠타 고로는 을급 1번 위치(토가리 겐야 바로 왼쪽)로, 다비츠는 갑급 맨 오른쪽 위치로 이동했다. 티어 이동(갑↔을↔병) 없이 같은 등급 내 순서 변동만 반영했다.
+- **주요 파일**: `tier-class/tier2.html`
+- **관련 RDMD**: [frontend/02-tier-class/03-kita-kintaro-2tier-record.md](../frontend/02-tier-class/03-kita-kintaro-2tier-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
 
 ## 빈 템플릿 (이후 커밋 추가용)
 
@@ -2475,4 +2494,4 @@
 
 ---
 
-**마지막 갱신**: 2026-08-22 · 총 126 항목 · 2티어 키타 킨타로 추가 · 정렬 = 과거→현재
+**마지막 갱신**: 2026-08-23 · 총 128 항목 · 2티어 배치 변동 · 정렬 = 과거→현재
