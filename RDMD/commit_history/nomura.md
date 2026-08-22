@@ -157,7 +157,7 @@
 | 126 | 2026-08-22 | [`07104d3`](#07104d3) | docs(commit_history): 키타 킨타로 문서 커밋 반영 |
 | 127 | 2026-08-23 | [`ad2aef0`](#ad2aef0) | feat(custom-maker): 모바일 탭 배치 시 빈 칸(고스트 슬롯) 추가 |
 | 128 | 2026-08-23 | [`afa7cbf`](#afa7cbf) | feat(tier-class): 2티어 배치 변동 (하카마다·햐쿠타·다비츠 재배치) |
-| 129 | 2026-08-23 | [`pending`](#pending-129) | feat(notice): 공지 내용에 굵게·목록 서식 렌더링 지원 |
+| 129 | 2026-08-23 | [`43b26d5`](#43b26d5) | feat(notice): 공지 내용에 굵게·목록 서식 렌더링 지원 |
 
 ---
 
@@ -2463,6 +2463,24 @@
 - **요약**: 2티어 갑·을 구간 내에서 세 캐릭터를 재배치했다. 하카마다 히데코는 갑급 2번 위치(미카도 바로 오른쪽)로, 햐쿠타 고로는 을급 1번 위치(토가리 겐야 바로 왼쪽)로, 다비츠는 갑급 맨 오른쪽 위치로 이동했다. 티어 이동(갑↔을↔병) 없이 같은 등급 내 순서 변동만 반영했다.
 - **주요 파일**: `tier-class/tier2.html`
 - **관련 RDMD**: [frontend/02-tier-class/03-kita-kintaro-2tier-record.md](../frontend/02-tier-class/03-kita-kintaro-2tier-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="43b26d5"></a>
+
+### 129. 2026-08-23 — `43b26d5`
+
+- **hash (short)**: `43b26d5`
+- **hash (full)**: `43b26d57575616c9f7f2d1f74ec722a43110a537`
+- **author**: nomura
+- **message**: feat(notice): 공지 내용에 굵게·목록 서식 렌더링 지원
+- **git**: `git show 43b26d5`
+- **범위**: frontend / notice / admin
+- **요약**: 공지 상세 본문에 노션/코파일럿 채팅처럼 `**굵게**`와 `- ` 목록, 빈 줄 문단 구분을 지원하는 경량 렌더러(`renderNoticeContent`)를 추가했다. escapeHtml로 이스케이프한 뒤 문법 기호만 치환해 XSS 위험 없이 `<p>`/`<ul>`/`<strong>`/`<em>`으로 렌더링한다. 관리자 공지 작성 폼에는 서식 사용법 힌트를 추가했다.
+- **주요 파일**: `notice/notice.js`, `notice/notice.css`, `admin/comments/comment-management.html`, `admin/comments/comment-management.css`
+- **관련 RDMD**: [notice/README.md](../../notice/README.md)
 
 [▲ 목차로](#목차)
 
