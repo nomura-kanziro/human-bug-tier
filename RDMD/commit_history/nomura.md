@@ -7,8 +7,8 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 126 |
-| **기간** | 2026-03-20 ~ 2026-08-22|
+| **커밋 수** | 127 |
+| **기간** | 2026-03-20 ~ 2026-08-23|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
 > 폴더 안내: [README.md](./README.md)  ·  상세 기능 일지: [../frontend/](../frontend/README.md) · [../backend/](../backend/README.md)
@@ -154,7 +154,8 @@
 | 123 | 2026-08-21 | [`f9ec591`](#f9ec591) | docs(commit_history): 에이전트 스킬 반영 커밋 해시 기입 |
 | 124 | 2026-08-22 | [`42ce137`](#42ce137) | feat(tier-class): 2티어에 키타 킨타로 추가 |
 | 125 | 2026-08-22 | [`a70defd`](#a70defd) | docs(commit_history): 키타 킨타로 추가 커밋 해시 기입 |
-| 126 | 2026-08-22 | [`07104d3`](#07104d3) | docs(commit_history): 키타 킨타로 문서 커밋 해시 반영 |
+| 126 | 2026-08-22 | [`07104d3`](#07104d3) | docs(commit_history): 키타 킨타로 문서 커밋 반영 |
+| 127 | 2026-08-23 | [`pending`](#pending-127) | feat(custom-maker): 모바일 탭 배치 시 빈 칸(고스트 슬롯) 추가 |
 
 ---
 
@@ -2429,6 +2430,24 @@
 [▲ 목차로](#목차)
 
 ---
+<a id="pending-127"></a>
+
+### 127. 2026-08-23 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(custom-maker): 모바일 탭 배치 시 빈 칸(고스트 슬롯) 추가
+- **git**: `git show pending`
+- **범위**: frontend / custom-maker / CSS
+- **요약**: 모바일에서 탭으로 캐릭터를 티어 칸에 하나씩만 배치하면 옆에 빈 공간이 생기는 문제를 해결하기 위해, `.characters:not(:empty)::after`로 고스트 슬롯(점선 테두리 빈 칸)을 자동으로 표시해 다음 캐릭터 배치 위치가 명확하게 보이도록 개선했다.
+- **주요 파일**: `custom-maker/custom-maker.css`
+- **관련 RDMD**: [frontend/03-custom-maker/07-post-edit-and-mobile-tap-record.md](../frontend/03-custom-maker/07-post-edit-and-mobile-tap-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
 
 ## 빈 템플릿 (이후 커밋 추가용)
 
@@ -2438,7 +2457,7 @@
 
 ```markdown
 <a id="SHORT_HASH_or_pending"></a>
-
+3 · 총 127 항목 · 모바일 빈 칸
 ### N. YYYY-MM-DD — `SHORT_HASH_or_pending`
 
 - **hash (short)**: `pending`

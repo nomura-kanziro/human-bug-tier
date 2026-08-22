@@ -387,6 +387,17 @@ body.char-selected-mode .characters {
     font-size: 0.85rem;
   }
 
+  /* 캐릭터 배치 후에도 옆에 빈 칸이 보이도록 고스트 슬롯 추가 (탭하면 그대로 배치됨) */
+  .characters:not(:empty)::after {
+    content: "";
+    flex: 0 0 auto;
+    width: 78px;
+    height: 112px;
+    border: 1px dashed rgba(255, 204, 0, 0.35);
+    border-radius: 8px;
+    background: rgba(255, 255, 255, 0.02);
+  }
+
   .action-bar {
     gap: 10px;
     margin: 16px 0;
