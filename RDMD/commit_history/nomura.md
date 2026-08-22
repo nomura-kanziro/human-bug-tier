@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 129 |
+| **커밋 수** | 130 |
 | **기간** | 2026-03-20 ~ 2026-08-23|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -158,6 +158,7 @@
 | 127 | 2026-08-23 | [`ad2aef0`](#ad2aef0) | feat(custom-maker): 모바일 탭 배치 시 빈 칸(고스트 슬롯) 추가 |
 | 128 | 2026-08-23 | [`afa7cbf`](#afa7cbf) | feat(tier-class): 2티어 배치 변동 (하카마다·햐쿠타·다비츠 재배치) |
 | 129 | 2026-08-23 | [`43b26d5`](#43b26d5) | feat(notice): 공지 내용에 굵게·목록 서식 렌더링 지원 |
+| 130 | 2026-08-23 | [`pending`](#pending-130) | feat(notice): 관리자 공지 서식 툴바와 실시간 미리보기 추가 |
 
 ---
 
@@ -2486,6 +2487,24 @@
 
 ---
 
+<a id="pending-130"></a>
+
+### 130. 2026-08-23 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(notice): 관리자 공지 서식 툴바와 실시간 미리보기 추가
+- **git**: `git show pending`
+- **범위**: frontend / notice / admin
+- **요약**: 관리자가 마크다운 문법을 외우지 않아도 되도록 노션처럼 버튼으로 서식을 넣는 툴바(제목·굵게·기울임·취소선·코드·목록·인용·링크·구분선)와 실시간 미리보기 패널을 공지 편집기에 추가했다. 미리보기는 실제 공지 페이지와 같은 `renderNoticeContent`와 `notice.css`를 그대로 써 화면이 일치한다. 렌더러도 제목(`#`)·번호 목록·인용(`>`)·코드·링크·구분선까지 확장했고, 링크는 http(s)만 허용해 javascript: 주입을 막는다. Ctrl+B/I 단축키도 지원한다.
+- **주요 파일**: `admin/comments/comment-management.js`, `comment-management.html`, `comment-management.css`, `notice/notice.js`, `notice/notice.css`
+- **관련 RDMD**: [notice/README.md](../../notice/README.md)
+
+[▲ 목차로](#목차)
+
+---
+
 
 ## 빈 템플릿 (이후 커밋 추가용)
 
@@ -2513,4 +2532,4 @@
 
 ---
 
-**마지막 갱신**: 2026-08-23 · 총 129 항목 · 공지 서식 렌더링 지원 · 정렬 = 과거→현재
+**마지막 갱신**: 2026-08-23 · 총 130 항목 · 공지 서식 툴바·미리보기 · 정렬 = 과거→현재

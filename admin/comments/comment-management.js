@@ -265,6 +265,140 @@ function clearNoticeFormFields() {
   if (summaryEl) summaryEl.value = '';
   if (contentEl) contentEl.value = '';
   if (categoryEl) categoryEl.value = 'notice';
+  updateNoticePreview();
+}
+
+// ===== 공지 에디터: 서식 툴바 + 미리보기 =====
+
+const NOTICE_INLINE_FORMATS = {
+  bold: { wrap: '**', placeholder: '굵은 텍스트' },
+  italic: { wrap: '*', placeholder: '기울인 텍스트' },
+  strike: { wrap: '~~', placeholder: '취소선 텍스트' },
+  code: { wrap: '`', placeholder: '코드' },
+};
+
+const NOTICE_LINE_FORMATS = {
+  h2: { prefix: '# ', placeholder: '제목' },
+  h3: { prefix: '## ', placeholder: '소제목' },
+  ul: { prefix: '- ', placeholder: '항목' },
+  ol: { prefix: '1. ', placeholder: '항목' },
+  quote: { prefix: '> ', placeholder: '인용문' },
+};
+
+function updateNoticePreview() {
+  const pane = document.getElementById('notice-preview-pane');
+  if (!pane || pane.hidden) return;
+
+  const content = document.getElementById('notice-content-input')?.value || '';
+  pane.innerHTML = content.trim()
+    ? window.renderNoticeContent(content)
+    : '<p class="notice-preview-empty">내용을 입력하면 실제 공지 화면처럼 보입니다.</p>';
+}
+
+function replaceNoticeSelection(textarea, newText, selStart, selEnd) {
+  textarea.setRangeText(newText, textarea.selectionStart, textarea.selectionEnd, 'end');
+  textarea.focus();
+  if (selStart !== undefined) textarea.setSelectionRange(selStart, selEnd ?? selStart);
+  updateNoticePreview();
+}
+
+function applyNoticeInlineFormat(textarea, format) {
+  const { wrap, placeholder } = NOTICE_INLINE_FORMATS[format];
+  const start = textarea.selectionStart;
+  const selected = textarea.value.slice(start, textarea.selectionEnd);
+  const body = selected || placeholder;
+
+  replaceNoticeSelection(
+    textarea,
+    `${wrap}${body}${wrap}`,
+    start + wrap.length,
+    start + wrap.length + body.length
+  );
+}
+
+function applyNoticeLineFormat(textarea, format) {
+  const { prefix, placeholder } = NOTICE_LINE_FORMATS[format];
+  const value = textarea.value;
+  const lineStart = value.lastIndexOf('\n', textarea.selectionStart - 1) + 1;
+  const lineEndIndex = value.indexOf('\n', textarea.selectionEnd);
+  const lineEnd = lineEndIndex === -1 ? value.length : lineEndIndex;
+
+  const formatted = value
+    .slice(lineStart, lineEnd)
+    .split('\n')
+    .map((line, index) => {
+      const stripped = line.replace(/^(#{1,3}\s+|[-*]\s+|\d+\.\s+|>\s?)/, '');
+      const linePrefix = format === 'ol' ? `${index + 1}. ` : prefix;
+      return `${linePrefix}${stripped || placeholder}`;
+    })
+    .join('\n');
+
+  textarea.setSelectionRange(lineStart, lineEnd);
+  replaceNoticeSelection(textarea, formatted, lineStart, lineStart + formatted.length);
+}
+
+function applyNoticeFormat(format) {
+  const textarea = document.getElementById('notice-content-input');
+  if (!textarea) return;
+
+  if (NOTICE_INLINE_FORMATS[format]) {
+    applyNoticeInlineFormat(textarea, format);
+    return;
+  }
+  if (NOTICE_LINE_FORMATS[format]) {
+    applyNoticeLineFormat(textarea, format);
+    return;
+  }
+
+  if (format === 'link') {
+    const start = textarea.selectionStart;
+    const label = textarea.value.slice(start, textarea.selectionEnd) || '링크 텍스트';
+    const url = prompt('연결할 주소를 입력하세요 (https://로 시작)', 'https://');
+    if (!url || !/^https?:\/\//i.test(url)) return;
+    replaceNoticeSelection(textarea, `[${label}](${url})`, start + 1, start + 1 + label.length);
+    return;
+  }
+
+  if (format === 'hr') {
+    const needsLeadingBreak = textarea.selectionStart > 0
+      && textarea.value[textarea.selectionStart - 1] !== '\n';
+    replaceNoticeSelection(textarea, `${needsLeadingBreak ? '\n' : ''}\n---\n\n`);
+  }
+}
+
+function toggleNoticePreview() {
+  const pane = document.getElementById('notice-preview-pane');
+  const toggle = document.getElementById('notice-preview-toggle');
+  if (!pane || !toggle) return;
+
+  pane.hidden = !pane.hidden;
+  toggle.setAttribute('aria-pressed', String(!pane.hidden));
+  toggle.classList.toggle('is-active', !pane.hidden);
+  toggle.textContent = pane.hidden ? '👁 미리보기' : '✏️ 편집만 보기';
+  updateNoticePreview();
+}
+
+function setupNoticeEditor() {
+  const toolbar = document.getElementById('notice-editor-toolbar');
+  const textarea = document.getElementById('notice-content-input');
+  if (!toolbar || !textarea) return;
+
+  toolbar.addEventListener('click', (event) => {
+    const btn = event.target.closest('[data-format]');
+    if (btn) applyNoticeFormat(btn.dataset.format);
+  });
+
+  const previewToggle = document.getElementById('notice-preview-toggle');
+  if (previewToggle) previewToggle.addEventListener('click', toggleNoticePreview);
+
+  textarea.addEventListener('input', updateNoticePreview);
+  textarea.addEventListener('keydown', (event) => {
+    if (!event.ctrlKey && !event.metaKey) return;
+    const shortcut = { b: 'bold', i: 'italic' }[event.key.toLowerCase()];
+    if (!shortcut) return;
+    event.preventDefault();
+    applyNoticeFormat(shortcut);
+  });
 }
 
 function updateNoticeFormModeUI() {
@@ -321,6 +455,7 @@ async function startEditAdminNotice(noticeId) {
   if (categoryEl) categoryEl.value = notice.category === 'news' ? 'news' : 'notice';
 
   updateNoticeFormModeUI();
+  updateNoticePreview();
 
   const formCard = document.getElementById('notice-form-card');
   if (formCard) {
@@ -758,6 +893,7 @@ document.addEventListener('DOMContentLoaded', () => {
     cancelNoticeEditBtn.addEventListener('click', cancelEditAdminNotice);
   }
 
+  setupNoticeEditor();
   updateNoticeFormModeUI();
 
   const noticeListFilter = document.getElementById('notice-list-filter');

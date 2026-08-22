@@ -6,6 +6,7 @@
     <title>댓글 관리 - Admin</title>
     
     <link rel="stylesheet" href="../../Header_Footer.css">
+    <link rel="stylesheet" href="../../notice/notice.css">
     <link rel="stylesheet" href="comment-management.css">
 </head>
 <body style="background-color: #ffffff;">
@@ -144,8 +145,30 @@
               <input type="hidden" id="notice-edit-id" value="">
               <input type="text" id="notice-title-input" class="notice-form-input" placeholder="공지 제목을 입력하세요">
               <input type="text" id="notice-summary-input" class="notice-form-input" placeholder="요약 (선택, 목록에 표시됩니다)">
-              <textarea id="notice-content-input" class="notice-form-textarea" placeholder="공지 내용을 입력하세요"></textarea>
-              <p class="notice-format-hint">서식: <code>**굵게**</code> · 줄 앞에 <code>- </code> 붙이면 목록 · 빈 줄로 문단 구분</p>
+
+              <div class="notice-editor-toolbar" id="notice-editor-toolbar">
+                <button type="button" class="notice-tool-btn" data-format="h2" title="제목">제목</button>
+                <button type="button" class="notice-tool-btn" data-format="h3" title="소제목">소제목</button>
+                <span class="notice-tool-sep"></span>
+                <button type="button" class="notice-tool-btn" data-format="bold" title="굵게 (Ctrl+B)"><strong>B</strong></button>
+                <button type="button" class="notice-tool-btn" data-format="italic" title="기울임 (Ctrl+I)"><em>I</em></button>
+                <button type="button" class="notice-tool-btn" data-format="strike" title="취소선"><del>S</del></button>
+                <button type="button" class="notice-tool-btn" data-format="code" title="코드">&lt;/&gt;</button>
+                <span class="notice-tool-sep"></span>
+                <button type="button" class="notice-tool-btn" data-format="ul" title="글머리 목록">• 목록</button>
+                <button type="button" class="notice-tool-btn" data-format="ol" title="번호 목록">1. 목록</button>
+                <button type="button" class="notice-tool-btn" data-format="quote" title="인용">❝ 인용</button>
+                <span class="notice-tool-sep"></span>
+                <button type="button" class="notice-tool-btn" data-format="link" title="링크">🔗 링크</button>
+                <button type="button" class="notice-tool-btn" data-format="hr" title="구분선">— 구분선</button>
+                <span class="notice-tool-spacer"></span>
+                <button type="button" class="notice-tool-btn notice-preview-toggle" id="notice-preview-toggle" aria-pressed="false">👁 미리보기</button>
+              </div>
+
+              <textarea id="notice-content-input" class="notice-form-textarea" placeholder="공지 내용을 입력하세요. 툴바 버튼으로 서식을 넣을 수 있습니다."></textarea>
+              <div class="notice-preview-pane notice-detail-content" id="notice-preview-pane" hidden></div>
+
+              <p class="notice-format-hint">서식: <code>**굵게**</code> · <code># 제목</code> · <code>- 목록</code> · <code>&gt; 인용</code> · 빈 줄로 문단 구분</p>
               <div class="notice-form-actions">
                 <button type="button" id="cancel-notice-edit-btn" class="notice-cancel-btn" hidden>수정 취소</button>
                 <button type="button" id="post-notice-btn" class="notice-post-btn">📢 공지 등록</button>
@@ -242,6 +265,7 @@
 
     <script src="../../common.js"></script>
     <script src="../admin_api.js"></script>
+    <script src="../../notice/notice.js"></script>
     <script src="comment-management.js"></script>
 
     <script>

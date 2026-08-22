@@ -52,12 +52,17 @@ function nl2br(text) {
   return escapeHtml(text).replace(/\n/g, '<br>');
 }
 
-// **굵게**, 줄 앞 '- '(또는 '* ') 목록, 빈 줄 문단 구분을 지원하는 경량 서식 렌더러.
+// 공지 본문 경량 서식 렌더러.
+// 지원: # 제목, - / 1. 목록, > 인용, --- 구분선, **굵게**, *기울임*, `코드`, [텍스트](링크)
 // 입력은 먼저 escapeHtml로 이스케이프한 뒤 문법 기호만 치환하므로 안전하다.
 function applyInlineNoticeFormatting(escapedLine) {
   return escapedLine
+    .replace(/`([^`]+?)`/g, '<code>$1</code>')
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/(^|[^*])\*(?!\*)([^*]+?)\*(?!\*)/g, '$1<em>$2</em>');
+    .replace(/(^|[^*])\*(?!\*)([^*]+?)\*(?!\*)/g, '$1<em>$2</em>')
+    .replace(/~~(.+?)~~/g, '<del>$1</del>')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
+      (_, label, url) => `<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`);
 }
 
 function renderNoticeContent(text) {
@@ -66,7 +71,9 @@ function renderNoticeContent(text) {
   const lines = escapeHtml(text).split(/\r?\n/);
   const blocks = [];
   let paragraph = [];
-  let list = [];
+  let listItems = [];
+  let listTag = '';
+  let quote = [];
 
   const flushParagraph = () => {
     if (paragraph.length) {
@@ -75,33 +82,77 @@ function renderNoticeContent(text) {
     }
   };
   const flushList = () => {
-    if (list.length) {
-      blocks.push(`<ul>${list.map(item => `<li>${item}</li>`).join('')}</ul>`);
-      list = [];
+    if (listItems.length) {
+      blocks.push(`<${listTag}>${listItems.map(item => `<li>${item}</li>`).join('')}</${listTag}>`);
+      listItems = [];
+      listTag = '';
     }
+  };
+  const flushQuote = () => {
+    if (quote.length) {
+      blocks.push(`<blockquote>${quote.join('<br>')}</blockquote>`);
+      quote = [];
+    }
+  };
+  const flushAll = () => {
+    flushParagraph();
+    flushList();
+    flushQuote();
   };
 
   for (const rawLine of lines) {
     const line = rawLine.trim();
+
     if (!line) {
+      flushAll();
+      continue;
+    }
+
+    if (/^(-{3,}|\*{3,}|_{3,})$/.test(line)) {
+      flushAll();
+      blocks.push('<hr>');
+      continue;
+    }
+
+    const headingMatch = line.match(/^(#{1,3})\s+(.*)/);
+    if (headingMatch) {
+      flushAll();
+      const level = headingMatch[1].length + 1; // # -> h2 (h1은 공지 제목이 사용)
+      blocks.push(`<h${level}>${applyInlineNoticeFormatting(headingMatch[2])}</h${level}>`);
+      continue;
+    }
+
+    const quoteMatch = line.match(/^&gt;\s?(.*)/);
+    if (quoteMatch) {
       flushParagraph();
       flushList();
+      quote.push(applyInlineNoticeFormatting(quoteMatch[1]));
       continue;
     }
+
     const bulletMatch = line.match(/^[-*]\s+(.*)/);
-    if (bulletMatch) {
+    const orderedMatch = line.match(/^\d+\.\s+(.*)/);
+    if (bulletMatch || orderedMatch) {
+      const tag = bulletMatch ? 'ul' : 'ol';
       flushParagraph();
-      list.push(applyInlineNoticeFormatting(bulletMatch[1]));
+      flushQuote();
+      if (listTag && listTag !== tag) flushList();
+      listTag = tag;
+      listItems.push(applyInlineNoticeFormatting((bulletMatch || orderedMatch)[1]));
       continue;
     }
+
     flushList();
+    flushQuote();
     paragraph.push(applyInlineNoticeFormatting(line));
   }
-  flushParagraph();
-  flushList();
+
+  flushAll();
 
   return blocks.join('');
 }
+
+window.renderNoticeContent = renderNoticeContent;
 
 function formatDate(dateStr) {
   const d = new Date(dateStr);
