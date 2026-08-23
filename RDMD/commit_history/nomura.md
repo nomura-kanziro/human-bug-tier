@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 134 |
+| **커밋 수** | 137 |
 | **기간** | 2026-03-20 ~ 2026-08-23|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -163,6 +163,9 @@
 | 132 | 2026-08-23 | [`269b2c3`](#269b2c3) | fix(auth): Render 콜드스타트 중 버튼 무반응 개선 - 클릭 즉시 로딩 상태 표시 |
 | 133 | 2026-08-23 | [`ce4d2c7`](#ce4d2c7) | perf(mail): SMTP 연결 풀링 및 타임아웃 설정으로 발송 지연 개선 |
 | 134 | 2026-08-23 | [`f38297c`](#f38297c) | fix(mail): Gmail 발송 실패 시 정확한 원인(responseCode) 로그 추가 |
+| 135 | 2026-08-23 | [`fda9890`](#fda9890) | fix(mail): EMAIL_APP_PASSWORD 중간 공백 제거 (Google 표시 형식 그대로 붙여넣어도 동작) |
+| 136 | 2026-08-23 | [`c0ea977`](#c0ea977) | fix(mail): Gmail SMTP IPv4 강제 연결로 Render ETIMEDOUT 문제 해결 |
+| 137 | 2026-08-23 | [`f33f4d8`](#f33f4d8) | fix(mail): dns.setDefaultResultOrder(ipv4first)로 Render IPv6 ENETUNREACH 근본 해결 |
 
 ---
 
@@ -2581,4 +2584,58 @@
 
 ---
 
-**마지막 갱신**: 2026-08-23 · 총 134 항목 · Render 콜드스타트 UX·메일 성능·디버깅 · 정렬 = 과거→현재
+<a id="fda9890"></a>
+
+### 135. 2026-08-23 — `fda9890`
+
+- **hash (short)**: `fda9890`
+- **hash (full)**: `fda9890e2b9cdaa996e86c1b5c5e1f6d3c7a4f2e`
+- **author**: nomura
+- **message**: fix(mail): EMAIL_APP_PASSWORD 중간 공백 제거 (Google 표시 형식 그대로 붙여넣어도 동작)
+- **git**: `git show fda9890`
+- **범위**: backend / email / usability
+- **요약**: Google이 앱 비밀번호를 표시할 때 'abcd efgh ijkl mnop' 형식으로 공백을 포함해 보여주는데, 사용자가 그대로 복사하면 공백까지 들어가 Gmail 인증이 실패하는 문제를 해결. getEmailPass() 함수에서 `.replace(/\s+/g, '')`로 모든 공백(앞뒤·중간)을 제거해 어떤 형식으로 붙여넣어도 동작하게 개선했다.
+- **주요 파일**: `backend/utils/mail.js`
+- **관련 RDMD**: _(선택 — 기능 일지 있으면 링크)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="c0ea977"></a>
+
+### 136. 2026-08-23 — `c0ea977`
+
+- **hash (short)**: `c0ea977`
+- **hash (full)**: `c0ea977e8b9d1e2f4a5c6d7e8f9a0b1c2d3e4f5a`
+- **author**: nomura
+- **message**: fix(mail): Gmail SMTP IPv4 강제 연결로 Render ETIMEDOUT 문제 해결
+- **git**: `git show c0ea977`
+- **범위**: backend / email / deployment
+- **요약**: Nodemailer가 `service: 'gmail'` 축약 설정을 쓸 때 DNS 조회 시 IPv6을 우선 시도하는데, Render 같은 호스팅에서 IPv6 아웃바운드 라우팅이 불안정하면 ETIMEDOUT이 발생하는 문제를 해결. host/port를 직접 지정(`host: 'smtp.gmail.com'`, `port: 465`, `secure: true`)하고 `family: 4`로 IPv4를 강제해 연결 안정성을 개선했다.
+- **주요 파일**: `backend/utils/mail.js`
+- **관련 RDMD**: _(선택 — 기능 일지 있으면 링크)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="f33f4d8"></a>
+
+### 137. 2026-08-23 — `f33f4d8`
+
+- **hash (short)**: `f33f4d8`
+- **hash (full)**: `f33f4d88bb35ff053e9b92b713701e34c4318e94`
+- **author**: nomura
+- **message**: fix(mail): dns.setDefaultResultOrder(ipv4first)로 Render IPv6 ENETUNREACH 근본 해결
+- **git**: `git show f33f4d8`
+- **범위**: backend / email / deployment
+- **요약**: Nodemailer의 `family: 4` 옵션이 실제 소켓 연결 단계에서 완전히 적용되지 않아, Render 환경에서 Gmail의 IPv6 주소(`2404:6800:...`)로 접속을 시도해 ENETUNREACH(네트워크 도달 불가) 에러가 발생하는 문제를 근본 해결. [server.js](../../backend/server.js) 최상단에 `dns.setDefaultResultOrder('ipv4first')`를 추가해 Node.js 프로세스 전체의 DNS 조회를 IPv4 우선으로 강제했다. 이는 Render/Docker 등 IPv6 미지원 환경에서 SMTP 연결 실패의 표준 해결책이다.
+- **주요 파일**: `backend/server.js`
+- **관련 RDMD**: _(선택 — 기능 일지 있으면 링크)_
+
+[▲ 목차로](#목차)
+
+---
+
+**마지막 갱신**: 2026-08-23 · 총 137 항목 · 메일 발송 안정화 · 정렬 = 과거→현재
