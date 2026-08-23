@@ -30,6 +30,13 @@ function getTransporter() {
         user: getEmailUser(),
         pass: (process.env.EMAIL_APP_PASSWORD || '').trim(),
       },
+      // 연결 재사용 + 응답 없는 연결을 빠르게 실패 처리해 체감 속도 개선
+      pool: true,
+      maxConnections: 3,
+      maxMessages: 100,
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 10000,
     });
   }
   return transporter;
