@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 140 |
+| **커밋 수** | 141 |
 | **기간** | 2026-03-20 ~ 2026-08-24|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -169,6 +169,7 @@
 | 138 | 2026-08-23 | [`9114e81`](#9114e81) | docs(commit-history): 137번 커밋까지 문서화 |
 | 139 | 2026-08-23 | [`bc332a7`](#bc332a7) | fix(mail): smtp.gmail.com IPv4 주소 직접 조회로 Render ENETUNREACH 해결 |
 | 140 | 2026-08-24 | [`8c4d171`](#8c4d171) | fix(mail): 465 포트 차단 대비 587(STARTTLS) 자동 폴백 추가 |
+| 141 | 2026-08-24 | [`62ab216`](#62ab216) | feat(mail): 이메일 발송 실패 시 SMTP 에러 코드를 화면 alert에 노출 |
 
 ---
 
@@ -2695,4 +2696,22 @@
 
 ---
 
-**마지막 갱신**: 2026-08-24 · 총 140 항목 · Gmail 포트 폴백(465→587) · 정렬 = 과거→현재
+<a id="62ab216"></a>
+
+### 141. 2026-08-24 — `62ab216`
+
+- **hash (short)**: `62ab216`
+- **hash (full)**: `62ab2161a290586a860aab92504a93a33aa6f74c`
+- **author**: nomura
+- **message**: feat(mail): 이메일 발송 실패 시 SMTP 에러 코드를 화면 alert에 노출
+- **git**: `git show 62ab216`
+- **범위**: backend / frontend / auth / diagnostics
+- **요약**: SMTP 연결 실패 원인(ETIMEDOUT 등)이 Render 서버 로그에만 찍혀 매번 대시보드를 확인해야 하는 불편을 해소하기 위해, `findId`/`forgotPassword` 응답의 502 JSON에 `detail: emailErr.code`를 추가하고 `find_account.js`의 `accountFindErrorMessage()`가 이를 alert 문구에 함꾼하게 했다. 민감 정보 없이 에러 코드(ETIMEDOUT/ECONNREFUSED 등)만 노출되어 브라우저 Network 탭만으로도 원인 파악이 가능해졌다.
+- **주요 파일**: `backend/controllers/authController.js`, `user_login/find_account.js`
+- **관련 RDMD**: _(선택 — 기능 일지 있으면 링크)_
+
+[▲ 목차로](#목차)
+
+---
+
+**마지막 갱신**: 2026-08-24 · 총 141 항목 · 메일 에러 진단 가시성 개선 · 정렬 = 과거→현재
