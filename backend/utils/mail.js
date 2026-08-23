@@ -6,7 +6,12 @@ const nodemailer = require('nodemailer');
 const dnsPromises = require('dns').promises;
 
 const SMTP_HOST = 'smtp.gmail.com';
-const SMTP_PORT = 465;
+// Render 등 일부 호스팅이 465(SMTPS)를 막아둔 경우가 있어 587(STARTTLS)로 대체 시도
+const SMTP_PORT_CANDIDATES = [
+  { port: 465, secure: true },
+  { port: 587, secure: false },
+];
+const CONNECTION_ERROR_CODES = new Set(['ESOCKET', 'ETIMEDOUT', 'ECONNECTION', 'ECONNREFUSED']);
 
 const EMAIL_NOT_CONFIGURED_MSG =
   '이메일 발송 기능이 서버에 설정되어 있지 않습니다. 관리자에게 문의해주세요.';
@@ -29,6 +34,7 @@ function getEmailUser() {
 }
 
 let transporter = null;
+let workingPortIndex = 0; // 마지막으로 연결에 성공한 포트 설정 인덱스 (다음에도 우선 시도)
 
 /**
  * Nodemailer는 내부적으로 dns.resolve6도 시도해 IPv6 주소를 고르는데,
@@ -53,10 +59,11 @@ async function resolveSmtpIPv4() {
   return null;
 }
 
-async function createGmailTransport() {
+async function createGmailTransport(portConfig) {
   const common = {
-    port: SMTP_PORT,
-    secure: true,
+    port: portConfig.port,
+    secure: portConfig.secure,
+    requireTLS: !portConfig.secure,
     auth: { user: getEmailUser(), pass: getEmailPass() },
     pool: true,
     maxConnections: 3,
@@ -81,7 +88,7 @@ async function createGmailTransport() {
 async function getTransporter() {
   if (!hasEmailConfig()) return null;
   if (!transporter) {
-    transporter = await createGmailTransport();
+    transporter = await createGmailTransport(SMTP_PORT_CANDIDATES[workingPortIndex]);
   }
   return transporter;
 }
@@ -97,26 +104,38 @@ async function sendAppMail({ to, subject, html }) {
     throw err;
   }
 
-  const transport = await getTransporter();
-  try {
-    await transport.sendMail({
-      from: `"휴먼버그티어" <${getEmailUser()}>`,
-      to,
-      subject,
-      html,
-    });
-  } catch (err) {
-    // 연결 자체가 실패하면 캐시된 IP가 막혔을 수 있으므로 다음 요청에서 다시 조회하게 함
-    if (err.code === 'ESOCKET' || err.code === 'ETIMEDOUT' || err.code === 'ECONNECTION') {
+  const mailOptions = {
+    from: `"휴먼버그티어" <${getEmailUser()}>`,
+    to,
+    subject,
+    html,
+  };
+
+  let lastErr;
+  // 465가 방화벽에 막힌 호스팅에서는 587(STARTTLS)로 넘어가야 발송 가능
+  for (let attempt = 0; attempt < SMTP_PORT_CANDIDATES.length; attempt += 1) {
+    const portConfig = SMTP_PORT_CANDIDATES[workingPortIndex];
+    try {
+      const transport = await getTransporter();
+      await transport.sendMail(mailOptions);
+      return;
+    } catch (err) {
+      lastErr = err;
+      console.error(
+        `✉️  Gmail 발송 실패 [port=${portConfig.port}] [responseCode=${err.responseCode || '-'}] [code=${err.code || '-'}]:`,
+        err.response || err.message
+      );
+
+      const isConnectionIssue = CONNECTION_ERROR_CODES.has(err.code);
       transporter = null;
+      if (isConnectionIssue && attempt < SMTP_PORT_CANDIDATES.length - 1) {
+        workingPortIndex = (workingPortIndex + 1) % SMTP_PORT_CANDIDATES.length;
+        continue;
+      }
+      break;
     }
-    // Gmail 거부 사유(응답 코드) 로그로 원인 특정 (예: 낯선 IP 로그인 차단, 인증 실패 등)
-    console.error(
-      `✉️  Gmail 발송 실패 [responseCode=${err.responseCode || '-'}] [code=${err.code || '-'}]:`,
-      err.response || err.message
-    );
-    throw err;
   }
+  throw lastErr;
 }
 
 /** 서버 기동 시 한 줄 안내 (시크릿 값 출력 금지) */
