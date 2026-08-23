@@ -74,6 +74,7 @@ app.get('/favicon.ico', (req, res) => {
 // 헬스 체크 (DB 연결 상태 포함 — 시크릿 값은 노출하지 않음)
 app.get('/health', (req, res) => {
   const { hasEmailConfig } = require('./utils/mail');
+  const { getAppBaseUrl } = require('./utils/appUrl');
   const dbState = require('mongoose').connection.readyState;
   const dbStatus = {
     0: 'disconnected',
@@ -86,7 +87,8 @@ app.get('/health', (req, res) => {
     status: 'ok',
     db: dbStatus,
     emailConfigured: hasEmailConfig(),
-    appUrlConfigured: Boolean((process.env.APP_URL || '').trim()),
+    // 실제로 메일 링크에 쓰일 base URL (APP_URL > RENDER_EXTERNAL_URL > 요청 Host 순)
+    resolvedAppUrl: getAppBaseUrl(req),
     timestamp: new Date().toISOString(),
   });
 });

@@ -20,10 +20,12 @@ services:
         sync: false
         generateValue: true
       # 비밀번호 찾기·가입 인증 메일용 (Gmail 앱 비밀번호). 미설정 시 찾기 API는 503.
+      # sync: false = Render 대시보드에서 직접 값을 입력해야 함 (이 파일은 값을 채워주지 않음).
+      # 확인: 배포 후 /health 의 emailConfigured 가 true 인지 확인.
       - key: EMAIL_USER
         sync: false
       - key: EMAIL_APP_PASSWORD
         sync: false
-      # 메일 본문 절대 링크 (Render 공개 URL). 미설정 시 요청 Host로 생성.
+      # 메일 본문 절대 링크. 미설정 시 RENDER_EXTERNAL_URL(자동 주입) → 요청 Host 순으로 대체되므로 선택사항.
       - key: APP_URL
         sync: false

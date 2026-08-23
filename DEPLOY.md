@@ -28,13 +28,15 @@ Set these in the Render dashboard (Environment Variables):
 
 **Recommended:**
 - `JWT_SECRET` = strong random string
-- `APP_URL` = https://your-app.onrender.com (메일 재설정/인증 링크용, 배포 후 설정)
+- `APP_URL` = https://your-app.onrender.com (선택사항 — 미설정 시 Render가 자동 주입하는 `RENDER_EXTERNAL_URL`을 대신 사용함. 커스텀 도메인을 쓸 때만 직접 설정 권장)
 
 **메일 발송 (아이디 찾기 · 비밀번호 재설정 · 가입 인증에 필요):**
 - `EMAIL_USER` = Gmail 주소
-- `EMAIL_APP_PASSWORD` = Google **앱 비밀번호** (일반 로그인 비밀번호 아님, 2단계 인증 필요)
+- `EMAIL_APP_PASSWORD` = Google **앱 비밀번호** (일반 로그인 비밀번호 아님, 2단계 인증 필요, 공백 없이 16자리)
+- ⚠️ render.yaml에 `sync: false`로 선언만 되어 있고 값은 **Render 대시보드 → 서비스 → Environment 탭에서 직접 입력**해야 합니다. Blueprint로 서비스를 만들었어도 값은 자동으로 채워지지 않습니다.
 - 미설정 시: 가입은 “인증 생략”으로 완료되지만, **비밀번호/아이디 찾기 API는 503** 으로 안내합니다 (`/health` 의 `emailConfigured: false`).
 - 설정 후에도 메일이 없으면: 스팸함, Gmail 앱 비밀번호 오류(Render Logs의 `EMAIL_SEND_FAILED` / SMTP EAUTH), 아이디·이메일 일치 여부 확인.
+- 확인 방법: 배포 후 `https://your-app.onrender.com/health` 접속 → `emailConfigured: true` 인지 확인.
 
 **Optional:**
 - `ADMIN_NAME`

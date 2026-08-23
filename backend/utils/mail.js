@@ -59,7 +59,7 @@ async function sendAppMail({ to, subject, html }) {
 function logEmailConfigStatus() {
   if (hasEmailConfig()) {
     console.log('✉️  이메일 발송: 설정됨 (EMAIL_USER 존재)');
-    if (!(process.env.APP_URL || '').trim()) {
+    if (!(process.env.APP_URL || '').trim() && !(process.env.RENDER_EXTERNAL_URL || '').trim()) {
       console.warn(
         '⚠️  APP_URL 미설정 — 메일 링크는 요청 Host(x-forwarded-*)로 생성됩니다. Render에서는 APP_URL 설정을 권장합니다.'
       );
@@ -67,6 +67,9 @@ function logEmailConfigStatus() {
   } else {
     console.warn(
       '⚠️  EMAIL_USER / EMAIL_APP_PASSWORD 미설정 — 가입 인증·아이디/비번 찾기 메일이 발송되지 않습니다. (가입은 즉시 인증 처리)'
+    );
+    console.warn(
+      '⚠️  Render 배포: render.yaml의 sync: false는 값을 채워주지 않습니다. Render 대시보드 → 서비스 → Environment 탭에서 직접 입력하세요.'
     );
   }
 }

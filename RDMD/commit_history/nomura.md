@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 130 |
+| **커밋 수** | 131 |
 | **기간** | 2026-03-20 ~ 2026-08-23|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -159,6 +159,7 @@
 | 128 | 2026-08-23 | [`afa7cbf`](#afa7cbf) | feat(tier-class): 2티어 배치 변동 (하카마다·햐쿠타·다비츠 재배치) |
 | 129 | 2026-08-23 | [`43b26d5`](#43b26d5) | feat(notice): 공지 내용에 굵게·목록 서식 렌더링 지원 |
 | 130 | 2026-08-23 | [`e34524f`](#e34524f) | feat(notice): 관리자 공지 서식 툴바와 실시간 미리보기 추가 |
+| 131 | 2026-08-23 | [`pending`](#pending-131) | fix(deploy): Render 자동 URL로 APP_URL 미설정 보완 및 진단 개선 |
 
 ---
 
@@ -2505,6 +2506,24 @@
 
 ---
 
+<a id="pending-131"></a>
+
+### 131. 2026-08-23 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: fix(deploy): Render 자동 URL로 APP_URL 미설정 보완 및 진단 개선
+- **git**: `git show pending`
+- **범위**: backend / deploy
+- **요약**: Render가 자동 주입하는 `RENDER_EXTERNAL_URL`을 `APP_URL` 대체 값으로 쓰도록 `getAppBaseUrl`에 폴백을 추가해 비밀번호 재설정/인증 메일 링크가 `APP_URL` 미설정에도 올바른 Render 주소를 가리키도록 했다. `/health`에 실제 사용될 `resolvedAppUrl`을 노출해 진단을 쉽게 했고, 메일 미설정 시 서버 로그와 render.yaml/DEPLOY.md에 `sync: false`는 Render 대시보드에서 직접 값을 넣어야 함을 명시했다.
+- **주요 파일**: `backend/utils/appUrl.js`, `backend/server.js`, `backend/utils/mail.js`, `render.yaml`, `DEPLOY.md`
+- **관련 RDMD**: [DEPLOY.md](../../DEPLOY.md)
+
+[▲ 목차로](#목차)
+
+---
+
 
 ## 빈 템플릿 (이후 커밋 추가용)
 
@@ -2532,4 +2551,4 @@
 
 ---
 
-**마지막 갱신**: 2026-08-23 · 총 130 항목 · 공지 서식 툴바·미리보기 · 정렬 = 과거→현재
+**마지막 갱신**: 2026-08-23 · 총 131 항목 · Render APP_URL 자동 폴백 · 정렬 = 과거→현재
