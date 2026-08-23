@@ -3,6 +3,10 @@
  * EMAIL_USER / EMAIL_APP_PASSWORD 미설정 시 hasEmailConfig() === false
  */
 const nodemailer = require('nodemailer');
+const dnsPromises = require('dns').promises;
+
+const SMTP_HOST = 'smtp.gmail.com';
+const SMTP_PORT = 465;
 
 const EMAIL_NOT_CONFIGURED_MSG =
   '이메일 발송 기능이 서버에 설정되어 있지 않습니다. 관리자에게 문의해주세요.';
@@ -26,27 +30,58 @@ function getEmailUser() {
 
 let transporter = null;
 
-function getTransporter() {
+/**
+ * Nodemailer는 내부적으로 dns.resolve6도 시도해 IPv6 주소를 고르는데,
+ * Render 등 IPv6 아웃바운드가 없는 환경에서는 ENETUNREACH가 난다.
+ * IPv4 주소를 직접 조회해 host로 넘기고 TLS 검증용 SNI만 원래 도메인으로 유지한다.
+ */
+async function resolveSmtpIPv4() {
+  try {
+    const [ipv4] = await dnsPromises.resolve4(SMTP_HOST);
+    if (ipv4) return ipv4;
+  } catch (err) {
+    console.warn(`✉️  resolve4 실패 (${err.code || err.message}) — lookup으로 재시도`);
+  }
+
+  try {
+    const { address } = await dnsPromises.lookup(SMTP_HOST, { family: 4 });
+    if (address) return address;
+  } catch (err) {
+    console.warn(`✉️  lookup(IPv4) 실패 (${err.code || err.message}) — 도메인으로 연결 시도`);
+  }
+
+  return null;
+}
+
+async function createGmailTransport() {
+  const common = {
+    port: SMTP_PORT,
+    secure: true,
+    auth: { user: getEmailUser(), pass: getEmailPass() },
+    pool: true,
+    maxConnections: 3,
+    maxMessages: 100,
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 10000,
+  };
+
+  const ipv4 = await resolveSmtpIPv4();
+  if (ipv4) {
+    return nodemailer.createTransport({
+      ...common,
+      host: ipv4,
+      tls: { servername: SMTP_HOST },
+    });
+  }
+
+  return nodemailer.createTransport({ ...common, host: SMTP_HOST, family: 4 });
+}
+
+async function getTransporter() {
   if (!hasEmailConfig()) return null;
   if (!transporter) {
-    transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 465,
-      secure: true,
-      // Render 등 일부 호스팅에서 IPv6로 Gmail 접속 시 ETIMEDOUT 발생 → IPv4 강제
-      family: 4,
-      auth: {
-        user: getEmailUser(),
-        pass: getEmailPass(),
-      },
-      // 연결 재사용 + 응답 없는 연결을 빠르게 실패 처리해 체감 속도 개선
-      pool: true,
-      maxConnections: 3,
-      maxMessages: 100,
-      connectionTimeout: 10000,
-      greetingTimeout: 10000,
-      socketTimeout: 10000,
-    });
+    transporter = await createGmailTransport();
   }
   return transporter;
 }
@@ -62,7 +97,7 @@ async function sendAppMail({ to, subject, html }) {
     throw err;
   }
 
-  const transport = getTransporter();
+  const transport = await getTransporter();
   try {
     await transport.sendMail({
       from: `"휴먼버그티어" <${getEmailUser()}>`,
@@ -71,6 +106,10 @@ async function sendAppMail({ to, subject, html }) {
       html,
     });
   } catch (err) {
+    // 연결 자체가 실패하면 캐시된 IP가 막혔을 수 있으므로 다음 요청에서 다시 조회하게 함
+    if (err.code === 'ESOCKET' || err.code === 'ETIMEDOUT' || err.code === 'ECONNECTION') {
+      transporter = null;
+    }
     // Gmail 거부 사유(응답 코드) 로그로 원인 특정 (예: 낯선 IP 로그인 차단, 인증 실패 등)
     console.error(
       `✉️  Gmail 발송 실패 [responseCode=${err.responseCode || '-'}] [code=${err.code || '-'}]:`,
