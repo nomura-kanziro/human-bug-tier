@@ -30,7 +30,11 @@ function getTransporter() {
   if (!hasEmailConfig()) return null;
   if (!transporter) {
     transporter = nodemailer.createTransport({
-      service: 'gmail',
+      host: 'smtp.gmail.com',
+      port: 465,
+      secure: true,
+      // Render 등 일부 호스팅에서 IPv6로 Gmail 접속 시 ETIMEDOUT 발생 → IPv4 강제
+      family: 4,
       auth: {
         user: getEmailUser(),
         pass: getEmailPass(),
