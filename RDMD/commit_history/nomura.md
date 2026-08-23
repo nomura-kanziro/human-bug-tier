@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 141 |
+| **커밋 수** | 142 |
 | **기간** | 2026-03-20 ~ 2026-08-24|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -170,6 +170,7 @@
 | 139 | 2026-08-23 | [`bc332a7`](#bc332a7) | fix(mail): smtp.gmail.com IPv4 주소 직접 조회로 Render ENETUNREACH 해결 |
 | 140 | 2026-08-24 | [`8c4d171`](#8c4d171) | fix(mail): 465 포트 차단 대비 587(STARTTLS) 자동 폴백 추가 |
 | 141 | 2026-08-24 | [`62ab216`](#62ab216) | feat(mail): 이메일 발송 실패 시 SMTP 에러 코드를 화면 alert에 노출 |
+| 142 | 2026-08-24 | [`eb02847`](#eb02847) | feat(mail): Resend HTTPS API 지원 추가 (Render SMTP 포트 차단 우회) |
 
 ---
 
@@ -2714,4 +2715,22 @@
 
 ---
 
-**마지막 갱신**: 2026-08-24 · 총 141 항목 · 메일 에러 진단 가시성 개선 · 정렬 = 과거→현재
+<a id="eb02847"></a>
+
+### 142. 2026-08-24 — `eb02847`
+
+- **hash (short)**: `eb02847`
+- **hash (full)**: `eb028477d0006dcc984c24bd793777d0f78b00e3`
+- **author**: nomura
+- **message**: feat(mail): Resend HTTPS API 지원 추가 (Render SMTP 포트 차단 우회)
+- **git**: `git show eb02847`
+- **범위**: backend / email / deployment
+- **요약**: 465와 587 둘 다 `ETIMEDOUT`으로 Render가 SMTP 아웃바운드 자체를 막고 있음이 확인되어, HTTPS(443) 기반 [Resend](https://resend.com) API를 추가해 SMTP 포트 차단과 무관하게 발송할 수 있게 했다. `RESEND_API_KEY` 환경변수가 있으면 1순위로 HTTPS API를 사용하고, 없으면 기존 Gmail SMTP(465→587 폴백)로 그대로 폴백한다. 발신자는 도메인 미인증 시 `RESEND_FROM` 미설정 기본값으로 `onboarding@resend.dev`를 쓴다. render.yaml과 .env.example에 `RESEND_API_KEY`/`RESEND_FROM` 항목을 추가했다. 로컬 테스트에서 RESEND_API_KEY 미설정 시 기존 Gmail 경로로 정상 폴백되는 것을 확인했다.
+- **주요 파일**: `backend/utils/mail.js`, `render.yaml`, `backend/.env.example`
+- **관련 RDMD**: _(선택 — 기능 일지 있으면 링크)_
+
+[▲ 목차로](#목차)
+
+---
+
+**마지막 갱신**: 2026-08-24 · 총 142 항목 · Resend HTTPS 메일 전환 · 정렬 = 과거→현재
