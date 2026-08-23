@@ -54,12 +54,21 @@ async function sendAppMail({ to, subject, html }) {
   }
 
   const transport = getTransporter();
-  await transport.sendMail({
-    from: `"휴먼버그티어" <${getEmailUser()}>`,
-    to,
-    subject,
-    html,
-  });
+  try {
+    await transport.sendMail({
+      from: `"휴먼버그티어" <${getEmailUser()}>`,
+      to,
+      subject,
+      html,
+    });
+  } catch (err) {
+    // Gmail 거부 사유(응답 코드) 로그로 원인 특정 (예: 낯선 IP 로그인 차단, 인증 실패 등)
+    console.error(
+      `✉️  Gmail 발송 실패 [responseCode=${err.responseCode || '-'}] [code=${err.code || '-'}]:`,
+      err.response || err.message
+    );
+    throw err;
+  }
 }
 
 /** 서버 기동 시 한 줄 안내 (시크릿 값 출력 금지) */
