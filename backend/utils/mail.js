@@ -9,9 +9,14 @@ const EMAIL_NOT_CONFIGURED_MSG =
 const EMAIL_SEND_FAILED_MSG =
   '이메일 발송에 실패했습니다. 잠시 후 다시 시도하거나 관리자에게 문의해주세요.';
 
+// Google이 보여주는 'abcd efgh ijkl mnop' 형식 공백까지 제거 (그대로 붙여넣어도 동작하도록)
+function getEmailPass() {
+  return (process.env.EMAIL_APP_PASSWORD || '').replace(/\s+/g, '');
+}
+
 function hasEmailConfig() {
   const user = (process.env.EMAIL_USER || '').trim();
-  const pass = (process.env.EMAIL_APP_PASSWORD || '').trim();
+  const pass = getEmailPass();
   return Boolean(user && pass);
 }
 
@@ -28,7 +33,7 @@ function getTransporter() {
       service: 'gmail',
       auth: {
         user: getEmailUser(),
-        pass: (process.env.EMAIL_APP_PASSWORD || '').trim(),
+        pass: getEmailPass(),
       },
       // 연결 재사용 + 응답 없는 연결을 빠르게 실패 처리해 체감 속도 개선
       pool: true,
