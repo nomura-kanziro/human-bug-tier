@@ -3,6 +3,10 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const path = require('path');
 const fs = require('fs');
+const dns = require('dns');
+
+// Render 등 IPv6 아웃바운드 미지원 환경에서 Gmail SMTP 접속 시 ENETUNREACH 방지
+dns.setDefaultResultOrder('ipv4first');
 
 // db 연결 함수 불러오기
 const connectDB = require('./config/db');
