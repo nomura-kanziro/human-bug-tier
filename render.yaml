@@ -19,7 +19,14 @@ services:
       - key: JWT_SECRET
         sync: false
         generateValue: true
-      # 비밀번호 찾기·가입 인증 메일용 (Gmail 앱 비밀번호). 미설정 시 찾기 API는 503.
+      # 비밀번호 찾기·가입 인증 메일용. Render는 SMTP(465/587) 아웃바운드 포트를 막아둘 수 있어
+      # Resend(HTTPS API, https://resend.com) 사용을 권장. 설정 시 EMAIL_USER/EMAIL_APP_PASSWORD보다 우선함.
+      - key: RESEND_API_KEY
+        sync: false
+      # Resend 도메인 미인증 시 기본값 onboarding@resend.dev 사용 (미설정 시 자동 적용)
+      - key: RESEND_FROM
+        sync: false
+      # 비밀번호 찾기·가입 인증 메일용 (Gmail 앱 비밀번호). Render가 SMTP를 막으면 동작 안 함 → RESEND_API_KEY 권장.
       # sync: false = Render 대시보드에서 직접 값을 입력해야 함 (이 파일은 값을 채워주지 않음).
       # 확인: 배포 후 /health 의 emailConfigured 가 true 인지 확인.
       - key: EMAIL_USER

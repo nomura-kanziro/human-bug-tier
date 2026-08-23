@@ -1,9 +1,13 @@
 /**
- * 앱 메일 발송 (Gmail + 앱 비밀번호)
- * EMAIL_USER / EMAIL_APP_PASSWORD 미설정 시 hasEmailConfig() === false
+ * 앱 메일 발송
+ * 1순위: Resend HTTPS API (RESEND_API_KEY 설정 시) — Render의 SMTP(465/587) 포트 차단과 무관하게 동작
+ * 2순위: Gmail SMTP (로컬 등 SMTP가 열린 환경 대비 유지)
+ * 두 방식 모두 미설정 시 hasEmailConfig() === false
  */
 const nodemailer = require('nodemailer');
 const dnsPromises = require('dns').promises;
+
+const RESEND_API_URL = 'https://api.resend.com/emails';
 
 const SMTP_HOST = 'smtp.gmail.com';
 // Render 등 일부 호스팅이 465(SMTPS)를 막아둔 경우가 있어 587(STARTTLS)로 대체 시도
@@ -23,14 +27,46 @@ function getEmailPass() {
   return (process.env.EMAIL_APP_PASSWORD || '').replace(/\s+/g, '');
 }
 
-function hasEmailConfig() {
-  const user = (process.env.EMAIL_USER || '').trim();
-  const pass = getEmailPass();
-  return Boolean(user && pass);
-}
-
 function getEmailUser() {
   return (process.env.EMAIL_USER || '').trim();
+}
+
+function getResendApiKey() {
+  return (process.env.RESEND_API_KEY || '').trim();
+}
+
+// Resend는 도메인 인증 전에는 발신자를 onboarding@resend.dev로만 허용함
+function getResendFrom() {
+  return (process.env.RESEND_FROM || '').trim() || 'onboarding@resend.dev';
+}
+
+function hasEmailConfig() {
+  return Boolean(getResendApiKey()) || Boolean((process.env.EMAIL_USER || '').trim() && getEmailPass());
+}
+
+/** Render의 SMTP 포트 차단과 무관하게 동작하는 HTTPS 기반 발송 */
+async function sendViaResend({ to, subject, html }) {
+  const response = await fetch(RESEND_API_URL, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${getResendApiKey()}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: `휴먼버그티어 <${getResendFrom()}>`,
+      to: [to],
+      subject,
+      html,
+    }),
+  });
+
+  if (!response.ok) {
+    const body = await response.text().catch(() => '');
+    const err = new Error(`Resend API ${response.status}: ${body}`);
+    err.code = 'RESEND_API_ERROR';
+    err.responseCode = response.status;
+    throw err;
+  }
 }
 
 let transporter = null;
@@ -95,13 +131,27 @@ async function getTransporter() {
 
 /**
  * @param {{ to: string, subject: string, html: string }} opts
- * @throws Error on SMTP failure
+ * @throws Error on failure
  */
 async function sendAppMail({ to, subject, html }) {
   if (!hasEmailConfig()) {
     const err = new Error(EMAIL_NOT_CONFIGURED_MSG);
     err.code = 'EMAIL_NOT_CONFIGURED';
     throw err;
+  }
+
+  // Resend(HTTPS)가 설정돼 있으면 우선 사용 — Render의 SMTP 포트 차단 영향 없음
+  if (getResendApiKey()) {
+    try {
+      await sendViaResend({ to, subject, html });
+      return;
+    } catch (err) {
+      console.error(
+        `✉️  Resend 발송 실패 [responseCode=${err.responseCode || '-'}]:`,
+        err.message
+      );
+      throw err;
+    }
   }
 
   const mailOptions = {
@@ -141,7 +191,11 @@ async function sendAppMail({ to, subject, html }) {
 /** 서버 기동 시 한 줄 안내 (시크릿 값 출력 금지) */
 function logEmailConfigStatus() {
   if (hasEmailConfig()) {
-    console.log('✉️  이메일 발송: 설정됨 (EMAIL_USER 존재)');
+    console.log(
+      getResendApiKey()
+        ? '✉️  이메일 발송: 설정됨 (Resend API)'
+        : '✉️  이메일 발송: 설정됨 (Gmail SMTP)'
+    );
     if (!(process.env.APP_URL || '').trim() && !(process.env.RENDER_EXTERNAL_URL || '').trim()) {
       console.warn(
         '⚠️  APP_URL 미설정 — 메일 링크는 요청 Host(x-forwarded-*)로 생성됩니다. Render에서는 APP_URL 설정을 권장합니다.'
