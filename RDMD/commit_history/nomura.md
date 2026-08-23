@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 131 |
+| **커밋 수** | 134 |
 | **기간** | 2026-03-20 ~ 2026-08-23|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -160,6 +160,9 @@
 | 129 | 2026-08-23 | [`43b26d5`](#43b26d5) | feat(notice): 공지 내용에 굵게·목록 서식 렌더링 지원 |
 | 130 | 2026-08-23 | [`e34524f`](#e34524f) | feat(notice): 관리자 공지 서식 툴바와 실시간 미리보기 추가 |
 | 131 | 2026-08-23 | [`98ae5ce`](#98ae5ce) | fix(deploy): Render 자동 URL로 APP_URL 미설정 보완 및 진단 개선 |
+| 132 | 2026-08-23 | [`269b2c3`](#269b2c3) | fix(auth): Render 콜드스타트 중 버튼 무반응 개선 - 클릭 즉시 로딩 상태 표시 |
+| 133 | 2026-08-23 | [`ce4d2c7`](#ce4d2c7) | perf(mail): SMTP 연결 풀링 및 타임아웃 설정으로 발송 지연 개선 |
+| 134 | 2026-08-23 | [`f38297c`](#f38297c) | fix(mail): Gmail 발송 실패 시 정확한 원인(responseCode) 로그 추가 |
 
 ---
 
@@ -2524,31 +2527,58 @@
 
 ---
 
+<a id="269b2c3"></a>
 
-## 빈 템플릿 (이후 커밋 추가용)
+### 132. 2026-08-23 — `269b2c3`
 
-**최신 항목은 커밋 상세 구역의 맨 아래(이 템플릿 바로 위)** 에 붙인다.
-
-커밋·푸시 **전** 작성 → `git add` 에 이 파일 포함 → `git commit` → `git push`
-
-```markdown
-<a id="SHORT_HASH_or_pending"></a>
-3 · 총 127 항목 · 모바일 빈 칸
-### N. YYYY-MM-DD — `SHORT_HASH_or_pending`
-
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `269b2c3`
+- **hash (full)**: `269b2c36a02cc4e8eb86b58b1b21a2a1fd0cf2ea`
 - **author**: nomura
-- **message**: (git commit -m 원문 그대로)
-- **git**: `git show SHORT_HASH`
-- **범위**: frontend | backend | docs | deploy | …
-- **요약**: (이 커밋이 실제로 한 일을 1~2문장으로 — message 복붙 금지)
-- **주요 파일**: 
-- **관련 RDMD**: 
+- **message**: fix(auth): Render 콜드스타트 중 버튼 무반응 개선 - 클릭 즉시 로딩 상태 표시
+- **git**: `git show 269b2c3`
+- **범위**: auth / frontend / user-experience
+- **요약**: Render 무료 플랜이 슬립 후 깨어나는 시간(최대 1분)동안 버튼이 응답하지 않는 것처럼 보이는 문제를 해결. 클릭 즉시 버튼을 비활성화하고 로딩 메시지 "요청 중... (최대 1분 소요될 수 있어요)"를 표시해 사용자 경험 개선. find_account.html에 버튼 id 추가, find_account.js에 로딩 피드백 기능 구현.
+- **주요 파일**: `user_login/find_account.html`, `user_login/find_account.js`
+- **관련 RDMD**: _(선택 — 기능 일지 있으면 링크)_
 
 [▲ 목차로](#목차)
-```
 
 ---
 
-**마지막 갱신**: 2026-08-23 · 총 131 항목 · Render APP_URL 자동 폴백 · 정렬 = 과거→현재
+<a id="ce4d2c7"></a>
+
+### 133. 2026-08-23 — `ce4d2c7`
+
+- **hash (short)**: `ce4d2c7`
+- **hash (full)**: `ce4d2c7c865722b9bd4a47d52cce015646e08851`
+- **author**: nomura
+- **message**: perf(mail): SMTP 연결 풀링 및 타임아웃 설정으로 발송 지연 개선
+- **git**: `git show ce4d2c7`
+- **범위**: backend / email / performance
+- **요약**: Nodemailer의 SMTP 연결을 매번 새로 생성하는 대신 풀링으로 재사용 + 타임아웃 설정으로 지연 개선. 로컬 테스트 결과 약 2.6초 이내 발송 완료. 변경 사항: Gmail SMTP pool 설정(maxConnections: 3, maxMessages: 100) 및 connectionTimeout, greetingTimeout, socketTimeout 각 10초 추가. Nodemailer v8.0.10.
+- **주요 파일**: `backend/utils/mail.js`
+- **관련 RDMD**: _(선택 — 기능 일지 있으면 링크)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="f38297c"></a>
+
+### 134. 2026-08-23 — `f38297c`
+
+- **hash (short)**: `f38297c`
+- **hash (full)**: `f38297cb6bc95f3f16ad1c0f796662554b279a34`
+- **author**: nomura
+- **message**: fix(mail): Gmail 발송 실패 시 정확한 원인(responseCode) 로그 추가
+- **git**: `git show f38297c`
+- **범위**: backend / email / diagnostics
+- **요약**: sendAppMail() 함수에 try-catch를 추가해 Gmail SMTP 발송 실패 시 responseCode·error.code·error.response를 로그에 남김. Render 로그에서 `✉️ Gmail 발송 실패 [responseCode=...]` 줄을 보면 낯선 IP 차단(421)·인증 실패(534, 535) 등 정확한 원인을 특정할 수 있어 디버깅 시간 단축. 에러 진단을 쉽게 하기 위해 console.error에 responseCode를 먼저 노출.
+- **주요 파일**: `backend/utils/mail.js`
+- **관련 RDMD**: _(선택 — 기능 일지 있으면 링크)_
+
+[▲ 목차로](#목차)
+
+---
+
+**마지막 갱신**: 2026-08-23 · 총 134 항목 · Render 콜드스타트 UX·메일 성능·디버깅 · 정렬 = 과거→현재
