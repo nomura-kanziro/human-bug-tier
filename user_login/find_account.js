@@ -29,7 +29,9 @@ function accountFindErrorMessage(data, fallback) {
     return data.error || '이메일 발송이 서버에 설정되어 있지 않습니다. 관리자에게 문의해주세요.';
   }
   if (data.code === 'EMAIL_SEND_FAILED') {
-    return data.error || '이메일 발송에 실패했습니다. 잠시 후 다시 시도해주세요.';
+    const base = data.error || '이메일 발송에 실패했습니다. 잠시 후 다시 시도해주세요.';
+    // 서버 SMTP 에러 코드를 화면에 노출해 Render 로그 없이도 원인 파악 가능하게 함
+    return data.detail ? `${base} (${data.detail})` : base;
   }
   return data.error || fallback;
 }
