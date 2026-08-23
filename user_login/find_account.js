@@ -42,6 +42,14 @@ async function findId() {
     return;
   }
 
+  // Render 무료 플랜 슬립 후 첫 요청은 최대 1분까지 걸릴 수 있어 클릭 즉시 상태를 표시함
+  const btn = document.getElementById('findIdBtn');
+  const originalText = btn ? btn.textContent : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = '요청 중... (최대 1분 소요될 수 있어요)';
+  }
+
   try {
     const response = await fetch(`${getAuthApiBase()}/find-id`, {
       method: 'POST',
@@ -62,6 +70,11 @@ async function findId() {
   } catch (err) {
     console.error(err);
     alert('서버와 연결할 수 없습니다. 잠시 후 다시 시도해주세요.');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = originalText;
+    }
   }
 }
 
@@ -72,6 +85,14 @@ async function findPassword() {
   if (!userId || !email) {
     alert('아이디와 이메일을 모두 입력해주세요.');
     return;
+  }
+
+  // Render 무료 플랜 슬립 후 첫 요청은 최대 1분까지 걸릴 수 있어 클릭 즉시 상태를 표시함
+  const btn = document.getElementById('findPwBtn');
+  const originalText = btn ? btn.textContent : '';
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = '요청 중... (최대 1분 소요될 수 있어요)';
   }
 
   try {
@@ -94,6 +115,11 @@ async function findPassword() {
   } catch (err) {
     console.error(err);
     alert('서버와 연결할 수 없습니다. 잠시 후 다시 시도해주세요.');
+  } finally {
+    if (btn) {
+      btn.disabled = false;
+      btn.textContent = originalText;
+    }
   }
 }
 

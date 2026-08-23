@@ -25,14 +25,14 @@
       <!-- 아이디 찾기 폼 -->
       <div id="id-form" class="form-tab">
         <input type="email" id="findEmail" placeholder="가입한 이메일 주소" />
-        <button onclick="findId()" style="width:240px; margin-top:15px;">아이디 찾기</button>
+        <button id="findIdBtn" onclick="findId()" style="width:240px; margin-top:15px;">아이디 찾기</button>
       </div>
 
       <!-- 비밀번호 찾기 폼 -->
       <div id="pw-form" class="form-tab" style="display:none;">
         <input type="text" id="findUserId" placeholder="아이디" />
         <input type="email" id="findPwEmail" placeholder="가입한 이메일 주소" />
-        <button onclick="findPassword()" style="width:240px; margin-top:15px;">비밀번호 재설정 링크 받기</button>
+        <button id="findPwBtn" onclick="findPassword()" style="width:240px; margin-top:15px;">비밀번호 재설정 링크 받기</button>
       </div>
 
       <!-- 로그인으로 돌아가기 -->
