@@ -7,8 +7,8 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 139 |
-| **기간** | 2026-03-20 ~ 2026-08-23|
+| **커밋 수** | 140 |
+| **기간** | 2026-03-20 ~ 2026-08-24|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
 > 폴더 안내: [README.md](./README.md)  ·  상세 기능 일지: [../frontend/](../frontend/README.md) · [../backend/](../backend/README.md)
@@ -168,6 +168,7 @@
 | 137 | 2026-08-23 | [`f33f4d8`](#f33f4d8) | fix(mail): dns.setDefaultResultOrder(ipv4first)로 Render IPv6 ENETUNREACH 근본 해결 |
 | 138 | 2026-08-23 | [`9114e81`](#9114e81) | docs(commit-history): 137번 커밋까지 문서화 |
 | 139 | 2026-08-23 | [`bc332a7`](#bc332a7) | fix(mail): smtp.gmail.com IPv4 주소 직접 조회로 Render ENETUNREACH 해결 |
+| 140 | 2026-08-24 | [`8c4d171`](#8c4d171) | fix(mail): 465 포트 차단 대비 587(STARTTLS) 자동 폴백 추가 |
 
 ---
 
@@ -2676,4 +2677,22 @@
 
 ---
 
-**마지막 갱신**: 2026-08-23 · 총 139 항목 · Gmail IPv4 직접 조회 · 정렬 = 과거→현재
+<a id="8c4d171"></a>
+
+### 140. 2026-08-24 — `8c4d171`
+
+- **hash (short)**: `8c4d171`
+- **hash (full)**: `8c4d1710287f5d96a339cf85ae6bd421cf723637`
+- **author**: nomura
+- **message**: fix(mail): 465 포트 차단 대비 587(STARTTLS) 자동 폴백 추가
+- **git**: `git show 8c4d171`
+- **범위**: backend / email / deployment
+- **요약**: IPv4 주소로 직접 접속해도 `ETIMEDOUT`이 발생해, Render가 465(SMTPS) 포트 자체를 방화벽으로 막고 있다고 결론지었다. `SMTP_PORT_CANDIDATES`에 465(secure)와 587(STARTTLS) 두 설정을 두고, 연결 단계 에러(ESOCKET/ETIMEDOUT/ECONNECTION/ECONNREFUSED) 발생 시 다음 포트로 자동 재시도하도록 `sendAppMail`을 루프 구조로 변경했다. 마지막으로 성공한 포트 인덱스를 캐시해 다음 발송부터는 그 포트를 우선 시도한다. 로컬 테스트에서 정상 발송을 확인했다.
+- **주요 파일**: `backend/utils/mail.js`
+- **관련 RDMD**: _(선택 — 기능 일지 있으면 링크)_
+
+[▲ 목차로](#목차)
+
+---
+
+**마지막 갱신**: 2026-08-24 · 총 140 항목 · Gmail 포트 폴백(465→587) · 정렬 = 과거→현재
