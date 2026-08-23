@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 137 |
+| **커밋 수** | 139 |
 | **기간** | 2026-03-20 ~ 2026-08-23|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -166,6 +166,8 @@
 | 135 | 2026-08-23 | [`fda9890`](#fda9890) | fix(mail): EMAIL_APP_PASSWORD 중간 공백 제거 (Google 표시 형식 그대로 붙여넣어도 동작) |
 | 136 | 2026-08-23 | [`c0ea977`](#c0ea977) | fix(mail): Gmail SMTP IPv4 강제 연결로 Render ETIMEDOUT 문제 해결 |
 | 137 | 2026-08-23 | [`f33f4d8`](#f33f4d8) | fix(mail): dns.setDefaultResultOrder(ipv4first)로 Render IPv6 ENETUNREACH 근본 해결 |
+| 138 | 2026-08-23 | [`9114e81`](#9114e81) | docs(commit-history): 137번 커밋까지 문서화 |
+| 139 | 2026-08-23 | [`bc332a7`](#bc332a7) | fix(mail): smtp.gmail.com IPv4 주소 직접 조회로 Render ENETUNREACH 해결 |
 
 ---
 
@@ -2638,4 +2640,40 @@
 
 ---
 
-**마지막 갱신**: 2026-08-23 · 총 137 항목 · 메일 발송 안정화 · 정렬 = 과거→현재
+<a id="9114e81"></a>
+
+### 138. 2026-08-23 — `9114e81`
+
+- **hash (short)**: `9114e81`
+- **hash (full)**: `9114e8148b7ac1e6d3c6d1ba5c04a5a5d0a2f2b1`
+- **author**: nomura
+- **message**: docs(commit-history): 137번 커밋까지 문서화 (fda9890·c0ea977·f33f4d8 - 메일 IPv4 강제 연결)
+- **git**: `git show 9114e81`
+- **범위**: docs / commit_history
+- **요약**: 메일 발송 안정화 커밋 3건(135~137)을 목차와 상세 블록에 반영했다. 코드 동작은 바꾸지 않았다.
+- **주요 파일**: `RDMD/commit_history/nomura.md`
+- **관련 RDMD**: [commit_history/README.md](./README.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="bc332a7"></a>
+
+### 139. 2026-08-23 — `bc332a7`
+
+- **hash (short)**: `bc332a7`
+- **hash (full)**: `bc332a7fd5b35822686d20116f17ffc4fd6b5934`
+- **author**: nomura
+- **message**: fix(mail): smtp.gmail.com IPv4 주소 직접 조회로 Render ENETUNREACH 해결
+- **git**: `git show bc332a7`
+- **범위**: backend / email / deployment
+- **요약**: 앞선 두 시도(`family: 4`, `dns.setDefaultResultOrder`)로도 Render에서 IPv6 주소(`2404:6800:...`)로 접속을 시도해 ENETUNREACH가 계속 발생했다. Nodemailer v8이 자체 DNS 로직에서 `dns.resolve6` 결과를 우선할 수 있어 두 옵션 모두 우회되기 때문. 이를 `resolveSmtpIPv4()`로 `dns.resolve4` → `dns.lookup({family:4})` 순서로 IPv4 주소를 직접 조회한 뒤 그 IP를 `host`로 넘기고 `tls.servername`에 원래 도메인을 지정해 인증서 검증을 유지하는 방식으로 해결했다. 조회 실패 시에는 도메인 연결로 폴백하며, ESOCKET/ETIMEDOUT 발생 시 트랜스포터 캐시를 비워 다음 요청에서 IP를 재조회한다. 로컬 테스트에서 `resolve4` 실패 후 `lookup` 폴백으로 발송 성공을 확인했다.
+- **주요 파일**: `backend/utils/mail.js`
+- **관련 RDMD**: _(선택 — 기능 일지 있으면 링크)_
+
+[▲ 목차로](#목차)
+
+---
+
+**마지막 갱신**: 2026-08-23 · 총 139 항목 · Gmail IPv4 직접 조회 · 정렬 = 과거→현재
