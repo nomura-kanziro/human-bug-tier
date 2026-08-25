@@ -229,7 +229,7 @@ const findId = async (req, res) => {
         return res.status(502).json({
           error: EMAIL_SEND_FAILED_MSG,
           code: 'EMAIL_SEND_FAILED',
-          detail: emailErr.code || undefined,
+          detail: [emailErr.code, emailErr.responseCode].filter(Boolean).join(' '),
         });
       }
     }
@@ -280,7 +280,7 @@ const forgotPassword = async (req, res) => {
         return res.status(502).json({
           error: EMAIL_SEND_FAILED_MSG,
           code: 'EMAIL_SEND_FAILED',
-          detail: emailErr.code || undefined,
+          detail: [emailErr.code, emailErr.responseCode].filter(Boolean).join(' '),
         });
       }
     }
