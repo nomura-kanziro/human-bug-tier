@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 145 |
+| **커밋 수** | 146 |
 | **기간** | 2026-03-20 ~ 2026-08-25|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -174,6 +174,7 @@
 | 143 | 2026-08-25 | [`5da6326`](#5da6326) | feat(mail): /health에 emailProvider(resend\|gmail-smtp\|none) 진단 필드 추가 |
 | 144 | 2026-08-25 | [`143a022`](#143a022) | feat(mail): Resend 실패 시 responseCode(HTTP 상태)까지 화면 alert에 노출 |
 | 145 | 2026-08-25 | [`64a85d6`](#64a85d6) | feat(mail): 회원가입 인증 메일 실패 시에도 에러 코드 화면에 노출 (누락된 부분 통일) |
+| 146 | 2026-08-25 | [`b0e1cf7`](#b0e1cf7) | feat(mail): Brevo API 지원 추가 (도메인 없이 발신자 1개 인증만으로 임의 수신자 발송 가능) |
 
 ---
 
@@ -2795,3 +2796,25 @@
 ---
 
 **마지막 갱신**: 2026-08-25 · 총 145 항목 · 메일 에러 진단 노출 3곳 통일 · 정렬 = 과거→현재
+
+---
+
+<a id="b0e1cf7"></a>
+
+### 146. 2026-08-25 — `b0e1cf7`
+
+- **hash (short)**: `b0e1cf7`
+- **hash (full)**: `b0e1cf7267b0dc974bbdc63512fad36e6809393d`
+- **author**: nomura
+- **message**: feat(mail): Brevo API 지원 추가 (도메인 없이 발신자 1개 인증만으로 임의 수신자 발송 가능)
+- **git**: `git show b0e1cf7`
+- **범위**: backend / email / deployment
+- **요약**: Resend가 도메인 미인증 상태에서는 계정 소유자 본인에게만 발송을 허용해(403 validation_error) 실제 유저에게 발송이 불가능한 문제를 해결. 도메인 구매·DNS 설정 없이 발신자 이메일 1개만 클릭 인증하면 임의 수신자에게 발송이 가능한 [Brevo](https://brevo.com) API를 추가해 `BREVO_API_KEY` 설정 시 최우선 사용되도록 했다 (우선순위: Brevo → Resend → Gmail SMTP). 다리는 과정에서 JSDoc 주석이 야당히 닫혀있지 않아 `getEmailProvider`/`sendViaBrevo` 함수 전체가 주석 처리되는 버그가 발생해 즉시 발견하여 수정했다. render.yaml과 .env.example에 `BREVO_API_KEY`/`BREVO_FROM` 항목을 추가하고, 로컬에서 Brevo/Gmail 경로 모두 정상 동작을 확인했다.
+- **주요 파일**: `backend/utils/mail.js`, `render.yaml`, `backend/.env.example`
+- **관련 RDMD**: _(선택 — 기능 일지 있으면 링크)_
+
+[▲ 목차로](#목차)
+
+---
+
+**마지막 갱신**: 2026-08-25 · 총 146 항목 · Brevo 전환으로 임의 수신자 발송 가능 · 정렬 = 과거→현재
