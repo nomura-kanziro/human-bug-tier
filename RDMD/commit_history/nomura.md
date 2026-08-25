@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 144 |
+| **커밋 수** | 145 |
 | **기간** | 2026-03-20 ~ 2026-08-25|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -173,6 +173,7 @@
 | 142 | 2026-08-24 | [`eb02847`](#eb02847) | feat(mail): Resend HTTPS API 지원 추가 (Render SMTP 포트 차단 우회) |
 | 143 | 2026-08-25 | [`5da6326`](#5da6326) | feat(mail): /health에 emailProvider(resend\|gmail-smtp\|none) 진단 필드 추가 |
 | 144 | 2026-08-25 | [`143a022`](#143a022) | feat(mail): Resend 실패 시 responseCode(HTTP 상태)까지 화면 alert에 노출 |
+| 145 | 2026-08-25 | [`64a85d6`](#64a85d6) | feat(mail): 회원가입 인증 메일 실패 시에도 에러 코드 화면에 노출 (누락된 부분 통일) |
 
 ---
 
@@ -2772,3 +2773,25 @@
 ---
 
 **마지막 갱신**: 2026-08-25 · 총 144 항목 · Resend 진단 가시성 개선 · 정렬 = 과거→현재
+
+---
+
+<a id="64a85d6"></a>
+
+### 145. 2026-08-25 — `64a85d6`
+
+- **hash (short)**: `64a85d6`
+- **hash (full)**: `64a85d6b946a19e0bf487e206efcc8e6c5b9c400`
+- **author**: nomura
+- **message**: feat(mail): 회원가입 인증 메일 실패 시에도 에러 코드 화면에 노출 (누락된 부분 통일)
+- **git**: `git show 64a85d6`
+- **범위**: backend / frontend / auth / diagnostics
+- **요약**: 아이디/비번 찾기에만 에러 코드 노출이 적용되고 회원가입 인증 메일 실패 경로는 빠져 있었다. `register` 컨트롤러의 캐치 블록에 `detail: [emailErr.code, emailErr.responseCode]` 를 추가하고, `sign_up.js`가 `response.ok`에서도 고정 문구 대신 서버의 `data.message`/`data.detail`을 그대로 보여주도록 수정해, 회원가입·아이디 찾기·비번 찾기 3개 메일 발송 경로 모두에 진단 코드 노출을 통일했다.
+- **주요 파일**: `backend/controllers/authController.js`, `user_login/sign_up.js`
+- **관련 RDMD**: _(선택 — 기능 일지 있으면 링크)_
+
+[▲ 목차로](#목차)
+
+---
+
+**마지막 갱신**: 2026-08-25 · 총 145 항목 · 메일 에러 진단 노출 3곳 통일 · 정렬 = 과거→현재
