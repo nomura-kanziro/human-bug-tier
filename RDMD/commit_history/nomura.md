@@ -7,8 +7,8 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 142 |
-| **기간** | 2026-03-20 ~ 2026-08-24|
+| **커밋 수** | 144 |
+| **기간** | 2026-03-20 ~ 2026-08-25|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
 > 폴더 안내: [README.md](./README.md)  ·  상세 기능 일지: [../frontend/](../frontend/README.md) · [../backend/](../backend/README.md)
@@ -171,6 +171,8 @@
 | 140 | 2026-08-24 | [`8c4d171`](#8c4d171) | fix(mail): 465 포트 차단 대비 587(STARTTLS) 자동 폴백 추가 |
 | 141 | 2026-08-24 | [`62ab216`](#62ab216) | feat(mail): 이메일 발송 실패 시 SMTP 에러 코드를 화면 alert에 노출 |
 | 142 | 2026-08-24 | [`eb02847`](#eb02847) | feat(mail): Resend HTTPS API 지원 추가 (Render SMTP 포트 차단 우회) |
+| 143 | 2026-08-25 | [`5da6326`](#5da6326) | feat(mail): /health에 emailProvider(resend\|gmail-smtp\|none) 진단 필드 추가 |
+| 144 | 2026-08-25 | [`143a022`](#143a022) | feat(mail): Resend 실패 시 responseCode(HTTP 상태)까지 화면 alert에 노출 |
 
 ---
 
@@ -2733,4 +2735,40 @@
 
 ---
 
-**마지막 갱신**: 2026-08-24 · 총 142 항목 · Resend HTTPS 메일 전환 · 정렬 = 과거→현재
+<a id="5da6326"></a>
+
+### 143. 2026-08-25 — `5da6326`
+
+- **hash (short)**: `5da6326`
+- **hash (full)**: `5da6326e8b6b0c6d1a2f3e4d5c6b7a8f9e0d1c2b`
+- **author**: nomura
+- **message**: feat(mail): /health에 emailProvider(resend|gmail-smtp|none) 진단 필드 추가
+- **git**: `git show 5da6326`
+- **범위**: backend / email / diagnostics
+- **요약**: `emailConfigured: true`만으로는 Resend와 Gmail SMTP 중 어느 쪽이 활성화됐는지 구분이 안 되던 문제를 해결. `getEmailProvider()`를 추가해 `/health` 응답에 `emailProvider` 필드(`resend`|`gmail-smtp`|`none`)를 노출해 Render 대시보드를 들어가지 않아도 브라우저에서 바로 확인 가능하게 했다.
+- **주요 파일**: `backend/server.js`, `backend/utils/mail.js`
+- **관련 RDMD**: _(선택 — 기능 일지 있으면 링크)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="143a022"></a>
+
+### 144. 2026-08-25 — `143a022`
+
+- **hash (short)**: `143a022`
+- **hash (full)**: `143a0229d21eb3884e5fae47d0a9da42912f0b4b`
+- **author**: nomura
+- **message**: feat(mail): Resend 실패 시 responseCode(HTTP 상태)까지 화면 alert에 노출
+- **git**: `git show 143a022`
+- **범위**: backend / auth / diagnostics
+- **요약**: Resend 전환 후 발생한 `(RESEND_API_ERROR)` alert가 정확한 거부 사유(401 인증 실패, 422 유효성 검사 실패 등)를 알려주지 않는 문제를 해결. `findId`/`forgotPassword` 응답의 `detail`에 `emailErr.code`와 `emailErr.responseCode`(HTTP 상태 코드)를 함께 포함시켰다. 로컬에서 가짜 API 키로 `401 API key is invalid` 응답을 확인해 정상 동작을 검증했다.
+- **주요 파일**: `backend/controllers/authController.js`
+- **관련 RDMD**: _(선택 — 기능 일지 있으면 링크)_
+
+[▲ 목차로](#목차)
+
+---
+
+**마지막 갱신**: 2026-08-25 · 총 144 항목 · Resend 진단 가시성 개선 · 정렬 = 과거→현재
