@@ -63,13 +63,16 @@ async function signUp() {
     const data = await response.json();
 
     if (response.ok) {
-      alert('✅ 인증 메일이 발송되었습니다.\n메일함을 확인해주세요.');
+      // 메일 발송 실패 시에도 201로 응답되므로 detail 유무로 실제 발송 성공 여부를 구분
+      const suffix = data.detail ? ` (${data.detail})` : '';
+      alert((data.message || '✅ 인증 메일이 발송되었습니다.\n메일함을 확인해주세요.') + suffix);
       // 로그인 페이지로 이동
       setTimeout(() => {
         window.location.href = "login.html";
       }, 1500);
     } else {
-      alert('❌ ' + (data.error || '회원가입에 실패했습니다.'));
+      const suffix = data.detail ? ` (${data.detail})` : '';
+      alert('❌ ' + (data.error || '회원가입에 실패했습니다.') + suffix);
     }
   } catch (err) {
     console.error(err);

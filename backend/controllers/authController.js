@@ -112,6 +112,7 @@ const register = async (req, res) => {
         res.status(201).json({
           message:
             '회원가입은 완료되었으나 인증 메일 발송에 실패했습니다. 관리자에게 문의해주세요.',
+          detail: [emailErr.code, emailErr.responseCode].filter(Boolean).join(' ') || undefined,
         });
       }
     } else {
