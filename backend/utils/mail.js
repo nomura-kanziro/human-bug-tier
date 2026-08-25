@@ -1,12 +1,14 @@
 /**
  * 앱 메일 발송
- * 1순위: Resend HTTPS API (RESEND_API_KEY 설정 시) — Render의 SMTP(465/587) 포트 차단과 무관하게 동작
- * 2순위: Gmail SMTP (로컬 등 SMTP가 열린 환경 대비 유지)
- * 두 방식 모두 미설정 시 hasEmailConfig() === false
+ * 1순위: Brevo HTTPS API (BREVO_API_KEY 설정 시) — 발신자 이메일 1개만 클릭 인증하면 도메인 없이도 임의 수신자에게 발송 가능
+ * 2순위: Resend HTTPS API (RESEND_API_KEY 설정 시) — 도메인 미인증 시 계정 소유자 본인에게만 발송 가능
+ * 3순위: Gmail SMTP (로컬 등 SMTP가 열린 환경 대비 유지)
+ * 세 방식 모두 미설정 시 hasEmailConfig() === false
  */
 const nodemailer = require('nodemailer');
 const dnsPromises = require('dns').promises;
 
+const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
 const RESEND_API_URL = 'https://api.resend.com/emails';
 
 const SMTP_HOST = 'smtp.gmail.com';
@@ -40,15 +42,54 @@ function getResendFrom() {
   return (process.env.RESEND_FROM || '').trim() || 'onboarding@resend.dev';
 }
 
-function hasEmailConfig() {
-  return Boolean(getResendApiKey()) || Boolean((process.env.EMAIL_USER || '').trim() && getEmailPass());
+function getBrevoApiKey() {
+  return (process.env.BREVO_API_KEY || '').trim();
 }
 
-/** /health 진단용 — 시크릿 값 없이 어떤 발송 경로가 활성인지만 노출 */
+function getBrevoFrom() {
+  return (process.env.BREVO_FROM || '').trim() || getEmailUser();
+}
+
+function hasEmailConfig() {
+  return (
+    Boolean(getBrevoApiKey()) ||
+    Boolean(getResendApiKey()) ||
+    Boolean((process.env.EMAIL_USER || '').trim() && getEmailPass())
+  );
+}
+
+/** /health 진단용 — 시크릿 값 없이 어느 발송 경로가 활성인지만 노출 */
 function getEmailProvider() {
+  if (getBrevoApiKey()) return 'brevo';
   if (getResendApiKey()) return 'resend';
   if ((process.env.EMAIL_USER || '').trim() && getEmailPass()) return 'gmail-smtp';
   return 'none';
+}
+
+/** 도메인 없이 발신자 이메일 1개만 인증하면 임의 수신자에게 발송 가능 */
+async function sendViaBrevo({ to, subject, html }) {
+  const response = await fetch(BREVO_API_URL, {
+    method: 'POST',
+    headers: {
+      'api-key': getBrevoApiKey(),
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify({
+      sender: { name: '휴먼버그티어', email: getBrevoFrom() },
+      to: [{ email: to }],
+      subject,
+      htmlContent: html,
+    }),
+  });
+
+  if (!response.ok) {
+    const body = await response.text().catch(() => '');
+    const err = new Error(`Brevo API ${response.status}: ${body}`);
+    err.code = 'BREVO_API_ERROR';
+    err.responseCode = response.status;
+    throw err;
+  }
 }
 
 /** Render의 SMTP 포트 차단과 무관하게 동작하는 HTTPS 기반 발송 */
@@ -147,7 +188,21 @@ async function sendAppMail({ to, subject, html }) {
     throw err;
   }
 
-  // Resend(HTTPS)가 설정돼 있으면 우선 사용 — Render의 SMTP 포트 차단 영향 없음
+  // Brevo(HTTPS, 발신자 1개만 인증하면 임의 수신자 발송 가능)가 설정돼 있으면 최우선 사용
+  if (getBrevoApiKey()) {
+    try {
+      await sendViaBrevo({ to, subject, html });
+      return;
+    } catch (err) {
+      console.error(
+        `✉️  Brevo 발송 실패 [responseCode=${err.responseCode || '-'}]:`,
+        err.message
+      );
+      throw err;
+    }
+  }
+
+  // Resend(HTTPS)가 설정돼 있으면 사용 — Render의 SMTP 포트 차단 영향 없음 (단, 도메인 미인증 시 계정 소유자에게만 발송 가능)
   if (getResendApiKey()) {
     try {
       await sendViaResend({ to, subject, html });
@@ -198,10 +253,9 @@ async function sendAppMail({ to, subject, html }) {
 /** 서버 기동 시 한 줄 안내 (시크릿 값 출력 금지) */
 function logEmailConfigStatus() {
   if (hasEmailConfig()) {
+    const provider = getEmailProvider();
     console.log(
-      getResendApiKey()
-        ? '✉️  이메일 발송: 설정됨 (Resend API)'
-        : '✉️  이메일 발송: 설정됨 (Gmail SMTP)'
+      `✉️  이메일 발송: 설정됨 (${provider === 'brevo' ? 'Brevo API' : provider === 'resend' ? 'Resend API' : 'Gmail SMTP'})`
     );
     if (!(process.env.APP_URL || '').trim() && !(process.env.RENDER_EXTERNAL_URL || '').trim()) {
       console.warn(
