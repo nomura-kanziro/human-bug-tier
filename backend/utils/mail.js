@@ -44,6 +44,13 @@ function hasEmailConfig() {
   return Boolean(getResendApiKey()) || Boolean((process.env.EMAIL_USER || '').trim() && getEmailPass());
 }
 
+/** /health 진단용 — 시크릿 값 없이 어떤 발송 경로가 활성인지만 노출 */
+function getEmailProvider() {
+  if (getResendApiKey()) return 'resend';
+  if ((process.env.EMAIL_USER || '').trim() && getEmailPass()) return 'gmail-smtp';
+  return 'none';
+}
+
 /** Render의 SMTP 포트 차단과 무관하게 동작하는 HTTPS 기반 발송 */
 async function sendViaResend({ to, subject, html }) {
   const response = await fetch(RESEND_API_URL, {
@@ -213,6 +220,7 @@ function logEmailConfigStatus() {
 
 module.exports = {
   hasEmailConfig,
+  getEmailProvider,
   sendAppMail,
   logEmailConfigStatus,
   EMAIL_NOT_CONFIGURED_MSG,
