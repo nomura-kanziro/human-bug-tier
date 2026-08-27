@@ -18,6 +18,7 @@ description: >
 - `common.js`, `common.css`, `Header_Footer.css`
 - `header.html`, `footer.html`
 - `manifest.webmanifest`, `sw.js` (PWA)
+- 후원 커피 버튼: `header.html` `#header-sponsor-btn` + `common.js` `SPONSOR_PROFILE_URL` / `renderSponsorButton()`
 
 ## Read first
 

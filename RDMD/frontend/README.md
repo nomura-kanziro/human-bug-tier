@@ -35,6 +35,7 @@ RDMD/frontend/
 | [02-project-structure-overview-record.md](./01-common/02-project-structure-overview-record.md) | 2 | 프로젝트 구조·기능 스냅샷 |
 | [03-misc-feature-changelog-record.md](./01-common/03-misc-feature-changelog-record.md) | 5 | 기능 추가·수정 요약 |
 | [04-jwt-auth-utils-commonjs-record.md](./01-common/04-jwt-auth-utils-commonjs-record.md) | 22 | common.js JWT 유틸·로그아웃 |
+| [05-header-sponsor-coffee-btn-record.md](./01-common/05-header-sponsor-coffee-btn-record.md) | — | 헤더 후원(커피) 버튼 · URL 상수 |
 
 ## 02-tier-class
 

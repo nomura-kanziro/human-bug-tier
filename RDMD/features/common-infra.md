@@ -76,6 +76,7 @@ function getAuthHeaders(extraHeaders = {}) {
 | `buildTierPostDetailUrl()` | 게시글 상세 URL (서브패스 대응) |
 | `goHome()` 등 이동 헬퍼 | getBasePath + 상대 경로 |
 | 알림 폴링 / resolveNotificationLink | 헤더 알림 |
+| `SPONSOR_PROFILE_URL` / `renderSponsorButton()` | 헤더 커피(후원) 버튼. 로그아웃 시 로그인 왼쪽, 로그인 시 알림 왼쪽. 외부 URL은 `common.js` 맨 위 상수에 넣음 |
 
 ## 페이지 추가 시 필수 체크
 

@@ -9,6 +9,13 @@
 //   5. 푸터 '문의하기' 링크 → Contact_us/[index.html -> contact_us.html] 이동
 // ========================================================
 
+// ========================================================
+// [설정] 후원 프로필 링크
+// 헤더 커피 아이콘이 이 주소로 이동합니다. 본인 후원 페이지 URL을 넣으세요.
+// 예: 'https://buymeacoffee.com/your_id'
+// ========================================================
+const SPONSOR_PROFILE_URL = 'buymeacoffee.com/limjinhengm';
+
 function getApiBase() {
   const { protocol, hostname, port } = window.location;
 
@@ -368,6 +375,7 @@ function loadCommon() {
     renderUserProfile();
     renderNotificationBell();
     renderHeaderLoginButton();
+    renderSponsorButton();
 
     initSideMenuDropdowns();     // ← 이 줄이 있어야 합니다
 
@@ -401,6 +409,7 @@ function fallbackLoadHeaderFooter(base) {
     renderUserProfile();
     renderNotificationBell();
     renderHeaderLoginButton();
+    renderSponsorButton();
 
     console.log('✅ Header & Footer + 모든 이벤트 완전 로드 완료!');
   })
@@ -525,6 +534,52 @@ function renderHeaderLoginButton() {
 
   loginBtn.hidden = false;
   loginBtn.href = `${getBasePath()}user_login/login.html`;
+}
+
+function getSponsorProfileUrl() {
+  const url = String(SPONSOR_PROFILE_URL || '').trim();
+  if (!url || url === '#') return '';
+  if (/^[a-z][a-z0-9+.-]*:/i.test(url)) return url;
+  return `https://${url}`;
+}
+
+function renderSponsorButton() {
+  const btn = document.querySelector('#header-placeholder #header-sponsor-btn');
+  if (!btn) return;
+
+  const url = getSponsorProfileUrl();
+  if (url) {
+    btn.href = url;
+    btn.target = '_blank';
+    btn.rel = 'noopener noreferrer';
+    btn.removeAttribute('aria-disabled');
+  } else {
+    btn.href = '#';
+    btn.removeAttribute('target');
+    btn.removeAttribute('rel');
+    btn.setAttribute('aria-disabled', 'true');
+  }
+
+  if (btn.dataset.sponsorBound !== '1') {
+    btn.dataset.sponsorBound = '1';
+    btn.addEventListener('click', (e) => {
+      if (!getSponsorProfileUrl()) e.preventDefault();
+    });
+  }
+
+  if (isUserLoggedIn()) {
+    const anchor = document.getElementById('notification-bell')
+      || document.getElementById('user-profile');
+    if (anchor && anchor.parentNode) {
+      anchor.parentNode.insertBefore(btn, anchor);
+      return;
+    }
+  }
+
+  const loginBtn = document.querySelector('#header-placeholder #header-login-btn');
+  if (loginBtn && loginBtn.parentNode) {
+    loginBtn.parentNode.insertBefore(btn, loginBtn);
+  }
 }
 
 // ========================================================
