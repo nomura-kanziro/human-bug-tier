@@ -104,9 +104,11 @@ Visit:
 ## Troubleshooting
 - 500 on registration? Check EMAIL or MONGO.
 - **비밀번호 재설정 메일이 안 옴?**
-  1. `https://your-app.onrender.com/health` → `emailConfigured` 가 `true` 인지
-  2. Render Environment에 `EMAIL_USER`, `EMAIL_APP_PASSWORD`(앱 비밀번호), 권장 `APP_URL`
-  3. 찾기 요청 직후 Render **Logs** — `비밀번호 찾기 메일 실패` / `EAUTH` 이면 Gmail 설정 문제
+  1. `https://your-app.onrender.com/health` → `emailConfigured: true`, `emailProvider` 확인 (`brevo` 권장)
+  2. Render Environment: **`BREVO_API_KEY` + `BREVO_FROM`** (Brevo Senders에서 인증한 메일). Gmail SMTP만으로는 Render에서 실패하는 경우가 많음
+  3. 화면 alert의 `detail`:
+     - `401` → API 키가 아님/잘림. 새 키 발급, 따옴표 없이 붙여넣기, IP 제한 해제
+     - `403` → 키는 통과. **Senders에서 발신 메일 인증**(받은 6자리 코드 입력) 후 `BREVO_FROM`을 그 주소와 동일하게. 그래도 `permission_denied` / `not yet activated` 이면 Brevo 고객지원에 **Transactional/SMTP 활성화** 티켓
   4. 응답이 성공인데 메일 없음 → 아이디·이메일이 DB와 다르거나 스팸함 (계정 존재 여부는 보안상 숨김)
 - Admin can't create notices? Check ADMIN_ vars and admin token in localStorage.
 - Homepage shows JSON? Check if static serving is working (should be fixed).

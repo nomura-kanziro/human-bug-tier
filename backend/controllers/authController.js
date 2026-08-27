@@ -18,6 +18,12 @@ const RESET_TOKEN_TTL_MS = 3600000;
 const GENERIC_EMAIL_MSG =
   '입력하신 정보가 등록되어 있다면 이메일로 안내를 발송했습니다. 메일이 없으면 스팸함을 확인하거나, 아이디·이메일이 가입 정보와 일치하는지 다시 확인해 주세요.';
 
+function emailFailDetail(emailErr) {
+  return [emailErr.code, emailErr.responseCode, emailErr.providerDetail]
+    .filter(Boolean)
+    .join(' ');
+}
+
 function createResetToken() {
   return crypto.randomBytes(32).toString('hex');
 }
@@ -112,7 +118,7 @@ const register = async (req, res) => {
         res.status(201).json({
           message:
             '회원가입은 완료되었으나 인증 메일 발송에 실패했습니다. 관리자에게 문의해주세요.',
-          detail: [emailErr.code, emailErr.responseCode].filter(Boolean).join(' ') || undefined,
+          detail: emailFailDetail(emailErr) || undefined,
         });
       }
     } else {
@@ -230,7 +236,7 @@ const findId = async (req, res) => {
         return res.status(502).json({
           error: EMAIL_SEND_FAILED_MSG,
           code: 'EMAIL_SEND_FAILED',
-          detail: [emailErr.code, emailErr.responseCode].filter(Boolean).join(' '),
+          detail: emailFailDetail(emailErr),
         });
       }
     }
@@ -281,7 +287,7 @@ const forgotPassword = async (req, res) => {
         return res.status(502).json({
           error: EMAIL_SEND_FAILED_MSG,
           code: 'EMAIL_SEND_FAILED',
-          detail: [emailErr.code, emailErr.responseCode].filter(Boolean).join(' '),
+          detail: emailFailDetail(emailErr),
         });
       }
     }

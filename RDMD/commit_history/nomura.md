@@ -7,8 +7,8 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 148 |
-| **기간** | 2026-03-20 ~ 2026-08-27|
+| **커밋 수** | 149 |
+| **기간** | 2026-03-20 ~ 2026-08-28|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
 > 폴더 안내: [README.md](./README.md)  ·  상세 기능 일지: [../frontend/](../frontend/README.md) · [../backend/](../backend/README.md)
@@ -177,6 +177,7 @@
 | 146 | 2026-08-25 | [`b0e1cf7`](#b0e1cf7) | feat(mail): Brevo API 지원 추가 (도메인 없이 발신자 1개 인증만으로 임의 수신자 발송 가능) |
 | 147 | 2026-08-27 | [`689ee4c`](#689ee4c) | feat(common): 헤더에 후원 커피 버튼 추가 |
 | 148 | 2026-08-27 | [`1d78856`](#1d78856) | docs(RDMD): commit_history 일회성 Python 스크립트 제거 |
+| 149 | 2026-08-28 | [`pending`](#pending) | fix(mail): Brevo 403 시 인증된 발신자 사용 및 거절 사유 표시 |
 
 ---
 
@@ -2864,3 +2865,25 @@
 ---
 
 **마지막 갱신**: 2026-08-27 · 총 148 항목 · 일회성 Python 스크립트 제거 · 정렬 = 과거→현재
+
+---
+
+<a id="pending"></a>
+
+### 149. 2026-08-28 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: fix(mail): Brevo 403 시 인증된 발신자 사용 및 거절 사유 표시
+- **git**: `git show pending`
+- **범위**: backend / email / deploy
+- **요약**: Render에서 Brevo 401 다음으로 난 403을 줄이기 위해, 가입 메일 문자열 대신 Senders API의 인증된 발신자 id로 보내게 했다. 실패 시 Brevo가 준 code/message를 화면에 보여 미인증 발신자와 트랜잭션 미활성를 구분할 수 있게 했다.
+- **주요 파일**: `backend/utils/mail.js`, `backend/controllers/authController.js`, `DEPLOY.md`
+- **관련 RDMD**: _(선택 — 기능 일지 있으면 링크)_
+
+[▲ 목차로](#목차)
+
+---
+
+**마지막 갱신**: 2026-08-28 · 총 149 항목 · Brevo 403 발신자 인증 · 정렬 = 과거→현재

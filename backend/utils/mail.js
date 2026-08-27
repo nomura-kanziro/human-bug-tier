@@ -9,6 +9,7 @@ const nodemailer = require('nodemailer');
 const dnsPromises = require('dns').promises;
 
 const BREVO_API_URL = 'https://api.brevo.com/v3/smtp/email';
+const BREVO_SENDERS_URL = 'https://api.brevo.com/v3/senders';
 const RESEND_API_URL = 'https://api.resend.com/emails';
 
 const SMTP_HOST = 'smtp.gmail.com';
@@ -33,8 +34,15 @@ function getEmailUser() {
   return (process.env.EMAIL_USER || '').trim();
 }
 
+function sanitizeSecret(value) {
+  return String(value || '')
+    .trim()
+    .replace(/^['"]+|['"]+$/g, '')
+    .replace(/\s+/g, '');
+}
+
 function getResendApiKey() {
-  return (process.env.RESEND_API_KEY || '').trim();
+  return sanitizeSecret(process.env.RESEND_API_KEY);
 }
 
 // Resend는 도메인 인증 전에는 발신자를 onboarding@resend.dev로만 허용함
@@ -43,11 +51,84 @@ function getResendFrom() {
 }
 
 function getBrevoApiKey() {
-  return (process.env.BREVO_API_KEY || '').trim();
+  return sanitizeSecret(process.env.BREVO_API_KEY);
 }
 
 function getBrevoFrom() {
   return (process.env.BREVO_FROM || '').trim() || getEmailUser();
+}
+
+function brevoHeaders() {
+  return {
+    'api-key': getBrevoApiKey(),
+    'Content-Type': 'application/json',
+    Accept: 'application/json',
+  };
+}
+
+function parseProviderErrorBody(body) {
+  const raw = String(body || '').replace(/\s+/g, ' ').trim();
+  try {
+    const parsed = JSON.parse(body);
+    const parts = [parsed.code, parsed.message].filter(Boolean);
+    if (parts.length) return parts.join(': ').slice(0, 220);
+  } catch (_) {
+    /* 본문이 JSON이 아니면 원문 일부를 사용 */
+  }
+  return raw.slice(0, 220);
+}
+
+function brevoApiError(status, body) {
+  const parsed = parseProviderErrorBody(body);
+  const err = new Error(`Brevo API ${status}: ${parsed || body}`);
+  err.code = 'BREVO_API_ERROR';
+  err.responseCode = status;
+  let hint = parsed;
+  if (status === 403) {
+    const lower = (parsed || '').toLowerCase();
+    if (/activat|permission_denied|smtp account|not yet/i.test(lower)) {
+      hint = `${parsed} | Brevo 트랜잭션(SMTP) 미활성 — 대시보드 고객지원에서 활성화 요청`;
+    } else {
+      hint = `${parsed} | 발신자 미인증 가능 — Senders에서 인증 후 BREVO_FROM을 그 메일과 맞출 것`;
+    }
+  }
+  err.providerDetail = String(hint || '').slice(0, 280);
+  return err;
+}
+
+async function resolveBrevoSender() {
+  const preferred = getBrevoFrom().toLowerCase();
+  const response = await fetch(BREVO_SENDERS_URL, { headers: brevoHeaders() });
+  const body = await response.text().catch(() => '');
+  if (!response.ok) throw brevoApiError(response.status, body);
+
+  let senders = [];
+  try {
+    senders = JSON.parse(body).senders || [];
+  } catch (_) {
+    senders = [];
+  }
+
+  const active = senders.filter((s) => s && s.active && s.email);
+  if (!active.length) {
+    const err = new Error('Brevo에 인증된 발신자가 없습니다.');
+    err.code = 'BREVO_SENDER_NOT_VERIFIED';
+    err.responseCode = 403;
+    err.providerDetail =
+      'Senders, domains & IPs에서 발신 이메일을 추가하고 받은 인증 코드를 입력하세요';
+    throw err;
+  }
+
+  const matched = preferred
+    ? active.find((s) => String(s.email).toLowerCase() === preferred)
+    : null;
+  const chosen = matched || active[0];
+  if (preferred && !matched) {
+    console.warn(
+      `✉️  BREVO_FROM이 인증된 발신자가 아니라 인증된 주소(${chosen.email})로 보냅니다`
+    );
+  }
+  return { id: chosen.id };
 }
 
 function hasEmailConfig() {
@@ -68,15 +149,12 @@ function getEmailProvider() {
 
 /** 도메인 없이 발신자 이메일 1개만 인증하면 임의 수신자에게 발송 가능 */
 async function sendViaBrevo({ to, subject, html }) {
+  const sender = await resolveBrevoSender();
   const response = await fetch(BREVO_API_URL, {
     method: 'POST',
-    headers: {
-      'api-key': getBrevoApiKey(),
-      'Content-Type': 'application/json',
-      Accept: 'application/json',
-    },
+    headers: brevoHeaders(),
     body: JSON.stringify({
-      sender: { name: '휴먼버그티어', email: getBrevoFrom() },
+      sender: { id: sender.id },
       to: [{ email: to }],
       subject,
       htmlContent: html,
@@ -85,10 +163,7 @@ async function sendViaBrevo({ to, subject, html }) {
 
   if (!response.ok) {
     const body = await response.text().catch(() => '');
-    const err = new Error(`Brevo API ${response.status}: ${body}`);
-    err.code = 'BREVO_API_ERROR';
-    err.responseCode = response.status;
-    throw err;
+    throw brevoApiError(response.status, body);
   }
 }
 
