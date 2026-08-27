@@ -178,7 +178,7 @@
 | 147 | 2026-08-27 | [`689ee4c`](#689ee4c) | feat(common): 헤더에 후원 커피 버튼 추가 |
 | 148 | 2026-08-27 | [`1d78856`](#1d78856) | docs(RDMD): commit_history 일회성 Python 스크립트 제거 |
 | 149 | 2026-08-28 | [`cf20e66`](#cf20e66) | fix(mail): Brevo 403 시 인증된 발신자 사용 및 거절 사유 표시 |
-| 150 | 2026-08-28 | [`pending`](#pending) | chore(common): 푸터 사이트 버전을 0.3.1로 변경 |
+| 150 | 2026-08-28 | [`23b8d0f`](#23b8d0f) | chore(common): 푸터 사이트 버전을 0.3.1로 변경 |
 
 ---
 
@@ -2891,15 +2891,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="23b8d0f"></a>
 
-### 150. 2026-08-28 — `pending`
+### 150. 2026-08-28 — `23b8d0f`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `23b8d0f`
+- **hash (full)**: `23b8d0f387bafb09459089a3759dfc79d29e52e8`
 - **author**: nomura
 - **message**: chore(common): 푸터 사이트 버전을 0.3.1로 변경
-- **git**: `git show pending`
+- **git**: `git show 23b8d0f`
 - **범위**: frontend / common
 - **요약**: 푸터에 보이던 `site version : 0.0.1`을 `0.3.1`로 바꿨다. 배포된 베타라 앞자리는 0으로 둔다.
 - **주요 파일**: `footer.html`
