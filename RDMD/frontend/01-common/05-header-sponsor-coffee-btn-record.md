@@ -9,6 +9,9 @@ feature: common
 후원 사이트 프로필로 가는 커피 아이콘을 헤더 오른쪽에 추가했다.  
 링크는 코드에 박지 않고 `common.js` 상수에 직접 넣도록 했다.
 
+## 관련 커밋
+- **689ee4c** — `feat(common): 헤더에 후원 커피 버튼 추가`
+
 ## 변경된 파일
 - `header.html` — `#header-sponsor-btn` (커피 SVG)
 - `common.js` — `SPONSOR_PROFILE_URL`, `renderSponsorButton()`

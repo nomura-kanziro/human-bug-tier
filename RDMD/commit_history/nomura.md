@@ -175,7 +175,7 @@
 | 144 | 2026-08-25 | [`143a022`](#143a022) | feat(mail): Resend 실패 시 responseCode(HTTP 상태)까지 화면 alert에 노출 |
 | 145 | 2026-08-25 | [`64a85d6`](#64a85d6) | feat(mail): 회원가입 인증 메일 실패 시에도 에러 코드 화면에 노출 (누락된 부분 통일) |
 | 146 | 2026-08-25 | [`b0e1cf7`](#b0e1cf7) | feat(mail): Brevo API 지원 추가 (도메인 없이 발신자 1개 인증만으로 임의 수신자 발송 가능) |
-| 147 | 2026-08-27 | [`pending`](#pending) | feat(common): 헤더에 후원 커피 버튼 추가 |
+| 147 | 2026-08-27 | [`689ee4c`](#689ee4c) | feat(common): 헤더에 후원 커피 버튼 추가 |
 
 ---
 
@@ -2822,15 +2822,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="689ee4c"></a>
 
-### 147. 2026-08-27 — `pending`
+### 147. 2026-08-27 — `689ee4c`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `689ee4c`
+- **hash (full)**: `689ee4c45d564475fc7ee2b983e42c33eabedbaf`
 - **author**: nomura
 - **message**: feat(common): 헤더에 후원 커피 버튼 추가
-- **git**: `git show pending`
+- **git**: `git show 689ee4c`
 - **범위**: frontend / common / docs
 - **요약**: 헤더 오른쪽에 커피 아이콘 후원 버튼을 넣었다. 로그아웃이면 로그인 왼쪽, 로그인이면 알림 왼쪽에 두고, 이동 주소는 `common.js`의 `SPONSOR_PROFILE_URL`에만 넣으면 되게 했다.
 - **주요 파일**: `header.html`, `common.js`, `Header_Footer.css`
