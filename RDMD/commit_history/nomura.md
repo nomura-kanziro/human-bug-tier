@@ -177,7 +177,7 @@
 | 146 | 2026-08-25 | [`b0e1cf7`](#b0e1cf7) | feat(mail): Brevo API 지원 추가 (도메인 없이 발신자 1개 인증만으로 임의 수신자 발송 가능) |
 | 147 | 2026-08-27 | [`689ee4c`](#689ee4c) | feat(common): 헤더에 후원 커피 버튼 추가 |
 | 148 | 2026-08-27 | [`1d78856`](#1d78856) | docs(RDMD): commit_history 일회성 Python 스크립트 제거 |
-| 149 | 2026-08-28 | [`pending`](#pending) | fix(mail): Brevo 403 시 인증된 발신자 사용 및 거절 사유 표시 |
+| 149 | 2026-08-28 | [`cf20e66`](#cf20e66) | fix(mail): Brevo 403 시 인증된 발신자 사용 및 거절 사유 표시 |
 
 ---
 
@@ -2868,15 +2868,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="cf20e66"></a>
 
-### 149. 2026-08-28 — `pending`
+### 149. 2026-08-28 — `cf20e66`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `cf20e66`
+- **hash (full)**: `cf20e666b486dcc2790459b0fa019da326c2d9f6`
 - **author**: nomura
 - **message**: fix(mail): Brevo 403 시 인증된 발신자 사용 및 거절 사유 표시
-- **git**: `git show pending`
+- **git**: `git show cf20e66`
 - **범위**: backend / email / deploy
 - **요약**: Render에서 Brevo 401 다음으로 난 403을 줄이기 위해, 가입 메일 문자열 대신 Senders API의 인증된 발신자 id로 보내게 했다. 실패 시 Brevo가 준 code/message를 화면에 보여 미인증 발신자와 트랜잭션 미활성를 구분할 수 있게 했다.
 - **주요 파일**: `backend/utils/mail.js`, `backend/controllers/authController.js`, `DEPLOY.md`
