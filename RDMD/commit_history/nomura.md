@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 147 |
+| **커밋 수** | 148 |
 | **기간** | 2026-03-20 ~ 2026-08-27|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -176,6 +176,7 @@
 | 145 | 2026-08-25 | [`64a85d6`](#64a85d6) | feat(mail): 회원가입 인증 메일 실패 시에도 에러 코드 화면에 노출 (누락된 부분 통일) |
 | 146 | 2026-08-25 | [`b0e1cf7`](#b0e1cf7) | feat(mail): Brevo API 지원 추가 (도메인 없이 발신자 1개 인증만으로 임의 수신자 발송 가능) |
 | 147 | 2026-08-27 | [`689ee4c`](#689ee4c) | feat(common): 헤더에 후원 커피 버튼 추가 |
+| 148 | 2026-08-27 | [`pending`](#pending) | docs(RDMD): commit_history 일회성 Python 스크립트 제거 |
 
 ---
 
@@ -2841,3 +2842,25 @@
 ---
 
 **마지막 갱신**: 2026-08-27 · 총 147 항목 · 헤더 후원 커피 버튼 · 정렬 = 과거→현재
+
+---
+
+<a id="pending"></a>
+
+### 148. 2026-08-27 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(RDMD): commit_history 일회성 Python 스크립트 제거
+- **git**: `git show pending`
+- **범위**: docs / RDMD / commit_history
+- **요약**: nomura.md를 채우거나 pending 해시를 바꾸던 일회성 Python 스크립트와 임시 메시지 파일을 삭제했다. 커밋 로그는 수동으로만 추가하고, README의 재생성 안내도 뺐다.
+- **주요 파일**: `RDMD/commit_history/README.md`, `RDMD/commit_history/_append_*.py`, `RDMD/commit_history/_gen_nomura.py`, `RDMD/commit_history/_set_hash.py`, `RDMD/commit_history/_fix_git_show.py`, `RDMD/commit_history/_planned_msgs.txt`
+- **관련 RDMD**: [commit_history/README.md](./README.md)
+
+[▲ 목차로](#목차)
+
+---
+
+**마지막 갱신**: 2026-08-27 · 총 148 항목 · 일회성 Python 스크립트 제거 · 정렬 = 과거→현재

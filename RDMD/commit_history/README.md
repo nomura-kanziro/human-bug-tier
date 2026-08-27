@@ -171,16 +171,9 @@ git rev-parse HEAD
 
 ## nomura.md 스냅샷
 
-- git log 기준 전체 커밋 수록 (재생성 가능)  
+- git log 기준 전체 커밋 수록  
 - 정렬: **과거(위) → 현재(아래)**  
 - 상단 목차 → 단축 해시 앵커  
-
-### 전체 재생성 (선택)
-
-```bash
-python RDMD/commit_history/_gen_nomura.py
-```
-
-수동 요약·RDMD 링크가 있다면 재생성 전 백업.
+- 이후 커밋은 **수동으로** 목차·상세 맨 아래에 추가한다 (스크립트 재생성 없음)
 
 RDMD 소개: [../README.md](../README.md)
