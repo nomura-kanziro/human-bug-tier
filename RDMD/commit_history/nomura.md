@@ -180,7 +180,7 @@
 | 149 | 2026-08-28 | [`cf20e66`](#cf20e66) | fix(mail): Brevo 403 시 인증된 발신자 사용 및 거절 사유 표시 |
 | 150 | 2026-08-28 | [`23b8d0f`](#23b8d0f) | chore(common): 푸터 사이트 버전을 0.3.1로 변경 |
 | 151 | 2026-08-28 | [`b28865a`](#b28865a) | style(admin): 커스텀 메이커 관리 삭제 버튼을 다른 관리 버튼과 통일 |
-| 152 | 2026-08-28 | [`pending`](#pending) | feat(admin): 관리자 페이지에서 회원 삭제 기능 추가 |
+| 152 | 2026-08-28 | [`50fa6f1`](#50fa6f1) | feat(admin): 관리자 페이지에서 회원 삭제 기능 추가 |
 
 ---
 
@@ -2937,15 +2937,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="50fa6f1"></a>
 
-### 152. 2026-08-28 — `pending`
+### 152. 2026-08-28 — `50fa6f1`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `50fa6f1`
+- **hash (full)**: `50fa6f145b2dccda768279a19c94a4ced1cef255`
 - **author**: nomura
 - **message**: feat(admin): 관리자 페이지에서 회원 삭제 기능 추가
-- **git**: `git show pending`
+- **git**: `git show 50fa6f1`
 - **범위**: backend / frontend / admin
 - **요약**: 차단 관리의 등록된 사용자 목록에 삭제 버튼을 넣었다. 관리자만 `DELETE /api/admin/users/:id`로 계정을 지울 수 있고, 해당 닉네임의 커스텀 글·댓글·문의·알림·차단 기록도 함께 정리한다.
 - **주요 파일**: `backend/controllers/adminController.js`, `backend/routes/adminRoutes.js`, `admin/comments/comment-management.js`
