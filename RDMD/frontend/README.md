@@ -45,6 +45,7 @@ RDMD/frontend/
 | [02-tier6-9-images-placement-record.md](./02-tier-class/02-tier6-9-images-placement-record.md) | — | 6~9티어 이미지 연결, 1·2티어 재배치 |
 | [03-kita-kintaro-2tier-record.md](./02-tier-class/03-kita-kintaro-2tier-record.md) | — | 2티어 키타 킨타로 추가 |
 | [04-tier1-heiji-satake-images-record.md](./02-tier-class/04-tier1-heiji-satake-images-record.md) | — | 1티어 헤이지 jpg 교체 · 사타케 이미지 |
+| [05-satake-hirohumi-9tier-record.md](./02-tier-class/05-satake-hirohumi-9tier-record.md) | — | 사타케 히로후미 9티어 표 추가 |
 
 ## 03-custom-maker
 

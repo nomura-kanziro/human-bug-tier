@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 153 |
+| **커밋 수** | 154 |
 | **기간** | 2026-03-20 ~ 2026-08-28|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -182,6 +182,7 @@
 | 151 | 2026-08-28 | [`b28865a`](#b28865a) | style(admin): 커스텀 메이커 관리 삭제 버튼을 다른 관리 버튼과 통일 |
 | 152 | 2026-08-28 | [`50fa6f1`](#50fa6f1) | feat(admin): 관리자 페이지에서 회원 삭제 기능 추가 |
 | 153 | 2026-08-28 | [`cecf5a4`](#cecf5a4) | feat(tier-class): 1티어 헤이지 이미지 교체 및 사타케 히로후미 이미지 추가 |
+| 154 | 2026-08-28 | [`pending`](#pending) | feat(tier-class): 사타케 히로후미를 9티어 표에 추가 |
 
 ---
 
@@ -2979,3 +2980,25 @@
 ---
 
 **마지막 갱신**: 2026-08-28 · 총 153 항목 · 1티어 헤이지·사타케 이미지 · 정렬 = 과거→현재
+
+---
+
+<a id="pending"></a>
+
+### 154. 2026-08-28 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(tier-class): 사타케 히로후미를 9티어 표에 추가
+- **git**: `git show pending`
+- **범위**: frontend / tier-class
+- **요약**: 사타케 히로후미 이미지를 1티어에서 9티어 폴더로 옮기고, 9티어 언랭크 칸 맨 뒤에 카드를 넣었다. 커스텀 메이커 풀은 이 HTML을 따른다.
+- **주요 파일**: `tier-class/tier9.html`, `tier-image/9 tier/satake hirohumi.png`
+- **관련 RDMD**: [../frontend/02-tier-class/05-satake-hirohumi-9tier-record.md](../frontend/02-tier-class/05-satake-hirohumi-9tier-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+**마지막 갱신**: 2026-08-28 · 총 154 항목 · 사타케 히로후미 9티어 · 정렬 = 과거→현재
