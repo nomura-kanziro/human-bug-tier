@@ -181,7 +181,7 @@
 | 150 | 2026-08-28 | [`23b8d0f`](#23b8d0f) | chore(common): 푸터 사이트 버전을 0.3.1로 변경 |
 | 151 | 2026-08-28 | [`b28865a`](#b28865a) | style(admin): 커스텀 메이커 관리 삭제 버튼을 다른 관리 버튼과 통일 |
 | 152 | 2026-08-28 | [`50fa6f1`](#50fa6f1) | feat(admin): 관리자 페이지에서 회원 삭제 기능 추가 |
-| 153 | 2026-08-28 | [`pending`](#pending) | feat(tier-class): 1티어 헤이지 이미지 교체 및 사타케 히로후미 이미지 추가 |
+| 153 | 2026-08-28 | [`cecf5a4`](#cecf5a4) | feat(tier-class): 1티어 헤이지 이미지 교체 및 사타케 히로후미 이미지 추가 |
 
 ---
 
@@ -2960,15 +2960,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="cecf5a4"></a>
 
-### 153. 2026-08-28 — `pending`
+### 153. 2026-08-28 — `cecf5a4`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `cecf5a4`
+- **hash (full)**: `cecf5a466d0fdb93ff14b699a27423fa24dd9308`
 - **author**: nomura
 - **message**: feat(tier-class): 1티어 헤이지 이미지 교체 및 사타케 히로후미 이미지 추가
-- **git**: `git show pending`
+- **git**: `git show cecf5a4`
 - **범위**: frontend / tier-class
 - **요약**: 1티어 을급 헤이지 이미지를 png에서 jpg로 바꿨고, 페이지에 없던 hikurumi.png는 지웠다. 사타케 히로후미 이미지는 1티어 폴더에 넣었으나 이번 HTML에는 아직 연결하지 않았다.
 - **주요 파일**: `tier-class/tier1.html`, `tier-image/1 tier/`
