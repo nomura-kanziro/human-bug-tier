@@ -28,6 +28,7 @@ description: >
 
 - 공지는 작성뿐 아니라 **수정**(PUT/PATCH `/api/notices/:id`)도 관리 페이지에서 함
 - 티어 신고: `/api/admin/tier-reports/*`
+- 회원 삭제: `DELETE /api/admin/users/:id` (`requireAdmin`, 계정+커스텀 글·댓글·문의 정리)
 
 ## Do
 

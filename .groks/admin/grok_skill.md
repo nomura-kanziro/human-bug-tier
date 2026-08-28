@@ -24,7 +24,8 @@ description: >
 | `admin/comments/comment-detail.*` | 문의 상세 |
 | `backend/middleware/auth.js` | `requireAdmin` |
 | `backend/routes/adminRoutes.js` | 관리 API |
-| `backend/controllers/adminController.js` | 유저·차단 등 |
+| `backend/controllers/adminController.js` | 유저 목록·회원 삭제·로그인 |
+| `DELETE /api/admin/users/:id` | 회원 삭제 (`requireAdmin`, 글·댓글·문의 정리) |
 | `backend/controllers/adminTierReportController.js` | 티어 신고 |
 
 ## Read first

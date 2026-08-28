@@ -94,6 +94,7 @@ RDMD/frontend/
 | [06-admin-api-custom-display-fix-record.md](./07-admin/06-admin-api-custom-display-fix-record.md) | 26 | admin_api · 표시 수정 |
 | [07-auth-middleware-admin-routes-record.md](./07-admin/07-auth-middleware-admin-routes-record.md) | 28 | requireAdmin 연동 노트 |
 | [08-comment-notice-ui-polish-record.md](./07-admin/08-comment-notice-ui-polish-record.md) | 29 | 댓글/공지 관리 UI 강화 |
+| [09-user-delete-button-record.md](./07-admin/09-user-delete-button-record.md) | — | 등록 회원 삭제 버튼 |
 
 ## 08-notifications
 

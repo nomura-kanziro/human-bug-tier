@@ -76,6 +76,7 @@ RDMD/backend/
 | [04-admin-tier-data-auth-fix-record.md](./06-admin/04-admin-tier-data-auth-fix-record.md) | 26 | 관리자 티어 데이터 표시·인증 |
 | [05-requireadmin-middleware-record.md](./06-admin/05-requireadmin-middleware-record.md) | 28 | requireAdmin 전면 적용 |
 | [06-admin-board-ui-backend-note-record.md](./06-admin/06-admin-board-ui-backend-note-record.md) | 29 | 관리 UI 작업 시 백엔드 메모 |
+| [07-user-delete-api-record.md](./06-admin/07-user-delete-api-record.md) | — | 회원 삭제 DELETE /api/admin/users/:id |
 
 ## 07-deploy — 배포
 

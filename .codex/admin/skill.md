@@ -17,6 +17,7 @@ description: >
 - `admin/comments/comment-management.*`, `comment-detail.*`
 - `backend/middleware/auth.js` (requireAdmin)
 - adminRoutes, admin controllers
+- 회원 삭제: `DELETE /api/admin/users/:id` (`requireAdmin`)
 
 ## Read first
 

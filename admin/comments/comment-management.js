@@ -955,6 +955,7 @@ function renderUserList() {
   tbody.innerHTML = registeredUsers.map((user, idx) => {
     const block = findBlockByValue(user.nickname);
     const isBlocked = !!block;
+    const userId = user._id || user.id || '';
 
     return `
       <tr class="${isBlocked ? 'row-blocked' : ''}">
@@ -969,9 +970,10 @@ function renderUserList() {
           : '<span class="badge badge-active">정상</span>'}</td>
         <td style="white-space:nowrap;">
           ${isBlocked
-            ? `<button class="unblock-btn" data-block-id="${block._id}">차단 해제</button>`
-            : `<button class="block-btn block-user-btn" data-nickname="${escapeHtml(user.nickname)}">차단</button>`
+            ? `<button type="button" class="unblock-btn" data-block-id="${block._id}">차단 해제</button>`
+            : `<button type="button" class="block-btn block-user-btn" data-nickname="${escapeHtml(user.nickname)}">차단</button>`
           }
+          <button type="button" class="danger-btn delete-user-btn" data-user-id="${escapeHtml(String(userId))}" data-nickname="${escapeHtml(user.nickname)}">삭제</button>
         </td>
       </tr>`;
   }).join('');
@@ -988,6 +990,40 @@ function renderUserList() {
   tbody.querySelectorAll('.unblock-btn').forEach(btn => {
     btn.addEventListener('click', () => unblock(btn.dataset.blockId));
   });
+
+  tbody.querySelectorAll('.delete-user-btn').forEach(btn => {
+    btn.addEventListener('click', () => deleteRegisteredUser(btn.dataset.userId, btn.dataset.nickname));
+  });
+}
+
+async function deleteRegisteredUser(userId, nickname) {
+  if (!userId) {
+    alert('❌ 사용자 정보를 찾을 수 없습니다.');
+    return;
+  }
+
+  const label = nickname || '이 회원';
+  if (!confirm(`${label} 님의 회원 계정을 삭제할까요?\n커스텀 게시글·댓글·문의도 함께 삭제되며 복구할 수 없습니다.`)) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`${getApiBase()}/api/admin/users/${encodeURIComponent(userId)}`, {
+      method: 'DELETE',
+      headers: getAdminAuthHeaders(),
+    });
+    const data = await response.json().catch(() => ({}));
+
+    if (response.ok) {
+      alert('✅ 회원이 삭제되었습니다.');
+      await Promise.all([loadUsers(), loadBlocks(), loadComments(), loadTierMakerData()]);
+    } else {
+      alert('❌ ' + (data.error || '회원 삭제 실패'));
+    }
+  } catch (err) {
+    console.error(err);
+    alert('❌ 서버와 연결할 수 없습니다.');
+  }
 }
 
 function renderBlockList() {

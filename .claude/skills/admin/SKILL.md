@@ -27,6 +27,7 @@ description: >
 ## 현재 (작업 전 이해)
 
 - 공지 **수정**: PUT/PATCH `/api/notices/:id` (관리 페이지 수정 버튼)
+- 회원 삭제: `DELETE /api/admin/users/:id` (`requireAdmin`)
 
 ## Do
 

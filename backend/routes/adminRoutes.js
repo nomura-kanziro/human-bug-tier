@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { login, getUsers } = require('../controllers/adminController');
+const { login, getUsers, deleteUser } = require('../controllers/adminController');
 const { getBlocks, addBlock, removeBlock } = require('../controllers/blockController');
 const {
   getReportedPosts,
@@ -17,6 +17,7 @@ router.post('/login', login);
 
 // 관리자 전용
 router.get('/users', requireAdmin, getUsers);
+router.delete('/users/:id', requireAdmin, deleteUser);
 router.get('/blocks', requireAdmin, getBlocks);
 router.post('/blocks', requireAdmin, addBlock);
 router.delete('/blocks/:id', requireAdmin, removeBlock);

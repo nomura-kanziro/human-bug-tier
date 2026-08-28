@@ -26,10 +26,11 @@
 - 답변 작성 및 수정
 - 문의 삭제
 
-### 4. 사용자 차단 관리
+### 4. 사용자 차단 · 회원 삭제
 - 닉네임 또는 IP 차단
 - 차단 해제
 - 만료 시간 설정 가능
+- 등록된 회원 **삭제** (계정 + 해당 닉네임의 커스텀 글·댓글·문의)
 
 ### 5. 티어 신고 관리
 - 신고된 커스텀 게시글 확인
@@ -59,6 +60,7 @@ function getAdminAuthHeaders() {
 
 ```js
 router.get('/users', requireAdmin, getUsers);
+router.delete('/users/:id', requireAdmin, deleteUser);
 router.delete('/inquiries/:id', requireAdmin, deleteInquiry);
 ```
 

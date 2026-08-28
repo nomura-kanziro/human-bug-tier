@@ -639,7 +639,9 @@ tr.row-pinned {
     }
 }
 
-.admin-table .action-btn + .danger-btn {
+.admin-table .action-btn + .danger-btn,
+.admin-table .block-btn + .danger-btn,
+.admin-table .unblock-btn + .danger-btn {
     margin-left: 4px;
 }
 
