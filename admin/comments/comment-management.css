@@ -639,9 +639,8 @@ tr.row-pinned {
     }
 }
 
-.danger-btn-inline {
-    margin-left: 6px;
-    color: #c0392b;
+.admin-table .action-btn + .danger-btn {
+    margin-left: 4px;
 }
 
 .tier-maker-section .subsection-title {

@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 150 |
+| **커밋 수** | 151 |
 | **기간** | 2026-03-20 ~ 2026-08-28|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -179,6 +179,7 @@
 | 148 | 2026-08-27 | [`1d78856`](#1d78856) | docs(RDMD): commit_history 일회성 Python 스크립트 제거 |
 | 149 | 2026-08-28 | [`cf20e66`](#cf20e66) | fix(mail): Brevo 403 시 인증된 발신자 사용 및 거절 사유 표시 |
 | 150 | 2026-08-28 | [`23b8d0f`](#23b8d0f) | chore(common): 푸터 사이트 버전을 0.3.1로 변경 |
+| 151 | 2026-08-28 | [`pending`](#pending) | style(admin): 커스텀 메이커 관리 삭제 버튼을 다른 관리 버튼과 통일 |
 
 ---
 
@@ -2910,3 +2911,25 @@
 ---
 
 **마지막 갱신**: 2026-08-28 · 총 150 항목 · 푸터 버전 0.3.1 · 정렬 = 과거→현재
+
+---
+
+<a id="pending"></a>
+
+### 151. 2026-08-28 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: style(admin): 커스텀 메이커 관리 삭제 버튼을 다른 관리 버튼과 통일
+- **git**: `git show pending`
+- **범위**: frontend / admin
+- **요약**: 커스텀 메이커 게시글·댓글 관리의 삭제가 빨간 글씨만 있는 버튼이라, 댓글·공지 관리와 같은 채워진 `danger-btn`으로 맞췄다. 신고 해제는 `action-btn`으로 맞춰 관리 칸을 통일했다.
+- **주요 파일**: `admin/comments/comment-management.js`, `admin/comments/comment-management.css`
+- **관련 RDMD**: _(선택 — 기능 일지 있으면 링크)_
+
+[▲ 목차로](#목차)
+
+---
+
+**마지막 갱신**: 2026-08-28 · 총 151 항목 · 커스텀 메이커 삭제 버튼 통일 · 정렬 = 과거→현재

@@ -655,9 +655,9 @@ function renderTierMaker() {
           <td>${escapeHtml(post.author || '-')}</td>
           <td>${escapeHtml(reason)}</td>
           <td>${formatDate(post.updatedAt || post.createdAt)}</td>
-          <td>
-            ${post.reported ? `<button onclick="dismissTierPostReport('${id}')">해제</button>` : ''}
-            <button onclick="deleteTierPostReport('${id}')" class="danger-btn-inline">삭제</button>
+          <td style="white-space: nowrap;">
+            ${post.reported ? `<button type="button" onclick="dismissTierPostReport('${id}')" class="action-btn">해제</button>` : ''}
+            <button type="button" onclick="deleteTierPostReport('${id}')" class="danger-btn">삭제</button>
           </td>
         </tr>`;
     }).join('');
@@ -680,9 +680,9 @@ function renderTierMaker() {
           <td>${escapeHtml(comment.author || '-')}</td>
           <td>${escapeHtml(snippet)}</td>
           <td>${escapeHtml(reason)}</td>
-          <td>
-            ${comment.reported ? `<button onclick="dismissTierCommentReport('${id}')">해제</button>` : ''}
-            <button onclick="deleteTierCommentReport('${id}')" class="danger-btn-inline">삭제</button>
+          <td style="white-space: nowrap;">
+            ${comment.reported ? `<button type="button" onclick="dismissTierCommentReport('${id}')" class="action-btn">해제</button>` : ''}
+            <button type="button" onclick="deleteTierCommentReport('${id}')" class="danger-btn">삭제</button>
           </td>
         </tr>`;
     }).join('');
