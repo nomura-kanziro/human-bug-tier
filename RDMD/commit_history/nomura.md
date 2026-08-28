@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 152 |
+| **커밋 수** | 153 |
 | **기간** | 2026-03-20 ~ 2026-08-28|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -181,6 +181,7 @@
 | 150 | 2026-08-28 | [`23b8d0f`](#23b8d0f) | chore(common): 푸터 사이트 버전을 0.3.1로 변경 |
 | 151 | 2026-08-28 | [`b28865a`](#b28865a) | style(admin): 커스텀 메이커 관리 삭제 버튼을 다른 관리 버튼과 통일 |
 | 152 | 2026-08-28 | [`50fa6f1`](#50fa6f1) | feat(admin): 관리자 페이지에서 회원 삭제 기능 추가 |
+| 153 | 2026-08-28 | [`pending`](#pending) | feat(tier-class): 1티어 헤이지 이미지 교체 및 사타케 히로후미 이미지 추가 |
 
 ---
 
@@ -2956,3 +2957,25 @@
 ---
 
 **마지막 갱신**: 2026-08-28 · 총 152 항목 · 관리자 회원 삭제 · 정렬 = 과거→현재
+
+---
+
+<a id="pending"></a>
+
+### 153. 2026-08-28 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(tier-class): 1티어 헤이지 이미지 교체 및 사타케 히로후미 이미지 추가
+- **git**: `git show pending`
+- **범위**: frontend / tier-class
+- **요약**: 1티어 을급 헤이지 이미지를 png에서 jpg로 바꿨고, 페이지에 없던 hikurumi.png는 지웠다. 사타케 히로후미 이미지는 1티어 폴더에 넣었으나 이번 HTML에는 아직 연결하지 않았다.
+- **주요 파일**: `tier-class/tier1.html`, `tier-image/1 tier/`
+- **관련 RDMD**: [../frontend/02-tier-class/04-tier1-heiji-satake-images-record.md](../frontend/02-tier-class/04-tier1-heiji-satake-images-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+**마지막 갱신**: 2026-08-28 · 총 153 항목 · 1티어 헤이지·사타케 이미지 · 정렬 = 과거→현재
