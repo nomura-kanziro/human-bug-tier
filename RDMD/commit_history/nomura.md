@@ -179,7 +179,7 @@
 | 148 | 2026-08-27 | [`1d78856`](#1d78856) | docs(RDMD): commit_history 일회성 Python 스크립트 제거 |
 | 149 | 2026-08-28 | [`cf20e66`](#cf20e66) | fix(mail): Brevo 403 시 인증된 발신자 사용 및 거절 사유 표시 |
 | 150 | 2026-08-28 | [`23b8d0f`](#23b8d0f) | chore(common): 푸터 사이트 버전을 0.3.1로 변경 |
-| 151 | 2026-08-28 | [`pending`](#pending) | style(admin): 커스텀 메이커 관리 삭제 버튼을 다른 관리 버튼과 통일 |
+| 151 | 2026-08-28 | [`b28865a`](#b28865a) | style(admin): 커스텀 메이커 관리 삭제 버튼을 다른 관리 버튼과 통일 |
 
 ---
 
@@ -2914,15 +2914,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="b28865a"></a>
 
-### 151. 2026-08-28 — `pending`
+### 151. 2026-08-28 — `b28865a`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `b28865a`
+- **hash (full)**: `b28865a026bfe3a57ebe4eb7ec05eb3cdbc75977`
 - **author**: nomura
 - **message**: style(admin): 커스텀 메이커 관리 삭제 버튼을 다른 관리 버튼과 통일
-- **git**: `git show pending`
+- **git**: `git show b28865a`
 - **범위**: frontend / admin
 - **요약**: 커스텀 메이커 게시글·댓글 관리의 삭제가 빨간 글씨만 있는 버튼이라, 댓글·공지 관리와 같은 채워진 `danger-btn`으로 맞췄다. 신고 해제는 `action-btn`으로 맞춰 관리 칸을 통일했다.
 - **주요 파일**: `admin/comments/comment-management.js`, `admin/comments/comment-management.css`
