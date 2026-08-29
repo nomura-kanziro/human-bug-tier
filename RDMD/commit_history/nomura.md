@@ -186,7 +186,7 @@
 | 155 | 2026-08-30 | [`6fa29f3`](#6fa29f3) | feat(notice): 유튜브 커뮤니티 글을 새 소식에 자동 연동 |
 | 156 | 2026-08-30 | [`52a9791`](#52a9791) | feat(notice): 유튜브 커뮤니티 일본어 글을 한국어로 번역 |
 | 157 | 2026-08-30 | [`a5a2e3f`](#a5a2e3f) | feat(custom-maker): 본인 글 수정하기를 공유·신고 사이에 배치 |
-| 158 | 2026-08-30 | [`pending`](#pending) | feat(custom-maker): 업로드 모달에 제목·내용·썸네일 입력 추가 |
+| 158 | 2026-08-30 | [`ad6baf7`](#ad6baf7) | feat(custom-maker): 업로드 모달에 제목·내용·썸네일 입력 추가 |
 
 ---
 
@@ -3075,15 +3075,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="ad6baf7"></a>
 
-### 158. 2026-08-30 — `pending`
+### 158. 2026-08-30 — `ad6baf7`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `ad6baf7`
+- **hash (full)**: `ad6baf7f0ea26a87a22b76a7ea6f4996d304a67a`
 - **author**: nomura
 - **message**: feat(custom-maker): 업로드 모달에 제목·내용·썸네일 입력 추가
-- **git**: `git show pending`
+- **git**: `git show ad6baf7`
 - **범위**: frontend / custom-maker / backend / docs
 - **요약**: 커스텀 티어 업로드·수정 때 prompt 대신 가운데 모달에서 제목·내용·썸네일 사진을 받도록 했다. 상세 페이지는 제목 바로 아래에 내용을 보여 준다.
 - **주요 파일**: `custom-maker/custom-maker.js`, `custom-maker.css`, `post_detail.html`, `backend/server.js`
