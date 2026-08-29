@@ -184,7 +184,7 @@
 | 153 | 2026-08-28 | [`cecf5a4`](#cecf5a4) | feat(tier-class): 1티어 헤이지 이미지 교체 및 사타케 히로후미 이미지 추가 |
 | 154 | 2026-08-28 | [`a187616`](#a187616) | feat(tier-class): 사타케 히로후미를 9티어 표에 추가 |
 | 155 | 2026-08-30 | [`6fa29f3`](#6fa29f3) | feat(notice): 유튜브 커뮤니티 글을 새 소식에 자동 연동 |
-| 156 | 2026-08-30 | [`pending`](#pending) | feat(notice): 유튜브 커뮤니티 일본어 글을 한국어로 번역 |
+| 156 | 2026-08-30 | [`52a9791`](#52a9791) | feat(notice): 유튜브 커뮤니티 일본어 글을 한국어로 번역 |
 
 ---
 
@@ -3029,15 +3029,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="52a9791"></a>
 
-### 156. 2026-08-30 — `pending`
+### 156. 2026-08-30 — `52a9791`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `52a9791`
+- **hash (full)**: `52a9791e7e4d519e22b9ca848646e3d9a58051ce`
 - **author**: nomura
 - **message**: feat(notice): 유튜브 커뮤니티 일본어 글을 한국어로 번역
-- **git**: `git show pending`
+- **git**: `git show 52a9791`
 - **범위**: backend / frontend / admin / docs
 - **요약**: 유튜브에서 가져온 일본어 제목·본문을 한국어로 번역해 새 소식에 저장하고, 이미 올라온 글도 다시 번역한다. 상세 페이지에서 일본어 원문을 볼 수 있다.
 - **주요 파일**: `backend/utils/translateJaKo.js`, `backend/utils/youtubeCommunitySync.js`, `notice/notice.js`
