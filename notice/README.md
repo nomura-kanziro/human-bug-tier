@@ -9,6 +9,7 @@
 - **고정(Pin)** 기능 (최대 5개)
 - 메인 페이지에서 최신  공지 미리보기 표시
 - 상세 페이지 (`notice-detail.html`)
+- **유튜브 커뮤니티 자동 연동**: `@humanbug_univ.` 게시판 새 글(본문·이미지·링크)을 새 소식으로 등록
 
 ## 작동 원리
 
@@ -19,6 +20,9 @@
   summary,
   content,
   category: 'notice' | 'news',
+  source: 'admin' | 'youtube',
+  youtubePostId,
+  youtubePostUrl,
   isPinned,
   pinnedAt,
   createdAt
@@ -31,6 +35,16 @@
 - PUT / PATCH `/api/notices/:id` — 제목·본문·요약·분류 수정 (Admin)
 - PATCH `/api/notices/:id/pin` — 고정 토글 (Admin)
 - DELETE `/api/notices/:id` — 삭제 (Admin)
+- GET `/api/notices/youtube-sync/status` — 유튜브 연동 상태 (Admin)
+- POST `/api/notices/youtube-sync` — 유튜브 게시판 즉시 가져오기 (Admin)
+
+### 유튜브 커뮤니티 연동
+- 대상: `https://www.youtube.com/@humanbug_univ./posts`
+- 서버가 기본 10분마다 확인하고, 새 `postId`만 새 소식(`news`)으로 저장
+- 같은 글은 `youtubePostId` unique로 중복 등록하지 않음
+- 첫 적재(기존 글)는 회원 알림을 보내지 않음. 이후 새 글만 알림
+- 본문은 텍스트 + 이미지(`![이미지](url)`) + `[유튜브 커뮤니티에서 보기](링크)`
+- 끄기: `YOUTUBE_POSTS_SYNC_ENABLED=false`
 
 ### 프론트 렌더링
 - `notice/notice.js`에서 카테고리별 필터링

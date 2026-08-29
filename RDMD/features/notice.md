@@ -28,6 +28,9 @@ notice/
   summary,
   content,
   category: 'notice' | 'news',  // 전체 공지 | 새 소식
+  source: 'admin' | 'youtube',
+  youtubePostId,               // 유튜브 커뮤니티 글 ID (sparse unique)
+  youtubePostUrl,
   isPinned,
   pinnedAt,
   createdAt
@@ -43,6 +46,8 @@ notice/
 | PUT / PATCH | `/api/notices/:id` | Admin (제목·본문·요약·분류 수정) |
 | PATCH | `/api/notices/:id/pin` | Admin |
 | DELETE | `/api/notices/:id` | Admin |
+| GET | `/api/notices/youtube-sync/status` | Admin |
+| POST | `/api/notices/youtube-sync` | Admin (채널 게시판 즉시 가져오기) |
 
 보호: `requireAdmin` (`backend_28`)
 
@@ -57,6 +62,16 @@ notice/
 - 공지 필터·버튼 색상: **#10b981** 계열 통일 (information29)  
 - `.filter-nav.notice-filter-nav` 등 클래스 사용  
 - 삭제/핀 시 반드시 `getAdminAuthHeaders()`  
+
+## 유튜브 커뮤니티 → 새 소식
+
+`backend/utils/youtubeCommunitySync.js` 가 `@humanbug_univ./posts` 페이지의 `ytInitialData`(해당 UI의 `ytd-backstage-post-thread-renderer`가 쓰는 데이터)를 읽어 새 글을 `category: news` 로 저장합니다.
+
+- 주기: 기본 10분 (`YOUTUBE_POSTS_POLL_MS`) + 서버 기동 약 15초 후 1회
+- 중복: `youtubePostId` sparse unique
+- 이미지·본문 링크·원문 링크 포함
+- 관리자 페이지 **유튜브 게시판 가져오기** 버튼
+- 공식 Data API에는 커뮤니티 글 목록이 없어서, 페이지 JSON 파싱에 의존함 (유튜브 UI 변경 시 깨질 수 있음)
 
 ## 유지보수
 

@@ -55,14 +55,44 @@ function nl2br(text) {
 // 공지 본문 경량 서식 렌더러.
 // 지원: # 제목, - / 1. 목록, > 인용, --- 구분선, **굵게**, *기울임*, `코드`, [텍스트](링크)
 // 입력은 먼저 escapeHtml로 이스케이프한 뒤 문법 기호만 치환하므로 안전하다.
+function unescapeNoticeUrl(url) {
+  return String(url || '').replace(/&amp;/g, '&');
+}
+
+function isSafeNoticeUrl(url) {
+  try {
+    const parsed = new URL(unescapeNoticeUrl(url));
+    return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+  } catch {
+    return false;
+  }
+}
+
+function parseNoticeImageMarkdown(escapedLine) {
+  const match = String(escapedLine || '').trim().match(/^!\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)$/);
+  if (!match || !isSafeNoticeUrl(match[2])) return null;
+  return { alt: match[1] || '이미지', url: match[2] };
+}
+
+function renderNoticeImageTag(alt, escapedUrl) {
+  return `<img class="notice-content-img" src="${escapedUrl}" alt="${alt}" loading="lazy" referrerpolicy="no-referrer">`;
+}
+
 function applyInlineNoticeFormatting(escapedLine) {
   return escapedLine
+    .replace(/!\[([^\]]*)\]\((https?:\/\/[^\s)]+)\)/g, (_, alt, url) => (
+      isSafeNoticeUrl(url) ? renderNoticeImageTag(alt || '이미지', url) : (alt || '')
+    ))
     .replace(/`([^`]+?)`/g, '<code>$1</code>')
     .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
     .replace(/(^|[^*])\*(?!\*)([^*]+?)\*(?!\*)/g, '$1<em>$2</em>')
     .replace(/~~(.+?)~~/g, '<del>$1</del>')
     .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,
-      (_, label, url) => `<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`);
+      (_, label, url) => (
+        isSafeNoticeUrl(url)
+          ? `<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`
+          : label
+      ));
 }
 
 function renderNoticeContent(text) {
@@ -74,6 +104,7 @@ function renderNoticeContent(text) {
   let listItems = [];
   let listTag = '';
   let quote = [];
+  let images = [];
 
   const flushParagraph = () => {
     if (paragraph.length) {
@@ -94,10 +125,22 @@ function renderNoticeContent(text) {
       quote = [];
     }
   };
+  const flushImages = () => {
+    if (!images.length) return;
+    if (images.length === 1) {
+      blocks.push(`<figure class="notice-content-figure">${renderNoticeImageTag(images[0].alt, images[0].url)}</figure>`);
+    } else {
+      blocks.push(
+        `<div class="notice-content-gallery">${images.map((img) => renderNoticeImageTag(img.alt, img.url)).join('')}</div>`
+      );
+    }
+    images = [];
+  };
   const flushAll = () => {
     flushParagraph();
     flushList();
     flushQuote();
+    flushImages();
   };
 
   for (const rawLine of lines) {
@@ -105,6 +148,15 @@ function renderNoticeContent(text) {
 
     if (!line) {
       flushAll();
+      continue;
+    }
+
+    const imageOnly = parseNoticeImageMarkdown(line);
+    if (imageOnly) {
+      flushParagraph();
+      flushList();
+      flushQuote();
+      images.push(imageOnly);
       continue;
     }
 
@@ -126,6 +178,7 @@ function renderNoticeContent(text) {
     if (quoteMatch) {
       flushParagraph();
       flushList();
+      flushImages();
       quote.push(applyInlineNoticeFormatting(quoteMatch[1]));
       continue;
     }
@@ -136,6 +189,7 @@ function renderNoticeContent(text) {
       const tag = bulletMatch ? 'ul' : 'ol';
       flushParagraph();
       flushQuote();
+      flushImages();
       if (listTag && listTag !== tag) flushList();
       listTag = tag;
       listItems.push(applyInlineNoticeFormatting((bulletMatch || orderedMatch)[1]));
@@ -144,6 +198,7 @@ function renderNoticeContent(text) {
 
     flushList();
     flushQuote();
+    flushImages();
     paragraph.push(applyInlineNoticeFormatting(line));
   }
 
@@ -319,12 +374,15 @@ function renderNoticeListItem(notice, options = {}) {
   const pinBadge = notice.isPinned
     ? '<span class="notice-pin-label">📌</span>'
     : '';
+  const youtubeBadge = notice.source === 'youtube'
+    ? '<span class="notice-yt-badge">YouTube</span>'
+    : '';
 
   if (options.homeStyle) {
     return `
       <a href="${detailUrl}" data-notice-id="${id}" class="notice-item notice-item-link ${notice.isPinned ? 'notice-item-pinned' : ''}">
         <div class="title">
-          <span class="notice-item-title">${pinBadge}${escapeHtml(notice.title)}</span>
+          <span class="notice-item-title">${pinBadge}${youtubeBadge}${escapeHtml(notice.title)}</span>
           <span class="date">${formatRelativeDate(notice.createdAt)}</span>
         </div>
         <p class="desc">${escapeHtml(shortSummary)}</p>
@@ -338,6 +396,7 @@ function renderNoticeListItem(notice, options = {}) {
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
           ${pinBadge}
           ${getCategoryBadge(notice.category)}
+          ${youtubeBadge}
           <span class="notice-link">${escapeHtml(notice.title)}</span>
         </div>
         ${desc ? `<p class="notice-desc">${escapeHtml(desc.length > 200 ? desc.slice(0, 200) + '...' : desc)}</p>` : ''}
@@ -348,6 +407,7 @@ function renderNoticeListItem(notice, options = {}) {
   return `
     <a href="${detailUrl}" data-notice-id="${id}" class="notice-item notice-item-link ${notice.isPinned ? 'notice-item-pinned' : ''}">
       ${pinBadge}
+      ${youtubeBadge}
       <span class="notice-link">${escapeHtml(notice.title)}</span>
       <p class="notice-desc">${escapeHtml(shortSummary)}</p>
       <span class="notice-date">${formatDate(notice.createdAt)}</span>
@@ -382,6 +442,7 @@ async function renderNoticeDetailPage() {
           <div class="notice-detail-meta-row">
             ${notice.isPinned ? '<span class="badge badge-pinned" style="background:#fef3c7;color:#b45309;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;">📌 고정</span>' : ''}
             ${getCategoryBadge(notice.category)}
+            ${notice.source === 'youtube' ? '<span class="notice-yt-badge">YouTube 커뮤니티</span>' : ''}
           </div>
         </div>
 

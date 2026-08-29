@@ -7,8 +7,8 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 154 |
-| **기간** | 2026-03-20 ~ 2026-08-28|
+| **커밋 수** | 155 |
+| **기간** | 2026-03-20 ~ 2026-08-30|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
 > 폴더 안내: [README.md](./README.md)  ·  상세 기능 일지: [../frontend/](../frontend/README.md) · [../backend/](../backend/README.md)
@@ -183,6 +183,7 @@
 | 152 | 2026-08-28 | [`50fa6f1`](#50fa6f1) | feat(admin): 관리자 페이지에서 회원 삭제 기능 추가 |
 | 153 | 2026-08-28 | [`cecf5a4`](#cecf5a4) | feat(tier-class): 1티어 헤이지 이미지 교체 및 사타케 히로후미 이미지 추가 |
 | 154 | 2026-08-28 | [`a187616`](#a187616) | feat(tier-class): 사타케 히로후미를 9티어 표에 추가 |
+| 155 | 2026-08-30 | [`pending`](#pending) | feat(notice): 유튜브 커뮤니티 글을 새 소식에 자동 연동 |
 
 ---
 
@@ -3002,3 +3003,25 @@
 ---
 
 **마지막 갱신**: 2026-08-28 · 총 154 항목 · 사타케 히로후미 9티어 · 정렬 = 과거→현재
+
+---
+
+<a id="pending"></a>
+
+### 155. 2026-08-30 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(notice): 유튜브 커뮤니티 글을 새 소식에 자동 연동
+- **git**: `git show pending`
+- **범위**: backend / frontend / admin / docs / deploy
+- **요약**: 휴먼버그대학교 유튜브 채널 게시판 글을 주기적으로 읽어 본문·이미지·원문 링크와 함께 새 소식으로 저장한다. 같은 글은 중복 등록하지 않고, 관리자 페이지에서 즉시 가져올 수 있다.
+- **주요 파일**: `backend/utils/youtubeCommunitySync.js`, `backend/models/Notice.js`, `notice/notice.js`, `admin/comments/comment-management.js`
+- **관련 RDMD**: [../backend/04-notice/03-youtube-community-sync-record.md](../backend/04-notice/03-youtube-community-sync-record.md), [../frontend/04-notice/04-youtube-news-images-record.md](../frontend/04-notice/04-youtube-news-images-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+**마지막 갱신**: 2026-08-30 · 총 155 항목 · 유튜브 커뮤니티 → 새 소식 · 정렬 = 과거→현재

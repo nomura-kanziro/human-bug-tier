@@ -26,6 +26,7 @@ description: >
 - 본문 수정: `PUT`/`PATCH` `/api/notices/:id` + requireAdmin
 - 핀: `PATCH` `/api/notices/:id/pin`
 - 관리 페이지 **수정** 버튼 → 폼 채움 → 저장
+- 유튜브 커뮤니티 → 새 소식 자동 연동 (`youtubeCommunitySync`, Admin `POST /api/notices/youtube-sync`)
 
 ## Do
 

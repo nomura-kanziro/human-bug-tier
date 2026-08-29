@@ -95,6 +95,7 @@ app.get('/health', (req, res) => {
     // 실제로 메일 링크에 쓰일 base URL (APP_URL > RENDER_EXTERNAL_URL > 요청 Host 순)
     resolvedAppUrl: getAppBaseUrl(req),
     timestamp: new Date().toISOString(),
+    youtubeSync: require('./utils/youtubeCommunitySync').getYoutubeSyncStatus(),
   });
 });
 
@@ -127,6 +128,11 @@ const server = app.listen(PORT, () => {
     /* ignore */
   }
   console.log(`   프론트엔드: / (index.html) + /notice/notice.html 등`);
+  try {
+    require('./utils/youtubeCommunitySync').startYoutubeCommunitySyncScheduler();
+  } catch (err) {
+    console.error('유튜브 커뮤니티 동기화 스케줄러 시작 실패:', err.message);
+  }
 });
 
 process.on('unhandledRejection', (reason) => {

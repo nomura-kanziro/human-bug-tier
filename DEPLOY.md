@@ -40,6 +40,11 @@ Set these in the Render dashboard (Environment Variables):
 
 **Optional:**
 - `ADMIN_NAME`
+- `YOUTUBE_POSTS_SYNC_ENABLED` — 유튜브 커뮤니티 글을 새 소식으로 가져오기 (기본 켜짐, `false`로 끄기)
+- `YOUTUBE_POSTS_URL` — 기본 `https://www.youtube.com/@humanbug_univ./posts`
+- `YOUTUBE_POSTS_POLL_MS` — 확인 주기(ms). 기본 600000(10분), 최소 60000
+
+Free 플랜은 잠자기 때문에, 잠든 동안에는 자동 확인이 멈춥니다. 서버가 다시 켜지면 재개됩니다.
 
 ## 2. Local Test First (Strongly Recommended)
 

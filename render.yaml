@@ -42,3 +42,10 @@ services:
       # 메일 본문 절대 링크. 미설정 시 RENDER_EXTERNAL_URL(자동 주입) → 요청 Host 순으로 대체되므로 선택사항.
       - key: APP_URL
         sync: false
+      # 유튜브 커뮤니티(@humanbug_univ./posts) → 새 소식 자동 연동. 미설정 시 기본 켜짐.
+      - key: YOUTUBE_POSTS_SYNC_ENABLED
+        sync: false
+      - key: YOUTUBE_POSTS_URL
+        sync: false
+      - key: YOUTUBE_POSTS_POLL_MS
+        sync: false

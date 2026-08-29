@@ -1,5 +1,9 @@
 const Notice = require('../models/Notice');
 const { broadcastNoticeNotification } = require('../utils/notificationService');
+const {
+  syncYoutubeCommunityPosts,
+  getYoutubeSyncStatus,
+} = require('../utils/youtubeCommunitySync');
 
 const MAX_PINNED = 5;
 
@@ -173,6 +177,31 @@ const deleteNotice = async (req, res) => {
   }
 };
 
+const syncYoutubePosts = async (req, res) => {
+  try {
+    const result = await syncYoutubeCommunityPosts();
+    if (result && result.reason === 'already-running') {
+      return res.status(409).json({ error: '이미 동기화가 진행 중입니다.', result });
+    }
+    if (!result?.ok) {
+      const status = result?.error === 'database-disconnected' ? 503 : 502;
+      return res.status(status).json({ error: result?.error || '유튜브 동기화 실패', result });
+    }
+    res.json({ success: true, result });
+  } catch (err) {
+    console.error('유튜브 동기화 API 에러:', err);
+    res.status(500).json({ error: '유튜브 동기화 실패' });
+  }
+};
+
+const getYoutubeSyncState = async (_req, res) => {
+  try {
+    res.json({ success: true, status: getYoutubeSyncStatus() });
+  } catch (err) {
+    res.status(500).json({ error: '유튜브 동기화 상태 조회 실패' });
+  }
+};
+
 module.exports = {
   getNotices,
   getNoticeById,
@@ -180,5 +209,7 @@ module.exports = {
   updateNotice,
   togglePin,
   deleteNotice,
+  syncYoutubePosts,
+  getYoutubeSyncState,
   MAX_PINNED,
 };

@@ -59,7 +59,7 @@ backend/
 |-----------------------|--------------------------|------|
 | `/api/auth`           | 로그인, 회원가입, 비번재설정 | 공개/일부 JWT |
 | `/api/tierlists`      | 티어 게시글 CRUD(본인 PUT 수정), 좋아요, 신고 | 일부 JWT |
-| `/api/notices`        | 공지사항 (Admin PUT 수정) | GET 공개, 나머지 Admin |
+| `/api/notices`        | 공지사항 (Admin PUT 수정, 유튜브 동기화) | GET 공개, 나머지 Admin |
 | `/api/inquiries`      | 문의 + 답변              | 일부 Admin |
 | `/api/admin`          | 관리자 전용 (유저, 차단, 신고) | requireAdmin |
 | `/api/notifications`  | 알림                     | requireAuth |
@@ -69,7 +69,7 @@ backend/
 - **User**: nickname, email, password, isVerified, reset tokens
 - **TierList**: title, tierData, author, likes, reported
 - **TierPostComment**: 댓글 + 대댓글, reported
-- **Notice**: title, content, category(notice/news), isPinned
+- **Notice**: title, content, category(notice/news), isPinned, source(admin/youtube), youtubePostId
 - **Inquiry**: 문의 + 답변 배열
 - **Block**: 사용자/IP 차단
 - **Admin**: 관리자 계정
@@ -93,6 +93,12 @@ backend/
 이메일 기능 사용 시:
 - `EMAIL_USER`, `EMAIL_APP_PASSWORD`
 - `APP_URL` (Render 배포 후 설정)
+
+유튜브 커뮤니티 → 새 소식 (선택, 기본 켜짐):
+- `YOUTUBE_POSTS_URL` (기본 휴먼버그대학교 `/posts`)
+- `YOUTUBE_POSTS_POLL_MS` (기본 10분)
+- `YOUTUBE_POSTS_SYNC_ENABLED=false` 로 비활성화
+- 관리자: `POST /api/notices/youtube-sync` 로 즉시 가져오기
 
 ### DB 마이그레이션 / 변경
 - 모델 변경 시 `models/` 수정

@@ -189,6 +189,71 @@ async function loadNotices() {
   }
 }
 
+function formatYoutubeSyncStatus(status, result) {
+  const parts = [];
+  if (status) {
+    parts.push(status.enabled === false ? '자동 동기화 꺼짐' : '자동 동기화 켜짐');
+    if (status.lastFinishedAt) {
+      parts.push(`마지막 확인: ${formatDate(status.lastFinishedAt)}`);
+    }
+  }
+  const payload = result || status?.lastResult;
+  if (payload?.ok) {
+    parts.push(`가져온 글 ${payload.fetched || 0}개, 새 소식 등록 ${payload.created || 0}개, 이미 있음 ${payload.skipped || 0}개`);
+  } else if (payload?.error) {
+    parts.push(`마지막 오류: ${payload.error}`);
+  }
+  return parts.join(' · ') || '휴먼버그대학교 채널 게시판 글을 새 소식에 가져옵니다.';
+}
+
+async function loadYoutubeSyncStatus() {
+  const statusEl = document.getElementById('youtube-sync-status');
+  if (!statusEl || typeof getAdminAuthHeaders !== 'function') return;
+  try {
+    const response = await fetch(`${getApiBase()}/api/notices/youtube-sync/status`, {
+      headers: getAdminAuthHeaders(),
+    });
+    if (!response.ok) return;
+    const data = await response.json();
+    statusEl.textContent = formatYoutubeSyncStatus(data.status);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function syncYoutubePostsNow() {
+  const btn = document.getElementById('youtube-sync-btn');
+  const statusEl = document.getElementById('youtube-sync-status');
+  if (btn) btn.disabled = true;
+  if (statusEl) statusEl.textContent = '유튜브 게시판을 확인하는 중...';
+
+  try {
+    const response = await fetch(`${getApiBase()}/api/notices/youtube-sync`, {
+      method: 'POST',
+      headers: getAdminAuthHeaders(),
+    });
+    const data = await response.json();
+    if (response.ok && data.success) {
+      if (statusEl) statusEl.textContent = formatYoutubeSyncStatus(null, data.result);
+      await loadNotices();
+      const created = data.result?.created || 0;
+      alert(created
+        ? `✅ 유튜브 게시판에서 새 소식 ${created}개를 등록했습니다.`
+        : '✅ 확인할 새 유튜브 게시글이 없습니다. 이미 가져온 글은 건너뜁니다.');
+    } else {
+      const message = data.error || '유튜브 동기화 실패';
+      if (statusEl) statusEl.textContent = message;
+      alert('❌ ' + message);
+    }
+  } catch (err) {
+    console.error(err);
+    if (statusEl) statusEl.textContent = '서버와 연결할 수 없습니다.';
+    alert('❌ 서버와 연결할 수 없습니다.');
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
 function renderAdminNoticeList() {
   const tbody = document.getElementById('admin-notice-list');
   const pinCountEl = document.getElementById('notice-pin-count');
@@ -225,7 +290,7 @@ function renderAdminNoticeList() {
           ? '<span class="badge badge-pinned">📌 고정</span>'
           : '<span style="color:#ccc;">-</span>'}</td>
         <td><span class="badge ${isNews ? 'badge-news' : 'badge-notice'}">${NOTICE_CATEGORY_LABELS[notice.category] || notice.category}</span></td>
-        <td><strong>${escapeHtml(notice.title)}</strong></td>
+        <td><strong>${escapeHtml(notice.title)}</strong>${notice.source === 'youtube' ? ' <span class="badge badge-youtube">YouTube</span>' : ''}</td>
         <td>${escapeHtml(notice.summary || '-')}</td>
         <td>${formatDate(notice.createdAt)}</td>
         <td style="white-space:nowrap;">
@@ -748,7 +813,7 @@ window.deleteTierCommentReport = async function(id) {
 };
 
 async function initAdminData() {
-  await Promise.all([loadComments(), loadBlocks(), loadUsers(), loadNotices(), loadTierMakerData()]);
+  await Promise.all([loadComments(), loadBlocks(), loadUsers(), loadNotices(), loadTierMakerData(), loadYoutubeSyncStatus()]);
 }
 
 function renderComments() {
@@ -886,6 +951,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const postNoticeBtn = document.getElementById('post-notice-btn');
   if (postNoticeBtn) {
     postNoticeBtn.addEventListener('click', postAdminNotice);
+  }
+
+  const youtubeSyncBtn = document.getElementById('youtube-sync-btn');
+  if (youtubeSyncBtn) {
+    youtubeSyncBtn.addEventListener('click', syncYoutubePostsNow);
   }
 
   const cancelNoticeEditBtn = document.getElementById('cancel-notice-edit-btn');

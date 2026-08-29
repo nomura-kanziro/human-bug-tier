@@ -66,6 +66,7 @@ RDMD/frontend/
 | [01-notice-modal-frontend-record.md](./04-notice/01-notice-modal-frontend-record.md) | 6 | 공지 섹션·모달 |
 | [02-notice-folder-pages-record.md](./04-notice/02-notice-folder-pages-record.md) | 10 | notice 폴더·페이지 |
 | [03-notice-system-integration-record.md](./04-notice/03-notice-system-integration-record.md) | 18 | 공지 시스템 연동·상세 |
+| [04-youtube-news-images-record.md](./04-notice/04-youtube-news-images-record.md) | — | 유튜브 새 소식 이미지·링크 |
 
 ## 05-auth
 

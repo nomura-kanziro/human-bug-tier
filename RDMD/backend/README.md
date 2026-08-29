@@ -58,6 +58,7 @@ RDMD/backend/
 |------|--------|------|
 | [01-notice-crud-static-serve-record.md](./04-notice/01-notice-crud-static-serve-record.md) | 8 | Notice CRUD · server 정적 서빙 |
 | [02-notice-update-put-record.md](./04-notice/02-notice-update-put-record.md) | — | 관리자 공지 PUT/PATCH 수정 |
+| [03-youtube-community-sync-record.md](./04-notice/03-youtube-community-sync-record.md) | — | 유튜브 커뮤니티 → 새 소식 |
 
 ## 05-inquiry — 문의
 

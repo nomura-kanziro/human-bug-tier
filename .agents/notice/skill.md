@@ -27,6 +27,7 @@ description: >
 - 본문 수정: `PUT`/`PATCH` `/api/notices/:id` (제목·본문·요약·분류)
 - 핀은 별도 `PATCH` `/api/notices/:id/pin`
 - 관리 페이지 목록의 **수정** 버튼으로 폼을 채워 저장
+- 유튜브 커뮤니티 → 새 소식: `youtubeCommunitySync.js`, `POST /api/notices/youtube-sync` (Admin). 쓰기는 공개하지 않음
 
 ## Do
 

@@ -42,7 +42,7 @@ backend/
 | `/api/auth` | 가입·로그인·비번재설정·이메일 | 공개 / 일부 토큰 |
 | `/api/tierlists` | 커스텀 게시글 CRUD·좋아요·신고 | 일부 JWT. 수정은 작성자 PUT/PATCH `/:id` |
 | `/api/tierlists/:id/comments` | 댓글·대댓글 | 일부 JWT |
-| `/api/notices` | 공지 | GET 공개 / 쓰기 Admin. 수정은 PUT/PATCH `/:id` |
+| `/api/notices` | 공지 | GET 공개 / 쓰기 Admin. 수정은 PUT/PATCH `/:id`. 유튜브 동기화는 `/youtube-sync` |
 | `/api/inquiries` | 문의·답변·신고 | 쓰기 혼합 / 답변 Admin |
 | `/api/admin` | 유저·차단·티어 신고 등 | **requireAdmin** |
 | `/api/notifications` | 알림 | requireAuth |
@@ -61,7 +61,7 @@ backend/
 | **TierList** | 커스텀 티어 게시글, likes, reported |
 | **TierLike** | 좋아요 |
 | **TierPostComment** | 댓글·대댓글, reported |
-| **Notice** | 공지, category, isPinned |
+| **Notice** | 공지, category, isPinned, source, youtubePostId |
 | **Inquiry** | 문의 + answers[] |
 | **Block** | 닉네임/IP 차단, 만료 |
 | **Notification** | 사용자 알림 |
