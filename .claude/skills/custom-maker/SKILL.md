@@ -29,7 +29,7 @@ description: >
 
 - 풀 = `tier-class` HTML 파싱 (1~9)
 - 데스크톱 DnD, 모바일 **탭 선택 후 칸 탭**
-- 본인 글 수정: 상세 → `post_edit.html` → PUT → 게시판 목록
+- 본인 글 수정: 상세 공유하기·신고하기 사이 **수정하기** → `post_edit.html`(수정완료) → PUT → 상세
 - 캐릭터 id는 이름 기반 안정 id
 
 ## Do

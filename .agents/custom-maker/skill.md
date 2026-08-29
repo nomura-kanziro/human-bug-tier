@@ -26,7 +26,7 @@ description: >
 
 - 캐릭터 풀 = `tier-class` HTML 파싱 (`loadCharactersFromTierClass`). 1~9 전부
 - 데스크톱: DnD. 모바일: **캐릭터 탭 → 티어 칸 탭** (풀 탭으로 되돌리기)
-- 본인 글 수정: 상세 **수정** → `post_edit.html` → PUT 저장 → **게시판 목록**
+- 본인 글 수정: 상세 공유하기·신고하기 사이 **수정하기** → `post_edit.html`(업로드 대신 수정완료) → PUT → **상세**
 - 캐릭터 id는 이름 기반 안정 id (랜덤 id면 수정 시 배치 복원 실패)
 
 ## Do

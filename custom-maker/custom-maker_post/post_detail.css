@@ -100,6 +100,7 @@
 /* 액션 버튼 */
 .post-action {
   display: flex;
+  flex-wrap: wrap;
   gap: 10px;
   margin: 20px auto;
   justify-content: center;

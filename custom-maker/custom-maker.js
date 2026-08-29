@@ -843,7 +843,9 @@ function isPostOwner(post, user) {
   if (recordEmail && userEmail) {
     return recordEmail === userEmail;
   }
-  return (post.author || '').trim() === (user.nickname || '').trim();
+  const recordAuthor = (post.author || '').trim();
+  const userName = (user.nickname || '').trim();
+  return Boolean(recordAuthor && userName && recordAuthor === userName);
 }
 
 function clearEditModeFromUrl() {
@@ -1128,9 +1130,16 @@ async function uploadToBoard() {
     if (isEdit) {
       editingDefaults = { title: title.trim(), description: (description || '').trim() };
       clearEditPostSession();
-      // 상세 URL 조합 오류로 "잘못된 접근입니다"가 뜨지 않도록 게시판 목록으로 이동
       alert('✅ 게시글 수정이 완료되었습니다.');
-      window.location.href = getCustomMakerBoardUrl();
+      const detailUrl = typeof buildTierPostDetailUrl === 'function'
+        ? buildTierPostDetailUrl(editingPostId)
+        : `${getCustomMakerBoardUrl().replace(/custom-maker_post\.html$/i, 'post_detail.html')}?id=${encodeURIComponent(editingPostId)}`;
+      try {
+        sessionStorage.setItem('selectedPostId', editingPostId);
+      } catch (err) {
+        /* ignore */
+      }
+      window.location.href = detailUrl;
       return;
     }
 

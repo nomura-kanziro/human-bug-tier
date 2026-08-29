@@ -181,7 +181,34 @@ function isPostOwner(post, user) {
   const userEmail = (user.email || '').trim().toLowerCase();
   if (postEmail && userEmail) return postEmail === userEmail;
 
-  return (post.author || '').trim() === (user.nickname || '').trim();
+  const postAuthor = (post.author || '').trim();
+  const userName = (user.nickname || '').trim();
+  return Boolean(postAuthor && userName && postAuthor === userName);
+}
+
+function goToEditPost(post) {
+  const id = getPostId(post);
+  if (!isValidPostId(id)) return;
+
+  try {
+    sessionStorage.setItem(
+      'customMakerEditPost',
+      JSON.stringify({
+        _id: id,
+        id,
+        title: post.title || '',
+        description: post.description || '',
+        author: post.author || '',
+        authorEmail: post.authorEmail || '',
+        tierData: post.tierData || null,
+      })
+    );
+  } catch (err) {
+    console.warn('수정용 게시글 스냅샷 저장 실패:', err);
+  }
+
+  const base = typeof getBasePath === 'function' ? getBasePath() : '/';
+  window.location.href = `${base}custom-maker/post_edit.html?id=${encodeURIComponent(id)}`;
 }
 
 function closeReportModal() {
@@ -337,7 +364,18 @@ function createPostCard(post) {
   wrapper.appendChild(card);
 
   const user = getLoggedInUser();
-  if (user && !isPostOwner(post, user)) {
+  if (user && isPostOwner(post, user)) {
+    const editBtn = document.createElement('button');
+    editBtn.type = 'button';
+    editBtn.className = 'post-card-edit-btn';
+    editBtn.textContent = '수정';
+    editBtn.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+      goToEditPost(post);
+    });
+    wrapper.appendChild(editBtn);
+  } else if (user && !isPostOwner(post, user)) {
     const reportBtn = document.createElement('button');
     reportBtn.type = 'button';
     reportBtn.className = 'post-card-report-btn';

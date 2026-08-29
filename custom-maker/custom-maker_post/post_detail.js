@@ -48,14 +48,6 @@ function isAdminLoggedIn() {
 
 function getLoggedInUser() {
   try {
-    if (isAdminLoggedIn()) {
-      return {
-        nickname: localStorage.getItem('adminName') || '관리자',
-        email: '',
-        isAdmin: true,
-      };
-    }
-
     const user = JSON.parse(localStorage.getItem('user') || 'null');
     if (user?.nickname) {
       return { ...user, isAdmin: false };
@@ -63,6 +55,15 @@ function getLoggedInUser() {
   } catch (err) {
     console.warn('로그인 정보 파싱 실패:', err);
   }
+
+  if (isAdminLoggedIn()) {
+    return {
+      nickname: localStorage.getItem('adminName') || '관리자',
+      email: '',
+      isAdmin: true,
+    };
+  }
+
   return null;
 }
 
@@ -81,8 +82,7 @@ function isSameAuthor(record, user) {
 
   const recordAuthor = (record.author || record.userId || '').trim();
   const userName = (user.nickname || '').trim();
-
-  return recordAuthor === userName;
+  return Boolean(recordAuthor && userName && recordAuthor === userName);
 }
 
 function nl2br(text) {
@@ -491,8 +491,7 @@ function updatePostActions() {
   if (editBtn) editBtn.hidden = !isOwner;
 
   if (reportBtn) {
-    const canReport = Boolean(user && !isOwner && !currentPost?.reported);
-    reportBtn.hidden = !canReport;
+    reportBtn.hidden = Boolean(isOwner);
     reportBtn.disabled = Boolean(currentPost?.reported);
     reportBtn.textContent = currentPost?.reported ? '신고됨' : '🚨 신고하기';
   }

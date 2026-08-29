@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 156 |
+| **커밋 수** | 157 |
 | **기간** | 2026-03-20 ~ 2026-08-30|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -185,6 +185,7 @@
 | 154 | 2026-08-28 | [`a187616`](#a187616) | feat(tier-class): 사타케 히로후미를 9티어 표에 추가 |
 | 155 | 2026-08-30 | [`6fa29f3`](#6fa29f3) | feat(notice): 유튜브 커뮤니티 글을 새 소식에 자동 연동 |
 | 156 | 2026-08-30 | [`52a9791`](#52a9791) | feat(notice): 유튜브 커뮤니티 일본어 글을 한국어로 번역 |
+| 157 | 2026-08-30 | [`pending`](#pending) | feat(custom-maker): 본인 글 수정하기를 공유·신고 사이에 배치 |
 
 ---
 
@@ -3048,3 +3049,25 @@
 ---
 
 **마지막 갱신**: 2026-08-30 · 총 156 항목 · 유튜브 일본어 번역 · 정렬 = 과거→현재
+
+---
+
+<a id="pending"></a>
+
+### 157. 2026-08-30 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(custom-maker): 본인 글 수정하기를 공유·신고 사이에 배치
+- **git**: `git show pending`
+- **범위**: frontend / custom-maker / docs
+- **요약**: 본인 커스텀 티어 글만 상세에서 공유하기와 신고하기 사이에 수정하기가 보이게 했다. 수정 전용 페이지에서 수정완료 후 상세로 돌아간다.
+- **주요 파일**: `custom-maker/custom-maker_post/post_detail.html`, `post_detail.js`, `custom-maker.js`
+- **관련 RDMD**: [../frontend/03-custom-maker/08-post-edit-button-between-share-report-record.md](../frontend/03-custom-maker/08-post-edit-button-between-share-report-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+**마지막 갱신**: 2026-08-30 · 총 157 항목 · 본인 글 수정하기 · 정렬 = 과거→현재

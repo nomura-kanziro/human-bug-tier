@@ -63,7 +63,7 @@ PUT  /api/tierlists/:id      → 본인 글 수정 (PATCH 동일)
 | 좋아요 | TierLike 연동 |
 | 신고 | 게시글·댓글 `reported` 플래그 |
 | 알림 딥링크 | `?id=&comment=` + `buildTierPostDetailUrl` |
-| 본인 글 수정 | 작성자만 **수정** → `post_edit.html` → 저장 후 게시판 목록 |
+| 본인 글 수정 | 작성자만 공유하기·신고하기 사이 **수정하기** → `post_edit.html`(업로드 대신 수정완료) → 상세 복귀 |
 
 ### 댓글 API (개요)
 
