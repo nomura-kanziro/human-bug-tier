@@ -20,7 +20,8 @@ feature: notice
 
 ## 동작
 - 서버 기동 약 15초 후 1회, 이후 기본 10분마다
-- 이미 있는 `youtubePostId`는 건너뜀
+- 이미 있는 `youtubePostId`는 건너뜀. 일본어가 남아 있으면 한국어로 다시 번역
+- 일본어 → 한국어 번역 후 저장 (`translateJaKo.js`). 원문은 `youtubeOriginalTitle` / `youtubeOriginalContent`
 - 첫 적재는 알림 없음. 이후 새 글만 알림
 - 관리자 `POST /api/notices/youtube-sync`로 즉시 실행
 - 공개 쓰기 경로는 열지 않음 (`requireAdmin` + 서버 내부 작업만)

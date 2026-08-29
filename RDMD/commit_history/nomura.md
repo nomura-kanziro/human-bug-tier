@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 155 |
+| **커밋 수** | 156 |
 | **기간** | 2026-03-20 ~ 2026-08-30|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -184,6 +184,7 @@
 | 153 | 2026-08-28 | [`cecf5a4`](#cecf5a4) | feat(tier-class): 1티어 헤이지 이미지 교체 및 사타케 히로후미 이미지 추가 |
 | 154 | 2026-08-28 | [`a187616`](#a187616) | feat(tier-class): 사타케 히로후미를 9티어 표에 추가 |
 | 155 | 2026-08-30 | [`6fa29f3`](#6fa29f3) | feat(notice): 유튜브 커뮤니티 글을 새 소식에 자동 연동 |
+| 156 | 2026-08-30 | [`pending`](#pending) | feat(notice): 유튜브 커뮤니티 일본어 글을 한국어로 번역 |
 
 ---
 
@@ -3025,3 +3026,25 @@
 ---
 
 **마지막 갱신**: 2026-08-30 · 총 155 항목 · 유튜브 커뮤니티 → 새 소식 · 정렬 = 과거→현재
+
+---
+
+<a id="pending"></a>
+
+### 156. 2026-08-30 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(notice): 유튜브 커뮤니티 일본어 글을 한국어로 번역
+- **git**: `git show pending`
+- **범위**: backend / frontend / admin / docs
+- **요약**: 유튜브에서 가져온 일본어 제목·본문을 한국어로 번역해 새 소식에 저장하고, 이미 올라온 글도 다시 번역한다. 상세 페이지에서 일본어 원문을 볼 수 있다.
+- **주요 파일**: `backend/utils/translateJaKo.js`, `backend/utils/youtubeCommunitySync.js`, `notice/notice.js`
+- **관련 RDMD**: [../backend/04-notice/03-youtube-community-sync-record.md](../backend/04-notice/03-youtube-community-sync-record.md), [../frontend/04-notice/04-youtube-news-images-record.md](../frontend/04-notice/04-youtube-news-images-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+**마지막 갱신**: 2026-08-30 · 총 156 항목 · 유튜브 일본어 번역 · 정렬 = 과거→현재

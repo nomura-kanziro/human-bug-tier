@@ -28,6 +28,7 @@ description: >
 - 핀은 별도 `PATCH` `/api/notices/:id/pin`
 - 관리 페이지 목록의 **수정** 버튼으로 폼을 채워 저장
 - 유튜브 커뮤니티 → 새 소식: `youtubeCommunitySync.js`, `POST /api/notices/youtube-sync` (Admin). 쓰기는 공개하지 않음
+- 일본어 커뮤니티 글은 한국어로 번역해 저장 (`translateJaKo.js`). 원문은 상세에서 토글
 
 ## Do
 

@@ -44,6 +44,7 @@
 - 같은 글은 `youtubePostId` unique로 중복 등록하지 않음
 - 첫 적재(기존 글)는 회원 알림을 보내지 않음. 이후 새 글만 알림
 - 본문은 텍스트 + 이미지(`![이미지](url)`) + `[유튜브 커뮤니티에서 보기](링크)`
+- 일본어 글은 한국어로 번역해 저장 (`YOUTUBE_POSTS_TRANSLATE`, 기본 켜짐). 상세에서 원문 보기 가능
 - 끄기: `YOUTUBE_POSTS_SYNC_ENABLED=false`
 
 ### 프론트 렌더링

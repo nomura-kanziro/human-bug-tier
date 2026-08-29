@@ -1,5 +1,11 @@
 const Notice = require('../models/Notice');
 const { broadcastNoticeNotification } = require('./notificationService');
+const { containsJapanese, isTranslateEnabled, translateJaToKo } = require('./translateJaKo');
+
+const CHANNEL_AUTHOR_KO = {
+  'ヒューマンバグ大学_闇の漫画': '휴먼버그대학교 유튜브',
+  'ヒューマンバグ大学': '휴먼버그대학교 유튜브',
+};
 
 const DEFAULT_POSTS_URL = 'https://www.youtube.com/@humanbug_univ./posts';
 const DEFAULT_BROWSE_ID = 'UC7umTzIrIJq8Xh428lj0M5A';
@@ -337,6 +343,76 @@ function normalizePost(renderer) {
   };
 }
 
+function localizeAuthor(author) {
+  const raw = String(author || '').trim();
+  if (!raw) return '휴먼버그대학교 유튜브';
+  if (CHANNEL_AUTHOR_KO[raw]) return CHANNEL_AUTHOR_KO[raw];
+  const found = Object.keys(CHANNEL_AUTHOR_KO).find((name) => raw.includes(name));
+  if (found) return CHANNEL_AUTHOR_KO[found];
+  return raw;
+}
+
+function withTranslationNote(content) {
+  const text = String(content || '').trim();
+  if (!text) return text;
+  if (text.includes('일본어 원문을 한국어로 번역')) return text;
+  return `${text}\n\n> 일본어 원문을 한국어로 번역한 글입니다.`;
+}
+
+function needsKoreanTranslation(notice, post) {
+  if (!isTranslateEnabled()) return false;
+  if (containsJapanese(notice.title) || containsJapanese(notice.content)) return true;
+  if (!notice.youtubeTranslated && containsJapanese(post.title + post.content)) return true;
+  return false;
+}
+
+async function localizePost(post) {
+  const originalTitle = post.title;
+  const originalContent = post.content;
+  const originalSummary = post.summary;
+  const originalAuthor = post.author;
+
+  if (!isTranslateEnabled() || !containsJapanese(`${post.title}\n${post.content}`)) {
+    return {
+      ...post,
+      author: localizeAuthor(originalAuthor),
+      originalTitle,
+      originalContent,
+      translated: false,
+    };
+  }
+
+  const title = await translateJaToKo(post.title);
+  const summary = await translateJaToKo(post.summary);
+  const content = await translateJaToKo(post.content);
+
+  return {
+    ...post,
+    title: title || originalTitle,
+    summary: (summary || originalSummary || title || '').slice(0, 200),
+    content: withTranslationNote(content || originalContent),
+    author: localizeAuthor(originalAuthor),
+    originalTitle,
+    originalContent,
+    translated: true,
+  };
+}
+
+function noticeFieldsFromLocalized(post, localized) {
+  return {
+    title: localized.title,
+    content: localized.content,
+    summary: localized.summary || localized.title,
+    author: localized.author,
+    source: 'youtube',
+    youtubePostId: post.postId,
+    youtubePostUrl: post.url,
+    youtubeOriginalTitle: localized.originalTitle || '',
+    youtubeOriginalContent: localized.originalContent || '',
+    youtubeTranslated: Boolean(localized.translated),
+  };
+}
+
 function pickRicher(a, b) {
   if ((b.imageCount || 0) !== (a.imageCount || 0)) {
     return (b.imageCount || 0) > (a.imageCount || 0) ? b : a;
@@ -451,28 +527,32 @@ async function syncYoutubeCommunityPosts(options = {}) {
 
     let created = 0;
     let skipped = 0;
+    let translated = 0;
     const createdIds = [];
 
     for (const post of posts) {
-      const already = await Notice.findOne({ youtubePostId: post.postId }).select('_id');
+      const already = await Notice.findOne({ youtubePostId: post.postId });
       if (already) {
-        skipped += 1;
+        if (needsKoreanTranslation(already, post)) {
+          const localized = await localizePost(post);
+          Object.assign(already, noticeFieldsFromLocalized(post, localized));
+          await already.save();
+          translated += 1;
+        } else {
+          skipped += 1;
+        }
         continue;
       }
 
       try {
+        const localized = await localizePost(post);
         const notice = await Notice.create({
-          title: post.title,
-          content: post.content,
-          summary: post.summary || post.title,
+          ...noticeFieldsFromLocalized(post, localized),
           category: 'news',
-          author: post.author,
-          source: 'youtube',
-          youtubePostId: post.postId,
-          youtubePostUrl: post.url,
           createdAt: post.publishedAt || undefined,
         });
         created += 1;
+        if (localized.translated) translated += 1;
         createdIds.push(String(notice._id));
 
         if (notify) {
@@ -495,7 +575,8 @@ async function syncYoutubeCommunityPosts(options = {}) {
       fetched: posts.length,
       created,
       skipped,
-      notified: notify,
+      translated,
+      notified: Boolean(notify && created > 0),
       createdIds,
     };
     syncState.lastResult = result;

@@ -31,6 +31,9 @@ notice/
   source: 'admin' | 'youtube',
   youtubePostId,               // 유튜브 커뮤니티 글 ID (sparse unique)
   youtubePostUrl,
+  youtubeOriginalTitle,
+  youtubeOriginalContent,
+  youtubeTranslated,
   isPinned,
   pinnedAt,
   createdAt
@@ -70,6 +73,7 @@ notice/
 - 주기: 기본 10분 (`YOUTUBE_POSTS_POLL_MS`) + 서버 기동 약 15초 후 1회
 - 중복: `youtubePostId` sparse unique
 - 이미지·본문 링크·원문 링크 포함
+- 일본어 본문·제목은 한국어로 번역해 저장. 원문은 `youtubeOriginal*` 에 보관
 - 관리자 페이지 **유튜브 게시판 가져오기** 버튼
 - 공식 Data API에는 커뮤니티 글 목록이 없어서, 페이지 JSON 파싱에 의존함 (유튜브 UI 변경 시 깨질 수 있음)
 

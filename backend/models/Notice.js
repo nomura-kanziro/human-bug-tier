@@ -17,6 +17,9 @@ const noticeSchema = new mongoose.Schema({
   },
   youtubePostId: { type: String, trim: true, unique: true, sparse: true },
   youtubePostUrl: { type: String, default: '' },
+  youtubeOriginalTitle: { type: String, default: '' },
+  youtubeOriginalContent: { type: String, default: '' },
+  youtubeTranslated: { type: Boolean, default: false },
   isPinned: { type: Boolean, default: false },
   pinnedAt: { type: Date },
 }, { timestamps: true });

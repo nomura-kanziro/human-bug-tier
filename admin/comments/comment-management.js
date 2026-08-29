@@ -199,7 +199,7 @@ function formatYoutubeSyncStatus(status, result) {
   }
   const payload = result || status?.lastResult;
   if (payload?.ok) {
-    parts.push(`가져온 글 ${payload.fetched || 0}개, 새 소식 등록 ${payload.created || 0}개, 이미 있음 ${payload.skipped || 0}개`);
+    parts.push(`가져온 글 ${payload.fetched || 0}개, 새 소식 등록 ${payload.created || 0}개, 번역 ${payload.translated || 0}개, 이미 있음 ${payload.skipped || 0}개`);
   } else if (payload?.error) {
     parts.push(`마지막 오류: ${payload.error}`);
   }
@@ -237,9 +237,14 @@ async function syncYoutubePostsNow() {
       if (statusEl) statusEl.textContent = formatYoutubeSyncStatus(null, data.result);
       await loadNotices();
       const created = data.result?.created || 0;
-      alert(created
-        ? `✅ 유튜브 게시판에서 새 소식 ${created}개를 등록했습니다.`
-        : '✅ 확인할 새 유튜브 게시글이 없습니다. 이미 가져온 글은 건너뜁니다.');
+      const translated = data.result?.translated || 0;
+      if (created) {
+        alert(`✅ 유튜브 게시판에서 새 소식 ${created}개를 등록했습니다.`);
+      } else if (translated) {
+        alert(`✅ 기존 유튜브 글 ${translated}개를 한국어로 번역했습니다.`);
+      } else {
+        alert('✅ 확인할 새 유튜브 게시글이 없습니다. 이미 가져온 글은 건너뜁니다.');
+      }
     } else {
       const message = data.error || '유튜브 동기화 실패';
       if (statusEl) statusEl.textContent = message;

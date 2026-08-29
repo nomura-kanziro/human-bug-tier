@@ -313,6 +313,35 @@ function getNoticeIdFromURL() {
   return null;
 }
 
+function setupNoticeOriginalToggle(notice) {
+  const toggle = document.getElementById('notice-original-toggle');
+  const titleEl = document.getElementById('notice-detail-title');
+  const summaryEl = document.getElementById('notice-detail-summary');
+  const contentEl = document.getElementById('notice-detail-content');
+  if (!toggle || !contentEl || !notice.youtubeOriginalContent) return;
+
+  let showingOriginal = false;
+  toggle.addEventListener('click', () => {
+    showingOriginal = !showingOriginal;
+    toggle.setAttribute('aria-pressed', showingOriginal ? 'true' : 'false');
+    toggle.textContent = showingOriginal ? '한국어 번역 보기' : '일본어 원문 보기';
+    if (titleEl) {
+      titleEl.textContent = showingOriginal
+        ? (notice.youtubeOriginalTitle || notice.title)
+        : notice.title;
+    }
+    if (summaryEl && !showingOriginal && notice.summary) {
+      summaryEl.textContent = notice.summary;
+      summaryEl.hidden = false;
+    } else if (summaryEl) {
+      summaryEl.hidden = showingOriginal;
+    }
+    contentEl.innerHTML = renderNoticeContent(
+      showingOriginal ? notice.youtubeOriginalContent : notice.content
+    );
+  });
+}
+
 function rememberNoticeId(id) {
   if (!isValidNoticeId(id)) return;
   sessionStorage.setItem(NOTICE_ID_STORAGE_KEY, id);
@@ -443,21 +472,23 @@ async function renderNoticeDetailPage() {
             ${notice.isPinned ? '<span class="badge badge-pinned" style="background:#fef3c7;color:#b45309;padding:4px 10px;border-radius:20px;font-size:12px;font-weight:600;">📌 고정</span>' : ''}
             ${getCategoryBadge(notice.category)}
             ${notice.source === 'youtube' ? '<span class="notice-yt-badge">YouTube 커뮤니티</span>' : ''}
+            ${notice.youtubeTranslated ? '<span class="notice-yt-badge">한국어 번역</span>' : ''}
           </div>
         </div>
 
         <div class="notice-detail-body">
-          <h1 class="notice-detail-title">${escapeHtml(notice.title)}</h1>
+          <h1 class="notice-detail-title" id="notice-detail-title">${escapeHtml(notice.title)}</h1>
 
           <div class="notice-detail-info">
             <span class="notice-detail-author">${escapeHtml(notice.author || '관리자')}</span>
             <span>·</span>
             <span>${formatFullDate(notice.createdAt)}</span>
+            ${notice.youtubeOriginalContent ? '<button type="button" class="notice-original-toggle" id="notice-original-toggle" aria-pressed="false">일본어 원문 보기</button>' : ''}
           </div>
 
-          ${summary ? `<div class="notice-detail-summary ${isNews ? 'news-summary' : ''}">${escapeHtml(summary)}</div>` : ''}
+          ${summary ? `<div class="notice-detail-summary ${isNews ? 'news-summary' : ''}" id="notice-detail-summary">${escapeHtml(summary)}</div>` : ''}
 
-          <div class="notice-detail-content">${renderNoticeContent(notice.content)}</div>
+          <div class="notice-detail-content" id="notice-detail-content">${renderNoticeContent(notice.content)}</div>
 
           <div class="notice-detail-footer">
             <a href="${backLink}" class="notice-detail-list-btn">${CATEGORY_LABELS[notice.category]} 목록 보기</a>
@@ -467,6 +498,7 @@ async function renderNoticeDetailPage() {
 
     document.title = `${notice.title} - 휴버대 티어표`;
     sessionStorage.removeItem(NOTICE_ID_STORAGE_KEY);
+    setupNoticeOriginalToggle(notice);
   } catch (err) {
     console.error(err);
     const isNetworkError = err instanceof TypeError || /fetch|network|Failed/i.test(err.message || '');

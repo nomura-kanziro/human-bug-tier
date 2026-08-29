@@ -117,6 +117,23 @@
   vertical-align: middle;
 }
 
+.notice-original-toggle {
+  margin-left: 8px;
+  padding: 3px 10px;
+  border: 1px solid #fecaca;
+  border-radius: 999px;
+  background: #fff;
+  color: #b91c1c;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.notice-original-toggle:hover,
+.notice-original-toggle[aria-pressed="true"] {
+  background: #fef2f2;
+}
+
 .notice-item-pinned {
   background: #fffbeb;
   border-radius: 8px;
