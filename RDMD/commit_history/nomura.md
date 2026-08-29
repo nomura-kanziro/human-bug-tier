@@ -183,7 +183,7 @@
 | 152 | 2026-08-28 | [`50fa6f1`](#50fa6f1) | feat(admin): 관리자 페이지에서 회원 삭제 기능 추가 |
 | 153 | 2026-08-28 | [`cecf5a4`](#cecf5a4) | feat(tier-class): 1티어 헤이지 이미지 교체 및 사타케 히로후미 이미지 추가 |
 | 154 | 2026-08-28 | [`a187616`](#a187616) | feat(tier-class): 사타케 히로후미를 9티어 표에 추가 |
-| 155 | 2026-08-30 | [`pending`](#pending) | feat(notice): 유튜브 커뮤니티 글을 새 소식에 자동 연동 |
+| 155 | 2026-08-30 | [`6fa29f3`](#6fa29f3) | feat(notice): 유튜브 커뮤니티 글을 새 소식에 자동 연동 |
 
 ---
 
@@ -3006,15 +3006,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="6fa29f3"></a>
 
-### 155. 2026-08-30 — `pending`
+### 155. 2026-08-30 — `6fa29f3`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `6fa29f3`
+- **hash (full)**: `6fa29f39f7b12160e6d0d3eb888ac382191604c8`
 - **author**: nomura
 - **message**: feat(notice): 유튜브 커뮤니티 글을 새 소식에 자동 연동
-- **git**: `git show pending`
+- **git**: `git show 6fa29f3`
 - **범위**: backend / frontend / admin / docs / deploy
 - **요약**: 휴먼버그대학교 유튜브 채널 게시판 글을 주기적으로 읽어 본문·이미지·원문 링크와 함께 새 소식으로 저장한다. 같은 글은 중복 등록하지 않고, 관리자 페이지에서 즉시 가져올 수 있다.
 - **주요 파일**: `backend/utils/youtubeCommunitySync.js`, `backend/models/Notice.js`, `notice/notice.js`, `admin/comments/comment-management.js`
