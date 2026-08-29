@@ -738,7 +738,8 @@ function downloadAllTiersAsJSON() {
 // ============================================================
 /** 수정 모드 게시글 id (null이면 신규 업로드) */
 let editingPostId = null;
-let editingDefaults = { title: '', description: '' };
+let editingDefaults = { title: '', description: '', thumbnail: '' };
+let pendingThumbnailDataUrl = null;
 const EDIT_POST_SESSION_KEY = 'customMakerEditPost';
 
 /** 전용 수정 페이지(post_edit.html) 여부 */
@@ -977,6 +978,7 @@ async function enterEditMode(postId) {
   editingDefaults = {
     title: post.title || '',
     description: post.description || '',
+    thumbnail: post.thumbnail || '',
   };
 
   const rawState = post.tierData?.tierState;
@@ -1014,6 +1016,7 @@ function getThumbnailFromState() {
 
 function normalizeImgForBoard(img) {
   if (!img) return '/tier-image/logo.webp';
+  if (img.startsWith('data:image/')) return img;
 
   try {
     if (img.startsWith('http')) {
@@ -1039,8 +1042,9 @@ function normalizeTierStateForUpload(state) {
   return normalized;
 }
 
-function buildUploadPayload(title, description, user) {
+function buildUploadPayload(title, description, user, thumbnail) {
   const normalizedState = normalizeTierStateForUpload(tierState);
+  const thumb = thumbnail || getThumbnailFromState();
 
   return {
     title: title.trim(),
@@ -1051,9 +1055,147 @@ function buildUploadPayload(title, description, user) {
     },
     author: user.nickname,
     authorEmail: user.email || '',
-    thumbnail: normalizeImgForBoard(getThumbnailFromState()),
+    thumbnail: normalizeImgForBoard(thumb),
     isPublic: true,
   };
+}
+
+function resolveMakerPreviewPath(path) {
+  if (!path) return '../tier-image/logo.webp';
+  if (path.startsWith('data:') || path.startsWith('blob:') || path.startsWith('http')) return path;
+  if (typeof getBasePath === 'function' && path.startsWith('/')) {
+    return getBasePath() + path.slice(1);
+  }
+  return path;
+}
+
+function getDefaultThumbnailPreview() {
+  if (pendingThumbnailDataUrl) return pendingThumbnailDataUrl;
+  if (editingDefaults.thumbnail) return resolveMakerPreviewPath(editingDefaults.thumbnail);
+  return resolveMakerPreviewPath(getThumbnailFromState());
+}
+
+function compressImageFile(file) {
+  return new Promise((resolve, reject) => {
+    if (!file || !String(file.type || '').startsWith('image/')) {
+      reject(new Error('이미지 파일만 선택할 수 있습니다.'));
+      return;
+    }
+    if (file.size > 8 * 1024 * 1024) {
+      reject(new Error('이미지는 8MB 이하로 올려주세요.'));
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      URL.revokeObjectURL(objectUrl);
+      const maxWidth = 720;
+      const scale = Math.min(1, maxWidth / Math.max(1, img.width));
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.max(1, Math.round(img.width * scale));
+      canvas.height = Math.max(1, Math.round(img.height * scale));
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.82);
+      if (dataUrl.length > 1.6 * 1024 * 1024) {
+        reject(new Error('이미지가 너무 큽니다. 더 작은 사진을 선택해주세요.'));
+        return;
+      }
+      resolve(dataUrl);
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(objectUrl);
+      reject(new Error('이미지를 읽지 못했습니다.'));
+    };
+    img.src = objectUrl;
+  });
+}
+
+function ensureUploadModal() {
+  let overlay = document.getElementById('upload-modal');
+  if (overlay) return overlay;
+
+  overlay = document.createElement('div');
+  overlay.id = 'upload-modal';
+  overlay.className = 'upload-modal-overlay';
+  overlay.hidden = true;
+  overlay.innerHTML = `
+    <div class="upload-modal-card" role="dialog" aria-modal="true" aria-labelledby="upload-modal-heading">
+      <h3 id="upload-modal-heading">게시판에 올리기</h3>
+      <label class="upload-modal-field">
+        <span>제목</span>
+        <input id="upload-modal-title-input" type="text" maxlength="80" placeholder="게시글 제목">
+      </label>
+      <label class="upload-modal-field">
+        <span>내용</span>
+        <textarea id="upload-modal-content-input" maxlength="2000" placeholder="게시글 내용을 입력하세요"></textarea>
+      </label>
+      <div class="upload-modal-field">
+        <span>썸네일 사진 (게시판 썸네일 사진)</span>
+        <img id="upload-modal-thumb-preview" class="upload-modal-thumb-preview" alt="썸네일 미리보기">
+        <div class="upload-modal-thumb-actions">
+          <label class="upload-modal-file-btn">사진 선택
+            <input id="upload-modal-thumb-input" type="file" accept="image/*" hidden>
+          </label>
+          <button type="button" id="upload-modal-thumb-reset" class="upload-modal-thumb-reset">기본 이미지</button>
+        </div>
+        <p class="upload-modal-hint">선택하지 않으면 배치된 첫 캐릭터 이미지가 사용됩니다.</p>
+      </div>
+      <div class="upload-modal-actions">
+        <button type="button" id="upload-modal-cancel" class="upload-modal-cancel">취소</button>
+        <button type="button" id="upload-modal-submit" class="upload-modal-submit">업로드</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+
+  overlay.addEventListener('click', (event) => {
+    if (event.target === overlay) closeUploadModal();
+  });
+  overlay.querySelector('#upload-modal-cancel').addEventListener('click', closeUploadModal);
+  overlay.querySelector('#upload-modal-submit').addEventListener('click', submitUploadFromModal);
+  overlay.querySelector('#upload-modal-thumb-reset').addEventListener('click', () => {
+    pendingThumbnailDataUrl = null;
+    overlay.querySelector('#upload-modal-thumb-preview').src = resolveMakerPreviewPath(getThumbnailFromState());
+  });
+  overlay.querySelector('#upload-modal-thumb-input').addEventListener('change', async (event) => {
+    const file = event.target.files && event.target.files[0];
+    event.target.value = '';
+    if (!file) return;
+    try {
+      pendingThumbnailDataUrl = await compressImageFile(file);
+      overlay.querySelector('#upload-modal-thumb-preview').src = pendingThumbnailDataUrl;
+    } catch (err) {
+      alert(err.message || '썸네일을 읽지 못했습니다.');
+    }
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !overlay.hidden) closeUploadModal();
+  });
+
+  return overlay;
+}
+
+function closeUploadModal() {
+  const overlay = document.getElementById('upload-modal');
+  if (overlay) overlay.hidden = true;
+  document.body.style.overflow = '';
+}
+
+function openUploadModal(user) {
+  const overlay = ensureUploadModal();
+  const isEdit = Boolean(editingPostId || isPostEditPage());
+  overlay.querySelector('#upload-modal-heading').textContent = isEdit ? '게시글 수정' : '게시판에 올리기';
+  overlay.querySelector('#upload-modal-submit').textContent = isEdit ? '수정완료' : '업로드';
+  overlay.querySelector('#upload-modal-title-input').value =
+    (isEdit ? editingDefaults.title : '') || `${user.nickname}의 커스텀 티어표`;
+  overlay.querySelector('#upload-modal-content-input').value = isEdit ? (editingDefaults.description || '') : '';
+  pendingThumbnailDataUrl = null;
+  overlay.querySelector('#upload-modal-thumb-preview').src = getDefaultThumbnailPreview();
+  overlay.hidden = false;
+  document.body.style.overflow = 'hidden';
+  overlay.querySelector('#upload-modal-title-input').focus();
 }
 
 async function uploadToBoard() {
@@ -1085,29 +1227,32 @@ async function uploadToBoard() {
     return;
   }
 
-  const defaultTitle = editingPostId
-    ? editingDefaults.title || `${user.nickname}의 커스텀 티어표`
-    : `${user.nickname}의 커스텀 티어표`;
-  const title = prompt(
-    editingPostId || isPostEditPage()
-      ? '수정 완료할 제목을 입력해주세요.'
-      : '게시판에 올릴 제목을 입력해주세요.',
-    defaultTitle
-  );
-  if (!title?.trim()) return;
+  openUploadModal(user);
+}
 
-  const description = prompt(
-    editingPostId || isPostEditPage()
-      ? '설명을 수정해주세요. (선택)'
-      : '간단한 설명을 입력해주세요. (선택, 취소 가능)',
-    editingPostId ? (editingDefaults.description || '') : ''
-  ) || '';
+async function submitUploadFromModal() {
+  const user = getLoggedInUser();
+  if (!user) return;
+
+  const title = document.getElementById('upload-modal-title-input')?.value.trim();
+  const description = document.getElementById('upload-modal-content-input')?.value.trim() || '';
+  if (!title) {
+    alert('제목을 입력해주세요.');
+    document.getElementById('upload-modal-title-input')?.focus();
+    return;
+  }
+
+  const thumbnail = pendingThumbnailDataUrl
+    || editingDefaults.thumbnail
+    || getThumbnailFromState();
 
   const isEdit = Boolean(editingPostId);
   const url = isEdit
     ? `${getTierApiBase()}/api/tierlists/${encodeURIComponent(editingPostId)}`
     : `${getTierApiBase()}/api/tierlists`;
   const method = isEdit ? 'PUT' : 'POST';
+  const submitBtn = document.getElementById('upload-modal-submit');
+  if (submitBtn) submitBtn.disabled = true;
 
   try {
     const headers = typeof getAuthHeaders === 'function'
@@ -1117,7 +1262,7 @@ async function uploadToBoard() {
     const response = await fetch(url, {
       method,
       headers,
-      body: JSON.stringify(buildUploadPayload(title, description, user)),
+      body: JSON.stringify(buildUploadPayload(title, description, user, thumbnail)),
     });
 
     const data = await response.json();
@@ -1127,8 +1272,14 @@ async function uploadToBoard() {
       return;
     }
 
+    closeUploadModal();
+
     if (isEdit) {
-      editingDefaults = { title: title.trim(), description: (description || '').trim() };
+      editingDefaults = {
+        title: title.trim(),
+        description,
+        thumbnail,
+      };
       clearEditPostSession();
       alert('✅ 게시글 수정이 완료되었습니다.');
       const detailUrl = typeof buildTierPostDetailUrl === 'function'
@@ -1149,6 +1300,8 @@ async function uploadToBoard() {
   } catch (err) {
     console.error(err);
     alert('❌ 서버에 연결할 수 없습니다. backend에서 npm start를 실행해주세요.');
+  } finally {
+    if (submitBtn) submitBtn.disabled = false;
   }
 }
 

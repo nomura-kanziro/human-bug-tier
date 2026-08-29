@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 157 |
+| **커밋 수** | 158 |
 | **기간** | 2026-03-20 ~ 2026-08-30|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -186,6 +186,7 @@
 | 155 | 2026-08-30 | [`6fa29f3`](#6fa29f3) | feat(notice): 유튜브 커뮤니티 글을 새 소식에 자동 연동 |
 | 156 | 2026-08-30 | [`52a9791`](#52a9791) | feat(notice): 유튜브 커뮤니티 일본어 글을 한국어로 번역 |
 | 157 | 2026-08-30 | [`a5a2e3f`](#a5a2e3f) | feat(custom-maker): 본인 글 수정하기를 공유·신고 사이에 배치 |
+| 158 | 2026-08-30 | [`pending`](#pending) | feat(custom-maker): 업로드 모달에 제목·내용·썸네일 입력 추가 |
 
 ---
 
@@ -3071,3 +3072,25 @@
 ---
 
 **마지막 갱신**: 2026-08-30 · 총 157 항목 · 본인 글 수정하기 · 정렬 = 과거→현재
+
+---
+
+<a id="pending"></a>
+
+### 158. 2026-08-30 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(custom-maker): 업로드 모달에 제목·내용·썸네일 입력 추가
+- **git**: `git show pending`
+- **범위**: frontend / custom-maker / backend / docs
+- **요약**: 커스텀 티어 업로드·수정 때 prompt 대신 가운데 모달에서 제목·내용·썸네일 사진을 받도록 했다. 상세 페이지는 제목 바로 아래에 내용을 보여 준다.
+- **주요 파일**: `custom-maker/custom-maker.js`, `custom-maker.css`, `post_detail.html`, `backend/server.js`
+- **관련 RDMD**: [../frontend/03-custom-maker/09-upload-modal-title-content-thumb-record.md](../frontend/03-custom-maker/09-upload-modal-title-content-thumb-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+**마지막 갱신**: 2026-08-30 · 총 158 항목 · 업로드 모달 · 정렬 = 과거→현재

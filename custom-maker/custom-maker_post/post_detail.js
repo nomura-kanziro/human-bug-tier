@@ -293,6 +293,17 @@ function renderPostMeta(post) {
   const likeCountEl = document.getElementById('like-count');
 
   if (titleEl) titleEl.textContent = post.title;
+  const descEl = document.getElementById('post-description');
+  if (descEl) {
+    const desc = (post.description || '').trim();
+    if (desc) {
+      descEl.hidden = false;
+      descEl.textContent = desc;
+    } else {
+      descEl.hidden = true;
+      descEl.textContent = '';
+    }
+  }
   if (authorEl) authorEl.textContent = post.author || '익명';
   if (dateEl) dateEl.textContent = formatFullDate(post.createdAt);
   if (viewsEl) viewsEl.textContent = post.viewCount || 0;
@@ -601,6 +612,7 @@ function handleEditPost() {
         description: currentPost.description || '',
         author: currentPost.author || '',
         authorEmail: currentPost.authorEmail || '',
+        thumbnail: currentPost.thumbnail || '',
         tierData: currentPost.tierData || null,
       })
     );

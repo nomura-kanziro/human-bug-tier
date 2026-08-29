@@ -200,6 +200,7 @@ function goToEditPost(post) {
         description: post.description || '',
         author: post.author || '',
         authorEmail: post.authorEmail || '',
+        thumbnail: post.thumbnail || '',
         tierData: post.tierData || null,
       })
     );
@@ -312,6 +313,7 @@ function getThumbnail(post) {
 
 function resolveAssetPath(path) {
   if (!path) return getBasePath() + 'tier-image/logo.webp';
+  if (path.startsWith('data:') || path.startsWith('blob:')) return path;
   if (path.startsWith('http')) return path;
   if (path.startsWith('/')) {
     return getBasePath() + path.slice(1);

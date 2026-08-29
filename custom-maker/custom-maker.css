@@ -124,6 +124,146 @@
   filter: brightness(1.08);
 }
 
+/* 업로드/수정 가운데 모달 */
+.upload-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: rgba(0, 0, 0, 0.62);
+  box-sizing: border-box;
+}
+
+.upload-modal-overlay[hidden] {
+  display: none !important;
+}
+
+.upload-modal-card {
+  width: min(520px, 100%);
+  max-height: min(92vh, 760px);
+  overflow: auto;
+  padding: 22px 22px 18px;
+  border-radius: 16px;
+  border: 1px solid #3f3f46;
+  background: #141414;
+  color: #f4f4f5;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45);
+  text-align: left;
+}
+
+.upload-modal-card h3 {
+  margin: 0 0 18px;
+  font-size: 1.2rem;
+  color: #ffcc00;
+  text-align: center;
+}
+
+.upload-modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 14px;
+}
+
+.upload-modal-field span {
+  font-size: 0.86rem;
+  font-weight: 700;
+  color: #d4d4d8;
+}
+
+.upload-modal-field input[type="text"],
+.upload-modal-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid #3f3f46;
+  border-radius: 8px;
+  background: #1f1f1f;
+  color: #fff;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+.upload-modal-field textarea {
+  min-height: 120px;
+  resize: vertical;
+  line-height: 1.5;
+}
+
+.upload-modal-field input:focus,
+.upload-modal-field textarea:focus {
+  outline: none;
+  border-color: #ffcc00;
+}
+
+.upload-modal-thumb-preview {
+  width: 100%;
+  height: 168px;
+  object-fit: cover;
+  border-radius: 10px;
+  background: #0a0a0a;
+  border: 1px solid #333;
+}
+
+.upload-modal-thumb-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.upload-modal-file-btn,
+.upload-modal-thumb-reset,
+.upload-modal-cancel,
+.upload-modal-submit {
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  cursor: pointer;
+  border: 1px solid #444;
+}
+
+.upload-modal-file-btn {
+  background: #2a2a2a;
+  color: #ffcc00;
+  border-color: #6b4e16;
+}
+
+.upload-modal-thumb-reset,
+.upload-modal-cancel {
+  background: #1f1f1f;
+  color: #d4d4d8;
+}
+
+.upload-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.upload-modal-submit {
+  background: #ffcc00;
+  color: #111;
+  border-color: #eab308;
+}
+
+.upload-modal-hint {
+  margin: 8px 0 0;
+  font-size: 0.78rem;
+  color: #a1a1aa;
+}
+
+@media (max-width: 700px) {
+  .upload-modal-card {
+    padding: 18px 14px 14px;
+  }
+}
+
 .maker-container--edit h1 {
   color: #93c5fd;
 }

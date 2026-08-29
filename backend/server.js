@@ -23,7 +23,7 @@ dotenv.config({ path: path.join(__dirname, '.env'), override: true });
 const app = express();
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '2mb' }));
 
 // 정적 프론트엔드 파일 서빙 (루트의 index.html, 하위 폴더, 에셋 등)
 // 이 서버를 실행하면 frontend + API가 모두 같은 포트(기본 5000)에서 제공됨.

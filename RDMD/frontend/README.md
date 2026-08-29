@@ -59,6 +59,7 @@ RDMD/frontend/
 | [06-maker-upload-to-board-record.md](./03-custom-maker/06-maker-upload-to-board-record.md) | 21 | 제작→게시판 업로드 |
 | [07-post-edit-and-mobile-tap-record.md](./03-custom-maker/07-post-edit-and-mobile-tap-record.md) | — | 본인 글 수정 · 모바일 탭 배치 |
 | [08-post-edit-button-between-share-report-record.md](./03-custom-maker/08-post-edit-button-between-share-report-record.md) | — | 공유·신고 사이 수정하기 |
+| [09-upload-modal-title-content-thumb-record.md](./03-custom-maker/09-upload-modal-title-content-thumb-record.md) | — | 업로드 모달·상세 내용 |
 
 ## 04-notice
 
