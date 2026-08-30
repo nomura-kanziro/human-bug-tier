@@ -50,6 +50,7 @@ env 로드: 루트 `.env` 후 `backend/.env` (동일 키는 backend 우선)
 | 문의 | `.claude/skills/inquiry/SKILL.md` | `Contact_us/` |
 | 관리자 | `.claude/skills/admin/SKILL.md` | `admin/` |
 | 알림 | `.claude/skills/notifications/SKILL.md` | Notification + `common.js` |
+| 행운 뽑기 | `.claude/skills/luck-draw/SKILL.md` | `luck-draw/`, `backend/*luckDraw*` |
 | 백엔드 | `.claude/skills/backend/SKILL.md` | `backend/` |
 | 배포 | `.claude/skills/deploy/SKILL.md` | `DEPLOY.md`, `render.yaml` |
 | 문서/RDMD | `.claude/skills/rdmd/SKILL.md` | `RDMD/` |

@@ -20,7 +20,8 @@ RDMD/frontend/
 ├── 06-inquiry/          # 문의하기 (Contact_us)
 ├── 07-admin/            # 관리자 UI · 신고 · 차단
 ├── 08-notifications/    # 헤더 알림 (교차 참조)
-└── 09-deploy-path/      # getBasePath · API Base · 배포 경로
+├── 09-deploy-path/      # getBasePath · API Base · 배포 경로
+└── 10-luck-draw/        # 행운 뽑기 (오늘의 행운 티어)
 ```
 
 파일명 규칙: `{순서}-{기능키워드}-record.md`
@@ -113,6 +114,12 @@ RDMD/frontend/
 | 파일 | legacy | 요약 |
 |------|--------|------|
 | [01-getbasepath-api-base-deploy-frontend-record.md](./09-deploy-path/01-getbasepath-api-base-deploy-frontend-record.md) | 27 | 경로·API Base·배포 프론트 |
+
+## 10-luck-draw
+
+| 파일 | legacy | 요약 |
+|------|--------|------|
+| [01-luck-draw-record.md](./10-luck-draw/01-luck-draw-record.md) | — | 오늘의 행운 티어 프론트 연동·게스트 체크 모드 |
 
 ---
 

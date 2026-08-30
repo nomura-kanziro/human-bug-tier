@@ -192,7 +192,8 @@
 | 161 | 2026-08-31 | [`58620ef`](#58620ef) | fix(notifications): 공지/새소식 알림 클릭 시 sessionStorage 폴백 추가 |
 | 162 | 2026-08-31 | [`7ba90c8`](#7ba90c8) | chore(common): 푸터 사이트 버전을 0.3.2로 변경 |
 | 163 | 2026-08-31 | [`5479732`](#5479732) | feat(luck-draw): 오늘의 행운 티어 백엔드 모델·API 추가 |
-| 164 | 2026-08-31 | [`pending`](#pending-164) | feat(luck-draw): 오늘의 행운 티어 프론트 페이지와 헤더·인덱스 메뉴 연결 |
+| 164 | 2026-08-31 | [`daf1606`](#daf1606) | feat(luck-draw): 오늘의 행운 티어 프론트 페이지와 헤더·인덱스 메뉴 연결 |
+| 165 | 2026-08-31 | [`pending`](#pending-165) | docs(luck-draw): 행운 뽑기 RDMD 기록과 스킬팩 추가 |
 
 ---
 
@@ -3205,18 +3206,36 @@
 
 ---
 
-<a id="pending-164"></a>
+<a id="daf1606"></a>
 
-### 164. 2026-08-31 — `pending`
+### 164. 2026-08-31 — `daf1606`
 
-- **hash (short)**: `pending`
+- **hash (short)**: `daf1606`
 - **hash (full)**: `pending`
 - **author**: nomura
 - **message**: feat(luck-draw): 오늘의 행운 티어 프론트 페이지와 헤더·인덱스 메뉴 연결
-- **git**: `git show pending`
+- **git**: `git show daf1606`
 - **범위**: frontend / luck-draw / common
 - **요약**: `luck-draw/` 폴더에 페이지·스타일·스크립트·API 래퍼를 새로 만들고, 헤더(데스크톱+사이드 드롭다운)와 홈 퀵카드의 "준비 중" 링크를 실제 페이지로 연결했다. 회원은 뽑기 후 버튼이 3분 카운트다운으로 바뀌고, 비회원은 24시간 내 재클릭 시 서버 호출 없이 로그인 유도 alert만 뜨도록 구현했다.
 - **주요 파일**: `luck-draw/luck-draw.html`, `luck-draw/luck-draw.js`, `luck-draw/luck-draw.css`, `luck-draw/luck-draw-api.js`, `luck-draw/README.md`, `header.html`, `index.html`
 - **관련 RDMD**: [../frontend/10-luck-draw/01-luck-draw-record.md](../frontend/10-luck-draw/01-luck-draw-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-165"></a>
+
+### 165. 2026-08-31 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(luck-draw): 행운 뽑기 RDMD 기록과 스킬팩 추가
+- **git**: `git show pending`
+- **범위**: docs
+- **요약**: 행운 뽑기 기능의 프론트·백엔드 작업 일지, `features/luck-draw.md` 설명 문서, `.agents`/`.claude` 스킬팩을 새로 만들고 각 인덱스(`CLAUDE.md`, RDMD README들)에 한 줄씩 반영했다.
+- **주요 파일**: `RDMD/frontend/10-luck-draw/01-luck-draw-record.md`, `RDMD/backend/08-luck-draw/01-luck-draw-record.md`, `RDMD/features/luck-draw.md`, `.agents/luck-draw/skill.md`, `.claude/skills/luck-draw/SKILL.md`, `CLAUDE.md`
+- **관련 RDMD**: [../features/luck-draw.md](../features/luck-draw.md)
 
 [▲ 목차로](#목차)

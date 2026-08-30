@@ -20,6 +20,7 @@ Claude Code가 자동으로 찾는 프로젝트 스킬 위치입니다.
 │   ├── inquiry/SKILL.md
 │   ├── admin/SKILL.md
 │   ├── notifications/SKILL.md
+│   ├── luck-draw/SKILL.md
 │   ├── backend/SKILL.md
 │   ├── deploy/SKILL.md
 │   ├── rdmd/SKILL.md

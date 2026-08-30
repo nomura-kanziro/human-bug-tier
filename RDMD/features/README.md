@@ -16,6 +16,7 @@
 | [inquiry.md](./inquiry.md) | 문의하기 · 답변 · 신고 |
 | [admin.md](./admin.md) | 관리자 로그인 · 통합 관리 |
 | [notifications.md](./notifications.md) | 알림 시스템 |
+| [luck-draw.md](./luck-draw.md) | 행운 뽑기 (오늘의 행운 티어) |
 | [backend-api.md](./backend-api.md) | API 그룹 · 모델 · 미들웨어 |
 
 ## 모듈 README (코드 옆 문서)

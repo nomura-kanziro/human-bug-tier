@@ -19,7 +19,8 @@ RDMD/backend/
 ├── 04-notice/       # 공지 CRUD · 정적 서빙 연동
 ├── 05-inquiry/      # 문의 · 답변 · 신고 API
 ├── 06-admin/        # 관리자 로그인 · 차단 · 신고 · requireAdmin
-└── 07-deploy/       # Render · 정적 서빙 · 배포
+├── 07-deploy/       # Render · 정적 서빙 · 배포
+└── 08-luck-draw/    # 행운 뽑기 (오늘의 행운 티어) 모델·API
 ```
 
 파일명 규칙: `{순서}-{기능키워드}-record.md`
@@ -84,6 +85,12 @@ RDMD/backend/
 | 파일 | legacy | 요약 |
 |------|--------|------|
 | [01-render-static-serve-deploy-record.md](./07-deploy/01-render-static-serve-deploy-record.md) | 27 | Render · 정적 서빙 · DEPLOY |
+
+## 08-luck-draw — 행운 뽑기
+
+| 파일 | legacy | 요약 |
+|------|--------|------|
+| [01-luck-draw-record.md](./08-luck-draw/01-luck-draw-record.md) | — | LuckDraw 모델·오늘의 행운 티어 API·kstDate |
 
 ---
 
