@@ -190,7 +190,7 @@
 | 159 | 2026-08-30 | [`9a99612`](#9a99612) | style(custom-maker): 상세 내용 박스를 티어표 너비·색·간격에 맞춤 |
 | 160 | 2026-08-30 | [`5ba7f40`](#5ba7f40) | feat(tier-class): 1~5티어 칸 순서를 재배치하고 5정을 추가 |
 | 161 | 2026-08-31 | [`58620ef`](#58620ef) | fix(notifications): 공지/새소식 알림 클릭 시 sessionStorage 폴백 추가 |
-| 162 | 2026-08-31 | `pending` | chore(common): 푸터 사이트 버전을 0.3.2로 변경 |
+| 162 | 2026-08-31 | [`7ba90c8`](#7ba90c8) | chore(common): 푸터 사이트 버전을 0.3.2로 변경 |
 
 ---
 
@@ -3167,15 +3167,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="7ba90c8"></a>
 
-### 162. 2026-08-31 — `pending`
+### 162. 2026-08-31 — `7ba90c8`
 
-- **hash (short)**: _(git commit 후 업데이트)_
-- **hash (full)**: _(git commit 후 업데이트)_
+- **hash (short)**: `7ba90c8`
+- **hash (full)**: `7ba90c8d767cfa5694962e242a7a4a43b2f9846b`
 - **author**: nomura
 - **message**: chore(common): 푸터 사이트 버전을 0.3.2로 변경
-- **git**: `git show <hash>`
+- **git**: `git show 7ba90c8`
 - **범위**: frontend / common
 - **요약**: 푸터에 보이던 `site version : 0.3.1`을 `0.3.2`로 바꿨다. 공지/새소식 알림 폴백 기능 추가에 따른 버전 업 반영.
 - **주요 파일**: `footer.html`
