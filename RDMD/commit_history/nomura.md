@@ -193,7 +193,7 @@
 | 162 | 2026-08-31 | [`7ba90c8`](#7ba90c8) | chore(common): 푸터 사이트 버전을 0.3.2로 변경 |
 | 163 | 2026-08-31 | [`5479732`](#5479732) | feat(luck-draw): 오늘의 행운 티어 백엔드 모델·API 추가 |
 | 164 | 2026-08-31 | [`daf1606`](#daf1606) | feat(luck-draw): 오늘의 행운 티어 프론트 페이지와 헤더·인덱스 메뉴 연결 |
-| 165 | 2026-08-31 | [`pending`](#pending-165) | docs(luck-draw): 행운 뽑기 RDMD 기록과 스킬팩 추가 |
+| 165 | 2026-08-31 | [`8144c78`](#8144c78) | docs(luck-draw): 행운 뽑기 RDMD 기록과 스킬팩 추가 |
 
 ---
 
@@ -3193,7 +3193,7 @@
 ### 163. 2026-08-31 — `5479732`
 
 - **hash (short)**: `5479732`
-- **hash (full)**: `pending`
+- **hash (full)**: `5479732cc969e5dd1c45459d9fe82c57b9c0501e`
 - **author**: nomura
 - **message**: feat(luck-draw): 오늘의 행운 티어 백엔드 모델·API 추가
 - **git**: `git show 5479732`
@@ -3206,12 +3206,16 @@
 
 ---
 
+**마지막 갱신**: 2026-08-31 · 총 163 항목 · 행운 뽑기 백엔드 모델·API · 정렬 = 과거→현재
+
+---
+
 <a id="daf1606"></a>
 
 ### 164. 2026-08-31 — `daf1606`
 
 - **hash (short)**: `daf1606`
-- **hash (full)**: `pending`
+- **hash (full)**: `daf1606eaa12522c73861839a1c41285213f2b71`
 - **author**: nomura
 - **message**: feat(luck-draw): 오늘의 행운 티어 프론트 페이지와 헤더·인덱스 메뉴 연결
 - **git**: `git show daf1606`
@@ -3224,15 +3228,19 @@
 
 ---
 
-<a id="pending-165"></a>
+**마지막 갱신**: 2026-08-31 · 총 164 항목 · 행운 뽑기 프론트 연동 · 정렬 = 과거→현재
 
-### 165. 2026-08-31 — `pending`
+---
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+<a id="8144c78"></a>
+
+### 165. 2026-08-31 — `8144c78`
+
+- **hash (short)**: `8144c78`
+- **hash (full)**: `8144c78b5e74b85efd2119c976246a6efcdf5a7a`
 - **author**: nomura
 - **message**: docs(luck-draw): 행운 뽑기 RDMD 기록과 스킬팩 추가
-- **git**: `git show pending`
+- **git**: `git show 8144c78`
 - **범위**: docs
 - **요약**: 행운 뽑기 기능의 프론트·백엔드 작업 일지, `features/luck-draw.md` 설명 문서, `.agents`/`.claude` 스킬팩을 새로 만들고 각 인덱스(`CLAUDE.md`, RDMD README들)에 한 줄씩 반영했다.
 - **주요 파일**: `RDMD/frontend/10-luck-draw/01-luck-draw-record.md`, `RDMD/backend/08-luck-draw/01-luck-draw-record.md`, `RDMD/features/luck-draw.md`, `.agents/luck-draw/skill.md`, `.claude/skills/luck-draw/SKILL.md`, `CLAUDE.md`
