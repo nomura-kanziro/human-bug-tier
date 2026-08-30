@@ -63,6 +63,7 @@ backend/
 | `/api/inquiries`      | 문의 + 답변              | 일부 Admin |
 | `/api/admin`          | 관리자 전용 (유저, 차단, 신고) | requireAdmin |
 | `/api/notifications`  | 알림                     | requireAuth |
+| `/api/luck-draw`      | 오늘의 행운 티어 뽑기 (게스트 체크만/로그인 저장) | optionalAuth(뽑기) · requireAuth(조회) |
 
 ## 데이터 모델 (주요)
 
@@ -73,6 +74,7 @@ backend/
 - **Inquiry**: 문의 + 답변 배열
 - **Block**: 사용자/IP 차단
 - **Admin**: 관리자 계정
+- **LuckDraw**: userId, mode(daily_tier/random_char), tier, characterName, imagePath, drawDate(KST) — `{userId, mode, drawDate}` unique
 
 ## 인증 시스템 원리
 

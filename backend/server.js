@@ -105,6 +105,7 @@ const inquiryRoutes = require('./routes/inquiryRoutes');
 const adminRoutes = require('./routes/adminRoutes');
 const noticeRoutes = require('./routes/noticeRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const luckDrawRoutes = require('./routes/luckDrawRoutes');
 
 app.use('/api/tierlists', tierRoutes);
 app.use('/api/auth', authRoutes);
@@ -112,6 +113,7 @@ app.use('/api/inquiries', inquiryRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/notices', noticeRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/luck-draw', luckDrawRoutes);
 
 app.use((err, req, res, next) => {
   console.error('서버 에러:', err);

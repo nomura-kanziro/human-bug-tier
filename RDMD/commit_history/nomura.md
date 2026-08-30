@@ -191,6 +191,7 @@
 | 160 | 2026-08-30 | [`5ba7f40`](#5ba7f40) | feat(tier-class): 1~5티어 칸 순서를 재배치하고 5정을 추가 |
 | 161 | 2026-08-31 | [`58620ef`](#58620ef) | fix(notifications): 공지/새소식 알림 클릭 시 sessionStorage 폴백 추가 |
 | 162 | 2026-08-31 | [`7ba90c8`](#7ba90c8) | chore(common): 푸터 사이트 버전을 0.3.2로 변경 |
+| 163 | 2026-08-31 | [`pending`](#pending-163) | feat(luck-draw): 오늘의 행운 티어 백엔드 모델·API 추가 |
 
 ---
 
@@ -3180,5 +3181,23 @@
 - **요약**: 푸터에 보이던 `site version : 0.3.1`을 `0.3.2`로 바꿨다. 공지/새소식 알림 폴백 기능 추가에 따른 버전 업 반영.
 - **주요 파일**: `footer.html`
 - **관련 RDMD**: _(선택 — 기능 일지 있으면 링크)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-163"></a>
+
+### 163. 2026-08-31 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(luck-draw): 오늘의 행운 티어 백엔드 모델·API 추가
+- **git**: `git show pending`
+- **범위**: backend / luck-draw
+- **요약**: 헤더에 "준비 중"으로만 있던 행운 뽑기 중 "오늘의 행운 티어"를 실제로 구현했다. `User` 스키마는 건드리지 않고 별도 `LuckDraw` 컬렉션과 `optionalAuth`/`requireAuth` 조합으로 API 4개(config/daily/today/history)를 추가했다. 회원은 하루 20회·뽑기당 3분 쿨다운을 서버가 DB 조회로 강제하고, 게스트는 결과를 계산만 해서 보여주되 저장하지 않는다.
+- **주요 파일**: `backend/models/LuckDraw.js`, `backend/controllers/luckDrawController.js`, `backend/routes/luckDrawRoutes.js`, `backend/data/luckPool.js`, `backend/utils/kstDate.js`, `backend/server.js`, `backend/README.md`
+- **관련 RDMD**: [../backend/08-luck-draw/01-luck-draw-record.md](../backend/08-luck-draw/01-luck-draw-record.md)
 
 [▲ 목차로](#목차)
