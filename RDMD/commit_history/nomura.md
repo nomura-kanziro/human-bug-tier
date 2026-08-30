@@ -190,6 +190,7 @@
 | 159 | 2026-08-30 | [`9a99612`](#9a99612) | style(custom-maker): 상세 내용 박스를 티어표 너비·색·간격에 맞춤 |
 | 160 | 2026-08-30 | [`5ba7f40`](#5ba7f40) | feat(tier-class): 1~5티어 칸 순서를 재배치하고 5정을 추가 |
 | 161 | 2026-08-31 | [`58620ef`](#58620ef) | fix(notifications): 공지/새소식 알림 클릭 시 sessionStorage 폴백 추가 |
+| 162 | 2026-08-31 | `pending` | chore(common): 푸터 사이트 버전을 0.3.2로 변경 |
 
 ---
 
@@ -3157,5 +3158,27 @@
 - **요약**: 공지/새소식 알림을 클릭했을 때 URL 쿼리 문자열이 유실되어도 `sessionStorage`의 백업 ID로 상세 페이지를 복구할 수 있게 했다. 기존엔 게시판 댓글·문의 답변 알림만 이중 안전장치(`rememberTierPostIdFromLink`)가 있었고, 공지/새소식 알림은 누락되어 있었음. 이제 `rememberNoticeIdFromLink()`를 추가해 게시판과 동일한 수준의 복원력을 갖추었고, 부수적으로 경로 체크를 강화해 무관한 ID 덮어쓰기 오류도 방지.
 - **주요 파일**: `common.js`
 - **관련 RDMD**: [../features/common-infra.md](../features/common-infra.md)
+
+[▲ 목차로](#목차)
+
+---
+
+**마지막 갱신**: 2026-08-31 · 총 162 항목 · 푸터 버전 0.3.2 · 정렬 = 과거→현재
+
+---
+
+<a id="pending"></a>
+
+### 162. 2026-08-31 — `pending`
+
+- **hash (short)**: _(git commit 후 업데이트)_
+- **hash (full)**: _(git commit 후 업데이트)_
+- **author**: nomura
+- **message**: chore(common): 푸터 사이트 버전을 0.3.2로 변경
+- **git**: `git show <hash>`
+- **범위**: frontend / common
+- **요약**: 푸터에 보이던 `site version : 0.3.1`을 `0.3.2`로 바꿨다. 공지/새소식 알림 폴백 기능 추가에 따른 버전 업 반영.
+- **주요 파일**: `footer.html`
+- **관련 RDMD**: _(선택 — 기능 일지 있으면 링크)_
 
 [▲ 목차로](#목차)
