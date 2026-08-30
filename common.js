@@ -163,10 +163,23 @@ const NOTIFICATION_SCROLL_KEY = 'notificationScrollTarget';
 function rememberTierPostIdFromLink(link) {
   const resolved = resolveNotificationLink(link);
   if (!resolved) return;
+  if (!/post_detail/i.test(resolved)) return;
 
   const match = resolved.match(/[?&]id=([a-fA-F0-9]{24})/i);
   if (match?.[1]) {
     sessionStorage.setItem('selectedPostId', match[1]);
+  }
+}
+
+// notice.js가 읽는 것과 동일한 키('selectedNoticeId')에 저장 — URL 쿼리가 유실돼도 상세 페이지에서 복구 가능
+function rememberNoticeIdFromLink(link) {
+  const resolved = resolveNotificationLink(link);
+  if (!resolved) return;
+  if (!/notice-detail/i.test(resolved)) return;
+
+  const match = resolved.match(/[?&]id=([a-fA-F0-9]{24})/i);
+  if (match?.[1]) {
+    sessionStorage.setItem('selectedNoticeId', match[1]);
   }
 }
 
@@ -837,6 +850,7 @@ async function handleNotificationClick(notificationId, link, resourceId, resourc
   const targetUrl = storeNotificationScrollTarget(link, resourceId, resourceType);
   if (targetUrl) {
     rememberTierPostIdFromLink(targetUrl);
+    rememberNoticeIdFromLink(targetUrl);
     window.location.href = targetUrl;
     return;
   }

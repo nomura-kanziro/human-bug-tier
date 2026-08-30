@@ -189,6 +189,7 @@
 | 158 | 2026-08-30 | [`ad6baf7`](#ad6baf7) | feat(custom-maker): 업로드 모달에 제목·내용·썸네일 입력 추가 |
 | 159 | 2026-08-30 | [`9a99612`](#9a99612) | style(custom-maker): 상세 내용 박스를 티어표 너비·색·간격에 맞춤 |
 | 160 | 2026-08-30 | [`5ba7f40`](#5ba7f40) | feat(tier-class): 1~5티어 칸 순서를 재배치하고 5정을 추가 |
+| 161 | 2026-08-31 | `pending` | fix(notifications): 공지/새소식 알림 클릭 시 sessionStorage 폴백 추가 |
 
 ---
 
@@ -3139,4 +3140,22 @@
 
 ---
 
-**마지막 갱신**: 2026-08-30 · 총 160 항목 · 1~5티어 재배치 · 정렬 = 과거→현재
+**마지막 갱신**: 2026-08-31 · 총 161 항목 · 공지 알림 폴백 · 정렬 = 과거→현재
+
+---
+
+<a id="pending"></a>
+
+### 161. 2026-08-31 — `pending`
+
+- **hash (short)**: _(git commit 후 업데이트)_
+- **hash (full)**: _(git commit 후 업데이트)_
+- **author**: nomura
+- **message**: fix(notifications): 공지/새소식 알림 클릭 시 sessionStorage 폴백 추가
+- **git**: `git show <hash>`
+- **범위**: frontend / notifications / common
+- **요약**: 공지/새소식 알림을 클릭했을 때 URL 쿼리 문자열이 유실되어도 `sessionStorage`의 백업 ID로 상세 페이지를 복구할 수 있게 했다. 기존엔 게시판 댓글·문의 답변 알림만 이중 안전장치(`rememberTierPostIdFromLink`)가 있었고, 공지/새소식 알림은 누락되어 있었음. 이제 `rememberNoticeIdFromLink()`를 추가해 게시판과 동일한 수준의 복원력을 갖추었고, 부수적으로 경로 체크를 강화해 무관한 ID 덮어쓰기 오류도 방지.
+- **주요 파일**: `common.js`
+- **관련 RDMD**: [../features/common-infra.md](../features/common-infra.md)
+
+[▲ 목차로](#목차)
