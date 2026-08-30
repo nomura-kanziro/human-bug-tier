@@ -187,7 +187,7 @@
 | 156 | 2026-08-30 | [`52a9791`](#52a9791) | feat(notice): 유튜브 커뮤니티 일본어 글을 한국어로 번역 |
 | 157 | 2026-08-30 | [`a5a2e3f`](#a5a2e3f) | feat(custom-maker): 본인 글 수정하기를 공유·신고 사이에 배치 |
 | 158 | 2026-08-30 | [`ad6baf7`](#ad6baf7) | feat(custom-maker): 업로드 모달에 제목·내용·썸네일 입력 추가 |
-| 159 | 2026-08-30 | [`pending`](#pending) | style(custom-maker): 상세 내용 박스를 티어표 너비·색·간격에 맞춤 |
+| 159 | 2026-08-30 | [`9a99612`](#9a99612) | style(custom-maker): 상세 내용 박스를 티어표 너비·색·간격에 맞춤 |
 
 ---
 
@@ -3098,15 +3098,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="9a99612"></a>
 
-### 159. 2026-08-30 — `pending`
+### 159. 2026-08-30 — `9a99612`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `9a99612`
+- **hash (full)**: `9a99612010d432043771f12510d9378ad5e39808`
 - **author**: nomura
 - **message**: style(custom-maker): 상세 내용 박스를 티어표 너비·색·간격에 맞춤
-- **git**: `git show pending`
+- **git**: `git show 9a99612`
 - **범위**: frontend / custom-maker
 - **요약**: 게시글 상세의 내용 박스 가로 너비와 금색 테두리·어두운 배경을 티어표와 맞추고, 제목과의 간격을 티어 네비와 같은 수치로 벌렸다.
 - **주요 파일**: `custom-maker/custom-maker_post/post_detail.css`
