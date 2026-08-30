@@ -191,7 +191,8 @@
 | 160 | 2026-08-30 | [`5ba7f40`](#5ba7f40) | feat(tier-class): 1~5티어 칸 순서를 재배치하고 5정을 추가 |
 | 161 | 2026-08-31 | [`58620ef`](#58620ef) | fix(notifications): 공지/새소식 알림 클릭 시 sessionStorage 폴백 추가 |
 | 162 | 2026-08-31 | [`7ba90c8`](#7ba90c8) | chore(common): 푸터 사이트 버전을 0.3.2로 변경 |
-| 163 | 2026-08-31 | [`pending`](#pending-163) | feat(luck-draw): 오늘의 행운 티어 백엔드 모델·API 추가 |
+| 163 | 2026-08-31 | [`5479732`](#5479732) | feat(luck-draw): 오늘의 행운 티어 백엔드 모델·API 추가 |
+| 164 | 2026-08-31 | [`pending`](#pending-164) | feat(luck-draw): 오늘의 행운 티어 프론트 페이지와 헤더·인덱스 메뉴 연결 |
 
 ---
 
@@ -3186,18 +3187,36 @@
 
 ---
 
-<a id="pending-163"></a>
+<a id="5479732"></a>
 
-### 163. 2026-08-31 — `pending`
+### 163. 2026-08-31 — `5479732`
 
-- **hash (short)**: `pending`
+- **hash (short)**: `5479732`
 - **hash (full)**: `pending`
 - **author**: nomura
 - **message**: feat(luck-draw): 오늘의 행운 티어 백엔드 모델·API 추가
-- **git**: `git show pending`
+- **git**: `git show 5479732`
 - **범위**: backend / luck-draw
 - **요약**: 헤더에 "준비 중"으로만 있던 행운 뽑기 중 "오늘의 행운 티어"를 실제로 구현했다. `User` 스키마는 건드리지 않고 별도 `LuckDraw` 컬렉션과 `optionalAuth`/`requireAuth` 조합으로 API 4개(config/daily/today/history)를 추가했다. 회원은 하루 20회·뽑기당 3분 쿨다운을 서버가 DB 조회로 강제하고, 게스트는 결과를 계산만 해서 보여주되 저장하지 않는다.
 - **주요 파일**: `backend/models/LuckDraw.js`, `backend/controllers/luckDrawController.js`, `backend/routes/luckDrawRoutes.js`, `backend/data/luckPool.js`, `backend/utils/kstDate.js`, `backend/server.js`, `backend/README.md`
 - **관련 RDMD**: [../backend/08-luck-draw/01-luck-draw-record.md](../backend/08-luck-draw/01-luck-draw-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-164"></a>
+
+### 164. 2026-08-31 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(luck-draw): 오늘의 행운 티어 프론트 페이지와 헤더·인덱스 메뉴 연결
+- **git**: `git show pending`
+- **범위**: frontend / luck-draw / common
+- **요약**: `luck-draw/` 폴더에 페이지·스타일·스크립트·API 래퍼를 새로 만들고, 헤더(데스크톱+사이드 드롭다운)와 홈 퀵카드의 "준비 중" 링크를 실제 페이지로 연결했다. 회원은 뽑기 후 버튼이 3분 카운트다운으로 바뀌고, 비회원은 24시간 내 재클릭 시 서버 호출 없이 로그인 유도 alert만 뜨도록 구현했다.
+- **주요 파일**: `luck-draw/luck-draw.html`, `luck-draw/luck-draw.js`, `luck-draw/luck-draw.css`, `luck-draw/luck-draw-api.js`, `luck-draw/README.md`, `header.html`, `index.html`
+- **관련 RDMD**: [../frontend/10-luck-draw/01-luck-draw-record.md](../frontend/10-luck-draw/01-luck-draw-record.md)
 
 [▲ 목차로](#목차)

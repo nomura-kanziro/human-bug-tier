@@ -1,0 +1,203 @@
+/* luck-draw 페이지 전용. common.css / Header_Footer.css 는 수정하지 않는다. */
+
+.luck-draw-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 60px 40px 100px;
+}
+
+.luck-draw-page h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.luck-desc {
+  color: #666;
+  margin: 0 0 28px;
+}
+
+/* 탭 */
+.luck-draw-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid #eee;
+}
+
+.luck-tab {
+  appearance: none;
+  border: none;
+  background: none;
+  font-size: 15px;
+  font-weight: 600;
+  color: #999;
+  padding: 10px 14px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.luck-tab.active {
+  color: #f59e0b;
+  border-bottom-color: #f59e0b;
+}
+
+.luck-tab:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.luck-tab-panel {
+  display: none;
+}
+
+.luck-tab-panel.active {
+  display: block;
+}
+
+/* 안내 배지 */
+.luck-static-guard {
+  background: #fef3c7;
+  color: #92400e;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+/* 뽑기 버튼 */
+.luck-draw-btn {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.luck-draw-btn:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+}
+
+.luck-draw-status {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: #888;
+  text-align: center;
+}
+
+/* 결과 카드 */
+.luck-result-card {
+  margin-top: 28px;
+  padding: 28px;
+  border-radius: 16px;
+  background: #fafafa;
+  border: 1px solid #eee;
+  text-align: center;
+}
+
+.luck-result-image {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #f59e0b;
+  margin: 0 auto 16px;
+  display: block;
+}
+
+.luck-result-tier {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #92400e;
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.luck-result-name {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 12px;
+}
+
+.luck-result-tier-link {
+  display: inline-block;
+  color: #f97316;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.luck-guest-notice {
+  margin: 16px 0 0;
+  padding: 12px;
+  background: #fff7ed;
+  border-radius: 10px;
+  font-size: 13px;
+  color: #9a3412;
+}
+
+.luck-guest-notice a {
+  color: #f97316;
+  font-weight: 700;
+  margin-left: 6px;
+}
+
+/* 확률표 */
+.luck-probability-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 40px;
+  font-size: 14px;
+}
+
+.luck-probability-table caption {
+  text-align: left;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.luck-probability-table th,
+.luck-probability-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+/* 기록 */
+.luck-history {
+  margin-top: 40px;
+}
+
+.luck-history h2 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.luck-history-item {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fafafa;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.luck-history-empty {
+  color: #999;
+  font-size: 14px;
+}
+
+@media (max-width: 600px) {
+  .luck-draw-page {
+    padding: 40px 20px 80px;
+  }
+}
