@@ -188,7 +188,7 @@
 | 157 | 2026-08-30 | [`a5a2e3f`](#a5a2e3f) | feat(custom-maker): 본인 글 수정하기를 공유·신고 사이에 배치 |
 | 158 | 2026-08-30 | [`ad6baf7`](#ad6baf7) | feat(custom-maker): 업로드 모달에 제목·내용·썸네일 입력 추가 |
 | 159 | 2026-08-30 | [`9a99612`](#9a99612) | style(custom-maker): 상세 내용 박스를 티어표 너비·색·간격에 맞춤 |
-| 160 | 2026-08-30 | [`pending`](#pending) | feat(tier-class): 1~5티어 칸 순서를 재배치하고 5정을 추가 |
+| 160 | 2026-08-30 | [`5ba7f40`](#5ba7f40) | feat(tier-class): 1~5티어 칸 순서를 재배치하고 5정을 추가 |
 
 ---
 
@@ -3121,15 +3121,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="5ba7f40"></a>
 
-### 160. 2026-08-30 — `pending`
+### 160. 2026-08-30 — `5ba7f40`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `5ba7f40`
+- **hash (full)**: `5ba7f40855f4c26acf3d58823452a2fc75090b44`
 - **author**: nomura
 - **message**: feat(tier-class): 1~5티어 칸 순서를 재배치하고 5정을 추가
-- **git**: `git show pending`
+- **git**: `git show 5ba7f40`
 - **범위**: frontend / tier-class
 - **요약**: 1~5티어 갑을병정 순서를 지정 명단대로 맞추고, 언급되지 않은 캐릭터는 같은 칸 맨 뒤로 보냈다. 티어가 바뀐 캐릭터는 이미지 폴더도 옮겼고, 5정 칸을 새로 넣었다.
 - **주요 파일**: `tier-class/tier1.html` ~ `tier6.html`, `tier-image/`
