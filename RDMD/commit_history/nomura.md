@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 158 |
+| **커밋 수** | 159 |
 | **기간** | 2026-03-20 ~ 2026-08-30|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -187,6 +187,7 @@
 | 156 | 2026-08-30 | [`52a9791`](#52a9791) | feat(notice): 유튜브 커뮤니티 일본어 글을 한국어로 번역 |
 | 157 | 2026-08-30 | [`a5a2e3f`](#a5a2e3f) | feat(custom-maker): 본인 글 수정하기를 공유·신고 사이에 배치 |
 | 158 | 2026-08-30 | [`ad6baf7`](#ad6baf7) | feat(custom-maker): 업로드 모달에 제목·내용·썸네일 입력 추가 |
+| 159 | 2026-08-30 | [`pending`](#pending) | style(custom-maker): 상세 내용 박스를 티어표 너비·색·간격에 맞춤 |
 
 ---
 
@@ -3094,3 +3095,25 @@
 ---
 
 **마지막 갱신**: 2026-08-30 · 총 158 항목 · 업로드 모달 · 정렬 = 과거→현재
+
+---
+
+<a id="pending"></a>
+
+### 159. 2026-08-30 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: style(custom-maker): 상세 내용 박스를 티어표 너비·색·간격에 맞춤
+- **git**: `git show pending`
+- **범위**: frontend / custom-maker
+- **요약**: 게시글 상세의 내용 박스 가로 너비와 금색 테두리·어두운 배경을 티어표와 맞추고, 제목과의 간격을 티어 네비와 같은 수치로 벌렸다.
+- **주요 파일**: `custom-maker/custom-maker_post/post_detail.css`
+- **관련 RDMD**:
+
+[▲ 목차로](#목차)
+
+---
+
+**마지막 갱신**: 2026-08-30 · 총 159 항목 · 상세 내용 박스 스타일 · 정렬 = 과거→현재
