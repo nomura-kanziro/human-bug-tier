@@ -11,6 +11,7 @@ const GUEST_COOLDOWN_MS = 24 * 60 * 60 * 1000;
 const LUCK_GUEST_STATE_KEY = 'luckDrawGuestState';
 
 let cooldownTimer = null;
+let luckPointsTable = {};
 
 function isLoggedIn() {
   return Boolean(localStorage.getItem('authToken'));
@@ -77,7 +78,7 @@ function bindTabClicks() {
   });
 }
 
-function renderProbabilityTable(weights) {
+function renderProbabilityTable(weights, pointsTable) {
   const tbody = document.querySelector('#probability-table tbody');
   if (!tbody || !weights) return;
 
@@ -93,19 +94,25 @@ function renderProbabilityTable(weights) {
       const percentCell = document.createElement('td');
       percentCell.textContent = `${weights[tier]}%`;
 
+      const points = pointsTable ? pointsTable[tier] : undefined;
+      const pointsCell = document.createElement('td');
+      pointsCell.textContent = typeof points === 'number' ? `${points >= 0 ? '+' : ''}${points}P` : '-';
+
       tr.appendChild(tierCell);
       tr.appendChild(percentCell);
+      tr.appendChild(pointsCell);
       tbody.appendChild(tr);
     });
 }
 
-function renderResult(result, { guest }) {
+function renderResult(result, { guest, pointsDelta } = {}) {
   const card = document.getElementById('result-card');
   const img = document.getElementById('result-image');
   const tierEl = document.getElementById('result-tier');
   const nameEl = document.getElementById('result-name');
   const tierLink = document.getElementById('result-tier-link');
   const guestNotice = document.getElementById('guest-notice');
+  const pointsEl = document.getElementById('result-points');
   if (!card || !result) return;
 
   img.src = getBasePath() + encodeURI(result.imagePath);
@@ -113,6 +120,17 @@ function renderResult(result, { guest }) {
   tierEl.textContent = LUCK_TIER_LABELS[result.tier] || `${result.tier}티어`;
   nameEl.textContent = result.characterName;
   tierLink.href = getBasePath() + result.tierPageUrl;
+
+  if (pointsEl) {
+    // 방금 뽑은 결과에만 +N/-N 포인트 배지를 보여준다 (히스토리 복원 시엔 delta를 모르므로 숨김).
+    if (typeof pointsDelta === 'number') {
+      pointsEl.textContent = `${pointsDelta >= 0 ? '+' : ''}${pointsDelta}P`;
+      pointsEl.classList.toggle('luck-result-points-minus', pointsDelta < 0);
+      pointsEl.hidden = false;
+    } else {
+      pointsEl.hidden = true;
+    }
+  }
 
   if (guestNotice) guestNotice.hidden = !guest;
   card.hidden = false;
@@ -135,7 +153,9 @@ function renderHistory(items) {
   items.forEach((item) => {
     const row = document.createElement('div');
     row.className = 'luck-history-item';
-    row.textContent = `${item.drawDate} · ${LUCK_TIER_LABELS[item.tier] || item.tier + '티어'} · ${item.characterName}`;
+    const points = luckPointsTable[item.tier];
+    const pointsText = typeof points === 'number' ? ` · ${points >= 0 ? '+' : ''}${points}P` : '';
+    row.textContent = `${item.drawDate} · ${LUCK_TIER_LABELS[item.tier] || item.tier + '티어'} · ${item.characterName}${pointsText}`;
     list.appendChild(row);
   });
 }
@@ -158,14 +178,16 @@ function renderMemberStatus(status) {
 
   clearCooldownTimer();
 
+  const pointsText = typeof status.points === 'number' ? ` · 보유 포인트 ${status.points}P` : '';
+
   if (status.remainingToday <= 0) {
     btn.disabled = true;
     btn.textContent = '오늘 뽑기 횟수 소진 (내일 다시)';
-    statusEl.textContent = `오늘 ${status.dailyLimit}/${status.dailyLimit}회를 모두 사용했습니다.`;
+    statusEl.textContent = `오늘 ${status.dailyLimit}/${status.dailyLimit}회를 모두 사용했습니다.${pointsText}`;
     return;
   }
 
-  statusEl.textContent = `오늘 남은 횟수 ${status.remainingToday}/${status.dailyLimit}`;
+  statusEl.textContent = `오늘 남은 횟수 ${status.remainingToday}/${status.dailyLimit}${pointsText}`;
 
   if (status.cooldownRemainingSec > 0) {
     btn.disabled = true;
@@ -236,7 +258,8 @@ function renderGuestStatus() {
 async function loadConfig() {
   const { ok, data } = await fetchLuckConfig();
   if (ok && data) {
-    renderProbabilityTable(data.weights);
+    luckPointsTable = data.pointsTable || {};
+    renderProbabilityTable(data.weights, luckPointsTable);
   }
 }
 
@@ -283,13 +306,24 @@ async function onClickDaily() {
     const { ok, status, data } = await drawDailyLuck();
 
     if (ok && data.ok) {
-      renderResult(data.result, { guest: Boolean(data.guest) });
       if (data.guest) {
+        renderResult(data.result, { guest: true });
         setGuestState(data.result);
         renderGuestStatus();
-      } else {
-        loadStatus();
+        return;
       }
+
+      // 방금 응답에 이미 최신 횟수/쿨다운/포인트가 들어있으므로 /today 재요청 없이 바로 반영.
+      renderResult(data.result, { guest: false, pointsDelta: data.pointsDelta });
+      renderMemberStatus({
+        remainingToday: data.remainingToday,
+        dailyLimit: data.dailyLimit,
+        cooldownRemainingSec: data.cooldownRemainingSec,
+        points: data.totalPoints,
+      });
+
+      const historyRes = await fetchLuckHistory(1);
+      if (historyRes.ok) renderHistory(historyRes.data.items);
       return;
     }
 

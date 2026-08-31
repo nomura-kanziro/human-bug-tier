@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const LuckDraw = require('../models/LuckDraw');
+const LuckProfile = require('../models/LuckProfile');
 const luckPool = require('../data/luckPool');
 const { getKstDateString } = require('../utils/kstDate');
 
@@ -10,6 +11,18 @@ const DAILY_TIER_WEIGHTS = { 1: 1, 2: 3, 3: 6, 4: 10, 5: 14, 6: 18, 7: 18, 8: 16
 // (계정이 없음) 여기서 제한하지 않는다. 게스트 24시간 안내는 프론트 localStorage UX일 뿐이다.
 const MEMBER_DAILY_LIMIT = 20;
 const MEMBER_COOLDOWN_MS = 3 * 60 * 1000;
+
+// 이력(LuckDraw)은 최근 N건만 보관 — 초과분은 뽑을 때마다 오래된 것부터 자동 삭제.
+const HISTORY_RETENTION = 5;
+
+// 9티어 -5점을 기준으로, 티어가 한 단계(숫자가 1) 좋아질 때마다 +1점. 1티어 = +3점.
+function getTierPoints(tier) {
+  return (9 - tier) - 5;
+}
+
+const POINTS_TABLE = Object.fromEntries(
+  Object.keys(DAILY_TIER_WEIGHTS).map((tier) => [tier, getTierPoints(Number(tier))]),
+);
 
 function pickWeightedTier(weights) {
   const entries = Object.entries(weights);
@@ -56,17 +69,43 @@ function isDbConnected() {
   return mongoose.connection.readyState === 1;
 }
 
-// 오늘 사용 횟수·쿨다운 잔여 시간·마지막 결과를 한 번에 계산.
-async function getMemberDrawStatus(userId) {
+const EMPTY_PROFILE = { points: 0, totalDraws: 0, tierCounts: {}, bestTier: null, todayCount: 0, todayDate: '', lastDrawAt: null };
+
+// 읽기 전용 조회 — 아직 한 번도 안 뽑은 유저는 문서를 만들지 않고 기본값만 반환.
+async function readLuckProfile(userId) {
+  const profile = await LuckProfile.findOne({ userId });
+  return profile || { ...EMPTY_PROFILE };
+}
+
+// 뽑기 처리용 — 갱신해서 저장해야 하므로 없으면 생성.
+async function getOrCreateLuckProfile(userId) {
+  let profile = await LuckProfile.findOne({ userId });
+  if (!profile) {
+    profile = await LuckProfile.create({ userId });
+  }
+  return profile;
+}
+
+// 이력은 최근 HISTORY_RETENTION건만 유지 — 초과분(오래된 것부터)을 삭제.
+async function pruneLuckHistory(userId, mode) {
+  const excess = await LuckDraw.find({ userId, mode })
+    .sort({ createdAt: -1 })
+    .skip(HISTORY_RETENTION)
+    .select('_id');
+
+  if (excess.length) {
+    await LuckDraw.deleteMany({ _id: { $in: excess.map((doc) => doc._id) } });
+  }
+}
+
+// 오늘 사용 횟수·쿨다운 잔여 시간·누적 포인트/횟수/최고 티어를 profile 기준으로 계산.
+function buildStatusFromProfile(profile) {
   const drawDate = getKstDateString();
-  const [todayCount, lastDraw] = await Promise.all([
-    LuckDraw.countDocuments({ userId, mode: 'daily_tier', drawDate }),
-    LuckDraw.findOne({ userId, mode: 'daily_tier' }).sort({ createdAt: -1 }),
-  ]);
+  const todayCount = profile.todayDate === drawDate ? profile.todayCount : 0;
 
   let cooldownRemainingSec = 0;
-  if (lastDraw) {
-    const elapsedMs = Date.now() - lastDraw.createdAt.getTime();
+  if (profile.lastDrawAt) {
+    const elapsedMs = Date.now() - new Date(profile.lastDrawAt).getTime();
     if (elapsedMs < MEMBER_COOLDOWN_MS) {
       cooldownRemainingSec = Math.ceil((MEMBER_COOLDOWN_MS - elapsedMs) / 1000);
     }
@@ -78,7 +117,9 @@ async function getMemberDrawStatus(userId) {
     dailyLimit: MEMBER_DAILY_LIMIT,
     cooldownSec: MEMBER_COOLDOWN_MS / 1000,
     cooldownRemainingSec,
-    lastResult: lastDraw ? toResultShape(lastDraw) : null,
+    points: profile.points,
+    totalDraws: profile.totalDraws,
+    bestTier: profile.bestTier,
   };
 }
 
@@ -86,9 +127,11 @@ const getConfig = async (req, res) => {
   try {
     res.json({
       weights: DAILY_TIER_WEIGHTS,
+      pointsTable: POINTS_TABLE,
       resetAt: 'KST 00:00',
       dailyLimit: MEMBER_DAILY_LIMIT,
       cooldownSec: MEMBER_COOLDOWN_MS / 1000,
+      historyRetention: HISTORY_RETENTION,
     });
   } catch (err) {
     console.error('행운 뽑기 설정 조회 에러:', err);
@@ -108,7 +151,8 @@ const drawDailyTier = async (req, res) => {
       return res.status(503).json({ error: '데이터베이스에 연결되지 않았습니다.' });
     }
 
-    const status = await getMemberDrawStatus(req.auth.sub);
+    const profile = await getOrCreateLuckProfile(req.auth.sub);
+    const status = buildStatusFromProfile(profile);
 
     if (status.remainingToday <= 0) {
       return res.status(429).json({
@@ -129,6 +173,19 @@ const drawDailyTier = async (req, res) => {
     }
 
     const result = buildDrawResult();
+    const pointsDelta = getTierPoints(result.tier);
+    const isNewDay = profile.todayDate !== result.drawDate;
+
+    profile.todayCount = isNewDay ? 1 : profile.todayCount + 1;
+    profile.todayDate = result.drawDate;
+    profile.totalDraws += 1;
+    profile.points += pointsDelta;
+    profile.bestTier = profile.bestTier === null || result.tier < profile.bestTier ? result.tier : profile.bestTier;
+    profile.tierCounts[result.tier] = (profile.tierCounts[result.tier] || 0) + 1;
+    profile.markModified('tierCounts');
+    profile.lastDrawAt = new Date();
+    await profile.save();
+
     await LuckDraw.create({
       userId: req.auth.sub,
       nickname: req.auth.nickname || '',
@@ -138,15 +195,18 @@ const drawDailyTier = async (req, res) => {
       imagePath: result.imagePath,
       drawDate: result.drawDate,
     });
+    await pruneLuckHistory(req.auth.sub, 'daily_tier');
 
     res.json({
       ok: true,
       saved: true,
       guest: false,
       result,
-      remainingToday: status.remainingToday - 1,
-      dailyLimit: status.dailyLimit,
-      cooldownRemainingSec: status.cooldownSec,
+      pointsDelta,
+      totalPoints: profile.points,
+      remainingToday: Math.max(0, MEMBER_DAILY_LIMIT - profile.todayCount),
+      dailyLimit: MEMBER_DAILY_LIMIT,
+      cooldownRemainingSec: MEMBER_COOLDOWN_MS / 1000,
     });
   } catch (err) {
     console.error('오늘의 행운 티어 뽑기 에러:', err);
@@ -160,8 +220,16 @@ const getToday = async (req, res) => {
       return res.status(503).json({ error: '데이터베이스에 연결되지 않았습니다.' });
     }
 
-    const status = await getMemberDrawStatus(req.auth.sub);
-    res.json({ ok: true, ...status });
+    const [profile, lastDraw] = await Promise.all([
+      readLuckProfile(req.auth.sub),
+      LuckDraw.findOne({ userId: req.auth.sub, mode: 'daily_tier' }).sort({ createdAt: -1 }),
+    ]);
+
+    res.json({
+      ok: true,
+      ...buildStatusFromProfile(profile),
+      lastResult: lastDraw ? toResultShape(lastDraw) : null,
+    });
   } catch (err) {
     console.error('오늘의 뽑기 상태 조회 에러:', err);
     res.status(500).json({ error: '상태 조회 실패' });
@@ -174,6 +242,7 @@ const getHistory = async (req, res) => {
       return res.status(503).json({ error: '데이터베이스에 연결되지 않았습니다.' });
     }
 
+    // 이력은 최근 HISTORY_RETENTION건만 남아있으므로 사실상 항상 1페이지다.
     const page = Math.max(1, parseInt(req.query.page, 10) || 1);
     const limit = 10;
     const filter = { userId: req.auth.sub };
@@ -196,12 +265,37 @@ const getHistory = async (req, res) => {
   }
 };
 
+// 마이페이지용 단순 집계 — LuckProfile 누적치를 그대로 반환 (이력 삭제와 무관).
+const getStats = async (req, res) => {
+  try {
+    if (!isDbConnected()) {
+      return res.status(503).json({ error: '데이터베이스에 연결되지 않았습니다.' });
+    }
+
+    const profile = await readLuckProfile(req.auth.sub);
+
+    res.json({
+      ok: true,
+      totalDraws: profile.totalDraws,
+      tierCounts: profile.tierCounts,
+      bestTier: profile.bestTier,
+      points: profile.points,
+    });
+  } catch (err) {
+    console.error('행운 뽑기 통계 조회 에러:', err);
+    res.status(500).json({ error: '통계 조회 실패' });
+  }
+};
+
 module.exports = {
   getConfig,
   drawDailyTier,
   getToday,
   getHistory,
+  getStats,
   DAILY_TIER_WEIGHTS,
   MEMBER_DAILY_LIMIT,
   MEMBER_COOLDOWN_MS,
+  HISTORY_RETENTION,
+  getTierPoints,
 };

@@ -12,5 +12,6 @@ router.post('/daily', optionalAuth, luckDrawController.drawDailyTier);
 // 로그인 전용
 router.get('/today', requireAuth, luckDrawController.getToday);
 router.get('/history', requireAuth, luckDrawController.getHistory);
+router.get('/stats', requireAuth, luckDrawController.getStats);
 
 module.exports = router;
