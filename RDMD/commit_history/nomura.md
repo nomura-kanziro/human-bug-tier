@@ -207,7 +207,7 @@
 | 176 | 2026-09-01 | [`93de8f6`](#93de8f6) | feat(notifications): 알림 상세 페이지 추가 및 프로필 드롭다운 어드민 통합 마무리 |
 | 177 | 2026-09-01 | [`ef36535`](#ef36535) | feat(luck-draw): 오늘의 행운 티어 확률 재조정 |
 | 178 | 2026-09-01 | [`fd41c85`](#fd41c85) | fix(luck-draw): 4티어 확률 2%↓, 7티어 확률 2%↑ |
-| 179 | 2026-09-01 | [`pending`](#pending-179) | fix(common): 알림 벨 클릭 시 유저 프로필 드롭다운도 같이 닫히도록 수정 |
+| 179 | 2026-09-01 | [`1fd8e84`](#1fd8e84) | fix(common): 알림 벨 클릭 시 유저 프로필 드롭다운도 같이 닫히도록 수정 |
 
 ---
 
@@ -3498,15 +3498,15 @@
 
 ---
 
-<a id="pending-179"></a>
+<a id="1fd8e84"></a>
 
-### 179. 2026-09-01 — `pending`
+### 179. 2026-09-01 — `1fd8e84`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `1fd8e84`
+- **hash (full)**: `1fd8e84431835c46baf329f8a3a1150f443b3245`
 - **author**: nomura
 - **message**: fix(common): 알림 벨 클릭 시 유저 프로필 드롭다운도 같이 닫히도록 수정
-- **git**: `git show pending`
+- **git**: `git show 1fd8e84`
 - **범위**: frontend / common
 - **요약**: 유저 프로필 드롭다운이 열린 상태에서 알림 벨을 클릭하면 두 패널이 겹쳐서 안 닫히는 버그를 고쳤다. 원인은 벨 버튼 클릭 핸들러의 `e.stopPropagation()` 때문에 프로필 패널의 document 레벨 바깥클릭 감지 리스너가 아예 실행되지 않는 것 — `toggleNotificationPanel()` 이 열릴 때 `closeUserProfileMenu()` 를 직접 호출하도록 해서, 반대 방향(`toggleUserProfileMenu()` → `closeNotificationPanel()`)과 대칭이 되도록 맞췄다.
 - **주요 파일**: `common.js`
