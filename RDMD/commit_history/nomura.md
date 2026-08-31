@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 160 |
+| **커밋 수** | 175 |
 | **기간** | 2026-03-20 ~ 2026-08-30|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -194,6 +194,16 @@
 | 163 | 2026-08-31 | [`5479732`](#5479732) | feat(luck-draw): 오늘의 행운 티어 백엔드 모델·API 추가 |
 | 164 | 2026-08-31 | [`daf1606`](#daf1606) | feat(luck-draw): 오늘의 행운 티어 프론트 페이지와 헤더·인덱스 메뉴 연결 |
 | 165 | 2026-08-31 | [`8144c78`](#8144c78) | docs(luck-draw): 행운 뽑기 RDMD 기록과 스킬팩 추가 |
+| 166 | 2026-08-31 | [`e185dbd`](#e185dbd) | feat(luck-draw): 행운 뽑기 모델·API·프론트엔드 구현 |
+| 167 | 2026-08-31 | [`e724361`](#e724361) | feat(my-page): 마이페이지 및 내 게시글 필터 기능 |
+| 168 | 2026-08-31 | [`93894b2`](#93894b2) | docs(agents): 행운 뽑기·마이페이지 에이전트 스킬 추가 |
+| 169 | 2026-08-31 | [`793266e`](#793266e) | docs(RDMD): 행운 뽑기·마이페이지 작업 기록 문서화 |
+| 170 | 2026-08-31 | [`4ac9450`](#4ac9450) | chore: 알림·스타일·README 업데이트 |
+| 171 | 2026-08-31 | [`b137a5c`](#b137a5c) | docs(admin): 관리자 프로필 드롭다운 스킬·기록 추가 |
+| 172 | 2026-08-31 | [`1f2bfdb`](#1f2bfdb) | docs(my-page): 마이페이지 스킬 업데이트 및 기능 문서화 |
+| 173 | 2026-08-31 | [`b8f9c93`](#b8f9c93) | style(luck-draw): 행운뽑기 UI·기능 개선 |
+| 174 | 2026-08-31 | [`4adaea3`](#4adaea3) | chore(common): 알림·스타일·공통 스킬 업데이트 |
+| 175 | 2026-08-31 | [`c3f6163`](#c3f6163) | fix(luck-draw): 행운뽑기 컨트롤러 로직 개선 |
 
 ---
 
@@ -3245,5 +3255,185 @@
 - **요약**: 행운 뽑기 기능의 프론트·백엔드 작업 일지, `features/luck-draw.md` 설명 문서, `.agents`/`.claude` 스킬팩을 새로 만들고 각 인덱스(`CLAUDE.md`, RDMD README들)에 한 줄씩 반영했다.
 - **주요 파일**: `RDMD/frontend/10-luck-draw/01-luck-draw-record.md`, `RDMD/backend/08-luck-draw/01-luck-draw-record.md`, `RDMD/features/luck-draw.md`, `.agents/luck-draw/skill.md`, `.claude/skills/luck-draw/SKILL.md`, `CLAUDE.md`
 - **관련 RDMD**: [../features/luck-draw.md](../features/luck-draw.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="e185dbd"></a>
+
+### 166. 2026-08-31 — `e185dbd`
+
+- **hash (short)**: `e185dbd`
+- **hash (full)**: `e185dbd`
+- **author**: nomura
+- **message**: feat(luck-draw): 행운 뽑기 모델·API·프론트엔드 구현
+- **git**: `git show e185dbd`
+- **범위**: backend / luck-draw / frontend
+- **요약**: `LuckProfile` 모델과 `luckDrawController`/`luckDrawRoutes`를 확장해 포인트 이력·쿨다운 로직을 보강하고, `luck-draw.js`/`.css`/`.html`을 함께 개선했다.
+- **주요 파일**: `backend/controllers/luckDrawController.js`, `backend/models/LuckProfile.js`, `backend/routes/luckDrawRoutes.js`, `luck-draw/luck-draw.css`, `luck-draw/luck-draw.html`, `luck-draw/luck-draw.js`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="e724361"></a>
+
+### 167. 2026-08-31 — `e724361`
+
+- **hash (short)**: `e724361`
+- **hash (full)**: `e724361`
+- **author**: nomura
+- **message**: feat(my-page): 마이페이지 및 내 게시글 필터 기능
+- **git**: `git show e724361`
+- **범위**: frontend / my-page / backend
+- **요약**: `my-page/` 폴더(html·css·js·README)를 신규 추가해 마이페이지 UI를 구현하고, `tierController`에 `mine=true` 필터를 추가해 본인 게시글만 조회할 수 있게 했다.
+- **주요 파일**: `my-page/my-page.html`, `my-page/my-page.js`, `my-page/my-page.css`, `my-page/README.md`, `backend/controllers/tierController.js`
+- **관련 RDMD**: [../features/my-page.md](../features/my-page.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="93894b2"></a>
+
+### 168. 2026-08-31 — `93894b2`
+
+- **hash (short)**: `93894b2`
+- **hash (full)**: `93894b2`
+- **author**: nomura
+- **message**: docs(agents): 행운 뽑기·마이페이지 에이전트 스킬 추가
+- **git**: `git show 93894b2`
+- **범위**: docs / agents
+- **요약**: `.agents/my-page/skill.md`, `.claude/skills/my-page/SKILL.md`를 새로 만들고 luck-draw·common 스킬을 최신 구현에 맞춰 갱신, 각 README/CLAUDE.md 인덱스에 반영했다.
+- **주요 파일**: `.agents/my-page/skill.md`, `.claude/skills/my-page/SKILL.md`, `.agents/luck-draw/skill.md`, `.claude/skills/luck-draw/SKILL.md`, `.agents/common/skill.md`, `.claude/skills/common/SKILL.md`, `CLAUDE.md`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="793266e"></a>
+
+### 169. 2026-08-31 — `793266e`
+
+- **hash (short)**: `793266e`
+- **hash (full)**: `793266e`
+- **author**: nomura
+- **message**: docs(RDMD): 행운 뽑기·마이페이지 작업 기록 문서화
+- **git**: `git show 793266e`
+- **범위**: docs / RDMD
+- **요약**: `mine` 필터·행운 뽑기 포인트 보존 관련 backend record, `features/my-page.md`, `frontend/11-my-page/01-my-page-record.md`를 새로 추가하고 관련 README/overview를 갱신했다.
+- **주요 파일**: `RDMD/backend/02-tierlists/06-mine-filter-record.md`, `RDMD/backend/08-luck-draw/02-luck-draw-points-retention-record.md`, `RDMD/features/my-page.md`, `RDMD/frontend/11-my-page/01-my-page-record.md`, `RDMD/features/overview.md`
+- **관련 RDMD**: [../features/my-page.md](../features/my-page.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="4ac9450"></a>
+
+### 170. 2026-08-31 — `4ac9450`
+
+- **hash (short)**: `4ac9450`
+- **hash (full)**: `4ac9450`
+- **author**: nomura
+- **message**: chore: 알림·스타일·README 업데이트
+- **git**: `git show 4ac9450`
+- **범위**: common / style / backend
+- **요약**: `common.js`의 알림 처리 로직을 정리하고 `Header_Footer.css`에 스타일을 추가했으며 `backend/README.md`를 보완했다.
+- **주요 파일**: `common.js`, `Header_Footer.css`, `backend/README.md`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="b137a5c"></a>
+
+### 171. 2026-08-31 — `b137a5c`
+
+- **hash (short)**: `b137a5c`
+- **hash (full)**: `b137a5c`
+- **author**: nomura
+- **message**: docs(admin): 관리자 프로필 드롭다운 스킬·기록 추가
+- **git**: `git show b137a5c`
+- **범위**: docs / admin
+- **요약**: 관리자 프로필 드롭다운 기능에 대한 작업 기록(`06-admin-profile-dropdown-record.md`)을 신규 작성하고 admin 스킬·features 문서에 한 줄씩 반영했다.
+- **주요 파일**: `RDMD/frontend/01-common/06-admin-profile-dropdown-record.md`, `.agents/admin/skill.md`, `.claude/skills/admin/SKILL.md`, `RDMD/features/admin.md`
+- **관련 RDMD**: [../frontend/01-common/06-admin-profile-dropdown-record.md](../frontend/01-common/06-admin-profile-dropdown-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="1f2bfdb"></a>
+
+### 172. 2026-08-31 — `1f2bfdb`
+
+- **hash (short)**: `1f2bfdb`
+- **hash (full)**: `1f2bfdb`
+- **author**: nomura
+- **message**: docs(my-page): 마이페이지 스킬 업데이트 및 기능 문서화
+- **git**: `git show 1f2bfdb`
+- **범위**: docs / my-page
+- **요약**: 마이페이지 스킬 문서와 `features/my-page.md`의 세부 설명을 최신 구현에 맞춰 다듬었다.
+- **주요 파일**: `.agents/my-page/skill.md`, `.claude/skills/my-page/SKILL.md`, `RDMD/features/my-page.md`
+- **관련 RDMD**: [../features/my-page.md](../features/my-page.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="b8f9c93"></a>
+
+### 173. 2026-08-31 — `b8f9c93`
+
+- **hash (short)**: `b8f9c93`
+- **hash (full)**: `b8f9c93`
+- **author**: nomura
+- **message**: style(luck-draw): 행운뽑기 UI·기능 개선
+- **git**: `git show b8f9c93`
+- **범위**: frontend / luck-draw
+- **요약**: `luck-draw.css`/`.html`/`.js`에 UI 요소와 기능을 추가로 다듬었다.
+- **주요 파일**: `luck-draw/luck-draw.css`, `luck-draw/luck-draw.html`, `luck-draw/luck-draw.js`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="4adaea3"></a>
+
+### 174. 2026-08-31 — `4adaea3`
+
+- **hash (short)**: `4adaea3`
+- **hash (full)**: `4adaea3`
+- **author**: nomura
+- **message**: chore(common): 알림·스타일·공통 스킬 업데이트
+- **git**: `git show 4adaea3`
+- **범위**: common / style / docs
+- **요약**: `common.js`를 대폭 정리하고 `Header_Footer.css`에 스타일을 추가, common 스킬 문서와 `RDMD/frontend/README.md`를 함께 갱신했다.
+- **주요 파일**: `common.js`, `Header_Footer.css`, `.agents/common/skill.md`, `.claude/skills/common/SKILL.md`, `RDMD/frontend/README.md`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="c3f6163"></a>
+
+### 175. 2026-08-31 — `c3f6163`
+
+- **hash (short)**: `c3f6163`
+- **hash (full)**: `c3f61631807447e5698341c20470f9e6aaee3899`
+- **author**: nomura
+- **message**: fix(luck-draw): 행운뽑기 컨트롤러 로직 개선
+- **git**: `git show c3f6163`
+- **범위**: backend / luck-draw
+- **요약**: `luckDrawController.js`의 세부 로직을 수정했다.
+- **주요 파일**: `backend/controllers/luckDrawController.js`
+- **관련 RDMD**: _(선택)_
 
 [▲ 목차로](#목차)
