@@ -205,7 +205,7 @@
 | 174 | 2026-08-31 | [`4adaea3`](#4adaea3) | chore(common): 알림·스타일·공통 스킬 업데이트 |
 | 175 | 2026-08-31 | [`c3f6163`](#c3f6163) | fix(luck-draw): 행운뽑기 컨트롤러 로직 개선 |
 | 176 | 2026-09-01 | [`93de8f6`](#93de8f6) | feat(notifications): 알림 상세 페이지 추가 및 프로필 드롭다운 어드민 통합 마무리 |
-| 177 | 2026-09-01 | [`pending`](#pending-177) | feat(luck-draw): 오늘의 행운 티어 확률 재조정 |
+| 177 | 2026-09-01 | [`ef36535`](#ef36535) | feat(luck-draw): 오늘의 행운 티어 확률 재조정 |
 
 ---
 
@@ -3460,15 +3460,15 @@
 
 ---
 
-<a id="pending-177"></a>
+<a id="ef36535"></a>
 
-### 177. 2026-09-01 — `pending`
+### 177. 2026-09-01 — `ef36535`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `ef36535`
+- **hash (full)**: `ef3653513d215b51246506782e9ee3eefbc98019`
 - **author**: nomura
 - **message**: feat(luck-draw): 오늘의 행운 티어 확률 재조정
-- **git**: `git show pending`
+- **git**: `git show ef36535`
 - **범위**: backend / luck-draw
 - **요약**: `DAILY_TIER_WEIGHTS` 를 {4,5,6}=20% > {7,8}=12% > {9,3}=6% > {2}=3% > {1}=1% 순으로 재조정했다(합계 100 유지). 프론트는 `/config` 응답의 `weights` 를 그대로 표로 그리는 구조라 별도 수정 없음.
 - **주요 파일**: `backend/controllers/luckDrawController.js`
