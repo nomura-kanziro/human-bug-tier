@@ -857,6 +857,7 @@ function toggleNotificationPanel() {
 
   if (willOpen) {
     loadNotificationList();
+    closeUserProfileMenu(); // 유저 프로필 패널과 동시에 열리지 않도록
   }
 }
 

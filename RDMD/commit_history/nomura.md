@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 178 |
+| **커밋 수** | 179 |
 | **기간** | 2026-03-20 ~ 2026-08-30|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -207,6 +207,7 @@
 | 176 | 2026-09-01 | [`93de8f6`](#93de8f6) | feat(notifications): 알림 상세 페이지 추가 및 프로필 드롭다운 어드민 통합 마무리 |
 | 177 | 2026-09-01 | [`ef36535`](#ef36535) | feat(luck-draw): 오늘의 행운 티어 확률 재조정 |
 | 178 | 2026-09-01 | [`fd41c85`](#fd41c85) | fix(luck-draw): 4티어 확률 2%↓, 7티어 확률 2%↑ |
+| 179 | 2026-09-01 | [`pending`](#pending-179) | fix(common): 알림 벨 클릭 시 유저 프로필 드롭다운도 같이 닫히도록 수정 |
 
 ---
 
@@ -3492,5 +3493,23 @@
 - **요약**: `DAILY_TIER_WEIGHTS` 를 미세 조정했다 — 4티어 20%→18%, 7티어 12%→14%. 나머지 티어는 그대로, 합계 100 유지.
 - **주요 파일**: `backend/controllers/luckDrawController.js`
 - **관련 RDMD**: [../features/luck-draw.md](../features/luck-draw.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-179"></a>
+
+### 179. 2026-09-01 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: fix(common): 알림 벨 클릭 시 유저 프로필 드롭다운도 같이 닫히도록 수정
+- **git**: `git show pending`
+- **범위**: frontend / common
+- **요약**: 유저 프로필 드롭다운이 열린 상태에서 알림 벨을 클릭하면 두 패널이 겹쳐서 안 닫히는 버그를 고쳤다. 원인은 벨 버튼 클릭 핸들러의 `e.stopPropagation()` 때문에 프로필 패널의 document 레벨 바깥클릭 감지 리스너가 아예 실행되지 않는 것 — `toggleNotificationPanel()` 이 열릴 때 `closeUserProfileMenu()` 를 직접 호출하도록 해서, 반대 방향(`toggleUserProfileMenu()` → `closeNotificationPanel()`)과 대칭이 되도록 맞췄다.
+- **주요 파일**: `common.js`
+- **관련 RDMD**: _(선택)_
 
 [▲ 목차로](#목차)
