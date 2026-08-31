@@ -17,6 +17,7 @@ description: >
 - `admin/comments/comment-management.*`, `comment-detail.*`
 - `backend/middleware/auth.js` (`requireAdmin`)
 - `backend/routes/adminRoutes.js`, admin controllers
+- 헤더 프로필 드롭다운(관리자): `common.js` `buildAdminProfilePanelHTML()`/`getAdminInfo()`/`logoutAdmin()`
 
 ## Read first
 
@@ -28,6 +29,7 @@ description: >
 
 - 공지 **수정**: PUT/PATCH `/api/notices/:id` (관리 페이지 수정 버튼)
 - 회원 삭제: `DELETE /api/admin/users/:id` (`requireAdmin`)
+- 헤더 프로필 아이콘 = 일반 유저와 같은 드롭다운 패턴(`.user-profile-panel`, `my-page` 스킬 참고). 예전 전체화면 모달(`showAdminModal`)은 제거됨. 관리자 메뉴는 "관리하기"/"로그아웃"만 — 마이페이지 없음
 
 ## Do
 
@@ -58,3 +60,4 @@ description: >
 - [ ] 관리자 로그인→대시보드
 - [ ] 일반 토큰 → 403
 - [ ] 수정 경로 스모크 + 헤더 누락 없음
+- [ ] 헤더 프로필 드롭다운 열기/닫기, "관리하기" 이동, "로그아웃" 정상

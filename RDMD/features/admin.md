@@ -12,6 +12,8 @@
 
 상세: [`admin/README.md`](../../admin/README.md)
 
+로그인 후에는 사이트 헤더의 프로필 아이콘(👑)을 눌러도 진입 가능 — 일반 유저와 동일한 드롭다운 패턴이며 메뉴는 "관리하기"/"로그아웃"뿐. 상세: [`../frontend/01-common/06-admin-profile-dropdown-record.md`](../frontend/01-common/06-admin-profile-dropdown-record.md)
+
 ---
 
 ## 파일 구조
