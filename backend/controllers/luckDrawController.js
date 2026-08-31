@@ -15,14 +15,12 @@ const MEMBER_COOLDOWN_MS = 3 * 60 * 1000;
 // 이력(LuckDraw)은 최근 N건만 보관 — 초과분은 뽑을 때마다 오래된 것부터 자동 삭제.
 const HISTORY_RETENTION = 5;
 
-// 9티어 -5점을 기준으로, 티어가 한 단계(숫자가 1) 좋아질 때마다 +1점. 1티어 = +3점.
-function getTierPoints(tier) {
-  return (9 - tier) - 5;
-}
+// 티어별 지급 포인트 — 등급이 좋을수록 가파르게 증가(선형 아님, 고정 테이블).
+const POINTS_TABLE = { 1: 10, 2: 7, 3: 4, 4: 2, 5: 1, 6: -1, 7: -2, 8: -3, 9: -4 };
 
-const POINTS_TABLE = Object.fromEntries(
-  Object.keys(DAILY_TIER_WEIGHTS).map((tier) => [tier, getTierPoints(Number(tier))]),
-);
+function getTierPoints(tier) {
+  return POINTS_TABLE[tier] ?? 0;
+}
 
 function pickWeightedTier(weights) {
   const entries = Object.entries(weights);
