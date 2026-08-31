@@ -12,6 +12,57 @@ const LUCK_GUEST_STATE_KEY = 'luckDrawGuestState';
 
 let cooldownTimer = null;
 let luckPointsTable = {};
+let drawReelTimer = null;
+
+// 뽑기 버튼 클릭 후 결과를 바로 보여주지 않고 이 시간(ms)만큼 긴장감용 애니메이션을 먼저 보여준다.
+const DRAW_SUSPENSE_MS = 10000;
+
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function startDrawSuspense() {
+  const btn = document.getElementById('draw-btn');
+  const loading = document.getElementById('draw-loading');
+  const reel = document.getElementById('draw-loading-reel');
+  const barFill = document.getElementById('draw-loading-bar-fill');
+  const resultCard = document.getElementById('result-card');
+
+  if (btn) btn.hidden = true;
+  if (resultCard) resultCard.hidden = true;
+  if (loading) loading.hidden = false;
+
+  if (reel) {
+    let i = 1;
+    reel.textContent = '1';
+    drawReelTimer = setInterval(() => {
+      i = (i % 9) + 1;
+      reel.textContent = String(i);
+    }, 90);
+  }
+
+  if (barFill) {
+    barFill.style.transition = 'none';
+    barFill.style.width = '0%';
+    // 강제 리플로우 — 다음 transition이 0%부터 새로 시작하도록.
+    // eslint-disable-next-line no-unused-expressions
+    barFill.offsetHeight;
+    barFill.style.transition = `width ${DRAW_SUSPENSE_MS}ms linear`;
+    barFill.style.width = '100%';
+  }
+}
+
+function stopDrawSuspense() {
+  if (drawReelTimer) {
+    clearInterval(drawReelTimer);
+    drawReelTimer = null;
+  }
+
+  const btn = document.getElementById('draw-btn');
+  const loading = document.getElementById('draw-loading');
+  if (loading) loading.hidden = true;
+  if (btn) btn.hidden = false;
+}
 
 function isLoggedIn() {
   return Boolean(localStorage.getItem('authToken'));
@@ -298,18 +349,20 @@ async function onClickDaily() {
     return;
   }
 
-  const originalText = btn.textContent;
   btn.disabled = true;
-  btn.textContent = '뽑는 중...';
+  startDrawSuspense();
 
   try {
-    const { ok, status, data } = await drawDailyLuck();
+    // 실제 결과는 즉시 오지만, 긴장감을 위해 DRAW_SUSPENSE_MS 만큼은 무조건 로딩을 보여준다.
+    const [{ ok, status, data }] = await Promise.all([drawDailyLuck(), sleep(DRAW_SUSPENSE_MS)]);
+    stopDrawSuspense();
 
     if (ok && data.ok) {
       if (data.guest) {
         renderResult(data.result, { guest: true });
         setGuestState(data.result);
         renderGuestStatus();
+        btn.disabled = false;
         return;
       }
 
@@ -334,11 +387,10 @@ async function onClickDaily() {
     }
 
     btn.disabled = false;
-    btn.textContent = originalText;
     alert(data.error || '뽑기에 실패했습니다.');
   } catch (err) {
+    stopDrawSuspense();
     btn.disabled = false;
-    btn.textContent = originalText;
     if (err.message === 'GITHUB_STATIC') return;
     console.error('행운 뽑기 요청 실패:', err);
     alert('네트워크 오류로 뽑기에 실패했습니다.');

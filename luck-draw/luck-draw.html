@@ -28,6 +28,14 @@
       <button type="button" id="draw-btn" class="luck-draw-btn">오늘의 행운 뽑기</button>
       <p id="draw-status" class="luck-draw-status"></p>
 
+      <div id="draw-loading" class="luck-draw-loading" hidden>
+        <div id="draw-loading-reel" class="luck-draw-loading-reel">?</div>
+        <p class="luck-draw-loading-text">두근두근... 오늘의 운명을 뽑는 중</p>
+        <div class="luck-draw-loading-bar">
+          <div id="draw-loading-bar-fill" class="luck-draw-loading-bar-fill"></div>
+        </div>
+      </div>
+
       <div id="result-card" class="luck-result-card" hidden>
         <img id="result-image" class="luck-result-image" src="" alt="">
         <div class="luck-result-tier" id="result-tier"></div>

@@ -92,6 +92,59 @@
   text-align: center;
 }
 
+/* 뽑기 로딩(긴장감용) — 버튼 클릭 후 10초간 결과를 숨기고 보여준다 */
+.luck-draw-loading {
+  margin-top: 24px;
+  padding: 32px 20px;
+  border-radius: 16px;
+  background: #111827;
+  text-align: center;
+}
+
+.luck-draw-loading-reel {
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  color: #fff;
+  font-size: 30px;
+  font-weight: 800;
+  animation: luck-loading-pulse 0.5s ease-in-out infinite alternate;
+}
+
+@keyframes luck-loading-pulse {
+  from { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5); }
+  to { transform: scale(1.08); box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+}
+
+.luck-draw-loading-text {
+  color: #e5e7eb;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+
+.luck-draw-loading-bar {
+  width: 100%;
+  max-width: 260px;
+  height: 8px;
+  margin: 0 auto;
+  border-radius: 999px;
+  background: #374151;
+  overflow: hidden;
+}
+
+.luck-draw-loading-bar-fill {
+  width: 0%;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #f59e0b, #f97316);
+}
+
 /* 결과 카드 */
 .luck-result-card {
   margin-top: 28px;
