@@ -78,6 +78,7 @@
 | [admin/skill.md](./admin/skill.md) | 관리자 |
 | [notifications/skill.md](./notifications/skill.md) | 알림 |
 | [luck-draw/skill.md](./luck-draw/skill.md) | 행운 뽑기 |
+| [my-page/skill.md](./my-page/skill.md) | 마이페이지 · 프로필 드롭다운 |
 | [backend/skill.md](./backend/skill.md) | Express API |
 | [deploy/skill.md](./deploy/skill.md) | 배포 |
 | [rdmd/skill.md](./rdmd/skill.md) | 문서 일지 |
