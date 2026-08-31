@@ -10,7 +10,7 @@
 
 헤더 프로필 아이콘(`#user-profile`) 클릭 → 유튜브식 드롭다운(`#user-profile-panel`) → "마이페이지"
 
-드롭다운은 알림 벨(`#notification-panel`)과 동일한 열기/닫기 패턴을 재사용한다. 어드민은 기존 전용 모달(`showAdminModal()`)을 그대로 쓴다 — 이번 변경은 일반 유저 프로필에만 적용.
+드롭다운은 알림 벨(`#notification-panel`)과 동일한 열기/닫기 패턴을 재사용한다. **어드민도 같은 드롭다운을 쓴다** — 이전엔 전체화면 모달(`showAdminModal()`)이었으나 제거되었고, 메뉴만 "관리하기"/"로그아웃"으로 다르다(마이페이지 없음). 상세: [`../frontend/01-common/06-admin-profile-dropdown-record.md`](../frontend/01-common/06-admin-profile-dropdown-record.md)
 
 ## 표시 항목
 
