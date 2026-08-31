@@ -603,19 +603,40 @@ function renderUserProfile() {
   const isAdmin = localStorage.getItem("isAdmin") === "true";
 
   if (!user.nickname && !isAdmin) return;
+  if (document.getElementById('user-profile')) return; // 중복 렌더 방지
 
   const header = document.getElementById('header-placeholder');
   if (!header) return;
 
   // 햄버거 메뉴 버튼 찾기
-  const menuBtn = header.querySelector('#menuBtn') || 
-                  header.querySelector('.menu-btn') || 
+  const menuBtn = header.querySelector('#menuBtn') ||
+                  header.querySelector('.menu-btn') ||
                   header.querySelector('button[onclick*="toggleMenu"]');
 
   if (!menuBtn) {
     console.warn('햄버거 메뉴 버튼을 찾을 수 없습니다.');
     return;
   }
+
+  // 어드민은 기존 전용 모달 유지, 일반 유저만 유튜브식 드롭다운 패널 사용.
+  const panelHTML = isAdmin ? '' : `
+        <div id="user-profile-panel" class="user-profile-panel">
+          <div class="user-profile-panel-header">
+            <div class="user-profile-panel-avatar">
+              <img id="user-profile-panel-img" src="${getProfileImageSrc()}" alt="프로필">
+            </div>
+            <div class="user-profile-panel-info">
+              <strong id="user-profile-panel-name"></strong>
+              <span id="user-profile-panel-email"></span>
+            </div>
+          </div>
+          <div class="user-profile-panel-menu">
+            <button type="button" class="user-profile-panel-item" data-action="mypage">👤 마이페이지</button>
+            <button type="button" class="user-profile-panel-item" data-action="board">📋 커스텀 게시판 보기</button>
+            <button type="button" class="user-profile-panel-item" data-action="photo">📷 프로필 사진 변경</button>
+            <button type="button" class="user-profile-panel-item user-profile-panel-item-danger" data-action="logout">로그아웃</button>
+          </div>
+        </div>`;
 
   const profileHTML = `
     <div id="header-user-actions" class="header-user-actions">
@@ -624,7 +645,7 @@ function renderUserProfile() {
           <img id="profile-img"
                src="${getProfileImageSrc()}"
                alt="프로필">
-        </div>
+        </div>${panelHTML}
       </div>
     </div>
   `;
@@ -633,17 +654,84 @@ function renderUserProfile() {
 
   bindProfileImageFallback(document.getElementById('profile-img'));
 
-  // 클릭 이벤트
   const profileEl = document.getElementById('user-profile');
-  if (profileEl) {
-    profileEl.addEventListener('click', () => {
-      if (isAdmin) {
-        showAdminModal();      // 어드민 전용 모달
-      } else {
-        showUserModal();       // 일반 유저 모달
-      }
-    });
+  if (!profileEl) return;
+
+  if (isAdmin) {
+    profileEl.addEventListener('click', () => showAdminModal());
+    return;
   }
+
+  bindProfileImageFallback(document.getElementById('user-profile-panel-img'));
+  bindUserProfileMenuActions();
+
+  profileEl.addEventListener('click', (e) => {
+    e.stopPropagation();
+    toggleUserProfileMenu();
+  });
+  document.addEventListener('click', closeUserProfileMenuOnOutsideClick);
+}
+
+function toggleUserProfileMenu() {
+  const panel = document.getElementById('user-profile-panel');
+  if (!panel) return;
+
+  const willOpen = !panel.classList.contains('is-open');
+  panel.classList.toggle('is-open', willOpen);
+
+  if (willOpen) {
+    updateUserProfilePanelInfo();
+    closeNotificationPanel(); // 알림 패널과 동시에 열리지 않도록
+  }
+}
+
+function closeUserProfileMenu() {
+  const panel = document.getElementById('user-profile-panel');
+  if (panel) panel.classList.remove('is-open');
+}
+
+function closeUserProfileMenuOnOutsideClick(e) {
+  const profileEl = document.getElementById('user-profile');
+  const panel = document.getElementById('user-profile-panel');
+  if (!profileEl || !panel || !panel.classList.contains('is-open')) return;
+  if (!profileEl.contains(e.target)) {
+    closeUserProfileMenu();
+  }
+}
+
+function updateUserProfilePanelInfo() {
+  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const nameEl = document.getElementById('user-profile-panel-name');
+  const emailEl = document.getElementById('user-profile-panel-email');
+  if (nameEl) nameEl.textContent = user.nickname || '사용자';
+  if (emailEl) emailEl.textContent = user.email || '';
+}
+
+function bindUserProfileMenuActions() {
+  const menu = document.querySelector('#user-profile-panel .user-profile-panel-menu');
+  if (!menu || menu.dataset.bound === '1') return;
+  menu.dataset.bound = '1';
+
+  menu.addEventListener('click', (e) => {
+    const btn = e.target.closest('.user-profile-panel-item');
+    if (!btn) return;
+    closeUserProfileMenu();
+
+    switch (btn.dataset.action) {
+      case 'mypage':
+        window.location.href = getBasePath() + 'my-page/my-page.html';
+        break;
+      case 'board':
+        goToCustomBoard();
+        break;
+      case 'photo':
+        changeProfileImage();
+        break;
+      case 'logout':
+        logout();
+        break;
+    }
+  });
 }
 
 function escapeNotificationHtml(str) {
@@ -1006,61 +1094,8 @@ async function saveNotificationSettings() {
 }
 
 
-// 일반 유저 프로필 모달
-function showUserModal() {
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
-
-  const modalHTML = `
-    <div id="user-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; display: flex; align-items: center; justify-content: center;">
-      <div style="background: white; width: 360px; border-radius: 16px; padding: 30px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-        
-        <!-- 프로필 사진 -->
-        <div style="margin-bottom: 20px;">
-          <img id="modal-profile-img" 
-               src="${getProfileImageSrc()}" 
-               alt="프로필"
-               style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #8faadc;">
-        </div>
-
-        <h2 style="margin: 0 0 8px 0; color: #333;">${user.nickname || '사용자'}</h2>
-        <p style="color: #666; font-size: 14px; margin-bottom: 25px;">${user.email || ''}</p>
-
-        <button onclick="goToCustomBoard()" style="
-          width: 100%; padding: 14px; background: #8faadc; color: white; border: none; 
-          border-radius: 8px; font-size: 16px; cursor: pointer; margin-bottom: 12px;">
-          📋 커스텀 게시판 보기
-        </button>
-
-        <button onclick="changeProfileImage()" style="
-          width: 100%; padding: 14px; background: #6c757d; color: white; border: none; 
-          border-radius: 8px; font-size: 16px; cursor: pointer; margin-bottom: 12px;">
-          📷 프로필 사진 변경
-        </button>
-
-        <button onclick="logout()" style="
-          width: 100%; padding: 14px; background: #dc3545; color: white; border: none; 
-          border-radius: 8px; font-size: 16px; cursor: pointer;">
-          로그아웃
-        </button>
-
-        <div onclick="closeUserModal()" style="margin-top: 20px; color: #999; cursor: pointer; font-size: 14px;">
-          ✕ 닫기
-        </div>
-      </div>
-    </div>
-  `;
-
-  document.body.insertAdjacentHTML('beforeend', modalHTML);
-  bindProfileImageFallback(document.getElementById('modal-profile-img'));
-}
-
-function closeUserModal() {
-  const modal = document.getElementById('user-modal');
-  if (modal) modal.remove();
-}
-
 function goToCustomBoard() {
-  closeUserModal();
+  closeUserProfileMenu();
 
   let user = null;
   try {
@@ -1098,11 +1133,11 @@ function changeProfileImage() {
       const img = document.getElementById('profile-img');
       if (img) img.src = base64;
 
-      // 모달 안의 이미지들도 변경
-      const modalImg = document.getElementById('modal-profile-img');
-      if (modalImg) modalImg.src = base64;
+      // 드롭다운 패널 안의 이미지도 변경
+      const panelImg = document.getElementById('user-profile-panel-img');
+      if (panelImg) panelImg.src = base64;
 
-      closeUserModal();
+      closeUserProfileMenu();
     };
     reader.readAsDataURL(file);
   };
@@ -1120,7 +1155,7 @@ function logout() {
     localStorage.removeItem("adminName");
     localStorage.removeItem("adminIp");
     localStorage.removeItem("profileImage");
-    closeUserModal();
+    closeUserProfileMenu();
     location.reload();
   }
 }

@@ -58,12 +58,12 @@ backend/
 | 경로                  | 설명                     | 인증 |
 |-----------------------|--------------------------|------|
 | `/api/auth`           | 로그인, 회원가입, 비번재설정 | 공개/일부 JWT |
-| `/api/tierlists`      | 티어 게시글 CRUD(본인 PUT 수정), 좋아요, 신고 | 일부 JWT |
+| `/api/tierlists`      | 티어 게시글 CRUD(본인 PUT 수정), 좋아요, 신고, `?author=&mine=true`(본인 비공개 글 포함 조회) | 일부 JWT |
 | `/api/notices`        | 공지사항 (Admin PUT 수정, 유튜브 동기화) | GET 공개, 나머지 Admin |
 | `/api/inquiries`      | 문의 + 답변              | 일부 Admin |
 | `/api/admin`          | 관리자 전용 (유저, 차단, 신고) | requireAdmin |
 | `/api/notifications`  | 알림                     | requireAuth |
-| `/api/luck-draw`      | 오늘의 행운 티어 뽑기 (게스트 체크만/로그인 저장) | optionalAuth(뽑기) · requireAuth(조회) |
+| `/api/luck-draw`      | 오늘의 행운 티어 뽑기 (게스트 체크만/로그인 저장, 이력 최근 5건 유지, 티어별 포인트 적립), `/stats` 누적 통계 | optionalAuth(뽑기) · requireAuth(조회/통계) |
 
 ## 데이터 모델 (주요)
 
@@ -74,7 +74,8 @@ backend/
 - **Inquiry**: 문의 + 답변 배열
 - **Block**: 사용자/IP 차단
 - **Admin**: 관리자 계정
-- **LuckDraw**: userId, mode(daily_tier/random_char), tier, characterName, imagePath, drawDate(KST) — `{userId, mode, drawDate}` unique
+- **LuckDraw**: userId, mode(daily_tier/random_char), tier, characterName, imagePath, drawDate(KST) — 유저당 최근 5건만 유지(자동 삭제)
+- **LuckProfile**: userId(unique), points(누적), totalDraws(누적), tierCounts, bestTier, todayCount/todayDate, lastDrawAt — LuckDraw 삭제와 무관하게 유지되는 누적 카운터
 
 ## 인증 시스템 원리
 
