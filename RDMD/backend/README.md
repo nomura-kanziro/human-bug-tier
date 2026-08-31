@@ -43,6 +43,7 @@ RDMD/backend/
 | [03-tierlist-delete-report-like-record.md](./02-tierlists/03-tierlist-delete-report-like-record.md) | 10 | 삭제·신고·추천·연쇄 삭제 |
 | [04-tier-like-dedupe-record.md](./02-tierlists/04-tier-like-dedupe-record.md) | 12 | TierLike 중복 추천 방지 |
 | [05-tierlist-owner-put-record.md](./02-tierlists/05-tierlist-owner-put-record.md) | — | 작성자 PUT 게시글 수정 |
+| [06-mine-filter-record.md](./02-tierlists/06-mine-filter-record.md) | — | `mine=true` 본인 비공개 글 포함 조회 (마이페이지용) |
 
 ## 03-auth — 회원 인증
 
@@ -91,6 +92,7 @@ RDMD/backend/
 | 파일 | legacy | 요약 |
 |------|--------|------|
 | [01-luck-draw-record.md](./08-luck-draw/01-luck-draw-record.md) | — | LuckDraw 모델·오늘의 행운 티어 API·kstDate |
+| [02-luck-draw-points-retention-record.md](./08-luck-draw/02-luck-draw-points-retention-record.md) | — | LuckProfile 신설 — 포인트 적립 + 이력 5건 자동 삭제 |
 
 ---
 

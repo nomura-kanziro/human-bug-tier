@@ -21,7 +21,8 @@ RDMD/frontend/
 ├── 07-admin/            # 관리자 UI · 신고 · 차단
 ├── 08-notifications/    # 헤더 알림 (교차 참조)
 ├── 09-deploy-path/      # getBasePath · API Base · 배포 경로
-└── 10-luck-draw/        # 행운 뽑기 (오늘의 행운 티어)
+├── 10-luck-draw/        # 행운 뽑기 (오늘의 행운 티어)
+└── 11-my-page/          # 유저 프로필 드롭다운 + 마이페이지
 ```
 
 파일명 규칙: `{순서}-{기능키워드}-record.md`
@@ -120,6 +121,12 @@ RDMD/frontend/
 | 파일 | legacy | 요약 |
 |------|--------|------|
 | [01-luck-draw-record.md](./10-luck-draw/01-luck-draw-record.md) | — | 오늘의 행운 티어 프론트 연동·게스트 체크 모드 |
+
+## 11-my-page
+
+| 파일 | legacy | 요약 |
+|------|--------|------|
+| [01-my-page-record.md](./11-my-page/01-my-page-record.md) | — | 유저 프로필 드롭다운 + 마이페이지(게시글·뽑기 집계) |
 
 ---
 
