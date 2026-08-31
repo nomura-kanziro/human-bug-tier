@@ -6,8 +6,12 @@ const { isTierListOwner, getVoterKey } = require('../utils/ownership');
 
 const getAllTierLists = async (req, res) => {
   try {
-    const { search, author } = req.query;
-    const filter = { isPublic: true };
+    const { search, author, mine } = req.query;
+    const actor = getActor(req);
+
+    // mine=true 는 "내 글 전체보기"(비공개 포함) 용도 — 본인 글일 때만 isPublic 필터를 건너뛴다.
+    const isOwnerRequest = mine === 'true' && Boolean(author) && actor?.nickname === author;
+    const filter = isOwnerRequest ? {} : { isPublic: true };
 
     if (author) {
       filter.author = author;
