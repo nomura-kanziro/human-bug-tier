@@ -49,7 +49,7 @@ env 로드: 루트 `.env` 후 `backend/.env` (동일 키는 backend 우선)
 | 공지 | `.claude/skills/notice/SKILL.md` | `notice/` |
 | 문의 | `.claude/skills/inquiry/SKILL.md` | `Contact_us/` |
 | 관리자 | `.claude/skills/admin/SKILL.md` | `admin/` |
-| 알림 | `.claude/skills/notifications/SKILL.md` | Notification + `common.js` |
+| 알림 | `.claude/skills/notifications/SKILL.md` | Notification + `common.js`, `notifications/`(상세 페이지) |
 | 행운 뽑기 | `.claude/skills/luck-draw/SKILL.md` | `luck-draw/`, `backend/*luckDraw*` |
 | 마이페이지 | `.claude/skills/my-page/SKILL.md` | `my-page/`, `common.js`(프로필 드롭다운) |
 | 백엔드 | `.claude/skills/backend/SKILL.md` | `backend/` |
@@ -97,6 +97,9 @@ custom-maker/                          # 제작 + 게시판 + post_edit
 user_login/                            # 인증
 notice/                                # 공지
 Contact_us/                            # 문의
+notifications/                         # 알림 상세 페이지
+luck-draw/                             # 행운 뽑기 (오늘의 행운 티어)
+my-page/                               # 마이페이지 (프로필 드롭다운 진입)
 admin/                                 # 관리자
 backend/                               # Express + Mongo + 정적 서빙
 RDMD/                                  # 기록·가이드

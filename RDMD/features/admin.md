@@ -12,7 +12,7 @@
 
 상세: [`admin/README.md`](../../admin/README.md)
 
-로그인 후에는 사이트 헤더의 프로필 아이콘(👑)을 눌러도 진입 가능 — 일반 유저와 동일한 드롭다운 패턴이며 메뉴는 "관리하기"/"로그아웃"뿐. 상세: [`../frontend/01-common/06-admin-profile-dropdown-record.md`](../frontend/01-common/06-admin-profile-dropdown-record.md)
+로그인 후에는 사이트 헤더의 프로필 아이콘을 눌러도 진입 가능 — 아이콘·메뉴 전부 일반 유저와 **완전히 동일**(마이페이지·게시판·사진변경·로그아웃)하고 "관리하기" 한 줄만 추가된다. 관리자 전용 표시(왕관 아이콘 등)는 의도적으로 넣지 않았다 — 테스트 계정이 관리자 티가 나면 안 된다는 요청. 상세: [`../frontend/01-common/06-admin-profile-dropdown-record.md`](../frontend/01-common/06-admin-profile-dropdown-record.md)
 
 ---
 

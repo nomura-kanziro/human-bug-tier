@@ -19,7 +19,7 @@ description: >
 - `header.html`, `footer.html`
 - `manifest.webmanifest`, `sw.js` (PWA)
 - 후원 커피 버튼: `header.html` `#header-sponsor-btn` + `common.js` `SPONSOR_PROFILE_URL` / `renderSponsorButton()`
-- 유저 프로필 드롭다운(일반 유저+어드민 공용, 알림 벨과 동일 패턴, 메뉴만 다름): `common.js` `renderUserProfile()` 이하 `toggleUserProfileMenu`/`closeUserProfileMenu*`/`buildAdminProfilePanelHTML` — 상세는 `my-page`(일반 유저)·`admin`(어드민) 스킬 참고
+- 유저 프로필 드롭다운(일반 유저·어드민 완전히 동일 UI, 알림 벨과 동일 패턴, 어드민만 "관리하기" 한 줄 추가): `common.js` `getCurrentIdentity()`, `renderUserProfile()` 이하 `toggleUserProfileMenu`/`closeUserProfileMenu*` — 상세는 `my-page`(일반 유저)·`admin`(어드민) 스킬 참고
 
 ## Read first
 

@@ -529,13 +529,6 @@ function isAdminLoggedIn() {
   return localStorage.getItem("isAdmin") === "true";
 }
 
-function getAdminInfo() {
-  return {
-    name: localStorage.getItem("adminName") || "관리자",
-    ip: localStorage.getItem("adminIp") || "공유 IP"
-  };
-}
-
 function renderHeaderLoginButton() {
   const loginBtn = document.querySelector('#header-placeholder #header-login-btn');
   if (!loginBtn) return;
@@ -598,11 +591,25 @@ function renderSponsorButton() {
 // ========================================================
 // 로그인한 사용자 프로필 아이콘 표시 (일반 유저 + 어드민 공통)
 // ========================================================
-function renderUserProfile() {
-  const user = JSON.parse(localStorage.getItem("user") || "{}");
-  const isAdmin = localStorage.getItem("isAdmin") === "true";
+// 어드민도 일반 유저와 같은 신원 형태(nickname/email)로 다뤄서 프로필 UI를 완전히 통일한다 —
+// 테스트 중에 "이 계정은 관리자다" 티가 나지 않도록, 관리자 로그인 표시(👑 등)는 두지 않는다.
+function getCurrentIdentity() {
+  const isAdmin = localStorage.getItem('isAdmin') === 'true';
+  if (isAdmin) {
+    return { nickname: localStorage.getItem('adminName') || '관리자', email: '', isAdmin: true };
+  }
 
-  if (!user.nickname && !isAdmin) return;
+  try {
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    return { nickname: user.nickname || '', email: user.email || '', isAdmin: false };
+  } catch (err) {
+    return { nickname: '', email: '', isAdmin: false };
+  }
+}
+
+function renderUserProfile() {
+  const identity = getCurrentIdentity();
+  if (!identity.nickname) return;
   if (document.getElementById('user-profile')) return; // 중복 렌더 방지
 
   const header = document.getElementById('header-placeholder');
@@ -618,8 +625,13 @@ function renderUserProfile() {
     return;
   }
 
-  // 어드민 · 일반 유저 모두 같은 유튜브식 드롭다운 패널을 쓰되, 메뉴 구성만 다르다.
-  const panelHTML = isAdmin ? buildAdminProfilePanelHTML() : `
+  // 어드민도 마이페이지·게시판·사진변경 등 일반 메뉴를 그대로 쓴다.
+  // "관리하기"만 관리자일 때 맨 끝에 하나 더 붙는다 — 그 외엔 일반 유저와 완전히 동일한 UI.
+  const adminMenuItem = identity.isAdmin
+    ? `<button type="button" class="user-profile-panel-item" data-action="admin-manage">🛠 관리하기</button>`
+    : '';
+
+  const panelHTML = `
         <div id="user-profile-panel" class="user-profile-panel">
           <div class="user-profile-panel-header">
             <div class="user-profile-panel-avatar">
@@ -634,28 +646,25 @@ function renderUserProfile() {
             <button type="button" class="user-profile-panel-item" data-action="mypage">👤 마이페이지</button>
             <button type="button" class="user-profile-panel-item" data-action="board">📋 커스텀 게시판 보기</button>
             <button type="button" class="user-profile-panel-item" data-action="photo">📷 프로필 사진 변경</button>
+            ${adminMenuItem}
             <button type="button" class="user-profile-panel-item user-profile-panel-item-danger" data-action="logout">로그아웃</button>
           </div>
         </div>`;
 
-  const avatarHTML = isAdmin
-    ? `<div class="user-profile-avatar user-profile-avatar-admin">👑</div>`
-    : `<div class="user-profile-avatar"><img id="profile-img" src="${getProfileImageSrc()}" alt="프로필"></div>`;
-
   const profileHTML = `
     <div id="header-user-actions" class="header-user-actions">
       <div id="user-profile" class="user-profile-btn">
-        ${avatarHTML}${panelHTML}
+        <div class="user-profile-avatar">
+          <img id="profile-img" src="${getProfileImageSrc()}" alt="프로필">
+        </div>${panelHTML}
       </div>
     </div>
   `;
 
   menuBtn.insertAdjacentHTML('beforebegin', profileHTML);
 
-  if (!isAdmin) {
-    bindProfileImageFallback(document.getElementById('profile-img'));
-    bindProfileImageFallback(document.getElementById('user-profile-panel-img'));
-  }
+  bindProfileImageFallback(document.getElementById('profile-img'));
+  bindProfileImageFallback(document.getElementById('user-profile-panel-img'));
 
   const profileEl = document.getElementById('user-profile');
   if (!profileEl) return;
@@ -667,24 +676,6 @@ function renderUserProfile() {
     toggleUserProfileMenu();
   });
   document.addEventListener('click', closeUserProfileMenuOnOutsideClick);
-}
-
-function buildAdminProfilePanelHTML() {
-  const admin = getAdminInfo();
-  return `
-        <div id="user-profile-panel" class="user-profile-panel">
-          <div class="user-profile-panel-header">
-            <div class="user-profile-panel-avatar user-profile-panel-avatar-admin">👑</div>
-            <div class="user-profile-panel-info">
-              <strong>${escapeNotificationHtml(admin.name)} <span class="user-profile-admin-badge" title="관리자">✔</span></strong>
-              <span>공유 IP: ${escapeNotificationHtml(admin.ip)}</span>
-            </div>
-          </div>
-          <div class="user-profile-panel-menu">
-            <button type="button" class="user-profile-panel-item" data-action="admin-manage">📋 관리하기 (댓글 관리)</button>
-            <button type="button" class="user-profile-panel-item user-profile-panel-item-danger" data-action="admin-logout">로그아웃</button>
-          </div>
-        </div>`;
 }
 
 function toggleUserProfileMenu() {
@@ -715,11 +706,11 @@ function closeUserProfileMenuOnOutsideClick(e) {
 }
 
 function updateUserProfilePanelInfo() {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
+  const identity = getCurrentIdentity();
   const nameEl = document.getElementById('user-profile-panel-name');
   const emailEl = document.getElementById('user-profile-panel-email');
-  if (nameEl) nameEl.textContent = user.nickname || '사용자';
-  if (emailEl) emailEl.textContent = user.email || '';
+  if (nameEl) nameEl.textContent = identity.nickname || '사용자';
+  if (emailEl) emailEl.textContent = identity.email || '';
 }
 
 function bindUserProfileMenuActions() {
@@ -748,9 +739,6 @@ function bindUserProfileMenuActions() {
       case 'admin-manage':
         window.location.href = getBasePath() + 'admin/comments/comment-management.html';
         break;
-      case 'admin-logout':
-        logoutAdmin();
-        break;
     }
   });
 }
@@ -774,6 +762,22 @@ const NOTIFICATION_LABELS = {
   notice: '공지사항',
   news: '새 소식',
 };
+
+// 알림 상세 페이지(notifications/)의 4개 탭 분류. 공지/멘션에 안 걸리는 새 타입은
+// 전부 "이벤트"로 떨어지도록 기본값을 둬서, 새 알림 종류가 추가돼도 탭 매핑을 안 잊게 한다.
+const NOTIFICATION_GROUPS = {
+  notice: 'notice',
+  news: 'notice',
+  tier_post_comment: 'mention',
+  tier_comment_reply: 'mention',
+  tier_comment_mention: 'mention',
+  inquiry_answer: 'mention',
+  inquiry_mention: 'mention',
+};
+
+function getNotificationGroup(type) {
+  return NOTIFICATION_GROUPS[type] || 'event';
+}
 
 function formatNotificationTime(dateStr) {
   const date = new Date(dateStr);
@@ -807,7 +811,10 @@ function renderNotificationBell() {
       <div id="notification-panel" class="notification-panel">
         <div class="notification-panel-header">
           <strong>알림</strong>
-          <button type="button" id="notification-settings-btn" class="notification-settings-btn" aria-label="알림 설정">⚙</button>
+          <div class="notification-panel-header-actions">
+            <a href="${getBasePath()}notifications/notifications.html" class="notification-viewall-link">전체보기</a>
+            <button type="button" id="notification-settings-btn" class="notification-settings-btn" aria-label="알림 설정">⚙</button>
+          </div>
         </div>
         <div id="notification-list" class="notification-list">
           <div class="notification-empty">알림을 불러오는 중...</div>
@@ -1118,20 +1125,14 @@ async function saveNotificationSettings() {
 function goToCustomBoard() {
   closeUserProfileMenu();
 
-  let user = null;
-  try {
-    user = JSON.parse(localStorage.getItem('user') || 'null');
-  } catch (err) {
-    user = null;
-  }
-
-  if (!user?.nickname) {
+  const identity = getCurrentIdentity();
+  if (!identity.nickname) {
     alert('내 게시글을 보려면 로그인이 필요합니다.');
     window.location.href = `${getBasePath()}user_login/login.html`;
     return;
   }
 
-  const nickname = encodeURIComponent(user.nickname);
+  const nickname = encodeURIComponent(identity.nickname);
   window.location.href = getBasePath() + `custom-maker/custom-maker_post/custom-maker_post.html?search=@${nickname}`;
 }
 
@@ -1181,21 +1182,6 @@ function logout() {
   }
 }
 
-
-// ========================================================
-// 어드민 로그아웃 (프로필 드롭다운의 "로그아웃" 메뉴에서 호출)
-// ========================================================
-function logoutAdmin() {
-  if (confirm("로그아웃 하시겠습니까?")) {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("adminAuthToken");
-    localStorage.removeItem("isAdmin");
-    localStorage.removeItem("adminName");
-    localStorage.removeItem("adminIp");
-    closeUserProfileMenu();
-    location.reload();
-  }
-}
 
 // ========================================================
 // loadCommon() 끝난 후 프로필 렌더링 호출 (기존 loadCommon 함수 안에 추가)

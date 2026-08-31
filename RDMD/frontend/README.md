@@ -110,6 +110,7 @@ RDMD/frontend/
 | 파일 | legacy | 요약 |
 |------|--------|------|
 | [01-header-notification-ui-index-record.md](./08-notifications/01-header-notification-ui-index-record.md) | cross-ref | 헤더 알림 UI 인덱스 |
+| [02-notifications-detail-page-record.md](./08-notifications/02-notifications-detail-page-record.md) | — | 알림 상세 페이지(탭 4개 + 정렬/필터 select) |
 
 ## 09-deploy-path
 

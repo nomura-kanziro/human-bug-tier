@@ -14,7 +14,7 @@ description: >
 ## Code map
 
 - `my-page/` (html·css·js·README)
-- `common.js` → `renderUserProfile`, `toggleUserProfileMenu`, `closeUserProfileMenu*`, `bindUserProfileMenuActions`
+- `common.js` → `getCurrentIdentity`, `renderUserProfile`, `toggleUserProfileMenu`, `closeUserProfileMenu*`, `bindUserProfileMenuActions`
 - `Header_Footer.css` → `.user-profile-panel*`
 - `backend/controllers/tierController.js` (`mine=true` 옵션), `backend/controllers/luckDrawController.js` (`getStats`), `backend/models/LuckProfile.js` (누적 포인트·횟수·최고티어의 실제 출처)
 
@@ -25,7 +25,8 @@ description: >
 
 ## 현재 (작업 전 이해)
 
-- **일반 유저 + 어드민 둘 다 드롭다운**(`common.js` `renderUserProfile()`). 관리자 메뉴 구성은 `admin` 스킬 소관 — 마이페이지·게시글·행운뽑기 항목은 일반 유저 전용, 어드민은 "관리하기"/"로그아웃"만
+- **일반 유저 + 어드민 완전히 동일한 드롭다운**(`common.js` `getCurrentIdentity()` + `renderUserProfile()`). 마이페이지·게시판·프로필사진변경·로그아웃을 어드민도 그대로 쓴다 — "관리하기" 한 줄만 어드민일 때 추가됨(그 메뉴 자체는 `admin` 스킬 소관). 테스트 계정이 관리자 티가 나면 안 된다는 이유로 별도 UI를 만들지 않기로 결정함
+- 어드민 로그인도 `localStorage.authToken` 을 같이 세팅해서(`admin-login.js`) 마이페이지·행운뽑기 API를 별도 처리 없이 그대로 쓸 수 있다(검증 완료)
 - 드롭다운은 알림 벨(`#notification-panel`)과 **동일한 패턴**(`.is-open` 토글 + outside-click 닫기) — 새 UI 패턴 발명 금지, 벨과 동시에 열리지 않도록 서로 닫아줌
 - **행운 포인트는 실제 적립형** (`luck-draw` 스킬의 `LuckProfile` 참고) — 마이페이지는 이 값을 **표시만** 함, 여기서 새로 계산/저장하지 않음. `User` 스키마에는 여전히 포인트 필드 추가 안 함
 - 게시글 목록은 `GET /api/tierlists?author=&mine=true` — `mine=true` 는 **요청자 닉네임과 author가 일치할 때만** `isPublic` 필터를 건너뜀 (다른 사람 비공개 글 유출 금지, 검증 완료)
@@ -44,7 +45,7 @@ description: >
 
 - `User` 스키마에 포인트/뱃지 필드 추가 (포인트는 `luck-draw` 의 `LuckProfile` 소관)
 - 마이페이지에서 포인트·통계를 독자적으로 재계산 (항상 `/api/luck-draw/stats` 응답을 그대로 표시)
-- 어드민 드롭다운에 마이페이지·게시글·뽑기 메뉴 추가 (관리자는 "관리하기"/"로그아웃"만 — `admin` 스킬 참고)
+- 어드민 드롭다운을 일반 유저와 다르게 축소하기 (완전히 같아야 함 — 다르게 하려면 사용자에게 먼저 확인)
 - `mine=true` 를 인증 없이 또는 다른 사람 대상으로 우회 가능하게 만들기
 - 알림 벨과 다른 새 드롭다운 CSS/JS 패턴을 별도로 만들기
 
@@ -55,4 +56,4 @@ description: >
 - [ ] 마이페이지 통계 5칸 정상 (게시글 수/좋아요 합/뽑기 횟수/최고 티어/포인트)
 - [ ] 비공개 글이 `mine=true` + 본인 토큰에서만 보임
 - [ ] 비로그인 마이페이지 접근 → 리다이렉트
-- [ ] 어드민 로그인 시 드롭다운(관리하기/로그아웃) 정상, 마이페이지 메뉴는 안 뜸
+- [ ] 어드민 로그인 시 드롭다운이 일반 유저와 동일(+ "관리하기"), 마이페이지 정상 진입

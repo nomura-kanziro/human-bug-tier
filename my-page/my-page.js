@@ -18,14 +18,8 @@ function myPageFormatDate(dateStr) {
     .replace(/\. /g, '.').replace(/\.$/, '');
 }
 
-function getMyPageUser() {
-  try {
-    return JSON.parse(localStorage.getItem('user') || 'null');
-  } catch (err) {
-    return null;
-  }
-}
-
+// getCurrentIdentity() 는 common.js 전역 함수 재사용 — 어드민도 nickname/email 형태로 동일하게 다뤄서
+// 일반 회원과 같은 마이페이지를 그대로 쓸 수 있게 한다.
 function renderProfileHeader(user) {
   document.getElementById('my-page-avatar-img').src = getProfileImageSrc();
   document.getElementById('my-page-nickname').textContent = user.nickname || '사용자';
@@ -135,7 +129,7 @@ async function loadLuckHistory() {
 }
 
 async function initMyPage() {
-  const user = getMyPageUser();
+  const user = getCurrentIdentity();
   if (!user?.nickname) {
     alert('마이페이지는 로그인 후 이용할 수 있습니다.');
     window.location.href = getBasePath() + 'user_login/login.html';

@@ -17,7 +17,7 @@ description: >
 - `admin/comments/comment-management.*`, `comment-detail.*`
 - `backend/middleware/auth.js` (`requireAdmin`)
 - `backend/routes/adminRoutes.js`, admin controllers
-- 헤더 프로필 드롭다운(관리자): `common.js` `buildAdminProfilePanelHTML()`/`getAdminInfo()`/`logoutAdmin()`
+- 헤더 프로필 드롭다운: `common.js` `getCurrentIdentity()`/`renderUserProfile()` — 관리자도 일반 유저와 같은 메뉴 + "관리하기" 한 줄 추가
 
 ## Read first
 
@@ -29,7 +29,8 @@ description: >
 
 - 공지 **수정**: PUT/PATCH `/api/notices/:id` (관리 페이지 수정 버튼)
 - 회원 삭제: `DELETE /api/admin/users/:id` (`requireAdmin`)
-- 헤더 프로필 아이콘 = 일반 유저와 같은 드롭다운 패턴(`.user-profile-panel`, `my-page` 스킬 참고). 예전 전체화면 모달(`showAdminModal`)은 제거됨. 관리자 메뉴는 "관리하기"/"로그아웃"만 — 마이페이지 없음
+- 헤더 프로필 아이콘 = 일반 유저와 **완전히 같은** 드롭다운(`.user-profile-panel`, `my-page` 스킬 참고). 예전 전체화면 모달(`showAdminModal`)과 관리자 전용 축소 메뉴 둘 다 제거됨 — 지금은 마이페이지/게시판/사진변경/로그아웃 + "관리하기" 한 줄. 이유: 테스트 계정이 티 나면 안 됨(사용자 요청)
+- 관리자도 `authToken` 이 세팅돼 있어(`admin-login.js`) `/api/luck-draw/*`, `/api/tierlists?mine=true` 등 일반 회원 API를 그대로 쓸 수 있음(검증 완료) — 백엔드 변경 불필요
 
 ## Do
 
@@ -60,4 +61,4 @@ description: >
 - [ ] 관리자 로그인→대시보드
 - [ ] 일반 토큰 → 403
 - [ ] 수정 경로 스모크 + 헤더 누락 없음
-- [ ] 헤더 프로필 드롭다운 열기/닫기, "관리하기" 이동, "로그아웃" 정상
+- [ ] 헤더 프로필 드롭다운 열기/닫기, 마이페이지/게시판/사진변경/"관리하기"/"로그아웃" 전부 정상

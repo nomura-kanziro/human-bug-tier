@@ -230,6 +230,23 @@ header {
   color: #111;
 }
 
+.notification-panel-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.notification-viewall-link {
+  font-size: 12px;
+  font-weight: 600;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.notification-viewall-link:hover {
+  text-decoration: underline;
+}
+
 .notification-settings-btn {
   width: 32px;
   height: 32px;
@@ -399,25 +416,6 @@ header {
 
 .user-profile-panel-item-danger {
   color: #dc3545;
-}
-
-/* 어드민 전용 아바타(왕관) + 인증 배지 */
-.user-profile-avatar-admin {
-  font-size: 18px;
-  background: linear-gradient(135deg, #fbbf24, #f59e0b);
-}
-
-.user-profile-panel-avatar-admin {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 20px;
-  background: linear-gradient(135deg, #fbbf24, #f59e0b);
-}
-
-.user-profile-admin-badge {
-  color: #007bff;
-  font-size: 12px;
 }
 
 .notification-settings-modal {

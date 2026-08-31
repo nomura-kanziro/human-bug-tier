@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>알림 - 휴버대 티어표</title>
+  <link rel="stylesheet" href="../common.css">
+  <link rel="stylesheet" href="../Header_Footer.css">
+  <link rel="stylesheet" href="notifications.css">
+</head>
+<body>
+  <div id="header-placeholder"></div>
+
+  <div class="notif-page">
+    <h1 class="notif-page-title">알림</h1>
+
+    <div class="notif-toolbar">
+      <div class="notif-tabs">
+        <button type="button" class="notif-tab active" data-tab="all">전체</button>
+        <button type="button" class="notif-tab" data-tab="notice">공지</button>
+        <button type="button" class="notif-tab" data-tab="mention">멘션</button>
+        <button type="button" class="notif-tab" data-tab="event">이벤트</button>
+      </div>
+
+      <select id="notif-sort-select" class="notif-sort-select">
+        <option value="all">전체</option>
+        <option value="latest">최신순</option>
+        <option value="oldest">날짜별 (오래된 것)</option>
+        <option value="read">읽은 것</option>
+        <option value="unread">안 읽은 것</option>
+      </select>
+    </div>
+
+    <div id="notif-list" class="notif-list"></div>
+  </div>
+
+  <div id="footer-placeholder"></div>
+  <script src="../common.js"></script>
+  <script src="notifications.js"></script>
+</body>
+</html>

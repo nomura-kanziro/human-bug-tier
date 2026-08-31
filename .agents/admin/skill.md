@@ -16,7 +16,7 @@ description: >
 - `admin/comments/comment-management.*`, `comment-detail.*`
 - `backend/middleware/auth.js` (requireAdmin)
 - adminRoutes, admin controllers
-- 헤더 프로필 드롭다운(관리자용): `common.js` `buildAdminProfilePanelHTML()`, `getAdminInfo()`, `logoutAdmin()` — 일반 유저와 같은 `.user-profile-panel` 패턴(`my-page` 스킬 참고), 관리자 메뉴는 "관리하기"/"로그아웃"뿐
+- 헤더 프로필 드롭다운: `common.js` `getCurrentIdentity()`, `renderUserProfile()` — 관리자도 **일반 유저와 완전히 동일한 메뉴**(마이페이지/게시판/사진변경/로그아웃)를 쓰고 "관리하기"만 추가로 붙음 (`my-page` 스킬 참고)
 
 ## Read first
 
@@ -30,7 +30,8 @@ description: >
 - 공지는 작성뿐 아니라 **수정**(PUT/PATCH `/api/notices/:id`)도 관리 페이지에서 함
 - 티어 신고: `/api/admin/tier-reports/*`
 - 회원 삭제: `DELETE /api/admin/users/:id` (`requireAdmin`, 계정+커스텀 글·댓글·문의 정리)
-- 헤더 프로필 아이콘 클릭 시 관리자도 일반 유저와 동일한 드롭다운 패널(`#user-profile-panel`)을 씀 — 예전엔 전체화면 모달(`showAdminModal`)이었으나 제거됨. 마이페이지는 없음(관리자는 "관리하기"로 바로 이동)
+- 헤더 프로필 아이콘 클릭 시 관리자도 일반 유저와 **완전히 같은** 드롭다운(`#user-profile-panel`)을 씀 — 예전엔 전체화면 모달(`showAdminModal`), 그다음엔 관리자 전용 축소 메뉴였으나 최종적으로 "테스트 중 관리자 티가 나면 안 된다"는 이유로 일반 메뉴 전체 + "관리하기" 한 줄 추가로 정리됨
+- 관리자도 `localStorage.authToken` 이 세팅돼 있어(`admin-login.js` 가 `adminAuthToken` 과 같이 저장) 마이페이지·행운뽑기 등 **일반 회원 API를 그대로 쓸 수 있다** — 백엔드는 `isAdmin` 여부를 안 가리고 토큰만 검증하므로 별도 처리 불필요
 
 ## Do
 
@@ -53,4 +54,4 @@ description: >
 - [ ] 관리자 로그인→대시보드
 - [ ] 일반 토큰 → 403
 - [ ] 헤더 누락 없는 fetch
-- [ ] 헤더 프로필 드롭다운 → "관리하기"/"로그아웃" 정상, 알림 벨과 상호 배타
+- [ ] 헤더 프로필 드롭다운 → 마이페이지/게시판/사진변경/**관리하기**/로그아웃 전부 정상, 알림 벨과 상호 배타
