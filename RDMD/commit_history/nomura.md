@@ -206,7 +206,7 @@
 | 175 | 2026-08-31 | [`c3f6163`](#c3f6163) | fix(luck-draw): 행운뽑기 컨트롤러 로직 개선 |
 | 176 | 2026-09-01 | [`93de8f6`](#93de8f6) | feat(notifications): 알림 상세 페이지 추가 및 프로필 드롭다운 어드민 통합 마무리 |
 | 177 | 2026-09-01 | [`ef36535`](#ef36535) | feat(luck-draw): 오늘의 행운 티어 확률 재조정 |
-| 178 | 2026-09-01 | [`pending`](#pending-178) | fix(luck-draw): 4티어 확률 2%↓, 7티어 확률 2%↑ |
+| 178 | 2026-09-01 | [`fd41c85`](#fd41c85) | fix(luck-draw): 4티어 확률 2%↓, 7티어 확률 2%↑ |
 
 ---
 
@@ -3479,15 +3479,15 @@
 
 ---
 
-<a id="pending-178"></a>
+<a id="fd41c85"></a>
 
-### 178. 2026-09-01 — `pending`
+### 178. 2026-09-01 — `fd41c85`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `fd41c85`
+- **hash (full)**: `fd41c85f2f90e7f9d69e357c833e906102afffbc`
 - **author**: nomura
 - **message**: fix(luck-draw): 4티어 확률 2%↓, 7티어 확률 2%↑
-- **git**: `git show pending`
+- **git**: `git show fd41c85`
 - **범위**: backend / luck-draw
 - **요약**: `DAILY_TIER_WEIGHTS` 를 미세 조정했다 — 4티어 20%→18%, 7티어 12%→14%. 나머지 티어는 그대로, 합계 100 유지.
 - **주요 파일**: `backend/controllers/luckDrawController.js`
