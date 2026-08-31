@@ -204,7 +204,7 @@
 | 173 | 2026-08-31 | [`b8f9c93`](#b8f9c93) | style(luck-draw): 행운뽑기 UI·기능 개선 |
 | 174 | 2026-08-31 | [`4adaea3`](#4adaea3) | chore(common): 알림·스타일·공통 스킬 업데이트 |
 | 175 | 2026-08-31 | [`c3f6163`](#c3f6163) | fix(luck-draw): 행운뽑기 컨트롤러 로직 개선 |
-| 176 | 2026-09-01 | [`pending`](#pending-176) | feat(notifications): 알림 상세 페이지 추가 및 프로필 드롭다운 어드민 통합 마무리 |
+| 176 | 2026-09-01 | [`93de8f6`](#93de8f6) | feat(notifications): 알림 상세 페이지 추가 및 프로필 드롭다운 어드민 통합 마무리 |
 
 ---
 
@@ -3441,15 +3441,15 @@
 
 ---
 
-<a id="pending-176"></a>
+<a id="93de8f6"></a>
 
-### 176. 2026-09-01 — `pending`
+### 176. 2026-09-01 — `93de8f6`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `93de8f6`
+- **hash (full)**: `93de8f659b316114431d90bdebe0730c82586690`
 - **author**: nomura
 - **message**: feat(notifications): 알림 상세 페이지 추가 및 프로필 드롭다운 어드민 통합 마무리
-- **git**: `git show pending`
+- **git**: `git show 93de8f6`
 - **범위**: frontend / notifications / common / my-page
 - **요약**: 헤더 알림 드롭다운에 "전체보기"를 추가하고, 전체/공지/멘션/이벤트 탭 + 정렬·읽음 필터 select를 갖춘 알림 상세 페이지(`notifications/`)를 새로 만들었다(새 API 없이 기존 목록을 클라이언트에서 분류). 이전 커밋에서 관리자 전용으로 갈라졌던 프로필 드롭다운(`buildAdminProfilePanelHTML`)을 `getCurrentIdentity()` 기반으로 다시 통합해, 관리자도 일반 유저와 완전히 같은 메뉴(마이페이지·게시판·사진변경·로그아웃)를 쓰고 "관리하기" 한 줄만 추가되도록 정리했다.
 - **주요 파일**: `notifications/notifications.html`, `notifications/notifications.js`, `notifications/notifications.css`, `notifications/README.md`, `common.js`, `Header_Footer.css`, `my-page/my-page.js`
