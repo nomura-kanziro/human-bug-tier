@@ -618,8 +618,8 @@ function renderUserProfile() {
     return;
   }
 
-  // 어드민은 기존 전용 모달 유지, 일반 유저만 유튜브식 드롭다운 패널 사용.
-  const panelHTML = isAdmin ? '' : `
+  // 어드민 · 일반 유저 모두 같은 유튜브식 드롭다운 패널을 쓰되, 메뉴 구성만 다르다.
+  const panelHTML = isAdmin ? buildAdminProfilePanelHTML() : `
         <div id="user-profile-panel" class="user-profile-panel">
           <div class="user-profile-panel-header">
             <div class="user-profile-panel-avatar">
@@ -638,31 +638,28 @@ function renderUserProfile() {
           </div>
         </div>`;
 
+  const avatarHTML = isAdmin
+    ? `<div class="user-profile-avatar user-profile-avatar-admin">👑</div>`
+    : `<div class="user-profile-avatar"><img id="profile-img" src="${getProfileImageSrc()}" alt="프로필"></div>`;
+
   const profileHTML = `
     <div id="header-user-actions" class="header-user-actions">
       <div id="user-profile" class="user-profile-btn">
-        <div class="user-profile-avatar">
-          <img id="profile-img"
-               src="${getProfileImageSrc()}"
-               alt="프로필">
-        </div>${panelHTML}
+        ${avatarHTML}${panelHTML}
       </div>
     </div>
   `;
 
   menuBtn.insertAdjacentHTML('beforebegin', profileHTML);
 
-  bindProfileImageFallback(document.getElementById('profile-img'));
+  if (!isAdmin) {
+    bindProfileImageFallback(document.getElementById('profile-img'));
+    bindProfileImageFallback(document.getElementById('user-profile-panel-img'));
+  }
 
   const profileEl = document.getElementById('user-profile');
   if (!profileEl) return;
 
-  if (isAdmin) {
-    profileEl.addEventListener('click', () => showAdminModal());
-    return;
-  }
-
-  bindProfileImageFallback(document.getElementById('user-profile-panel-img'));
   bindUserProfileMenuActions();
 
   profileEl.addEventListener('click', (e) => {
@@ -670,6 +667,24 @@ function renderUserProfile() {
     toggleUserProfileMenu();
   });
   document.addEventListener('click', closeUserProfileMenuOnOutsideClick);
+}
+
+function buildAdminProfilePanelHTML() {
+  const admin = getAdminInfo();
+  return `
+        <div id="user-profile-panel" class="user-profile-panel">
+          <div class="user-profile-panel-header">
+            <div class="user-profile-panel-avatar user-profile-panel-avatar-admin">👑</div>
+            <div class="user-profile-panel-info">
+              <strong>${escapeNotificationHtml(admin.name)} <span class="user-profile-admin-badge" title="관리자">✔</span></strong>
+              <span>공유 IP: ${escapeNotificationHtml(admin.ip)}</span>
+            </div>
+          </div>
+          <div class="user-profile-panel-menu">
+            <button type="button" class="user-profile-panel-item" data-action="admin-manage">📋 관리하기 (댓글 관리)</button>
+            <button type="button" class="user-profile-panel-item user-profile-panel-item-danger" data-action="admin-logout">로그아웃</button>
+          </div>
+        </div>`;
 }
 
 function toggleUserProfileMenu() {
@@ -729,6 +744,12 @@ function bindUserProfileMenuActions() {
         break;
       case 'logout':
         logout();
+        break;
+      case 'admin-manage':
+        window.location.href = getBasePath() + 'admin/comments/comment-management.html';
+        break;
+      case 'admin-logout':
+        logoutAdmin();
         break;
     }
   });
@@ -1162,56 +1183,8 @@ function logout() {
 
 
 // ========================================================
-// 어드민 모달 (이름 + 파란 체크 + 공유 IP + 관리하기 버튼)
+// 어드민 로그아웃 (프로필 드롭다운의 "로그아웃" 메뉴에서 호출)
 // ========================================================
-function getAdminInfo() {
-  return {
-    name: localStorage.getItem("adminName") || "관리자",
-    ip: localStorage.getItem("adminIp") || "공유 IP"
-  };
-}
-
-function showAdminModal() {
-  const admin = getAdminInfo();
-
-  const modalHTML = `
-    <div id="admin-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.7); z-index: 9999; display: flex; align-items: center; justify-content: center;">
-      <div style="background: white; width: 380px; border-radius: 16px; padding: 30px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-        <div style="font-size: 60px; margin-bottom: 15px;">👑</div>
-        <h2 style="margin: 0 0 8px 0; color: #333;">
-          <span style="color: #007bff;">✔</span> ${admin.name}
-        </h2>
-        <p style="color: #666; font-size: 15px; margin: 0 0 25px 0;">
-          공유 IP: <strong>${admin.ip}</strong>
-        </p>
-        
-        <button onclick="window.location.href=getBasePath() + 'admin/comments/comment-management.html'" style="
-          width: 100%; padding: 14px; background: #007bff; color: white; border: none; 
-          border-radius: 8px; font-size: 16px; cursor: pointer; margin-bottom: 12px;">
-          📋 관리하기 (댓글 관리)
-        </button>
-        
-        <button onclick="logoutAdmin()" style="
-          width: 100%; padding: 14px; background: #dc3545; color: white; border: none; 
-          border-radius: 8px; font-size: 16px; cursor: pointer; margin-bottom: 12px;">
-          로그아웃
-        </button>
-        
-        <div onclick="closeAdminModal()" style="margin-top: 20px; color: #999; cursor: pointer; font-size: 14px;">
-          ✕ 닫기
-        </div>
-      </div>
-    </div>
-  `;
-
-  document.body.insertAdjacentHTML('beforeend', modalHTML);
-}
-
-function closeAdminModal() {
-  const modal = document.getElementById('admin-modal');
-  if (modal) modal.remove();
-}
-
 function logoutAdmin() {
   if (confirm("로그아웃 하시겠습니까?")) {
     localStorage.removeItem("authToken");
@@ -1219,28 +1192,7 @@ function logoutAdmin() {
     localStorage.removeItem("isAdmin");
     localStorage.removeItem("adminName");
     localStorage.removeItem("adminIp");
-    closeAdminModal();
-    location.reload();
-  }
-}
-
-// ========================================================
-// 백업용 goToAdminPage (모달에서 직접 href를 사용하므로 거의 호출 안 됨)
-// ========================================================
-function goToAdminPage() {
-  closeAdminModal();
-  window.location.href = getBasePath() + "admin/comments/comment-management.html";
-  console.log('✅ goToAdminPage 실행 → admin/comments/comment-management.html');
-}
-
-function logoutAdmin() {
-  if (confirm("로그아웃 하시겠습니까?")) {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("adminAuthToken");
-    localStorage.removeItem("isAdmin");
-    localStorage.removeItem("adminName");
-    localStorage.removeItem("adminIp");
-    closeAdminModal();
+    closeUserProfileMenu();
     location.reload();
   }
 }
