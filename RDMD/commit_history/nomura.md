@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 189 |
+| **커밋 수** | 190 |
 | **기간** | 2026-03-20 ~ 2026-09-01 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -218,6 +218,7 @@
 | 187 | 2026-09-01 | [`fdc0237`](#fdc0237) | refactor(deploy): 루트 프론트 제거 후 서버가 전용 폴더를 서빙 |
 | 188 | 2026-09-01 | [`7f6487f`](#7f6487f) | ci(deploy): Cloudflare Pages 워크플로 추가 |
 | 189 | 2026-09-01 | [`23770a2`](#23770a2) | docs(deploy): 폴더별 실행 안내와 배포 기록 정리 |
+| 190 | 2026-09-01 | pending | chore(common): 푸터 사이트 버전을 0.4.1로 변경 |
 
 ---
 
@@ -3701,5 +3702,23 @@
 - **요약**: README에 Cloudflare/Render 폴더별 실행 방법을 적고, 배포 스킬과 RDMD 기록을 맞췄다. 로컬은 `cd backend && npm start`(root-cloudflare), Render 화면은 `STATIC_ROOT=root-render`.
 - **주요 파일**: `README.md`, `DEPLOY.md`, `CLAUDE.md`, `.agents/deploy/skill.md`, RDMD deploy records
 - **관련 RDMD**: [../frontend/09-deploy-path/03-root-cloudflare-split-record.md](../frontend/09-deploy-path/03-root-cloudflare-split-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-190"></a>
+
+### 190. 2026-09-01 — pending
+
+- **hash (short)**: pending
+- **hash (full)**: pending
+- **author**: nomura
+- **message**: chore(common): 푸터 사이트 버전을 0.4.1로 변경
+- **git**: _(커밋 후 기입)_
+- **범위**: frontend / common
+- **요약**: 푸터의 `site version`을 `0.3.2`에서 `0.4.1`로 올렸다. Cloudflare·Render 전용 프론트 둘 다 반영했다.
+- **주요 파일**: `root-cloudflare/footer.html`, `root-render/footer.html`
+- **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)
