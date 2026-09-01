@@ -80,6 +80,12 @@ terminals/
 # GitHub Pages 로컬 임시 배포 폴더 (CI에서는 생성됨)
 gh-pages-deploy/
 
+# Cloudflare Pages 로컬 임시 배포 폴더 (CI에서는 생성됨)
+cf-pages-deploy/
+
+# Wrangler 로컬 캐시 (배포 상태, 올리지 않음)
+.wrangler/
+
 # ============================================
 # 기타 Node 관련
 # ============================================

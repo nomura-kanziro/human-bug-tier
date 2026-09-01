@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 183 |
+| **커밋 수** | 184 |
 | **기간** | 2026-03-20 ~ 2026-08-30|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -212,6 +212,7 @@
 | 181 | 2026-09-01 | [`2677aea`](#2677aea) | fix(auth): 이메일 발송 시 설정된 provider 전부 순서대로 시도(Brevo→Resend→Gmail 자동 대체) |
 | 182 | 2026-09-01 | [`94b7ce8`](#94b7ce8) | fix(auth): Gmail SMTP ETIMEDOUT 원인(Render 포트 차단) 확인 및 진단 힌트 추가 |
 | 183 | 2026-09-01 | [`b80a9fc`](#b80a9fc) | fix(auth): 이메일 발송 실패 시 시도한 provider 전부의 원인을 합쳐서 표시 |
+| 184 | 2026-09-01 | pending | docs(deploy): Cloudflare 배포 정본 CLOUDFLARE.md 추가 |
 
 ---
 
@@ -3587,5 +3588,23 @@
 - **요약**: Render에 Resend API를 등록했는데도 여전히 Gmail의 `ETIMEDOUT`만 보인다는 제보를 조사했다. 실제로는 Resend가 시도되고 있었지만 Resend 고유 제약(도메인 미인증 시 계정 가입 이메일에만 발송 가능)으로 실패하고 있었는데, `sendAppMail()`이 "마지막 provider의 에러만" 던지는 구조라 그 진짜 원인이 뒤이은 Gmail의 ETIMEDOUT에 완전히 가려져 있었다. provider가 2개 이상 설정돼 전부 실패하면 각 provider의 실패 이유를 전부 합쳐서(`Brevo: ... / Resend: ... / Gmail: ...`) 응답에 담도록 고쳤고, Resend 에러 파싱도 Brevo 수준으로 개선해 "도메인 인증 필요" 힌트를 추가했다.
 - **주요 파일**: `backend/utils/mail.js`, `DEPLOY.md`
 - **관련 RDMD**: [../backend/03-auth/07-mail-aggregated-error-record.md](../backend/03-auth/07-mail-aggregated-error-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-184"></a>
+
+### 184. 2026-09-01 — pending
+
+- **hash (short)**: pending
+- **hash (full)**: pending
+- **author**: nomura
+- **message**: docs(deploy): Cloudflare 배포 정본 CLOUDFLARE.md 추가
+- **git**: _(커밋 후 기입)_
+- **범위**: docs / deploy
+- **요약**: Render를 방치하고 Cloudflare를 배포 정본으로 쓰기 위해 `CLOUDFLARE.md`를 추가했다. Pages는 정적 미리보기만, 풀스택은 로컬/`backend` + Tunnel이라는 전제를 문서화했고, Wrangler 캐시·임시 Pages 폴더를 gitignore에 넣었다.
+- **주요 파일**: `CLOUDFLARE.md`, `.gitignore`
+- **관련 RDMD**: _(이 커밋은 정본 문서)_
 
 [▲ 목차로](#목차)
