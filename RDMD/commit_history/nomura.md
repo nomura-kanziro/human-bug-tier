@@ -209,7 +209,7 @@
 | 178 | 2026-09-01 | [`fd41c85`](#fd41c85) | fix(luck-draw): 4티어 확률 2%↓, 7티어 확률 2%↑ |
 | 179 | 2026-09-01 | [`1fd8e84`](#1fd8e84) | fix(common): 알림 벨 클릭 시 유저 프로필 드롭다운도 같이 닫히도록 수정 |
 | 180 | 2026-09-01 | [`fa72c7d`](#fa72c7d) | docs(common): 드롭다운 상호배타 버그 기록 및 관련 스킬 문서 전면 갱신 |
-| 181 | 2026-09-01 | [`pending`](#pending-181) | fix(auth): 이메일 발송 시 설정된 provider 전부 순서대로 시도(Brevo→Resend→Gmail 자동 대체) |
+| 181 | 2026-09-01 | [`2677aea`](#2677aea) | fix(auth): 이메일 발송 시 설정된 provider 전부 순서대로 시도(Brevo→Resend→Gmail 자동 대체) |
 
 ---
 
@@ -3536,15 +3536,15 @@
 
 ---
 
-<a id="pending-181"></a>
+<a id="2677aea"></a>
 
-### 181. 2026-09-01 — `pending`
+### 181. 2026-09-01 — `2677aea`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `2677aea`
+- **hash (full)**: `2677aea2cfed3c2ef251365c442267edcb22f5ab`
 - **author**: nomura
 - **message**: fix(auth): 이메일 발송 시 설정된 provider 전부 순서대로 시도(Brevo→Resend→Gmail 자동 대체)
-- **git**: `git show pending`
+- **git**: `git show 2677aea`
 - **범위**: backend / auth
 - **요약**: "이메일 발송에 실패했습니다" 오류(`BREVO_API_ERROR 403 permission_denied: ... not yet activated`) 원인을 조사했다 — Brevo 계정이 트랜잭션(SMTP) 발송을 아직 승인받지 못한 상태로, 코드 버그가 아니라 Brevo 쪽 수동 활성화가 필요한 외부 요인이었다. 다만 기존 코드가 "먼저 설정된 provider 하나만" 쓰고 실패하면 바로 포기하는 구조라, Brevo가 막히면 Resend/Gmail이 같이 설정돼 있어도 전혀 시도조차 안 하는 취약점이 있어 이를 고쳤다 — `sendAppMail()`이 설정된 provider를 전부 우선순위대로 시도하고, 하나가 실패해도 다음으로 자동 대체하도록 변경. `/health`의 `emailProvider`도 설정된 것 전부를 콤마로 나열하게 함. DEPLOY.md·env 예시·관련 스킬 문서에 Brevo 활성화 필요성과 백업 provider 설정 권장 안내를 추가했다.
 - **주요 파일**: `backend/utils/mail.js`, `backend/.env.example`, `DEPLOY.md`, `RDMD/features/auth.md`, `.agents/auth/skill.md`, `.claude/skills/auth/SKILL.md`
