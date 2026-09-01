@@ -7,8 +7,8 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 192 |
-| **기간** | 2026-03-20 ~ 2026-09-01 |
+| **커밋 수** | 193 |
+| **기간** | 2026-03-20 ~ 2026-09-02 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
 > 폴더 안내: [README.md](./README.md)  ·  상세 기능 일지: [../frontend/](../frontend/README.md) · [../backend/](../backend/README.md)
@@ -221,6 +221,7 @@
 | 190 | 2026-09-01 | [`d2e54f5`](#d2e54f5) | chore(common): 푸터 사이트 버전을 0.4.1로 변경 |
 | 191 | 2026-09-01 | [`2f98421`](#2f98421) | docs(react-rewrite): 정식 버전 React 기획 및 Cloudflare 작업 중지 인수인계 |
 | 192 | 2026-09-01 | [`f1229e4`](#f1229e4) | docs(deploy): 현재 실무는 Render.com만이라고 선언 |
+| 193 | 2026-09-02 | pending | feat(custom-maker): 캐릭터 풀 화살표로 티어표·풀 이동 |
 
 ---
 
@@ -3758,5 +3759,23 @@
 - **요약**: Cloudflare·React는 손대지 않고, 지금 코드 작업은 Render.com(`root-render/` + `backend/`)만 한다고 문서와 전 에이전트 스킬에 밝혔다.
 - **주요 파일**: `RDMD/features/react-rewrite.md`, `.agents/deploy/skill.md`, `team/README.md`, `README.md`
 - **관련 RDMD**: [../features/react-rewrite.md](../features/react-rewrite.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-193"></a>
+
+### 193. 2026-09-02 — pending
+
+- **hash (short)**: pending
+- **hash (full)**: pending
+- **author**: nomura
+- **message**: feat(custom-maker): 캐릭터 풀 화살표로 티어표·풀 이동
+- **git**: _(커밋 후 기입)_
+- **범위**: frontend / custom-maker
+- **요약**: Render 전용 커스텀 메이커에서 전체 캐릭터 풀이 보이면 화면 위·아래에 반투명 화살표를 띄운다. ▲는 티어표 테이블로, ▼는 캐릭터 풀 맨 아래로 이동한다. 헤더에 가려 위 버튼이 안 눌리던 것도 고쳤다. 제작·글 수정 페이지 공통.
+- **주요 파일**: `root-render/custom-maker/custom-maker.js`, `custom-maker.css`, `custom-maker.html`, `post_edit.html`
+- **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)

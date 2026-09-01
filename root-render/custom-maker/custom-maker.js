@@ -690,6 +690,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   renderCharacterPool();
   enableDragAndDrop();   // pool / tierList에 위임 리스너 등록
   enableTapToPlace();    // 모바일: 탭 선택 → 티어 칸 탭 배치
+  initPoolMaxWindow();
   updateUploadButtonState();
   updateEditModeChrome();
   console.log('✅ custom-maker: 초기 로드 완료', editingPostId ? `(수정 ${editingPostId})` : '(신규)');
@@ -698,6 +699,52 @@ document.addEventListener('DOMContentLoaded', async () => {
 // ============================================================
 // JSON 다운로드 (사용자가 원하는 정확한 형식)
 // ============================================================
+function initPoolMaxWindow() {
+  const wrap = document.querySelector('.character-pool');
+  const arrows = document.getElementById('pool-viewport-arrows');
+  const up = document.getElementById('pool-max-up');
+  const down = document.getElementById('pool-max-down');
+  const tierTable = document.getElementById('tier-capture-area') || document.getElementById('tier-list');
+  const innerPool = document.getElementById('character-pool');
+  if (!wrap || !arrows || !up || !down) return;
+
+  function syncArrows(show) {
+    document.body.classList.toggle('pool-arrows-on', show);
+    arrows.hidden = !show;
+  }
+
+  function scrollToEl(el, block) {
+    if (!el) return;
+    el.scrollIntoView({ behavior: 'smooth', block: block || 'start' });
+  }
+
+  up.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    wrap.classList.remove('is-max');
+    document.body.classList.remove('pool-is-max');
+    scrollToEl(tierTable, 'start');
+  });
+
+  down.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    wrap.classList.remove('is-max');
+    document.body.classList.remove('pool-is-max');
+    scrollToEl(wrap, 'end');
+    if (innerPool) innerPool.scrollTop = innerPool.scrollHeight;
+  });
+
+  if (typeof IntersectionObserver === 'function') {
+    const io = new IntersectionObserver((entries) => {
+      syncArrows(entries.some((en) => en.isIntersecting));
+    }, { threshold: 0, rootMargin: '120px 0px 80px 0px' });
+    io.observe(wrap);
+  } else {
+    syncArrows(true);
+  }
+}
+
 function downloadAllTiersAsJSON() {
   const result = {
     "티어표 명단 목록": {}

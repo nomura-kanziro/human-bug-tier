@@ -271,6 +271,43 @@
 .tier-nav button { padding: 10px 20px; font-size: 1.2rem; background: #222; color: #ffcc00; border: 2px solid #ffcc00; cursor: pointer; }
 .character-pool { margin-top: 40px; }
 .characters-pool { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; padding: 20px; background: #1a1a1a; border-radius: 8px; }
+
+/* 전체 캐릭터 풀: 화면 위·아래 반투명 화살표로 최대 창 올리기/내리기 */
+.pool-viewport-arrows {
+  display: none;
+  pointer-events: none;
+}
+body.pool-arrows-on .pool-viewport-arrows {
+  display: block;
+  pointer-events: none;
+}
+.pool-arrow {
+  pointer-events: auto;
+  position: fixed;
+  left: 50%;
+  z-index: 20000;
+  width: 56px;
+  height: 40px;
+  margin: 0;
+  padding: 0;
+  transform: translateX(-50%);
+  border: 1px solid rgba(255, 204, 0, 0.35);
+  border-radius: 10px;
+  background: rgba(17, 17, 17, 0.45);
+  color: rgba(255, 204, 0, 0.7);
+  font-size: 1.25rem;
+  line-height: 1;
+  cursor: pointer;
+  backdrop-filter: blur(4px);
+}
+.pool-arrow:hover,
+.pool-arrow:focus-visible {
+  background: rgba(17, 17, 17, 0.7);
+  color: #ffcc00;
+  outline: none;
+}
+.pool-arrow--up { top: 12px; }
+.pool-arrow--down { bottom: 12px; }
 .action-bar { margin-top: 30px; }
 
 /* 캐릭터가 많아지면 자동으로 높이 늘어남 */

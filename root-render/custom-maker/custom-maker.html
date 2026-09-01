@@ -68,10 +68,15 @@
     </div>
 
     <!-- 아래쪽 캐릭터 목록 (드래그 가능) -->
-    <div class="character-pool">
+    <div class="character-pool" id="character-pool-wrap">
       <h3>📦 전체 캐릭터 풀 <span class="pool-hint-pc">(드래그해서 위로)</span><span class="pool-hint-mobile">(탭으로 선택)</span></h3>
       <div id="character-pool" class="characters-pool"></div>
     </div>
+  </div>
+
+  <div id="pool-viewport-arrows" class="pool-viewport-arrows" hidden>
+    <button type="button" id="pool-max-up" class="pool-arrow pool-arrow--up" aria-label="티어표 테이블로 이동">▲</button>
+    <button type="button" id="pool-max-down" class="pool-arrow pool-arrow--down" aria-label="전체 캐릭터 풀로 이동">▼</button>
   </div>
 
   <div id="footer-placeholder"></div>
