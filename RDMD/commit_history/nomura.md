@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 185 |
+| **커밋 수** | 186 |
 | **기간** | 2026-03-20 ~ 2026-08-30|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -213,7 +213,8 @@
 | 182 | 2026-09-01 | [`94b7ce8`](#94b7ce8) | fix(auth): Gmail SMTP ETIMEDOUT 원인(Render 포트 차단) 확인 및 진단 힌트 추가 |
 | 183 | 2026-09-01 | [`b80a9fc`](#b80a9fc) | fix(auth): 이메일 발송 실패 시 시도한 provider 전부의 원인을 합쳐서 표시 |
 | 184 | 2026-09-01 | [`7532ffe`](#7532ffe) | docs(deploy): Cloudflare 배포 정본 CLOUDFLARE.md 추가 |
-| 185 | 2026-09-01 | pending | feat(deploy): Render 전용 프론트 root-render 추가 |
+| 185 | 2026-09-01 | [`fe2369c`](#fe2369c) | feat(deploy): Render 전용 프론트 root-render 추가 |
+| 186 | 2026-09-01 | pending | feat(deploy): Cloudflare 전용 프론트 root-cloudflare 추가 |
 
 ---
 
@@ -3612,18 +3613,36 @@
 
 ---
 
-<a id="pending-185"></a>
+<a id="fe2369c"></a>
 
-### 185. 2026-09-01 — pending
+### 185. 2026-09-01 — `fe2369c`
 
-- **hash (short)**: pending
-- **hash (full)**: pending
+- **hash (short)**: `fe2369c`
+- **hash (full)**: `fe2369c1a0f964ac35adddb269d09563dd580b6a`
 - **author**: nomura
 - **message**: feat(deploy): Render 전용 프론트 root-render 추가
-- **git**: _(커밋 후 기입)_
+- **git**: `git show fe2369c`
 - **범위**: frontend / deploy
 - **요약**: Render.com이 쓸 정적 프론트를 `root-render/`에 복제했다. 레포 루트 프론트와 분리해서, 이후 Cloudflare 쪽으로 루트를 비워도 Render는 이 폴더만 보면 된다.
 - **주요 파일**: `root-render/`
 - **관련 RDMD**: [../backend/07-deploy/02-root-render-static-record.md](../backend/07-deploy/02-root-render-static-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-186"></a>
+
+### 186. 2026-09-01 — pending
+
+- **hash (short)**: pending
+- **hash (full)**: pending
+- **author**: nomura
+- **message**: feat(deploy): Cloudflare 전용 프론트 root-cloudflare 추가
+- **git**: _(커밋 후 기입)_
+- **범위**: frontend / deploy
+- **요약**: 로컬·Tunnel·Cloudflare Pages가 쓸 정적 프론트를 `root-cloudflare/`에 두었다. 이후 루트에서 프론트를 지워도 Pages와 로컬은 이 폴더를 본다.
+- **주요 파일**: `root-cloudflare/`
+- **관련 RDMD**: [../frontend/09-deploy-path/03-root-cloudflare-split-record.md](../frontend/09-deploy-path/03-root-cloudflare-split-record.md)
 
 [▲ 목차로](#목차)

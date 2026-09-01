@@ -1,0 +1,447 @@
+/* ========================================================
+   common-v2.css - Contact_us 전용 스타일 
+   컨셉 : 휴먼버그대학교 컨셉
+   특징: 강한 검정 테두리, bold 타이포, 직설적이고 강렬한 대학 게시판 느낌
+   배경은 #ffffff로 완전 하얀색 유지
+   헤더/푸터는 건들지 않음
+   ======================================================== */
+
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #ffffff;
+  color: #111;
+}
+
+/* 문의사항 본문 */
+.contact {
+  max-width: 920px;
+  margin: 80px auto;
+  padding: 0 20px;
+}
+
+.page-title {
+  font-size: 36px;
+  font-weight: 900;
+  text-align: center;
+  margin-bottom: 12px;
+  letter-spacing: -1px;
+  border-bottom: 5px solid #111;
+  padding-bottom: 12px;
+}
+
+.desc {
+  font-size: 15px;
+  color: #444;
+  text-align: center;
+  margin-bottom: 50px;
+  line-height: 1.6;
+}
+
+/* ==================== 로그인한 유저용 폼 ==================== */
+.form-card {
+  background: #fff;
+  border: 4px solid #111;
+  border-radius: 12px;
+  padding: 40px 35px;
+  box-shadow: 8px 8px 0 #111;
+  width: 100%;
+  max-width: 825px;
+  box-sizing: border-box;
+  margin: 0 auto 60px;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 28px;
+  padding-bottom: 20px;
+  border-bottom: 3px solid #111;
+}
+
+.user-avatar {
+  width: 48px;
+  height: 48px;
+  background: linear-gradient(135deg, #007bff, #8faadc);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.user-name {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+/* 잘하면 폐기할 수 있는 것 */
+.form-card input[type="text"],
+.form-card textarea {
+  width: 100%;
+  padding: 14px 18px;
+  border: 3px solid #111;
+  border-radius: 8px;
+  font-size: 15px;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
+
+.form-card textarea {
+  min-height: 180px;
+  resize: vertical;
+}
+
+/* ================================= */
+
+/* ========================================================
+   contenteditable 댓글/답변 입력창 스타일 (Contact_us 전용)
+   ======================================================== */
+.comment-input-box {
+  flex: 1;
+  min-height: 80px;
+  max-height: 200px;
+  padding: 12px 14px;
+  border: 3px solid #111;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #111; /* 텍스트는 검정으로 고정 */
+  font-size: 0.95rem;
+  line-height: 1.5;
+  overflow-y: auto;
+  outline: none;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* placeholder */
+.comment-input-box:empty:before {
+  content: attr(data-placeholder);
+  color: #888;
+  pointer-events: none;
+}
+
+/* focus */
+.comment-input-box:focus {
+  border-color: #111; /* 포커스 시에도 검정 테두리 유지 */
+  background: #ffffff; /* 배경은 항상 흰색 유지 */
+  margin-bottom: 10px; /* 입력창 아래 여백 추가 */
+}
+
+.form-card button {
+  width: 100%;
+  padding: 16px;
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 17px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px; /* 버튼 위 여백 추가 */
+}
+
+.form-card button:hover {
+  background: #333;
+  transform: translateY(-3px);
+}
+
+/* ==================== 비로그인 상태 ==================== */
+.login-required {
+  text-align: center;
+  padding: 60px 40px;
+  font-size: 18px;
+  color: #666;
+  border: 4px solid #111;
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 8px 8px 0 #111;
+  max-width: 825px;
+  margin: 0 auto 60px;
+}
+
+.login-required button {
+  margin-top: 24px;
+  padding: 14px 32px;
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+/* ==================== 댓글 목록 ==================== */
+.comment-list {
+  max-width: 825px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.comment {
+  background: #fff;
+  border: 3px solid #111;
+  border-radius: 12px;
+  padding: 22px;
+  margin-bottom: 24px;
+  box-shadow: 6px 6px 0 #111;
+  max-width: 825px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* ========================================================
+   제목 스타일 (요청사항 적용)
+   ======================================================== */
+.comment .title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #111;
+  margin-bottom: 14px;
+}
+
+.comment .title::before {
+  content: "제목 : ";
+  font-weight: 700;
+  color: #007bff;
+}
+
+/* 댓글 액션 버튼 */
+.comment-actions {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.comment-actions button {
+  padding: 8px 16px;
+  font-size: 13px;
+  border: 2px solid #111;
+  background: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.comment-actions button:hover {
+  background: #111;
+  color: #fff;
+}
+
+.report-btn { border-color: #dc3545; color: #dc3545; }
+.report-btn:hover { background: #dc3545; color: #fff; }
+
+/* 프로필 배지 */
+.user-badge {
+  margin-left: auto;
+  padding: 4px 12px;
+  font-size: 13px;
+  font-weight: 700;
+  border-radius: 9999px;
+}
+
+.nr-user {
+  background: #111;
+  color: #fff;
+}
+
+.admin-user {
+  background: #007bff;
+  color: #fff;
+}
+
+/* ========================================================
+   답변/수정 상자 스타일 (하얀색 배경 + 검정 테두리 고정)
+   ======================================================== */
+.reply-box,
+.edit-box,
+.action-box {
+  margin-top: 20px;
+  padding: 20px;
+  border: 3px solid #111;
+  border-radius: 12px;
+  background: #ffffff;           /* 하얀색 고정 */
+  box-shadow: 6px 6px 0 #111;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* reply/edit/action 박스 내 입력창: 배경/테두리/텍스트 색상은 전역 설정을 따르고,
+   여기서는 높이만 조정하여 중복 스타일을 제거합니다. */
+.reply-box .comment-input-box,
+.edit-box .comment-input-box,
+.action-box .comment-input-box {
+  min-height: 120px;
+  max-height: 200px;
+}
+
+/* 버튼 그룹 */
+.reply-box .button-group,
+.edit-box .button-group,
+.action-box .button-group {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* ========================================================
+   답변 상자 스타일 (Contact-us 전용)
+   ======================================================== */
+.answer {
+  margin: 30px 0 0 45px;
+  padding: 22px 24px;
+  border: 3px solid #111;
+  border-radius: 12px;
+  background: #fafafa;
+  box-shadow: 6px 6px 0 #111;
+  width: 100%;
+  max-width: calc(100% - 45px);
+  box-sizing: border-box;
+}
+
+.answer .user-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #111;
+}
+
+.answer .user-avatar {
+  width: 42px;
+  height: 42px;
+  background: linear-gradient(135deg, #007bff, #8faadc);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.answer .user-name {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.answer .answer-text {
+  font-size: 15px;
+  line-height: 1.7;
+  margin-bottom: 18px;
+  color: #222;
+}
+
+.answer .comment-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* 인용 블록 */
+.answer-quote {
+  background: #f0f0f0;
+  border: 3px solid #666;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+  font-size: 15px;
+  line-height: 1.6;
+  color: #333;
+  box-shadow: 4px 4px 0 #666;
+}
+
+.answer-quote strong {
+  color: #222;
+  font-weight: 800;
+}
+
+/* 답변 토글 헤더 */
+.answer-toggle-header {
+  background: #f8f8f8;
+  border: 3px solid #111;
+  border-radius: 8px;
+  padding: 12px 18px;
+  margin: 20px 0 10px 0;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 15px;
+  box-shadow: 4px 4px 0 #111;
+}
+
+.answer-toggle-header:hover {
+  background: #f0f0f0;
+}
+
+.toggle-arrow {
+  font-size: 18px;
+  transition: transform 0.2s;
+}
+
+.notification-scroll-highlight {
+  outline: 3px solid #2563eb;
+  outline-offset: 3px;
+  background: rgba(37, 99, 235, 0.08);
+  transition: outline-color 0.3s ease, background 0.3s ease;
+}
+
+/* 답변 컨테이너 */
+.answers-container {
+  margin-left: 45px;
+}
+/* ====================== 모바일 ====================== */
+@media (max-width: 768px) {
+  .contact {
+    margin: 24px auto 40px;
+    padding: 0 12px;
+  }
+
+  .page-title {
+    font-size: 1.5rem;
+    border-bottom-width: 3px;
+  }
+
+  .desc {
+    font-size: 14px;
+    margin-bottom: 28px;
+  }
+
+  .form-card {
+    padding: 20px 16px;
+    border-width: 3px;
+    box-shadow: 4px 4px 0 #111;
+  }
+
+  .form-card input[type="text"],
+  .form-card textarea {
+    font-size: 16px;
+    padding: 12px 14px;
+  }
+
+  .form-card button {
+    min-height: 48px;
+    font-size: 16px;
+  }
+
+  .login-required {
+    padding: 32px 16px;
+    font-size: 16px;
+    box-shadow: 4px 4px 0 #111;
+  }
+
+  .login-required button {
+    min-height: 48px;
+    width: 100%;
+    max-width: 280px;
+  }
+}

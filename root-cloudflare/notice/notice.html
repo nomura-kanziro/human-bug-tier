@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>공지사항 - 휴버대 티어표</title>
+  <link rel="stylesheet" href="../common.css">
+  <link rel="stylesheet" href="notice.css">
+  <link rel="stylesheet" href="../Header_Footer.css">
+</head>
+<body>
+  <div id="header-placeholder"></div>
+
+  <div class="notice-page">
+    <h1 class="notice-title">공지사항</h1>
+
+    <div class="notice-grid">
+      <div class="notice-col notice-col-general">
+        <h2 class="notice-col-title">
+          <span class="notice-dot" style="background:#10b981;"></span>
+          전체 공지
+        </h2>
+        <div id="notice-list-general" class="notice-list"></div>
+        <a href="all_notices.html" id="notice-count-general" class="notice-more">문서 모두 보기 →</a>
+      </div>
+
+      <div class="notice-col notice-col-news">
+        <h2 class="notice-col-title">
+          <span class="notice-dot" style="background:#8b5cf6;"></span>
+          새 소식
+        </h2>
+        <div id="notice-list-news" class="notice-list"></div>
+        <a href="news.html" id="notice-count-news" class="notice-more">문서 모두 보기 →</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="footer-placeholder"></div>
+  <script src="../common.js"></script>
+  <script src="notice.js"></script>
+</body>
+</html>
