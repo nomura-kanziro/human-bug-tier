@@ -33,6 +33,7 @@
 | 관리자 | `adminAuthToken` + `getAdminAuthHeaders()` + `requireAdmin` |
 | 비밀 | `.env` 커밋·출력 금지 |
 | 문서 | `RDMD/frontend|backend/<기능>/*-record.md` |
+| 우선순위 | 바닐라 유지. **Cloudflare 추가 작업 금지.** React 정식은 기획만 `RDMD/features/react-rewrite.md` |
 
 ## 스킬 · 문서 위치
 

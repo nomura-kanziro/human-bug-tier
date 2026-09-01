@@ -13,6 +13,10 @@ description: >
 - “인수인계”, “온보딩”, “프로젝트 설명해”
 - 전체 구조·실행·문서 위치를 한 번에 안내
 
+## 현재 상태
+
+바닐라 0.4.1 (`root-cloudflare/`). Cloudflare 작업 중지. React 정식은 기획만 `RDMD/features/react-rewrite.md`. 구현 지시 전 금지.
+
 ## Do
 
 1. 루트 **`AGENTS.md`** (+ 필요 시 `CLAUDE.md`) 실행·규칙 요약

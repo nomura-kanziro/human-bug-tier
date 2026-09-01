@@ -19,17 +19,18 @@
 | [luck-draw.md](./luck-draw.md) | 행운 뽑기 (오늘의 행운 티어) |
 | [my-page.md](./my-page.md) | 마이페이지 (프로필 드롭다운 + 내 활동 집계) |
 | [backend-api.md](./backend-api.md) | API 그룹 · 모델 · 미들웨어 |
+| [react-rewrite.md](./react-rewrite.md) | **기획만** — 정식 버전 React 이식. Cloudflare 작업 중지. 구현 지시 전 스캐폴드 금지 |
 
 ## 모듈 README (코드 옆 문서)
 
 | 기능 | 경로 |
 |------|------|
-| 관리자 | [`admin/README.md`](../../admin/README.md) |
+| 관리자 | [`root-cloudflare/admin/README.md`](../../root-cloudflare/admin/README.md) |
 | 백엔드 | [`backend/README.md`](../../backend/README.md) |
-| 커스텀 메이커 | [`custom-maker/README.md`](../../custom-maker/README.md) |
-| 인증 | [`user_login/README.md`](../../user_login/README.md) |
-| 공지 | [`notice/README.md`](../../notice/README.md) |
-| 문의 | [`Contact_us/README.md`](../../Contact_us/README.md) |
+| 커스텀 메이커 | [`root-cloudflare/custom-maker/README.md`](../../root-cloudflare/custom-maker/README.md) |
+| 인증 | [`root-cloudflare/user_login/README.md`](../../root-cloudflare/user_login/README.md) |
+| 공지 | [`root-cloudflare/notice/README.md`](../../root-cloudflare/notice/README.md) |
+| 문의 | [`root-cloudflare/Contact_us/README.md`](../../root-cloudflare/Contact_us/README.md) |
 
 ## 읽는 순서 추천
 

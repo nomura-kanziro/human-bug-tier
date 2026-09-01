@@ -80,7 +80,8 @@ npm start
 | [`root-cloudflare/`](./root-cloudflare/README.md) | 로컬 · Tunnel · Cloudflare Pages | 로컬/Tunnel만 |
 | [`root-render/`](./root-render/README.md) | Render.com | Render에서 됨 |
 
-배포 정본: [`CLOUDFLARE.md`](./CLOUDFLARE.md)
+배포 정본: [`CLOUDFLARE.md`](./CLOUDFLARE.md) — **지금은 Cloudflare 추가 작업을 하지 않음.**  
+정식 버전 React는 기획만: [`RDMD/features/react-rewrite.md`](./RDMD/features/react-rewrite.md) (구현은 별도 지시)
 
 ### 로컬 — Cloudflare 프론트 (기본)
 

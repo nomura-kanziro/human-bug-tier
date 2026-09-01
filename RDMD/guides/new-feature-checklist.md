@@ -11,7 +11,8 @@
 - [ ] 기존 모듈에 붙일지, 새 폴더를 만들지  
 - [ ] 알림·신고·차단 중 연동이 필요한가  
 
-문서: [features/overview.md](../features/overview.md)
+문서: [features/overview.md](../features/overview.md)  
+정식 React 이식은 지금 하지 않음: [features/react-rewrite.md](../features/react-rewrite.md)
 
 ---
 

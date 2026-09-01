@@ -30,6 +30,7 @@
 1. 이 README (지금 문서)
 2. summary/work-history.md     ← 프로젝트 히스토리 한 바퀴
 3. features/overview.md        ← 기능·폴더 지도
+   features/react-rewrite.md   ← 정식 버전 React 기획 (구현 전, Cloudflare 작업 중지)
 4. guides/path-and-api.md      ← 경로·API 함정 (필수)
 5. 담당 영역
    · 기능 이해 → features/<이름>.md

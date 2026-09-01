@@ -13,6 +13,12 @@ description: >
 - “인수인계”, “온보딩”, “프로젝트 설명해”, “클로드 가이드”
 - 전체 구조·실행·문서 위치를 한 번에 안내할 때
 
+## 현재 상태 (반드시 말할 것)
+
+- 바닐라 **0.4.1**. 프론트 `root-cloudflare/` · `root-render/`
+- Cloudflare 배포 **추가 작업 중지**
+- React 정식 버전 = 기획만 `RDMD/features/react-rewrite.md`. 구현 지시 전 금지
+
 ## Do (에이전트가 할 일)
 
 1. **루트 `CLAUDE.md`를 읽고** 실행 방법·불변 규칙을 요약해 전달한다.
@@ -56,19 +62,19 @@ npm start
 | 3 | `RDMD/summary/work-history.md` | 지금까지 한 일 |
 | 4 | `RDMD/features/overview.md` | 기능 맵 |
 | 5 | `RDMD/guides/path-and-api.md` | 경로/API 함정 |
-| 6 | `DEPLOY.md` | 배포 (필요할 때) |
+| 6 | `RDMD/features/react-rewrite.md` | 정식 React 기획 (구현 전) |
 
 ### 3) 기능별 코드 위치
 
 | 기능 | 폴더 | Claude 스킬 |
 |------|------|-------------|
-| 공통 UI/경로 | `common.js`, header/footer | `common` |
-| 공식 티어 | `tier-class/`, `tier-image/` | `tier-class` |
-| 커스텀·게시판 | `custom-maker/` | `custom-maker` |
-| 로그인 | `user_login/` | `auth` |
-| 공지 | `notice/` | `notice` |
-| 문의 | `Contact_us/` | `inquiry` |
-| 관리자 | `admin/` | `admin` |
+| 공통 UI/경로 | `root-cloudflare/common.js`, header/footer | `common` |
+| 공식 티어 | `root-cloudflare/tier-class/` | `tier-class` |
+| 커스텀·게시판 | `root-cloudflare/custom-maker/` | `custom-maker` |
+| 로그인 | `root-cloudflare/user_login/` | `auth` |
+| 공지 | `root-cloudflare/notice/` | `notice` |
+| 문의 | `root-cloudflare/Contact_us/` | `inquiry` |
+| 관리자 | `root-cloudflare/admin/` | `admin` |
 | API 서버 | `backend/` | `backend` |
 
 ### 4) 꼭 기억할 함정

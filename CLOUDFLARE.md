@@ -1,5 +1,9 @@
 # Cloudflare 배포 가이드
 
+> **2026-09-01**: Cloudflare **추가 작업은 일단 하지 않는다.**  
+> 정식 버전은 나중에 React로 다시 만들 예정 — [`RDMD/features/react-rewrite.md`](./RDMD/features/react-rewrite.md).  
+> 이미 올린 Pages 미리보기·이 문서·`root-cloudflare/`는 유지한다. 창시자가 배포를 다시 시키기 전에는 CI/시크릿/Wrangler를 손대지 말 것.
+
 배포 정본은 이 문서다. Render.com은 쓰지 않는다.
 
 레포에 남아 있는 아래 파일은 **레거시**다. 따라가지 않는다.

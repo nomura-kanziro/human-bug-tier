@@ -29,6 +29,10 @@ description: >
 6. 큰 변경 후 RDMD · 모듈 README · **`.agents/<기능>/skill.md` 현행화** · (규칙 변경 시) `.claude` 동기화
 7. 종료 시: 요약 + 수동 테스트 + 시크릿 점검
 
+## 현재 우선순위
+
+바닐라 유지. **Cloudflare 추가 작업 금지.** React는 기획만 (`react-rewrite` 스킬). 스캐폴드 금지.
+
 ## Do not
 
 - `.env` / 시크릿 커밋·출력
@@ -53,6 +57,7 @@ description: >
 | 배포 | `deploy` |
 | 문서 | `rdmd` |
 | 온보딩 | `handoff` |
+| React 기획 | `react-rewrite` |
 
 ## Checklist
 

@@ -13,7 +13,8 @@
 ## 프로젝트 한 줄
 
 휴먼버그대학교 캐릭터 **공식 티어표** + **커스텀 티어 제작/게시판** +  
-회원·공지·문의·관리자 기능을 갖춘 **바닐라 HTML/CSS/JS + Express/MongoDB** 사이트.
+회원·공지·문의·관리자 기능을 갖춘 **바닐라 HTML/CSS/JS (`0.4.1`) + Express/MongoDB** 사이트.  
+프론트는 `root-cloudflare/`(로컬). **Cloudflare 배포 작업은 중지.** 정식 버전 React는 기획만 — `RDMD/features/react-rewrite.md`, `.claude/skills/react-rewrite/SKILL.md`. 구현 지시 전 스캐폴드 금지.
 
 ## 로컬 실행 (필수)
 
@@ -53,9 +54,10 @@ env 로드: 루트 `.env` 후 `backend/.env` (동일 키는 backend 우선)
 | 행운 뽑기 | `.claude/skills/luck-draw/SKILL.md` | `luck-draw/`, `backend/*luckDraw*` |
 | 마이페이지 | `.claude/skills/my-page/SKILL.md` | `my-page/`, `common.js`(프로필 드롭다운) |
 | 백엔드 | `.claude/skills/backend/SKILL.md` | `backend/` |
-| 배포 | `.claude/skills/deploy/SKILL.md` | `DEPLOY.md`, `render.yaml` |
+| 배포 | `.claude/skills/deploy/SKILL.md` | `CLOUDFLARE.md` (작업 중지), `root-cloudflare/` |
 | 문서/RDMD | `.claude/skills/rdmd/SKILL.md` | `RDMD/` |
 | 인수인계 | `.claude/skills/handoff/SKILL.md` | 팀 온보딩 |
+| React 정식 기획 | `.claude/skills/react-rewrite/SKILL.md` | 구현 금지·CF 작업 중지 |
 
 인덱스: [`.claude/README.md`](./.claude/README.md)
 

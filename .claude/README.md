@@ -25,7 +25,8 @@ Claude Code가 자동으로 찾는 프로젝트 스킬 위치입니다.
 │   ├── backend/SKILL.md
 │   ├── deploy/SKILL.md
 │   ├── rdmd/SKILL.md
-│   └── handoff/SKILL.md      ← 팀 온보딩·인수인계 전용
+│   ├── handoff/SKILL.md      ← 팀 온보딩·인수인계 전용
+│   └── react-rewrite/SKILL.md ← 정식 React 기획 (구현 전)
 ```
 
 루트 **`CLAUDE.md`**: 프로젝트를 열 때 Claude(와 사람)가 먼저 읽는 총괄 지침.

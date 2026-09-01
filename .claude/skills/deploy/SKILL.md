@@ -22,8 +22,12 @@ description: >
 
 ## Read first
 
-- `CLOUDFLARE.md`
-- `RDMD/guides/path-and-api.md`
+- `CLOUDFLARE.md` (상단: 추가 작업 중지)
+- `RDMD/features/react-rewrite.md`
+
+## 현재
+
+**Cloudflare 배포를 새로 하지 않는다.** React 정식은 기획만.
 
 ## Do
 
@@ -38,6 +42,7 @@ description: >
 
 ## Do not
 
+- Cloudflare Pages/CI/시크릿/Wrangler를 새로 손대기 (재개 지시 전)
 - `.env` 내용 채팅/커밋
 - serve -p 5000 을 프로덕션 대체 추천
 - Pages/GH Pages에서 로그인·게시판 “배포 완료” 오안내

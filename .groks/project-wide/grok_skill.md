@@ -33,6 +33,7 @@ description: >
 
 ## Do not
 
+- 지시 없이 React 스캐폴드 · Cloudflare 배포 재개 (`RDMD/features/react-rewrite.md`)
 - `.env`, 시크릿, `node_modules` 커밋/출력
 - `getBasePath` / `getApiBase` 를 무시하고 URL 하드코딩
 - 관리 기능을 인증 없이 추가

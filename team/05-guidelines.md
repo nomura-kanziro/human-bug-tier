@@ -31,6 +31,11 @@
 - **필수**: 커밋·푸시 전 `RDMD/commit_history/{본인}.md` 작성  
   → [RDMD/commit_history/README.md](../RDMD/commit_history/README.md)
 
+## 지금 하지 않는 것 (2026-09-01)
+
+- Cloudflare Pages/CI/시크릿을 더 만지지 않음
+- React/Next 스캐폴드 (정식 버전 이식은 기획 문서만: `RDMD/features/react-rewrite.md`)
+
 ## 문서
 
 - **매 커밋**: `commit_history` 개인 로그 (필수)  

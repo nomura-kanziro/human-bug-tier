@@ -23,8 +23,14 @@ description: >
 
 ## Read first
 
-- `CLOUDFLARE.md`
+- `CLOUDFLARE.md` (상단: **추가 작업 중지**)
 - `RDMD/guides/path-and-api.md`
+- `RDMD/features/react-rewrite.md`
+
+## 현재 (2026-09-01)
+
+창시자 지시: **Cloudflare 배포를 새로 하지 않는다.** 이미 올린 Pages·문서는 유지.  
+React 정식 버전은 기획만.
 
 ## Do
 
@@ -38,6 +44,9 @@ description: >
 8. `*.pages.dev` 를 `GITHUB_STATIC` 분기로 넣는 건 **지시 있을 때만** `root-cloudflare/common.js`
 
 ## Do not
+
+- (현재) Cloudflare Pages/CI/시크릿/Wrangler를 **새로** 손대기 — 창시자가 재개하기 전
+- React 이식을 이유로 배포를 다시 설계하기
 
 - `.env` 내용 채팅/커밋
 - Pages URL을 실서비스(로그인·게시판)처럼 공유

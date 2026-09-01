@@ -120,6 +120,7 @@ RDMD/frontend/
 | [01-getbasepath-api-base-deploy-frontend-record.md](./09-deploy-path/01-getbasepath-api-base-deploy-frontend-record.md) | 27 | 경로·API Base·배포 프론트 |
 | [02-cloudflare-pages-static-preview-record.md](./09-deploy-path/02-cloudflare-pages-static-preview-record.md) | — | Cloudflare Pages 정적 미리보기 (`human-bug-tier`) |
 | [03-root-cloudflare-split-record.md](./09-deploy-path/03-root-cloudflare-split-record.md) | — | 루트 프론트 → `root-cloudflare/` · `root-render/` |
+| [04-react-rewrite-plan-record.md](./09-deploy-path/04-react-rewrite-plan-record.md) | — | React 정식 기획 · Cloudflare 작업 중지 |
 
 ## 10-luck-draw
 

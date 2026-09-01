@@ -3,8 +3,8 @@
 > `RDMD/frontend/` · `RDMD/backend/` (기능 폴더 + `*-record.md`) 기록을 바탕으로 정리한 **프로젝트 개발 이력 요약**입니다.  
 > 상세 로그: [frontend/README](../frontend/README.md) · [backend/README](../backend/README.md)
 
-**기준일**: 2026-08-20  
-**문서 작성일**: 2026-08-20 (6월 20일 이후 기능 반영)
+**기준일**: 2026-09-01  
+**문서 작성일**: 2026-08-20 (이후 Phase 7 반영 2026-09-01)
 
 ---
 
@@ -18,6 +18,7 @@
 | 인증·관리 | information23~26 / backend_23~26 | JWT 로그인, 비번 재설정, 관리자 신고 UI |
 | 배포·보안 | information27~29 / backend_27~29 | GH Pages + Render, requireAdmin, 관리 UI 강화 |
 | 모바일·티어 | 2026-07 ~ 08 | PWA, 게시글 수정, 6~9티어 이미지, 1·2티어 재배치 |
+| 배포 분리 · React 기획 | 2026-09 | 프론트 `root-cloudflare`/`root-render`, Cloudflare 작업 중지, React 정식 버전은 기획만 |
 
 ---
 
@@ -116,6 +117,21 @@
 | 공식 티어 | 6~9티어 캐릭터 이미지, 우사미 6티어, 1·2티어 일부 재배치 |
 
 **결과물**: 휴대폰에서도 제작·수정 가능, 공식 1~9티어 이미지 연결
+
+### Phase 7 — 프론트 폴더 분리 · React 정식 버전 기획
+
+**기간**: 2026-09-01
+
+| 영역 | 한 일 |
+|------|--------|
+| 프론트 | 바닐라를 `root-cloudflare/`(로컬·Pages)와 `root-render/`(Render)로 분리. 루트에서 HTML 제거 |
+| 서버 | `server.js` 기본 정적 루트 = `root-cloudflare`, `RENDER=true`면 `root-render` |
+| 배포 | Cloudflare Pages 정적 미리보기 한 번 올림. **이후 Cloudflare 작업은 중지** |
+| 기획 | 정식 버전을 React로 다시 만들 계획만 문서화. **구현 없음** |
+
+**정본**: [`features/react-rewrite.md`](../features/react-rewrite.md)
+
+**결과물**: 바닐라 `0.4.1` 유지 + React 이식 인수인계 문서
 
 ---
 

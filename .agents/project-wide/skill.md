@@ -32,6 +32,12 @@ description: >
 6. 큰 변경: RDMD · 모듈 README · **해당 `.agents/<기능>/skill.md` 현행화** · 규칙 변경 시 정본 후 주 골격 팩 동기화
 7. 종료: 요약 + 수동 테스트 + 시크릿 점검
 
+## 현재 우선순위 (2026-09-01)
+
+- 바닐라 유지 (`root-cloudflare/` / `root-render/` + `backend/`)
+- **Cloudflare 추가 작업 금지** (재개 지시 전)
+- React 정식 버전은 **기획만** (`RDMD/features/react-rewrite.md`, `.agents/react-rewrite/skill.md`). 스캐폴드 금지
+
 ## Do not
 
 - `.env` / 시크릿 커밋·출력
@@ -57,6 +63,7 @@ description: >
 | 배포 | `deploy` |
 | 문서 | `rdmd` |
 | 온보딩 | `handoff` |
+| React 정식 기획 | `react-rewrite` |
 
 ## Checklist
 

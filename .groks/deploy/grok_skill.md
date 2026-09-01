@@ -29,8 +29,12 @@ description: >
 
 ## Read first
 
-- `CLOUDFLARE.md`
-- `RDMD/guides/path-and-api.md`
+- `CLOUDFLARE.md` (추가 작업 중지)
+- `RDMD/features/react-rewrite.md`
+
+## 현재
+
+Cloudflare 배포를 새로 하지 않음. React 정식은 기획만.
 
 ## Do
 
@@ -45,6 +49,7 @@ description: >
 
 ## Do not
 
+- Cloudflare Pages/CI/Wrangler를 새로 손대기 (재개 지시 전)
 - `.env` 내용을 채팅/커밋에 붙이기
 - `npx serve -p 5000` 을 프로덕션 대체로 추천
 - Pages URL을 실서비스처럼 공유

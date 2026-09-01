@@ -30,6 +30,7 @@
 | [deploy](./deploy/grok_skill.md) | Render·GH Pages·env | 배포, render, DEPLOY |
 | [rdmd](./rdmd/grok_skill.md) | 개발 기록·가이드 문서 | RDMD, 일지, 문서화 |
 | [project-wide](./project-wide/grok_skill.md) | 전역 규칙·크로스 기능 | 새 기능, 전체, 리팩터 |
+| [react-rewrite](./react-rewrite/grok_skill.md) | 정식 React 기획 | React, 정식 버전 (구현 전) |
 
 ## 관련 문서
 

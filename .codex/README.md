@@ -32,6 +32,7 @@ ChatGPT Codex / Codex VS Code 확장과 함께 쓰도록 맞춰 두었습니다.
 | [deploy](./deploy/skill.md) | 배포 | Render, env |
 | [rdmd](./rdmd/skill.md) | 문서 일지 | RDMD, 기록 |
 | [handoff](./handoff/skill.md) | 온보딩·인수인계 | 팀, 처음 |
+| [react-rewrite](./react-rewrite/skill.md) | 정식 React 기획 | React (구현 전), CF 중지 |
 
 ## 다른 에이전트와의 관계
 

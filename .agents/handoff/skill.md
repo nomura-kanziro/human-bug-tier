@@ -11,6 +11,12 @@ description: >
 - 새 팀원, “인수인계”, “온보딩”, “프로젝트 설명해”
 - **번외 AI** 사용자에게 어디를 보라고 안내할 때
 
+## 현재 상태 (반드시 말할 것)
+
+- 바닐라 **0.4.1**. 프론트 `root-cloudflare/` · `root-render/`
+- Cloudflare 배포 **추가 작업 중지**. 정본 실행은 `cd backend && npm start` → `:5000`
+- 정식 버전 React = 기획만 `RDMD/features/react-rewrite.md`. **구현 지시 전 착수 금지**
+
 ## Do
 
 1. 사람 → [`team/README.md`](../team/README.md)  

@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 190 |
+| **커밋 수** | 191 |
 | **기간** | 2026-03-20 ~ 2026-09-01 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -219,6 +219,7 @@
 | 188 | 2026-09-01 | [`7f6487f`](#7f6487f) | ci(deploy): Cloudflare Pages 워크플로 추가 |
 | 189 | 2026-09-01 | [`23770a2`](#23770a2) | docs(deploy): 폴더별 실행 안내와 배포 기록 정리 |
 | 190 | 2026-09-01 | [`d2e54f5`](#d2e54f5) | chore(common): 푸터 사이트 버전을 0.4.1로 변경 |
+| 191 | 2026-09-01 | pending | docs(react-rewrite): 정식 버전 React 기획 및 Cloudflare 작업 중지 인수인계 |
 
 ---
 
@@ -3720,5 +3721,23 @@
 - **요약**: 푸터의 `site version`을 `0.3.2`에서 `0.4.1`로 올렸다. Cloudflare·Render 전용 프론트 둘 다 반영했다.
 - **주요 파일**: `root-cloudflare/footer.html`, `root-render/footer.html`
 - **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-191"></a>
+
+### 191. 2026-09-01 — pending
+
+- **hash (short)**: pending
+- **hash (full)**: pending
+- **author**: nomura
+- **message**: docs(react-rewrite): 정식 버전 React 기획 및 Cloudflare 작업 중지 인수인계
+- **git**: _(커밋 후 기입)_
+- **범위**: docs
+- **요약**: 정식 버전을 나중에 React로 만들기 위한 기획을 `RDMD/features/react-rewrite.md`에 썼다. Cloudflare 추가 작업은 하지 않는다고 문서·전 에이전트 스킬에 인수인계했다. 구현·스캐폴드는 없다.
+- **주요 파일**: `RDMD/features/react-rewrite.md`, `.agents/react-rewrite/skill.md`, `CLOUDFLARE.md`, `team/README.md`
+- **관련 RDMD**: [../features/react-rewrite.md](../features/react-rewrite.md)
 
 [▲ 목차로](#목차)

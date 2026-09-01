@@ -83,6 +83,7 @@
 | [deploy/skill.md](./deploy/skill.md) | 배포 |
 | [rdmd/skill.md](./rdmd/skill.md) | 문서 일지 |
 | [handoff/skill.md](./handoff/skill.md) | 온보딩·인수인계 |
+| [react-rewrite/skill.md](./react-rewrite/skill.md) | 정식 버전 React 기획 (구현 지시 전 금지, CF 작업 중지) |
 
 파일명: **`skill.md`** (도구 중립).
 

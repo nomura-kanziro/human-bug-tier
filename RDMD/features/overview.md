@@ -1,5 +1,9 @@
 # 전체 기능 맵
 
+> **현재**: 바닐라 `0.4.1` — 프론트 `root-cloudflare/` (로컬) · `root-render/` (Render).  
+> **Cloudflare 배포 작업은 일시 중지.**  
+> **정식 버전 React 이식**은 기획만: [react-rewrite.md](./react-rewrite.md). 구현은 창시자 지시 후.
+
 ## 서비스 한눈에
 
 ```
@@ -37,18 +41,18 @@
 
 | 폴더 / 파일 | 기능 | 주요 사용자 |
 |-------------|------|-------------|
-| `index.html` | 홈, 티어 카드, 공지 미리보기 | 전체 |
-| `header.html` / `footer.html` / `common.js` | 공통 UI·경로·인증 헤더·알림 | 전체 |
-| `tier-class/` | 공식 1~9티어 캐릭터 목록 | 방문자 |
-| `tier-image/` | 캐릭터·로고 이미지 자산 | (에셋) |
-| `custom-maker/` | 티어 제작, PNG/PDF, 본인 글 수정(`post_edit.html`) | 회원·방문자 |
-| `custom-maker/custom-maker_post/` | 게시판·상세·댓글·수정 진입 | 회원 |
-| `user_login/` | 가입·로그인·찾기·재설정 | 방문자→회원 |
-| `notice/` | 공지 목록·상세 | 전체 / 작성은 Admin |
-| `Contact_us/` | 문의 등록·조회 | 전체 / 답변 Admin |
-| `luck-draw/` | 오늘의 행운 티어 뽑기 (회원 20회/3분 쿨다운) | 방문자(체크)·회원(저장) |
-| `my-page/` | 내 게시글·뽑기 활동 요약 (프로필 드롭다운 진입) | 회원 |
-| `admin/` | 관리자 로그인·대시보드 | Admin |
+| `root-cloudflare/index.html` | 홈, 티어 카드, 공지 미리보기 | 전체 |
+| `root-cloudflare/` header/footer/`common.js` | 공통 UI·경로·인증 헤더·알림 | 전체 |
+| `root-cloudflare/tier-class/` | 공식 1~9티어 캐릭터 목록 | 방문자 |
+| `root-cloudflare/tier-image/` | 캐릭터·로고 이미지 자산 | (에셋) |
+| `root-cloudflare/custom-maker/` | 티어 제작, PNG/PDF, 본인 글 수정 | 회원·방문자 |
+| `root-cloudflare/custom-maker/custom-maker_post/` | 게시판·상세·댓글·수정 진입 | 회원 |
+| `root-cloudflare/user_login/` | 가입·로그인·찾기·재설정 | 방문자→회원 |
+| `root-cloudflare/notice/` | 공지 목록·상세 | 전체 / 작성은 Admin |
+| `root-cloudflare/Contact_us/` | 문의 등록·조회 | 전체 / 답변 Admin |
+| `root-cloudflare/luck-draw/` | 오늘의 행운 티어 뽑기 | 방문자(체크)·회원(저장) |
+| `root-cloudflare/my-page/` | 내 게시글·뽑기 활동 요약 | 회원 |
+| `root-cloudflare/admin/` | 관리자 로그인·대시보드 | Admin |
 | `backend/` | API + 정적 서빙 | 서버 |
 | `RDMD/` | 개발 기록·가이드·기능 문서 | 개발자 |
 
