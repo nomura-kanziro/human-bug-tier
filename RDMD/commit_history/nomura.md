@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 182 |
+| **커밋 수** | 183 |
 | **기간** | 2026-03-20 ~ 2026-08-30|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -211,6 +211,7 @@
 | 180 | 2026-09-01 | [`fa72c7d`](#fa72c7d) | docs(common): 드롭다운 상호배타 버그 기록 및 관련 스킬 문서 전면 갱신 |
 | 181 | 2026-09-01 | [`2677aea`](#2677aea) | fix(auth): 이메일 발송 시 설정된 provider 전부 순서대로 시도(Brevo→Resend→Gmail 자동 대체) |
 | 182 | 2026-09-01 | [`94b7ce8`](#94b7ce8) | fix(auth): Gmail SMTP ETIMEDOUT 원인(Render 포트 차단) 확인 및 진단 힌트 추가 |
+| 183 | 2026-09-01 | [`pending`](#pending-183) | fix(auth): 이메일 발송 실패 시 시도한 provider 전부의 원인을 합쳐서 표시 |
 
 ---
 
@@ -3568,5 +3569,23 @@
 - **요약**: 직전 커밋(Brevo→Resend→Gmail 자동 대체) 배포 후 Gmail 단계에서 `ETIMEDOUT` 이 뜬 걸 조사했다 — Render 등 클라우드 호스팅이 SMTP 아웃바운드 포트(465/587)를 막아두는 잘 알려진 제약으로, 코드 문제가 아니라 재시도로도 절대 해결 안 되는 상황이었다(HTTPS 기반인 Resend/Brevo로 가야만 함). `sendViaGmail()` 이 두 포트 다 연결 실패로 끝나면 이 진단을 `providerDetail` 로 붙이도록 해서, 다음부터는 화면에 맨 `ETIMEDOUT` 만 뜨는 대신 원인과 해결 방향이 같이 보이게 했다. nodemailer를 모킹해 465→587 재시도 후 힌트가 정확히 붙는 것 확인.
 - **주요 파일**: `backend/utils/mail.js`, `DEPLOY.md`
 - **관련 RDMD**: [../backend/03-auth/06-gmail-smtp-timeout-hint-record.md](../backend/03-auth/06-gmail-smtp-timeout-hint-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-183"></a>
+
+### 183. 2026-09-01 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: fix(auth): 이메일 발송 실패 시 시도한 provider 전부의 원인을 합쳐서 표시
+- **git**: `git show pending`
+- **범위**: backend / auth
+- **요약**: Render에 Resend API를 등록했는데도 여전히 Gmail의 `ETIMEDOUT`만 보인다는 제보를 조사했다. 실제로는 Resend가 시도되고 있었지만 Resend 고유 제약(도메인 미인증 시 계정 가입 이메일에만 발송 가능)으로 실패하고 있었는데, `sendAppMail()`이 "마지막 provider의 에러만" 던지는 구조라 그 진짜 원인이 뒤이은 Gmail의 ETIMEDOUT에 완전히 가려져 있었다. provider가 2개 이상 설정돼 전부 실패하면 각 provider의 실패 이유를 전부 합쳐서(`Brevo: ... / Resend: ... / Gmail: ...`) 응답에 담도록 고쳤고, Resend 에러 파싱도 Brevo 수준으로 개선해 "도메인 인증 필요" 힌트를 추가했다.
+- **주요 파일**: `backend/utils/mail.js`, `DEPLOY.md`
+- **관련 RDMD**: [../backend/03-auth/07-mail-aggregated-error-record.md](../backend/03-auth/07-mail-aggregated-error-record.md)
 
 [▲ 목차로](#목차)

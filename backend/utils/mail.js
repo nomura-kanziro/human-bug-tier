@@ -70,7 +70,9 @@ function parseProviderErrorBody(body) {
   const raw = String(body || '').replace(/\s+/g, ' ').trim();
   try {
     const parsed = JSON.parse(body);
-    const parts = [parsed.code, parsed.message].filter(Boolean);
+    // Brevo는 code, Resend는 name — 둘 다 지원
+    const codeLike = parsed.code || parsed.name;
+    const parts = [codeLike, parsed.message].filter(Boolean);
     if (parts.length) return parts.join(': ').slice(0, 220);
   } catch (_) {
     /* 본문이 JSON이 아니면 원문 일부를 사용 */
@@ -190,9 +192,16 @@ async function sendViaResend({ to, subject, html }) {
 
   if (!response.ok) {
     const body = await response.text().catch(() => '');
-    const err = new Error(`Resend API ${response.status}: ${body}`);
+    const parsed = parseProviderErrorBody(body);
+    const err = new Error(`Resend API ${response.status}: ${parsed || body}`);
     err.code = 'RESEND_API_ERROR';
     err.responseCode = response.status;
+
+    let hint = parsed;
+    if (response.status === 403 && /own email|verify a domain|testing emails/i.test(parsed || '')) {
+      hint = `${parsed} | 도메인 미인증 Resend는 계정 가입 이메일로만 발송 가능 — resend.com에서 도메인을 인증하거나, 테스트는 가입한 이메일로`;
+    }
+    err.providerDetail = String(hint || '').slice(0, 280);
     throw err;
   }
 }
@@ -320,16 +329,18 @@ async function sendAppMail({ to, subject, html }) {
   if (getEmailUser() && getEmailPass()) providers.push({ name: 'Gmail', send: sendViaGmail });
 
   let lastErr;
+  const failures = []; // 전부 실패했을 때, "마지막 것만" 보여주면 중간에 실패한 provider의 진짜 원인이 묻힌다.
   for (let i = 0; i < providers.length; i += 1) {
     const provider = providers[i];
     try {
       await provider.send({ to, subject, html });
-      if (lastErr) {
-        console.warn(`✉️  ${provider.name} 로 대체 발송 성공 (이전 실패: ${lastErr.message})`);
+      if (failures.length) {
+        console.warn(`✉️  ${provider.name} 로 대체 발송 성공 (이전 실패: ${failures.map((f) => f.name).join(', ')})`);
       }
       return;
     } catch (err) {
       lastErr = err;
+      failures.push({ name: provider.name, detail: err.providerDetail || err.message });
       console.error(
         `✉️  ${provider.name} 발송 실패 [responseCode=${err.responseCode || '-'}]:`,
         err.message
@@ -340,6 +351,14 @@ async function sendAppMail({ to, subject, html }) {
       }
     }
   }
+
+  // 설정된 게 여러 개인데 전부 실패했다면, 마지막(보통 Gmail)의 에러만 보여주는 대신
+  // 각 provider가 왜 실패했는지 전부 이어붙인다 — 예: Resend가 "본인 이메일만 가능"으로 막혔는데
+  // Gmail의 ETIMEDOUT 뒤에 가려서 정작 고쳐야 할 원인을 못 보는 걸 방지.
+  if (lastErr && failures.length > 1) {
+    lastErr.providerDetail = failures.map((f) => `${f.name}: ${f.detail}`).join(' / ').slice(0, 900);
+  }
+
   throw lastErr;
 }
 

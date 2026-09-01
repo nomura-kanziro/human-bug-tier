@@ -33,10 +33,11 @@ description: >
 3. localStorage: `authToken`, `user` 키 유지
 4. `adminAuthToken` 과 섞지 말 것
 5. **가입** EMAIL 미설정 → 즉시 `isVerified` 폴백 유지
-6. **비번 찾기** 가짜 성공 금지: EMAIL 설정 자체가 없으면 **503**, 설정된 provider가 전부 실패하면 **502** + 토큰 롤백. `sendAppMail()` 은 설정된 provider(Brevo/Resend/Gmail)를 전부 순서대로 시도하니, 하나가 막혀도(예: Brevo 계정 미승인) 나머지가 설정돼 있으면 자동으로 성공함 — 502가 뜬다는 건 **설정된 전부**가 실패했다는 뜻
-7. `detail` 이 `ETIMEDOUT`/`ESOCKET`/`ECONNREFUSED`/`ECONNECTION` 이면 Gmail SMTP 포트가 호스팅에서 막힌 것(Render 등) — 재시도해도 안 뚫림, Resend/Brevo(HTTPS)로 전환 필요
-7. 미인증 계정도 재설정 가능, 성공 시 인증 처리
-8. 차단 검사 유지, 메일 링크는 APP_URL/appUrl
+6. **비번 찾기** 가짜 성공 금지: EMAIL 설정 자체가 없으면 **503**, 설정된 provider가 전부 실패하면 **502** + 토큰 롤백. `sendAppMail()` 은 설정된 provider(Brevo/Resend/Gmail)를 전부 순서대로 시도하니, 하나가 막혀도(예: Brevo 계정 미승인) 나머지가 설정돼 있으면 자동으로 성공함 — 502가 뜬다는 건 **설정된 전부**가 실패했다는 뜻. provider가 2개 이상 설정돼 전부 실패하면 `providerDetail`에 각각의 원인이 `Brevo: ... / Resend: ... / Gmail: ...` 로 합쳐져서 나옴(마지막 것 하나만 보고 판단 금지)
+7. `RESEND_API_KEY` 만 등록해도 도메인 미인증이면 Resend 계정 가입 이메일에만 발송됨(스팸 방지 정책) — 임의 수신자 발송은 resend.com 도메인 인증 필요
+8. `detail` 에 `ETIMEDOUT`/`ESOCKET`/`ECONNREFUSED`/`ECONNECTION` 이 보이면 Gmail SMTP 포트가 호스팅에서 막힌 것(Render 등) — 재시도해도 안 뚫림, Resend/Brevo(HTTPS)로 전환 필요
+9. 미인증 계정도 재설정 가능, 성공 시 인증 처리
+10. 차단 검사 유지, 메일 링크는 APP_URL/appUrl
 
 ## Do not
 

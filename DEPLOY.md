@@ -111,12 +111,13 @@ Visit:
 - **비밀번호 재설정 메일이 안 옴?**
   1. `https://your-app.onrender.com/health` → `emailConfigured: true`, `emailProvider` 확인. **콤마로 여러 개**가 뜰 수 있음(예: `brevo,gmail-smtp`) — `sendAppMail()`이 우선순위(Brevo→Resend→Gmail)대로 **설정된 걸 전부 순서대로 시도**하기 때문. 앞 방식이 막혀 있어도 뒤에 설정된 게 있으면 자동으로 그걸로 발송됨(단일 장애점 방지)
   2. Render Environment: **`BREVO_API_KEY` + `BREVO_FROM`** (Brevo Senders에서 인증한 메일). Gmail SMTP만으로는 Render에서 실패하는 경우가 많음
-  3. 화면 alert의 `detail`(= **마지막으로 시도한** 방식의 에러. 뒤 순위 방식이 성공했으면 애초에 alert 자체가 안 뜸):
-     - `401` → API 키가 아님/잘림. 새 키 발급, 따옴표 없이 붙여넣기, IP 제한 해제
-     - `403` → 키는 통과. **Senders에서 발신 메일 인증**(받은 6자리 코드 입력) 후 `BREVO_FROM`을 그 주소와 동일하게. 그래도 `permission_denied` / `not yet activated` 이면 **Brevo 계정 자체가 아직 트랜잭션(SMTP) 발송이 승인 안 된 상태** — Brevo 고객지원(contact@brevo.com 또는 대시보드)에 **Transactional/SMTP 활성화** 요청 필요(코드로 해결 불가, Brevo 쪽 수동 승인 대기)
-  4. **Brevo 승인을 기다리는 동안 당장 메일을 보내야 하면**: Render Environment에 `RESEND_API_KEY`(또는 `EMAIL_USER`+`EMAIL_APP_PASSWORD`)를 **추가로** 설정해두면, Brevo가 막혀 있어도 자동으로 그쪽으로 대체 발송됨 — `BREVO_API_KEY`를 지울 필요 없음
-  5. **`detail`이 `ETIMEDOUT`(또는 `ESOCKET`/`ECONNREFUSED`/`ECONNECTION`)이면 Gmail SMTP 차례까지 왔다는 뜻** — Render 같은 클라우드 호스팅은 SMTP 아웃바운드 포트(465/587)를 통째로 막아두는 경우가 많아서, 재시도해도 계속 같은 에러만 남. **Gmail은 애초에 Render에서 될 수가 없는 경우**이니 재시도 대신 HTTPS 기반인 `RESEND_API_KEY`를 설정하거나(1번 항목 참고) Brevo를 활성화하는 쪽으로 가야 함
-  6. 응답이 성공인데 메일 없음 → 아이디·이메일이 DB와 다르거나 스팸함 (계정 존재 여부는 보안상 숨김)
+  3. 화면 alert의 `detail` — **설정된 provider가 여러 개인데 전부 실패했으면, 시도한 provider 전부의 실패 이유가 `Brevo: ... / Resend: ... / Gmail: ...` 형태로 다 나옵니다.** ( `/` 로 구분된 각 항목이 그 provider의 원인. 뒤 provider가 성공하면 그 시점에 발송이 끝나서 alert 자체가 안 뜸 — detail이 보인다는 건 설정된 걸 전부 다 시도했는데도 안 됐다는 뜻)
+     - `Brevo ... 401` → API 키가 아님/잘림. 새 키 발급, 따옴표 없이 붙여넣기, IP 제한 해제
+     - `Brevo ... 403` → 키는 통과. **Senders에서 발신 메일 인증**(받은 6자리 코드 입력) 후 `BREVO_FROM`을 그 주소와 동일하게. 그래도 `permission_denied` / `not yet activated` 이면 **Brevo 계정 자체가 아직 트랜잭션(SMTP) 발송이 승인 안 된 상태** — Brevo 고객지원(contact@brevo.com 또는 대시보드)에 **Transactional/SMTP 활성화** 요청 필요(코드로 해결 불가, Brevo 쪽 수동 승인 대기)
+     - `Resend ... 403` + "own email address" / "verify a domain" → **`RESEND_API_KEY`를 등록해도 도메인 인증 전에는 Resend 계정 본인 가입 이메일에만 보낼 수 있습니다.** 다른 사람(테스트 계정 등)에게 보내려면 resend.com에서 커스텀 도메인을 인증하고 `RESEND_FROM`을 그 도메인 주소로 바꿔야 함 — `RESEND_API_KEY`만 채워 넣는 걸로는 임의 수신자 발송이 안 됨
+     - `Gmail: SMTP 연결 자체가 안 됨 (ETIMEDOUT 등)` → Render 같은 클라우드 호스팅은 SMTP 아웃바운드 포트(465/587)를 통째로 막아두는 경우가 많아서, 재시도해도 계속 같은 에러만 남음. **Gmail은 애초에 Render에서 될 수가 없는 경우**이니 위 Brevo/Resend 쪽을 해결해야 함
+  4. **Brevo 승인을 기다리는 동안 당장 메일을 보내야 하면**: 가장 확실한 건 Resend에서 **도메인 인증**까지 끝내는 것(위 항목 참고) — `RESEND_API_KEY`만 등록하고 도메인 인증을 안 하면 본인 이메일 말고는 여전히 안 나갑니다
+  5. 응답이 성공인데 메일 없음 → 아이디·이메일이 DB와 다르거나 스팸함 (계정 존재 여부는 보안상 숨김)
 - Admin can't create notices? Check ADMIN_ vars and admin token in localStorage.
 - Homepage shows JSON? Check if static serving is working (should be fixed).
 
