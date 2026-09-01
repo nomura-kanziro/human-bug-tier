@@ -20,26 +20,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Prepare clean static frontend only (exclude backend, node_modules, etc.)
-        run: |
-          mkdir -p ./gh-pages-deploy
-          # Copy root static files (critical: common.js is required for dynamic header/footer loading)
-          cp -f index.html common.js common.css Header_Footer.css header.html footer.html .nojekyll ./gh-pages-deploy/ 2>/dev/null || true
-          # Copy all frontend asset directories (no backend/)
-          for d in tier-class tier-image tier-media notice custom-maker Contact_us user_login admin RDMD; do
-            if [ -d "$d" ]; then
-              cp -r "$d" ./gh-pages-deploy/
-            fi
-          done
-          # Remove any accidentally copied heavy or private things (defensive)
-          rm -rf ./gh-pages-deploy/backend ./gh-pages-deploy/node_modules ./gh-pages-deploy/.git ./gh-pages-deploy/terminals ./gh-pages-deploy/mcps 2>/dev/null || true
-          echo "Prepared deploy dir:"
-          ls -la ./gh-pages-deploy/
-
-      - name: Upload artifact
+      - name: Upload Cloudflare frontend folder
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./gh-pages-deploy
+          path: ./root-cloudflare
 
   deploy:
     environment:

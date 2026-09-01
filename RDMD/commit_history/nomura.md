@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 187 |
+| **커밋 수** | 188 |
 | **기간** | 2026-03-20 ~ 2026-08-30|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -215,7 +215,8 @@
 | 184 | 2026-09-01 | [`7532ffe`](#7532ffe) | docs(deploy): Cloudflare 배포 정본 CLOUDFLARE.md 추가 |
 | 185 | 2026-09-01 | [`fe2369c`](#fe2369c) | feat(deploy): Render 전용 프론트 root-render 추가 |
 | 186 | 2026-09-01 | [`9b82a7a`](#9b82a7a) | feat(deploy): Cloudflare 전용 프론트 root-cloudflare 추가 |
-| 187 | 2026-09-01 | pending | refactor(deploy): 루트 프론트 제거 후 서버가 전용 폴더를 서빙 |
+| 187 | 2026-09-01 | [`fdc0237`](#fdc0237) | refactor(deploy): 루트 프론트 제거 후 서버가 전용 폴더를 서빙 |
+| 188 | 2026-09-01 | pending | ci(deploy): Cloudflare Pages 워크플로 추가 |
 
 ---
 
@@ -3650,18 +3651,36 @@
 
 ---
 
-<a id="pending-187"></a>
+<a id="fdc0237"></a>
 
-### 187. 2026-09-01 — pending
+### 187. 2026-09-01 — `fdc0237`
 
-- **hash (short)**: pending
-- **hash (full)**: pending
+- **hash (short)**: `fdc0237`
+- **hash (full)**: `fdc023795b55b0547a6aeb23e79bcd58b6a34060`
 - **author**: nomura
 - **message**: refactor(deploy): 루트 프론트 제거 후 서버가 전용 폴더를 서빙
-- **git**: _(커밋 후 기입)_
+- **git**: `git show fdc0237`
 - **범위**: backend / frontend / deploy
 - **요약**: 레포 루트에 있던 HTML/CSS/JS/이미지를 지웠다. `server.js`는 기본으로 `root-cloudflare/`를 열고, Render(`RENDER=true`)만 `root-render/`를 연다. 셸의 `PORT`·`STATIC_ROOT`는 `.env`보다 우선한다.
 - **주요 파일**: `backend/server.js`, `render.yaml`, 루트 프론트 삭제분
 - **관련 RDMD**: [../backend/07-deploy/02-root-render-static-record.md](../backend/07-deploy/02-root-render-static-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-188"></a>
+
+### 188. 2026-09-01 — pending
+
+- **hash (short)**: pending
+- **hash (full)**: pending
+- **author**: nomura
+- **message**: ci(deploy): Cloudflare Pages 워크플로 추가
+- **git**: _(커밋 후 기입)_
+- **범위**: ci / deploy
+- **요약**: `root-cloudflare/`를 Cloudflare Pages에 올리는 GitHub Actions를 추가하고, 기존 GH Pages 워크플로도 같은 폴더를 쓰도록 바꿨다. CI 시크릿 `CLOUDFLARE_API_TOKEN`·`CLOUDFLARE_ACCOUNT_ID`가 필요하다.
+- **주요 파일**: `.github/workflows/deploy-cloudflare-pages.yml`, `.github/workflows/deploy-pages.yml`
+- **관련 RDMD**: [../frontend/09-deploy-path/02-cloudflare-pages-static-preview-record.md](../frontend/09-deploy-path/02-cloudflare-pages-static-preview-record.md)
 
 [▲ 목차로](#목차)

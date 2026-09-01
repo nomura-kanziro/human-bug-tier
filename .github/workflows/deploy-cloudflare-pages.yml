@@ -1,0 +1,23 @@
+name: Deploy to Cloudflare Pages (static frontend)
+
+on:
+  push:
+    branches: ["master", "main"]
+
+concurrency:
+  group: "cloudflare-pages"
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Deploy root-cloudflare to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          command: pages deploy root-cloudflare --project-name=human-bug-tier --branch=${{ github.ref_name }} --commit-dirty=true
