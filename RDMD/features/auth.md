@@ -77,7 +77,7 @@ user_login/
 | 변수 | 용도 |
 |------|------|
 | `JWT_SECRET` | JWT 서명 |
-| `EMAIL_USER`, `EMAIL_APP_PASSWORD` | Gmail 앱 비밀번호 권장 |
+| `BREVO_API_KEY`/`BREVO_FROM`, `RESEND_API_KEY`, `EMAIL_USER`/`EMAIL_APP_PASSWORD` | 이메일 발송(`backend/utils/mail.js`). 설정된 걸 전부 우선순위(Brevo→Resend→Gmail)대로 시도, 앞이 실패하면 자동으로 다음 걸로 대체 발송 — 상세: `RDMD/backend/03-auth/05-mail-provider-fallback-record.md` |
 | `APP_URL` | 재설정·인증 메일 절대 URL (Render 배포 후) |
 | `MONGO_URI` | User 저장 |
 

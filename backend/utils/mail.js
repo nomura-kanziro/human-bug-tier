@@ -139,12 +139,17 @@ function hasEmailConfig() {
   );
 }
 
-/** /health 진단용 — 시크릿 값 없이 어느 발송 경로가 활성인지만 노출 */
+/**
+ * /health 진단용 — 시크릿 값 없이 어느 발송 경로(들)가 활성인지만 노출.
+ * sendAppMail() 이 우선순위대로 전부 시도하므로, 설정된 방식을 전부 콤마로 나열한다
+ * (첫 방식 하나만 보여주면 "대체 방식이 있는지"를 운영자가 알 수 없음).
+ */
 function getEmailProvider() {
-  if (getBrevoApiKey()) return 'brevo';
-  if (getResendApiKey()) return 'resend';
-  if ((process.env.EMAIL_USER || '').trim() && getEmailPass()) return 'gmail-smtp';
-  return 'none';
+  const providers = [];
+  if (getBrevoApiKey()) providers.push('brevo');
+  if (getResendApiKey()) providers.push('resend');
+  if ((process.env.EMAIL_USER || '').trim() && getEmailPass()) providers.push('gmail-smtp');
+  return providers.length ? providers.join(',') : 'none';
 }
 
 /** 도메인 없이 발신자 이메일 1개만 인증하면 임의 수신자에게 발송 가능 */
@@ -252,45 +257,7 @@ async function getTransporter() {
   return transporter;
 }
 
-/**
- * @param {{ to: string, subject: string, html: string }} opts
- * @throws Error on failure
- */
-async function sendAppMail({ to, subject, html }) {
-  if (!hasEmailConfig()) {
-    const err = new Error(EMAIL_NOT_CONFIGURED_MSG);
-    err.code = 'EMAIL_NOT_CONFIGURED';
-    throw err;
-  }
-
-  // Brevo(HTTPS, 발신자 1개만 인증하면 임의 수신자 발송 가능)가 설정돼 있으면 최우선 사용
-  if (getBrevoApiKey()) {
-    try {
-      await sendViaBrevo({ to, subject, html });
-      return;
-    } catch (err) {
-      console.error(
-        `✉️  Brevo 발송 실패 [responseCode=${err.responseCode || '-'}]:`,
-        err.message
-      );
-      throw err;
-    }
-  }
-
-  // Resend(HTTPS)가 설정돼 있으면 사용 — Render의 SMTP 포트 차단 영향 없음 (단, 도메인 미인증 시 계정 소유자에게만 발송 가능)
-  if (getResendApiKey()) {
-    try {
-      await sendViaResend({ to, subject, html });
-      return;
-    } catch (err) {
-      console.error(
-        `✉️  Resend 발송 실패 [responseCode=${err.responseCode || '-'}]:`,
-        err.message
-      );
-      throw err;
-    }
-  }
-
+async function sendViaGmail({ to, subject, html }) {
   const mailOptions = {
     from: `"휴먼버그티어" <${getEmailUser()}>`,
     to,
@@ -325,13 +292,59 @@ async function sendAppMail({ to, subject, html }) {
   throw lastErr;
 }
 
+/**
+ * 우선순위대로(Brevo → Resend → Gmail) **설정된 모든 방식**을 순서대로 시도한다.
+ * 앞선 방식이 계정 미활성·발신자 미인증 등 그 서비스만의 문제로 막혀 있어도,
+ * 다른 방식이 설정돼 있으면 그걸로 계속 발송을 시도한다(단일 장애점 방지).
+ * @param {{ to: string, subject: string, html: string }} opts
+ * @throws Error 마지막으로 시도한 방식의 에러 (모두 실패했거나 설정된 방식이 없을 때)
+ */
+async function sendAppMail({ to, subject, html }) {
+  if (!hasEmailConfig()) {
+    const err = new Error(EMAIL_NOT_CONFIGURED_MSG);
+    err.code = 'EMAIL_NOT_CONFIGURED';
+    throw err;
+  }
+
+  const providers = [];
+  if (getBrevoApiKey()) providers.push({ name: 'Brevo', send: sendViaBrevo });
+  if (getResendApiKey()) providers.push({ name: 'Resend', send: sendViaResend });
+  if (getEmailUser() && getEmailPass()) providers.push({ name: 'Gmail', send: sendViaGmail });
+
+  let lastErr;
+  for (let i = 0; i < providers.length; i += 1) {
+    const provider = providers[i];
+    try {
+      await provider.send({ to, subject, html });
+      if (lastErr) {
+        console.warn(`✉️  ${provider.name} 로 대체 발송 성공 (이전 실패: ${lastErr.message})`);
+      }
+      return;
+    } catch (err) {
+      lastErr = err;
+      console.error(
+        `✉️  ${provider.name} 발송 실패 [responseCode=${err.responseCode || '-'}]:`,
+        err.message
+      );
+      const hasMoreProviders = i < providers.length - 1;
+      if (hasMoreProviders) {
+        console.warn(`✉️  다음 발송 방식으로 대체 시도합니다 (${providers[i + 1].name})`);
+      }
+    }
+  }
+  throw lastErr;
+}
+
+const PROVIDER_DISPLAY_NAMES = { brevo: 'Brevo API', resend: 'Resend API', 'gmail-smtp': 'Gmail SMTP' };
+
 /** 서버 기동 시 한 줄 안내 (시크릿 값 출력 금지) */
 function logEmailConfigStatus() {
   if (hasEmailConfig()) {
-    const provider = getEmailProvider();
-    console.log(
-      `✉️  이메일 발송: 설정됨 (${provider === 'brevo' ? 'Brevo API' : provider === 'resend' ? 'Resend API' : 'Gmail SMTP'})`
-    );
+    const providerNames = getEmailProvider()
+      .split(',')
+      .map((p) => PROVIDER_DISPLAY_NAMES[p] || p)
+      .join(' → ');
+    console.log(`✉️  이메일 발송: 설정됨 (${providerNames})`);
     if (!(process.env.APP_URL || '').trim() && !(process.env.RENDER_EXTERNAL_URL || '').trim()) {
       console.warn(
         '⚠️  APP_URL 미설정 — 메일 링크는 요청 Host(x-forwarded-*)로 생성됩니다. Render에서는 APP_URL 설정을 권장합니다.'

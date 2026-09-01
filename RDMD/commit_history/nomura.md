@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 180 |
+| **커밋 수** | 181 |
 | **기간** | 2026-03-20 ~ 2026-08-30|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -209,6 +209,7 @@
 | 178 | 2026-09-01 | [`fd41c85`](#fd41c85) | fix(luck-draw): 4티어 확률 2%↓, 7티어 확률 2%↑ |
 | 179 | 2026-09-01 | [`1fd8e84`](#1fd8e84) | fix(common): 알림 벨 클릭 시 유저 프로필 드롭다운도 같이 닫히도록 수정 |
 | 180 | 2026-09-01 | [`fa72c7d`](#fa72c7d) | docs(common): 드롭다운 상호배타 버그 기록 및 관련 스킬 문서 전면 갱신 |
+| 181 | 2026-09-01 | [`pending`](#pending-181) | fix(auth): 이메일 발송 시 설정된 provider 전부 순서대로 시도(Brevo→Resend→Gmail 자동 대체) |
 
 ---
 
@@ -3530,5 +3531,23 @@
 - **요약**: 직전 커밋(179번, 알림 벨↔프로필 드롭다운 동시 열림 버그 수정)의 근본 원인(`e.stopPropagation()`이 바깥클릭 감지 리스너를 막는 함정)을 새 RDMD 기록으로 남기고, `.agents`/`.claude` 의 `common`·`notifications` 스킬 문서에 "새 헤더 드롭다운 추가 시 반드시 서로 명시적으로 닫아줄 것" 가이드를 추가했다. 겸사겸사 `common` 스킬에 남아있던 "행운 뽑기 = 미구현" 이라는 오래된(구현 완료 후에도 안 고쳐졌던) 문구도 바로잡았다.
 - **주요 파일**: `RDMD/frontend/01-common/07-dropdown-mutual-exclusion-fix-record.md`, `RDMD/frontend/README.md`, `.agents/common/skill.md`, `.claude/skills/common/SKILL.md`, `.agents/notifications/skill.md`, `.claude/skills/notifications/SKILL.md`
 - **관련 RDMD**: [../frontend/01-common/07-dropdown-mutual-exclusion-fix-record.md](../frontend/01-common/07-dropdown-mutual-exclusion-fix-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-181"></a>
+
+### 181. 2026-09-01 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: fix(auth): 이메일 발송 시 설정된 provider 전부 순서대로 시도(Brevo→Resend→Gmail 자동 대체)
+- **git**: `git show pending`
+- **범위**: backend / auth
+- **요약**: "이메일 발송에 실패했습니다" 오류(`BREVO_API_ERROR 403 permission_denied: ... not yet activated`) 원인을 조사했다 — Brevo 계정이 트랜잭션(SMTP) 발송을 아직 승인받지 못한 상태로, 코드 버그가 아니라 Brevo 쪽 수동 활성화가 필요한 외부 요인이었다. 다만 기존 코드가 "먼저 설정된 provider 하나만" 쓰고 실패하면 바로 포기하는 구조라, Brevo가 막히면 Resend/Gmail이 같이 설정돼 있어도 전혀 시도조차 안 하는 취약점이 있어 이를 고쳤다 — `sendAppMail()`이 설정된 provider를 전부 우선순위대로 시도하고, 하나가 실패해도 다음으로 자동 대체하도록 변경. `/health`의 `emailProvider`도 설정된 것 전부를 콤마로 나열하게 함. DEPLOY.md·env 예시·관련 스킬 문서에 Brevo 활성화 필요성과 백업 provider 설정 권장 안내를 추가했다.
+- **주요 파일**: `backend/utils/mail.js`, `backend/.env.example`, `DEPLOY.md`, `RDMD/features/auth.md`, `.agents/auth/skill.md`, `.claude/skills/auth/SKILL.md`
+- **관련 RDMD**: [../backend/03-auth/05-mail-provider-fallback-record.md](../backend/03-auth/05-mail-provider-fallback-record.md)
 
 [▲ 목차로](#목차)

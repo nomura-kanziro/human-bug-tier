@@ -53,6 +53,7 @@ RDMD/backend/
 | [02-jwt-auth-system-record.md](./03-auth/02-jwt-auth-system-record.md) | 11 | JWT 발급 · getActor |
 | [03-find-id-password-reset-api-record.md](./03-auth/03-find-id-password-reset-api-record.md) | 13 | 아이디 찾기 · 비번 재설정 필드 |
 | [04-password-reset-token-hash-record.md](./03-auth/04-password-reset-token-hash-record.md) | 25 | 랜덤 토큰 + SHA-256 · appUrl |
+| [05-mail-provider-fallback-record.md](./03-auth/05-mail-provider-fallback-record.md) | — | 이메일 provider 자동 대체(Brevo→Resend→Gmail), Brevo 미활성 대응 |
 
 ## 04-notice — 공지
 

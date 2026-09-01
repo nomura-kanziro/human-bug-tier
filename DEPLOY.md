@@ -109,12 +109,13 @@ Visit:
 ## Troubleshooting
 - 500 on registration? Check EMAIL or MONGO.
 - **비밀번호 재설정 메일이 안 옴?**
-  1. `https://your-app.onrender.com/health` → `emailConfigured: true`, `emailProvider` 확인 (`brevo` 권장)
+  1. `https://your-app.onrender.com/health` → `emailConfigured: true`, `emailProvider` 확인. **콤마로 여러 개**가 뜰 수 있음(예: `brevo,gmail-smtp`) — `sendAppMail()`이 우선순위(Brevo→Resend→Gmail)대로 **설정된 걸 전부 순서대로 시도**하기 때문. 앞 방식이 막혀 있어도 뒤에 설정된 게 있으면 자동으로 그걸로 발송됨(단일 장애점 방지)
   2. Render Environment: **`BREVO_API_KEY` + `BREVO_FROM`** (Brevo Senders에서 인증한 메일). Gmail SMTP만으로는 Render에서 실패하는 경우가 많음
-  3. 화면 alert의 `detail`:
+  3. 화면 alert의 `detail`(= **마지막으로 시도한** 방식의 에러. 뒤 순위 방식이 성공했으면 애초에 alert 자체가 안 뜸):
      - `401` → API 키가 아님/잘림. 새 키 발급, 따옴표 없이 붙여넣기, IP 제한 해제
-     - `403` → 키는 통과. **Senders에서 발신 메일 인증**(받은 6자리 코드 입력) 후 `BREVO_FROM`을 그 주소와 동일하게. 그래도 `permission_denied` / `not yet activated` 이면 Brevo 고객지원에 **Transactional/SMTP 활성화** 티켓
-  4. 응답이 성공인데 메일 없음 → 아이디·이메일이 DB와 다르거나 스팸함 (계정 존재 여부는 보안상 숨김)
+     - `403` → 키는 통과. **Senders에서 발신 메일 인증**(받은 6자리 코드 입력) 후 `BREVO_FROM`을 그 주소와 동일하게. 그래도 `permission_denied` / `not yet activated` 이면 **Brevo 계정 자체가 아직 트랜잭션(SMTP) 발송이 승인 안 된 상태** — Brevo 고객지원(contact@brevo.com 또는 대시보드)에 **Transactional/SMTP 활성화** 요청 필요(코드로 해결 불가, Brevo 쪽 수동 승인 대기)
+  4. **Brevo 승인을 기다리는 동안 당장 메일을 보내야 하면**: Render Environment에 `RESEND_API_KEY`(또는 `EMAIL_USER`+`EMAIL_APP_PASSWORD`)를 **추가로** 설정해두면, Brevo가 막혀 있어도 자동으로 그쪽으로 대체 발송됨 — `BREVO_API_KEY`를 지울 필요 없음
+  5. 응답이 성공인데 메일 없음 → 아이디·이메일이 DB와 다르거나 스팸함 (계정 존재 여부는 보안상 숨김)
 - Admin can't create notices? Check ADMIN_ vars and admin token in localStorage.
 - Homepage shows JSON? Check if static serving is working (should be fixed).
 
