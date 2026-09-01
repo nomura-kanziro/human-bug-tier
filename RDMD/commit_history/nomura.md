@@ -210,7 +210,7 @@
 | 179 | 2026-09-01 | [`1fd8e84`](#1fd8e84) | fix(common): 알림 벨 클릭 시 유저 프로필 드롭다운도 같이 닫히도록 수정 |
 | 180 | 2026-09-01 | [`fa72c7d`](#fa72c7d) | docs(common): 드롭다운 상호배타 버그 기록 및 관련 스킬 문서 전면 갱신 |
 | 181 | 2026-09-01 | [`2677aea`](#2677aea) | fix(auth): 이메일 발송 시 설정된 provider 전부 순서대로 시도(Brevo→Resend→Gmail 자동 대체) |
-| 182 | 2026-09-01 | [`pending`](#pending-182) | fix(auth): Gmail SMTP ETIMEDOUT 원인(Render 포트 차단) 확인 및 진단 힌트 추가 |
+| 182 | 2026-09-01 | [`94b7ce8`](#94b7ce8) | fix(auth): Gmail SMTP ETIMEDOUT 원인(Render 포트 차단) 확인 및 진단 힌트 추가 |
 
 ---
 
@@ -3555,15 +3555,15 @@
 
 ---
 
-<a id="pending-182"></a>
+<a id="94b7ce8"></a>
 
-### 182. 2026-09-01 — `pending`
+### 182. 2026-09-01 — `94b7ce8`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `94b7ce8`
+- **hash (full)**: `94b7ce8da0bebc9cfd38d71873304efbb0ff425b`
 - **author**: nomura
 - **message**: fix(auth): Gmail SMTP ETIMEDOUT 원인(Render 포트 차단) 확인 및 진단 힌트 추가
-- **git**: `git show pending`
+- **git**: `git show 94b7ce8`
 - **범위**: backend / auth
 - **요약**: 직전 커밋(Brevo→Resend→Gmail 자동 대체) 배포 후 Gmail 단계에서 `ETIMEDOUT` 이 뜬 걸 조사했다 — Render 등 클라우드 호스팅이 SMTP 아웃바운드 포트(465/587)를 막아두는 잘 알려진 제약으로, 코드 문제가 아니라 재시도로도 절대 해결 안 되는 상황이었다(HTTPS 기반인 Resend/Brevo로 가야만 함). `sendViaGmail()` 이 두 포트 다 연결 실패로 끝나면 이 진단을 `providerDetail` 로 붙이도록 해서, 다음부터는 화면에 맨 `ETIMEDOUT` 만 뜨는 대신 원인과 해결 방향이 같이 보이게 했다. nodemailer를 모킹해 465→587 재시도 후 힌트가 정확히 붙는 것 확인.
 - **주요 파일**: `backend/utils/mail.js`, `DEPLOY.md`
