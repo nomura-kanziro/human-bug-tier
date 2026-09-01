@@ -18,10 +18,10 @@ description: >
 
 | 경로 | 역할 |
 |------|------|
-| `common.js` | base path, API base, auth headers, header 로드, 알림 |
-| `common.css` | 전역 스타일 |
-| `Header_Footer.css` | 헤더·푸터·사이드 메뉴 |
-| `header.html` / `footer.html` | 마크업 (동적 주입) |
+| `root-cloudflare/common.js` | 로컬·Cloudflare. Render는 `root-render/common.js` |
+| `root-cloudflare/common.css` | 전역 스타일 |
+| `root-cloudflare/Header_Footer.css` | 헤더·푸터·사이드 메뉴 |
+| `root-cloudflare/header.html` / `footer.html` | 마크업 (동적 주입) |
 | `common.js` `SPONSOR_PROFILE_URL` | 헤더 커피(후원) 버튼 URL. 로그아웃 시 로그인 왼쪽, 로그인 시 알림 왼쪽 |
 
 ## Read first

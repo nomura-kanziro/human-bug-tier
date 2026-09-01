@@ -21,7 +21,7 @@
 
 ### 1. 메인 페이지 접속
 ```bash
-# 로컬에서 전체 앱 실행
+# 로컬에서 전체 앱 실행 (프론트 = root-cloudflare/)
 cd backend
 npm start
 ```
@@ -73,7 +73,18 @@ npm start
 
 ## 시작하기
 
-### 로컬 개발 환경 (추천)
+프론트는 레포 루트가 아니라 배포 전용 폴더에 있다. 폴더 안에서 `npm start` 하지 않는다. 항상 `backend`에서 서버를 켠다.
+
+| 폴더 | 쓰는 곳 | 로그인·게시판 |
+|------|---------|----------------|
+| [`root-cloudflare/`](./root-cloudflare/README.md) | 로컬 · Tunnel · Cloudflare Pages | 로컬/Tunnel만 |
+| [`root-render/`](./root-render/README.md) | Render.com | Render에서 됨 |
+
+배포 정본: [`CLOUDFLARE.md`](./CLOUDFLARE.md)
+
+### 로컬 — Cloudflare 프론트 (기본)
+
+`npm start`는 **`root-cloudflare/`** 를 연다.
 
 ```bash
 cd backend
@@ -81,18 +92,48 @@ npm install
 npm start
 ```
 
-→ `http://localhost:5000` 에서 **프론트엔드 + API**가 동시에 실행됩니다.
+→ http://localhost:5000/  (프론트 + API)
 
-자세한 실행 방법은 [DEPLOY.md](./DEPLOY.md)를 참고하세요.
+### 로컬 — Render 프론트만 보기
 
-### GitHub Pages (정적 프리뷰)
-- GitHub Actions를 통해 정적 파일만 배포
-- 실제 데이터(로그인, 게시판 등)는 동작하지 않음 (미리보기용)
+`root-render/` 화면을 이 PC에서 확인하려면 정적 루트만 바꾼다.
 
-### Render.com 배포
-- `render.yaml` 사용
-- MongoDB Atlas + 환경변수 설정 필요
-- 전체 기능 사용 가능
+PowerShell:
+
+```powershell
+cd backend
+$env:STATIC_ROOT='root-render'
+npm start
+```
+
+cmd:
+
+```bat
+cd backend
+set STATIC_ROOT=root-render
+npm start
+```
+
+→ 역시 http://localhost:5000/  종료 후 다시 기본(`root-cloudflare`)으로 돌아가면 `STATIC_ROOT`를 비운다.
+
+### Cloudflare Pages (정적 미리보기)
+
+로그인·게시판은 안 된다. HTML만 올린다.
+
+확인: https://human-bug-tier.pages.dev/
+
+다시 올리기 (레포 루트에서):
+
+```bash
+npx wrangler pages deploy root-cloudflare --project-name=human-bug-tier --branch=master --commit-dirty=true
+```
+
+대시보드: Cloudflare → Workers & Pages → `human-bug-tier`  
+목록: `npx wrangler pages deployment list --project-name=human-bug-tier`
+
+### Render.com (레거시, 전체 기능)
+
+`render.yaml` + Mongo 환경변수. 서버가 `RENDER=true`이면 **`root-render/`** 만 연다. 자세한 변수 이름은 [`DEPLOY.md`](./DEPLOY.md).
 
 ---
 
@@ -146,24 +187,22 @@ copy .env.example .env
 서버 로드: 루트 `.env` → `backend/.env` (후자가 덮어씀)
 
 ### 3. 배포 방법
-- **Render.com**: `render.yaml` 사용 (권장)
-- **GitHub Pages**: `.github/workflows/deploy-pages.yml` (정적 미리보기)
-- 배포 전 반드시 `backend/.env`가 커밋되지 않도록 주의
+- **로컬 / Pages / Render 실행**은 위의 **시작하기** (폴더별 실행)
+- 배포 정본: [`CLOUDFLARE.md`](./CLOUDFLARE.md)
+- 배포 전 `backend/.env`가 커밋되지 않도록 주의
 
 ### 4. 코드 구조
 ```
 /
-├── index.html, common.js, header.html ...   # 프론트엔드 정적 파일
+├── root-cloudflare/                         # Cloudflare Pages · 로컬/Tunnel 프론트
+├── root-render/                             # Render.com 전용 프론트
 ├── backend/                                 # Express 서버 + API
 │   ├── server.js                            # 정적 파일 서빙 + API 라우팅
 │   ├── routes/                              # API 라우트
 │   ├── controllers/                         # 비즈니스 로직
 │   ├── models/                              # Mongoose 스키마
 │   └── middleware/auth.js                   # requireAuth, requireAdmin
-├── custom-maker/                            # 커스텀 메이커
-├── notice/                                  # 공지사항
-├── user_login/                              # 인증 관련 페이지
-├── admin/                                   # 관리자 페이지
+├── CLOUDFLARE.md                             # 배포 정본
 └── RDMD/                                    # 개발 기록 (커밋 로그)
 ```
 
@@ -175,7 +214,7 @@ copy .env.example .env
 - 이메일 기능 사용 시 Gmail 앱 비밀번호 사용
 
 ### 6. 문제 해결
-- Header/Footer 404 → `common.js`의 `getBasePath()` 확인
+- Header/Footer 404 → `root-cloudflare/common.js` (Render면 `root-render/common.js`) 의 `getBasePath()` 확인
 - 관리자 401 → `getAdminAuthHeaders()` 사용 여부 확인
 - 회원가입 실패 → EMAIL_* 설정 여부 확인 (미설정 시 즉시 인증 처리)
 

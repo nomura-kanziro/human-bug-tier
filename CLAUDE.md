@@ -91,19 +91,12 @@ env 로드: 루트 `.env` 후 `backend/.env` (동일 키는 backend 우선)
 ## 폴더 한눈에
 
 ```
-index.html, common.js, header/footer   # 공통 · PWA
-tier-class/, tier-image/1~9 tier/      # 공식 티어 (이미지 폴더=티어)
-custom-maker/                          # 제작 + 게시판 + post_edit
-user_login/                            # 인증
-notice/                                # 공지
-Contact_us/                            # 문의
-notifications/                         # 알림 상세 페이지
-luck-draw/                             # 행운 뽑기 (오늘의 행운 티어)
-my-page/                               # 마이페이지 (프로필 드롭다운 진입)
-admin/                                 # 관리자
+root-cloudflare/                       # Cloudflare · 로컬 프론트 (티어/커스텀/공지/로그인/관리자/PWA)
+root-render/                           # Render.com 전용 프론트
 backend/                               # Express + Mongo + 정적 서빙
 RDMD/                                  # 기록·가이드
-groks/                                 # Grok 스킬
+CLOUDFLARE.md                          # 배포 정본
+.groks/                                # Grok 스킬
 .claude/skills/                        # Claude 스킬
 ```
 

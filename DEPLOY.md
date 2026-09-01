@@ -57,7 +57,8 @@ npm start
 
 Open **http://localhost:5000/**
 
-- The backend (`server.js`) serves **both** the frontend static files (index.html, /notice, /custom-maker 등) **and** all `/api/*` endpoints on the same port.
+- The backend (`server.js`) serves **both** the frontend static files **and** all `/api/*` endpoints on the same port.
+- **로컬:** `root-cloudflare/`. **Render.com:** `root-render/` (`RENDER=true`). 로컬에서 Render 프론트를 보려면 `STATIC_ROOT=root-render`.
 - This matches the frontend JS logic (`get*ApiBase()`) which uses relative URLs when on port 5000.
 - All features work: API, health check, clean URL fallback, etc.
 

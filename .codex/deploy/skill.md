@@ -1,7 +1,7 @@
 ---
 name: deploy
 description: >
-  Render.com, GitHub Pages, render.yaml, DEPLOY.md, 환경변수.
+  Cloudflare Pages 정적 미리보기, Tunnel 풀스택, 레거시 Render/GH Pages, 환경변수.
   Codex: deployment.
 ---
 
@@ -9,38 +9,41 @@ description: >
 
 ## When
 
-- Render / GH Pages, env, 배포 후 404·API 실패
+- Cloudflare Pages / Tunnel, 레거시 Render·GH Pages, env, 배포 후 404·API 실패
 
 ## Code map
 
-- `DEPLOY.md`, `render.yaml`, `backend/.env.example`
-- `backend/server.js`, `.github/workflows/deploy-pages.yml`
-- `common.js` getBasePath / getApiBase
+- `CLOUDFLARE.md` — 현재 배포 정본
+- `DEPLOY.md`, `render.yaml`, `root-render/` — 레거시 Render
+- `root-cloudflare/` — Cloudflare · 로컬 프론트
+- `backend/.env.example`, `backend/server.js`
+- `.github/workflows/deploy-cloudflare-pages.yml`
+- `root-cloudflare/common.js` getBasePath / getApiBase
 
 ## Read first
 
-- `DEPLOY.md`
-- `RDMD/guides/deploy-checklist.md`
+- `CLOUDFLARE.md`
 - `RDMD/guides/path-and-api.md`
 
 ## Do
 
-1. 풀스택 = **Render** (rootDir backend + Mongo)
-2. GH Pages = **정적 미리보기만**
-3. 로컬 검증: backend `:5000`
-4. env는 **키 이름만** 안내
-5. APP_URL 배포 URL (메일)
+1. 풀스택 = `cd backend && npm start` (포트 5000) + 필요 시 Cloudflare Tunnel
+2. Pages `human-bug-tier` = 정적 미리보기만 (`root-cloudflare/`, `backend/` 제외)
+3. Express → Workers 이식 금지
+4. env는 키 이름만
+5. APP_URL = 터널/API 호스트 (Pages URL 아님)
 6. path/API 수정 시 common + auth_api + admin_api 일치
-7. render.yaml build/start/rootDir 일치
+7. Render로 재배포하지 않음. Render 정적은 `root-render/`
 
 ## Do not
 
 - `.env` 내용 채팅/커밋
 - serve -p 5000 을 프로덕션 대체 추천
-- GH Pages에서 로그인·게시판 “배포 완료” 오안내
+- Pages/GH Pages에서 로그인·게시판 “배포 완료” 오안내
 
 ## Checklist
 
 - [ ] :5000 스모크 안내
 - [ ] 필수 env 목록 (값 없이)
-- [ ] Render vs Pages 구분
+- [ ] Pages vs Tunnel 구분
+- [ ] 시크릿 미노출

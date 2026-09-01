@@ -15,9 +15,9 @@ description: >
 
 ## Code map
 
-- `common.js`, `common.css`, `Header_Footer.css`
-- `header.html`, `footer.html`
-- `manifest.webmanifest`, `sw.js` (PWA, common.js에서 등록)
+- `root-cloudflare/common.js` (로컬·Cloudflare). Render 복제본: `root-render/common.js`
+- `root-cloudflare/common.css`, `Header_Footer.css`, `header.html`, `footer.html`
+- `root-cloudflare/manifest.webmanifest`, `sw.js` (PWA)
 - 후원 커피 버튼: `header.html` `#header-sponsor-btn` + `common.js` `SPONSOR_PROFILE_URL` / `renderSponsorButton()`
 - 유저 프로필 드롭다운(일반 유저·어드민 완전히 동일, 어드민만 "관리하기" 한 줄 추가): `common.js` `getCurrentIdentity()`, `renderUserProfile()` 이하 `toggleUserProfileMenu`/`closeUserProfileMenu*` — 상세는 `my-page/skill.md`(일반 유저), `admin/skill.md`(어드민)
 - 헤더 드롭다운(프로필·알림)은 서로 열릴 때 상대방을 **명시적으로** 닫아준다(`toggleUserProfileMenu()` ↔ `toggleNotificationPanel()` 서로 호출). 버튼 클릭 핸들러가 `e.stopPropagation()` 을 쓰기 때문에 "바깥클릭 닫기" 리스너만으로는 서로를 못 닫음 — 새 헤더 드롭다운을 추가할 때 반드시 이 패턴을 따를 것. 상세: `RDMD/frontend/01-common/07-dropdown-mutual-exclusion-fix-record.md`

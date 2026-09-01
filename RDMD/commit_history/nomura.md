@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 188 |
+| **커밋 수** | 189 |
 | **기간** | 2026-03-20 ~ 2026-08-30|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -216,7 +216,8 @@
 | 185 | 2026-09-01 | [`fe2369c`](#fe2369c) | feat(deploy): Render 전용 프론트 root-render 추가 |
 | 186 | 2026-09-01 | [`9b82a7a`](#9b82a7a) | feat(deploy): Cloudflare 전용 프론트 root-cloudflare 추가 |
 | 187 | 2026-09-01 | [`fdc0237`](#fdc0237) | refactor(deploy): 루트 프론트 제거 후 서버가 전용 폴더를 서빙 |
-| 188 | 2026-09-01 | pending | ci(deploy): Cloudflare Pages 워크플로 추가 |
+| 188 | 2026-09-01 | [`7f6487f`](#7f6487f) | ci(deploy): Cloudflare Pages 워크플로 추가 |
+| 189 | 2026-09-01 | pending | docs(deploy): 폴더별 실행 안내와 배포 기록 정리 |
 
 ---
 
@@ -3669,18 +3670,36 @@
 
 ---
 
-<a id="pending-188"></a>
+<a id="7f6487f"></a>
 
-### 188. 2026-09-01 — pending
+### 188. 2026-09-01 — `7f6487f`
 
-- **hash (short)**: pending
-- **hash (full)**: pending
+- **hash (short)**: `7f6487f`
+- **hash (full)**: `7f6487fc504de2620d6ea77da103eddaa7d0ce6a`
 - **author**: nomura
 - **message**: ci(deploy): Cloudflare Pages 워크플로 추가
-- **git**: _(커밋 후 기입)_
+- **git**: `git show 7f6487f`
 - **범위**: ci / deploy
 - **요약**: `root-cloudflare/`를 Cloudflare Pages에 올리는 GitHub Actions를 추가하고, 기존 GH Pages 워크플로도 같은 폴더를 쓰도록 바꿨다. CI 시크릿 `CLOUDFLARE_API_TOKEN`·`CLOUDFLARE_ACCOUNT_ID`가 필요하다.
 - **주요 파일**: `.github/workflows/deploy-cloudflare-pages.yml`, `.github/workflows/deploy-pages.yml`
 - **관련 RDMD**: [../frontend/09-deploy-path/02-cloudflare-pages-static-preview-record.md](../frontend/09-deploy-path/02-cloudflare-pages-static-preview-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-189"></a>
+
+### 189. 2026-09-01 — pending
+
+- **hash (short)**: pending
+- **hash (full)**: pending
+- **author**: nomura
+- **message**: docs(deploy): 폴더별 실행 안내와 배포 기록 정리
+- **git**: _(커밋 후 기입)_
+- **범위**: docs / deploy
+- **요약**: README에 Cloudflare/Render 폴더별 실행 방법을 적고, 배포 스킬과 RDMD 기록을 맞췄다. 로컬은 `cd backend && npm start`(root-cloudflare), Render 화면은 `STATIC_ROOT=root-render`.
+- **주요 파일**: `README.md`, `DEPLOY.md`, `CLAUDE.md`, `.agents/deploy/skill.md`, RDMD deploy records
+- **관련 RDMD**: [../frontend/09-deploy-path/03-root-cloudflare-split-record.md](../frontend/09-deploy-path/03-root-cloudflare-split-record.md)
 
 [▲ 목차로](#목차)
