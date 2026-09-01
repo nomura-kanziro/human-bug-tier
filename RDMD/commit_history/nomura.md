@@ -220,7 +220,7 @@
 | 189 | 2026-09-01 | [`23770a2`](#23770a2) | docs(deploy): 폴더별 실행 안내와 배포 기록 정리 |
 | 190 | 2026-09-01 | [`d2e54f5`](#d2e54f5) | chore(common): 푸터 사이트 버전을 0.4.1로 변경 |
 | 191 | 2026-09-01 | [`2f98421`](#2f98421) | docs(react-rewrite): 정식 버전 React 기획 및 Cloudflare 작업 중지 인수인계 |
-| 192 | 2026-09-01 | pending | docs(deploy): 현재 실무는 Render.com만이라고 선언 |
+| 192 | 2026-09-01 | [`f1229e4`](#f1229e4) | docs(deploy): 현재 실무는 Render.com만이라고 선언 |
 
 ---
 
@@ -3745,15 +3745,15 @@
 
 ---
 
-<a id="pending-192"></a>
+<a id="f1229e4"></a>
 
-### 192. 2026-09-01 — pending
+### 192. 2026-09-01 — `f1229e4`
 
-- **hash (short)**: pending
-- **hash (full)**: pending
+- **hash (short)**: `f1229e4`
+- **hash (full)**: `f1229e40ee4ef07e838f37b7a874bfc265a5d317`
 - **author**: nomura
 - **message**: docs(deploy): 현재 실무는 Render.com만이라고 선언
-- **git**: _(커밋 후 기입)_
+- **git**: `git show f1229e4`
 - **범위**: docs / deploy
 - **요약**: Cloudflare·React는 손대지 않고, 지금 코드 작업은 Render.com(`root-render/` + `backend/`)만 한다고 문서와 전 에이전트 스킬에 밝혔다.
 - **주요 파일**: `RDMD/features/react-rewrite.md`, `.agents/deploy/skill.md`, `team/README.md`, `README.md`
