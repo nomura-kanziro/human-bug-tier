@@ -8,7 +8,7 @@
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
 | **커밋 수** | 189 |
-| **기간** | 2026-03-20 ~ 2026-08-30|
+| **기간** | 2026-03-20 ~ 2026-09-01 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
 > 폴더 안내: [README.md](./README.md)  ·  상세 기능 일지: [../frontend/](../frontend/README.md) · [../backend/](../backend/README.md)
@@ -217,7 +217,7 @@
 | 186 | 2026-09-01 | [`9b82a7a`](#9b82a7a) | feat(deploy): Cloudflare 전용 프론트 root-cloudflare 추가 |
 | 187 | 2026-09-01 | [`fdc0237`](#fdc0237) | refactor(deploy): 루트 프론트 제거 후 서버가 전용 폴더를 서빙 |
 | 188 | 2026-09-01 | [`7f6487f`](#7f6487f) | ci(deploy): Cloudflare Pages 워크플로 추가 |
-| 189 | 2026-09-01 | pending | docs(deploy): 폴더별 실행 안내와 배포 기록 정리 |
+| 189 | 2026-09-01 | [`23770a2`](#23770a2) | docs(deploy): 폴더별 실행 안내와 배포 기록 정리 |
 
 ---
 
@@ -3688,15 +3688,15 @@
 
 ---
 
-<a id="pending-189"></a>
+<a id="23770a2"></a>
 
-### 189. 2026-09-01 — pending
+### 189. 2026-09-01 — `23770a2`
 
-- **hash (short)**: pending
-- **hash (full)**: pending
+- **hash (short)**: `23770a2`
+- **hash (full)**: `23770a2b9ce6df119d0fee6fb26ccf19ee97f835`
 - **author**: nomura
 - **message**: docs(deploy): 폴더별 실행 안내와 배포 기록 정리
-- **git**: _(커밋 후 기입)_
+- **git**: `git show 23770a2`
 - **범위**: docs / deploy
 - **요약**: README에 Cloudflare/Render 폴더별 실행 방법을 적고, 배포 스킬과 RDMD 기록을 맞췄다. 로컬은 `cd backend && npm start`(root-cloudflare), Render 화면은 `STATIC_ROOT=root-render`.
 - **주요 파일**: `README.md`, `DEPLOY.md`, `CLAUDE.md`, `.agents/deploy/skill.md`, RDMD deploy records
