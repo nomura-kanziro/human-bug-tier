@@ -211,7 +211,7 @@
 | 180 | 2026-09-01 | [`fa72c7d`](#fa72c7d) | docs(common): 드롭다운 상호배타 버그 기록 및 관련 스킬 문서 전면 갱신 |
 | 181 | 2026-09-01 | [`2677aea`](#2677aea) | fix(auth): 이메일 발송 시 설정된 provider 전부 순서대로 시도(Brevo→Resend→Gmail 자동 대체) |
 | 182 | 2026-09-01 | [`94b7ce8`](#94b7ce8) | fix(auth): Gmail SMTP ETIMEDOUT 원인(Render 포트 차단) 확인 및 진단 힌트 추가 |
-| 183 | 2026-09-01 | [`pending`](#pending-183) | fix(auth): 이메일 발송 실패 시 시도한 provider 전부의 원인을 합쳐서 표시 |
+| 183 | 2026-09-01 | [`b80a9fc`](#b80a9fc) | fix(auth): 이메일 발송 실패 시 시도한 provider 전부의 원인을 합쳐서 표시 |
 
 ---
 
@@ -3574,15 +3574,15 @@
 
 ---
 
-<a id="pending-183"></a>
+<a id="b80a9fc"></a>
 
-### 183. 2026-09-01 — `pending`
+### 183. 2026-09-01 — `b80a9fc`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `b80a9fc`
+- **hash (full)**: `b80a9fc31d49248408306d537671f297cc06cf24`
 - **author**: nomura
 - **message**: fix(auth): 이메일 발송 실패 시 시도한 provider 전부의 원인을 합쳐서 표시
-- **git**: `git show pending`
+- **git**: `git show b80a9fc`
 - **범위**: backend / auth
 - **요약**: Render에 Resend API를 등록했는데도 여전히 Gmail의 `ETIMEDOUT`만 보인다는 제보를 조사했다. 실제로는 Resend가 시도되고 있었지만 Resend 고유 제약(도메인 미인증 시 계정 가입 이메일에만 발송 가능)으로 실패하고 있었는데, `sendAppMail()`이 "마지막 provider의 에러만" 던지는 구조라 그 진짜 원인이 뒤이은 Gmail의 ETIMEDOUT에 완전히 가려져 있었다. provider가 2개 이상 설정돼 전부 실패하면 각 provider의 실패 이유를 전부 합쳐서(`Brevo: ... / Resend: ... / Gmail: ...`) 응답에 담도록 고쳤고, Resend 에러 파싱도 Brevo 수준으로 개선해 "도메인 인증 필요" 힌트를 추가했다.
 - **주요 파일**: `backend/utils/mail.js`, `DEPLOY.md`
