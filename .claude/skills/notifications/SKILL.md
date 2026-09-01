@@ -30,6 +30,7 @@ description: >
 - 상세 페이지 탭(전체/공지/멘션/이벤트)은 DB가 아니라 `common.js` 의 `NOTIFICATION_GROUPS` 매핑으로만 나뉜다. 매핑 안 된 타입은 자동으로 "이벤트"로 떨어짐(기본값)
 - 상세 페이지는 `GET /api/notifications?limit=100` 한 번만 호출하고 탭·select 정렬/필터는 전부 클라이언트 처리 — 새 서버 API 없음
 - 드롭다운과 상세 페이지는 `handleNotificationClick()` 하나를 공유(읽음 처리 + 딥링크)
+- 알림 벨 패널은 열릴 때 `closeUserProfileMenu()` 를 호출해 유저 프로필 드롭다운과 상호 배타를 유지한다(둘 다 명시적 호출 필요 — `e.stopPropagation()` 때문에 바깥클릭 리스너만으론 부족했던 버그를 고친 상태, `07-dropdown-mutual-exclusion-fix-record.md` 참고)
 
 ## Do
 
@@ -60,3 +61,4 @@ description: >
 - [ ] 딥링크·타이머
 - [ ] 상세 페이지 탭 4개 + select 정렬/필터 정확
 - [ ] 드롭다운 "전체보기" 링크 정상
+- [ ] 프로필 드롭다운과 상호 배타(동시에 안 열림)

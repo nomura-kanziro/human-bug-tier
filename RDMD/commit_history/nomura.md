@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 179 |
+| **커밋 수** | 180 |
 | **기간** | 2026-03-20 ~ 2026-08-30|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -208,6 +208,7 @@
 | 177 | 2026-09-01 | [`ef36535`](#ef36535) | feat(luck-draw): 오늘의 행운 티어 확률 재조정 |
 | 178 | 2026-09-01 | [`fd41c85`](#fd41c85) | fix(luck-draw): 4티어 확률 2%↓, 7티어 확률 2%↑ |
 | 179 | 2026-09-01 | [`1fd8e84`](#1fd8e84) | fix(common): 알림 벨 클릭 시 유저 프로필 드롭다운도 같이 닫히도록 수정 |
+| 180 | 2026-09-01 | [`pending`](#pending-180) | docs(common): 드롭다운 상호배타 버그 기록 및 관련 스킬 문서 전면 갱신 |
 
 ---
 
@@ -3511,5 +3512,23 @@
 - **요약**: 유저 프로필 드롭다운이 열린 상태에서 알림 벨을 클릭하면 두 패널이 겹쳐서 안 닫히는 버그를 고쳤다. 원인은 벨 버튼 클릭 핸들러의 `e.stopPropagation()` 때문에 프로필 패널의 document 레벨 바깥클릭 감지 리스너가 아예 실행되지 않는 것 — `toggleNotificationPanel()` 이 열릴 때 `closeUserProfileMenu()` 를 직접 호출하도록 해서, 반대 방향(`toggleUserProfileMenu()` → `closeNotificationPanel()`)과 대칭이 되도록 맞췄다.
 - **주요 파일**: `common.js`
 - **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-180"></a>
+
+### 180. 2026-09-01 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(common): 드롭다운 상호배타 버그 기록 및 관련 스킬 문서 전면 갱신
+- **git**: `git show pending`
+- **범위**: docs
+- **요약**: 직전 커밋(179번, 알림 벨↔프로필 드롭다운 동시 열림 버그 수정)의 근본 원인(`e.stopPropagation()`이 바깥클릭 감지 리스너를 막는 함정)을 새 RDMD 기록으로 남기고, `.agents`/`.claude` 의 `common`·`notifications` 스킬 문서에 "새 헤더 드롭다운 추가 시 반드시 서로 명시적으로 닫아줄 것" 가이드를 추가했다. 겸사겸사 `common` 스킬에 남아있던 "행운 뽑기 = 미구현" 이라는 오래된(구현 완료 후에도 안 고쳐졌던) 문구도 바로잡았다.
+- **주요 파일**: `RDMD/frontend/01-common/07-dropdown-mutual-exclusion-fix-record.md`, `RDMD/frontend/README.md`, `.agents/common/skill.md`, `.claude/skills/common/SKILL.md`, `.agents/notifications/skill.md`, `.claude/skills/notifications/SKILL.md`
+- **관련 RDMD**: [../frontend/01-common/07-dropdown-mutual-exclusion-fix-record.md](../frontend/01-common/07-dropdown-mutual-exclusion-fix-record.md)
 
 [▲ 목차로](#목차)

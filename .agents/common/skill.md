@@ -20,6 +20,7 @@ description: >
 - `manifest.webmanifest`, `sw.js` (PWA, common.js에서 등록)
 - 후원 커피 버튼: `header.html` `#header-sponsor-btn` + `common.js` `SPONSOR_PROFILE_URL` / `renderSponsorButton()`
 - 유저 프로필 드롭다운(일반 유저·어드민 완전히 동일, 어드민만 "관리하기" 한 줄 추가): `common.js` `getCurrentIdentity()`, `renderUserProfile()` 이하 `toggleUserProfileMenu`/`closeUserProfileMenu*` — 상세는 `my-page/skill.md`(일반 유저), `admin/skill.md`(어드민)
+- 헤더 드롭다운(프로필·알림)은 서로 열릴 때 상대방을 **명시적으로** 닫아준다(`toggleUserProfileMenu()` ↔ `toggleNotificationPanel()` 서로 호출). 버튼 클릭 핸들러가 `e.stopPropagation()` 을 쓰기 때문에 "바깥클릭 닫기" 리스너만으로는 서로를 못 닫음 — 새 헤더 드롭다운을 추가할 때 반드시 이 패턴을 따를 것. 상세: `RDMD/frontend/01-common/07-dropdown-mutual-exclusion-fix-record.md`
 
 ## Read first
 
@@ -35,7 +36,8 @@ description: >
 4. API base 분기 기존과 동일
 5. `addEventListener` 유지
 6. 검증: 루트, `tier-class/tier1`, `admin/comments/`, `:5000`
-7. `goHome`은 항상 `index.html`. 미구현 메뉴(이벤트·행운 뽑기)는 **준비 중** 표시
+7. `goHome`은 항상 `index.html`. 미구현 메뉴(커스텀 메이커 이벤트·행운 뽑기의 랜덤 뽑기)는 **준비 중** 표시 — 행운 뽑기의 "오늘의 행운 티어"는 구현 완료(준비 중 아님)
+8. 헤더에 새 드롭다운/패널 추가 시, 열릴 때 **기존 패널들을 명시적으로 닫는 호출**을 서로 추가 ("바깥클릭 닫기"만으로는 버튼 간 상호 배제가 안 됨 — 위 항목 참고)
 
 ## Do not
 
@@ -54,3 +56,4 @@ description: >
 
 - [ ] 깊은 경로 header/footer
 - [ ] 메뉴 이동 · API base 분기
+- [ ] 헤더 드롭다운 여러 개 동시 오픈 안 됨(프로필↔알림 상호 배타)

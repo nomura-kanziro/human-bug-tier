@@ -27,6 +27,7 @@ description: >
 - 매핑 안 된 타입은 **자동으로 "이벤트"** 로 떨어짐(기본값). 새 타입이 실제로는 공지/멘션 성격이면 매핑을 반드시 추가할 것 — 안 그러면 조용히 이벤트 탭에 잘못 들어감
 - 상세 페이지는 `GET /api/notifications?limit=100` 한 번만 불러오고 탭·정렬(select: 전체/최신순/오래된것/읽은것/안읽은것)은 **클라이언트에서** 처리. 새 서버 필터/페이지네이션 API 없음
 - 알림 클릭 처리는 드롭다운과 상세 페이지가 `handleNotificationClick()` 하나를 공유
+- 알림 벨 패널(`toggleNotificationPanel`)은 열릴 때 `closeUserProfileMenu()` 를 명시적으로 호출해 유저 프로필 드롭다운을 닫는다(반대 방향도 대칭) — 버튼 클릭이 `e.stopPropagation()` 을 쓰기 때문에 "바깥클릭 닫기"만으로는 서로 못 닫아서 생겼던 버그(`RDMD/frontend/01-common/07-dropdown-mutual-exclusion-fix-record.md`) 수정 후 상태
 
 ## Do
 
@@ -51,3 +52,4 @@ description: >
 - [ ] 딥링크·타이머
 - [ ] 상세 페이지 탭 4개 분류 정확, select 필터/정렬 정확
 - [ ] 드롭다운 "전체보기" → 상세 페이지 정상 이동
+- [ ] 프로필 드롭다운 연 상태에서 알림 벨 클릭 → 프로필 닫히고 알림만 열림(상호 배타)

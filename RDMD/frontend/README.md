@@ -39,6 +39,7 @@ RDMD/frontend/
 | [04-jwt-auth-utils-commonjs-record.md](./01-common/04-jwt-auth-utils-commonjs-record.md) | 22 | common.js JWT 유틸·로그아웃 |
 | [05-header-sponsor-coffee-btn-record.md](./01-common/05-header-sponsor-coffee-btn-record.md) | — | 헤더 후원(커피) 버튼 · URL 상수 |
 | [06-admin-profile-dropdown-record.md](./01-common/06-admin-profile-dropdown-record.md) | — | 어드민도 유저 프로필 드롭다운 사용(전체화면 모달 제거) |
+| [07-dropdown-mutual-exclusion-fix-record.md](./01-common/07-dropdown-mutual-exclusion-fix-record.md) | — | 알림 벨↔프로필 드롭다운 동시 열림 버그 수정 (stopPropagation 함정) |
 
 ## 02-tier-class
 
