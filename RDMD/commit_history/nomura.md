@@ -218,7 +218,7 @@
 | 187 | 2026-09-01 | [`fdc0237`](#fdc0237) | refactor(deploy): 루트 프론트 제거 후 서버가 전용 폴더를 서빙 |
 | 188 | 2026-09-01 | [`7f6487f`](#7f6487f) | ci(deploy): Cloudflare Pages 워크플로 추가 |
 | 189 | 2026-09-01 | [`23770a2`](#23770a2) | docs(deploy): 폴더별 실행 안내와 배포 기록 정리 |
-| 190 | 2026-09-01 | pending | chore(common): 푸터 사이트 버전을 0.4.1로 변경 |
+| 190 | 2026-09-01 | [`d2e54f5`](#d2e54f5) | chore(common): 푸터 사이트 버전을 0.4.1로 변경 |
 
 ---
 
@@ -3707,15 +3707,15 @@
 
 ---
 
-<a id="pending-190"></a>
+<a id="d2e54f5"></a>
 
-### 190. 2026-09-01 — pending
+### 190. 2026-09-01 — `d2e54f5`
 
-- **hash (short)**: pending
-- **hash (full)**: pending
+- **hash (short)**: `d2e54f5`
+- **hash (full)**: `d2e54f513917543a7b54e2799172e875c73e980f`
 - **author**: nomura
 - **message**: chore(common): 푸터 사이트 버전을 0.4.1로 변경
-- **git**: _(커밋 후 기입)_
+- **git**: `git show d2e54f5`
 - **범위**: frontend / common
 - **요약**: 푸터의 `site version`을 `0.3.2`에서 `0.4.1`로 올렸다. Cloudflare·Render 전용 프론트 둘 다 반영했다.
 - **주요 파일**: `root-cloudflare/footer.html`, `root-render/footer.html`
