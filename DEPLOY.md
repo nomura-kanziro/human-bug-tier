@@ -115,7 +115,8 @@ Visit:
      - `401` → API 키가 아님/잘림. 새 키 발급, 따옴표 없이 붙여넣기, IP 제한 해제
      - `403` → 키는 통과. **Senders에서 발신 메일 인증**(받은 6자리 코드 입력) 후 `BREVO_FROM`을 그 주소와 동일하게. 그래도 `permission_denied` / `not yet activated` 이면 **Brevo 계정 자체가 아직 트랜잭션(SMTP) 발송이 승인 안 된 상태** — Brevo 고객지원(contact@brevo.com 또는 대시보드)에 **Transactional/SMTP 활성화** 요청 필요(코드로 해결 불가, Brevo 쪽 수동 승인 대기)
   4. **Brevo 승인을 기다리는 동안 당장 메일을 보내야 하면**: Render Environment에 `RESEND_API_KEY`(또는 `EMAIL_USER`+`EMAIL_APP_PASSWORD`)를 **추가로** 설정해두면, Brevo가 막혀 있어도 자동으로 그쪽으로 대체 발송됨 — `BREVO_API_KEY`를 지울 필요 없음
-  5. 응답이 성공인데 메일 없음 → 아이디·이메일이 DB와 다르거나 스팸함 (계정 존재 여부는 보안상 숨김)
+  5. **`detail`이 `ETIMEDOUT`(또는 `ESOCKET`/`ECONNREFUSED`/`ECONNECTION`)이면 Gmail SMTP 차례까지 왔다는 뜻** — Render 같은 클라우드 호스팅은 SMTP 아웃바운드 포트(465/587)를 통째로 막아두는 경우가 많아서, 재시도해도 계속 같은 에러만 남. **Gmail은 애초에 Render에서 될 수가 없는 경우**이니 재시도 대신 HTTPS 기반인 `RESEND_API_KEY`를 설정하거나(1번 항목 참고) Brevo를 활성화하는 쪽으로 가야 함
+  6. 응답이 성공인데 메일 없음 → 아이디·이메일이 DB와 다르거나 스팸함 (계정 존재 여부는 보안상 숨김)
 - Admin can't create notices? Check ADMIN_ vars and admin token in localStorage.
 - Homepage shows JSON? Check if static serving is working (should be fixed).
 

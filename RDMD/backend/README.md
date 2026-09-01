@@ -54,6 +54,7 @@ RDMD/backend/
 | [03-find-id-password-reset-api-record.md](./03-auth/03-find-id-password-reset-api-record.md) | 13 | 아이디 찾기 · 비번 재설정 필드 |
 | [04-password-reset-token-hash-record.md](./03-auth/04-password-reset-token-hash-record.md) | 25 | 랜덤 토큰 + SHA-256 · appUrl |
 | [05-mail-provider-fallback-record.md](./03-auth/05-mail-provider-fallback-record.md) | — | 이메일 provider 자동 대체(Brevo→Resend→Gmail), Brevo 미활성 대응 |
+| [06-gmail-smtp-timeout-hint-record.md](./03-auth/06-gmail-smtp-timeout-hint-record.md) | — | Gmail SMTP ETIMEDOUT = Render 포트 차단, 진단 힌트 추가 |
 
 ## 04-notice — 공지
 

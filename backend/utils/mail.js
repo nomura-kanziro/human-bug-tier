@@ -289,6 +289,14 @@ async function sendViaGmail({ to, subject, html }) {
       break;
     }
   }
+
+  // 465·587 둘 다 연결 자체가 안 됐다면(타임아웃 등) 계정 설정 문제가 아니라
+  // 호스팅이 SMTP 아웃바운드 포트를 막아둔 것일 가능성이 높다 — Render 등 클라우드 호스팅에서 흔함.
+  if (lastErr && CONNECTION_ERROR_CODES.has(lastErr.code) && !lastErr.providerDetail) {
+    lastErr.providerDetail =
+      'SMTP 연결 자체가 안 됨 — Render 등 클라우드 호스팅이 SMTP 아웃바운드 포트(465/587)를 막아둔 경우 Gmail은 재시도해도 계속 실패합니다. HTTPS 기반인 Resend/Brevo API 사용을 권장';
+  }
+
   throw lastErr;
 }
 
