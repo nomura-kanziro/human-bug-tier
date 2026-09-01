@@ -2,8 +2,9 @@ services:
   - type: web
     name: human-bug-tier
     env: node
-    # backend 폴더를 루트로 설정 (추천)
-    # frontend 정적 파일은 backend/server.js에서 __dirname 기준 상위로 서빙함
+    # backend 폴더를 작업 디렉터리로 설정
+    # 정적 프론트는 backend/server.js가 ../root-render 를 서빙 (RENDER=true)
+    # 레포 루트 프론트는 Cloudflare / 로컬용. Render는 root-render 전용.
     rootDir: backend
     buildCommand: npm install
     startCommand: npm start

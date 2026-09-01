@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 186 |
+| **커밋 수** | 187 |
 | **기간** | 2026-03-20 ~ 2026-08-30|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -214,7 +214,8 @@
 | 183 | 2026-09-01 | [`b80a9fc`](#b80a9fc) | fix(auth): 이메일 발송 실패 시 시도한 provider 전부의 원인을 합쳐서 표시 |
 | 184 | 2026-09-01 | [`7532ffe`](#7532ffe) | docs(deploy): Cloudflare 배포 정본 CLOUDFLARE.md 추가 |
 | 185 | 2026-09-01 | [`fe2369c`](#fe2369c) | feat(deploy): Render 전용 프론트 root-render 추가 |
-| 186 | 2026-09-01 | pending | feat(deploy): Cloudflare 전용 프론트 root-cloudflare 추가 |
+| 186 | 2026-09-01 | [`9b82a7a`](#9b82a7a) | feat(deploy): Cloudflare 전용 프론트 root-cloudflare 추가 |
+| 187 | 2026-09-01 | pending | refactor(deploy): 루트 프론트 제거 후 서버가 전용 폴더를 서빙 |
 
 ---
 
@@ -3631,18 +3632,36 @@
 
 ---
 
-<a id="pending-186"></a>
+<a id="9b82a7a"></a>
 
-### 186. 2026-09-01 — pending
+### 186. 2026-09-01 — `9b82a7a`
 
-- **hash (short)**: pending
-- **hash (full)**: pending
+- **hash (short)**: `9b82a7a`
+- **hash (full)**: `9b82a7ac1fb448dc50d83df8bf6b95eb52391fb7`
 - **author**: nomura
 - **message**: feat(deploy): Cloudflare 전용 프론트 root-cloudflare 추가
-- **git**: _(커밋 후 기입)_
+- **git**: `git show 9b82a7a`
 - **범위**: frontend / deploy
 - **요약**: 로컬·Tunnel·Cloudflare Pages가 쓸 정적 프론트를 `root-cloudflare/`에 두었다. 이후 루트에서 프론트를 지워도 Pages와 로컬은 이 폴더를 본다.
 - **주요 파일**: `root-cloudflare/`
 - **관련 RDMD**: [../frontend/09-deploy-path/03-root-cloudflare-split-record.md](../frontend/09-deploy-path/03-root-cloudflare-split-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-187"></a>
+
+### 187. 2026-09-01 — pending
+
+- **hash (short)**: pending
+- **hash (full)**: pending
+- **author**: nomura
+- **message**: refactor(deploy): 루트 프론트 제거 후 서버가 전용 폴더를 서빙
+- **git**: _(커밋 후 기입)_
+- **범위**: backend / frontend / deploy
+- **요약**: 레포 루트에 있던 HTML/CSS/JS/이미지를 지웠다. `server.js`는 기본으로 `root-cloudflare/`를 열고, Render(`RENDER=true`)만 `root-render/`를 연다. 셸의 `PORT`·`STATIC_ROOT`는 `.env`보다 우선한다.
+- **주요 파일**: `backend/server.js`, `render.yaml`, 루트 프론트 삭제분
+- **관련 RDMD**: [../backend/07-deploy/02-root-render-static-record.md](../backend/07-deploy/02-root-render-static-record.md)
 
 [▲ 목차로](#목차)

@@ -17,28 +17,49 @@ const { seedAdmin } = require('./controllers/adminController');
 // 2) backend/.env — 동일 키는 backend가 우선 (override: true)
 //    ※ dotenv 기본은 이미 있는 키를 덮어쓰지 않음.
 //       루트에 MONGO_URI= (빈 값)만 있으면 backend 값이 무시되어 DB 연결 실패함.
+// 3) 셸/호스트가 이미 준 PORT·STATIC_ROOT·RENDER 는 파일보다 우선
+//    (Render가 넣는 PORT, 로컬 STATIC_ROOT=root-render 검증)
+const shellPort = process.env.PORT;
+const shellStaticRoot = process.env.STATIC_ROOT;
+const shellRender = process.env.RENDER;
 dotenv.config({ path: path.join(__dirname, '..', '.env') });
 dotenv.config({ path: path.join(__dirname, '.env'), override: true });
+if (shellPort !== undefined) process.env.PORT = shellPort;
+if (shellStaticRoot !== undefined) process.env.STATIC_ROOT = shellStaticRoot;
+if (shellRender !== undefined) process.env.RENDER = shellRender;
 
 const app = express();
 
 app.use(cors());
 app.use(express.json({ limit: '2mb' }));
 
-// 정적 프론트엔드 파일 서빙 (루트의 index.html, 하위 폴더, 에셋 등)
+// 정적 프론트엔드 파일 서빙
 // 이 서버를 실행하면 frontend + API가 모두 같은 포트(기본 5000)에서 제공됨.
-// 
+//
+// 로컬 / Cloudflare Tunnel:
+//   ../root-cloudflare
+// Render.com:
+//   ../root-render  (`RENDER=true`)
+// 강제: STATIC_ROOT=root-cloudflare | root-render
+//
 // 로컬 개발 추천 방법 (5000 통일):
 //   cd backend
 //   npm start
 //   → http://localhost:5000 에서 전체 앱 (프론트 + API) 사용
-// 
-// npx serve . 는 비추천 (주요 개발 방법으로):
-//   - 5000으로 실행하면 백엔드와 포트 충돌
-//   - 별도 포트(예: 3000)로 하면 API는 localhost:5000을 바라보게 되지만,
-//     백엔드 기능(클린 URL, /health 등)을 잃고 두 프로세스를 관리해야 함
-//   - 프로젝트는 백엔드가 프론트를 함께 서빙하는 구조로 설계됨
-const projectRoot = path.join(__dirname, '..');
+function resolveStaticRoot() {
+  const fromEnv = (process.env.STATIC_ROOT || '').trim();
+  if (fromEnv) {
+    return path.isAbsolute(fromEnv) ? fromEnv : path.join(__dirname, '..', fromEnv);
+  }
+  if (process.env.RENDER === 'true') {
+    return path.join(__dirname, '..', 'root-render');
+  }
+  return path.join(__dirname, '..', 'root-cloudflare');
+}
+const projectRoot = resolveStaticRoot();
+if (!fs.existsSync(projectRoot)) {
+  console.error('정적 프론트 폴더가 없습니다:', projectRoot);
+}
 app.use(express.static(projectRoot));
 
 // 깔끔한 URL 대응 (예: /notice → notice.html, /api/* 는 제외)
@@ -72,7 +93,7 @@ connectDB().then(async (connected) => {
 });
 
 app.get('/favicon.ico', (req, res) => {
-  res.sendFile(path.join(__dirname, '..', 'tier-image', 'logo.webp'));
+  res.sendFile(path.join(projectRoot, 'tier-image', 'logo.webp'));
 });
 
 // 헬스 체크 (DB 연결 상태 포함 — 시크릿 값은 노출하지 않음)
@@ -124,6 +145,7 @@ const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, () => {
   console.log(`🚀 서버가 포트 ${PORT}에서 실행 중입니다.`);
   console.log(`   Health check: /health`);
+  console.log(`   정적 루트: ${projectRoot}`);
   try {
     require('./utils/mail').logEmailConfigStatus();
   } catch (e) {

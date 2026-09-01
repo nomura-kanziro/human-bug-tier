@@ -4,6 +4,9 @@
 
 프론트엔드 정적 파일도 함께 서빙하며, 모든 API 요청을 처리합니다.
 
+- 로컬 / Tunnel: `../root-cloudflare`
+- Render.com: `../root-render` (`RENDER=true`)
+
 ## 주요 역할
 - Express 서버로 프론트엔드 정적 파일 제공 (`/`, `/notice`, `/custom-maker` 등)
 - MongoDB와 연동 (Mongoose)
