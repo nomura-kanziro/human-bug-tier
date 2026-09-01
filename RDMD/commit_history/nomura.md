@@ -208,7 +208,7 @@
 | 177 | 2026-09-01 | [`ef36535`](#ef36535) | feat(luck-draw): 오늘의 행운 티어 확률 재조정 |
 | 178 | 2026-09-01 | [`fd41c85`](#fd41c85) | fix(luck-draw): 4티어 확률 2%↓, 7티어 확률 2%↑ |
 | 179 | 2026-09-01 | [`1fd8e84`](#1fd8e84) | fix(common): 알림 벨 클릭 시 유저 프로필 드롭다운도 같이 닫히도록 수정 |
-| 180 | 2026-09-01 | [`pending`](#pending-180) | docs(common): 드롭다운 상호배타 버그 기록 및 관련 스킬 문서 전면 갱신 |
+| 180 | 2026-09-01 | [`fa72c7d`](#fa72c7d) | docs(common): 드롭다운 상호배타 버그 기록 및 관련 스킬 문서 전면 갱신 |
 
 ---
 
@@ -3517,15 +3517,15 @@
 
 ---
 
-<a id="pending-180"></a>
+<a id="fa72c7d"></a>
 
-### 180. 2026-09-01 — `pending`
+### 180. 2026-09-01 — `fa72c7d`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `fa72c7d`
+- **hash (full)**: `fa72c7d9f183685050e3400ee9d2592f2556e821`
 - **author**: nomura
 - **message**: docs(common): 드롭다운 상호배타 버그 기록 및 관련 스킬 문서 전면 갱신
-- **git**: `git show pending`
+- **git**: `git show fa72c7d`
 - **범위**: docs
 - **요약**: 직전 커밋(179번, 알림 벨↔프로필 드롭다운 동시 열림 버그 수정)의 근본 원인(`e.stopPropagation()`이 바깥클릭 감지 리스너를 막는 함정)을 새 RDMD 기록으로 남기고, `.agents`/`.claude` 의 `common`·`notifications` 스킬 문서에 "새 헤더 드롭다운 추가 시 반드시 서로 명시적으로 닫아줄 것" 가이드를 추가했다. 겸사겸사 `common` 스킬에 남아있던 "행운 뽑기 = 미구현" 이라는 오래된(구현 완료 후에도 안 고쳐졌던) 문구도 바로잡았다.
 - **주요 파일**: `RDMD/frontend/01-common/07-dropdown-mutual-exclusion-fix-record.md`, `RDMD/frontend/README.md`, `.agents/common/skill.md`, `.claude/skills/common/SKILL.md`, `.agents/notifications/skill.md`, `.claude/skills/notifications/SKILL.md`
