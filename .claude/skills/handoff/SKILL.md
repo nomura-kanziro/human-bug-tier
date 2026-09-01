@@ -16,7 +16,7 @@ description: >
 ## 현재 상태 (반드시 말할 것)
 
 - 바닐라 **0.4.1**. 프론트 `root-cloudflare/` · `root-render/`
-- Cloudflare 배포 **추가 작업 중지**
+- **지금 실무 = Render.com** (`root-render/` + `backend/`). Cloudflare 추가 작업 중지
 - React 정식 버전 = 기획만 `RDMD/features/react-rewrite.md`. 구현 지시 전 금지
 
 ## Do (에이전트가 할 일)

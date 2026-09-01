@@ -15,7 +15,7 @@ description: >
 
 ## 현재 상태
 
-바닐라 0.4.1 (`root-cloudflare/`). Cloudflare 작업 중지. React 정식은 기획만 `RDMD/features/react-rewrite.md`. 구현 지시 전 금지.
+바닐라 0.4.1. **실무는 Render.com만** (`root-render/` + `backend/`). Cloudflare 작업 중지. React 정식은 기획만. 구현 지시 전 금지.
 
 ## Do
 

@@ -34,9 +34,9 @@ description: >
 
 ## 현재 우선순위 (2026-09-01)
 
-- 바닐라 유지 (`root-cloudflare/` / `root-render/` + `backend/`)
-- **Cloudflare 추가 작업 금지** (재개 지시 전)
-- React 정식 버전은 **기획만** (`RDMD/features/react-rewrite.md`, `.agents/react-rewrite/skill.md`). 스캐폴드 금지
+- **지금 실무 = Render.com** (`root-render/` + `backend/`)
+- 바닐라 유지. **Cloudflare 추가 작업 금지**
+- React 정식 버전은 **기획만**. 스캐폴드 금지
 
 ## Do not
 

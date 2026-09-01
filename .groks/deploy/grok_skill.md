@@ -34,7 +34,7 @@ description: >
 
 ## 현재
 
-Cloudflare 배포를 새로 하지 않음. React 정식은 기획만.
+**실무는 Render.com만.** Cloudflare 배포를 새로 하지 않음. React 정식은 기획만.
 
 ## Do
 

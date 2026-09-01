@@ -31,7 +31,7 @@ description: >
 
 ## 현재 우선순위
 
-바닐라 유지. **Cloudflare 추가 작업 금지.** React는 기획만 (`react-rewrite` 스킬). 스캐폴드 금지.
+**실무는 Render.com만.** 바닐라 유지. **Cloudflare 추가 작업 금지.** React는 기획만. 스캐폴드 금지.
 
 ## Do not
 

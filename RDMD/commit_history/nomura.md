@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 191 |
+| **커밋 수** | 192 |
 | **기간** | 2026-03-20 ~ 2026-09-01 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -219,7 +219,8 @@
 | 188 | 2026-09-01 | [`7f6487f`](#7f6487f) | ci(deploy): Cloudflare Pages 워크플로 추가 |
 | 189 | 2026-09-01 | [`23770a2`](#23770a2) | docs(deploy): 폴더별 실행 안내와 배포 기록 정리 |
 | 190 | 2026-09-01 | [`d2e54f5`](#d2e54f5) | chore(common): 푸터 사이트 버전을 0.4.1로 변경 |
-| 191 | 2026-09-01 | pending | docs(react-rewrite): 정식 버전 React 기획 및 Cloudflare 작업 중지 인수인계 |
+| 191 | 2026-09-01 | [`2f98421`](#2f98421) | docs(react-rewrite): 정식 버전 React 기획 및 Cloudflare 작업 중지 인수인계 |
+| 192 | 2026-09-01 | pending | docs(deploy): 현재 실무는 Render.com만이라고 선언 |
 
 ---
 
@@ -3726,18 +3727,36 @@
 
 ---
 
-<a id="pending-191"></a>
+<a id="2f98421"></a>
 
-### 191. 2026-09-01 — pending
+### 191. 2026-09-01 — `2f98421`
+
+- **hash (short)**: `2f98421`
+- **hash (full)**: `2f98421f1712a9fd6e9e714e15872fc96e7c353f`
+- **author**: nomura
+- **message**: docs(react-rewrite): 정식 버전 React 기획 및 Cloudflare 작업 중지 인수인계
+- **git**: `git show 2f98421`
+- **범위**: docs
+- **요약**: 정식 버전을 나중에 React로 만들기 위한 기획을 `RDMD/features/react-rewrite.md`에 썼다. Cloudflare 추가 작업은 하지 않는다고 문서·전 에이전트 스킬에 인수인계했다. 구현·스캐폴드는 없다.
+- **주요 파일**: `RDMD/features/react-rewrite.md`, `.agents/react-rewrite/skill.md`, `CLOUDFLARE.md`, `team/README.md`
+- **관련 RDMD**: [../features/react-rewrite.md](../features/react-rewrite.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-192"></a>
+
+### 192. 2026-09-01 — pending
 
 - **hash (short)**: pending
 - **hash (full)**: pending
 - **author**: nomura
-- **message**: docs(react-rewrite): 정식 버전 React 기획 및 Cloudflare 작업 중지 인수인계
+- **message**: docs(deploy): 현재 실무는 Render.com만이라고 선언
 - **git**: _(커밋 후 기입)_
-- **범위**: docs
-- **요약**: 정식 버전을 나중에 React로 만들기 위한 기획을 `RDMD/features/react-rewrite.md`에 썼다. Cloudflare 추가 작업은 하지 않는다고 문서·전 에이전트 스킬에 인수인계했다. 구현·스캐폴드는 없다.
-- **주요 파일**: `RDMD/features/react-rewrite.md`, `.agents/react-rewrite/skill.md`, `CLOUDFLARE.md`, `team/README.md`
+- **범위**: docs / deploy
+- **요약**: Cloudflare·React는 손대지 않고, 지금 코드 작업은 Render.com(`root-render/` + `backend/`)만 한다고 문서와 전 에이전트 스킬에 밝혔다.
+- **주요 파일**: `RDMD/features/react-rewrite.md`, `.agents/deploy/skill.md`, `team/README.md`, `README.md`
 - **관련 RDMD**: [../features/react-rewrite.md](../features/react-rewrite.md)
 
 [▲ 목차로](#목차)

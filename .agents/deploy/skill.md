@@ -29,8 +29,8 @@ description: >
 
 ## 현재 (2026-09-01)
 
-창시자 지시: **Cloudflare 배포를 새로 하지 않는다.** 이미 올린 Pages·문서는 유지.  
-React 정식 버전은 기획만.
+창시자 지시: **실무는 Render.com만** (`root-render/` + `backend/`).  
+**Cloudflare 배포를 새로 하지 않는다.** React 정식은 기획만.
 
 ## Do
 
@@ -40,7 +40,7 @@ React 정식 버전은 기획만.
 4. env는 **키 이름만** 안내. 값은 `backend/.env` only
 5. `APP_URL` = 터널(또는 실제 API 호스트) 공개 URL. Pages URL 아님
 6. path/API 수정 시 common + auth_api + admin_api 일치
-7. Render 대시보드·`render.yaml`로 다시 올리지 않음 (기존 Render는 방치). Render 정적 프론트는 `root-render/` 만 사용
+7. **지금 손대는 프론트는 `root-render/`만.** Render 대시보드 env·서비스는 창시자가 관리. Cloudflare는 재개 지시 전 손대지 않음
 8. `*.pages.dev` 를 `GITHUB_STATIC` 분기로 넣는 건 **지시 있을 때만** `root-cloudflare/common.js`
 
 ## Do not

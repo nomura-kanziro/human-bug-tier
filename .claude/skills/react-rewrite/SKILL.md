@@ -20,6 +20,7 @@ description: >
 ## 현재
 
 - 바닐라 **0.4.1** — `root-cloudflare/` · `root-render/` + `backend/`
+- **지금 실무 = Render.com** (`root-render/` + `backend/`)
 - **Cloudflare 추가 작업 금지**
 - React **구현은 창시자 지시 전 금지**
 

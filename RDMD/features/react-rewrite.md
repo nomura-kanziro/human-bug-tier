@@ -13,6 +13,12 @@
 
 ---
 
+## 지금 하는 일 (2026-09-01 선언)
+
+**실무는 Render.com만.** 프론트는 `root-render/`, API는 `backend/`. Render가 쓰는 env·정적 서빙·버그만 고친다.
+
+하지 않는 것: Cloudflare Pages/CI/Wrangler, React 스캐폴드.
+
 ## 지금 하지 말 것
 
 | 금지 | 이유 |
@@ -92,9 +98,10 @@
 
 | 채널 | 상태 |
 |------|------|
-| 로컬 `:5000` | 정본. `root-cloudflare/` |
-| Cloudflare Pages | 정적 미리보기만. **추가 작업 중지** |
-| Render | 레거시. `root-render/` 방치 가능 |
+| **Render.com** | **지금 실무.** `root-render/` + `backend/` |
+| 로컬에서 Render 화면 | `STATIC_ROOT=root-render` 후 `cd backend && npm start` |
+| 로컬 기본 `:5000` | `root-cloudflare/` (참고용, 지금은 손대지 않음) |
+| Cloudflare Pages | 정적 미리보기. **추가 작업 중지** |
 | GH Pages | 정적 미리보기만 |
 
 Pages/GH Pages = 로그인·게시판 없음. 풀기능은 `backend` + (선택) Tunnel.

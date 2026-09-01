@@ -14,7 +14,7 @@
 
 휴먼버그대학교 캐릭터 **공식 티어표** + **커스텀 티어 제작/게시판** +  
 회원·공지·문의·관리자 기능을 갖춘 **바닐라 HTML/CSS/JS (`0.4.1`) + Express/MongoDB** 사이트.  
-프론트는 `root-cloudflare/`(로컬). **Cloudflare 배포 작업은 중지.** 정식 버전 React는 기획만 — `RDMD/features/react-rewrite.md`, `.claude/skills/react-rewrite/SKILL.md`. 구현 지시 전 스캐폴드 금지.
+프론트는 `root-cloudflare/`(로컬 기본) · `root-render/`(Render). **지금 실무는 Render.com만.** Cloudflare 배포 작업은 중지. 정식 버전 React는 기획만. 구현 지시 전 스캐폴드 금지.
 
 ## 로컬 실행 (필수)
 

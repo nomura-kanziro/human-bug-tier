@@ -27,7 +27,7 @@ description: >
 
 ## 현재
 
-Cloudflare 배포를 새로 하지 않음.
+**실무는 Render.com만.** Cloudflare 배포를 새로 하지 않음.
 
 ## Do
 

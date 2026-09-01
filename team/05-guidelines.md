@@ -33,6 +33,7 @@
 
 ## 지금 하지 않는 것 (2026-09-01)
 
+- **지금 실무는 Render.com만** (`root-render/` + `backend/`)
 - Cloudflare Pages/CI/시크릿을 더 만지지 않음
 - React/Next 스캐폴드 (정식 버전 이식은 기획 문서만: `RDMD/features/react-rewrite.md`)
 

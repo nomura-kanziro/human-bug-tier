@@ -31,10 +31,10 @@ AI 에이전트 공통 룰은 [`.agents/`](../.agents/README.md) 입니다.
 
 ## 지금 우선순위 (2026-09-01)
 
-- 제품은 바닐라 **0.4.1** (`root-cloudflare/` + `backend/`)
-- **Cloudflare 배포 작업은 하지 않음** (창시자가 재개하기 전)
-- **정식 버전을 React로 다시 만드는 것**은 기획만 — [`RDMD/features/react-rewrite.md`](../RDMD/features/react-rewrite.md). 코드 이식은 별도 지시 후
-- AI에게 React 스캐폴드를 시키지 말 것 (지시 전)
+- 제품은 바닐라 **0.4.1**
+- **지금 실무는 Render.com만** — 프론트 `root-render/`, API `backend/`
+- **Cloudflare 배포 작업은 하지 않음**
+- **정식 버전 React**는 기획만 — [`RDMD/features/react-rewrite.md`](../RDMD/features/react-rewrite.md). AI에게 스캐폴드 시키지 말 것
 
 ## AI와의 관계
 

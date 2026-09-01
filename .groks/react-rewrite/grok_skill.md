@@ -17,7 +17,7 @@ description: >
 
 ## 현재
 
-바닐라 0.4.1. Cloudflare 작업 중지. React 스캐폴드 **지시 전 금지**. 백엔드 Express 유지.
+바닐라 0.4.1. **실무는 Render.com만.** Cloudflare 작업 중지. React 스캐폴드 **지시 전 금지**. 백엔드 Express 유지.
 
 ## Do
 

@@ -14,7 +14,7 @@ description: >
 ## 현재 상태 (반드시 말할 것)
 
 - 바닐라 **0.4.1**. 프론트 `root-cloudflare/` · `root-render/`
-- Cloudflare 배포 **추가 작업 중지**. 정본 실행은 `cd backend && npm start` → `:5000`
+- **지금 실무 = Render.com** (`root-render/` + `backend/`). Cloudflare 추가 작업 중지. 로컬에서 Render 화면은 `STATIC_ROOT=root-render`
 - 정식 버전 React = 기획만 `RDMD/features/react-rewrite.md`. **구현 지시 전 착수 금지**
 
 ## Do

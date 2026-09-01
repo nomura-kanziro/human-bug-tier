@@ -22,7 +22,8 @@ description: >
 
 - 제품은 **바닐라 `0.4.1`**. 프론트: `root-cloudflare/` (로컬), `root-render/` (Render)
 - 백엔드: `backend/` Express + Mongo **유지**
-- **Cloudflare 배포 추가 작업은 하지 않음** (창시자가 다시 시키기 전)
+- **지금 실무 = Render.com** (`root-render/` + `backend/`)
+- **Cloudflare 배포 추가 작업은 하지 않음**
 - React **구현은 창시자 지시 전 금지**
 
 ## Do
