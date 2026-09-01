@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>휴버대 티어표</title>
+  <link rel="icon" href="tier-image/logo.webp" type="image/webp">
+  <link rel="stylesheet" href="common.css">
+  <link rel="stylesheet" href="notice/notice.css">
+  <link rel="stylesheet" href="Header_Footer.css">
+</head>
+<body>
+  <!-- 상단 네비게이션 -->
+  <div id="header-placeholder"></div>
+
+  <!-- 메인 소개 -->
+  <section class="intro">
+    <h1>
+      <img src="tier-image/logo.webp" alt="로고" class="logo-img">
+      휴버대 티어표
+    </h1>
+    <p>
+      휴버대 티어표는 ‘휴먼버그대학교’ 시리즈의 캐릭터들의 전투력 순위 및 관련 정보를 보여주기 위한 미니 웹 사이트입니다.
+    </p>
+  </section>
+
+  <!-- ★★★ 새로 추가된 3개 큰 상자 ★★★ -->
+  <section class="quick-nav">
+    <div class="quick-card" onclick="location.href='./tier-class/tier1.html'">
+      <h3>티어표</h3>
+      <div class="sub-menu">
+        <div class="sub-grid">
+          <a href="./tier-class/tier1.html">1티어</a>
+          <a href="./tier-class/tier2.html">2티어</a>
+          <a href="./tier-class/tier3.html">3티어</a>
+          <a href="./tier-class/tier4.html">4티어</a>
+          <a href="./tier-class/tier5.html">5티어</a>
+          <a href="./tier-class/tier6.html">6티어</a>
+          <a href="./tier-class/tier7.html">7티어</a>
+          <a href="./tier-class/tier8.html">8티어</a>
+          <a href="./tier-class/tier9.html">9티어</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="quick-card">
+      <h3>커스텀 메이커</h3>
+      <div class="sub-menu">
+        <a href="custom-maker/custom-maker.html">• 제작하기</a>
+        <a href="custom-maker/custom-maker_post/custom-maker_post.html">• 게시판</a>
+        <a href="#" class="nav-soon" title="준비 중" onclick="return false;">• 이벤트 (준비 중)</a>
+      </div>
+    </div>
+
+    <div class="quick-card">
+      <h3>행운 뽑기</h3>
+      <div class="sub-menu">
+        <a href="luck-draw/luck-draw.html#daily">• 오늘의 행운 티어</a>
+        <a href="#" class="nav-soon" title="준비 중" onclick="return false;">• 랜덤 뽑기 (준비 중)</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====================== 공지사항 섹션 (대칭 맞춤 버전) ====================== -->
+  <section class="notice-section">
+    <div class="notice-header">
+      <h2>공지사항</h2>
+      <a href="notice/notice.html" class="notice-view-all">전체 공지 보기 →</a>
+    </div>
+
+    <div class="notice-grid">
+      
+      <!-- 일반 공지 -->
+      <div class="notice-column">
+        <div class="notice-column-header">
+          <span style="color:#10b981; font-size:18px;">●</span>
+          <span>전체 공지</span>
+        </div>
+        <div id="home-notice-items"></div>
+      </div>
+
+      <!-- 새 소식 -->
+      <div class="notice-column">
+        <div class="notice-column-header">
+          <span style="color:#8b5cf6; font-size:18px;">●</span>
+          <span>새 소식</span>
+        </div>
+        <div id="home-news-items"></div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 티어 카드 목록 -->
+  <section class="tiers">
+    <div id="tier1" class="tier-card" onclick="location.href='./tier-class/tier1.html'">
+      <img src="./tier-image/logo2-1.png" alt="1티어 아이콘" class="tier-icon">
+      <span class="tier-title">1티어</span>
+      <p>신계 / 슈퍼 그랜드 마스터</p>
+    </div>
+
+    <div id="tier2" class="tier-card" onclick="location.href='./tier-class/tier2.html'">
+      <img src="./tier-image/logo2-2.png" alt="2티어 아이콘" class="tier-icon">
+      <span class="tier-title">2티어</span>
+      <p>뒷세계 전설들 / 그랜드 마스터</p>
+    </div>
+
+    <div id="tier3" class="tier-card" onclick="location.href='./tier-class/tier3.html'">
+      <img src="./tier-image/logo2-3.png" alt="3티어 아이콘" class="tier-icon">
+      <span class="tier-title">3티어</span>
+      <p>톱 클래스 무투파 / 마스터</p>
+    </div>
+
+    <div id="tier4" class="tier-card" onclick="location.href='./tier-class/tier4.html'">
+      <img src="./tier-image/logo2-4.png" alt="4티어 아이콘" class="tier-icon">
+      <span class="tier-title">4티어</span>
+      <p>준 톱클래스 무투파 / 다이아몬드</p>
+    </div>
+
+    <div id="tier5" class="tier-card" onclick="location.href='./tier-class/tier5.html'">
+      <img src="./tier-image/logo2-5.png" alt="5티어 아이콘" class="tier-icon">
+      <span class="tier-title">5티어</span> 
+      <p>중견급 무투파 or 탈사제 / 플래티넘</p>
+    </div>
+
+    <div id="tier6" class="tier-card" onclick="location.href='./tier-class/tier6.html'">
+      <img src="./tier-image/logo2-6.png" alt="6티어 아이콘" class="tier-icon">
+      <span class="tier-title">6티어</span>
+      <p>중하위권 무투파 or 정예 사제 / 골드</p>
+    </div>
+
+    <div id="tier7" class="tier-card" onclick="location.href='./tier-class/tier7.html'">
+      <img src="./tier-image/logo2-7.png" alt="7티어 아이콘" class="tier-icon">
+      <span class="tier-title">7티어</span>
+      <p>하위권 무투파 or 우수한 사제 / 실버</p>
+    </div>
+
+    <div id="tier8" class="tier-card" onclick="location.href='./tier-class/tier8.html'">
+      <img src="./tier-image/logo2-8.png" alt="8티어 아이콘" class="tier-icon">
+      <span class="tier-title">8티어</span>
+      <p>평범한 사제 수준의 전투력 / 브론즈</p>
+    </div>
+
+    <div id="tier9" class="tier-card" onclick="location.href='./tier-class/tier9.html'">
+      <img src="./tier-image/logo2-9.png" alt="9티어 아이콘" class="tier-icon">
+      <span class="tier-title">9티어</span>
+      <p>비전투원 또는 전투력 측정 단서 없음 / 언랭크</p>
+    </div>
+  </section>
+
+  <!-- 하단 -->
+  <div id="footer-placeholder"></div>
+
+  <script src="common.js"></script>
+  <script src="notice/notice.js"></script>
+</body>
+</html>

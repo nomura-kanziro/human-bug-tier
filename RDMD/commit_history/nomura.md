@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 184 |
+| **커밋 수** | 185 |
 | **기간** | 2026-03-20 ~ 2026-08-30|
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -212,7 +212,8 @@
 | 181 | 2026-09-01 | [`2677aea`](#2677aea) | fix(auth): 이메일 발송 시 설정된 provider 전부 순서대로 시도(Brevo→Resend→Gmail 자동 대체) |
 | 182 | 2026-09-01 | [`94b7ce8`](#94b7ce8) | fix(auth): Gmail SMTP ETIMEDOUT 원인(Render 포트 차단) 확인 및 진단 힌트 추가 |
 | 183 | 2026-09-01 | [`b80a9fc`](#b80a9fc) | fix(auth): 이메일 발송 실패 시 시도한 provider 전부의 원인을 합쳐서 표시 |
-| 184 | 2026-09-01 | pending | docs(deploy): Cloudflare 배포 정본 CLOUDFLARE.md 추가 |
+| 184 | 2026-09-01 | [`7532ffe`](#7532ffe) | docs(deploy): Cloudflare 배포 정본 CLOUDFLARE.md 추가 |
+| 185 | 2026-09-01 | pending | feat(deploy): Render 전용 프론트 root-render 추가 |
 
 ---
 
@@ -3593,18 +3594,36 @@
 
 ---
 
-<a id="pending-184"></a>
+<a id="7532ffe"></a>
 
-### 184. 2026-09-01 — pending
+### 184. 2026-09-01 — `7532ffe`
 
-- **hash (short)**: pending
-- **hash (full)**: pending
+- **hash (short)**: `7532ffe`
+- **hash (full)**: `7532ffe7927148de636a142606b6e92bc12d0876`
 - **author**: nomura
 - **message**: docs(deploy): Cloudflare 배포 정본 CLOUDFLARE.md 추가
-- **git**: _(커밋 후 기입)_
+- **git**: `git show 7532ffe`
 - **범위**: docs / deploy
 - **요약**: Render를 방치하고 Cloudflare를 배포 정본으로 쓰기 위해 `CLOUDFLARE.md`를 추가했다. Pages는 정적 미리보기만, 풀스택은 로컬/`backend` + Tunnel이라는 전제를 문서화했고, Wrangler 캐시·임시 Pages 폴더를 gitignore에 넣었다.
 - **주요 파일**: `CLOUDFLARE.md`, `.gitignore`
 - **관련 RDMD**: _(이 커밋은 정본 문서)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-185"></a>
+
+### 185. 2026-09-01 — pending
+
+- **hash (short)**: pending
+- **hash (full)**: pending
+- **author**: nomura
+- **message**: feat(deploy): Render 전용 프론트 root-render 추가
+- **git**: _(커밋 후 기입)_
+- **범위**: frontend / deploy
+- **요약**: Render.com이 쓸 정적 프론트를 `root-render/`에 복제했다. 레포 루트 프론트와 분리해서, 이후 Cloudflare 쪽으로 루트를 비워도 Render는 이 폴더만 보면 된다.
+- **주요 파일**: `root-render/`
+- **관련 RDMD**: [../backend/07-deploy/02-root-render-static-record.md](../backend/07-deploy/02-root-render-static-record.md)
 
 [▲ 목차로](#목차)

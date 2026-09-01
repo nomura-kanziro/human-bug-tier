@@ -1,0 +1,1260 @@
+let comments = [];
+let blockedList = [];
+let registeredUsers = [];
+let adminNotices = [];
+
+const NOTICE_CATEGORY_LABELS = {
+  notice: '전체 공지',
+  news: '새 소식',
+};
+
+const MAX_PINNED_NOTICES = 5;
+
+function sortAdminNotices(notices) {
+  return [...notices].sort((a, b) => {
+    if (a.isPinned !== b.isPinned) return b.isPinned - a.isPinned;
+    const aPin = new Date(a.pinnedAt || 0);
+    const bPin = new Date(b.pinnedAt || 0);
+    if (aPin !== bPin) return bPin - aPin;
+    return new Date(b.createdAt || 0) - new Date(a.createdAt || 0);
+  });
+}
+
+function getPinnedCount() {
+  return adminNotices.filter(n => n.isPinned).length;
+}
+
+let currentTypeFilter = 'all';
+let currentReportFilter = '';
+let currentSort = 'newest';
+
+const ITEMS_PER_PAGE = 25;
+let currentPage = 1;
+
+const NOTICE_ITEMS_PER_PAGE = 10;
+let currentNoticePage = 1;
+let currentNoticeFilter = 'all';
+/** 수정 중인 공지 id (null이면 신규 등록 모드) */
+let editingNoticeId = null;
+
+function getFilteredAdminNotices() {
+  if (currentNoticeFilter === 'all') return adminNotices;
+  return adminNotices.filter(n => n.category === currentNoticeFilter);
+}
+
+function getNoticeEmptyMessage() {
+  if (currentNoticeFilter === 'notice') return '전체 공지 항목이 없습니다.';
+  if (currentNoticeFilter === 'news') return '새 소식 항목이 없습니다.';
+  return '등록된 공지가 없습니다.';
+}
+
+function getCommentId(comment) {
+  return comment._id || comment.id;
+}
+
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
+function isBlockActive(block) {
+  if (!block?.expiresAt) return true;
+  return new Date(block.expiresAt) > new Date();
+}
+
+function getActiveBlocks() {
+  return blockedList.filter(isBlockActive);
+}
+
+function findBlockByValue(value) {
+  return getActiveBlocks().find(b => b.value === value);
+}
+
+function isBlockedUser(userId, ip) {
+  const active = getActiveBlocks();
+  return active.some(b => b.value === (userId || '') || b.value === (ip || ''));
+}
+
+function getUserEmail(userId) {
+  if (!userId) return '-';
+  const user = registeredUsers.find(u => u.nickname === userId);
+  return user?.email || '-';
+}
+
+function formatDate(dateStr) {
+  if (!dateStr) return 'N/A';
+  const d = new Date(dateStr);
+  if (Number.isNaN(d.getTime())) return 'N/A';
+  return d.toLocaleString('ko-KR');
+}
+
+function getRemainingLabel(expiresAt) {
+  const diff = new Date(expiresAt) - new Date();
+  if (diff <= 0) return '만료됨';
+
+  const days = Math.ceil(diff / (24 * 60 * 60 * 1000));
+  if (days >= 1) return `${days}일 남음`;
+
+  const hours = Math.ceil(diff / (60 * 60 * 1000));
+  return `${hours}시간 남음`;
+}
+
+function getSelectedDurationDays() {
+  const select = document.getElementById('block-duration-select');
+  const customInput = document.getElementById('block-custom-days');
+
+  if (!select) return 1;
+
+  if (select.value === 'custom') {
+    const customDays = parseInt(customInput?.value, 10);
+    if (!Number.isFinite(customDays) || customDays < 1 || customDays > 9999) {
+      alert('관리자 지정 기간은 1일 이상 9999일 이하로 입력해주세요.');
+      return null;
+    }
+    return customDays;
+  }
+
+  return parseInt(select.value, 10);
+}
+
+function setupDurationSelect() {
+  const select = document.getElementById('block-duration-select');
+  const customInput = document.getElementById('block-custom-days');
+  if (!select || !customInput) return;
+
+  const toggleCustom = () => {
+    const isCustom = select.value === 'custom';
+    customInput.classList.toggle('visible', isCustom);
+    if (!isCustom) customInput.value = '';
+  };
+
+  select.addEventListener('change', toggleCustom);
+  toggleCustom();
+}
+
+async function loadComments() {
+  try {
+    const response = await fetch(`${getApiBase()}/api/inquiries`);
+    if (!response.ok) throw new Error('댓글 목록 조회 실패');
+    comments = await response.json();
+    renderComments();
+  } catch (err) {
+    console.error(err);
+    alert('❌ 댓글 목록을 불러올 수 없습니다. 백엔드 서버를 확인해주세요.');
+  }
+}
+
+async function loadBlocks() {
+  try {
+    const response = await fetch(`${getApiBase()}/api/admin/blocks`, {
+      headers: getAdminAuthHeaders()
+    });
+    if (!response.ok) throw new Error('차단 목록 조회 실패');
+    blockedList = await response.json();
+    renderBlockList();
+    renderUserList();
+    renderComments();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function loadUsers() {
+  try {
+    const response = await fetch(`${getApiBase()}/api/admin/users`, {
+      headers: getAdminAuthHeaders()
+    });
+    if (!response.ok) throw new Error('사용자 목록 조회 실패');
+    registeredUsers = await response.json();
+    renderUserList();
+    renderComments();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function loadNotices() {
+  try {
+    const response = await fetch(`${getApiBase()}/api/notices`);
+    if (!response.ok) throw new Error('공지 목록 조회 실패');
+    adminNotices = await response.json();
+    renderAdminNoticeList();
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function formatYoutubeSyncStatus(status, result) {
+  const parts = [];
+  if (status) {
+    parts.push(status.enabled === false ? '자동 동기화 꺼짐' : '자동 동기화 켜짐');
+    if (status.lastFinishedAt) {
+      parts.push(`마지막 확인: ${formatDate(status.lastFinishedAt)}`);
+    }
+  }
+  const payload = result || status?.lastResult;
+  if (payload?.ok) {
+    parts.push(`가져온 글 ${payload.fetched || 0}개, 새 소식 등록 ${payload.created || 0}개, 번역 ${payload.translated || 0}개, 이미 있음 ${payload.skipped || 0}개`);
+  } else if (payload?.error) {
+    parts.push(`마지막 오류: ${payload.error}`);
+  }
+  return parts.join(' · ') || '휴먼버그대학교 채널 게시판 글을 새 소식에 가져옵니다.';
+}
+
+async function loadYoutubeSyncStatus() {
+  const statusEl = document.getElementById('youtube-sync-status');
+  if (!statusEl || typeof getAdminAuthHeaders !== 'function') return;
+  try {
+    const response = await fetch(`${getApiBase()}/api/notices/youtube-sync/status`, {
+      headers: getAdminAuthHeaders(),
+    });
+    if (!response.ok) return;
+    const data = await response.json();
+    statusEl.textContent = formatYoutubeSyncStatus(data.status);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+async function syncYoutubePostsNow() {
+  const btn = document.getElementById('youtube-sync-btn');
+  const statusEl = document.getElementById('youtube-sync-status');
+  if (btn) btn.disabled = true;
+  if (statusEl) statusEl.textContent = '유튜브 게시판을 확인하는 중...';
+
+  try {
+    const response = await fetch(`${getApiBase()}/api/notices/youtube-sync`, {
+      method: 'POST',
+      headers: getAdminAuthHeaders(),
+    });
+    const data = await response.json();
+    if (response.ok && data.success) {
+      if (statusEl) statusEl.textContent = formatYoutubeSyncStatus(null, data.result);
+      await loadNotices();
+      const created = data.result?.created || 0;
+      const translated = data.result?.translated || 0;
+      if (created) {
+        alert(`✅ 유튜브 게시판에서 새 소식 ${created}개를 등록했습니다.`);
+      } else if (translated) {
+        alert(`✅ 기존 유튜브 글 ${translated}개를 한국어로 번역했습니다.`);
+      } else {
+        alert('✅ 확인할 새 유튜브 게시글이 없습니다. 이미 가져온 글은 건너뜁니다.');
+      }
+    } else {
+      const message = data.error || '유튜브 동기화 실패';
+      if (statusEl) statusEl.textContent = message;
+      alert('❌ ' + message);
+    }
+  } catch (err) {
+    console.error(err);
+    if (statusEl) statusEl.textContent = '서버와 연결할 수 없습니다.';
+    alert('❌ 서버와 연결할 수 없습니다.');
+  } finally {
+    if (btn) btn.disabled = false;
+  }
+}
+
+function renderAdminNoticeList() {
+  const tbody = document.getElementById('admin-notice-list');
+  const pinCountEl = document.getElementById('notice-pin-count');
+  if (!tbody) return;
+
+  const pinnedCount = getPinnedCount();
+  if (pinCountEl) {
+    pinCountEl.textContent = `(고정 ${pinnedCount}/${MAX_PINNED_NOTICES})`;
+  }
+
+  const sorted = sortAdminNotices(getFilteredAdminNotices());
+  const totalPages = Math.ceil(sorted.length / NOTICE_ITEMS_PER_PAGE) || 1;
+  currentNoticePage = Math.max(1, Math.min(currentNoticePage, totalPages));
+
+  const start = (currentNoticePage - 1) * NOTICE_ITEMS_PER_PAGE;
+  const paginated = sorted.slice(start, start + NOTICE_ITEMS_PER_PAGE);
+
+  if (!paginated.length) {
+    tbody.innerHTML = `<tr class="empty-row"><td colspan="7">${getNoticeEmptyMessage()}</td></tr>`;
+    renderNoticePagination(totalPages);
+    return;
+  }
+
+  tbody.innerHTML = paginated.map((notice, idx) => {
+    const id = notice._id || notice.id;
+    const isNews = notice.category === 'news';
+    const canPin = pinnedCount < MAX_PINNED_NOTICES;
+    const rowNo = start + idx + 1;
+
+    return `
+      <tr class="${notice.isPinned ? 'row-pinned' : ''}">
+        <td>${rowNo}</td>
+        <td>${notice.isPinned
+          ? '<span class="badge badge-pinned">📌 고정</span>'
+          : '<span style="color:#ccc;">-</span>'}</td>
+        <td><span class="badge ${isNews ? 'badge-news' : 'badge-notice'}">${NOTICE_CATEGORY_LABELS[notice.category] || notice.category}</span></td>
+        <td><strong>${escapeHtml(notice.title)}</strong>${notice.source === 'youtube' ? ' <span class="badge badge-youtube">YouTube</span>' : ''}</td>
+        <td>${escapeHtml(notice.summary || '-')}</td>
+        <td>${formatDate(notice.createdAt)}</td>
+        <td style="white-space:nowrap;">
+          <button type="button" class="notice-edit-btn" data-edit-id="${id}">수정</button>
+          ${notice.isPinned
+            ? `<button class="pin-btn unpin" data-pin-id="${id}">고정 해제</button>`
+            : `<button class="pin-btn" data-pin-id="${id}" ${canPin ? '' : 'disabled style="opacity:0.4;cursor:not-allowed;"'}>📌 고정</button>`
+          }
+          <button class="danger-btn" data-notice-id="${id}">삭제</button>
+        </td>
+      </tr>`;
+  }).join('');
+
+  tbody.querySelectorAll('[data-edit-id]').forEach(btn => {
+    btn.addEventListener('click', () => startEditAdminNotice(btn.dataset.editId));
+  });
+
+  tbody.querySelectorAll('[data-notice-id]').forEach(btn => {
+    btn.addEventListener('click', () => deleteAdminNotice(btn.dataset.noticeId));
+  });
+
+  tbody.querySelectorAll('[data-pin-id]').forEach(btn => {
+    if (!btn.disabled) {
+      btn.addEventListener('click', () => toggleAdminNoticePin(btn.dataset.pinId));
+    }
+  });
+
+  renderNoticePagination(totalPages);
+}
+
+function clearNoticeFormFields() {
+  const titleEl = document.getElementById('notice-title-input');
+  const summaryEl = document.getElementById('notice-summary-input');
+  const contentEl = document.getElementById('notice-content-input');
+  const categoryEl = document.getElementById('notice-category');
+  if (titleEl) titleEl.value = '';
+  if (summaryEl) summaryEl.value = '';
+  if (contentEl) contentEl.value = '';
+  if (categoryEl) categoryEl.value = 'notice';
+  updateNoticePreview();
+}
+
+// ===== 공지 에디터: 서식 툴바 + 미리보기 =====
+
+const NOTICE_INLINE_FORMATS = {
+  bold: { wrap: '**', placeholder: '굵은 텍스트' },
+  italic: { wrap: '*', placeholder: '기울인 텍스트' },
+  strike: { wrap: '~~', placeholder: '취소선 텍스트' },
+  code: { wrap: '`', placeholder: '코드' },
+};
+
+const NOTICE_LINE_FORMATS = {
+  h2: { prefix: '# ', placeholder: '제목' },
+  h3: { prefix: '## ', placeholder: '소제목' },
+  ul: { prefix: '- ', placeholder: '항목' },
+  ol: { prefix: '1. ', placeholder: '항목' },
+  quote: { prefix: '> ', placeholder: '인용문' },
+};
+
+function updateNoticePreview() {
+  const pane = document.getElementById('notice-preview-pane');
+  if (!pane || pane.hidden) return;
+
+  const content = document.getElementById('notice-content-input')?.value || '';
+  pane.innerHTML = content.trim()
+    ? window.renderNoticeContent(content)
+    : '<p class="notice-preview-empty">내용을 입력하면 실제 공지 화면처럼 보입니다.</p>';
+}
+
+function replaceNoticeSelection(textarea, newText, selStart, selEnd) {
+  textarea.setRangeText(newText, textarea.selectionStart, textarea.selectionEnd, 'end');
+  textarea.focus();
+  if (selStart !== undefined) textarea.setSelectionRange(selStart, selEnd ?? selStart);
+  updateNoticePreview();
+}
+
+function applyNoticeInlineFormat(textarea, format) {
+  const { wrap, placeholder } = NOTICE_INLINE_FORMATS[format];
+  const start = textarea.selectionStart;
+  const selected = textarea.value.slice(start, textarea.selectionEnd);
+  const body = selected || placeholder;
+
+  replaceNoticeSelection(
+    textarea,
+    `${wrap}${body}${wrap}`,
+    start + wrap.length,
+    start + wrap.length + body.length
+  );
+}
+
+function applyNoticeLineFormat(textarea, format) {
+  const { prefix, placeholder } = NOTICE_LINE_FORMATS[format];
+  const value = textarea.value;
+  const lineStart = value.lastIndexOf('\n', textarea.selectionStart - 1) + 1;
+  const lineEndIndex = value.indexOf('\n', textarea.selectionEnd);
+  const lineEnd = lineEndIndex === -1 ? value.length : lineEndIndex;
+
+  const formatted = value
+    .slice(lineStart, lineEnd)
+    .split('\n')
+    .map((line, index) => {
+      const stripped = line.replace(/^(#{1,3}\s+|[-*]\s+|\d+\.\s+|>\s?)/, '');
+      const linePrefix = format === 'ol' ? `${index + 1}. ` : prefix;
+      return `${linePrefix}${stripped || placeholder}`;
+    })
+    .join('\n');
+
+  textarea.setSelectionRange(lineStart, lineEnd);
+  replaceNoticeSelection(textarea, formatted, lineStart, lineStart + formatted.length);
+}
+
+function applyNoticeFormat(format) {
+  const textarea = document.getElementById('notice-content-input');
+  if (!textarea) return;
+
+  if (NOTICE_INLINE_FORMATS[format]) {
+    applyNoticeInlineFormat(textarea, format);
+    return;
+  }
+  if (NOTICE_LINE_FORMATS[format]) {
+    applyNoticeLineFormat(textarea, format);
+    return;
+  }
+
+  if (format === 'link') {
+    const start = textarea.selectionStart;
+    const label = textarea.value.slice(start, textarea.selectionEnd) || '링크 텍스트';
+    const url = prompt('연결할 주소를 입력하세요 (https://로 시작)', 'https://');
+    if (!url || !/^https?:\/\//i.test(url)) return;
+    replaceNoticeSelection(textarea, `[${label}](${url})`, start + 1, start + 1 + label.length);
+    return;
+  }
+
+  if (format === 'hr') {
+    const needsLeadingBreak = textarea.selectionStart > 0
+      && textarea.value[textarea.selectionStart - 1] !== '\n';
+    replaceNoticeSelection(textarea, `${needsLeadingBreak ? '\n' : ''}\n---\n\n`);
+  }
+}
+
+function toggleNoticePreview() {
+  const pane = document.getElementById('notice-preview-pane');
+  const toggle = document.getElementById('notice-preview-toggle');
+  if (!pane || !toggle) return;
+
+  pane.hidden = !pane.hidden;
+  toggle.setAttribute('aria-pressed', String(!pane.hidden));
+  toggle.classList.toggle('is-active', !pane.hidden);
+  toggle.textContent = pane.hidden ? '👁 미리보기' : '✏️ 편집만 보기';
+  updateNoticePreview();
+}
+
+function setupNoticeEditor() {
+  const toolbar = document.getElementById('notice-editor-toolbar');
+  const textarea = document.getElementById('notice-content-input');
+  if (!toolbar || !textarea) return;
+
+  toolbar.addEventListener('click', (event) => {
+    const btn = event.target.closest('[data-format]');
+    if (btn) applyNoticeFormat(btn.dataset.format);
+  });
+
+  const previewToggle = document.getElementById('notice-preview-toggle');
+  if (previewToggle) previewToggle.addEventListener('click', toggleNoticePreview);
+
+  textarea.addEventListener('input', updateNoticePreview);
+  textarea.addEventListener('keydown', (event) => {
+    if (!event.ctrlKey && !event.metaKey) return;
+    const shortcut = { b: 'bold', i: 'italic' }[event.key.toLowerCase()];
+    if (!shortcut) return;
+    event.preventDefault();
+    applyNoticeFormat(shortcut);
+  });
+}
+
+function updateNoticeFormModeUI() {
+  const isEdit = Boolean(editingNoticeId);
+  const heading = document.getElementById('notice-section-heading');
+  const modeLabel = document.getElementById('notice-form-mode-label');
+  const postBtn = document.getElementById('post-notice-btn');
+  const cancelBtn = document.getElementById('cancel-notice-edit-btn');
+  const formCard = document.getElementById('notice-form-card');
+  const editIdEl = document.getElementById('notice-edit-id');
+
+  if (editIdEl) editIdEl.value = editingNoticeId || '';
+  if (heading) heading.textContent = isEdit ? '✏️ 공지 수정' : '📢 공지 올리기';
+  if (modeLabel) modeLabel.textContent = isEdit ? '공지 수정 중' : '공지 작성';
+  if (postBtn) postBtn.textContent = isEdit ? '💾 수정 저장' : '📢 공지 등록';
+  if (cancelBtn) cancelBtn.hidden = !isEdit;
+  if (formCard) formCard.classList.toggle('is-editing', isEdit);
+}
+
+function cancelEditAdminNotice() {
+  editingNoticeId = null;
+  clearNoticeFormFields();
+  updateNoticeFormModeUI();
+}
+
+async function startEditAdminNotice(noticeId) {
+  let notice = adminNotices.find(n => String(n._id || n.id) === String(noticeId));
+
+  // 목록에 본문이 없거나 비어 있으면 상세 조회
+  if (!notice || !(notice.content || '').trim()) {
+    try {
+      const response = await fetch(`${getApiBase()}/api/notices/${noticeId}`);
+      if (!response.ok) throw new Error('공지 조회 실패');
+      notice = await response.json();
+      const index = adminNotices.findIndex(n => String(n._id || n.id) === String(noticeId));
+      if (index !== -1) adminNotices[index] = notice;
+      else adminNotices.unshift(notice);
+    } catch (err) {
+      console.error(err);
+      alert('❌ 공지 내용을 불러올 수 없습니다.');
+      return;
+    }
+  }
+
+  editingNoticeId = String(notice._id || notice.id);
+  const titleEl = document.getElementById('notice-title-input');
+  const summaryEl = document.getElementById('notice-summary-input');
+  const contentEl = document.getElementById('notice-content-input');
+  const categoryEl = document.getElementById('notice-category');
+
+  if (titleEl) titleEl.value = notice.title || '';
+  if (summaryEl) summaryEl.value = notice.summary || '';
+  if (contentEl) contentEl.value = notice.content || '';
+  if (categoryEl) categoryEl.value = notice.category === 'news' ? 'news' : 'notice';
+
+  updateNoticeFormModeUI();
+  updateNoticePreview();
+
+  const formCard = document.getElementById('notice-form-card');
+  if (formCard) {
+    formCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  if (titleEl) titleEl.focus();
+}
+
+async function toggleAdminNoticePin(noticeId) {
+  try {
+    const response = await fetch(`${getApiBase()}/api/notices/${noticeId}/pin`, { 
+      method: 'PATCH',
+      headers: getAdminAuthHeaders()
+    });
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      const index = adminNotices.findIndex(n => (n._id || n.id) === noticeId);
+      if (index !== -1) adminNotices[index] = data.notice;
+      renderAdminNoticeList();
+    } else {
+      alert('❌ ' + (data.error || '고정 처리 실패'));
+    }
+  } catch (err) {
+    console.error(err);
+    alert('❌ 서버와 연결할 수 없습니다.');
+  }
+}
+
+async function postAdminNotice() {
+  const title = document.getElementById('notice-title-input')?.value.trim();
+  const summary = document.getElementById('notice-summary-input')?.value.trim();
+  const content = document.getElementById('notice-content-input')?.value.trim();
+  const category = document.getElementById('notice-category')?.value || 'notice';
+
+  if (!title || !content) {
+    alert('제목과 내용을 입력해주세요.');
+    return;
+  }
+
+  const isEdit = Boolean(editingNoticeId);
+  const url = isEdit
+    ? `${getApiBase()}/api/notices/${editingNoticeId}`
+    : `${getApiBase()}/api/notices`;
+  const method = isEdit ? 'PUT' : 'POST';
+  const body = isEdit
+    ? { title, summary, content, category }
+    : {
+        title,
+        summary,
+        content,
+        category,
+        author: localStorage.getItem('adminName') || '관리자',
+      };
+
+  try {
+    const response = await fetch(url, {
+      method,
+      headers: getAdminAuthHeaders(),
+      body: JSON.stringify(body),
+    });
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      if (isEdit) {
+        const index = adminNotices.findIndex(
+          n => String(n._id || n.id) === String(editingNoticeId)
+        );
+        if (index !== -1) adminNotices[index] = data.notice;
+        else adminNotices.unshift(data.notice);
+        cancelEditAdminNotice();
+        renderAdminNoticeList();
+        alert(`✅ ${NOTICE_CATEGORY_LABELS[category] || category} 공지가 수정되었습니다.`);
+      } else {
+        adminNotices.unshift(data.notice);
+        currentNoticePage = 1;
+        clearNoticeFormFields();
+        updateNoticeFormModeUI();
+        renderAdminNoticeList();
+        alert(`✅ ${NOTICE_CATEGORY_LABELS[category]} 공지가 등록되었습니다.`);
+      }
+    } else {
+      alert('❌ ' + (data.error || (isEdit ? '공지 수정 실패' : '공지 등록 실패')));
+    }
+  } catch (err) {
+    console.error(err);
+    alert('❌ 서버와 연결할 수 없습니다.');
+  }
+}
+
+async function deleteAdminNotice(noticeId) {
+  if (!confirm('이 공지를 삭제하시겠습니까?')) return;
+
+  try {
+    const response = await fetch(`${getApiBase()}/api/notices/${noticeId}`, { 
+      method: 'DELETE',
+      headers: getAdminAuthHeaders()
+    });
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      adminNotices = adminNotices.filter(n => String(n._id || n.id) !== String(noticeId));
+      if (editingNoticeId && String(editingNoticeId) === String(noticeId)) {
+        cancelEditAdminNotice();
+      }
+      renderAdminNoticeList();
+      alert('✅ 공지가 삭제되었습니다.');
+    } else {
+      alert('❌ ' + (data.error || '삭제 실패'));
+    }
+  } catch (err) {
+    console.error(err);
+    alert('❌ 서버와 연결할 수 없습니다.');
+  }
+}
+
+let tierPosts = [];
+let tierComments = [];
+let currentTierPostFilter = 'all';
+let currentTierCommentFilter = 'all';
+
+function getTierStatusBadge(reported) {
+  return reported
+    ? '<span class="badge badge-tier-reported">신고</span>'
+    : '<span class="badge badge-tier-normal">일반</span>';
+}
+
+function filterTierItems(items, filter) {
+  if (filter === 'normal') return items.filter(item => !item.reported);
+  if (filter === 'reported') return items.filter(item => item.reported);
+  return items;
+}
+
+function getTierPostEmptyMessage() {
+  if (currentTierPostFilter === 'normal') return '일반 게시글이 없습니다.';
+  if (currentTierPostFilter === 'reported') return '신고된 게시글이 없습니다.';
+  return '등록된 게시글이 없습니다.';
+}
+
+function getTierCommentEmptyMessage() {
+  if (currentTierCommentFilter === 'normal') return '일반 댓글이 없습니다.';
+  if (currentTierCommentFilter === 'reported') return '신고된 댓글이 없습니다.';
+  return '등록된 댓글이 없습니다.';
+}
+
+async function loadTierMakerData() {
+  try {
+    const headers = getAdminAuthHeaders();
+    const [postsRes, commentsRes] = await Promise.all([
+      fetch(`${getApiBase()}/api/admin/tier-reports/posts`, { headers }),
+      fetch(`${getApiBase()}/api/admin/tier-reports/comments`, { headers }),
+    ]);
+
+    if (postsRes.ok) {
+      tierPosts = await postsRes.json();
+    } else {
+      console.error('커스텀 메이커 게시글 조회 실패:', postsRes.status);
+      const fallback = await fetch(`${getApiBase()}/api/tierlists`);
+      tierPosts = fallback.ok ? await fallback.json() : [];
+    }
+
+    if (commentsRes.ok) {
+      tierComments = await commentsRes.json();
+    } else {
+      console.error('커스텀 메이커 댓글 조회 실패:', commentsRes.status);
+      tierComments = [];
+    }
+
+    renderTierMaker();
+  } catch (err) {
+    console.error(err);
+    alert('커스텀 메이커 데이터를 불러오지 못했습니다. backend에서 npm start를 실행해주세요.');
+  }
+}
+
+function renderTierMaker() {
+  const postsBody = document.getElementById('tier-posts-body');
+  const commentsBody = document.getElementById('tier-comments-body');
+  if (!postsBody || !commentsBody) return;
+
+  const filteredPosts = filterTierItems(tierPosts, currentTierPostFilter);
+  const filteredComments = filterTierItems(tierComments, currentTierCommentFilter);
+
+  if (!filteredPosts.length) {
+    postsBody.innerHTML = `<tr class="empty-row"><td colspan="7">${getTierPostEmptyMessage()}</td></tr>`;
+  } else {
+    postsBody.innerHTML = filteredPosts.map((post, idx) => {
+      const id = post._id || post.id;
+      const reason = post.reported
+        ? [post.reportReason, post.reportDetail].filter(Boolean).join(' / ') || '-'
+        : '-';
+      return `
+        <tr class="${post.reported ? 'row-reported' : ''}">
+          <td>${idx + 1}</td>
+          <td>${getTierStatusBadge(post.reported)}</td>
+          <td>${escapeHtml(post.title)}</td>
+          <td>${escapeHtml(post.author || '-')}</td>
+          <td>${escapeHtml(reason)}</td>
+          <td>${formatDate(post.updatedAt || post.createdAt)}</td>
+          <td style="white-space: nowrap;">
+            ${post.reported ? `<button type="button" onclick="dismissTierPostReport('${id}')" class="action-btn">해제</button>` : ''}
+            <button type="button" onclick="deleteTierPostReport('${id}')" class="danger-btn">삭제</button>
+          </td>
+        </tr>`;
+    }).join('');
+  }
+
+  if (!filteredComments.length) {
+    commentsBody.innerHTML = `<tr class="empty-row"><td colspan="7">${getTierCommentEmptyMessage()}</td></tr>`;
+  } else {
+    commentsBody.innerHTML = filteredComments.map((comment, idx) => {
+      const id = comment._id || comment.id;
+      const reason = comment.reported
+        ? [comment.reportReason, comment.reportDetail].filter(Boolean).join(' / ') || '-'
+        : '-';
+      const snippet = (comment.content || '').length > 80 ? `${comment.content.slice(0, 80)}...` : (comment.content || '');
+      return `
+        <tr class="${comment.reported ? 'row-reported' : ''}">
+          <td>${idx + 1}</td>
+          <td>${getTierStatusBadge(comment.reported)}</td>
+          <td>${escapeHtml(String(comment.tierListId || '-'))}</td>
+          <td>${escapeHtml(comment.author || '-')}</td>
+          <td>${escapeHtml(snippet)}</td>
+          <td>${escapeHtml(reason)}</td>
+          <td style="white-space: nowrap;">
+            ${comment.reported ? `<button type="button" onclick="dismissTierCommentReport('${id}')" class="action-btn">해제</button>` : ''}
+            <button type="button" onclick="deleteTierCommentReport('${id}')" class="danger-btn">삭제</button>
+          </td>
+        </tr>`;
+    }).join('');
+  }
+}
+
+window.setTierPostFilter = function(filter) {
+  currentTierPostFilter = filter;
+  ['all', 'normal', 'reported'].forEach(type => {
+    const btn = document.getElementById(`tier-post-filter-${type}`);
+    if (btn) btn.classList.toggle('active', type === filter);
+  });
+  renderTierMaker();
+};
+
+window.setTierCommentFilter = function(filter) {
+  currentTierCommentFilter = filter;
+  ['all', 'normal', 'reported'].forEach(type => {
+    const btn = document.getElementById(`tier-comment-filter-${type}`);
+    if (btn) btn.classList.toggle('active', type === filter);
+  });
+  renderTierMaker();
+};
+
+window.dismissTierPostReport = async function(id) {
+  if (!confirm('이 게시글 신고를 해제할까요?')) return;
+  const response = await fetch(`${getApiBase()}/api/admin/tier-reports/posts/${id}/dismiss`, {
+    method: 'PATCH',
+    headers: getAdminAuthHeaders(),
+  });
+  if (response.ok) loadTierMakerData();
+  else alert('신고 해제에 실패했습니다.');
+};
+
+window.deleteTierPostReport = async function(id) {
+  if (!confirm('이 게시글을 삭제할까요?')) return;
+  const response = await fetch(`${getApiBase()}/api/admin/tier-reports/posts/${id}`, {
+    method: 'DELETE',
+    headers: getAdminAuthHeaders(),
+  });
+  if (response.ok) loadTierMakerData();
+  else alert('게시글 삭제에 실패했습니다.');
+};
+
+window.dismissTierCommentReport = async function(id) {
+  if (!confirm('이 댓글 신고를 해제할까요?')) return;
+  const response = await fetch(`${getApiBase()}/api/admin/tier-reports/comments/${id}/dismiss`, {
+    method: 'PATCH',
+    headers: getAdminAuthHeaders(),
+  });
+  if (response.ok) loadTierMakerData();
+  else alert('신고 해제에 실패했습니다.');
+};
+
+window.deleteTierCommentReport = async function(id) {
+  if (!confirm('이 댓글을 삭제할까요?')) return;
+  const response = await fetch(`${getApiBase()}/api/admin/tier-reports/comments/${id}`, {
+    method: 'DELETE',
+    headers: getAdminAuthHeaders(),
+  });
+  if (response.ok) loadTierMakerData();
+  else alert('댓글 삭제에 실패했습니다.');
+};
+
+async function initAdminData() {
+  await Promise.all([loadComments(), loadBlocks(), loadUsers(), loadNotices(), loadTierMakerData(), loadYoutubeSyncStatus()]);
+}
+
+function renderComments() {
+  const tbody = document.querySelector('#comment-table tbody');
+  if (!tbody) return;
+  tbody.innerHTML = '';
+
+  let filtered = comments.filter(comment => {
+    if (currentTypeFilter === 'user' && comment.isAdmin) return false;
+    if (currentTypeFilter === 'admin' && !comment.isAdmin) return false;
+    if (currentTypeFilter === 'reported' && !comment.reported) return false;
+
+    if (currentReportFilter && (!comment.reported || comment.reportReason !== currentReportFilter)) {
+      return false;
+    }
+
+    const searchTerm = (document.getElementById('search-input')?.value || '').toLowerCase().trim();
+    if (searchTerm) {
+      const email = getUserEmail(comment.userId);
+      const text = (comment.title + ' ' + comment.message + ' ' + (comment.userId || '') + ' ' + email).toLowerCase();
+      if (!text.includes(searchTerm)) return false;
+    }
+    return true;
+  });
+
+  if (currentSort === 'newest') {
+    filtered.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+  } else {
+    filtered.sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
+  }
+
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
+  currentPage = Math.max(1, Math.min(currentPage, totalPages));
+
+  const start = (currentPage - 1) * ITEMS_PER_PAGE;
+  const paginated = filtered.slice(start, start + ITEMS_PER_PAGE);
+
+  if (!paginated.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="6">표시할 댓글이 없습니다.</td></tr>';
+    renderPagination(totalPages);
+    return;
+  }
+
+  paginated.forEach((comment, idx) => {
+    const commentId = getCommentId(comment);
+    const realIndex = start + idx;
+    const isBlocked = isBlockedUser(comment.userId, comment.ip);
+
+    let reportHTML = '';
+    if (comment.reported) {
+      const reason = comment.reportReason
+        ? `${comment.reportReason} ${comment.reportDetail ? `(${comment.reportDetail})` : ''}`
+        : '신고됨';
+      reportHTML = `
+        <span onclick="showReportTooltip(this, '${escapeHtml(reason)}')"
+              style="color:#dc3545; cursor:pointer; margin-left:8px; font-size:20px; font-weight:bold;">
+          ⚠️
+        </span>`;
+    }
+
+    const row = `
+      <tr class="${isBlocked ? 'row-blocked' : ''}">
+        <td>${realIndex + 1}</td>
+        <td>${escapeHtml(comment.userId || '익명')}</td>
+        <td>${escapeHtml(getUserEmail(comment.userId))}</td>
+        <td style="text-align:center;">${comment.title ? `<strong>${escapeHtml(comment.title)}</strong><br>` : ''}${escapeHtml(comment.message || '')}</td>
+        <td>${escapeHtml(comment.date || 'N/A')}</td>
+        <td style="white-space: nowrap;">
+          <button onclick="goToDetail('${commentId}')" class="action-btn">📋 상세</button>
+          <button onclick="event.stopImmediatePropagation(); deleteComment('${commentId}')" class="danger-btn">삭제</button>
+          ${reportHTML}
+        </td>
+      </tr>`;
+    tbody.innerHTML += row;
+  });
+
+  renderPagination(totalPages);
+}
+
+window.deleteComment = async function(commentId) {
+  if (!confirm('정말 이 댓글을 삭제하시겠습니까?')) return;
+
+  try {
+    const response = await fetch(`${getApiBase()}/api/inquiries/${commentId}`, {
+      method: 'DELETE',
+      headers: getAdminAuthHeaders()
+    });
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      comments = comments.filter(c => getCommentId(c) !== commentId);
+      renderComments();
+    } else {
+      alert('❌ 삭제 실패: ' + (data.error || '알 수 없는 오류'));
+    }
+  } catch (err) {
+    console.error(err);
+    alert('❌ 서버와 연결할 수 없습니다.');
+  }
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  setupDurationSelect();
+
+  const deleteAllBtn = document.getElementById('delete-all-btn');
+  if (deleteAllBtn) {
+    deleteAllBtn.addEventListener('click', async () => {
+      if (!confirm('⚠️ 정말 모든 댓글을 삭제하시겠습니까? (복구 불가)')) return;
+
+      try {
+        const response = await fetch(`${getApiBase()}/api/inquiries`, { 
+          method: 'DELETE',
+          headers: getAdminAuthHeaders()
+        });
+        const data = await response.json();
+
+        if (response.ok && data.success) {
+          comments = [];
+          renderComments();
+        } else {
+          alert('❌ 전체 삭제 실패: ' + (data.error || '알 수 없는 오류'));
+        }
+      } catch (err) {
+        console.error(err);
+        alert('❌ 서버와 연결할 수 없습니다.');
+      }
+    });
+  }
+
+  const addBlockBtn = document.getElementById('add-block-btn');
+  if (addBlockBtn) {
+    addBlockBtn.addEventListener('click', () => addBlockFromInput());
+  }
+
+  const postNoticeBtn = document.getElementById('post-notice-btn');
+  if (postNoticeBtn) {
+    postNoticeBtn.addEventListener('click', postAdminNotice);
+  }
+
+  const youtubeSyncBtn = document.getElementById('youtube-sync-btn');
+  if (youtubeSyncBtn) {
+    youtubeSyncBtn.addEventListener('click', syncYoutubePostsNow);
+  }
+
+  const cancelNoticeEditBtn = document.getElementById('cancel-notice-edit-btn');
+  if (cancelNoticeEditBtn) {
+    cancelNoticeEditBtn.addEventListener('click', cancelEditAdminNotice);
+  }
+
+  setupNoticeEditor();
+  updateNoticeFormModeUI();
+
+  const noticeListFilter = document.getElementById('notice-list-filter');
+  if (noticeListFilter) {
+    noticeListFilter.addEventListener('change', applyNoticeFilter);
+  }
+});
+
+window.applyNoticeFilter = function() {
+  currentNoticeFilter = document.getElementById('notice-list-filter')?.value || 'all';
+  currentNoticePage = 1;
+  renderAdminNoticeList();
+};
+
+async function addBlockFromInput(value, durationDays) {
+  const inputValue = (value ?? document.getElementById('block-input')?.value ?? '').trim();
+  if (!inputValue) {
+    alert('차단할 ID 또는 IP를 입력해주세요.');
+    return;
+  }
+
+  const days = durationDays ?? getSelectedDurationDays();
+  if (!days) return;
+
+  try {
+    const response = await fetch(`${getApiBase()}/api/admin/blocks`, {
+      method: 'POST',
+      headers: getAdminAuthHeaders(),
+      body: JSON.stringify({ value: inputValue, durationDays: days }),
+    });
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      blockedList = blockedList.filter(b => b.value !== data.block.value);
+      blockedList.push(data.block);
+      renderBlockList();
+      renderUserList();
+      renderComments();
+      if (!value) document.getElementById('block-input').value = '';
+      alert(`✅ ${inputValue} 님을 ${days}일간 차단했습니다.`);
+    } else {
+      alert('❌ ' + (data.error || '차단 추가 실패'));
+    }
+  } catch (err) {
+    console.error(err);
+    alert('❌ 서버와 연결할 수 없습니다.');
+  }
+}
+
+function renderUserList() {
+  const tbody = document.getElementById('user-list');
+  if (!tbody) return;
+
+  if (!registeredUsers.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="6">등록된 사용자가 없습니다.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = registeredUsers.map((user, idx) => {
+    const block = findBlockByValue(user.nickname);
+    const isBlocked = !!block;
+    const userId = user._id || user.id || '';
+
+    return `
+      <tr class="${isBlocked ? 'row-blocked' : ''}">
+        <td>${idx + 1}</td>
+        <td><strong>${escapeHtml(user.nickname)}</strong></td>
+        <td>${escapeHtml(user.email)}</td>
+        <td>${user.isVerified
+          ? '<span class="badge badge-verified">✔ 인증완료</span>'
+          : '<span class="badge badge-unverified">미인증</span>'}</td>
+        <td>${isBlocked
+          ? `<span class="badge badge-blocked">차단중 (${getRemainingLabel(block.expiresAt)})</span>`
+          : '<span class="badge badge-active">정상</span>'}</td>
+        <td style="white-space:nowrap;">
+          ${isBlocked
+            ? `<button type="button" class="unblock-btn" data-block-id="${block._id}">차단 해제</button>`
+            : `<button type="button" class="block-btn block-user-btn" data-nickname="${escapeHtml(user.nickname)}">차단</button>`
+          }
+          <button type="button" class="danger-btn delete-user-btn" data-user-id="${escapeHtml(String(userId))}" data-nickname="${escapeHtml(user.nickname)}">삭제</button>
+        </td>
+      </tr>`;
+  }).join('');
+
+  tbody.querySelectorAll('.block-user-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const days = getSelectedDurationDays();
+      if (!days) return;
+      if (!confirm(`${btn.dataset.nickname} 님을 ${days}일간 차단하시겠습니까?`)) return;
+      addBlockFromInput(btn.dataset.nickname, days);
+    });
+  });
+
+  tbody.querySelectorAll('.unblock-btn').forEach(btn => {
+    btn.addEventListener('click', () => unblock(btn.dataset.blockId));
+  });
+
+  tbody.querySelectorAll('.delete-user-btn').forEach(btn => {
+    btn.addEventListener('click', () => deleteRegisteredUser(btn.dataset.userId, btn.dataset.nickname));
+  });
+}
+
+async function deleteRegisteredUser(userId, nickname) {
+  if (!userId) {
+    alert('❌ 사용자 정보를 찾을 수 없습니다.');
+    return;
+  }
+
+  const label = nickname || '이 회원';
+  if (!confirm(`${label} 님의 회원 계정을 삭제할까요?\n커스텀 게시글·댓글·문의도 함께 삭제되며 복구할 수 없습니다.`)) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`${getApiBase()}/api/admin/users/${encodeURIComponent(userId)}`, {
+      method: 'DELETE',
+      headers: getAdminAuthHeaders(),
+    });
+    const data = await response.json().catch(() => ({}));
+
+    if (response.ok) {
+      alert('✅ 회원이 삭제되었습니다.');
+      await Promise.all([loadUsers(), loadBlocks(), loadComments(), loadTierMakerData()]);
+    } else {
+      alert('❌ ' + (data.error || '회원 삭제 실패'));
+    }
+  } catch (err) {
+    console.error(err);
+    alert('❌ 서버와 연결할 수 없습니다.');
+  }
+}
+
+function renderBlockList() {
+  const tbody = document.getElementById('block-list');
+  if (!tbody) return;
+
+  const activeBlocks = getActiveBlocks();
+
+  if (!activeBlocks.length) {
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="8">차단된 항목이 없습니다.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = activeBlocks.map((block, idx) => `
+    <tr>
+      <td>${idx + 1}</td>
+      <td><strong>${escapeHtml(block.value)}</strong></td>
+      <td><span class="badge badge-type">${block.type === 'ip' ? 'IP' : 'ID'}</span></td>
+      <td>${block.durationDays}일</td>
+      <td>${formatDate(block.blockedAt || block.createdAt)}</td>
+      <td>${formatDate(block.expiresAt)}</td>
+      <td>${getRemainingLabel(block.expiresAt)}</td>
+      <td>
+        <button class="unblock-btn" data-block-id="${block._id}">차단 해제</button>
+      </td>
+    </tr>
+  `).join('');
+
+  tbody.querySelectorAll('.unblock-btn').forEach(btn => {
+    btn.addEventListener('click', () => unblock(btn.dataset.blockId));
+  });
+}
+
+async function unblock(blockId) {
+  if (!confirm('관리자 재량으로 이 차단을 해제하시겠습니까?')) return;
+
+  try {
+    const response = await fetch(`${getApiBase()}/api/admin/blocks/${blockId}`, { 
+      method: 'DELETE',
+      headers: getAdminAuthHeaders()
+    });
+    const data = await response.json();
+
+    if (response.ok && data.success) {
+      blockedList = blockedList.filter(b => b._id !== blockId);
+      renderBlockList();
+      renderUserList();
+      renderComments();
+      alert('✅ 차단이 해제되었습니다.');
+    } else {
+      alert('❌ 차단 해제 실패: ' + (data.error || '알 수 없는 오류'));
+    }
+  } catch (err) {
+    console.error(err);
+    alert('❌ 서버와 연결할 수 없습니다.');
+  }
+}
+
+window.unblock = unblock;
+
+window.showReportTooltip = function(element, reason) {
+  const existing = document.querySelector('.report-popup');
+  if (existing) {
+    existing.remove();
+    return;
+  }
+
+  const popup = document.createElement('div');
+  popup.className = 'report-popup';
+  popup.innerHTML = `<strong>신고사유 : ${reason}</strong>`;
+  document.body.appendChild(popup);
+
+  const rect = element.getBoundingClientRect();
+  popup.style.left = `${rect.left + window.scrollX}px`;
+  popup.style.top = `${rect.bottom + window.scrollY + 8}px`;
+
+  const hidePopup = (e) => {
+    if (!popup.contains(e.target)) {
+      popup.remove();
+      document.removeEventListener('click', hidePopup);
+    }
+  };
+  setTimeout(() => document.addEventListener('click', hidePopup), 10);
+};
+
+window.goToDetail = function(commentId) {
+  window.location.href = `comment-detail?id=${commentId}`;
+};
+
+window.setTypeFilter = function(type) {
+  currentTypeFilter = type;
+  currentPage = 1;
+
+  document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.id === `filter-${type}`);
+  });
+
+  applyFilters();
+};
+
+window.applyFilters = function() {
+  currentReportFilter = document.getElementById('report-filter').value;
+  currentSort = document.getElementById('sort-select').value;
+  currentPage = 1;
+  renderComments();
+};
+
+function buildPaginationHtml(totalPages, page, prevFn, nextFn, goFn) {
+  let html = `<span style="margin-right:15px; color:#555; font-size:14px;">총 ${totalPages}페이지</span>`;
+
+  html += `<button onclick="${prevFn}(${page - 1})"
+                    style="padding:8px 16px; margin:0 4px; background:#007bff; color:white; border:none; border-radius:6px; cursor:pointer;"
+                    ${page === 1 ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : ''}>◀ 이전</button>`;
+
+  const startPage = Math.max(1, page - 3);
+  const endPage = Math.min(totalPages, page + 3);
+
+  for (let i = startPage; i <= endPage; i++) {
+    html += `<button onclick="${goFn}(${i})"
+                      style="padding:8px 16px; margin:0 4px; background:${i === page ? '#007bff' : '#f0f0f0'};
+                             color:${i === page ? 'white' : '#333'}; border:none; border-radius:6px; cursor:pointer; font-weight:${i === page ? '700' : '400'};">
+              ${i}
+            </button>`;
+  }
+
+  html += `<button onclick="${nextFn}(${page + 1})"
+                    style="padding:8px 16px; margin:0 4px; background:#007bff; color:white; border:none; border-radius:6px; cursor:pointer;"
+                    ${page === totalPages ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : ''}>다음 ▶</button>`;
+
+  return html;
+}
+
+function renderPagination(totalPages) {
+  const container = document.getElementById('pagination');
+  if (!container) return;
+  container.innerHTML = buildPaginationHtml(totalPages, currentPage, 'goToPage', 'goToPage', 'goToPage');
+}
+
+function renderNoticePagination(totalPages) {
+  const container = document.getElementById('notice-pagination');
+  if (!container) return;
+  container.innerHTML = buildPaginationHtml(totalPages, currentNoticePage, 'goToNoticePage', 'goToNoticePage', 'goToNoticePage');
+}
+
+window.goToPage = function(page) {
+  currentPage = page;
+  renderComments();
+};
+
+window.goToNoticePage = function(page) {
+  const totalPages = Math.ceil(getFilteredAdminNotices().length / NOTICE_ITEMS_PER_PAGE) || 1;
+  if (page < 1 || page > totalPages) return;
+  currentNoticePage = page;
+  renderAdminNoticeList();
+};
+
+window.renderComments = renderComments;
+window.renderBlockList = renderBlockList;
+window.initAdminData = initAdminData;

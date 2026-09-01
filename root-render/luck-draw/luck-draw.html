@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>행운 뽑기 - 휴버대 티어표</title>
+  <link rel="stylesheet" href="../common.css">
+  <link rel="stylesheet" href="../Header_Footer.css">
+  <link rel="stylesheet" href="luck-draw.css">
+</head>
+<body>
+  <div id="header-placeholder"></div>
+
+  <div class="luck-draw-page">
+    <div class="luck-draw-tabs">
+      <button type="button" class="luck-tab" data-tab="daily">오늘의 행운 티어</button>
+      <button type="button" class="luck-tab" data-tab="random" disabled title="준비 중">랜덤 뽑기 (준비 중)</button>
+    </div>
+
+    <section id="daily" class="luck-tab-panel">
+      <h1>오늘의 행운 티어</h1>
+      <p class="luck-desc">버튼을 누르면 서버가 확률에 따라 오늘의 티어와 캐릭터를 뽑아줍니다. 하루에 한 번만 뽑을 수 있어요.</p>
+
+      <div id="static-guard" class="luck-static-guard" hidden>
+        이 기능은 서버가 필요합니다. 로컬(:5000) 또는 배포된 사이트에서 이용해주세요.
+      </div>
+
+      <button type="button" id="draw-btn" class="luck-draw-btn">오늘의 행운 뽑기</button>
+      <p id="draw-status" class="luck-draw-status"></p>
+
+      <div id="draw-loading" class="luck-draw-loading" hidden>
+        <div id="draw-loading-reel" class="luck-draw-loading-reel">?</div>
+        <p class="luck-draw-loading-text">두근두근... 오늘의 운명을 뽑는 중</p>
+        <div class="luck-draw-loading-bar">
+          <div id="draw-loading-bar-fill" class="luck-draw-loading-bar-fill"></div>
+        </div>
+      </div>
+
+      <div id="result-card" class="luck-result-card" hidden>
+        <img id="result-image" class="luck-result-image" src="" alt="">
+        <div class="luck-result-tier" id="result-tier"></div>
+        <div class="luck-result-name" id="result-name"></div>
+        <span id="result-points" class="luck-result-points" hidden></span>
+        <a id="result-tier-link" class="luck-result-tier-link" href="#">공식 티어표에서 보기 →</a>
+        <p id="guest-notice" class="luck-guest-notice" hidden>
+          체크 결과 · 저장되지 않았습니다
+          <a href="../user_login/login.html">로그인하고 기록 남기기</a>
+        </p>
+      </div>
+
+      <table id="probability-table" class="luck-probability-table">
+        <caption>티어별 당첨 확률</caption>
+        <thead>
+          <tr><th>티어</th><th>확률</th><th>포인트</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+
+      <div class="luck-history">
+        <h2>내 기록</h2>
+        <div id="history-list" class="luck-history-list"></div>
+      </div>
+    </section>
+
+    <section id="random" class="luck-tab-panel">
+      <h1>랜덤 뽑기</h1>
+      <p class="luck-desc">랜덤 뽑기는 준비 중입니다. 곧 만나요!</p>
+    </section>
+  </div>
+
+  <div id="footer-placeholder"></div>
+  <script src="../common.js"></script>
+  <script src="luck-draw-api.js"></script>
+  <script src="luck-draw.js"></script>
+</body>
+</html>

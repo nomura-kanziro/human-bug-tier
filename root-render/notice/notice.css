@@ -1,0 +1,486 @@
+/* ====================== 전체 공지 / 새 소식 페이지 너비 조절 ====================== */
+.notice-page {
+  max-width: 1100px;     /* 너비 조절 */
+  margin: 0 auto;
+  padding: 60px 40px;    /* 좌우 여백 증가 */
+}
+
+/* 헤더(제목 + 뒤로가기)와 목록 사이 간격 확보 */
+.notice-header {
+  margin-bottom: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.notice-full-list {
+  max-width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* 항목간 간격 - 더 작게 조정 */
+}
+
+/* 카드형 공지 항목 - 내부 여백을 충분히 주고 배경/경계 적용
+   .notice-full-list 아래의 .notice-item에만 적용하여 기존 리스트 스타일과 충돌 방지 */
+.notice-full-list .notice-item {
+  padding: 5px 10px; /* 세로 패딩을 더 줄여 전체 높이를 약 2배 축소 */
+  background: #fafafa;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+  overflow: visible; /* 내부 내용 전부 표시 */
+  white-space: pre-wrap; /* 줄바꿈 유지 */
+  word-break: break-word;
+}
+
+.notice-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 0; /* 헤더에서 간격 제어 */
+}
+
+.notice-page .notice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+}
+
+@media (max-width: 900px) {
+  .notice-page .notice-grid {
+    grid-template-columns: 1fr;
+    gap: 50px;
+  }
+}
+
+.notice-col-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.notice-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.notice-col-general {
+  border-top: 3px solid #10b981;
+  padding-top: 16px;
+}
+
+.notice-col-news {
+  border-top: 3px solid #8b5cf6;
+  padding-top: 16px;
+}
+
+.notice-category-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.notice-empty {
+  color: #888;
+  font-size: 14px;
+  padding: 20px 0;
+}
+
+.notice-pin-label {
+  color: #f59e0b;
+  font-size: 14px;
+  margin-right: 4px;
+}
+
+.notice-yt-badge {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  vertical-align: middle;
+}
+
+.notice-original-toggle {
+  margin-left: 8px;
+  padding: 3px 10px;
+  border: 1px solid #fecaca;
+  border-radius: 999px;
+  background: #fff;
+  color: #b91c1c;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.notice-original-toggle:hover,
+.notice-original-toggle[aria-pressed="true"] {
+  background: #fef2f2;
+}
+
+.notice-item-pinned {
+  background: #fffbeb;
+  border-radius: 8px;
+  padding: 8px 10px;
+  border: 1px solid #fde68a;
+}
+
+.back-link {
+  font-size: 14px;
+  color: #2563eb;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.pagination {
+  margin-top: 40px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+}
+
+.notice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* 기존 .notice-item의 하단 구분선은 전체 목록 페이지(.notice-full-list)에서는 사용하지 않음 */
+.notice-full-list .notice-item:last-child {
+  margin-bottom: 0;
+}
+
+.notice-item-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.notice-link {
+  font-weight: 500;
+  color: #111;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.notice-item-link:hover .notice-link {
+  color: #2563eb;
+}
+
+.notice-desc {
+  font-size: 14px; /* 약간 작게 하여 공간 절약 */
+  color: #555;
+  line-height: 1.35; /* 줄간격 축소 */
+  margin: 4px 0 4px; /* 위아래 여백 축소 */
+  white-space: pre-wrap; /* 줄바꿈을 보존하여 전체 텍스트가 보이도록 함 */
+}
+
+.notice-date {
+  font-size: 13px;
+  color: #999;
+}
+
+.notice-more {
+  display: inline-block;
+  margin-top: 24px;
+  font-size: 14px;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.notice-more:hover {
+  text-decoration: underline;
+}
+
+/* ====================== 공지 상세 페이지 ====================== */
+.notice-detail-page {
+  padding-top: 48px;
+  padding-bottom: 80px;
+}
+
+.notice-detail-loading,
+.notice-detail-error {
+  text-align: center;
+  padding: 120px 20px;
+  color: #888;
+  font-size: 16px;
+}
+
+.notice-detail-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+.notice-detail-general {
+  border-top: 4px solid #10b981;
+}
+
+.notice-detail-news {
+  border-top: 4px solid #8b5cf6;
+}
+
+.notice-detail-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 32px;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.notice-detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #2563eb;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid #dbeafe;
+  transition: background 0.2s;
+}
+
+.notice-detail-back:hover {
+  background: #eff6ff;
+  text-decoration: none;
+}
+
+.notice-detail-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.notice-detail-body {
+  padding: 40px 32px 48px;
+}
+
+.notice-detail-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #111;
+  line-height: 1.35;
+  margin: 0 0 20px;
+  word-break: break-word;
+}
+
+.notice-detail-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 24px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.notice-detail-author {
+  font-weight: 600;
+  color: #374151;
+}
+
+.notice-detail-summary {
+  background: #f8fafc;
+  border-left: 4px solid #10b981;
+  padding: 16px 20px;
+  border-radius: 0 10px 10px 0;
+  margin-bottom: 32px;
+  font-size: 15px;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.notice-detail-summary.news-summary {
+  border-left-color: #8b5cf6;
+}
+
+.notice-detail-content {
+  font-size: 16px;
+  line-height: 1.85;
+  color: #1f2937;
+  word-break: break-word;
+}
+
+.notice-detail-content p {
+  margin: 0 0 18px;
+}
+
+.notice-detail-content p:last-child {
+  margin-bottom: 0;
+}
+
+.notice-detail-content ul {
+  margin: 0 0 18px;
+  padding-left: 22px;
+}
+
+.notice-detail-content li {
+  margin-bottom: 6px;
+}
+
+.notice-detail-content strong {
+  font-weight: 700;
+  color: #111827;
+}
+
+.notice-detail-content em {
+  font-style: italic;
+}
+
+.notice-detail-content h2,
+.notice-detail-content h3,
+.notice-detail-content h4 {
+  margin: 28px 0 12px;
+  line-height: 1.4;
+  color: #111827;
+}
+
+.notice-detail-content h2 { font-size: 22px; font-weight: 700; }
+.notice-detail-content h3 { font-size: 19px; font-weight: 600; }
+.notice-detail-content h4 { font-size: 17px; font-weight: 600; }
+
+.notice-detail-content ol {
+  margin: 0 0 18px;
+  padding-left: 22px;
+}
+
+.notice-detail-content blockquote {
+  margin: 0 0 18px;
+  padding: 10px 18px;
+  border-left: 3px solid #d1d5db;
+  color: #4b5563;
+  background: #f9fafb;
+  border-radius: 0 8px 8px 0;
+}
+
+.notice-detail-content code {
+  background: #f3f4f6;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.92em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: #b91c1c;
+}
+
+.notice-detail-content del {
+  color: #9ca3af;
+}
+
+.notice-detail-content a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.notice-detail-content hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 28px 0;
+}
+
+.notice-detail-content img.notice-content-img,
+.notice-content-gallery img.notice-content-img,
+.notice-content-figure img.notice-content-img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  background: #f3f4f6;
+}
+
+.notice-content-figure {
+  margin: 16px 0 22px;
+}
+
+.notice-content-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+  margin: 16px 0 22px;
+}
+
+@media (max-width: 700px) {
+  .notice-content-gallery {
+    grid-template-columns: 1fr;
+  }
+}
+
+.notice-detail-footer {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: center;
+}
+
+.notice-detail-list-btn {
+  padding: 12px 28px;
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.notice-detail-list-btn:hover {
+  background: #333;
+}
+
+.notice-item {
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.notice-full-list .notice-item:hover,
+.notice-list .notice-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+@media (max-width: 640px) {
+  .notice-detail-body {
+    padding: 28px 20px 36px;
+  }
+
+  .notice-detail-topbar {
+    padding: 16px 20px;
+  }
+
+  .notice-detail-title {
+    font-size: 24px;
+  }
+}

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>공지 상세 - 휴버대 티어표</title>
+  <link rel="stylesheet" href="../common.css">
+  <link rel="stylesheet" href="notice.css">
+  <link rel="stylesheet" href="../Header_Footer.css">
+</head>
+<body data-page="notice-detail">
+  <div id="header-placeholder"></div>
+
+  <div class="notice-page notice-detail-page">
+    <div id="notice-detail-container">
+      <div class="notice-detail-loading">공지를 불러오는 중...</div>
+    </div>
+  </div>
+
+  <div id="footer-placeholder"></div>
+  <script src="../common.js"></script>
+  <script src="notice.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      if (typeof window.initNoticeDetailPage === 'function') {
+        window.initNoticeDetailPage();
+      }
+    });
+  </script>
+</body>
+</html>
