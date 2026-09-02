@@ -1,9 +1,19 @@
-  <!-- 하단 -->
+  <!--
+    footer.html
+    ======================================================================
+    모든 페이지 공통 하단 조각(fragment). header.html과 마찬가지로 common.js의
+    loadCommon()이 fetch로 읽어와 각 페이지 하단(#footer-placeholder 등)에 삽입한다.
+    삽입 후 common.js가 하는 일:
+      - fixRootLinksInElement()로 상대경로를 현재 페이지 깊이에 맞게 보정.
+      - #contact-link 클릭 시 문의하기 페이지(Contact_us/)로 이동하도록 href를 채워준다.
+    스타일은 Header_Footer.css의 "푸터" 섹션이 담당.
+  -->
   <footer>
+    <!-- 사이트 버전 표기: package.json/README와 별개로 이 문자열은 수동 관리되므로 배포 시 직접 갱신 필요 -->
     <p>site version : 0.4.2</p>
     <a href="#" id="contact-link">
       <span class="fot-text">문의하기</span>
     </a>
   </footer>
 
-  
+

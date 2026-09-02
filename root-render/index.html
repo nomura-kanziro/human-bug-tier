@@ -5,16 +5,18 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>휴버대 티어표</title>
   <link rel="icon" href="tier-image/logo.webp" type="image/webp">
+  <!-- common.css: 사이트 전역 기본 스타일 / notice/notice.css: 홈 화면 공지 미리보기 목록 스타일
+       Header_Footer.css: 헤더·푸터 / index-home.css: 이 홈 화면 전용(퀵카드, 메이커·행운 미리보기 등) 스타일 -->
   <link rel="stylesheet" href="common.css">
   <link rel="stylesheet" href="notice/notice.css">
   <link rel="stylesheet" href="Header_Footer.css">
   <link rel="stylesheet" href="index-home.css">
 </head>
 <body>
-  <!-- 상단 네비게이션 -->
+  <!-- 상단 네비게이션: 빈 컨테이너이며, common.js의 loadCommon()이 header.html을 fetch해 여기에 삽입한다 -->
   <div id="header-placeholder"></div>
 
-  <!-- 메인 소개 -->
+  <!-- 메인 소개: 사이트 제목과 한 줄 설명만 보여주는 정적 섹션 -->
   <section class="intro">
     <h1>
       <img src="tier-image/logo.webp" alt="로고" class="logo-img">
@@ -25,7 +27,11 @@
     </p>
   </section>
 
-  <!-- ★★★ 새로 추가된 3개 큰 상자 ★★★ -->
+  <!-- ★★★ 새로 추가된 3개 큰 상자 ★★★
+       퀵 네비게이션: 티어표/커스텀 메이커/행운 뽑기 3개 카드.
+       각 카드는 클릭(또는 포커스)하면 하위에 숨겨진 .sub-menu가 펼쳐지고,
+       data-scroll-target에 지정된 하단 섹션(#home-tiers 등)으로 스크롤 이동하는 기능은
+       index-home.js가 담당한다. (CSS만으로는 hover 펼침만 되고, 실제 스크롤 이동은 JS 필요) -->
   <section class="quick-nav">
     <div class="quick-card" data-scroll-target="#home-tiers" tabindex="0">
       <h3>티어표</h3>
@@ -62,7 +68,9 @@
     </div>
   </section>
 
-  <!-- ====================== 공지사항 섹션 (대칭 맞춤 버전) ====================== -->
+  <!-- ====================== 공지사항 섹션 (대칭 맞춤 버전) ======================
+       "전체 공지"와 "새 소식" 두 컬럼으로 나뉘며, 각 #home-notice-items / #home-news-items 컨테이너는
+       처음엔 비어있다가 notice/notice.js가 백엔드 공지 API를 호출해 최신 항목 몇 개를 채워 넣는다. -->
   <section class="notice-section">
     <div class="notice-header">
       <h2>공지사항</h2>
@@ -70,7 +78,7 @@
     </div>
 
     <div class="notice-grid">
-      
+
       <!-- 일반 공지 -->
       <div class="notice-column">
         <div class="notice-column-header">
@@ -92,6 +100,9 @@
     </div>
   </section>
 
+  <!-- 커스텀 메이커 미리보기 섹션: 퀵카드에서 스크롤로 도착하는 지점(#home-maker-preview).
+       오른쪽 .home-maker-board는 실제 동작하는 위젯이 아니라, 갑/을/병 줄에 미리 배치된 캐릭터
+       이미지를 정적으로 보여주는 "장식용" 미니어처 — 진짜 제작 도구는 custom-maker/로 이동해야 사용 가능 -->
   <section id="home-maker-preview" class="home-maker-preview">
     <div class="home-maker-preview-inner">
       <div class="home-maker-copy">
@@ -103,6 +114,7 @@
           <a class="home-maker-btn home-maker-btn-ghost" href="custom-maker/custom-maker_post/custom-maker_post.html">게시판</a>
         </div>
       </div>
+      <!-- aria-hidden: 스크린리더에는 노출하지 않는 순수 시각적 장식 요소이기 때문 -->
       <div class="home-maker-board" aria-hidden="true">
         <div class="home-maker-row">
           <span class="home-maker-label">갑</span>
@@ -131,6 +143,11 @@
       </div>
     </div>
   </section>
+
+  <!-- 행운 뽑기 미리보기 위젯: 홈 화면에서 바로 "오늘의 행운 뽑기"를 체험해볼 수 있는 실동작 위젯.
+       #home-luck-btn 클릭 → luck-draw/luck-draw-api.js가 백엔드에 뽑기를 요청 →
+       #home-luck-loading(릴 애니메이션, 10초 서스펜스)을 보여준 뒤 → #home-luck-result에 결과 이미지/티어 표시.
+       #home-luck-static은 API 서버가 없는 정적 미리보기 환경(GitHub Pages 등)에서 대신 노출되는 안내문. -->
   <section id="home-luck-preview" class="home-luck-preview">
     <div class="home-luck-inner">
       <div class="home-luck-copy">
@@ -143,14 +160,17 @@
         <p id="home-luck-static" class="home-luck-static" hidden>서버가 있는 환경에서 뽑을 수 있습니다.</p>
         <button type="button" id="home-luck-btn" class="home-luck-btn">오늘의 행운 뽑기</button>
         <div class="home-luck-stage">
+          <!-- 초기 상태: 버튼 누르기 전 물음표 플레이스홀더 -->
           <div id="home-luck-placeholder" class="home-luck-placeholder">
             <span class="home-luck-placeholder-mark">?</span>
             <span class="home-luck-placeholder-text">버튼을 누르면 오늘의 티어가 나옵니다</span>
           </div>
+          <!-- 뽑는 중 상태: #home-luck-reel 숫자가 빠르게 바뀌며 슬롯머신처럼 돌아가는 연출(10초 서스펜스) -->
           <div id="home-luck-loading" class="home-luck-loading" hidden>
             <span id="home-luck-reel">1</span>
             <span class="home-luck-placeholder-text">뽑는 중…</span>
           </div>
+          <!-- 결과 상태: 확정된 티어의 캐릭터 이미지/이름/티어 표시. 게스트는 "저장되지 않음" 문구 추가 노출 -->
           <div id="home-luck-result" class="home-luck-result" hidden>
             <img id="home-luck-img" alt="">
             <div class="home-luck-result-copy">
@@ -160,12 +180,14 @@
             </div>
           </div>
         </div>
+        <!-- 에러/안내 메시지(쿨다운, 일일 횟수 초과 등)를 표시하는 공용 상태 라인 -->
         <p id="home-luck-status" class="home-luck-status" hidden></p>
       </div>
     </div>
   </section>
 
-  <!-- 티어 카드 목록 -->
+  <!-- 티어 카드 목록: 공식 1~9티어 전체를 한눈에 보여주는 그리드. 카드 클릭 시 해당 tier-class/tierN.html로 이동.
+       각 카드의 짧은 설명 문구는 게임 내 계급(그랜드마스터~언랭크 등)에 대응해 붙여둔 것. -->
   <section class="home-tiers-section" id="home-tiers">
     <div class="home-tiers-header">
       <h2>공식 티어표</h2>
@@ -197,7 +219,7 @@
 
     <div id="tier5" class="tier-card" onclick="location.href='./tier-class/tier5.html'">
       <img src="./tier-image/logo2-5.png" alt="5티어 아이콘" class="tier-icon">
-      <span class="tier-title">5티어</span> 
+      <span class="tier-title">5티어</span>
       <p>중견급 무투파 or 탈사제 / 플래티넘</p>
     </div>
 
@@ -227,9 +249,11 @@
     </div>
   </section>
 
-  <!-- 하단 -->
+  <!-- 하단: 빈 컨테이너이며, common.js의 loadCommon()이 footer.html을 fetch해 여기에 삽입한다 -->
   <div id="footer-placeholder"></div>
 
+  <!-- 스크립트 로딩 순서 중요: common.js(공통 유틸/헤더·푸터 삽입)가 먼저,
+       그 다음 각 섹션이 의존하는 기능별 스크립트(공지, 행운 뽑기 API), 마지막으로 이 페이지 전용 index-home.js -->
   <script src="common.js"></script>
   <script src="notice/notice.js"></script>
   <script src="luck-draw/luck-draw-api.js"></script>

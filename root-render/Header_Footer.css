@@ -1,4 +1,13 @@
-/* 상단바 */
+/* ========================================================
+   Header_Footer.css — header.html / footer.html 전용 스타일
+   ========================================================
+   모든 페이지가 공통으로 fetch해서 삽입하는 header.html/footer.html의 스타일을 모아둔 파일.
+   common.css(홈 화면 본문)와는 역할이 분리돼 있다 — 여긴 "모든 페이지에서 항상 보이는 뼈대"만.
+   구성 순서: 상단바(로고/메뉴) → 헤더 우측 아이콘들(후원/알림/프로필) → 알림 드롭다운 →
+   프로필 드롭다운 → 알림 설정 모달 → 사이드 메뉴(모바일 햄버거) → 데스크톱 드롭다운 네비 →
+   푸터 → 모바일 반응형. */
+
+/* 상단바 — 로고 + 데스크톱 네비게이션이 들어가는 맨 위 고정(sticky) 바 */
 header {
   display: flex;
   justify-content: space-between;
@@ -44,6 +53,7 @@ header {
   }
 }
 
+/* 헤더 우측 전체 래퍼 — 후원 버튼 / 로그인 버튼(또는 알림·프로필) 가로 정렬 */
 .header-right {
   display: flex;
   align-items: center;
@@ -51,6 +61,8 @@ header {
   flex-shrink: 0;
 }
 
+/* 로그인 상태일 때만 common.js가 header-right 안에 동적으로 만들어 넣는 그룹
+   (알림 벨 + 프로필 아이콘을 감싸는 컨테이너). renderUserProfile()이 삽입한다. */
 .header-user-actions {
   display: flex;
   align-items: center;
@@ -60,6 +72,9 @@ header {
   flex-shrink: 0;
 }
 
+/* 프로필 아바타 원형 아이콘 버튼 — 클릭하면 .user-profile-panel 드롭다운이 열린다.
+   position:relative가 있어야 안의 드롭다운(.user-profile-panel, absolute)이
+   이 버튼을 기준으로 위치를 잡는다. */
 .user-profile-btn {
   position: relative;
   cursor: pointer;
@@ -89,6 +104,9 @@ header {
   object-fit: cover;
 }
 
+/* 후원(커피) 버튼 — common.js의 renderSponsorButton()이 SPONSOR_PROFILE_URL 설정 여부에 따라
+   href를 채우거나 비활성화(aria-disabled)한다. 로그인 상태면 프로필 아이콘 옆으로,
+   비로그인이면 로그인 버튼 옆으로 자바스크립트가 위치를 옮겨 끼워 넣는다. */
 .header-sponsor-btn {
   width: 38px;
   height: 38px;
@@ -418,6 +436,10 @@ header {
   color: #dc3545;
 }
 
+/* ====================== 알림 설정 모달 ======================
+   알림 패널의 톱니바퀴(⚙) 아이콘으로 여는 팝업. body 끝에 삽입되는 별도 모달이라
+   position:fixed + inset:0으로 전체 화면을 덮고, 배경(.notification-settings-backdrop)을
+   클릭하면 닫히도록 common.js에서 처리한다. */
 .notification-settings-modal {
   position: fixed;
   inset: 0;
@@ -557,7 +579,10 @@ header {
   }
 }
 
-/* ====================== 사이드 메뉴 ====================== */
+/* ====================== 사이드 메뉴 ======================
+   모바일 햄버거(#menuBtn) 클릭 시 오른쪽에서 슬라이드로 나타나는 오프캔버스 메뉴.
+   평소엔 right:-500px로 화면 밖에 숨어있다가, common.js의 toggleMenu()가
+   .is-open 클래스(또는 인라인 style.right='0px')를 붙이면 transition으로 부드럽게 들어온다. */
 .side-menu {
   position: fixed;
   top: 0;
@@ -597,7 +622,11 @@ header {
   font-weight: bold;
 }
 
-/* ====================== 드롭다운 네비게이션 ====================== */
+/* ====================== 드롭다운 네비게이션 (데스크톱, 마우스 오버 방식) ======================
+   PC 화면(768px 초과)에서만 보이는 상단 메뉴. 별도의 JS 토글 없이 순수 CSS :hover로 동작:
+   .nav-item에 마우스를 올리면 자식 .dropdown의 opacity/visibility가 0→1로 바뀌며 펼쳐지고,
+   화살표(.arrow)도 180도 회전한다. 모바일에서는 .desktop-nav 자체가 display:none 처리되고
+   대신 아래 "사이드 메뉴 드롭다운 (클릭 전용)" 섹션이 같은 메뉴 데이터를 클릭 방식으로 보여준다. */
 .desktop-nav {
   display: flex;
   align-items: center;
@@ -669,7 +698,10 @@ header {
   background: #f5f5f5;
 }
 
-/* ====================== 사이드 메뉴 드롭다운 (클릭 전용) ====================== */
+/* ====================== 사이드 메뉴 드롭다운 (클릭 전용) ======================
+   모바일 사이드 메뉴 안에서는 마우스 hover가 없으므로, common.js가 .dropdown-toggle 클릭 시
+   부모 li에 .active 클래스를 붙였다 뗐다 하는 방식으로 하위 메뉴(.dropdown)를 펼치고 접는다.
+   데스크톱 버전(.nav-item:hover .dropdown)과 달리 position:static으로 문서 흐름에 그대로 쌓인다. */
 
 /* 사이드 드롭다운 기본: 숨김 */
 .side-menu .dropdown {
@@ -705,7 +737,9 @@ header {
   transform: rotate(180deg);
 }
 
-/* 푸터 */
+/* ====================== 푸터 ======================
+   모든 페이지 하단에 공통으로 삽입되는 저작권/문의 링크 바.
+   footer.html이 common.js의 loadCommon()을 통해 각 페이지에 fetch로 삽입된 뒤 이 스타일이 적용됨. */
 footer {
   display: flex;
   justify-content: space-between;
@@ -734,7 +768,9 @@ footer a:hover,
   text-decoration: none !important;
 }
 
-/* ====================== 모바일 헤더/레이아웃 ====================== */
+/* ====================== 모바일 헤더/레이아웃 (화면 너비 768px 이하) ======================
+   태블릿·폰 크기에서 데스크톱 상단 메뉴(.desktop-nav)를 숨기고 햄버거+사이드메뉴 방식으로 전환.
+   버튼/아바타 크기를 터치하기 쉽게 44px 이상으로 키우고, 사이드 메뉴는 오프캔버스(right:-100% → 0)로 슬라이드. */
 @media (max-width: 768px) {
   header {
     padding: 8px 12px;
@@ -832,6 +868,8 @@ footer a:hover,
   }
 }
 
+/* ====================== 초소형 화면 (480px 이하) ======================
+   구형/저가형 스마트폰 등 더 좁은 화면에서 로고 글자와 로그인 버튼을 한 번 더 축소. */
 @media (max-width: 480px) {
   .logo-text {
     font-size: 1.1rem;
@@ -843,7 +881,10 @@ footer a:hover,
   }
 }
 
-/* 미구현 메뉴 */
+/* ====================== 미구현 메뉴 ======================
+   아직 개발되지 않은 네비게이션 항목에 붙이는 클래스(.nav-soon).
+   반투명 처리 + cursor:not-allowed + 기울임체로 "곧 지원 예정"임을 시각적으로 알리고 클릭을 막는다.
+   실제 클릭 차단(예: preventDefault)은 JS 쪽에서 별도로 처리해야 하며, 이 CSS는 시각적 힌트만 담당. */
 .nav-soon,
 a.nav-soon {
   opacity: 0.55;

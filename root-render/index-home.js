@@ -37,6 +37,9 @@
   const resultBox = document.getElementById('home-luck-result');
   if (!btn || typeof luckDrawRequest !== 'function') return;
 
+  // 비로그인 게스트는 서버에 기록을 남기지 않으므로, 대신 브라우저 localStorage에
+  // "마지막으로 뽑은 시각 + 그때 결과"를 저장해 24시간 이내 재클릭 시 서버 호출 없이 안내만 보여준다.
+  // 뽑기 상세 페이지(luck-draw.html)도 동일한 키를 사용해 두 화면 간 게스트 상태를 공유한다.
   const GUEST_KEY = 'luckDrawGuestState'; // 뽑기 페이지와 동일
   const GUEST_MS = 24 * 60 * 60 * 1000;
   const TIER_LABELS = {
@@ -77,7 +80,8 @@
     showStage('result');
   }
 
-  // GH Pages 등 API 없음
+  // GH Pages 등 API 없음: 정적 호스팅에는 백엔드가 없어 실제 뽑기가 불가능하므로
+  // 안내 문구만 보여주고 버튼을 아예 비활성화해 클릭이 되지 않게 막는다.
   if (typeof getApiBase === 'function' && getApiBase() === 'GITHUB_STATIC') {
     if (staticEl) staticEl.hidden = false;
     btn.disabled = true;
@@ -101,13 +105,15 @@
     btn.disabled = true;
     setStatus('');
     showStage('loading');
+    // 슬롯머신처럼 1~9 숫자가 90ms마다 빠르게 순환하는 릴 애니메이션 (실제 뽑기 결과와는 무관한 연출용)
     let n = 1;
     const timer = setInterval(() => {
       n = (n % 9) + 1;
       if (reel) reel.textContent = String(n);
     }, 90);
 
-    // 릴과 API를 맞추려고 최소 2.2초 대기
+    // 릴과 API를 맞추려고 최소 2.2초 대기 — 서버 응답이 그보다 빨리 와도 애니메이션이 너무 짧게
+    // 끊기지 않도록 Promise.all처럼 두 작업(wait, drawDailyLuck)이 모두 끝날 때까지 기다린다.
     const wait = new Promise((resolve) => setTimeout(resolve, 2200));
     let res;
     try {

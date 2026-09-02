@@ -1,6 +1,12 @@
-/* 메인 전용: 커스텀 메이커 미리보기 · 행운 뽑기 */
+/* ======================================================================
+   index-home.css — 메인 홈(index.html) 전용 스타일
+   퀵 네비게이션 카드, 커스텀 메이커 미리보기(어두운 카드), 행운 뽑기 미리보기 위젯(밝은 카드),
+   공식 티어 그리드 섹션 간격을 담당한다. 공통 헤더/푸터/기본 톤은 common.css·Header_Footer.css가 맡고
+   이 파일은 홈 화면에만 존재하는 요소들만 다룬다.
+   ====================================================================== */
 
-/* 퀵 카드 · 공지 · 미리보기 · 티어표 가로 폭 통일 */
+/* 퀵 카드 · 공지 · 미리보기 · 티어표 가로 폭 통일: 모든 섹션이 동일한 max-width(1200px)와
+   좌우 패딩을 공유하도록 한 번에 묶어 지정 — 섹션마다 폭이 제각각이면 시선이 좌우로 흔들리기 때문 */
 .quick-nav,
 .notice-section,
 .home-maker-preview,
@@ -14,6 +20,9 @@
   box-sizing: border-box;
 }
 
+/* ====================== 커스텀 메이커 미리보기 (어두운 카드) ======================
+   index.html의 #home-maker-preview 섹션. 왼쪽엔 소개문+버튼(.home-maker-copy),
+   오른쪽엔 갑/을/병 줄로 배치된 캐릭터 미니어처(.home-maker-board, 순수 장식용 정적 이미지). */
 .home-maker-preview {
   margin-top: 8px;
   margin-bottom: 28px;
@@ -134,6 +143,7 @@
   background: rgba(255, 255, 255, 0.03);
 }
 
+/* 모바일: 좌우 2단이던 메이커 미리보기 카드를 세로로 쌓음 */
 @media (max-width: 768px) {
   .home-maker-preview-inner {
     flex-direction: column;
@@ -146,6 +156,10 @@
   }
 }
 
+/* ====================== 행운 뽑기 미리보기 (밝은 카드) ======================
+   index.html의 #home-luck-preview 섹션. 왼쪽은 소개문(.home-luck-copy), 오른쪽은
+   실제로 클릭해 뽑을 수 있는 위젯(.home-luck-widget) — 동작 로직은 index-home.js가 담당하고
+   여기서는 버튼/스테이지(placeholder·loading·result 3단 전환)의 모양만 정의한다. */
 .home-luck-preview {
   margin-bottom: 36px;
 }
@@ -217,6 +231,8 @@
   cursor: not-allowed;
 }
 
+/* 뽑기 결과가 표시되는 고정 높이 무대: placeholder(대기)/loading(뽑는 중)/result(결과) 중
+   하나만 [hidden] 없이 보이고 나머지 둘은 JS(index-home.js의 showStage())가 hidden 속성을 토글해 숨긴다 */
 .home-luck-stage {
   min-height: 92px;
   display: flex;
@@ -237,6 +253,7 @@
   margin: 0;
 }
 
+/* [hidden] 속성이 붙은 스테이지는 무조건 숨김 — 세 상태 중 정확히 하나만 보이도록 강제 */
 .home-luck-placeholder[hidden],
 .home-luck-loading[hidden],
 .home-luck-result[hidden] {
@@ -309,6 +326,7 @@
   font-size: 0.98rem;
 }
 
+/* 모바일: 홈 화면 전 섹션 좌우 패딩을 줄이고, 행운 뽑기 카드도 세로 1단으로 전환 */
 @media (max-width: 768px) {
   .quick-nav,
   .notice-section,
@@ -325,6 +343,9 @@
   }
 }
 
+/* ====================== 공식 티어표 섹션 ======================
+   index.html 맨 아래 1~9티어 카드 그리드(.tiers)를 감싸는 섹션. 그리드 자체 스타일(.tiers/.tier-card)은
+   common.css에 정의되어 있고, 여기서는 홈 화면에서의 섹션 여백만 추가로 조정한다. */
 .home-tiers-section {
   margin-bottom: 48px;
 }

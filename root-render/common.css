@@ -1,3 +1,11 @@
+/* ========================================================
+   common.css — 홈(index.html) 전용 스타일
+   ========================================================
+   header.html/footer.html 자체의 스타일은 Header_Footer.css에 따로 있고,
+   이 파일은 index.html 본문(소개 문구, 퀵 네비 카드, 공지 미리보기, 공지 모달)만 담당한다.
+   다른 페이지(tier-class, custom-maker 등)는 각자 폴더 안의 .css를 쓴다. */
+
+/* 텍스트 자동 확대 방지 — 모바일 사파리에서 화면 회전 시 폰트가 커지는 걸 막는다 */
 html {
   -webkit-text-size-adjust: 100%;
 }
@@ -16,13 +24,14 @@ img {
   height: auto;
 }
 
-/* 소개 */
+/* 소개 — 홈 상단의 제목/설명 문구 영역 */
 .intro {
   text-align: center; /* 안의 모든 내용을 가운데 정렬 */
   margin: 20px auto;
 }
 
-/* 티어 카드 */
+/* 티어 카드 — 홈 화면에서 1~9티어 페이지로 바로가는 3열 그리드(index.html의 .tiers 안에
+   .tier-card 9개, 클릭하면 tier-class/tierN.html로 이동). 아래 quick-card와는 별개 영역. */
 .tiers {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -56,7 +65,10 @@ img {
   margin-bottom: 8px;
 }
 
-/* ====================== 3개 큰 상자 (Quick Nav) ====================== */
+/* ====================== 3개 큰 상자 (Quick Nav) ======================
+   홈 화면의 "커스텀 메이커 / 행운 뽑기" 같은 큰 카드 영역. quick-card 하나가
+   기능 하나(예: 커스텀 메이커)를 나타내고, 마우스를 올리면(.sub-menu) 하위 링크들이
+   아래로 펼쳐지는 아코디언 효과가 있다(96번째 줄 sub-menu 애니메이션 참고). */
 .quick-nav {
   padding: 40px 20px;
   max-width: 1200px;
@@ -92,7 +104,11 @@ img {
   color: #111;
 }
 
-/* 서브 메뉴 애니메이션 */
+/* 서브 메뉴 애니메이션 — quick-card 하위 링크 목록은 평소엔 max-height:0으로 접혀서
+   안 보이다가(.sub-menu), 카드에 마우스를 올리면(.quick-card:hover .sub-menu) max-height가
+   커지면서 부드럽게 펼쳐진다. display:none 대신 max-height를 쓰는 이유는 transition
+   애니메이션을 걸기 위함(display는 애니메이션이 안 됨). 모바일에서는 hover가 없으므로
+   아래쪽 @media (max-width: 768px) 블록에서 항상 펼쳐진 상태로 강제 전환한다. */
 .sub-menu {
   max-height: 0;
   overflow: hidden;
@@ -144,7 +160,13 @@ img {
   line-height: 1.7;
 }
 
-/* ====================== 공지사항 섹션 ====================== */
+/* ====================== 공지사항 섹션 ======================
+   홈 화면 하단의 "전체 공지 / 새 소식" 2단 미리보기 카드(notice/notice.js가
+   API로 받아온 목록을 이 안에 렌더링). ⚠️ 아래로 내려가면 .notice-section과
+   .notice-grid 셀렉터가 여러 번(148줄대 / 232줄대 / 262줄대) 다시 나오는데,
+   전부 같은 클래스에 속성을 추가/덮어쓰는 방식으로 여러 번 수정된 흔적이다 —
+   나중 규칙이 CSS 특성상 우선 적용되므로, 실제 최종값을 알고 싶으면 파일 아래쪽
+   (더 나중에 나오는) 정의를 봐야 한다. 새로 손댈 때는 합쳐서 정리하는 게 좋다. */
 .notice-section {
   margin-bottom: 48px; /* 티어 섹션과 여백 통일 */
 }
@@ -295,7 +317,10 @@ img {
   padding: 12px 0;
 }
 
-/* ====================== 공지사항 모달 ====================== */
+/* ====================== 공지사항 모달 ======================
+   홈 화면 미리보기 카드를 클릭했을 때 뜨는 팝업(common.js의 showNoticeModal()이 열고 닫음).
+   기본은 display:none으로 숨겨져 있다가, JS가 .show 클래스를 추가하면 flex로 표시되며
+   화면 전체를 반투명 배경(overlay)으로 덮는다. */
 .notice-modal {
   display: none;
   position: fixed;
@@ -406,7 +431,10 @@ img {
 .notice-column-header {
   margin-bottom: 28px !important;
 }
-/* ====================== 모바일 공통 (메인 등) ====================== */
+/* ====================== 모바일 공통 (메인 등) ======================
+   768px 이하 화면(태블릿 세로/폰)에서 홈 화면 레이아웃을 재조정.
+   핵심은 quick-card의 sub-menu를 hover 없이 항상 펼쳐두는 것(터치 기기는 hover 개념이
+   없어서, 위쪽 PC용 규칙만으로는 하위 메뉴를 영영 못 열게 되기 때문). */
 @media (max-width: 768px) {
   .intro {
     margin: 12px 12px 8px;

@@ -1,6 +1,23 @@
-<!-- header.html -->
+<!--
+  header.html
+  ======================================================================
+  모든 페이지 공통 상단 헤더 조각(fragment).
+  단독으로 열리는 페이지가 아니라, common.js의 loadCommon()이 fetch로 이 파일을
+  통째로 읽어와 각 페이지의 <div id="header-placeholder">(또는 동일 역할의 컨테이너)에
+  innerHTML로 삽입하는 방식으로 모든 페이지에 재사용된다.
+
+  삽입 이후 common.js가 하는 일 (중요, 이 파일만 봐서는 안 보이는 동작들):
+    - fixRootLinksInElement()로 여기 적힌 상대경로(tier-class/..., custom-maker/... 등)를
+      현재 페이지 깊이에 맞춰 "../"를 붙이거나 떼어 보정한다. (하위 폴더 페이지에서도 링크가 깨지지 않게)
+    - #header-login-btn: 기본은 hidden 상태이며, 로그인 여부(localStorage.authToken 유무)에 따라
+      "로그인" 버튼을 보여주거나, 로그인 상태면 이 자리 대신 유저 프로필 아바타(renderUserProfile())로 교체한다.
+    - #header-sponsor-btn: href를 common.js 상단의 SPONSOR_PROFILE_URL 값으로 채워준다.
+    - #menuBtn / #closeBtn: 모바일 사이드 메뉴(#sideMenu)를 열고 닫는 토글 버튼.
+    - 알림 벨 아이콘 등 로그인 상태에서만 필요한 요소들도 이 조각이 삽입된 뒤 동적으로 추가된다.
+  스타일은 Header_Footer.css가 전담한다.
+-->
 <header>
-  <!-- 왼쪽 그룹: 로고 + 3개 메뉴 -->
+  <!-- 왼쪽 그룹: 로고 + 데스크톱 전용 상단 메뉴(3개 드롭다운: 티어표/커스텀 메이커/행운 뽑기) -->
   <div class="left-group">
     <div class="logo" id="logo">
       <img src="tier-image/logo.webp" alt="로고" class="logo-img">
@@ -8,8 +25,9 @@
       <span class="logo-text">휴버대 티어표</span>
     </div>
 
-    <!-- 데스크톱 네비게이션 -->
+    <!-- 데스크톱 네비게이션: 768px 초과 화면에서만 보임(모바일에서는 CSS로 숨기고 아래 사이드 메뉴를 대신 사용) -->
     <nav class="desktop-nav">
+      <!-- 티어표 드롭다운: 공식 1~9티어 목록으로 바로 이동 -->
       <div class="nav-item">
         <a href="#">티어표 <span class="arrow">▼</span></a>
         <div class="dropdown">
@@ -25,6 +43,7 @@
         </div>
       </div>
 
+      <!-- 커스텀 메이커 드롭다운: 제작 화면 / 게시판. "이벤트"는 nav-soon 클래스로 아직 비활성(클릭 무시) -->
       <div class="nav-item">
         <a href="#">커스텀 메이커 <span class="arrow">▼</span></a>
         <div class="dropdown">
@@ -34,6 +53,7 @@
         </div>
       </div>
 
+      <!-- 행운 뽑기 드롭다운: "오늘의 행운 티어"만 구현됨. "랜덤 뽑기"는 아직 미구현(nav-soon) -->
       <div class="nav-item">
         <a href="#">행운 뽑기 <span class="arrow">▼</span></a>
         <div class="dropdown">
@@ -44,6 +64,7 @@
     </nav>
   </div>
 
+  <!-- 오른쪽 그룹: 후원 버튼 + 로그인 버튼(또는 로그인 시 프로필/알림, common.js가 동적 삽입) + 모바일 햄버거 -->
   <div class="header-right">
     <!-- 후원 링크는 common.js 맨 위 SPONSOR_PROFILE_URL 에 넣으세요 -->
     <a href="#" id="header-sponsor-btn" class="header-sponsor-btn" title="후원하기" aria-label="후원하기">
@@ -56,11 +77,14 @@
         <path d="M7 20.4h8.4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
       </svg>
     </a>
+    <!-- 기본 hidden: common.js가 로그인 여부를 확인해 로그아웃 상태면 보여주고, 로그인 상태면 대신 프로필 아바타를 렌더링한다 -->
     <a href="#" id="header-login-btn" class="header-login-btn" hidden>로그인</a>
+    <!-- 모바일 전용 햄버거 버튼: 클릭 시 common.js의 toggleMenu()가 #sideMenu를 화면 오른쪽에서 슬라이드 인 -->
     <div class="menu-btn" id="menuBtn">☰</div>
   </div>
-  
-  <!-- 사이드 메뉴 -->
+
+  <!-- 사이드 메뉴(모바일 오프캔버스): 위 데스크톱 네비게이션과 동일한 3개 메뉴를 클릭식 아코디언으로 다시 제공.
+       두 벌을 따로 두는 이유는 데스크톱은 hover, 모바일은 click(터치)로 동작 방식 자체가 달라야 하기 때문. -->
   <nav id="sideMenu" class="side-menu">
     <div class="close-btn" id="closeBtn">×</div>
     <ul>
