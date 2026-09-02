@@ -234,7 +234,7 @@
 | 203 | 2026-09-02 | [`9bc6cdd`](#9bc6cdd) | feat(tier-class): 1티어 표 구조 통일 및 하늘색 보석 연출 |
 | 204 | 2026-09-02 | [`dae05b2`](#dae05b2) | feat(tier-class): 5을 토비구치~에비하라를 5정으로 추락 |
 | 205 | 2026-09-02 | [`4ebfef4`](#4ebfef4) | feat(tier-class): 이전·다음 티어표 페이지 네비 |
-| 206 | 2026-09-02 | pending | chore(common): 사이트 버전을 0.4.2로 변경 |
+| 206 | 2026-09-02 | [`9fcdcc8`](#9fcdcc8) | chore(common): 사이트 버전을 0.4.2로 변경 |
 
 ---
 
@@ -4011,15 +4011,15 @@
 
 ---
 
-<a id="pending-206"></a>
+<a id="9fcdcc8"></a>
 
-### 206. 2026-09-02 — pending
+### 206. 2026-09-02 — `9fcdcc8`
 
-- **hash (short)**: pending
-- **hash (full)**: pending
+- **hash (short)**: `9fcdcc8`
+- **hash (full)**: `9fcdcc882f9bf00b18eaedb70749e9b7f1d5ff7b`
 - **author**: nomura
 - **message**: chore(common): 사이트 버전을 0.4.2로 변경
-- **git**: _(커밋 후 기입)_
+- **git**: `git show 9fcdcc8`
 - **범위**: frontend / common
 - **요약**: 푸터 site version과 현재 제품 표기를 0.4.1에서 0.4.2로 올렸다. Render·Cloudflare 푸터 둘 다 맞췄다.
 - **주요 파일**: `root-render/footer.html`, `root-cloudflare/footer.html`, `AGENTS.md`, `CLAUDE.md`, `RDMD/features/overview.md`
