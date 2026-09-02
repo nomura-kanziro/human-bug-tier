@@ -226,7 +226,7 @@
 | 195 | 2026-09-02 | [`45b0d94`](#45b0d94) | feat(index): 메인 커스텀 메이커 미리보기 |
 | 196 | 2026-09-02 | [`a1164fa`](#a1164fa) | feat(index): 메인 행운 뽑기 위젯 |
 | 197 | 2026-09-02 | [`57a9298`](#57a9298) | feat(index): 공식 티어표 제목 및 메인 가로 폭 통일 |
-| 198 | 2026-09-02 | pending | feat(tier-class): 세르지오 1병에서 1정으로 추락 |
+| 198 | 2026-09-02 | [`2ab62c8`](#2ab62c8) | feat(tier-class): 세르지오 1병에서 1정으로 추락 |
 
 ---
 
@@ -3859,15 +3859,15 @@
 
 ---
 
-<a id="pending-198"></a>
+<a id="2ab62c8"></a>
 
-### 198. 2026-09-02 — pending
+### 198. 2026-09-02 — `2ab62c8`
 
-- **hash (short)**: pending
-- **hash (full)**: pending
+- **hash (short)**: `2ab62c8`
+- **hash (full)**: `2ab62c848e8fab8286c6d4bbe595ed954a7b4f7b`
 - **author**: nomura
 - **message**: feat(tier-class): 세르지오 1병에서 1정으로 추락
-- **git**: _(커밋 후 기입)_
+- **git**: `git show 2ab62c8`
 - **범위**: frontend / tier-class
 - **요약**: 세르지오를 1티어 병급에서 정급으로 내리고, 마치다 토모야스 바로 뒤에 배치했다. 같은 티어라 이미지 폴더는 그대로다.
 - **주요 파일**: `root-render/tier-class/tier1.html`
