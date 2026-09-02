@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 208 |
+| **커밋 수** | 216 |
 | **기간** | 2026-03-20 ~ 2026-09-03 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -237,6 +237,14 @@
 | 206 | 2026-09-02 | [`9fcdcc8`](#9fcdcc8) | chore(common): 사이트 버전을 0.4.2로 변경 |
 | 207 | 2026-09-03 | [`be363bc`](#be363bc) | feat(tier-class): 등급 제목에 티어 아이콘 색 윤광 |
 | 208 | 2026-09-03 | [`7a27872`](#7a27872) | chore: 최근 홈·티어 네비·풀 화살표 주석 |
+| 209 | 2026-09-03 | [`9a8dc9d`](#9a8dc9d) | chore(render-sync): 행운 뽑기 프론트엔드 root-render 반영 |
+| 210 | 2026-09-03 | [`8bfeaa9`](#8bfeaa9) | chore(render-sync): 마이페이지 root-render 반영 |
+| 211 | 2026-09-03 | [`a8025be`](#a8025be) | chore(render-sync): 공지·새소식·알림 root-render 반영 |
+| 212 | 2026-09-03 | [`f938dfe`](#f938dfe) | chore(render-sync): 커스텀 메이커·게시판 root-render 반영 |
+| 213 | 2026-09-03 | [`b62a7f5`](#b62a7f5) | chore(render-sync): 관리자 페이지·댓글 관리 root-render 반영 |
+| 214 | 2026-09-03 | [`78515a9`](#78515a9) | chore(render-sync): 인증(로그인·가입·비번찾기)·문의 root-render 반영 |
+| 215 | 2026-09-03 | [`a9a2a08`](#a9a2a08) | chore(render-sync): 공식 티어표(1~9티어) root-render 반영 |
+| 216 | 2026-09-03 | [`f2cfa65`](#f2cfa65) | chore(render-sync): 공통 스크립트·헤더/푸터·홈·PWA root-render 반영 |
 
 ---
 
@@ -4062,5 +4070,149 @@
 - **요약**: 메인 퀵 카드·행운 위젯, 티어 이전/다음 네비·등급 윤광, 커스텀 메이커 풀 화살표에 기능 단위 주석을 달았다. 동작은 그대로다.
 - **주요 파일**: `root-render/index-home.js`, `root-render/tier-class/tier-nav.js`, `root-render/custom-maker/custom-maker.js`
 - **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="9a8dc9d"></a>
+
+### 209. 2026-09-03 — `9a8dc9d`
+
+- **hash (short)**: `9a8dc9d`
+- **hash (full)**: `9a8dc9d849623fa8b55692b6385e58aa05e82abc`
+- **author**: nomura
+- **message**: chore(render-sync): 행운 뽑기 프론트엔드 root-render 반영
+- **git**: `git show 9a8dc9d`
+- **범위**: deploy / render-sync / luck-draw
+- **요약**: root 파일에서만 진행됐던 행운 뽑기 최신 UI·기능(포인트 배지, 쿨다운 카운트다운 등)을 실제 배포 폴더 `root-render/luck-draw/`에 그대로 반영했다.
+- **주요 파일**: `root-render/luck-draw/luck-draw.css`, `root-render/luck-draw/luck-draw.html`, `root-render/luck-draw/luck-draw.js`, `root-render/luck-draw/luck-draw-api.js`
+- **관련 RDMD**: [../features/luck-draw.md](../features/luck-draw.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="8bfeaa9"></a>
+
+### 210. 2026-09-03 — `8bfeaa9`
+
+- **hash (short)**: `8bfeaa9`
+- **hash (full)**: `8bfeaa9843591d33c3bd2c55c18a1a7268e57b84`
+- **author**: nomura
+- **message**: chore(render-sync): 마이페이지 root-render 반영
+- **git**: `git show 8bfeaa9`
+- **범위**: deploy / render-sync / my-page
+- **요약**: root에만 있던 마이페이지 기능을 배포 폴더에도 새로 추가해 Render 프로덕션에서도 마이페이지가 동작하도록 했다.
+- **주요 파일**: `root-render/my-page/my-page.css`, `root-render/my-page/my-page.html`, `root-render/my-page/my-page.js`
+- **관련 RDMD**: [../features/my-page.md](../features/my-page.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="a8025be"></a>
+
+### 211. 2026-09-03 — `a8025be`
+
+- **hash (short)**: `a8025be`
+- **hash (full)**: `a8025be5554a1378e97c8c5ee7846779cf550247`
+- **author**: nomura
+- **message**: chore(render-sync): 공지·새소식·알림 root-render 반영
+- **git**: `git show a8025be`
+- **범위**: deploy / render-sync / notice / notifications
+- **요약**: 공지 서식 렌더링, 유튜브 새소식 연동, 알림 상세 페이지 등 root에서 먼저 만든 변경을 배포 폴더 `notice/`·`notifications/`에 동기화했다.
+- **주요 파일**: `root-render/notice/notice.js`, `root-render/notice/notice-detail.html`, `root-render/notice/all_notices.html`, `root-render/notice/news.html`, `root-render/notifications/notifications.js`, `root-render/notifications/notifications.html`, `root-render/notifications/notifications.css`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="f938dfe"></a>
+
+### 212. 2026-09-03 — `f938dfe`
+
+- **hash (short)**: `f938dfe`
+- **hash (full)**: `f938dfe7ca5a37289db8d1737b00cfbb74f0b440`
+- **author**: nomura
+- **message**: chore(render-sync): 커스텀 메이커·게시판 root-render 반영
+- **git**: `git show f938dfe`
+- **범위**: deploy / render-sync / custom-maker
+- **요약**: 본인 글 수정 위치 변경, 업로드 모달 입력 항목 추가, 상세 페이지 스타일 개선 등 커스텀 메이커 관련 변경을 배포 폴더에 반영했다.
+- **주요 파일**: `root-render/custom-maker/custom-maker.js`, `root-render/custom-maker/custom-maker.html`, `root-render/custom-maker/custom-maker.css`, `root-render/custom-maker/post_edit.html`, `root-render/custom-maker/custom-maker_post/`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="b62a7f5"></a>
+
+### 213. 2026-09-03 — `b62a7f5`
+
+- **hash (short)**: `b62a7f5`
+- **hash (full)**: `b62a7f528bca8e382603422b89f8d0ca432334b5`
+- **author**: nomura
+- **message**: chore(render-sync): 관리자 페이지·댓글 관리 root-render 반영
+- **git**: `git show b62a7f5`
+- **범위**: deploy / render-sync / admin
+- **요약**: 회원 삭제 기능, 댓글 관리 필터/검색 개선 등 관리자 관련 변경을 배포 폴더 `admin/`에 동기화했다.
+- **주요 파일**: `root-render/admin/admin_api.js`, `root-render/admin/admin-login.js`, `root-render/admin/comments/comment-management.js`, `root-render/admin/comments/comment-detail.js`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="78515a9"></a>
+
+### 214. 2026-09-03 — `78515a9`
+
+- **hash (short)**: `78515a9`
+- **hash (full)**: `78515a931c8c12d843a98b11b10d0730e62c1ea0`
+- **author**: nomura
+- **message**: chore(render-sync): 인증(로그인·가입·비번찾기)·문의 root-render 반영
+- **git**: `git show 78515a9`
+- **범위**: deploy / render-sync / auth / inquiry
+- **요약**: 이메일 발송 안정화(provider 자동 대체 등) 및 문의하기 관련 개선사항을 배포 폴더 `user_login/`, `Contact_us/`에 동기화했다.
+- **주요 파일**: `root-render/user_login/auth_api.js`, `root-render/user_login/reset_password.js`, `root-render/user_login/login.js`, `root-render/Contact_us/contact_us.js`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="a9a2a08"></a>
+
+### 215. 2026-09-03 — `a9a2a08`
+
+- **hash (short)**: `a9a2a08`
+- **hash (full)**: `a9a2a0839592933523dfc2dedae635e910c5ef4f`
+- **author**: nomura
+- **message**: chore(render-sync): 공식 티어표(1~9티어) root-render 반영
+- **git**: `git show a9a2a08`
+- **범위**: deploy / render-sync / tier-class
+- **요약**: 캐릭터 재배치·이미지 교체·페이지 네비·등급 윤광 등 최근 공식 티어표 변경사항을 배포 폴더 `tier-class/`에 동기화했다.
+- **주요 파일**: `root-render/tier-class/tier1.html`~`tier9.html`, `root-render/tier-class/tier1.css`~`tier9.css`, `root-render/tier-class/tier-nav.js`, `root-render/tier-class/tier-nav.css`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="f2cfa65"></a>
+
+### 216. 2026-09-03 — `f2cfa65`
+
+- **hash (short)**: `f2cfa65`
+- **hash (full)**: `f2cfa658d0b35d4378ae626d4d6bf24e127cb582`
+- **author**: nomura
+- **message**: chore(render-sync): 공통 스크립트·헤더/푸터·홈·PWA root-render 반영
+- **git**: `git show f2cfa65`
+- **범위**: deploy / render-sync / common
+- **요약**: 알림 폴백, 드롭다운 상호배타 수정, 퀵카드 이동 등 공통 스크립트·헤더/푸터·홈·PWA 변경을 배포 폴더에 동기화해 root와 root-render 간 격차를 해소했다.
+- **주요 파일**: `root-render/common.js`, `root-render/common.css`, `root-render/Header_Footer.css`, `root-render/header.html`, `root-render/footer.html`, `root-render/index.html`, `root-render/index-home.js`, `root-render/index-home.css`, `root-render/pwa-register.js`, `root-render/sw.js`
+- **관련 RDMD**: _(선택)_
 
 [▲ 목차로](#목차)
