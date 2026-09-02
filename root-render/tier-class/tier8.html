@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <!-- 8등급(평범한 사제 수준의 전투력 / 브론즈) 공식 티어표 페이지.
+       tier1~9.html은 head 링크/스크립트 구성과 body 골격(header/footer
+       placeholder, section.tier-table > tier-row > tier-cards > char)이 모두
+       동일하고 등급별 캐릭터 목록·색상 테마(tierN.css)만 다르다. 상세 설명은
+       tier1.html 주석 참고. common.js가 header/footer를 삽입·경로 보정하고,
+       tier-nav.js가 이전/다음 등급 네비 + 제목(h2) 윤광을 붙인다. -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>8등급 - 평범한 사제 수준의 전투력 / 브론즈 | 휴버대 티어표</title>
@@ -16,8 +22,17 @@
   <div id="header-placeholder"></div>
 
   <main>
+    <!-- tier-nav.js가 로드 후 이 h2에 tier-heading 클래스 + data-tier="8"를 붙여
+         등급 테마색 윤광 애니메이션(tier-nav.css)을 적용한다 -->
     <h2>8등급 - 평범한 사제 수준의 전투력 / 브론즈</h2>
+    <!-- 등급표 본체. tier-row(세부등급 한 줄)가 갑급→병급 순으로 쌓인 구조
+         (다른 등급과 달리 8등급은 정급 행이 없다) -->
     <section class="tier-table">
+      <!-- 세부등급 한 줄 = tier-label(등급 이름) + tier-cards(캐릭터 카드 목록).
+           char 카드는 img(썸네일)+span(이름) 조합이며, custom-maker.js의
+           loadCharactersFromTierClass()가 이 tier8.html을 fetch·파싱해서
+           커스텀 티어 메이커의 캐릭터 풀도 자동으로 채운다(자세한 설명은
+           tier1.html 참고). -->
       <div class="tier-row">
         <div class="tier-label">갑급</div>
         <div class="tier-cards">
@@ -44,6 +59,7 @@
         </div>
       </div>
 
+      <!-- 을급 행 — 구조 동일 -->
       <div class="tier-row">
         <div class="tier-label">을급</div>
         <div class="tier-cards">
@@ -74,6 +90,7 @@
         </div>
       </div>
 
+      <!-- 병급 행 — 구조 동일. 이 페이지의 마지막 세부등급 -->
       <div class="tier-row">
         <div class="tier-label">병급</div>
         <div class="tier-cards">

@@ -1,5 +1,14 @@
-/* 공식 티어 페이지 공통 모바일 보정 */
+/* 공식 티어 페이지 공통 모바일 보정 — tier1~9.html이 전부 이 파일을 링크하며,
+   각 tierN.css가 이미 그려둔 PC용 레이아웃(가로 배치 tier-row 등) 위에 768px
+   이하에서만 적용되는 규칙을 덮어써서 세로 스택형 레이아웃으로 바꿔준다.
+   !important가 많은 이유: tierN.css의 고정 width(95%, 80px 등) 값을 등급별로
+   일일이 미디어쿼리로 오버라이드하지 않고, 이 공통 파일 하나로 확실히 이기기
+   위함(캐스케이드 순서/특정도 싸움을 피하는 목적) */
 @media (max-width: 768px) {
+  /* .tier-list~.characters 계열은 이 tier-class 폴더가 아닌 다른 화면(예: 커스텀
+     티어 결과물 미리보기 등)에서 쓰는 클래스명까지 폭넓게 커버하기 위한 보정으로
+     보이며, 실제 tierN.html에는 .tier-list/.characters가 없어 아래
+     .tier-table/.tier-row 이후 규칙들이 이 페이지에서 실질적으로 동작한다 */
   .tier-list {
     width: 100% !important;
     max-width: 100% !important;
@@ -41,6 +50,8 @@
     height: auto;
   }
 
+  /* 등급표 바깥 박스 — PC에서는 width:95%였지만 모바일에서는 화면 폭을 최대한
+     활용하도록 100%로 넓히고 안쪽 여백을 줄인다 */
   .tier-table {
     width: 100% !important;
     box-sizing: border-box;
@@ -51,16 +62,21 @@
     padding: 16px 8px !important;
   }
 
+  /* tierN.css의 .tier-row는 PC에서 display:flex(가로: 라벨 옆에 카드들)였는데,
+     모바일에서는 column으로 바꿔 라벨이 카드 목록 위에 오도록 세로로 쌓는다 */
   .tier-row {
     flex-direction: column !important;
   }
 
+  /* 라벨 칸도 위 tier-row가 세로로 바뀌었으므로 폭을 80px 고정에서 100%로
+     넓혀 카드 목록과 같은 너비의 가로 막대 형태가 되게 한다 */
   .tier-label {
     width: 100% !important;
     min-height: 40px;
     box-sizing: border-box;
   }
 
+  /* 캐릭터 카드 폭을 줄여 좁은 화면에서도 한 줄에 여러 장이 배치되게 한다 */
   .char {
     max-width: 96px;
   }

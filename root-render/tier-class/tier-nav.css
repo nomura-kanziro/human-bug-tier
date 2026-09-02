@@ -1,4 +1,5 @@
-/* 이전·다음 티어표 네비 — JS가 main 맨 위에 삽입 */
+/* 이전·다음 티어표 네비 — tier-nav.js가 main 맨 위에 삽입하는 <nav> 컨테이너.
+   자식 3개(이전 버튼/현재 등급 표시/다음 버튼)를 가로로 나란히 배치한다 */
 .tier-page-nav {
   display: flex;
   align-items: center;
@@ -10,6 +11,8 @@
   box-sizing: border-box;
 }
 
+/* 이전/다음 버튼 공통 스타일. tier-nav.js가 이 클래스를 <a>(활성) 또는
+   <span>(비활성)에 똑같이 붙이므로, 태그가 달라도 모양은 동일하다 */
 .tier-page-nav-btn {
   display: inline-flex;
   align-items: center;
@@ -31,12 +34,15 @@
   border-color: #555;
 }
 
+/* 1티어의 이전 버튼·9티어의 다음 버튼처럼 갈 곳이 없는 경우. tier-nav.js가
+   <span>으로 만든 요소에 이 클래스를 추가로 붙여 반투명 + 클릭 무시 처리한다 */
 .tier-page-nav-btn.is-disabled {
   opacity: 0.35;
   pointer-events: none;
   cursor: default;
 }
 
+/* 가운데 "N티어" 표시. flex:1로 남는 공간을 모두 차지해 좌우 버튼을 양 끝으로 밀어낸다 */
 .tier-page-nav-current {
   flex: 1;
   text-align: center;
@@ -45,7 +51,10 @@
   color: #222;
 }
 
-/* 메인 티어 아이콘 색에 맞춘 등급 제목 윤광 */
+/* 등급 제목(h2) 윤광 애니메이션의 기본값. tier-nav.js가 h2에 tier-heading
+   클래스 + data-tier 속성을 붙이면 이 애니메이션이 걸리고, 아래
+   [data-tier="N"] 규칙들이 CSS 변수(--tier-glow-*) 값만 등급별로 덮어써서
+   실제 홈 화면 티어 아이콘과 같은 색으로 빛나 보이게 한다 */
 .tier-heading {
   --tier-glow-soft: rgba(110, 180, 245, 0.35);
   --tier-glow-mid: rgba(110, 180, 245, 0.55);
@@ -53,6 +62,9 @@
   animation: tier-title-glow 5.2s ease-in-out infinite;
 }
 
+/* 이하 [data-tier="1"]~[data-tier="9"]는 등급별 윤광 색 재정의 블록.
+   숫자가 커질수록(등급이 낮을수록) 어둡고 채도 낮은 색으로 바뀌어 1등급의
+   화려한 하늘색부터 9등급의 무채색 회색까지 계단식으로 이어진다 */
 .tier-heading[data-tier="1"] {
   --tier-glow-soft: rgba(110, 180, 245, 0.38);
   --tier-glow-mid: rgba(110, 180, 245, 0.58);
@@ -107,6 +119,8 @@
   --tier-glow-strong: rgba(90, 90, 90, 0.65);
 }
 
+/* 위 CSS 변수 3단계(soft/mid/strong)를 오가며 text-shadow 레이어 수와 강도를
+   늘렸다 줄였다 반복해 "은은하게 숨쉬듯 빛나는" 느낌을 낸다 */
 @keyframes tier-title-glow {
   0%,
   100% {
@@ -122,6 +136,8 @@
   }
 }
 
+/* 접근성 — "동작 줄이기"를 켜둔 사용자에게는 애니메이션 대신 중간 밝기의
+   고정된 그림자만 보여준다(빛이 아예 없으면 밋밋해 보이므로 mid 단계로 고정) */
 @media (prefers-reduced-motion: reduce) {
   .tier-heading {
     animation: none;
@@ -129,6 +145,8 @@
   }
 }
 
+/* 모바일(≤768px) 보정 — 버튼 두 개를 flex:1로 균등폭 배분하고 글자 크기를
+   줄여 좁은 화면에서도 네비 바가 한 줄에 들어가게 한다 */
 @media (max-width: 768px) {
   .tier-page-nav {
     width: 100%;
