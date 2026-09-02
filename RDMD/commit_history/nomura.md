@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 205 |
+| **커밋 수** | 206 |
 | **기간** | 2026-03-20 ~ 2026-09-02 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -233,7 +233,8 @@
 | 202 | 2026-09-02 | [`b91c233`](#b91c233) | docs(rdmd): 최근 홈·풀 화살표·티어 재배치 반영 |
 | 203 | 2026-09-02 | [`9bc6cdd`](#9bc6cdd) | feat(tier-class): 1티어 표 구조 통일 및 하늘색 보석 연출 |
 | 204 | 2026-09-02 | [`dae05b2`](#dae05b2) | feat(tier-class): 5을 토비구치~에비하라를 5정으로 추락 |
-| 205 | 2026-09-02 | pending | feat(tier-class): 이전·다음 티어표 페이지 네비 |
+| 205 | 2026-09-02 | [`4ebfef4`](#4ebfef4) | feat(tier-class): 이전·다음 티어표 페이지 네비 |
+| 206 | 2026-09-02 | pending | chore(common): 사이트 버전을 0.4.2로 변경 |
 
 ---
 
@@ -3992,18 +3993,36 @@
 
 ---
 
-<a id="pending-205"></a>
+<a id="4ebfef4"></a>
 
-### 205. 2026-09-02 — pending
+### 205. 2026-09-02 — `4ebfef4`
 
-- **hash (short)**: pending
-- **hash (full)**: pending
+- **hash (short)**: `4ebfef4`
+- **hash (full)**: `4ebfef43585875160621c7488f9e2483a10802b8`
 - **author**: nomura
 - **message**: feat(tier-class): 이전·다음 티어표 페이지 네비
-- **git**: _(커밋 후 기입)_
+- **git**: `git show 4ebfef4`
 - **범위**: frontend / tier-class
 - **요약**: 공식 1~9티어 페이지 상단에 이전·다음 티어표 이동 바를 넣었다. 1티어의 이전과 9티어의 다음은 보이되 반투명으로 비활성이다.
 - **주요 파일**: `root-render/tier-class/tier-nav.js`, `root-render/tier-class/tier-nav.css`, `root-render/tier-class/tier1.html` ~ `tier9.html`
 - **관련 RDMD**: `RDMD/features/tier-class.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-206"></a>
+
+### 206. 2026-09-02 — pending
+
+- **hash (short)**: pending
+- **hash (full)**: pending
+- **author**: nomura
+- **message**: chore(common): 사이트 버전을 0.4.2로 변경
+- **git**: _(커밋 후 기입)_
+- **범위**: frontend / common
+- **요약**: 푸터 site version과 현재 제품 표기를 0.4.1에서 0.4.2로 올렸다. Render·Cloudflare 푸터 둘 다 맞췄다.
+- **주요 파일**: `root-render/footer.html`, `root-cloudflare/footer.html`, `AGENTS.md`, `CLAUDE.md`, `RDMD/features/overview.md`
+- **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)
