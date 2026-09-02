@@ -142,18 +142,25 @@
       <div class="home-luck-widget">
         <p id="home-luck-static" class="home-luck-static" hidden>서버가 있는 환경에서 뽑을 수 있습니다.</p>
         <button type="button" id="home-luck-btn" class="home-luck-btn">오늘의 행운 뽑기</button>
-        <p id="home-luck-status" class="home-luck-status"></p>
-        <div id="home-luck-loading" class="home-luck-loading" hidden>
-          <span id="home-luck-reel">?</span>
-        </div>
-        <div id="home-luck-result" class="home-luck-result" hidden>
-          <img id="home-luck-img" alt="">
-          <div>
-            <div id="home-luck-tier" class="home-luck-tier"></div>
-            <div id="home-luck-name" class="home-luck-name"></div>
-            <p id="home-luck-guest" class="home-luck-guest" hidden>체크 결과 · 저장되지 않음</p>
+        <div class="home-luck-stage">
+          <div id="home-luck-placeholder" class="home-luck-placeholder">
+            <span class="home-luck-placeholder-mark">?</span>
+            <span class="home-luck-placeholder-text">버튼을 누르면 오늘의 티어가 나옵니다</span>
+          </div>
+          <div id="home-luck-loading" class="home-luck-loading" hidden>
+            <span id="home-luck-reel">1</span>
+            <span class="home-luck-placeholder-text">뽑는 중…</span>
+          </div>
+          <div id="home-luck-result" class="home-luck-result" hidden>
+            <img id="home-luck-img" alt="">
+            <div class="home-luck-result-copy">
+              <div id="home-luck-tier" class="home-luck-tier"></div>
+              <div id="home-luck-name" class="home-luck-name"></div>
+              <p id="home-luck-guest" class="home-luck-guest" hidden>체크 결과 · 저장되지 않음</p>
+            </div>
           </div>
         </div>
+        <p id="home-luck-status" class="home-luck-status" hidden></p>
       </div>
     </div>
   </section>

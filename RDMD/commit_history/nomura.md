@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 198 |
+| **커밋 수** | 199 |
 | **기간** | 2026-03-20 ~ 2026-09-02 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -227,6 +227,7 @@
 | 196 | 2026-09-02 | [`a1164fa`](#a1164fa) | feat(index): 메인 행운 뽑기 위젯 |
 | 197 | 2026-09-02 | [`57a9298`](#57a9298) | feat(index): 공식 티어표 제목 및 메인 가로 폭 통일 |
 | 198 | 2026-09-02 | [`2ab62c8`](#2ab62c8) | feat(tier-class): 세르지오 1병에서 1정으로 추락 |
+| 199 | 2026-09-02 | pending | feat(index): 메인 행운 뽑기 위젯 스테이지 정리 |
 
 ---
 
@@ -3871,6 +3872,24 @@
 - **범위**: frontend / tier-class
 - **요약**: 세르지오를 1티어 병급에서 정급으로 내리고, 마치다 토모야스 바로 뒤에 배치했다. 같은 티어라 이미지 폴더는 그대로다.
 - **주요 파일**: `root-render/tier-class/tier1.html`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-199"></a>
+
+### 199. 2026-09-02 — pending
+
+- **hash (short)**: pending
+- **hash (full)**: pending
+- **author**: nomura
+- **message**: feat(index): 메인 행운 뽑기 위젯 스테이지 정리
+- **git**: _(커밋 후 기입)_
+- **범위**: frontend / index
+- **요약**: 메인 행운 위젯 버튼 아래를 자리 잡는 스테이지로 바꿨다. 기본은 `?` 안내, 뽑는 중은 릴, 결과는 카드. 빈 상태 문구는 숨긴다.
+- **주요 파일**: `root-render/index.html`, `root-render/index-home.css`, `root-render/index-home.js`
 - **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)

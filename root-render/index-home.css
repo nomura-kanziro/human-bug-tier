@@ -192,6 +192,9 @@
 
 .home-luck-widget {
   flex: 1 1 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   padding: 18px;
   border-radius: 16px;
   background: #fff;
@@ -214,11 +217,63 @@
   cursor: not-allowed;
 }
 
+.home-luck-stage {
+  min-height: 92px;
+  display: flex;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #fff7ed;
+  border: 1px dashed #f3d19a;
+}
+
+.home-luck-placeholder,
+.home-luck-loading,
+.home-luck-result {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+}
+
+.home-luck-placeholder[hidden],
+.home-luck-loading[hidden],
+.home-luck-result[hidden] {
+  display: none !important;
+}
+
+.home-luck-placeholder-mark,
+.home-luck-loading #home-luck-reel {
+  flex: 0 0 64px;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: #ffedd5;
+  color: #d97706;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.home-luck-placeholder-text {
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: #a16207;
+}
+
 .home-luck-status,
 .home-luck-guest {
-  margin: 10px 0 0;
-  font-size: 0.85rem;
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
   color: #78716c;
+}
+
+.home-luck-guest {
+  margin-top: 4px;
 }
 
 .home-luck-static {
@@ -227,39 +282,31 @@
   border-radius: 10px;
   padding: 10px 12px;
   font-size: 0.88rem;
-}
-
-.home-luck-loading {
-  text-align: center;
-  padding: 12px 0;
-  font-size: 1.6rem;
-  font-weight: 800;
-  color: #d97706;
-}
-
-.home-luck-result {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  margin-top: 14px;
+  margin: 0;
 }
 
 .home-luck-result img {
-  width: 72px;
-  height: 72px;
+  width: 64px;
+  height: 64px;
   object-fit: cover;
   object-position: top;
   border-radius: 10px;
+  flex: 0 0 64px;
+}
+
+.home-luck-result-copy {
+  min-width: 0;
 }
 
 .home-luck-tier {
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
   color: #d97706;
 }
 
 .home-luck-name {
   font-weight: 700;
+  font-size: 0.98rem;
 }
 
 @media (max-width: 768px) {
