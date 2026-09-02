@@ -18,7 +18,7 @@
 
 **휴버대 티어표** — 바닐라 HTML/CSS/JS + Express/MongoDB.  
 공식 1~9티어(이미지 폴더 일치) · 커스텀 제작/게시판/**본인 글 수정** · 회원 · 공지(관리자 수정) · 문의 · 관리자 · PWA.  
-**현재 바닐라 0.4.1.** **실무는 Render.com만** (`root-render/` + `backend/`). Cloudflare 작업 중지. React 정식은 기획만. 지시 전 구현 금지.
+**현재 바닐라 0.4.2.** **실무는 Render.com만** (`root-render/` + `backend/`). Cloudflare 작업 중지. React 정식은 기획만. 지시 전 구현 금지.
 
 ## Codex가 할 일 (순서)
 
