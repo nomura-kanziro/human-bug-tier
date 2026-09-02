@@ -224,7 +224,7 @@
 | 193 | 2026-09-02 | [`682c21c`](#682c21c) | feat(custom-maker): 캐릭터 풀 화살표로 티어표·풀 이동 |
 | 194 | 2026-09-02 | [`59fc3e5`](#59fc3e5) | feat(index): 퀵 카드 클릭 시 관련 섹션으로 이동 |
 | 195 | 2026-09-02 | [`45b0d94`](#45b0d94) | feat(index): 메인 커스텀 메이커 미리보기 |
-| 196 | 2026-09-02 | pending | feat(index): 메인 행운 뽑기 위젯 |
+| 196 | 2026-09-02 | [`a1164fa`](#a1164fa) | feat(index): 메인 행운 뽑기 위젯 |
 
 ---
 
@@ -3821,15 +3821,15 @@
 
 ---
 
-<a id="pending-196"></a>
+<a id="a1164fa"></a>
 
-### 196. 2026-09-02 — pending
+### 196. 2026-09-02 — `a1164fa`
 
-- **hash (short)**: pending
-- **hash (full)**: pending
+- **hash (short)**: `a1164fa`
+- **hash (full)**: `a1164fa19a4b836ff1a4b77b5fdef3903888c441`
 - **author**: nomura
 - **message**: feat(index): 메인 행운 뽑기 위젯
-- **git**: _(커밋 후 기입)_
+- **git**: `git show a1164fa`
 - **범위**: frontend / index
 - **요약**: 메인에 오늘의 행운 티어를 짧게 뽑는 위젯을 넣었다. 기존 luck-draw API를 쓰고, 카드 클릭으로 이 섹션까지 내려온다.
 - **주요 파일**: `root-render/index.html`, `root-render/index-home.js`, `root-render/index-home.css`
