@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 194 |
+| **커밋 수** | 195 |
 | **기간** | 2026-03-20 ~ 2026-09-02 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -222,7 +222,8 @@
 | 191 | 2026-09-01 | [`2f98421`](#2f98421) | docs(react-rewrite): 정식 버전 React 기획 및 Cloudflare 작업 중지 인수인계 |
 | 192 | 2026-09-01 | [`f1229e4`](#f1229e4) | docs(deploy): 현재 실무는 Render.com만이라고 선언 |
 | 193 | 2026-09-02 | [`682c21c`](#682c21c) | feat(custom-maker): 캐릭터 풀 화살표로 티어표·풀 이동 |
-| 194 | 2026-09-02 | pending | feat(index): 퀵 카드 클릭 시 관련 섹션으로 이동 |
+| 194 | 2026-09-02 | [`59fc3e5`](#59fc3e5) | feat(index): 퀵 카드 클릭 시 관련 섹션으로 이동 |
+| 195 | 2026-09-02 | pending | feat(index): 메인 커스텀 메이커 미리보기 |
 
 ---
 
@@ -3783,18 +3784,36 @@
 
 ---
 
-<a id="pending-194"></a>
+<a id="59fc3e5"></a>
 
-### 194. 2026-09-02 — pending
+### 194. 2026-09-02 — `59fc3e5`
+
+- **hash (short)**: `59fc3e5`
+- **hash (full)**: `59fc3e5aa04ed39b54472d1a661ab8881545657b`
+- **author**: nomura
+- **message**: feat(index): 퀵 카드 클릭 시 관련 섹션으로 이동
+- **git**: `git show 59fc3e5`
+- **범위**: frontend / index
+- **요약**: 메인 퀵 카드 본체를 누르면 내부 목록 링크는 그대로 두고, 티어표·커스텀 메이커·행운 뽑기 관련 섹션으로 부드럽게 스크롤한다.
+- **주요 파일**: `root-render/index.html`, `root-render/index-home.js`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-195"></a>
+
+### 195. 2026-09-02 — pending
 
 - **hash (short)**: pending
 - **hash (full)**: pending
 - **author**: nomura
-- **message**: feat(index): 퀵 카드 클릭 시 관련 섹션으로 이동
+- **message**: feat(index): 메인 커스텀 메이커 미리보기
 - **git**: _(커밋 후 기입)_
 - **범위**: frontend / index
-- **요약**: 메인 퀵 카드 본체를 누르면 내부 목록 링크는 그대로 두고, 티어표·커스텀 메이커·행운 뽑기 관련 섹션으로 부드럽게 스크롤한다.
-- **주요 파일**: `root-render/index.html`, `root-render/index-home.js`
+- **요약**: 메인에 커스텀 메이커 미리보기 패널을 넣었다. 어두운 티어 보드 미니 목업과 제작하기·게시판 버튼으로 바로 갈 수 있다.
+- **주요 파일**: `root-render/index.html`, `root-render/index-home.css`
 - **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)

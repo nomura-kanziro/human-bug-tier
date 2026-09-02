@@ -1,0 +1,134 @@
+/* 메인 전용: 커스텀 메이커 미리보기 · 행운 뽑기 */
+
+.home-maker-preview {
+  max-width: 1120px;
+  margin: 8px auto 28px;
+  padding: 0 20px;
+}
+
+.home-maker-preview-inner {
+  display: flex;
+  gap: 36px;
+  align-items: center;
+  padding: 36px 40px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #141414 0%, #1c1c1c 55%, #111 100%);
+  color: #f5f5f5;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+}
+
+.home-maker-copy {
+  flex: 1 1 280px;
+}
+
+.home-maker-kicker {
+  margin: 0 0 8px;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #ffcc00;
+}
+
+.home-maker-preview h2 {
+  margin: 0 0 10px;
+  font-size: 1.55rem;
+}
+
+.home-maker-desc {
+  margin: 0 0 20px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.95rem;
+}
+
+.home-maker-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.home-maker-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.home-maker-btn-primary {
+  background: #ffcc00;
+  color: #111;
+}
+
+.home-maker-btn-ghost {
+  border: 1px solid rgba(255, 204, 0, 0.45);
+  color: #ffcc00;
+}
+
+.home-maker-board {
+  flex: 1 1 300px;
+  min-width: 240px;
+  padding: 16px;
+  border: 1px solid rgba(255, 204, 0, 0.35);
+  border-radius: 14px;
+  background: #0d0d0d;
+}
+
+.home-maker-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.home-maker-row:last-child {
+  margin-bottom: 0;
+}
+
+.home-maker-label {
+  flex: 0 0 36px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ffcc00;
+  color: #ffcc00;
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.home-maker-slots {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+}
+
+.home-maker-slots img,
+.home-maker-empty {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  object-fit: cover;
+  object-position: top;
+}
+
+.home-maker-empty {
+  border: 1px dashed rgba(255, 204, 0, 0.35);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+@media (max-width: 768px) {
+  .home-maker-preview-inner {
+    flex-direction: column;
+    padding: 24px 18px;
+    gap: 22px;
+  }
+
+  .home-maker-board {
+    width: 100%;
+  }
+}

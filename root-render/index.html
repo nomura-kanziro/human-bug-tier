@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="common.css">
   <link rel="stylesheet" href="notice/notice.css">
   <link rel="stylesheet" href="Header_Footer.css">
+  <link rel="stylesheet" href="index-home.css">
 </head>
 <body>
   <!-- 상단 네비게이션 -->
@@ -91,7 +92,45 @@
     </div>
   </section>
 
-  <section id="home-maker-preview" class="home-preview-slot"></section>
+  <section id="home-maker-preview" class="home-maker-preview">
+    <div class="home-maker-preview-inner">
+      <div class="home-maker-copy">
+        <p class="home-maker-kicker">Custom Maker</p>
+        <h2>나만의 티어표를 만들어 보세요</h2>
+        <p class="home-maker-desc">공식 1~9티어 캐릭터를 끌어다 놓거나, 모바일에서는 탭으로 배치할 수 있습니다. PNG·PDF로 저장하고 게시판에 올려 보세요.</p>
+        <div class="home-maker-actions">
+          <a class="home-maker-btn home-maker-btn-primary" href="custom-maker/custom-maker.html">제작하기</a>
+          <a class="home-maker-btn home-maker-btn-ghost" href="custom-maker/custom-maker_post/custom-maker_post.html">게시판</a>
+        </div>
+      </div>
+      <div class="home-maker-board" aria-hidden="true">
+        <div class="home-maker-row">
+          <span class="home-maker-label">갑</span>
+          <div class="home-maker-slots">
+            <img src="tier-image/1 tier/uryu3paze.webp" alt="">
+            <img src="tier-image/1 tier/tsurugi.jpg" alt="">
+            <img src="tier-image/1 tier/nomura.jpg" alt="">
+          </div>
+        </div>
+        <div class="home-maker-row">
+          <span class="home-maker-label">을</span>
+          <div class="home-maker-slots">
+            <img src="tier-image/2 tier/kita kintaro.jpg" alt="">
+            <img src="tier-image/2 tier/togari genya.jpg" alt="">
+            <span class="home-maker-empty"></span>
+          </div>
+        </div>
+        <div class="home-maker-row">
+          <span class="home-maker-label">병</span>
+          <div class="home-maker-slots">
+            <img src="tier-image/3 tier/park seojun.jpg" alt="">
+            <span class="home-maker-empty"></span>
+            <span class="home-maker-empty"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
   <section id="home-luck-preview" class="home-preview-slot"></section>
 
   <!-- 티어 카드 목록 -->
