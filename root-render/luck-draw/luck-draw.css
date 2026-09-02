@@ -1,5 +1,7 @@
 /* luck-draw 페이지 전용. common.css / Header_Footer.css 는 수정하지 않는다. */
 
+/* ====== 페이지 레이아웃 ====== */
+/* 콘텐츠 전체를 카드형 리스트처럼 보이게 가운데 정렬된 좁은 폭 컬럼으로 제한. */
 .luck-draw-page {
   max-width: 720px;
   margin: 0 auto;
@@ -17,7 +19,9 @@
   margin: 0 0 28px;
 }
 
-/* 탭 */
+/* ====== 탭 (오늘의 행운 티어 / 랜덤 뽑기) ====== */
+/* 실제 탭 전환(active 토글, 해시 동기화)은 luck-draw.js가 담당하고,
+   여기서는 활성 탭에만 주황색 밑줄 강조를 준다. */
 .luck-draw-tabs {
   display: flex;
   gap: 8px;
@@ -42,11 +46,14 @@
   border-bottom-color: #f59e0b;
 }
 
+/* "랜덤 뽑기"처럼 아직 미구현이라 버튼 자체에 disabled 속성이 붙은 탭용 시각적 처리. */
 .luck-tab:disabled {
   cursor: not-allowed;
   opacity: 0.5;
 }
 
+/* 비활성 탭 패널은 완전히 숨기고(레이아웃에서 제외), .active가 붙은 패널만 노출.
+   JS가 URL 해시에 맞춰 이 클래스를 토글한다. */
 .luck-tab-panel {
   display: none;
 }
@@ -55,7 +62,7 @@
   display: block;
 }
 
-/* 안내 배지 */
+/* 안내 배지 — GitHub Pages 등 백엔드 없는 정적 배포 환경에서만 JS가 hidden을 풀어 노출. */
 .luck-static-guard {
   background: #fef3c7;
   color: #92400e;
@@ -65,7 +72,8 @@
   font-size: 14px;
 }
 
-/* 뽑기 버튼 */
+/* ====== 뽑기 버튼 ====== */
+/* 상태(대기 중/쿨다운/횟수 소진)에 따라 텍스트와 disabled만 JS가 바꾸고, 스타일은 고정. */
 .luck-draw-btn {
   display: block;
   width: 100%;
@@ -92,7 +100,10 @@
   text-align: center;
 }
 
-/* 뽑기 로딩(긴장감용) — 버튼 클릭 후 10초간 결과를 숨기고 보여준다 */
+/* ====== 뽑기 로딩(긴장감용) — 버튼 클릭 후 10초간 결과를 숨기고 보여준다 ======
+   어두운 배경 위에 원형 숫자 릴 + 진행 바를 배치해 "슬롯머신이 돌아가는" 느낌을 낸다.
+   릴의 숫자 순환은 luck-draw.js가 setInterval로 textContent를 바꾸는 방식이고,
+   진행 바는 JS가 width를 0%→100%로 바꿀 때 아래 transition이 애니메이션을 만든다. */
 .luck-draw-loading {
   margin-top: 24px;
   padding: 32px 20px;
@@ -101,6 +112,7 @@
   text-align: center;
 }
 
+/* 원형 숫자 릴 — 펄스(커졌다 작아졌다 + 은은한 그림자 확산) 애니메이션으로 "돌아가는 중" 느낌 강조. */
 .luck-draw-loading-reel {
   width: 76px;
   height: 76px;
@@ -116,6 +128,7 @@
   animation: luck-loading-pulse 0.5s ease-in-out infinite alternate;
 }
 
+/* 릴이 확대/축소를 반복하며 그림자가 바깥으로 퍼졌다 사라지는 펄스 효과 (0.5초 주기로 무한 반복). */
 @keyframes luck-loading-pulse {
   from { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5); }
   to { transform: scale(1.08); box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
@@ -128,6 +141,7 @@
   margin: 0 0 16px;
 }
 
+/* 진행 바 트랙(배경) — 안의 -fill 요소가 실제 채워지는 부분. */
 .luck-draw-loading-bar {
   width: 100%;
   max-width: 260px;
@@ -138,6 +152,9 @@
   overflow: hidden;
 }
 
+/* 진행 바 채움. 초기 width는 0%이며, luck-draw.js의 startDrawSuspense()가
+   width를 100%로 바꾸면서 인라인 style로 넣는 transition(DRAW_SUSPENSE_MS=10s, linear)이
+   실제 애니메이션 속도를 결정한다 — 즉 이 CSS는 정적 기본값만 정의한다. */
 .luck-draw-loading-bar-fill {
   width: 0%;
   height: 100%;
@@ -145,7 +162,9 @@
   background: linear-gradient(90deg, #f59e0b, #f97316);
 }
 
-/* 결과 카드 */
+/* ====== 결과 카드 ====== */
+/* 뽑기 결과(캐릭터 이미지/티어/이름/포인트 배지/링크)를 담는 카드. luck-draw.js의 renderResult()가
+   hidden을 해제하고 내부 요소들의 텍스트·src를 채운다. */
 .luck-result-card {
   margin-top: 28px;
   padding: 28px;
@@ -182,6 +201,7 @@
   margin-bottom: 8px;
 }
 
+/* 획득 포인트 배지 기본(양수) 스타일 — 초록 계열. 1~5티어처럼 +포인트일 때 표시. */
 .luck-result-points {
   display: inline-block;
   padding: 3px 10px;
@@ -193,6 +213,7 @@
   margin-bottom: 12px;
 }
 
+/* 음수 포인트(6~9티어)일 때 luck-draw.js가 이 클래스를 추가로 붙여 빨간 계열로 덮어쓴다. */
 .luck-result-points-minus {
   background: #fef2f2;
   color: #dc2626;
@@ -206,6 +227,7 @@
   font-size: 14px;
 }
 
+/* 비회원이 뽑았을 때만 노출되는 "저장되지 않음 + 로그인 유도" 안내 박스. */
 .luck-guest-notice {
   margin: 16px 0 0;
   padding: 12px;
@@ -221,7 +243,8 @@
   margin-left: 6px;
 }
 
-/* 확률표 */
+/* ====== 확률표 ====== */
+/* 서버 상수(티어별 당첨 확률·포인트)를 renderProbabilityTable()이 채우는 3열 표. */
 .luck-probability-table {
   width: 100%;
   border-collapse: collapse;
@@ -242,7 +265,8 @@
   text-align: left;
 }
 
-/* 기록 */
+/* ====== 내 뽑기 기록 (회원 전용) ====== */
+/* renderHistory()가 항목마다 -item 행을 채우고, 비회원이거나 기록이 없으면 -empty 안내 문구가 대신 들어간다. */
 .luck-history {
   margin-top: 40px;
 }
@@ -265,6 +289,7 @@
   font-size: 14px;
 }
 
+/* 모바일 폭에서는 좌우 여백을 줄여 화면을 더 넓게 활용. */
 @media (max-width: 600px) {
   .luck-draw-page {
     padding: 40px 20px 80px;

@@ -4,30 +4,44 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>행운 뽑기 - 휴버대 티어표</title>
+  <!-- common.css: 사이트 전역 기본 스타일 / Header_Footer.css: 헤더·푸터 전용 / luck-draw.css: 이 페이지 전용 -->
   <link rel="stylesheet" href="../common.css">
   <link rel="stylesheet" href="../Header_Footer.css">
   <link rel="stylesheet" href="luck-draw.css">
 </head>
 <body>
+  <!-- 공통 헤더/푸터는 common.js가 이 자리에 fetch로 로드해 삽입한다 (header.html/footer.html 재사용). -->
   <div id="header-placeholder"></div>
 
   <div class="luck-draw-page">
+    <!-- 탭 전환 UI. 실제 활성 탭 표시(.active 토글)와 해시 동기화는 luck-draw.js의
+         activateTabFromHash / bindTabClicks가 담당한다. "랜덤 뽑기"는 아직 미구현 기능이라
+         disabled로 막아두고 오늘의 행운 티어만 사용 가능하다. -->
     <div class="luck-draw-tabs">
       <button type="button" class="luck-tab" data-tab="daily">오늘의 행운 티어</button>
       <button type="button" class="luck-tab" data-tab="random" disabled title="준비 중">랜덤 뽑기 (준비 중)</button>
     </div>
 
+    <!-- ====== "오늘의 행운 티어" 탭 패널 ====== -->
     <section id="daily" class="luck-tab-panel">
       <h1>오늘의 행운 티어</h1>
       <p class="luck-desc">버튼을 누르면 서버가 확률에 따라 오늘의 티어와 캐릭터를 뽑아줍니다. 하루에 한 번만 뽑을 수 있어요.</p>
 
+      <!-- GitHub Pages 등 백엔드가 없는 정적 배포에서만 노출되는 경고 배지.
+           luck-draw.js의 guardStaticDeploy()가 getApiBase()==='GITHUB_STATIC'일 때 hidden을 해제한다. -->
       <div id="static-guard" class="luck-static-guard" hidden>
         이 기능은 서버가 필요합니다. 로컬(:5000) 또는 배포된 사이트에서 이용해주세요.
       </div>
 
+      <!-- 뽑기 트리거. 클릭 시 onClickDaily 실행 — 상태에 따라 disabled/문구가 JS에서 계속 갱신된다
+           (예: "오늘의 행운 뽑기" ↔ "다음 뽑기까지 mm:ss" ↔ "오늘 뽑기 횟수 소진"). -->
       <button type="button" id="draw-btn" class="luck-draw-btn">오늘의 행운 뽑기</button>
+      <!-- 남은 횟수/쿨다운/보유 포인트 등 현재 상태를 요약하는 한 줄 안내 (renderMemberStatus / renderGuestStatus가 채움). -->
       <p id="draw-status" class="luck-draw-status"></p>
 
+      <!-- 뽑기 직후 10초간(DRAW_SUSPENSE_MS) 결과 대신 보여주는 슬롯머신 느낌의 로딩 연출.
+           reel은 1~9 숫자가 빠르게 순환, bar-fill은 CSS transition으로 폭이 0→100%로 채워진다.
+           startDrawSuspense/stopDrawSuspense가 hidden을 토글한다. -->
       <div id="draw-loading" class="luck-draw-loading" hidden>
         <div id="draw-loading-reel" class="luck-draw-loading-reel">?</div>
         <p class="luck-draw-loading-text">두근두근... 오늘의 운명을 뽑는 중</p>
@@ -36,10 +50,13 @@
         </div>
       </div>
 
+      <!-- 뽑기 결과 카드. renderResult()가 이미지/티어명/캐릭터명/포인트 배지/공식 티어표 링크를 채운다.
+           guest-notice는 비회원이 뽑았을 때만(서버에 저장되지 않았다는 사실을 알리며) 보인다. -->
       <div id="result-card" class="luck-result-card" hidden>
         <img id="result-image" class="luck-result-image" src="" alt="">
         <div class="luck-result-tier" id="result-tier"></div>
         <div class="luck-result-name" id="result-name"></div>
+        <!-- 방금 뽑은 결과에만 표시되는 획득/차감 포인트 배지 (예: +10P, -4P). 이력 복원 시엔 delta를 모르므로 숨김. -->
         <span id="result-points" class="luck-result-points" hidden></span>
         <a id="result-tier-link" class="luck-result-tier-link" href="#">공식 티어표에서 보기 →</a>
         <p id="guest-notice" class="luck-guest-notice" hidden>
@@ -48,6 +65,8 @@
         </p>
       </div>
 
+      <!-- 서버 상수(DAILY_TIER_WEIGHTS)를 그대로 보여주는 티어별 확률/포인트 표.
+           renderProbabilityTable()이 loadConfig() 응답으로 tbody를 채운다. -->
       <table id="probability-table" class="luck-probability-table">
         <caption>티어별 당첨 확률</caption>
         <thead>
@@ -56,12 +75,15 @@
         <tbody></tbody>
       </table>
 
+      <!-- 로그인 회원의 최근 뽑기 이력(서버가 최근 5건만 보관, 오래된 것은 자동 삭제).
+           비회원은 renderHistory 대신 showLoginRequiredHistory()가 로그인 유도 문구를 채운다. -->
       <div class="luck-history">
         <h2>내 기록</h2>
         <div id="history-list" class="luck-history-list"></div>
       </div>
     </section>
 
+    <!-- ====== "랜덤 뽑기" 탭 패널 (준비 중 — 위 탭 버튼이 disabled이므로 실제로는 접근 불가) ====== -->
     <section id="random" class="luck-tab-panel">
       <h1>랜덤 뽑기</h1>
       <p class="luck-desc">랜덤 뽑기는 준비 중입니다. 곧 만나요!</p>
@@ -69,6 +91,8 @@
   </div>
 
   <div id="footer-placeholder"></div>
+  <!-- 로드 순서 중요: common.js(getApiBase/getAuthHeaders 등 전역 유틸) →
+       luck-draw-api.js(그 유틸을 쓰는 fetch 래퍼) → luck-draw.js(페이지 로직, 위 두 파일의 함수를 호출). -->
   <script src="../common.js"></script>
   <script src="luck-draw-api.js"></script>
   <script src="luck-draw.js"></script>
