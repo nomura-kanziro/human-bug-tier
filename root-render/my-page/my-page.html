@@ -4,14 +4,23 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>마이페이지 - 휴버대 티어표</title>
+  <!-- common.css / Header_Footer.css: 사이트 전역 공통 스타일 + 헤더/푸터 스타일.
+       my-page.css: 이 페이지 전용 스타일(마지막에 로드해서 필요 시 덮어쓸 수 있게 함). -->
   <link rel="stylesheet" href="../common.css">
   <link rel="stylesheet" href="../Header_Footer.css">
   <link rel="stylesheet" href="my-page.css">
 </head>
 <body>
+  <!-- 헤더는 정적 마크업이 아니라 common.js가 header.html을 fetch해서 이 자리에 주입한다.
+       프로필 드롭다운(로그인 시 표시)에서 "마이페이지" 링크를 눌러 이 페이지로 들어온다. -->
   <div id="header-placeholder"></div>
 
+  <!-- 마이페이지 본문. 로그인 여부/사용자 정보는 my-page.js의 initMyPage()가
+       common.js의 getCurrentIdentity()로 판별해서 아래 요소들을 채워 넣는다.
+       일반 회원과 관리자 계정이 정확히 같은 마크업을 공유한다(관리자 전용 UI는 여기 없음 —
+       관리자 전용 진입점은 헤더 프로필 드롭다운의 "관리하기" 메뉴 하나뿐). -->
   <div class="my-page">
+    <!-- 프로필 헤더: 아바타 + 닉네임 + 이메일. renderProfileHeader()가 채운다. -->
     <div class="my-page-header">
       <div class="my-page-avatar">
         <img id="my-page-avatar-img" src="" alt="프로필">
@@ -22,6 +31,8 @@
       </div>
     </div>
 
+    <!-- 통계 카드 5개: 작성 글 수 / 받은 좋아요 / 행운 뽑기 횟수 / 최고 등급 당첨 / 행운 포인트.
+         값은 초기에는 '-'로 표시해두고, API 응답이 오면 renderStats()가 실제 숫자로 교체한다. -->
     <div class="my-page-stats">
       <div class="my-page-stat-card">
         <span class="my-page-stat-value" id="stat-post-count">-</span>
@@ -45,6 +56,8 @@
       </div>
     </div>
 
+    <!-- "내가 쓴 게시글" 섹션: renderPostList()가 my-page-posts 안에 최근 게시글 카드(최대 6개)를
+         채운다. 우측 "전체 보기" 링크는 커스텀 메이커 게시판으로 "@닉네임" 검색어를 걸어 이동한다. -->
     <section class="my-page-section">
       <div class="my-page-section-header">
         <h2>내가 쓴 게시글</h2>
@@ -53,6 +66,8 @@
       <div id="my-page-posts" class="my-page-post-list"></div>
     </section>
 
+    <!-- "최근 행운 뽑기 기록" 섹션: renderDrawList()가 my-page-draws 안에 최근 뽑기 이력(최대 5건)을
+         채운다. 우측 링크는 행운 뽑기 페이지의 "오늘의 행운" 섹션(#daily)으로 바로 이동한다. -->
     <section class="my-page-section">
       <div class="my-page-section-header">
         <h2>최근 행운 뽑기 기록</h2>
@@ -62,7 +77,10 @@
     </section>
   </div>
 
+  <!-- 푸터도 헤더와 마찬가지로 common.js가 footer.html을 동적으로 불러와 채운다. -->
   <div id="footer-placeholder"></div>
+  <!-- common.js: 헤더/푸터 로드 + 경로 보정 + 로그인 상태 판별 등 전역 유틸 제공(먼저 로드되어야 함).
+       my-page.js: 이 페이지의 데이터 로딩/렌더링 로직(common.js의 전역 함수들에 의존하므로 이후에 로드). -->
   <script src="../common.js"></script>
   <script src="my-page.js"></script>
 </body>

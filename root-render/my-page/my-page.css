@@ -1,11 +1,17 @@
 /* my-page 전용. common.css / Header_Footer.css 는 수정하지 않는다. */
 
+/* ====================== 페이지 전체 레이아웃 ======================
+   본문 전체를 가운데 정렬된 최대 880px 너비 컬럼으로 제한한다(긴 목록/카드가
+   화면 전체 폭으로 늘어져 읽기 힘들어지는 것을 방지). */
 .my-page {
   max-width: 880px;
   margin: 0 auto;
   padding: 60px 40px 100px;
 }
 
+/* ====================== 프로필 헤더 (아바타 + 닉네임/이메일) ======================
+   아바타 원형 이미지와 닉네임/이메일 텍스트를 가로로 나란히 배치. 관리자 계정도
+   동일한 스타일을 그대로 쓴다(마이페이지는 일반 회원과 완전히 같은 UI). */
 .my-page-header {
   display: flex;
   align-items: center;
@@ -13,6 +19,8 @@
   margin-bottom: 32px;
 }
 
+/* 프로필 아바타: 84x84 원형, 파란 테두리로 강조. overflow:hidden으로 내부 img를
+   원형 틀에 맞춰 잘라낸다. */
 .my-page-avatar {
   width: 84px;
   height: 84px;
@@ -22,6 +30,8 @@
   border: 3px solid #8faadc;
 }
 
+/* object-fit: cover 로 원본 이미지 비율을 유지하면서 84x84 정사각형 프레임을
+   꽉 채우도록(찌그러지지 않게) 한다. */
 .my-page-avatar img {
   width: 100%;
   height: 100%;
@@ -40,6 +50,10 @@
   font-size: 14px;
 }
 
+/* ====================== 통계 카드 그리드 (5개) ======================
+   작성 글 수 / 받은 좋아요 / 행운 뽑기 횟수 / 최고 등급 당첨 / 행운 포인트를
+   한 줄에 5칸 그리드로 배치. 좁은 화면에서는 아래 미디어쿼리에서 auto-fit으로
+   줄바꿈되도록 재조정한다. */
 .my-page-stats {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -47,6 +61,7 @@
   margin-bottom: 44px;
 }
 
+/* 통계 카드 하나: 값(큰 숫자)과 라벨(설명 텍스트)을 세로로 쌓은 둥근 사각 박스. */
 .my-page-stat-card {
   display: flex;
   flex-direction: column;
@@ -59,6 +74,7 @@
   text-align: center;
 }
 
+/* 통계 값(숫자/포인트 등)은 파란색으로 강조해서 라벨과 시각적으로 구분되게 한다. */
 .my-page-stat-value {
   font-size: 22px;
   font-weight: 700;
@@ -70,10 +86,14 @@
   color: #888;
 }
 
+/* ====================== 섹션 공통 (게시글/행운 뽑기 목록 섹션) ======================
+   "내가 쓴 게시글", "최근 행운 뽑기 기록" 두 섹션이 공통으로 쓰는 레이아웃.
+   헤더(제목 + 우측 바로가기 링크)와 그 아래 목록 컨테이너 구조. */
 .my-page-section {
   margin-bottom: 40px;
 }
 
+/* 섹션 제목과 우측 바로가기 링크("전체 보기 →" 등)를 양 끝으로 정렬. */
 .my-page-section-header {
   display: flex;
   align-items: baseline;
@@ -94,12 +114,17 @@
   font-weight: 600;
 }
 
+/* ====================== "내가 쓴 게시글" 카드 목록 ======================
+   my-page.js의 renderPostList()가 여기 안에 게시글 카드(<a>)를 동적으로 채운다.
+   auto-fill + minmax로 카드 개수가 적어도 폭에 맞춰 자동으로 열을 나눠 배치. */
 .my-page-post-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
   gap: 12px;
 }
 
+/* 게시글 카드 하나: 썸네일 + 제목/메타 텍스트를 가로로 배치한 링크(<a>) 박스.
+   카드 전체가 클릭 영역이라 텍스트 링크 밑줄/색상은 없애고 상속 색을 그대로 쓴다. */
 .my-page-post-item {
   display: flex;
   gap: 10px;
@@ -112,10 +137,13 @@
   color: inherit;
 }
 
+/* 마우스 오버 시 살짝 밝은 배경으로 바뀌어 클릭 가능함을 시각적으로 알려준다. */
 .my-page-post-item:hover {
   background: #f1f5f9;
 }
 
+/* 게시글 썸네일: 48x48 정사각형으로 고정하고 object-fit: cover로 비율 유지 크롭.
+   thumbnail이 없을 때(로딩 지연 등)를 대비해 회색 배경을 기본값으로 깔아둔다. */
 .my-page-post-thumb {
   width: 48px;
   height: 48px;
@@ -132,6 +160,8 @@
   gap: 2px;
 }
 
+/* 제목이 카드 폭을 넘으면 줄바꿈하지 않고 말줄임표(...)로 잘라낸다.
+   min-width: 0(부모)과 함께 있어야 flex 자식에서 text-overflow가 정상 동작한다. */
 .my-page-post-title {
   font-size: 14px;
   font-weight: 600;
@@ -145,6 +175,9 @@
   color: #999;
 }
 
+/* ====================== "최근 행운 뽑기 기록" 목록 ======================
+   my-page.js의 renderDrawList()가 여기 안에 뽑기 이력 한 줄씩(<div>)을 채운다.
+   게시글 카드와 달리 이미지가 없는 단순 텍스트 행 목록이라 세로 flex로만 배치. */
 .my-page-draw-list {
   display: flex;
   flex-direction: column;
@@ -159,12 +192,17 @@
   font-size: 14px;
 }
 
+/* 게시글/뽑기 기록이 하나도 없을 때, 또는 GitHub Pages 정적 미리보기처럼 서버가 없어
+   데이터를 아예 불러오지 못할 때 대신 표시하는 안내 문구 스타일. */
 .my-page-empty {
   color: #999;
   font-size: 14px;
   padding: 20px 0;
 }
 
+/* ====================== 모바일 대응 (700px 이하) ======================
+   좌우 여백을 줄이고, 통계 카드는 5열 고정 대신 auto-fit으로 화면 폭에 맞춰
+   자동으로 줄바꿈되게 해서 좁은 화면에서 카드가 찌그러지지 않도록 한다. */
 @media (max-width: 700px) {
   .my-page {
     padding: 40px 20px 80px;
