@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 195 |
+| **커밋 수** | 196 |
 | **기간** | 2026-03-20 ~ 2026-09-02 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -223,7 +223,8 @@
 | 192 | 2026-09-01 | [`f1229e4`](#f1229e4) | docs(deploy): 현재 실무는 Render.com만이라고 선언 |
 | 193 | 2026-09-02 | [`682c21c`](#682c21c) | feat(custom-maker): 캐릭터 풀 화살표로 티어표·풀 이동 |
 | 194 | 2026-09-02 | [`59fc3e5`](#59fc3e5) | feat(index): 퀵 카드 클릭 시 관련 섹션으로 이동 |
-| 195 | 2026-09-02 | pending | feat(index): 메인 커스텀 메이커 미리보기 |
+| 195 | 2026-09-02 | [`45b0d94`](#45b0d94) | feat(index): 메인 커스텀 메이커 미리보기 |
+| 196 | 2026-09-02 | pending | feat(index): 메인 행운 뽑기 위젯 |
 
 ---
 
@@ -3802,18 +3803,36 @@
 
 ---
 
-<a id="pending-195"></a>
+<a id="45b0d94"></a>
 
-### 195. 2026-09-02 — pending
+### 195. 2026-09-02 — `45b0d94`
+
+- **hash (short)**: `45b0d94`
+- **hash (full)**: `45b0d94489a74abfad1e3f4ce3031249064bd188`
+- **author**: nomura
+- **message**: feat(index): 메인 커스텀 메이커 미리보기
+- **git**: `git show 45b0d94`
+- **범위**: frontend / index
+- **요약**: 메인에 커스텀 메이커 미리보기 패널을 넣었다. 어두운 티어 보드 미니 목업과 제작하기·게시판 버튼으로 바로 갈 수 있다.
+- **주요 파일**: `root-render/index.html`, `root-render/index-home.css`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-196"></a>
+
+### 196. 2026-09-02 — pending
 
 - **hash (short)**: pending
 - **hash (full)**: pending
 - **author**: nomura
-- **message**: feat(index): 메인 커스텀 메이커 미리보기
+- **message**: feat(index): 메인 행운 뽑기 위젯
 - **git**: _(커밋 후 기입)_
 - **범위**: frontend / index
-- **요약**: 메인에 커스텀 메이커 미리보기 패널을 넣었다. 어두운 티어 보드 미니 목업과 제작하기·게시판 버튼으로 바로 갈 수 있다.
-- **주요 파일**: `root-render/index.html`, `root-render/index-home.css`
+- **요약**: 메인에 오늘의 행운 티어를 짧게 뽑는 위젯을 넣었다. 기존 luck-draw API를 쓰고, 카드 클릭으로 이 섹션까지 내려온다.
+- **주요 파일**: `root-render/index.html`, `root-render/index-home.js`, `root-render/index-home.css`
 - **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)

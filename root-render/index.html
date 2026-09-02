@@ -131,7 +131,32 @@
       </div>
     </div>
   </section>
-  <section id="home-luck-preview" class="home-preview-slot"></section>
+  <section id="home-luck-preview" class="home-luck-preview">
+    <div class="home-luck-inner">
+      <div class="home-luck-copy">
+        <p class="home-luck-kicker">Luck Draw</p>
+        <h2>오늘의 행운 티어</h2>
+        <p class="home-luck-desc">한 번 뽑아 보세요. 회원은 기록이 남고, 게스트는 체크만 할 수 있습니다.</p>
+        <a class="home-luck-more" href="luck-draw/luck-draw.html#daily">자세히 보기 →</a>
+      </div>
+      <div class="home-luck-widget">
+        <p id="home-luck-static" class="home-luck-static" hidden>서버가 있는 환경에서 뽑을 수 있습니다.</p>
+        <button type="button" id="home-luck-btn" class="home-luck-btn">오늘의 행운 뽑기</button>
+        <p id="home-luck-status" class="home-luck-status"></p>
+        <div id="home-luck-loading" class="home-luck-loading" hidden>
+          <span id="home-luck-reel">?</span>
+        </div>
+        <div id="home-luck-result" class="home-luck-result" hidden>
+          <img id="home-luck-img" alt="">
+          <div>
+            <div id="home-luck-tier" class="home-luck-tier"></div>
+            <div id="home-luck-name" class="home-luck-name"></div>
+            <p id="home-luck-guest" class="home-luck-guest" hidden>체크 결과 · 저장되지 않음</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- 티어 카드 목록 -->
   <section class="tiers" id="home-tiers">
@@ -195,6 +220,7 @@
 
   <script src="common.js"></script>
   <script src="notice/notice.js"></script>
+  <script src="luck-draw/luck-draw-api.js"></script>
   <script src="index-home.js"></script>
 </body>
 </html>
