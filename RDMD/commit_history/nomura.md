@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 197 |
+| **커밋 수** | 198 |
 | **기간** | 2026-03-20 ~ 2026-09-02 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -225,7 +225,8 @@
 | 194 | 2026-09-02 | [`59fc3e5`](#59fc3e5) | feat(index): 퀵 카드 클릭 시 관련 섹션으로 이동 |
 | 195 | 2026-09-02 | [`45b0d94`](#45b0d94) | feat(index): 메인 커스텀 메이커 미리보기 |
 | 196 | 2026-09-02 | [`a1164fa`](#a1164fa) | feat(index): 메인 행운 뽑기 위젯 |
-| 197 | 2026-09-02 | pending | feat(index): 공식 티어표 제목 및 메인 가로 폭 통일 |
+| 197 | 2026-09-02 | [`57a9298`](#57a9298) | feat(index): 공식 티어표 제목 및 메인 가로 폭 통일 |
+| 198 | 2026-09-02 | pending | feat(tier-class): 세르지오 1병에서 1정으로 추락 |
 
 ---
 
@@ -3840,18 +3841,36 @@
 
 ---
 
-<a id="pending-197"></a>
+<a id="57a9298"></a>
 
-### 197. 2026-09-02 — pending
+### 197. 2026-09-02 — `57a9298`
+
+- **hash (short)**: `57a9298`
+- **hash (full)**: `57a92987e001d8db868bf8614d7c0288614c0b0e`
+- **author**: nomura
+- **message**: feat(index): 공식 티어표 제목 및 메인 가로 폭 통일
+- **git**: `git show 57a9298`
+- **범위**: frontend / index
+- **요약**: 메인 1~9티어 카드 위에 ‘공식 티어표’ 제목을 넣고, 퀵 카드·공지·미리보기·티어표의 가로 폭을 1200px로 맞췄다.
+- **주요 파일**: `root-render/index.html`, `root-render/index-home.css`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-198"></a>
+
+### 198. 2026-09-02 — pending
 
 - **hash (short)**: pending
 - **hash (full)**: pending
 - **author**: nomura
-- **message**: feat(index): 공식 티어표 제목 및 메인 가로 폭 통일
+- **message**: feat(tier-class): 세르지오 1병에서 1정으로 추락
 - **git**: _(커밋 후 기입)_
-- **범위**: frontend / index
-- **요약**: 메인 1~9티어 카드 위에 ‘공식 티어표’ 제목을 넣고, 퀵 카드·공지·미리보기·티어표의 가로 폭을 1200px로 맞췄다.
-- **주요 파일**: `root-render/index.html`, `root-render/index-home.css`
+- **범위**: frontend / tier-class
+- **요약**: 세르지오를 1티어 병급에서 정급으로 내리고, 마치다 토모야스 바로 뒤에 배치했다. 같은 티어라 이미지 폴더는 그대로다.
+- **주요 파일**: `root-render/tier-class/tier1.html`
 - **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)
