@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 203 |
+| **커밋 수** | 204 |
 | **기간** | 2026-03-20 ~ 2026-09-02 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -231,7 +231,8 @@
 | 200 | 2026-09-02 | [`a494cb7`](#a494cb7) | feat(tier-class): 세르지오를 라이덴 바로 뒤로 재배치 |
 | 201 | 2026-09-02 | [`828d0b7`](#828d0b7) | feat(tier-class): 호자키 킷페이 2을에서 2갑으로 상승 |
 | 202 | 2026-09-02 | [`b91c233`](#b91c233) | docs(rdmd): 최근 홈·풀 화살표·티어 재배치 반영 |
-| 203 | 2026-09-02 | pending | feat(tier-class): 1티어 표 구조 통일 및 하늘색 보석 연출 |
+| 203 | 2026-09-02 | [`9bc6cdd`](#9bc6cdd) | feat(tier-class): 1티어 표 구조 통일 및 하늘색 보석 연출 |
+| 204 | 2026-09-02 | pending | feat(tier-class): 5을 토비구치~에비하라를 5정으로 추락 |
 
 ---
 
@@ -3954,18 +3955,36 @@
 
 ---
 
-<a id="pending-203"></a>
+<a id="9bc6cdd"></a>
 
-### 203. 2026-09-02 — pending
+### 203. 2026-09-02 — `9bc6cdd`
+
+- **hash (short)**: `9bc6cdd`
+- **hash (full)**: `9bc6cddb82da34ce37b76ffb720b07353e6fc1da`
+- **author**: nomura
+- **message**: feat(tier-class): 1티어 표 구조 통일 및 하늘색 보석 연출
+- **git**: `git show 9bc6cdd`
+- **범위**: frontend / tier-class
+- **요약**: 1티어 HTML/CSS를 2티어와 같은 표 구조로 맞추고, 보드 안쪽 검은 배경은 유지한 채 하늘색 보석 반짝임 애니메이션을 넣었다. 모바일은 `tier-responsive`에서 급 행을 세로로 접는다.
+- **주요 파일**: `root-render/tier-class/tier1.html`, `root-render/tier-class/tier1.css`, `root-render/tier-class/tier-responsive.css`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-204"></a>
+
+### 204. 2026-09-02 — pending
 
 - **hash (short)**: pending
 - **hash (full)**: pending
 - **author**: nomura
-- **message**: feat(tier-class): 1티어 표 구조 통일 및 하늘색 보석 연출
+- **message**: feat(tier-class): 5을 토비구치~에비하라를 5정으로 추락
 - **git**: _(커밋 후 기입)_
 - **범위**: frontend / tier-class
-- **요약**: 1티어 HTML/CSS를 2티어와 같은 표 구조로 맞추고, 보드 안쪽 검은 배경은 유지한 채 하늘색 보석 반짝임 애니메이션을 넣었다. 모바일은 `tier-responsive`에서 급 행을 세로로 접는다.
-- **주요 파일**: `root-render/tier-class/tier1.html`, `root-render/tier-class/tier1.css`, `root-render/tier-class/tier-responsive.css`
+- **요약**: 5티어 을급에서 토비구치부터 에비하라까지(루크 쿠로바네, 코쿠쇼 히데키, 요시오카, 아스카바 포함)를 정급으로 내렸다. 같은 티어라 이미지 폴더는 그대로다. 을급 마지막은 로이.
+- **주요 파일**: `root-render/tier-class/tier5.html`
 - **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)
