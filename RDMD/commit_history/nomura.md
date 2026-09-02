@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 207 |
+| **커밋 수** | 208 |
 | **기간** | 2026-03-20 ~ 2026-09-03 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -235,7 +235,8 @@
 | 204 | 2026-09-02 | [`dae05b2`](#dae05b2) | feat(tier-class): 5을 토비구치~에비하라를 5정으로 추락 |
 | 205 | 2026-09-02 | [`4ebfef4`](#4ebfef4) | feat(tier-class): 이전·다음 티어표 페이지 네비 |
 | 206 | 2026-09-02 | [`9fcdcc8`](#9fcdcc8) | chore(common): 사이트 버전을 0.4.2로 변경 |
-| 207 | 2026-09-03 | pending | feat(tier-class): 등급 제목에 티어 아이콘 색 윤광 |
+| 207 | 2026-09-03 | [`be363bc`](#be363bc) | feat(tier-class): 등급 제목에 티어 아이콘 색 윤광 |
+| 208 | 2026-09-03 | pending | chore: 최근 홈·티어 네비·풀 화살표 주석 |
 
 ---
 
@@ -4030,18 +4031,36 @@
 
 ---
 
-<a id="pending-207"></a>
+<a id="be363bc"></a>
 
-### 207. 2026-09-03 — pending
+### 207. 2026-09-03 — `be363bc`
+
+- **hash (short)**: `be363bc`
+- **hash (full)**: `be363bce9128d902db1a401833a6da37735e5e07`
+- **author**: nomura
+- **message**: feat(tier-class): 등급 제목에 티어 아이콘 색 윤광
+- **git**: `git show be363bc`
+- **범위**: frontend / tier-class
+- **요약**: 공식 티어 페이지의 등급 제목에 메인 티어 버튼 아이콘과 같은 색으로 천천히 숨 쉬는 윤광을 넣었다.
+- **주요 파일**: `root-render/tier-class/tier-nav.js`, `root-render/tier-class/tier-nav.css`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-208"></a>
+
+### 208. 2026-09-03 — pending
 
 - **hash (short)**: pending
 - **hash (full)**: pending
 - **author**: nomura
-- **message**: feat(tier-class): 등급 제목에 티어 아이콘 색 윤광
+- **message**: chore: 최근 홈·티어 네비·풀 화살표 주석
 - **git**: _(커밋 후 기입)_
-- **범위**: frontend / tier-class
-- **요약**: 공식 티어 페이지의 등급 제목에 메인 티어 버튼 아이콘과 같은 색으로 천천히 숨 쉬는 윤광을 넣었다.
-- **주요 파일**: `root-render/tier-class/tier-nav.js`, `root-render/tier-class/tier-nav.css`
+- **범위**: frontend
+- **요약**: 메인 퀵 카드·행운 위젯, 티어 이전/다음 네비·등급 윤광, 커스텀 메이커 풀 화살표에 기능 단위 주석을 달았다. 동작은 그대로다.
+- **주요 파일**: `root-render/index-home.js`, `root-render/tier-class/tier-nav.js`, `root-render/custom-maker/custom-maker.js`
 - **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)
