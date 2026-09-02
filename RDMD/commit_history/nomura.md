@@ -232,7 +232,7 @@
 | 201 | 2026-09-02 | [`828d0b7`](#828d0b7) | feat(tier-class): 호자키 킷페이 2을에서 2갑으로 상승 |
 | 202 | 2026-09-02 | [`b91c233`](#b91c233) | docs(rdmd): 최근 홈·풀 화살표·티어 재배치 반영 |
 | 203 | 2026-09-02 | [`9bc6cdd`](#9bc6cdd) | feat(tier-class): 1티어 표 구조 통일 및 하늘색 보석 연출 |
-| 204 | 2026-09-02 | pending | feat(tier-class): 5을 토비구치~에비하라를 5정으로 추락 |
+| 204 | 2026-09-02 | [`dae05b2`](#dae05b2) | feat(tier-class): 5을 토비구치~에비하라를 5정으로 추락 |
 
 ---
 
@@ -3973,15 +3973,15 @@
 
 ---
 
-<a id="pending-204"></a>
+<a id="dae05b2"></a>
 
-### 204. 2026-09-02 — pending
+### 204. 2026-09-02 — `dae05b2`
 
-- **hash (short)**: pending
-- **hash (full)**: pending
+- **hash (short)**: `dae05b2`
+- **hash (full)**: `dae05b2d5789b9374d1f654abca4f897c2066f6f`
 - **author**: nomura
 - **message**: feat(tier-class): 5을 토비구치~에비하라를 5정으로 추락
-- **git**: _(커밋 후 기입)_
+- **git**: `git show dae05b2`
 - **범위**: frontend / tier-class
 - **요약**: 5티어 을급에서 토비구치부터 에비하라까지(루크 쿠로바네, 코쿠쇼 히데키, 요시오카, 아스카바 포함)를 정급으로 내렸다. 같은 티어라 이미지 폴더는 그대로다. 을급 마지막은 로이.
 - **주요 파일**: `root-render/tier-class/tier5.html`
