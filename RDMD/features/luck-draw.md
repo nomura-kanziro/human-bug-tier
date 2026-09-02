@@ -21,7 +21,7 @@
 
 ## 동작 개요
 
-1. 사용자가 헤더 `행운 뽑기 > 오늘의 행운 티어` 또는 홈 퀵카드로 진입 (`luck-draw/luck-draw.html#daily`)
+1. 사용자가 헤더 `행운 뽑기 > 오늘의 행운 티어`, 홈 퀵카드(페이지 이동), 또는 **메인 위젯**(`#home-luck-preview`)에서 뽑는다. 전용 페이지 진입은 `luck-draw/luck-draw.html#daily`
 2. `오늘의 행운 뽑기` 버튼 클릭 → `POST /api/luck-draw/daily`
 3. 서버가 가중치(`DAILY_TIER_WEIGHTS`)로 티어를 뽑고, 해당 티어 캐릭터 풀(`backend/data/luckPool.js`)에서 무작위 1명 선택
 4. **로그인**: `LuckProfile`(유저당 누적 카운터 1건)로 오늘 횟수·마지막 뽑기 시각을 확인해 한도(20)·쿨다운(3분)을 검사. 초과 시 `429 { limitReached:true }`(횟수) 또는 `429 { cooldown:true, cooldownRemainingSec }`(대기). 통과하면 `LuckProfile`(포인트·누적횟수·최고티어·오늘횟수) 갱신 + `LuckDraw`(이력) 1건 생성 + **이력이 5건을 넘으면 가장 오래된 것부터 삭제**
@@ -60,5 +60,12 @@
 - 랜덤 뽑기(`mode:'random_char'`), 천장(pity)
 - 포인트를 실제로 쓰는 상점/랭킹, 관리자 확률·포인트·초기화 시각 조정
 - 1티어 당첨 알림 (`Notification.type` enum 확장 필요)
+
+## 메인 위젯 (`root-render/index.html`)
+
+- `index-home.js`가 `luck-draw/luck-draw-api.js`의 `drawDailyLuck`을 호출한다.
+- 게스트 24시간 키는 뽑기 페이지와 같은 `luckDrawGuestState`.
+- 버튼 아래 `.home-luck-stage`: 기본 `?` 안내 → 릴 → 결과 카드. 상태 문구는 있을 때만 표시.
+- 회원 20회/3분 제한은 서버가 그대로 적용한다.
 
 관련 스킬: `.agents/luck-draw/skill.md`, `.claude/skills/luck-draw/SKILL.md`

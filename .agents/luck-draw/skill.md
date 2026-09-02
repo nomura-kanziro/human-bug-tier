@@ -17,7 +17,7 @@ description: >
 - `backend/models/LuckDraw.js`(이력, 최근 5건만 유지), `backend/models/LuckProfile.js`(누적 포인트·횟수·최고티어, 삭제 안 됨)
 - `backend/data/luckPool.js`, `backend/utils/kstDate.js`
 - `backend/controllers/luckDrawController.js`, `backend/routes/luckDrawRoutes.js`
-- `header.html`(데스크톱+사이드 드롭다운), `index.html`(퀵카드)
+- `header.html`(데스크톱+사이드 드롭다운), `index.html`(퀵카드 + **메인 위젯** `#home-luck-preview`, `index-home.js`)
 
 ## Read first
 

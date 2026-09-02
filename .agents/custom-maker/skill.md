@@ -25,6 +25,7 @@ description: >
 ## 현재 (작업 전 이해)
 
 - 캐릭터 풀 = `tier-class` HTML 파싱 (`loadCharactersFromTierClass`). 1~9 전부
+- 풀이 뷰포트에 들어오면 `#pool-viewport-arrows` (▲ 티어표, ▼ 풀 끝). PNG 캡처 영역 밖
 - 데스크톱: DnD. 모바일: **캐릭터 탭 → 티어 칸 탭** (풀 탭으로 되돌리기)
 - 본인 글 수정: 상세 공유하기·신고하기 사이 **수정하기** → `post_edit.html`(업로드 대신 수정완료) → PUT → **상세**
 - 업로드/수정은 가운데 모달(제목·내용·썸네일). 상세는 제목 아래 내용 표시

@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 201 |
+| **커밋 수** | 202 |
 | **기간** | 2026-03-20 ~ 2026-09-02 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -229,7 +229,8 @@
 | 198 | 2026-09-02 | [`2ab62c8`](#2ab62c8) | feat(tier-class): 세르지오 1병에서 1정으로 추락 |
 | 199 | 2026-09-02 | [`b3c185c`](#b3c185c) | feat(index): 메인 행운 뽑기 위젯 스테이지 정리 |
 | 200 | 2026-09-02 | [`a494cb7`](#a494cb7) | feat(tier-class): 세르지오를 라이덴 바로 뒤로 재배치 |
-| 201 | 2026-09-02 | pending | feat(tier-class): 호자키 킷페이 2을에서 2갑으로 상승 |
+| 201 | 2026-09-02 | [`828d0b7`](#828d0b7) | feat(tier-class): 호자키 킷페이 2을에서 2갑으로 상승 |
+| 202 | 2026-09-02 | pending | docs(rdmd): 최근 홈·풀 화살표·티어 재배치 반영 |
 
 ---
 
@@ -3916,18 +3917,36 @@
 
 ---
 
-<a id="pending-201"></a>
+<a id="828d0b7"></a>
 
-### 201. 2026-09-02 — pending
+### 201. 2026-09-02 — `828d0b7`
+
+- **hash (short)**: `828d0b7`
+- **hash (full)**: `828d0b70d996596b530df12ebbe3d08ecf304a13`
+- **author**: nomura
+- **message**: feat(tier-class): 호자키 킷페이 2을에서 2갑으로 상승
+- **git**: `git show 828d0b7`
+- **범위**: frontend / tier-class
+- **요약**: 호자키 킷페이를 2티어 을급에서 갑급으로 올리고, 다비츠 바로 뒤에 배치했다. 같은 2티어라 이미지는 `2 tier` 폴더에 둔다.
+- **주요 파일**: `root-render/tier-class/tier2.html`
+- **관련 RDMD**: `RDMD/frontend/02-tier-class/07-sergio-hozaki-reorder-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-202"></a>
+
+### 202. 2026-09-02 — pending
 
 - **hash (short)**: pending
 - **hash (full)**: pending
 - **author**: nomura
-- **message**: feat(tier-class): 호자키 킷페이 2을에서 2갑으로 상승
+- **message**: docs(rdmd): 최근 홈·풀 화살표·티어 재배치 반영
 - **git**: _(커밋 후 기입)_
-- **범위**: frontend / tier-class
-- **요약**: 호자키 킷페이를 2티어 을급에서 갑급으로 올리고, 다비츠 바로 뒤에 배치했다. 같은 2티어라 이미지는 `2 tier` 폴더에 둔다.
-- **주요 파일**: `root-render/tier-class/tier2.html`
-- **관련 RDMD**: _(없음)_
+- **범위**: docs / rdmd
+- **요약**: 메인 미리보기·행운 위젯, 풀 화살표, 세르지오·호자키 재배치를 features·frontend record·work-history·스킬에 반영했다.
+- **주요 파일**: `RDMD/features/`, `RDMD/frontend/`, `RDMD/summary/work-history.md`, `.agents/`
+- **관련 RDMD**: _(이 커밋)_
 
 [▲ 목차로](#목차)

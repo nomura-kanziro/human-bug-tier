@@ -11,7 +11,7 @@ description: >
 
 - `luck-draw/` 페이지·API, 오늘의 행운 티어 뽑기 로직
 - 포인트·이력 보관(5건 제한)·마이페이지 통계 관련 변경
-- 헤더 "행운 뽑기" 메뉴, `index.html` 퀵카드
+- 헤더 "행운 뽑기" 메뉴, `index.html` 퀵카드·메인 위젯 (`index-home.js`)
 
 ## Code map
 
@@ -61,4 +61,4 @@ description: >
 - [ ] 6번째 뽑기 이후 `/history` 는 항상 5건, `/stats.totalDraws` 는 실제 누적치(5로 고정 안 됨)
 - [ ] `/today`, `/history`, `/stats` 401 확인
 - [ ] GITHUB_STATIC 가드
-- [ ] header.html(데스크톱+사이드) · index.html 링크 정상
+- [ ] header.html(데스크톱+사이드) · index.html 링크·메인 위젯 정상

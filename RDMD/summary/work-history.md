@@ -3,8 +3,8 @@
 > `RDMD/frontend/` · `RDMD/backend/` (기능 폴더 + `*-record.md`) 기록을 바탕으로 정리한 **프로젝트 개발 이력 요약**입니다.  
 > 상세 로그: [frontend/README](../frontend/README.md) · [backend/README](../backend/README.md)
 
-**기준일**: 2026-09-01  
-**문서 작성일**: 2026-08-20 (이후 Phase 7 반영 2026-09-01)
+**기준일**: 2026-09-02  
+**문서 작성일**: 2026-08-20 (이후 Phase 7 반영 2026-09-01, Phase 8 반영 2026-09-02)
 
 ---
 
@@ -19,6 +19,7 @@
 | 배포·보안 | information27~29 / backend_27~29 | GH Pages + Render, requireAdmin, 관리 UI 강화 |
 | 모바일·티어 | 2026-07 ~ 08 | PWA, 게시글 수정, 6~9티어 이미지, 1·2티어 재배치 |
 | 배포 분리 · React 기획 | 2026-09 | 프론트 `root-cloudflare`/`root-render`, Cloudflare 작업 중지, React 정식 버전은 기획만 |
+| 메인·티어 다듬기 | 2026-09-02 | Render 홈 미리보기·행운 위젯, 풀 화살표, 세르지오/호자키 재배치 |
 
 ---
 
@@ -132,6 +133,18 @@
 **정본**: [`features/react-rewrite.md`](../features/react-rewrite.md)
 
 **결과물**: 바닐라 `0.4.1` 유지 + React 이식 인수인계 문서
+
+### Phase 8 — Render 메인·공식 티어 (실무만)
+
+**기간**: 2026-09-02
+
+| 영역 | 한 일 |
+|------|--------|
+| 메인 | 퀵 카드 섹션 스크롤, 메이커 미리보기, 행운 위젯(스테이지), 공식 티어표 제목, 가로 1200px |
+| 메이커 | 캐릭터 풀이 보이면 ▲▼로 티어표 / 풀 끝 이동 (`initPoolMaxWindow`) |
+| 공식 티어 | 세르지오 1정(라이덴 뒤), 호자키 킷페이 2갑(다비츠 뒤). `root-render/`만 |
+
+**결과물**: Render 홈이 티어·제작·뽑기 진입을 한 화면에서 보여 줌
 
 ---
 

@@ -40,6 +40,7 @@ RDMD/frontend/
 | [05-header-sponsor-coffee-btn-record.md](./01-common/05-header-sponsor-coffee-btn-record.md) | — | 헤더 후원(커피) 버튼 · URL 상수 |
 | [06-admin-profile-dropdown-record.md](./01-common/06-admin-profile-dropdown-record.md) | — | 어드민도 유저 프로필 드롭다운 사용(전체화면 모달 제거) |
 | [07-dropdown-mutual-exclusion-fix-record.md](./01-common/07-dropdown-mutual-exclusion-fix-record.md) | — | 알림 벨↔프로필 드롭다운 동시 열림 버그 수정 (stopPropagation 함정) |
+| [08-home-preview-and-quick-nav-record.md](./01-common/08-home-preview-and-quick-nav-record.md) | — | 메인 퀵 스크롤·메이커 미리보기·가로 폭 |
 
 ## 02-tier-class
 
@@ -51,6 +52,7 @@ RDMD/frontend/
 | [04-tier1-heiji-satake-images-record.md](./02-tier-class/04-tier1-heiji-satake-images-record.md) | — | 1티어 헤이지 jpg 교체 · 사타케 이미지 |
 | [05-satake-hirohumi-9tier-record.md](./02-tier-class/05-satake-hirohumi-9tier-record.md) | — | 사타케 히로후미 9티어 표 추가 |
 | [06-tier1-2-reorder-record.md](./02-tier-class/06-tier1-2-reorder-record.md) | — | 1·2티어 순서 재배치 |
+| [07-sergio-hozaki-reorder-record.md](./02-tier-class/07-sergio-hozaki-reorder-record.md) | — | 세르지오 1정(라이덴 뒤)·호자키 2갑(다비츠 뒤) |
 
 ## 03-custom-maker
 
@@ -65,6 +67,7 @@ RDMD/frontend/
 | [07-post-edit-and-mobile-tap-record.md](./03-custom-maker/07-post-edit-and-mobile-tap-record.md) | — | 본인 글 수정 · 모바일 탭 배치 |
 | [08-post-edit-button-between-share-report-record.md](./03-custom-maker/08-post-edit-button-between-share-report-record.md) | — | 공유·신고 사이 수정하기 |
 | [09-upload-modal-title-content-thumb-record.md](./03-custom-maker/09-upload-modal-title-content-thumb-record.md) | — | 업로드 모달·상세 내용 |
+| [10-pool-viewport-arrows-record.md](./03-custom-maker/10-pool-viewport-arrows-record.md) | — | 캐릭터 풀 뷰포트 화살표(티어표·풀 끝) |
 
 ## 04-notice
 
@@ -127,6 +130,7 @@ RDMD/frontend/
 | 파일 | legacy | 요약 |
 |------|--------|------|
 | [01-luck-draw-record.md](./10-luck-draw/01-luck-draw-record.md) | — | 오늘의 행운 티어 프론트 연동·게스트 체크 모드 |
+| [02-home-luck-widget-record.md](./10-luck-draw/02-home-luck-widget-record.md) | — | 메인 행운 뽑기 위젯·스테이지 |
 
 ## 11-my-page
 
