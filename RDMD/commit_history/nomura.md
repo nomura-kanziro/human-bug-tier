@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 199 |
+| **커밋 수** | 200 |
 | **기간** | 2026-03-20 ~ 2026-09-02 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -227,7 +227,8 @@
 | 196 | 2026-09-02 | [`a1164fa`](#a1164fa) | feat(index): 메인 행운 뽑기 위젯 |
 | 197 | 2026-09-02 | [`57a9298`](#57a9298) | feat(index): 공식 티어표 제목 및 메인 가로 폭 통일 |
 | 198 | 2026-09-02 | [`2ab62c8`](#2ab62c8) | feat(tier-class): 세르지오 1병에서 1정으로 추락 |
-| 199 | 2026-09-02 | pending | feat(index): 메인 행운 뽑기 위젯 스테이지 정리 |
+| 199 | 2026-09-02 | [`b3c185c`](#b3c185c) | feat(index): 메인 행운 뽑기 위젯 스테이지 정리 |
+| 200 | 2026-09-02 | pending | feat(tier-class): 세르지오를 라이덴 바로 뒤로 재배치 |
 
 ---
 
@@ -3878,18 +3879,36 @@
 
 ---
 
-<a id="pending-199"></a>
+<a id="b3c185c"></a>
 
-### 199. 2026-09-02 — pending
+### 199. 2026-09-02 — `b3c185c`
+
+- **hash (short)**: `b3c185c`
+- **hash (full)**: `b3c185ce8ec20a0ee6c920516f4a02fddb4e43c5`
+- **author**: nomura
+- **message**: feat(index): 메인 행운 뽑기 위젯 스테이지 정리
+- **git**: `git show b3c185c`
+- **범위**: frontend / index
+- **요약**: 메인 행운 위젯 버튼 아래를 자리 잡는 스테이지로 바꿨다. 기본은 `?` 안내, 뽑는 중은 릴, 결과는 카드. 빈 상태 문구는 숨긴다.
+- **주요 파일**: `root-render/index.html`, `root-render/index-home.css`, `root-render/index-home.js`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-200"></a>
+
+### 200. 2026-09-02 — pending
 
 - **hash (short)**: pending
 - **hash (full)**: pending
 - **author**: nomura
-- **message**: feat(index): 메인 행운 뽑기 위젯 스테이지 정리
+- **message**: feat(tier-class): 세르지오를 라이덴 바로 뒤로 재배치
 - **git**: _(커밋 후 기입)_
-- **범위**: frontend / index
-- **요약**: 메인 행운 위젯 버튼 아래를 자리 잡는 스테이지로 바꿨다. 기본은 `?` 안내, 뽑는 중은 릴, 결과는 카드. 빈 상태 문구는 숨긴다.
-- **주요 파일**: `root-render/index.html`, `root-render/index-home.css`, `root-render/index-home.js`
+- **범위**: frontend / tier-class
+- **요약**: 1정 세르지오를 마치다 뒤에서 라이덴 바로 뒤로 옮겼다. 같은 티어·같은 급이라 이미지는 그대로다.
+- **주요 파일**: `root-render/tier-class/tier1.html`
 - **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)
