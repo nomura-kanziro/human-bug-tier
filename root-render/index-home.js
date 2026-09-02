@@ -1,4 +1,8 @@
-// 메인 퀵 카드: 내부 링크는 그대로, 카드 본체 클릭은 관련 섹션으로 스크롤
+// ============================================================
+// 메인 홈 (index.html) — 퀵 카드 스크롤 + 행운 뽑기 위젯
+// ============================================================
+
+// 퀵 카드: 안쪽 <a>는 페이지 이동, 카드 빈 곳 클릭은 data-scroll-target 섹션으로 스크롤
 (function initHomeQuickCards() {
   document.querySelectorAll('.quick-card[data-scroll-target]').forEach((card) => {
     function go() {
@@ -22,6 +26,7 @@
   });
 })();
 
+// 오늘의 행운 티어 — luck-draw-api.js 와 같은 API·게스트 키
 (function initHomeLuckDraw() {
   const btn = document.getElementById('home-luck-btn');
   const statusEl = document.getElementById('home-luck-status');
@@ -32,7 +37,7 @@
   const resultBox = document.getElementById('home-luck-result');
   if (!btn || typeof luckDrawRequest !== 'function') return;
 
-  const GUEST_KEY = 'luckDrawGuestState';
+  const GUEST_KEY = 'luckDrawGuestState'; // 뽑기 페이지와 동일
   const GUEST_MS = 24 * 60 * 60 * 1000;
   const TIER_LABELS = {
     1: '1티어', 2: '2티어', 3: '3티어', 4: '4티어', 5: '5티어',
@@ -43,6 +48,7 @@
     return Boolean(localStorage.getItem('authToken'));
   }
 
+  // 안내 문구. 빈 문자열이면 숨김 (레이아웃 점프 방지)
   function setStatus(text) {
     if (!statusEl) return;
     const t = (text || '').trim();
@@ -50,6 +56,7 @@
     statusEl.hidden = !t;
   }
 
+  // 스테이지 한 칸만 표시: 기본 ? / 뽑는 중 릴 / 결과 카드
   function showStage(which) {
     if (placeholder) placeholder.hidden = which !== 'placeholder';
     if (loading) loading.hidden = which !== 'loading';
@@ -70,6 +77,7 @@
     showStage('result');
   }
 
+  // GH Pages 등 API 없음
   if (typeof getApiBase === 'function' && getApiBase() === 'GITHUB_STATIC') {
     if (staticEl) staticEl.hidden = false;
     btn.disabled = true;
@@ -77,6 +85,7 @@
   }
 
   btn.addEventListener('click', async () => {
+    // 게스트: 24시간 안이면 서버 호출 없이 안내 + 마지막 결과
     if (!loggedIn()) {
       try {
         const raw = localStorage.getItem(GUEST_KEY);
@@ -98,6 +107,7 @@
       if (reel) reel.textContent = String(n);
     }, 90);
 
+    // 릴과 API를 맞추려고 최소 2.2초 대기
     const wait = new Promise((resolve) => setTimeout(resolve, 2200));
     let res;
     try {

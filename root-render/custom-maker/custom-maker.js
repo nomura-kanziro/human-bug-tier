@@ -697,7 +697,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 // ============================================================
-// JSON 다운로드 (사용자가 원하는 정확한 형식)
+// 캐릭터 풀 뷰포트 화살표
+// 풀이 화면에 들어오면 ▲▼ 표시. PNG 캡처(#tier-capture-area) 밖.
+// ▲ = 티어표로, ▼ = 풀 맨 아래. (예전 전체화면 최대화는 쓰지 않음)
 // ============================================================
 function initPoolMaxWindow() {
   const wrap = document.querySelector('.character-pool');
@@ -718,6 +720,7 @@ function initPoolMaxWindow() {
     el.scrollIntoView({ behavior: 'smooth', block: block || 'start' });
   }
 
+  // ▲ 티어 보드로
   up.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -726,6 +729,7 @@ function initPoolMaxWindow() {
     scrollToEl(tierTable, 'start');
   });
 
+  // ▼ 풀 래퍼 끝 + 안쪽 스크롤 맨 아래
   down.addEventListener('click', (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -745,6 +749,9 @@ function initPoolMaxWindow() {
   }
 }
 
+// ============================================================
+// JSON 다운로드 (사용자가 원하는 정확한 형식)
+// ============================================================
 function downloadAllTiersAsJSON() {
   const result = {
     "티어표 명단 목록": {}

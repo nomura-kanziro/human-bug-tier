@@ -1,3 +1,4 @@
+/* 이전·다음 티어표 네비 — JS가 main 맨 위에 삽입 */
 .tier-page-nav {
   display: flex;
   align-items: center;
