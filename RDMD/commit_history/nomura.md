@@ -236,7 +236,7 @@
 | 205 | 2026-09-02 | [`4ebfef4`](#4ebfef4) | feat(tier-class): 이전·다음 티어표 페이지 네비 |
 | 206 | 2026-09-02 | [`9fcdcc8`](#9fcdcc8) | chore(common): 사이트 버전을 0.4.2로 변경 |
 | 207 | 2026-09-03 | [`be363bc`](#be363bc) | feat(tier-class): 등급 제목에 티어 아이콘 색 윤광 |
-| 208 | 2026-09-03 | pending | chore: 최근 홈·티어 네비·풀 화살표 주석 |
+| 208 | 2026-09-03 | [`7a27872`](#7a27872) | chore: 최근 홈·티어 네비·풀 화살표 주석 |
 
 ---
 
@@ -4049,15 +4049,15 @@
 
 ---
 
-<a id="pending-208"></a>
+<a id="7a27872"></a>
 
-### 208. 2026-09-03 — pending
+### 208. 2026-09-03 — `7a27872`
 
-- **hash (short)**: pending
-- **hash (full)**: pending
+- **hash (short)**: `7a27872`
+- **hash (full)**: `7a27872d03f3f06489233cf395731aebea92b619`
 - **author**: nomura
 - **message**: chore: 최근 홈·티어 네비·풀 화살표 주석
-- **git**: _(커밋 후 기입)_
+- **git**: `git show 7a27872`
 - **범위**: frontend
 - **요약**: 메인 퀵 카드·행운 위젯, 티어 이전/다음 네비·등급 윤광, 커스텀 메이커 풀 화살표에 기능 단위 주석을 달았다. 동작은 그대로다.
 - **주요 파일**: `root-render/index-home.js`, `root-render/tier-class/tier-nav.js`, `root-render/custom-maker/custom-maker.js`
