@@ -6,6 +6,8 @@
    헤더/푸터는 건들지 않음
    ======================================================== */
 
+/* 사이트 기본 배경/글꼴. 헤더·푸터는 이 파일이 아니라 Header_Footer.css가 담당하므로
+   여기서는 본문 영역(.contact 이하)에만 신경 쓰면 된다. */
 body {
   font-family: "Noto Sans KR", sans-serif;
   margin: 0;
@@ -14,13 +16,16 @@ body {
   color: #111;
 }
 
-/* 문의사항 본문 */
+/* 문의사항 본문: 페이지 전체를 가운데 정렬된 하나의 컬럼(최대 920px)으로 제한하는
+   최상위 컨테이너. 안쪽의 폼/댓글 목록은 이보다 좁은 825px 폭으로 다시 한 번 제한된다. */
 .contact {
   max-width: 920px;
   margin: 80px auto;
   padding: 0 20px;
 }
 
+/* 페이지 제목: 굵은 하단 테두리로 "게시판 헤더" 느낌을 주는 휴먼버그대 컨셉 요소.
+   HTML의 로고 이미지(.logo-img)와 함께 h1 안에 나란히 표시된다. */
 .page-title {
   font-size: 36px;
   font-weight: 900;
@@ -31,6 +36,7 @@ body {
   padding-bottom: 12px;
 }
 
+/* 제목 아래 안내 문구(문의 대상/방법 설명) */
 .desc {
   font-size: 15px;
   color: #444;
@@ -40,6 +46,9 @@ body {
 }
 
 /* ==================== 로그인한 유저용 폼 ==================== */
+/* renderInquiryForm()(contact_us.js)이 로그인 상태일 때 그려 넣는 문의 작성 카드.
+   두꺼운 검정 테두리 + 우하단 그림자(box-shadow 8px 8px 0)로 "종이 위에 얹힌 카드" 느낌을 준다
+   (이 사이트 전반의 강렬한 대학 게시판 컨셉 스타일). */
 .form-card {
   background: #fff;
   border: 4px solid #111;
@@ -52,6 +61,8 @@ body {
   margin: 0 auto 60px;
 }
 
+/* 폼 상단의 "아바타 + 이름 + 등급 배지" 한 줄. 답변 카드(.answer .user-info)에서도
+   같은 클래스명을 재사용해 동일한 레이아웃을 낸다. */
 .user-info {
   display: flex;
   align-items: center;
@@ -61,6 +72,8 @@ body {
   border-bottom: 3px solid #111;
 }
 
+/* 프로필 사진 대신 쓰는 이모지 아바타. 실제 이미지가 없으므로 그라디언트 원형 배경 위에
+   👤 이모지를 얹는 방식으로 처리한다. */
 .user-avatar {
   width: 48px;
   height: 48px;
@@ -80,6 +93,10 @@ body {
 }
 
 /* 잘하면 폐기할 수 있는 것 */
+/* 원래 문의 본문을 <textarea>로 입력받던 시절의 스타일. 지금은 본문 입력이
+   contenteditable div(.comment-input-box, 아래 섹션)로 교체되어 textarea 규칙은
+   더 이상 실제로 쓰이지 않는다. 다만 제목 입력창(input[type="text"]#inquiry-title)은
+   지금도 이 규칙을 그대로 쓰고 있어서 완전히 지우지 못하고 남겨둔 상태(주석 그대로 유지). */
 .form-card input[type="text"],
 .form-card textarea {
   width: 100%;
@@ -101,6 +118,10 @@ body {
 /* ========================================================
    contenteditable 댓글/답변 입력창 스타일 (Contact_us 전용)
    ======================================================== */
+/* 문의 본문, 답변, 답변 수정 등에서 공통으로 쓰는 입력창 스타일.
+   <textarea> 대신 contenteditable="true"가 걸린 <div>를 쓰기 때문에
+   placeholder도 CSS(:empty:before)로 흉내내고, 줄바꿈은 white-space: pre-wrap으로
+   입력한 그대로(\n) 보이게 처리한다. */
 .comment-input-box {
   flex: 1;
   min-height: 80px;
@@ -119,6 +140,9 @@ body {
 }
 
 /* placeholder */
+/* contenteditable div는 HTML placeholder 속성이 없으므로, 내용이 비어 있을 때(:empty)만
+   data-placeholder 값을 ::before 가상 요소로 흉내내어 보여준다. pointer-events:none으로
+   이 가짜 placeholder 텍스트가 클릭/커서 위치 계산을 방해하지 않게 한다. */
 .comment-input-box:empty:before {
   content: attr(data-placeholder);
   color: #888;
@@ -132,6 +156,7 @@ body {
   margin-bottom: 10px; /* 입력창 아래 여백 추가 */
 }
 
+/* 문의/답변 등록 버튼: 폼 카드 폭 전체를 채우는 큰 검정 버튼 */
 .form-card button {
   width: 100%;
   padding: 16px;
@@ -151,6 +176,8 @@ body {
 }
 
 /* ==================== 비로그인 상태 ==================== */
+/* renderInquiryForm()이 비로그인 사용자에게 보여주는 안내 카드.
+   .form-card와 같은 "두꺼운 테두리 + 그림자" 톤을 맞춰 시각적 일관성을 유지한다. */
 .login-required {
   text-align: center;
   padding: 60px 40px;
@@ -176,6 +203,8 @@ body {
 }
 
 /* ==================== 댓글 목록 ==================== */
+/* loadComments()(contact_us.js)가 채워 넣는 문의 카드들을 감싸는 목록 컨테이너.
+   폭을 .form-card와 동일한 825px로 맞춰 폼과 목록이 세로로 나란히 정렬돼 보이게 한다. */
 .comment-list {
   max-width: 825px;
   width: 100%;
@@ -183,6 +212,7 @@ body {
   padding: 0;
 }
 
+/* 문의(댓글) 카드 한 개. .form-card보다 얇은 3px 테두리로 폼과 시각적 위계를 구분한다. */
 .comment {
   background: #fff;
   border: 3px solid #111;
@@ -205,6 +235,9 @@ body {
   margin-bottom: 14px;
 }
 
+/* JS(contact_us.js)는 title에 순수 제목 텍스트만 넣고, "제목 : " 접두사는
+   ::before 가상 요소로 CSS가 붙여준다. 그래서 수정 시 title.textContent를 읽어와도
+   접두사 없이 원본 제목만 그대로 얻을 수 있다(editComment 참고). */
 .comment .title::before {
   content: "제목 : ";
   font-weight: 700;
@@ -212,6 +245,9 @@ body {
 }
 
 /* 댓글 액션 버튼 */
+/* 문의/답변 카드 하단의 답변·신고·수정·삭제 버튼들을 감싸는 줄. 버튼 개수는
+   로그인 상태·작성자 여부에 따라 JS가 조건부로 넣고 빼므로 flex-wrap으로
+   버튼이 많아져도 줄바꿈되게 한다. */
 .comment-actions {
   margin-top: 16px;
   display: flex;
@@ -233,10 +269,14 @@ body {
   color: #fff;
 }
 
+/* 신고 버튼만 빨간 계열로 강조해서 "위험/주의" 액션임을 구분한다.
+   신고 완료 후에는 JS가 disabled 속성과 인라인 회색 스타일을 직접 덧씌워 비활성화한다. */
 .report-btn { border-color: #dc3545; color: #dc3545; }
 .report-btn:hover { background: #dc3545; color: #fff; }
 
 /* 프로필 배지 */
+/* 사용자 이름 옆에 붙는 등급 배지 컨테이너 공통 스타일. margin-left:auto로
+   같은 flex 줄(.user-info) 안에서 항상 오른쪽 끝에 붙는다. */
 .user-badge {
   margin-left: auto;
   padding: 4px 12px;
@@ -245,11 +285,13 @@ body {
   border-radius: 9999px;
 }
 
+/* 일반 유저(NR User) 배지: 검정 배경 */
 .nr-user {
   background: #111;
   color: #fff;
 }
 
+/* 관리자(Admin User) 배지: 파란 배경으로 일반 유저와 시각적으로 구분 */
 .admin-user {
   background: #007bff;
   color: #fff;
@@ -258,6 +300,10 @@ body {
 /* ========================================================
    답변/수정 상자 스타일 (하얀색 배경 + 검정 테두리 고정)
    ======================================================== */
+/* replyComment/editComment 등(contact_us.js)이 JS로 동적으로 만들어 붙이는
+   입력 상자 3종(답변 작성/댓글·답변 수정/공통 액션박스)에 공통으로 적용되는 스타일.
+   원본 카드(.comment/.answer)와 같은 "흰 배경 + 검정 테두리 + 그림자" 톤을 유지해
+   새로 나타난 요소라도 위화감 없이 이어지도록 한다. */
 .reply-box,
 .edit-box,
 .action-box {
@@ -293,6 +339,9 @@ body {
 /* ========================================================
    답변 상자 스타일 (Contact-us 전용)
    ======================================================== */
+/* renderAnswer()(contact_us.js)가 만드는 답변 카드. 왼쪽 margin(45px)으로 부모 문의보다
+   안쪽으로 들여써서 "답변은 문의에 속한 하위 항목"이라는 계층을 시각적으로 표현한다.
+   배경도 문의 카드(#fff)보다 살짝 어두운 회색(#fafafa)을 써서 부모/자식을 구분한다. */
 .answer {
   margin: 30px 0 0 45px;
   padding: 22px 24px;
@@ -305,6 +354,8 @@ body {
   box-sizing: border-box;
 }
 
+/* 아래 .answer 하위 4개 규칙은 .form-card의 user-info/avatar/name, .comment-actions와
+   같은 구조를 답변 카드 크기에 맞게 살짝 축소해 재사용한 것이다(아바타 48→42px 등). */
 .answer .user-info {
   display: flex;
   align-items: center;
@@ -346,6 +397,8 @@ body {
 }
 
 /* 인용 블록 */
+/* replyToAnswer()가 "답변에 대한 답변"을 작성할 때 원본 답변 내용을 위에 붙이는 블록.
+   본문(회색 톤 #f0f0f0)과 답변 카드(#fafafa)를 구분하기 위해 더 진한 회색 테두리(#666)를 쓴다. */
 .answer-quote {
   background: #f0f0f0;
   border: 3px solid #666;
@@ -364,6 +417,8 @@ body {
 }
 
 /* 답변 토글 헤더 */
+/* "📬 답변 보기 (N개)" 줄. toggleAnswers()(contact_us.js)의 클릭 대상이며,
+   클릭 시 아래 .answers-container를 펼치고 화살표(.toggle-arrow) 방향을 바꾼다. */
 .answer-toggle-header {
   background: #f8f8f8;
   border: 3px solid #111;
@@ -383,11 +438,17 @@ body {
   background: #f0f0f0;
 }
 
+/* toggleAnswers()가 textContent를 '▼'/'▲'로 직접 바꾸는 방식이라 여기서는
+   회전 애니메이션(transition)만 준비해뒀지만, 실제로는 문자 자체가 바뀌므로
+   transform은 별도로 적용되지 않는다(향후 아이콘 방식으로 바꿀 때를 대비한 여지). */
 .toggle-arrow {
   font-size: 18px;
   transition: transform 0.2s;
 }
 
+/* 알림(Notification) 딥링크로 들어와 특정 문의/답변을 짚어줄 때(highlightScrollTarget,
+   contact_us.js) 잠깐 씌우는 강조 스타일. 파란 외곽선(outline) + 옅은 파란 배경으로
+   "여기를 보라"는 시선을 유도하고, 일정 시간 후 클래스가 제거되며 서서히 사라진다. */
 .notification-scroll-highlight {
   outline: 3px solid #2563eb;
   outline-offset: 3px;
@@ -396,10 +457,16 @@ body {
 }
 
 /* 답변 컨테이너 */
+/* 실제 답변(.answer) 카드들을 모아 담는 래퍼. 기본은 JS 인라인 스타일로
+   display:none 처리되어 있다가 toggleAnswers()로 펼쳐진다. */
 .answers-container {
   margin-left: 45px;
 }
 /* ====================== 모바일 ====================== */
+/* 768px 이하(태블릿 세로/폰) 화면에서 여백·테두리·그림자를 전반적으로 줄여 화면을
+   덜 답답하게 만들고, 입력창 font-size를 16px로 고정해 iOS Safari가 포커스 시
+   자동으로 확대(zoom)하는 것을 방지한다. 버튼 min-height:48px는 터치 조작을 위한
+   최소 권장 탭 영역 확보 목적이다. */
 @media (max-width: 768px) {
   .contact {
     margin: 24px auto 40px;

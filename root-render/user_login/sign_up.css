@@ -1,3 +1,4 @@
+/* ====== 좌상단 고정 로고 (login.css와 동일 규칙, 페이지별로 파일이 분리되어 있어 중복됨) ====== */
 .logo {
   position: absolute;
   top: 24px;
@@ -12,6 +13,7 @@
   margin-right: 8px;
 }
 
+/* 전역 리셋: 브라우저 기본 여백 제거 + 박스 크기 계산을 border-box로 통일 */
 * {
   margin: 0;
   padding: 0;
@@ -19,6 +21,7 @@
   font-family: sans-serif;
 }
 
+/* body를 뷰포트 전체 높이로 잡고 login-wrapper를 화면 정중앙에 배치 */
 body {
   background: #ffffff;
   height: 100vh;

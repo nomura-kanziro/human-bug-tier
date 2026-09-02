@@ -1,3 +1,10 @@
+<!--
+  login.html - 로그인 페이지
+  ============================================
+  좌: 아이디/비밀번호 입력 폼(login-box). 우: 장식용 컬러 패널(side-panel).
+  실제 로그인 요청/화면 전환 로직은 login.js(+공통 API 베이스 auth_api.js)에 있고,
+  이 파일은 마크업과 onclick 연결만 담당한다.
+-->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -7,6 +14,7 @@
 </head>
 <body>
 
+  <!-- 좌상단 로고: 클릭 시 홈(메인 티어표)으로 이동 (login.js: goHome) -->
   <div class="logo" onclick="goHome()">
       <img src="../tier-image/logo.webp" alt="로고" class="logo-img">
       휴버대 티어표
@@ -19,7 +27,7 @@
 
       <input type="text" id="userId" placeholder="아이디" />
       <input type="password" id="userPw" placeholder="비밀번호" />
-      
+
       <!-- 로그인 / 회원가입 두 갈래 버튼 -->
       <div class="button-row">
         <button onclick="login()" class="btn-primary">로그인</button>
@@ -29,16 +37,18 @@
       <!-- 아이디 및 비밀번호 찾기 -->
       <div class="find-btn" onclick="findAccount()">아이디 및 비밀번호 찾기</div>
 
-      <!-- 돌아가기 -->
+      <!-- 돌아가기 (브라우저 히스토리상 이전 페이지로) -->
       <div class="back-btn" onclick="goBack()">⟳</div>
     </div>
 
-    <!-- 오른쪽 컬러 영역 -->
+    <!-- 오른쪽 컬러 영역 (기능 없음, 순수 장식) -->
     <div class="side-panel"></div>
   </div>
 
+  <!-- auth_api.js: getAuthApiBase() 정의 (login.js가 사용) -->
   <script src="auth_api.js"></script>
   <script src="login.js"></script>
+  <!-- PWA 설치/서비스워커 등록 (사이트 전체 공통) -->
   <script src="../pwa-register.js"></script>
 </body>
 </html>

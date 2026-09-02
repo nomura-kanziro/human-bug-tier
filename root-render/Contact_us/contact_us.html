@@ -1,15 +1,24 @@
+<!-- ========================================================
+     Contact_us/contact_us.html - 문의사항(Contact Us) 페이지
+     구성: 공통 헤더/푸터(common.js가 header.html/footer.html을 fetch해 삽입)
+           + 문의 작성 폼(로그인 상태에 따라 동적 렌더링) + 문의/답변 목록
+     실제 동작 로직은 contact_us.js가 담당하고, 이 파일은 뼈대(마크업)만 제공한다.
+     ======================================================== -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>휴버대 티어표</title>
+  <!-- 이 페이지 전용 스타일(contact_us.css) + 사이트 공통 헤더/푸터 스타일(Header_Footer.css)을
+       함께 불러온다. 헤더/푸터 자체(HTML)는 common.js가 별도로 fetch해 아래 placeholder에 넣는다. -->
   <link rel="stylesheet" href="contact_us.css">
   <link rel="stylesheet" href="../Header_Footer.css">
-  
+
 </head>
 <body>
-  <!-- 상단 네비게이션 -->
+  <!-- 상단 네비게이션: 실제 내용은 비어 있다가 common.js의 loadCommon()이
+       header.html을 fetch해서 이 자리에 채워 넣는다(경로도 getBasePath()로 자동 보정). -->
   <div id="header-placeholder"></div>
 
 <!-- ==================== 문의사항 본문 ==================== -->
@@ -20,16 +29,21 @@
       사이트 내 버그/오류 관련 제보를 남겨주세요.
     </p>
 
-    <!-- 로그인 상태에 따라 동적으로 바뀌는 영역 -->
+    <!-- 로그인 상태에 따라 동적으로 바뀌는 영역: renderInquiryForm()(contact_us.js)이
+         로그인 시 문의 작성 폼을, 비로그인 시 "로그인 필요" 안내를 이 안에 그려 넣는다. -->
     <div id="inquiry-form-container"></div>
 
-    <!-- 댓글 목록 (로그인 여부와 상관없이 항상 표시) -->
+    <!-- 댓글 목록 (로그인 여부와 상관없이 항상 표시): loadComments()(contact_us.js)가
+         백엔드에서 문의/답변 목록을 받아와 이 안에 카드 형태로 렌더링한다. -->
     <div class="comment-list" id="commentList"></div>
   </section>
 
-  <!-- 하단 -->
+  <!-- 하단: header-placeholder와 마찬가지로 common.js가 footer.html을 fetch해 채운다. -->
   <div id="footer-placeholder"></div>
-  
+
+  <!-- 로드 순서가 중요하다: common.js가 먼저 실행되어야 getBasePath()/getApiBase()/
+       getAuthHeaders() 같은 전역 헬퍼와 header/footer가 준비되고,
+       그 다음 contact_us.js가 그 헬퍼들을 사용해 이 페이지 고유 기능을 초기화한다. -->
   <script src="../common.js"></script>
   <script src="contact_us.js"></script>
 </body>

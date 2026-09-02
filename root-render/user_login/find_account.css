@@ -1,3 +1,4 @@
+/* ====== 좌상단 고정 로고 (login.css/sign_up.css와 동일 규칙) ====== */
 .logo {
   position: absolute;
   top: 24px;
@@ -12,6 +13,7 @@
   margin-right: 8px;
 }
 
+/* 전역 리셋: 브라우저 기본 여백 제거 + 박스 크기 계산을 border-box로 통일 */
 * {
   margin: 0;
   padding: 0;
@@ -19,6 +21,7 @@
   font-family: sans-serif;
 }
 
+/* body를 뷰포트 전체 높이로 잡고 login-wrapper를 화면 정중앙에 배치 */
 body {
   background: #ffffff;
   height: 100vh;
@@ -27,6 +30,8 @@ body {
   align-items: center;
 }
 
+/* 전체 컨테이너: 좌(탭+폼)/우(컬러 패널) 50:50 가로 분할 레이아웃의 뼈대.
+   reset_password.html도 이 파일을 그대로 불러다 쓰므로 여기 규칙이 두 페이지 모두에 적용됨 */
 .login-wrapper {
   display: flex;
   width: 800px;
@@ -88,6 +93,8 @@ body {
   }
 }
 
+/* 왼쪽 영역: 실제 탭/입력폼/버튼이 들어가는 흰색 박스.
+   back-btn(⟳)을 absolute로 배치하기 위한 relative 기준점 역할도 겸함 */
 .login-box {
   width: 50%;
   background: #ffffff;

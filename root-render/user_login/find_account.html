@@ -1,3 +1,12 @@
+<!--
+  find_account.html - 아이디/비밀번호 찾기 페이지
+  ============================================
+  탭 2개(id-form / pw-form)를 한 페이지에 같이 그려두고 CSS display로 전환한다
+  (find_account.js: showTab). 아이디 찾기는 이메일만, 비밀번호 찾기는 아이디+이메일이
+  모두 일치해야 서버가 안내 메일/재설정 링크를 보낸다. 실제 이메일 발송은 서버가 담당하고
+  이 파일+find_account.js는 요청을 보내고 결과 문구만 보여준다.
+  참고: 제목(h2#find-account-title)을 클릭하면 숨겨진 관리자 로그인 진입점으로 이동한다.
+-->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -7,6 +16,7 @@
 </head>
 <body>
 
+  <!-- 좌상단 로고: 클릭 시 홈(메인 티어표)으로 이동 (find_account.js: goHome) -->
   <div class="logo" onclick="goHome()">
       <img src="../tier-image/logo.webp" alt="로고" class="logo-img">
       휴버대 티어표
@@ -14,21 +24,22 @@
 
   <div class="login-wrapper">
     <div class="login-box">
+      <!-- 클릭 시 관리자 로그인으로 이동하는 숨은 진입점 (find_account.js에서 리스너 등록) -->
       <h2 id="find-account-title" style="color:#000;">아이디 / 비밀번호 찾기</h2>
 
-      <!-- 탭 -->
+      <!-- 탭: 클릭한 탭에 맞춰 아래 두 폼 중 하나만 보여준다 -->
       <div class="tab-container">
         <button onclick="showTab(0)" class="tab-btn active" id="tab-id">아이디 찾기</button>
         <button onclick="showTab(1)" class="tab-btn" id="tab-pw">비밀번호 찾기</button>
       </div>
 
-      <!-- 아이디 찾기 폼 -->
+      <!-- 아이디 찾기 폼: 이메일만 입력받아 서버에 등록된 아이디를 메일로 안내 -->
       <div id="id-form" class="form-tab">
         <input type="email" id="findEmail" placeholder="가입한 이메일 주소" />
         <button id="findIdBtn" onclick="findId()" style="width:240px; margin-top:15px;">아이디 찾기</button>
       </div>
 
-      <!-- 비밀번호 찾기 폼 -->
+      <!-- 비밀번호 찾기 폼: 아이디+이메일이 모두 일치해야 재설정 링크(1회용 토큰) 메일 발송 -->
       <div id="pw-form" class="form-tab" style="display:none;">
         <input type="text" id="findUserId" placeholder="아이디" />
         <input type="email" id="findPwEmail" placeholder="가입한 이메일 주소" />
@@ -40,15 +51,18 @@
         로그인 페이지로 돌아가기
       </div>
 
-      <!-- 돌아가기 -->
+      <!-- 돌아가기 (브라우저 히스토리상 이전 페이지로) -->
       <div class="back-btn" onclick="goBack()">⟳</div>
     </div>
 
+    <!-- 오른쪽 컬러 영역 (기능 없음, 순수 장식) -->
     <div class="side-panel"></div>
   </div>
 
+  <!-- auth_api.js: getAuthApiBase() 정의 (find_account.js가 사용) -->
   <script src="auth_api.js"></script>
   <script src="find_account.js"></script>
+  <!-- PWA 설치/서비스워커 등록 (사이트 전체 공통) -->
   <script src="../pwa-register.js"></script>
 </body>
 </html>
