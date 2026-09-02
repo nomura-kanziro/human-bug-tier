@@ -1,3 +1,12 @@
+/* ========================================================
+   comment-management.css - 관리자 대시보드 공통 스타일
+   ========================================================
+   comment-management.html의 4개 섹션(문의/커스텀메이커/공지/차단)이 공유하는
+   레이아웃(.admin-main), 테이블(.admin-table), 배지(.badge-*), 필터 바(.filter-nav) 등을
+   한 파일에 모아둔다. 섹션마다 살짝 다른 강조색(파랑=문의, 보라=커스텀메이커,
+   초록=공지, 빨강=차단)을 써서 스크롤하다 지금 어느 섹션인지 한눈에 구분되게 했다.
+   ======================================================== */
+
 .admin-main {
     background-color: #ffffff;
     padding: 40px 20px;
@@ -13,12 +22,15 @@
     margin-bottom: 20px;
 }
 
+/* 맨 아래 차단 관리 섹션 제목: 위쪽에 빨간 강조선(구분선) */
 .section-title {
     margin-top: 0;
     padding-top: 20px;
     border-top: 3px solid #dc3545;
 }
 
+/* 공지 섹션 전체를 감싸는 회색 카드형 배경 (커스텀메이커/차단 섹션도 동일 톤의
+   .block-section 등을 별도로 두고 있음 - 시각적으로 "섹션 구획"임을 표시) */
 .notice-admin-section {
     margin-top: 60px;
     padding: 28px;
@@ -27,6 +39,7 @@
     border: 1px solid #e9ecef;
 }
 
+/* 공지 섹션 제목: 위쪽에 초록 강조선 (공지 섹션 전체의 테마 컬러 #10b981과 통일) */
 .notice-section-title {
     border-top: 3px solid #10b981;
     padding-top: 20px;
@@ -74,6 +87,8 @@
 
 
 /* 공지 분류 (목록) select 틀도 초록으로 */
+/* 참고: 위와 동일한 #notice-list-filter 규칙이 실수로 중복 작성되어 있음(효과는 동일해서
+   무해하지만 정리 대상). 동작에 영향이 없어 이번 주석 작업에서는 그대로 둔다. */
 #notice-list-filter {
     border: 2px solid #10b981;
     background: white;
@@ -85,6 +100,8 @@
     outline: none;
 }
 
+/* 공지 작성/수정 폼을 감싸는 흰 카드. is-editing 상태(수정 모드일 때)는 아래에서
+   초록 테두리+은은한 그림자로 "지금 기존 공지를 고치는 중"임을 시각적으로 강조한다 */
 .notice-form-card {
     background: #fff;
     border: 1px solid #e9ecef;
@@ -146,6 +163,9 @@
     color: #111827;
 }
 
+/* 서식 삽입 버튼들이 나열되는 툴바. textarea 바로 위에 붙어서 하나의 입력 상자처럼
+   보이도록 아래쪽 테두리를 없애고(border-bottom: none) textarea의 위쪽 모서리와
+   맞물리게 border-radius를 맞췄다 (.notice-editor-toolbar + .notice-form-textarea 참고) */
 .notice-editor-toolbar {
     display: flex;
     align-items: center;
@@ -195,6 +215,8 @@
     margin-bottom: 0;
 }
 
+/* 미리보기 패널: "👁 미리보기" 토글을 켰을 때만 표시(hidden 속성으로 제어).
+   점선 테두리로 "실제 공지가 아닌 미리보기 중"임을 은연중에 표시한다 */
 .notice-preview-pane {
     margin-top: 12px;
     padding: 20px;
@@ -278,6 +300,8 @@
     margin-left: 6px;
 }
 
+/* 유튜브 커뮤니티 자동 가져오기 상태 바. 공지 섹션(초록)과 구분되는 빨강 톤을 써서
+   "이건 자동화 기능 안내"라는 걸 별도 영역으로 눈에 띄게 했다 */
 .youtube-sync-bar {
     display: flex;
     align-items: center;
@@ -343,6 +367,8 @@
     margin-left: 8px;
 }
 
+/* 공지 고정(핀) / 고정 해제 버튼. 고정은 주황, 해제는 회색(.unpin)으로 구분해서
+   눌렀을 때 어떤 상태로 바뀔지 색만 보고도 짐작할 수 있게 했다 */
 .pin-btn {
     background: #f59e0b;
     color: white;
@@ -389,6 +415,7 @@ tr.row-pinned {
     color: #333;
 }
 
+/* ---- 공용 테이블 스타일 (문의/공지/차단/커스텀메이커 테이블 모두 이 클래스를 사용) ---- */
 .admin-table {
     width: 100%;
     border-collapse: collapse;
@@ -421,6 +448,8 @@ tr.row-pinned {
     opacity: 0.85;
 }
 
+/* ---- 관리 액션 버튼 색상 규칙: 빨강=삭제(위험), 회색=일반 액션(상세/해제),
+   초록=차단 해제(긍정적 조치) - 버튼 색만 보고도 어떤 종류의 동작인지 짐작 가능하게 함 ---- */
 .danger-btn {
     background: #dc3545;
     color: white;
@@ -481,6 +510,7 @@ tr.row-pinned {
     background: #c82333;
 }
 
+/* ---- 상태 배지(알약 모양 라벨) 공용 스타일 + 색상별 의미 ---- */
 .badge {
     display: inline-block;
     padding: 4px 10px;
@@ -519,6 +549,7 @@ tr.row-pinned {
     padding: 28px;
 }
 
+/* 차단 관리 섹션 전체를 감싸는 카드 (.notice-admin-section과 동일한 톤, 배경만 공유) */
 .block-section {
     margin-top: 60px;
     padding: 28px;
@@ -527,6 +558,8 @@ tr.row-pinned {
     border: 1px solid #e9ecef;
 }
 
+/* 신고 사유 툴팁 팝업 (JS의 showReportTooltip이 클릭 위치 계산 후 이 클래스로 동적 생성).
+   position:absolute이므로 JS에서 top/left를 직접 지정해 원하는 위치에 띄운다 */
 .report-popup {
     position: absolute;
     background: #fff;
@@ -543,6 +576,9 @@ tr.row-pinned {
     box-sizing: border-box;
 }
 
+/* ---- 필터/탐색 바 공용 스타일. 기본은 파란 배경(문의 섹션 색)이고, 각 섹션이
+   자기 테마 색을 덧씌운다(.block-filter-nav=빨강, .notice-filter-nav=초록,
+   .tier-filter-nav=보라 - 아래 각 규칙 참고) ---- */
 .filter-nav {
     display: flex;
     justify-content: space-between;
@@ -710,6 +746,8 @@ tr.row-pinned {
     margin-left: 4px;
 }
 
+/* ---- 커스텀 메이커(tier-maker) 섹션 전용 색상: 보라 톤(#6366f1)으로
+   문의(파랑)·공지(초록)·차단(빨강) 섹션과 시각적으로 구분 ---- */
 .tier-maker-section .subsection-title {
     margin: 18px 0 10px;
     font-size: 1.05rem;

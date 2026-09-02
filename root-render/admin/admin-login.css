@@ -1,3 +1,12 @@
+/* ========================================================
+   admin-login.css - 관리자 로그인 화면 전용 스타일
+   ========================================================
+   화면 전체를 검은 카드(.login-wrapper) 하나로 채우고, 그 카드를
+   좌(흰 로그인 폼) / 우(색상 패널) 반반으로 나누는 심플한 스플릿 레이아웃.
+   일반 유저 로그인 화면과는 별도 CSS 파일로, 서로 영향을 주지 않는다.
+   ======================================================== */
+
+/* 좌상단 고정 로고: 클릭 시 홈으로 이동하는 버튼 역할도 겸함 */
 .logo {
   position: absolute;
   top: 24px;
@@ -13,6 +22,7 @@
   margin-right: 8px;
 }
 
+/* 전역 리셋: 브라우저 기본 여백 제거 + 기본 폰트 통일 */
 * {
   margin: 0;
   padding: 0;
@@ -24,12 +34,13 @@ body {
   background: #ffffff;
   height: 100vh;
 
-  /* 🔥 중앙 정렬 */
+  /* 🔥 중앙 정렬: 로그인 카드를 화면 정중앙에 배치 */
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
+/* 현재 HTML에서는 사용되지 않지만, 로그인 폼을 감싸는 컨테이너용으로 남겨둔 예비 스타일 */
 .login-form {
   display: flex;
   flex-direction: column;
@@ -37,6 +48,7 @@ body {
 }
 
 /* 🔥 전체 컨테이너 크기 제한 */
+/* 검은 배경 카드: 안쪽에 .login-box(흰 왼쪽)와 .side-panel(색 오른쪽)을 나란히 배치 */
 .login-wrapper {
   display: flex;
   width: 800px;      /* ← 기존 대비 약 2.5배 축소 */
@@ -45,11 +57,11 @@ body {
   box-shadow: 0 0 30px rgba(0, 0, 0, 0.6);
 }
 
-/* 왼쪽 로그인 영역 */
+/* 왼쪽 로그인 영역: 아이디/비밀번호 입력 폼을 세로 중앙 정렬로 배치 */
 .login-box {
   width: 50%;
   background: #ffffff;
-  position: relative;   /* 🔥 필수 */
+  position: relative;   /* 🔥 필수: 내부 .back-btn을 이 박스 기준으로 절대 배치하기 위함 */
   display: flex;
   border: #000;
   flex-direction: column;
@@ -80,7 +92,7 @@ body {
   cursor: pointer;
 }
 
-/* 돌아가기 버튼 */
+/* 돌아가기 버튼 (⟳ 아이콘): 로그인 박스 하단 중앙에 절대 배치, 클릭 시 홈으로 이동 */
 .back-btn {
   position: absolute;
   bottom: 20px;
@@ -89,7 +101,7 @@ body {
   cursor: pointer;
 }
 
-/* 오른쪽 컬러 패널 */
+/* 오른쪽 컬러 패널: 기능은 없고 카드 우측 절반을 채우는 순수 장식용 색면 */
 .side-panel {
   width: 50%;
   background: #8faadc;

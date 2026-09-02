@@ -1,11 +1,25 @@
+<!-- ========================================================
+     comment-management.html - 관리자 대시보드 (메인 화면)
+     ========================================================
+     한 페이지 안에 4개 섹션이 세로로 이어진다:
+       1) 문의(댓글) 목록 관리 (아래, 페이지 상단)
+       2) 커스텀 메이커 게시글/댓글 신고 관리
+       3) 공지사항/새 소식 작성·수정·고정
+       4) 회원/IP 차단 관리
+     모든 데이터 로딩·렌더링·이벤트 처리는 comment-management.js가 담당하고,
+     이 파일은 각 섹션의 뼈대(테이블 껍데기, 폼 입력창)만 정적으로 갖고 있다.
+     하단 checkAdminAuth()가 관리자 로그인 여부를 먼저 검사하므로, 로그인하지
+     않은 상태로 이 URL에 직접 접근하면 admin-login.html로 튕겨나간다.
+     ======================================================== -->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>댓글 관리 - Admin</title>
-    
+
     <link rel="stylesheet" href="../../Header_Footer.css">
+    <!-- 공지 미리보기/본문을 실제 공지 화면과 동일하게 보이게 하려고 notice.css도 함께 로드 -->
     <link rel="stylesheet" href="../../notice/notice.css">
     <link rel="stylesheet" href="comment-management.css">
 </head>
@@ -14,8 +28,11 @@
     <div id="header-placeholder"></div>
 
     <main class="admin-main">
+        <!-- ==================== ① 문의(댓글) 목록 관리 ==================== -->
         <h1 class="page-title">📋 전체 댓글 관리</h1>
 
+        <!-- 탐색 바: 유형 탭 + 정렬 select (왼쪽) / 검색창 + 신고사유 select (오른쪽).
+             각 버튼/셀렉트는 comment-management.js의 setTypeFilter()·applyFilters()를 호출한다 -->
         <div class="filter-nav">
           <div class="filter-left">
             <span class="filter-title">댓글 탐색 기능</span>
@@ -29,17 +46,17 @@
               <option value="oldest">오래된순</option>
             </select>
           </div>
-      
+
             <div class="filter-right">
               <div class="search-group">
-                <input type="text" id="search-input" placeholder="작성자ID 또는 내용 검색..." 
+                <input type="text" id="search-input" placeholder="작성자ID 또는 내용 검색..."
                        onkeyup="if(event.key==='Enter') applyFilters()">
-              
+
                 <button onclick="applyFilters()" class="search-btn">
                   🔍 검색
                 </button>
               </div>
-        
+
               <select id="report-filter" onchange="applyFilters()" class="filter-select">
                 <option value="">없음</option>
                 <option value="도배 및 테러행위">도배 및 테러행위</option>
@@ -49,11 +66,13 @@
               </select>
             </div>
         </div>
-        
+
+        <!-- 문의 전체를 한 번에 지우는 위험 버튼. 실제 클릭 리스너는 JS의 DOMContentLoaded에서 연결됨 -->
         <div class="control-bar">
             <button id="delete-all-btn" class="danger-btn">🗑️ 모든 댓글 삭제</button>
         </div>
 
+        <!-- tbody는 비어있는 채로 시작 - comment-management.js의 renderComments()가 채운다 -->
         <table id="comment-table" class="admin-table">
             <thead>
                 <tr>
@@ -70,9 +89,11 @@
 
         <div id="pagination" class="pagination"></div>
 
-        <!-- ==================== 커스텀 메이커 관리 ==================== -->
+        <!-- ==================== ② 커스텀 메이커 관리 ==================== -->
         <section class="notice-admin-section tier-maker-section">
             <h2 class="page-title tier-section-title">📋 커스텀 메이커 관리</h2>
+            <!-- 커스텀 티어 게시판(custom-maker)에 신고된 게시글/댓글을 검토하는 영역.
+                 데이터는 loadTierMakerData()가 /api/admin/tier-reports/* 에서 불러온다 -->
 
             <h3 class="subsection-title">게시글</h3>
             <div class="filter-nav tier-filter-nav">
@@ -127,7 +148,9 @@
             </table>
         </section>
 
-        <!-- ==================== 공지 올리기 / 수정 섹션 ==================== -->
+        <!-- ==================== ③ 공지 올리기 / 수정 섹션 ==================== -->
+        <!-- editingNoticeId 상태 하나로 "신규 작성"과 "기존 수정"을 겸하는 단일 폼.
+             updateNoticeFormModeUI()가 제목/버튼 텍스트 등 겉모습을 그때그때 바꿔준다. -->
         <section class="notice-admin-section">
             <h2 class="page-title notice-section-title" id="notice-section-heading">📢 공지 올리기</h2>
 
@@ -142,10 +165,13 @@
             </div>
 
             <div class="notice-form-card" id="notice-form-card">
+              <!-- 수정 모드일 때 대상 공지 id를 담아두는 숨김 필드 (postAdminNotice가 참조) -->
               <input type="hidden" id="notice-edit-id" value="">
               <input type="text" id="notice-title-input" class="notice-form-input" placeholder="공지 제목을 입력하세요">
               <input type="text" id="notice-summary-input" class="notice-form-input" placeholder="요약 (선택, 목록에 표시됩니다)">
 
+              <!-- 마크다운 유사 서식을 textarea에 삽입해주는 버튼 툴바.
+                   각 버튼의 data-format 값을 comment-management.js의 applyNoticeFormat()이 읽어 처리한다 -->
               <div class="notice-editor-toolbar" id="notice-editor-toolbar">
                 <button type="button" class="notice-tool-btn" data-format="h2" title="제목">제목</button>
                 <button type="button" class="notice-tool-btn" data-format="h3" title="소제목">소제목</button>
@@ -166,6 +192,8 @@
               </div>
 
               <textarea id="notice-content-input" class="notice-form-textarea" placeholder="공지 내용을 입력하세요. 툴바 버튼으로 서식을 넣을 수 있습니다."></textarea>
+              <!-- 기본은 hidden. "👁 미리보기" 버튼을 누르면 renderNoticeContent()로 파싱한
+                   실제 공지 화면 모습을 이 안에 그려서 보여준다 -->
               <div class="notice-preview-pane notice-detail-content" id="notice-preview-pane" hidden></div>
 
               <p class="notice-format-hint">서식: <code>**굵게**</code> · <code># 제목</code> · <code>- 목록</code> · <code>&gt; 인용</code> · <code>![이미지](url)</code> · 빈 줄로 문단 구분</p>
@@ -175,6 +203,8 @@
               </div>
             </div>
 
+            <!-- 백엔드가 주기적으로 유튜브 채널 커뮤니티 글을 확인해 새 소식으로 자동 등록하는
+                 기능의 상태 표시 + 수동 실행 버튼. 상태 문구는 loadYoutubeSyncStatus()가 채운다 -->
             <div class="youtube-sync-bar" id="youtube-sync-bar">
               <div class="youtube-sync-copy">
                 <strong>유튜브 커뮤니티 연동</strong>
@@ -213,10 +243,12 @@
             <div id="notice-pagination" class="pagination"></div>
         </section>
 
-        <!-- ==================== 차단 관리 섹션 ==================== -->
+        <!-- ==================== ④ 차단 관리 섹션 ==================== -->
         <section class="block-section">
             <h2 class="page-title section-title">🚫 사용자 / IP 차단 관리</h2>
 
+            <!-- 차단 기간 select에서 "관리자 지정"을 고르면 옆의 숫자 입력창(block-custom-days)이
+                 나타난다 (setupDurationSelect()가 토글 처리) -->
             <div class="filter-nav block-filter-nav">
               <div class="filter-left block-filter-left">
                 <span class="filter-title">차단 추가</span>
@@ -271,12 +303,19 @@
 
     <div id="footer-placeholder"></div>
 
+    <!-- 로드 순서: common.js(공통 유틸/헤더·푸터) → admin_api.js(관리자 토큰 헤더) →
+         notice.js(공지 렌더링용 renderNoticeContent, 미리보기에서 재사용) →
+         comment-management.js(이 페이지의 실제 대시보드 로직) -->
     <script src="../../common.js"></script>
     <script src="../admin_api.js"></script>
     <script src="../../notice/notice.js"></script>
     <script src="comment-management.js"></script>
 
     <script>
+        // 관리자 로그인 여부를 검사하는 게이트키퍼. isAdmin 플래그와 adminAuthToken이
+        // 둘 다 있어야 통과시킨다(하나라도 없으면 위조/만료된 상태로 보고 로그인 화면으로 되돌림).
+        // 관리자 대시보드로 직접 URL을 쳐서 들어오는 우회 접근을 막는 최소한의 클라이언트 방어이며,
+        // 실제 데이터 보호는 서버의 requireAdmin 미들웨어가 담당한다.
         function checkAdminAuth() {
             const hasAdminFlag = localStorage.getItem("isAdmin") === "true";
             const hasAdminToken = !!getAdminAuthToken();
@@ -291,6 +330,8 @@
             return true;
         }
 
+        // 페이지의 모든 리소스(스크립트 포함)가 로드된 뒤 실행:
+        // 인증 확인 → 통과 시 공통 헤더/푸터 삽입(loadCommon) → 대시보드 데이터 초기 로드(initAdminData)
         window.addEventListener('load', () => {
             if (!checkAdminAuth()) return;
 
