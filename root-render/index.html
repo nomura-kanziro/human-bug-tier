@@ -26,7 +26,7 @@
 
   <!-- ★★★ 새로 추가된 3개 큰 상자 ★★★ -->
   <section class="quick-nav">
-    <div class="quick-card" onclick="location.href='./tier-class/tier1.html'">
+    <div class="quick-card" data-scroll-target="#home-tiers" tabindex="0">
       <h3>티어표</h3>
       <div class="sub-menu">
         <div class="sub-grid">
@@ -43,7 +43,7 @@
       </div>
     </div>
 
-    <div class="quick-card">
+    <div class="quick-card" data-scroll-target="#home-maker-preview" tabindex="0">
       <h3>커스텀 메이커</h3>
       <div class="sub-menu">
         <a href="custom-maker/custom-maker.html">• 제작하기</a>
@@ -52,7 +52,7 @@
       </div>
     </div>
 
-    <div class="quick-card">
+    <div class="quick-card" data-scroll-target="#home-luck-preview" tabindex="0">
       <h3>행운 뽑기</h3>
       <div class="sub-menu">
         <a href="luck-draw/luck-draw.html#daily">• 오늘의 행운 티어</a>
@@ -91,8 +91,11 @@
     </div>
   </section>
 
+  <section id="home-maker-preview" class="home-preview-slot"></section>
+  <section id="home-luck-preview" class="home-preview-slot"></section>
+
   <!-- 티어 카드 목록 -->
-  <section class="tiers">
+  <section class="tiers" id="home-tiers">
     <div id="tier1" class="tier-card" onclick="location.href='./tier-class/tier1.html'">
       <img src="./tier-image/logo2-1.png" alt="1티어 아이콘" class="tier-icon">
       <span class="tier-title">1티어</span>
@@ -153,5 +156,6 @@
 
   <script src="common.js"></script>
   <script src="notice/notice.js"></script>
+  <script src="index-home.js"></script>
 </body>
 </html>
