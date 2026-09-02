@@ -1,71 +1,207 @@
 body {
-      margin: 0;
-      background: #ffffff;
-      font-family: "Noto Sans KR", sans-serif;
-      color: #222222;
-    }
+  font-family: "Pretendard", sans-serif;
+  background-color: #e7e7e7;
+  color: #000000;
+  margin: 0;
+  padding: 0;
+}
 
-.tier-list {
-      width: 90%;
-      max-width: 1000px;
-      margin: 30px auto;
-      border: 2px solid #ffcc00;
-      padding: 20px;
-      background: #111;
-    }
+main {
+  padding: 30px;
+  text-align: center;
+}
 
-.tier-list h1 {
-      text-align: center;
-      margin-bottom: 30px;
-      font-size: 1.8rem;
-      color: #ffcc00;
-      border: 2px solid #ffcc00;
-      padding: 10px;
-    }
+h2 {
+  font-size: 1.6rem;
+  margin-bottom: 30px;
+}
 
-.tier {
-      display: flex;
-      margin-bottom: 20px;
-    }
+.tier-table {
+  position: relative;
+  width: 95%;
+  margin: 0 auto;
+  border: 2px solid #7ecbff;
+  background-color: #000;
+  color: #fff;
+  padding: 10px;
+  overflow: hidden;
+  box-shadow:
+    0 0 18px rgba(110, 190, 255, 0.35),
+    inset 0 0 40px rgba(80, 170, 255, 0.08);
+}
 
-.tier-name {
-      width: 80px;
-      font-size: 1rem;
-      border: 1px solid #ffcc00;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: rgba(255, 255, 255, 0.1);
-      padding: 5px;
-      color: #fff;
-    }
+.tier-table::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(180, 230, 255, 0.55) 0 1.5px, transparent 3px),
+    radial-gradient(circle at 72% 18%, rgba(126, 203, 255, 0.5) 0 1px, transparent 3px),
+    radial-gradient(circle at 40% 70%, rgba(200, 240, 255, 0.45) 0 1.5px, transparent 3px),
+    radial-gradient(circle at 86% 62%, rgba(150, 220, 255, 0.5) 0 1px, transparent 3px),
+    radial-gradient(circle at 12% 82%, rgba(126, 203, 255, 0.4) 0 1px, transparent 3px);
+  animation: gem-sparkle 4.5s ease-in-out infinite;
+  z-index: 0;
+}
 
-.characters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      grid-template-columns: repeat(5, 1fr);
-      padding-left: 10px;
-    }
+.tier-table::after {
+  content: "";
+  position: absolute;
+  top: -40%;
+  left: -30%;
+  width: 45%;
+  height: 180%;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(160, 220, 255, 0.08) 40%,
+    rgba(210, 240, 255, 0.28) 50%,
+    rgba(160, 220, 255, 0.08) 60%,
+    transparent 100%
+  );
+  animation: gem-sweep 6s ease-in-out infinite;
+  z-index: 1;
+}
+
+.tier-row {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  border-top: 1px solid #3a5a78;
+}
+
+.tier-row:first-child {
+  border-top: none;
+}
 
 .char {
-      border: 1px solid #ffcc00;
-      background: rgba(255,255,255,0.05);
-      border-radius: 6px;
-      padding: 4px;
-      text-align: center;
-      width: 100px;
-    }
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(126, 203, 255, 0.75);
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+  padding: 2px;
+  text-align: center;
+  width: 100px;
+  font-size: xx-small;
+  display: inline-block;
+}
+
+.char::after {
+  content: "";
+  position: absolute;
+  top: -30%;
+  left: -70%;
+  width: 45%;
+  height: 160%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(190, 235, 255, 0.55),
+    transparent
+  );
+  transform: rotate(18deg);
+  animation: gem-facet 3.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.char:nth-child(2n)::after { animation-delay: 0.6s; }
+.char:nth-child(3n)::after { animation-delay: 1.2s; }
+.char:nth-child(4n)::after { animation-delay: 1.8s; }
 
 .char img {
-      width: 100%;
-      height: 100px;
-      object-fit: cover;
-      border-radius: 4px;
-    }
+  display: block;
+  margin: 0 auto 5px;
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
 
-.char p {
-      margin: 4px 0 0;
-      font-size: 0.8rem;
-      color: #fff;
-    }
+.char span {
+  display: block;
+  color: #dff4ff;
+}
+
+.tier-label {
+  width: 80px;
+  background-color: #111;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: #9ad8ff;
+  text-shadow: 0 0 8px rgba(110, 200, 255, 0.45);
+}
+
+.tier-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 5px;
+  background-color: #111;
+  justify-content: flex-start;
+}
+
+.tier-cards img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border: 1px solid rgba(180, 230, 255, 0.7);
+  border-radius: 4px;
+}
+
+@keyframes gem-facet {
+  0%,
+  55%,
+  100% {
+    transform: translateX(0) rotate(18deg);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  38% {
+    transform: translateX(320%) rotate(18deg);
+    opacity: 0;
+  }
+}
+
+@keyframes gem-sweep {
+  0% {
+    transform: translateX(0);
+    opacity: 0;
+  }
+  12% {
+    opacity: 1;
+  }
+  45% {
+    transform: translateX(280%);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(280%);
+    opacity: 0;
+  }
+}
+
+@keyframes gem-sparkle {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.9;
+    transform: scale(1.04);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tier-table::before,
+  .tier-table::after,
+  .char::after {
+    animation: none;
+  }
+}

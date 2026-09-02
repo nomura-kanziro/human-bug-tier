@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 202 |
+| **커밋 수** | 203 |
 | **기간** | 2026-03-20 ~ 2026-09-02 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -231,6 +231,7 @@
 | 200 | 2026-09-02 | [`a494cb7`](#a494cb7) | feat(tier-class): 세르지오를 라이덴 바로 뒤로 재배치 |
 | 201 | 2026-09-02 | [`828d0b7`](#828d0b7) | feat(tier-class): 호자키 킷페이 2을에서 2갑으로 상승 |
 | 202 | 2026-09-02 | [`b91c233`](#b91c233) | docs(rdmd): 최근 홈·풀 화살표·티어 재배치 반영 |
+| 203 | 2026-09-02 | pending | feat(tier-class): 1티어 표 구조 통일 및 하늘색 보석 연출 |
 
 ---
 
@@ -3948,5 +3949,23 @@
 - **요약**: 메인 미리보기·행운 위젯, 풀 화살표, 세르지오·호자키 재배치를 features·frontend record·work-history·스킬에 반영했다.
 - **주요 파일**: `RDMD/features/`, `RDMD/frontend/`, `RDMD/summary/work-history.md`, `.agents/`
 - **관련 RDMD**: _(이 커밋)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-203"></a>
+
+### 203. 2026-09-02 — pending
+
+- **hash (short)**: pending
+- **hash (full)**: pending
+- **author**: nomura
+- **message**: feat(tier-class): 1티어 표 구조 통일 및 하늘색 보석 연출
+- **git**: _(커밋 후 기입)_
+- **범위**: frontend / tier-class
+- **요약**: 1티어 HTML/CSS를 2티어와 같은 표 구조로 맞추고, 보드 안쪽 검은 배경은 유지한 채 하늘색 보석 반짝임 애니메이션을 넣었다. 모바일은 `tier-responsive`에서 급 행을 세로로 접는다.
+- **주요 파일**: `root-render/tier-class/tier1.html`, `root-render/tier-class/tier1.css`, `root-render/tier-class/tier-responsive.css`
+- **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)

@@ -40,4 +40,28 @@
     max-width: 100%;
     height: auto;
   }
+
+  .tier-table {
+    width: 100% !important;
+    box-sizing: border-box;
+    padding: 8px !important;
+  }
+
+  main {
+    padding: 16px 8px !important;
+  }
+
+  .tier-row {
+    flex-direction: column !important;
+  }
+
+  .tier-label {
+    width: 100% !important;
+    min-height: 40px;
+    box-sizing: border-box;
+  }
+
+  .char {
+    max-width: 96px;
+  }
 }
