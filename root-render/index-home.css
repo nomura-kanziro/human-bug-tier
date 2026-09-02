@@ -1,9 +1,22 @@
 /* 메인 전용: 커스텀 메이커 미리보기 · 행운 뽑기 */
 
+/* 퀵 카드 · 공지 · 미리보기 · 티어표 가로 폭 통일 */
+.quick-nav,
+.notice-section,
+.home-maker-preview,
+.home-luck-preview,
+.home-tiers-section {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-sizing: border-box;
+}
+
 .home-maker-preview {
-  max-width: 1120px;
-  margin: 8px auto 28px;
-  padding: 0 20px;
+  margin-top: 8px;
+  margin-bottom: 28px;
 }
 
 .home-maker-preview-inner {
@@ -134,9 +147,7 @@
 }
 
 .home-luck-preview {
-  max-width: 1120px;
-  margin: 0 auto 36px;
-  padding: 0 20px;
+  margin-bottom: 36px;
 }
 
 .home-luck-inner {
@@ -252,8 +263,31 @@
 }
 
 @media (max-width: 768px) {
+  .quick-nav,
+  .notice-section,
+  .home-maker-preview,
+  .home-luck-preview,
+  .home-tiers-section {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
   .home-luck-inner {
     flex-direction: column;
     padding: 22px 16px;
   }
+}
+
+.home-tiers-section {
+  margin-bottom: 48px;
+}
+
+.home-tiers-header h2 {
+  margin: 0 0 16px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.home-tiers-section .tiers {
+  padding: 0;
 }

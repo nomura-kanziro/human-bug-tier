@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 196 |
+| **커밋 수** | 197 |
 | **기간** | 2026-03-20 ~ 2026-09-02 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -225,6 +225,7 @@
 | 194 | 2026-09-02 | [`59fc3e5`](#59fc3e5) | feat(index): 퀵 카드 클릭 시 관련 섹션으로 이동 |
 | 195 | 2026-09-02 | [`45b0d94`](#45b0d94) | feat(index): 메인 커스텀 메이커 미리보기 |
 | 196 | 2026-09-02 | [`a1164fa`](#a1164fa) | feat(index): 메인 행운 뽑기 위젯 |
+| 197 | 2026-09-02 | pending | feat(index): 공식 티어표 제목 및 메인 가로 폭 통일 |
 
 ---
 
@@ -3833,6 +3834,24 @@
 - **범위**: frontend / index
 - **요약**: 메인에 오늘의 행운 티어를 짧게 뽑는 위젯을 넣었다. 기존 luck-draw API를 쓰고, 카드 클릭으로 이 섹션까지 내려온다.
 - **주요 파일**: `root-render/index.html`, `root-render/index-home.js`, `root-render/index-home.css`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-197"></a>
+
+### 197. 2026-09-02 — pending
+
+- **hash (short)**: pending
+- **hash (full)**: pending
+- **author**: nomura
+- **message**: feat(index): 공식 티어표 제목 및 메인 가로 폭 통일
+- **git**: _(커밋 후 기입)_
+- **범위**: frontend / index
+- **요약**: 메인 1~9티어 카드 위에 ‘공식 티어표’ 제목을 넣고, 퀵 카드·공지·미리보기·티어표의 가로 폭을 1200px로 맞췄다.
+- **주요 파일**: `root-render/index.html`, `root-render/index-home.css`
 - **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)
