@@ -9,7 +9,9 @@
   <!-- 공통 CSS -->
   <link rel="stylesheet" href="custom-maker_post.css">
   <link rel="stylesheet" href="../../Header_Footer.css">
-  
+
+  <!-- 이 페이지 전용 레이아웃 스타일(게시판 카드 그리드/검색바). custom-maker_post.css로 옮기지 않고
+       페이지 안에 그대로 남겨둔 초기 스타일 — 모바일 대응·상세 카드 스타일은 별도 .css 파일에서 확장함 -->
   <style>
     .board-container {
       max-width: 1750px;
@@ -101,12 +103,15 @@
 
   <main>
     <div class="board-container">
-      <div class="board-header">        
+      <!-- ?mine=1(마이페이지에서 진입) 또는 ?author=닉네임(작성자별 보기)로 들어오면
+           updateBoardHeader()가 부제목(board-subtitle)과 "전체 게시판" 복귀 버튼을 보여준다 -->
+      <div class="board-header">
         <h1 id="board-title"><img src="../../tier-image/human_bug_eyes_icon.gif" class="eyes_icon" alt=""> 커스텀 티어 게시판</h1>
         <p id="board-subtitle" class="board-subtitle" hidden></p>
       </div>
 
-      <!-- 검색 + 글쓰기 영역 -->
+      <!-- 검색 + 글쓰기 영역: 검색창은 "제목 키워드" 또는 "@작성자" 형태를 함께 입력할 수 있고,
+           custom-maker_post.js의 parseSearchForAuthor()가 @부분만 따로 뽑아 author 필터로 보낸다 -->
       <div class="board-controls">
         <input type="text" id="search-input" placeholder="제목 또는 @작성자 검색">
         <button type="button" onclick="searchPosts()">검색</button>
@@ -115,6 +120,7 @@
       </div>
 
       <!-- 기존 더미 카드 부분을 아래로 교체 -->
+      <!-- 게시글 카드 그리드: loadPosts()가 fetchPosts() 결과로 이 안을 매번 새로 채운다 -->
       <div class="post-grid" id="post-grid"></div>
     </div>
   </main>

@@ -1,14 +1,22 @@
 // custom-maker/custom-maker.js
+// 이 파일은 custom-maker.html(신규 제작)과 post_edit.html(본인 글 수정) 양쪽에서 공유해서 쓴다.
+// 핵심 데이터 모델은 tierState: { "티어인덱스_세부등급이름": [캐릭터, ...] } 형태의 객체 하나로
+// "지금 어느 캐릭터가 어느 칸에 놓여있는지"를 전부 표현한다. 화면(DOM)은 이 tierState를 반영해
+// 매번 다시 그리는 방식(state → DOM)과, 사용자가 드래그/탭으로 옮기면 DOM에서 다시 state로
+// 역으로 읽어들이는 방식(DOM → state)을 함께 쓴다.
 let currentTierIndex = 0;
 
 // ─── 전역 상태 ───────────────────────────────────────────────
 let tierState = {};
 const STORAGE_KEY = 'customMakerTierState';
 
+// tierState 전체를 localStorage에 그대로 저장 (새로고침해도 배치가 안 날아가게)
 function saveToLocalStorage() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(tierState));
 }
 
+// 페이지 로드 시 localStorage에 저장된 tierState를 복원 (신규 제작 모드에서만 사용,
+// 수정 모드는 서버에서 받은 게시글 데이터로 tierState를 덮어쓰므로 이 함수를 쓰지 않음)
 function loadFromLocalStorage() {
   const saved = localStorage.getItem(STORAGE_KEY);
   if (saved) {
@@ -89,6 +97,10 @@ function rematchTierStateToCatalog(state) {
   return next;
 }
 
+// 캐릭터 이름으로부터 항상 같은 id를 만들어내는 함수 (이름 → "char-이름" 슬러그).
+// 예전에는 로드할 때마다 랜덤 id를 부여했는데, 그러면 게시글을 수정하려고 다시 열었을 때
+// 저장된 배치(id 기준)와 새로 불러온 캐릭터 목록(새 랜덤 id)이 일치하지 않아 복원이 깨졌다.
+// 이름 기반 안정 id로 바꿔서 언제 다시 로드하든 같은 캐릭터는 같은 id를 갖게 했다.
 function stableCharId(name) {
   return `char-${String(name || 'unknown').trim().replace(/\s+/g, '_')}`;
 }
@@ -140,17 +152,22 @@ const tierData = [
   { id: 9, title: "9등급 - 비전투원 또는 전투력 측정 단서 없음 / 언랭크", subTiers: ["미묘사 인원들"] }
 ];
 
+// 화면에 보여줄 전체 티어 등급 정의(9개 등급 x 세부 등급). tier-class 1~9 페이지와 제목/구성이 동일.
 let allCharacters = [];
 
 // ─── 캐릭터 엘리먼트 생성 헬퍼 ──────────────────────────────
 // ✅ 공통 함수로 분리: createCharElement
 // 이벤트는 enableDragAndDrop()에서 한 번에 위임하므로 여기선 draggable만 설정
+// (풀에 있든 티어 칸에 있든 이 함수 하나로 카드 DOM을 만들고, 클릭/드래그 리스너는
+//  각 카드마다 따로 안 붙이고 상위 컨테이너에 위임해서 성능·재등록 문제를 피한다)
 function createCharElement(char) {
   const div = document.createElement('div');
   div.className = 'char';
   div.draggable = true;
   div.dataset.id = char.id;
 
+  // 이미지 경로 보정: '/'로 시작하면 getBasePath()를 앞에 붙여 배포 경로 깊이에 맞추고,
+  // http로 시작하는 절대 URL은 그대로 두고, 그 외 상대경로도 base를 붙여준다.
   let imgSrc = char.img || '';
   const base = (typeof getBasePath === 'function') ? getBasePath() : '';
   if (imgSrc.startsWith('/')) {
@@ -169,6 +186,9 @@ function createCharElement(char) {
 }
 
 // ─── tier-class에서 캐릭터 로드 ──────────────────────────────
+// 이 사이트에는 별도의 "캐릭터 목록 API"가 없다. 대신 공식 티어표(tier-class/tier1~9.html)
+// 정적 HTML 자체를 fetch로 받아와 DOMParser로 파싱해서 .char 카드들을 긁어오는 방식으로
+// 캐릭터 풀을 구성한다. 즉 tier-class 페이지가 캐릭터 원본 데이터 소스 역할을 한다.
 function getTierClassHtmlUrl(tierNum) {
   const base = typeof getBasePath === 'function' ? getBasePath() : '../';
   return `${base}tier-class/tier${tierNum}.html`;
@@ -219,6 +239,9 @@ async function loadCharactersFromTierClass() {
 }
 
 // ─── 렌더링 ──────────────────────────────────────────────────
+// 현재 currentTierIndex에 해당하는 등급(예: "1등급")의 세부 등급 칸(.tier/.characters)을
+// tierData 정의에 맞춰 새로 그리고, tierState에 저장된 배치를 loadTierStateToDOM()으로 복원한다.
+// ← / → 버튼을 누르거나 초기 로드 시 항상 이 함수가 호출된다.
 function renderTier() {
   const container = document.getElementById('tier-list');
   const current = tierData[currentTierIndex];
@@ -239,6 +262,8 @@ function renderTier() {
   // 이벤트는 위임 방식이므로 re-register 불필요 (단, 풀 교체 시엔 필요)
 }
 
+// 화면 아래쪽 "전체 캐릭터 풀"을 다시 그린다. 모든 등급에 걸쳐 이미 배치된 캐릭터는
+// (지금 보고 있는 등급이 아니어도) 풀에서 제외해서, 같은 캐릭터를 중복 배치하지 못하게 막는다.
 function renderCharacterPool() {
   const pool = document.getElementById('character-pool');
   pool.innerHTML = '';
@@ -467,6 +492,12 @@ function enableTapToPlace() {
 }
 
 // ── 삽입 위치 계산 (가로+세로 복합) ─────────────────────────
+// 드래그 중인 카드를 마우스 좌표(x, y) 기준으로 "어느 카드 앞에 끼워넣을지" 계산한다.
+// 카드들은 flex-wrap으로 줄바꿈되므로 단순히 y좌표만 볼 수 없다:
+//   - sameRow: 대상 카드와 세로로 거의 같은 줄(높이의 75% 이내 차이)에 있으면 "같은 행"으로 보고
+//     좌우(x) 비교로 앞/뒤를 판단, 다른 행이면 상하(y) 비교로 판단.
+//   - 후보 중 마우스 포인터와 유클리드 거리(Math.hypot)가 가장 가까운 카드를 "삽입 기준점"으로 선택.
+//   - 반환값이 null이면 그 컨테이너의 맨 끝에 추가한다는 뜻 (dragover 핸들러에서 처리).
 function getDragAfterElement(container, x, y) {
   const elements = [...container.querySelectorAll('.char:not(.dragging)')];
 
@@ -483,6 +514,10 @@ function getDragAfterElement(container, x, y) {
 }
 
 // ── 자동 스크롤 ──────────────────────────────────────────────
+// 드래그 중 마우스 포인터가 화면 위/아래 80px 이내로 들어가면 setInterval로 페이지를 자동
+// 스크롤해서, 화면 밖에 있는 티어 칸까지도 드래그로 옮길 수 있게 한다. dragover가 계속
+// 발생하는 동안만 스크롤을 유지하고(중복 setInterval 방지용 scrollInterval 플래그),
+// 영역을 벗어나거나 드래그가 끝나면(dragend) 즉시 정지한다.
 (function initAutoScroll() {
   let scrollInterval;
   document.addEventListener('dragover', (e) => {
@@ -503,6 +538,8 @@ function getDragAfterElement(container, x, y) {
 })();
 
 // ─── 화살표 버튼 ─────────────────────────────────────────────
+// 등급 이동 전 반드시 saveCurrentTierState()로 지금 보고 있는 등급의 배치를 tierState에
+// 먼저 저장해야, renderTier()가 DOM을 갈아엎어도 데이터가 유실되지 않는다.
 document.getElementById('prev-btn').addEventListener('click', () => {
   saveCurrentTierState();
   currentTierIndex = (currentTierIndex - 1 + tierData.length) % tierData.length;
@@ -538,6 +575,9 @@ document.getElementById('reset-btn').addEventListener('click', () => {
 });
 
 // ─── 풀에 원래 순서로 삽입 ───────────────────────────────────
+// 티어 칸에서 풀로 캐릭터를 되돌릴 때, 풀 맨 끝에 그냥 붙이면 매번 순서가 뒤죽박죽이 된다.
+// allCharacters(원본 로드 순서)에서 이 캐릭터의 인덱스를 찾고, 현재 풀에 있는 카드들 중
+// "원본 순서상 이 캐릭터보다 뒤에 있어야 할 첫 카드" 앞에 끼워 넣어서 항상 일관된 정렬을 유지한다.
 function insertCharBackToPoolInOrder(charElement) {
   const pool = document.getElementById('character-pool');
   const allPoolChars = Array.from(pool.children);
@@ -556,6 +596,8 @@ function insertCharBackToPoolInOrder(charElement) {
 }
 
 // ─── 다운로드 ────────────────────────────────────────────────
+// 다운로드 버튼 클릭 → 드롭다운 메뉴(.dropdown-menu) 토글. 메뉴 바깥을 클릭하면 자동으로 닫히도록
+// document 전체에 클릭 리스너를 하나 더 걸어둔다(이벤트 위임으로 "바깥 클릭" 감지).
 const downloadBtn = document.getElementById('download-btn');
 const downloadMenu = document.getElementById('download-menu');
 
@@ -572,6 +614,7 @@ if (downloadBtn && downloadMenu) {
   });
 }
 
+// 드롭다운 항목(PNG/PDF/JSON) 클릭 시 각 형식에 맞는 다운로드 함수를 실행
 document.querySelectorAll('.dropdown-item').forEach(item => {
   item.addEventListener('click', (e) => {
     e.stopPropagation();
@@ -585,6 +628,10 @@ document.querySelectorAll('.dropdown-item').forEach(item => {
 });
 
 // ─── PNG 다운로드 ─────────────────────────────────────────────
+// 등급이 9개나 되고 한 화면엔 하나씩만 보이므로, "지금 보이는 화면"이 아니라
+// 9개 등급을 전부 하나씩 renderTier()로 바꿔가며 각각 캡처해서 tier-1.png ~ tier-9.png로
+// 총 9장을 순서대로 다운로드한다. 렌더링 후 바로 캡처하면 이미지 로드가 덜 끝난 상태일 수
+// 있어서 setTimeout으로 약간의 대기 시간을 두는 방어적 처리가 곳곳에 들어가 있다.
 async function downloadAllTiersAsPNG() {
   saveCurrentTierState();
   const originalTierIndex = currentTierIndex;
@@ -594,7 +641,7 @@ async function downloadAllTiersAsPNG() {
   for (let i = 0; i < tierData.length; i++) {
     currentTierIndex = i;
     renderTier();
-    await new Promise(r => setTimeout(r, 450));
+    await new Promise(r => setTimeout(r, 450)); // 렌더링·이미지 로드가 끝날 시간을 벌어준다
 
     try {
       const canvas = await html2canvas(tierListElement, { scale: 2, backgroundColor: '#111111', logging: false });
@@ -608,11 +655,16 @@ async function downloadAllTiersAsPNG() {
     }
   }
 
-  currentTierIndex = originalTierIndex;
+  currentTierIndex = originalTierIndex; // 원래 보고 있던 등급으로 화면 복귀
   renderTier();
 }
 
 // ─── PDF 다운로드 ─────────────────────────────────────────────
+// PNG와 같은 방식으로 9개 등급을 순회하며 캡처하되, 이번엔 낱장 이미지가 아니라 jsPDF로
+// A4 세로 페이지에 한 등급씩 이어붙여 all-tiers.pdf 한 파일로 합친다.
+// PNG와 달리 캡처 대상은 #tier-capture-area(테두리·배경 포함 영역)이고, 캡처 직전에
+// 등급 제목(h2)을 임시로 DOM에 끼워넣었다가 캡처 후 바로 제거해서 PDF 페이지 안에
+// "몇 등급인지" 제목이 함께 찍히게 하는 트릭을 쓴다.
 async function downloadAllTiersAsPDF() {
   saveCurrentTierState();
   const { jsPDF } = window.jspdf;
@@ -627,6 +679,7 @@ async function downloadAllTiersAsPDF() {
     await new Promise(r => setTimeout(r, 450));
 
     try {
+      // 캡처 직전에만 제목(h2)을 맨 앞에 임시 삽입 → 캡처 → 바로 제거 (실제 DOM 구조는 그대로 유지)
       const titleText = document.getElementById('tier-title').textContent;
       const tempTitle = document.createElement('h2');
       tempTitle.textContent = titleText;
@@ -636,6 +689,7 @@ async function downloadAllTiersAsPDF() {
       const canvas = await html2canvas(tierListElement, { scale: 2, backgroundColor: '#111111', logging: false });
       tierListElement.removeChild(tempTitle);
 
+      // 캡처한 캔버스를 A4 폭(210mm)에 맞춰 비율 유지로 축소, 페이지별로 이어붙임
       const imgData = canvas.toDataURL('image/png');
       const imgWidth = 210;
       const imgHeight = (canvas.height * imgWidth) / canvas.width;
@@ -652,6 +706,12 @@ async function downloadAllTiersAsPDF() {
 }
 
 // ─── 페이지 초기 로드 ────────────────────────────────────────
+// 진입 흐름:
+//   1) 구버전 링크(?edit=ID)로 들어왔으면 전용 수정 페이지(post_edit.html)로 리다이렉트
+//   2) 캐릭터 풀을 tier-class에서 로드
+//   3) 수정 페이지면 서버에서 게시글을 불러와 tierState를 채움(enterEditMode),
+//      아니면 localStorage에 저장해둔 이전 작업 상태를 복원
+//   4) 티어 화면·풀을 그리고, 드래그/탭 이벤트를 등록
 document.addEventListener('DOMContentLoaded', async () => {
   // 구 링크 custom-maker.html?edit=ID → 전용 수정 페이지로 이동
   if (!isPostEditPage()) {
@@ -797,6 +857,8 @@ let pendingThumbnailDataUrl = null;
 const EDIT_POST_SESSION_KEY = 'customMakerEditPost';
 
 /** 전용 수정 페이지(post_edit.html) 여부 */
+// body의 data-page 속성(post_edit.html에서 "post-edit"로 지정) 또는 URL 파일명으로 판별한다.
+// 이 값에 따라 업로드 버튼 라벨(업로드 vs 수정완료), 페이지 타이틀 등이 달라진다.
 function isPostEditPage() {
   if (document.body?.dataset?.page === 'post-edit') return true;
   try {
@@ -806,6 +868,8 @@ function isPostEditPage() {
   }
 }
 
+// 게시글 API(/api/tierlists) 호출용 서버 주소. common.js의 getApiBase()가 있으면 그걸 그대로 쓰고,
+// 없는 예외 상황에 대비해 동일한 로직을 로컬 fallback으로 한 번 더 갖고 있다.
 function getTierApiBase() {
   if (typeof getApiBase === 'function') {
     const base = getApiBase();
@@ -823,6 +887,7 @@ function getTierApiBase() {
   return '';
 }
 
+// URL 쿼리에서 수정할 게시글 id를 읽는다. 전용 수정 페이지는 ?id=, 구버전 메이커는 ?edit= 사용
 function getEditPostIdFromUrl() {
   try {
     const params = new URLSearchParams(window.location.search);
@@ -833,6 +898,8 @@ function getEditPostIdFromUrl() {
   }
 }
 
+// 게시글 상세 페이지에서 "수정하기"를 눌러 넘어온 경우, sessionStorage에 저장해둔 스냅샷에서
+// 게시글 id만 뽑아낸다 (URL에 id가 없을 때의 보조 경로)
 function getEditPostIdFromSession() {
   try {
     const raw = sessionStorage.getItem(EDIT_POST_SESSION_KEY);
@@ -844,6 +911,9 @@ function getEditPostIdFromSession() {
   }
 }
 
+// post_detail.js / custom-maker_post.js가 "수정하기" 클릭 시 sessionStorage에 저장해둔
+// 게시글 스냅샷(customMakerEditPost)을 읽어온다. 네트워크 요청 없이 즉시 화면을 채울 수 있어서
+// enterEditMode()가 서버 응답을 기다리는 동안의 초기값으로 쓰인다.
 function readEditPostFromSession(postId) {
   try {
     const raw = sessionStorage.getItem(EDIT_POST_SESSION_KEY);
@@ -857,6 +927,7 @@ function readEditPostFromSession(postId) {
   }
 }
 
+// 수정 완료/이탈 시 더 이상 필요 없는 스냅샷을 정리 (다음 진입 때 엉뚱한 글이 복원되지 않도록)
 function clearEditPostSession() {
   try {
     sessionStorage.removeItem(EDIT_POST_SESSION_KEY);
@@ -869,6 +940,9 @@ function isAdminLoggedIn() {
   return localStorage.getItem('isAdmin') === 'true';
 }
 
+// 현재 로그인한 사용자 정보를 반환. 일반 회원 로그인을 관리자 로그인보다 우선시해서,
+// 관리자 계정으로도 로그인되어 있는 브라우저에서 일반 회원 자격으로 본인 글을 수정할 수 있게 한다.
+// 일반 회원 세션이 없을 때만 관리자 세션(닉네임 없이 "관리자"로 표시)으로 대체한다.
 function getLoggedInUser() {
   // 일반 회원 세션 우선 (관리자 로그인이 있어도 본인 글 수정 가능하도록)
   try {
@@ -891,6 +965,10 @@ function getLoggedInUser() {
   return null;
 }
 
+// 게시글 작성자 == 현재 로그인 사용자인지 판별 (수정/삭제 버튼 노출 여부 결정).
+// 이메일이 둘 다 있으면 이메일로 정확히 비교하고, 없으면 닉네임 문자열 비교로 대체한다.
+// 닉네임 비교는 동명이인 위험이 있지만, 과거 게시글에 이메일이 없던 시절 데이터와의
+// 하위 호환을 위해 의도적으로 남겨둔 완화된 검증이다 (서버도 동일 로직으로 최종 검증함).
 function isPostOwner(post, user) {
   if (!post || !user) return false;
   const recordEmail = (post.authorEmail || '').trim().toLowerCase();
@@ -903,6 +981,7 @@ function isPostOwner(post, user) {
   return Boolean(recordAuthor && userName && recordAuthor === userName);
 }
 
+// 구버전 ?edit= 쿼리를 URL에서 제거 (로그인 취소 등으로 수정 진입을 포기했을 때 주소창 정리)
 function clearEditModeFromUrl() {
   try {
     const url = new URL(window.location.href);
@@ -913,6 +992,9 @@ function clearEditModeFromUrl() {
   }
 }
 
+// 수정 모드 여부에 따라 h1 제목, 문서 title, 상단 안내 배너(edit-mode-banner)를 갱신한다.
+// editingPostId가 설정되어 있으면(=enterEditMode 성공) "게시글 수정" 화면으로 꾸미고,
+// 아니라면 원래의 "커스텀 티어 메이커" 화면으로 되돌린다. 배너 DOM이 없으면 새로 만들어 삽입.
 function updateEditModeChrome() {
   const titleEl = document.querySelector('.maker-container h1');
   let banner = document.getElementById('edit-mode-banner');
@@ -956,6 +1038,8 @@ function updateEditModeChrome() {
   `;
 }
 
+// updateEditModeChrome()의 innerHTML 삽입에 쓰이는 게시글 제목을 이스케이프해서
+// 제목에 <, > 등이 들어 있어도 HTML로 해석되지 않게 방지 (간이 XSS 방지용)
 function escapeHtmlLite(str) {
   return String(str || '')
     .replace(/&/g, '&amp;')
@@ -966,6 +1050,10 @@ function escapeHtmlLite(str) {
 
 /**
  * 게시글 데이터를 메이커 상태에 반영
+ * 흐름: 로그인 확인 → (1) sessionStorage 스냅샷으로 즉시 화면 채움(네트워크 실패 대비)
+ *   → (2) 서버에서 최신 게시글을 다시 조회해 있으면 덮어씀 → 작성자 본인인지 검사(isPostOwner) →
+ *   과거 랜덤 id로 저장된 배치를 현재 캐릭터 카탈로그 id로 재매핑(rematchTierStateToCatalog).
+ * 작성자 검사는 프론트 UX용 가드일 뿐이며, 실제 수정 권한은 PUT 요청 시 서버가 최종 검증한다.
  * @returns {boolean} 성공 여부
  */
 async function enterEditMode(postId) {
@@ -1054,10 +1142,14 @@ async function enterEditMode(postId) {
   return true;
 }
 
+// 업로드/수정 전 최소 조건 확인용: 어느 등급에든 캐릭터가 하나라도 배치되어 있는지
 function hasPlacedCharacters() {
   return Object.values(tierState).some(arr => Array.isArray(arr) && arr.length > 0);
 }
 
+// 업로드 모달에서 사용자가 썸네일을 따로 고르지 않았을 때 쓸 기본 썸네일.
+// tierState를 순회하며 맨 처음 발견되는 배치 캐릭터의 이미지를 대표 이미지로 사용하고,
+// 아무것도 배치되어 있지 않으면 사이트 로고로 대체한다.
 function getThumbnailFromState() {
   for (const arr of Object.values(tierState)) {
     if (!Array.isArray(arr)) continue;
@@ -1068,6 +1160,10 @@ function getThumbnailFromState() {
   return '../tier-image/logo.webp';
 }
 
+// 서버(DB)에 저장할 이미지 경로를 "루트 기준 절대경로"(/tier-image/...)로 통일한다.
+// 화면에 보여줄 때는 getBasePath()로 상대경로화하지만, DB에는 배포 경로 깊이와 무관하게
+// 항상 동일한 절대경로 형태로 저장해야 나중에 어느 페이지에서 불러오든 일관되게 보정할 수 있다.
+// data URL(base64로 인코딩한 업로드 이미지)은 그대로 보존, http 절대 URL은 pathname만 추출.
 function normalizeImgForBoard(img) {
   if (!img) return '/tier-image/logo.webp';
   if (img.startsWith('data:image/')) return img;
@@ -1085,6 +1181,8 @@ function normalizeImgForBoard(img) {
   return '/' + img;
 }
 
+// 업로드/수정 payload를 만들기 전, tierState 안의 모든 캐릭터 이미지 경로를
+// normalizeImgForBoard()로 일괄 정규화한다 (서버에는 항상 절대경로만 저장되도록)
 function normalizeTierStateForUpload(state) {
   const normalized = {};
   Object.entries(state).forEach(([key, chars]) => {
@@ -1096,6 +1194,9 @@ function normalizeTierStateForUpload(state) {
   return normalized;
 }
 
+// POST(신규 업로드)/PUT(수정) 공용으로 서버에 보낼 요청 본문을 조립한다.
+// tierData 안에 tierState(배치 결과)와 tierDefinitions(등급 정의 스냅샷)를 함께 저장해두면,
+// 나중에 tierData 구조 자체가 바뀌어도 이 게시글은 작성 당시 정의 그대로 재현할 수 있다.
 function buildUploadPayload(title, description, user, thumbnail) {
   const normalizedState = normalizeTierStateForUpload(tierState);
   const thumb = thumbnail || getThumbnailFromState();
@@ -1114,6 +1215,8 @@ function buildUploadPayload(title, description, user, thumbnail) {
   };
 }
 
+// normalizeImgForBoard()와 반대 방향: DB에 저장된 루트 절대경로(/tier-image/...)를
+// 업로드 모달 미리보기(<img>)에서 화면에 실제로 보이도록 getBasePath() 깊이를 붙여 되돌린다.
 function resolveMakerPreviewPath(path) {
   if (!path) return '../tier-image/logo.webp';
   if (path.startsWith('data:') || path.startsWith('blob:') || path.startsWith('http')) return path;
@@ -1123,12 +1226,19 @@ function resolveMakerPreviewPath(path) {
   return path;
 }
 
+// 업로드 모달을 열 때 썸네일 미리보기에 보여줄 이미지 우선순위:
+// 1) 방금 사용자가 새로 고른 파일(pendingThumbnailDataUrl)
+// 2) 수정 모드라면 게시글에 이미 저장돼 있던 썸네일
+// 3) 둘 다 없으면 배치된 캐릭터 중 첫 번째 이미지로 자동 대체
 function getDefaultThumbnailPreview() {
   if (pendingThumbnailDataUrl) return pendingThumbnailDataUrl;
   if (editingDefaults.thumbnail) return resolveMakerPreviewPath(editingDefaults.thumbnail);
   return resolveMakerPreviewPath(getThumbnailFromState());
 }
 
+// 사용자가 썸네일 파일을 직접 선택했을 때, 원본을 그대로 base64로 올리면 DB 문서가 너무
+// 커지므로 <canvas>에 그려서 가로 최대 720px로 리사이즈 + JPEG 82% 압축한 data URL을 만든다.
+// 압축 후에도 1.6MB를 넘으면(너무 복잡한 이미지) 업로드를 거부해서 DB 비대화를 막는다.
 function compressImageFile(file) {
   return new Promise((resolve, reject) => {
     if (!file || !String(file.type || '').startsWith('image/')) {
@@ -1166,6 +1276,9 @@ function compressImageFile(file) {
   });
 }
 
+// 업로드/수정 모달 DOM을 처음 필요할 때 딱 한 번만 body에 생성해서 재사용한다(싱글턴 패턴).
+// 이미 만들어져 있으면 그대로 반환, 없으면 마크업을 만들고 폼 이벤트(취소/제출/파일선택/썸네일리셋)를
+// 이 안에서 한 번만 바인딩한다.
 function ensureUploadModal() {
   let overlay = document.getElementById('upload-modal');
   if (overlay) return overlay;
@@ -1237,6 +1350,8 @@ function closeUploadModal() {
   document.body.style.overflow = '';
 }
 
+// 모달을 열면서 제목/내용/썸네일 입력값을 신규 업로드 vs 수정 모드에 맞게 미리 채워 넣는다.
+// 수정 모드면 기존 게시글 값(editingDefaults)으로 초기화, 신규면 "닉네임의 커스텀 티어표"로 기본 제안.
 function openUploadModal(user) {
   const overlay = ensureUploadModal();
   const isEdit = Boolean(editingPostId || isPostEditPage());
@@ -1252,6 +1367,8 @@ function openUploadModal(user) {
   overlay.querySelector('#upload-modal-title-input').focus();
 }
 
+// "업로드"/"수정완료" 버튼 클릭 핸들러. 실제 서버 전송은 하지 않고, 로그인·정적호스팅·배치 여부를
+// 검증한 뒤 업로드 모달을 여는 역할까지만 담당한다 (실제 fetch는 submitUploadFromModal에서).
 async function uploadToBoard() {
   const user = getLoggedInUser();
   if (!user) {
@@ -1284,6 +1401,9 @@ async function uploadToBoard() {
   openUploadModal(user);
 }
 
+// 모달의 "업로드"/"수정완료" 버튼 클릭 시 실제 서버 요청을 보낸다.
+// editingPostId 유무로 PUT(수정, 작성자만 서버가 허용)과 POST(신규 생성)를 나눠서 같은 payload
+// 빌더(buildUploadPayload)를 재사용한다. 성공 시 수정이면 상세 페이지로, 신규면 게시판으로 이동.
 async function submitUploadFromModal() {
   const user = getLoggedInUser();
   if (!user) return;
@@ -1365,6 +1485,8 @@ function getCustomMakerBoardUrl() {
   return `${base}custom-maker/custom-maker_post/custom-maker_post.html`;
 }
 
+// 업로드 버튼의 라벨/아이콘/스타일/툴팁을 현재 모드(신규 vs 수정)와 로그인 여부에 맞춰 갱신한다.
+// 전용 수정 페이지이거나 editingPostId가 세팅돼 있으면 항상 "수정완료"로 고정 표시한다.
 function updateUploadButtonState() {
   const uploadBtn = document.getElementById('upload-btn');
   if (!uploadBtn) return;

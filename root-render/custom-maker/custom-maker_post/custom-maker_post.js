@@ -1,9 +1,14 @@
 // custom-maker_post/custom-maker_post.js
+// 커스텀 티어 게시판 "목록" 페이지 스크립트. 서버(/api/tierlists)에서 게시글 목록을 받아
+// 카드 그리드로 그리고, 검색(제목/@작성자)·전체보기·글쓰기·신고 기능을 담당한다.
+// 게시글 "상세" 페이지 로직은 post_detail.js에 별도로 있다.
 
 let allPosts = [];
 const POST_ID_STORAGE_KEY = 'selectedPostId';
 const REPORT_REASONS = ['도배 및 테러행위', '비방 및 모욕행위', '광고형 댓글', '기타'];
 
+// 게시글 API(/api/tierlists) 호출용 서버 주소 판별. common.js의 getApiBase()와 동일한 로직을
+// 이 페이지에서도 독립적으로 갖고 있다(로드 순서 이슈 대비 fallback).
 function getTierApiBase() {
   const { protocol, hostname, port } = window.location;
 
@@ -37,6 +42,9 @@ function formatPostDate(dateStr) {
   return d.toLocaleDateString('ko-KR', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\. /g, '.').replace(/\.$/, '');
 }
 
+// 게시글 객체에서 MongoDB ObjectId를 문자열로 뽑아낸다. 서버 응답 형태가
+// 문자열(post._id), ObjectId 인스턴스, {$oid: '...'} (일부 직렬화 경로) 등으로 섞여 올 수 있어
+// 어떤 형태든 최종적으로 문자열 id 하나로 정규화한다.
 function getPostId(post) {
   if (!post) return '';
   const raw = post._id ?? post.id;
@@ -48,10 +56,14 @@ function getPostId(post) {
   return String(raw);
 }
 
+// MongoDB ObjectId 형식(16진수 24자)인지 검사. URL 조작이나 잘못된 값으로
+// API를 호출하는 것을 프론트에서 미리 걸러낸다.
 function isValidPostId(id) {
   return typeof id === 'string' && /^[a-fA-F0-9]{24}$/.test(id);
 }
 
+// 게시글 상세 페이지 URL을 만든다. file://로 로컬에서 직접 연 경우(정적 미리보기)엔 절대경로가
+// 안 통하므로 상대경로를 쓰고, 그 외(로컬 서버·Render 배포)엔 항상 루트 기준 절대경로를 사용한다.
 function getPostDetailUrl(id) {
   const safeId = encodeURIComponent(id);
 
@@ -66,6 +78,8 @@ function getPostDetailUrl(id) {
   return `/custom-maker/custom-maker_post/post_detail.html?id=${safeId}`;
 }
 
+// 방금 클릭한 게시글 id를 sessionStorage에 저장. post_detail.js가 URL에 id가 없는 예외
+// 상황(예: 상대경로 이동 등)에서도 "방금 어떤 글을 클릭했는지"를 알 수 있게 하는 보조 경로다.
 function rememberPostId(id) {
   if (!isValidPostId(id)) return;
   sessionStorage.setItem(POST_ID_STORAGE_KEY, id);
@@ -78,6 +92,8 @@ function goToPostDetail(id) {
   window.location.href = getPostDetailUrl(postId);
 }
 
+// localStorage에 저장된 일반 회원 로그인 정보를 읽는다 (관리자 로그인은 여기서 다루지 않음 —
+// 게시판 목록에서는 "내 글인지" 판단에 일반 회원 닉네임/이메일만 쓰면 충분)
 function getLoggedInUser() {
   try {
     const user = JSON.parse(localStorage.getItem('user') || 'null');
@@ -88,10 +104,13 @@ function getLoggedInUser() {
   return null;
 }
 
+// 마이페이지 등에서 "?mine=1"로 들어왔는지 여부 (내 게시글만 보기 모드)
 function isMineMode() {
   return new URLSearchParams(window.location.search).get('mine') === '1';
 }
 
+// 지금 목록에 적용해야 할 작성자 필터를 하나로 결정한다.
+// 우선순위: ?mine=1(로그인한 내 닉네임) > ?author=닉네임 > 검색창에 입력된 "@닉네임"
 function getActiveAuthorFilter() {
   if (isMineMode()) {
     return getLoggedInUser()?.nickname || '';
@@ -127,6 +146,8 @@ function parseSearchForAuthor(input) {
   return { searchKeyword: trimmed, author: '' };
 }
 
+// 현재 모드(전체/내 글/작성자 필터)에 맞춰 게시판 헤더의 부제목, "전체 게시판" 버튼,
+// 검색창 placeholder·초기값을 갱신한다. initBoard()가 목록을 불러오기 전에 먼저 호출한다.
 function updateBoardHeader() {
   const subtitle = document.getElementById('board-subtitle');
   const viewAllBtn = document.getElementById('view-all-board-btn');
@@ -170,10 +191,14 @@ function updateBoardHeader() {
   }
 }
 
+// "전체 게시판" 버튼: author/mine 필터를 다 떼고 순수 목록 페이지로 이동
 function goAllPosts() {
   window.location.href = getBasePath() + 'custom-maker/custom-maker_post/custom-maker_post.html';
 }
 
+// 카드에 "수정" 버튼을 보여줄지 "신고" 버튼을 보여줄지 결정하는 소유권 판정.
+// post_detail.js/custom-maker.js와 동일한 규칙(이메일 우선, 없으면 닉네임 비교)을 쓴다 —
+// 실제 수정/삭제 권한은 서버가 다시 검증하므로 이건 어디까지나 버튼 노출용 UX 판단이다.
 function isPostOwner(post, user) {
   if (!post || !user) return false;
 
@@ -186,6 +211,9 @@ function isPostOwner(post, user) {
   return Boolean(postAuthor && userName && postAuthor === userName);
 }
 
+// 카드의 "수정" 버튼 클릭 시: 게시글 전체 데이터를 sessionStorage에 스냅샷으로 저장해두고
+// 전용 수정 페이지(post_edit.html)로 이동한다. custom-maker.js의 enterEditMode()가 이 스냅샷을
+// 즉시 읽어 화면을 채운 뒤, 서버에서 최신본을 다시 받아 덮어쓴다.
 function goToEditPost(post) {
   const id = getPostId(post);
   if (!isValidPostId(id)) return;
@@ -216,6 +244,8 @@ function closeReportModal() {
   document.getElementById('report-modal')?.remove();
 }
 
+// 신고 사유 선택 모달을 동적으로 만들어 body에 붙인다. 사유 버튼을 누르면 즉시 콜백(onSubmit)을
+// 실행하는 방식이라 "확인" 버튼이 따로 없다. "기타"를 고르면 prompt()로 상세 사유를 추가로 받는다.
 function openReportModal(title, onSubmit) {
   closeReportModal();
 
@@ -255,6 +285,9 @@ function openReportModal(title, onSubmit) {
   });
 }
 
+// 게시글 신고 처리: 로그인 필요 → 본인 글이면 차단 → 이미 신고했으면 차단 → 사유 모달을 띄우고
+// 선택 결과를 /api/tierlists/:id/report로 전송한다. 신고 자체는 정지가 아니라 접수일 뿐이며,
+// 실제 처리는 관리자 페이지(admin tier-reports)에서 이루어진다.
 async function reportPost(postId) {
   const user = getLoggedInUser();
   if (!user) {
@@ -303,6 +336,8 @@ async function reportPost(postId) {
   });
 }
 
+// 카드에 보여줄 썸네일을 결정한다: 게시글에 저장된 thumbnail이 있으면 그걸 쓰고,
+// 없으면(과거 데이터 등) tierState 전체를 뒤져 이미지가 있는 첫 캐릭터로 대체한다.
 function getThumbnail(post) {
   if (post.thumbnail) return resolveAssetPath(post.thumbnail);
   const firstChar = post.tierData?.tierState
@@ -311,6 +346,9 @@ function getThumbnail(post) {
   return resolveAssetPath(firstChar?.img);
 }
 
+// DB에 저장된 이미지 경로(루트 절대경로 '/...', data:/blob:, 절대 URL 등)를 이 페이지의
+// 배포 깊이에 맞는 실제 표시 경로로 변환한다. custom-maker.js의 resolveMakerPreviewPath와
+// 같은 역할을 게시판 목록 페이지에서 담당하는 버전.
 function resolveAssetPath(path) {
   if (!path) return getBasePath() + 'tier-image/logo.webp';
   if (path.startsWith('data:') || path.startsWith('blob:')) return path;
@@ -324,6 +362,8 @@ function resolveAssetPath(path) {
   return getBasePath() + path;
 }
 
+// 검색어/작성자 필터를 쿼리스트링으로 붙여 게시글 목록을 조회한다. 필터링은 서버(DB 쿼리)가
+// 수행하고, 프론트는 결과를 그대로 렌더링만 한다.
 async function fetchPosts(search, author) {
   const params = new URLSearchParams();
   if (search) params.set('search', search);
@@ -335,6 +375,9 @@ async function fetchPosts(search, author) {
   return response.json();
 }
 
+// 게시글 카드 하나(썸네일+제목+작성자+통계) + 그 위에 겹쳐지는 수정/신고 버튼을 만든다.
+// 카드 자체는 <a>라서 클릭하면 상세로 이동하고, 겹쳐진 버튼은 stopPropagation으로 그 이동을 막고
+// 자기 동작(수정 이동 / 신고 모달)만 실행한다.
 function createPostCard(post) {
   const id = getPostId(post);
   if (!isValidPostId(id)) return null;
@@ -394,6 +437,8 @@ function createPostCard(post) {
   return wrapper;
 }
 
+// data-post-id 속성이 붙은 아무 요소나 클릭하면 해당 id를 sessionStorage에 기억해두는
+// 전역 위임 리스너. (개별 카드마다 클릭 리스너를 새로 붙이지 않고 한 번만 등록)
 function setupPostLinkDelegation() {
   document.addEventListener('click', (event) => {
     const link = event.target.closest('[data-post-id]');
@@ -403,6 +448,8 @@ function setupPostLinkDelegation() {
   });
 }
 
+// 게시글 목록(allPosts 또는 검색으로 필터링된 목록)을 카드 그리드에 그린다.
+// 결과가 없으면 모드에 맞는 안내 문구(내 글 없음 / 등록된 글 없음)를 보여준다.
 function loadPosts(filteredPosts = null) {
   const grid = document.getElementById('post-grid');
   if (!grid) return;
@@ -425,6 +472,8 @@ function loadPosts(filteredPosts = null) {
   });
 }
 
+// 검색 버튼/엔터 클릭 시: 입력값에서 "@작성자"를 분리해내고, URL이 이미 작성자 필터를
+// 강제하고 있으면(?mine=1, ?author=) 그 필터를 우선시한 채 키워드만 새로 적용한다.
 async function searchPosts() {
   const rawInput = document.getElementById('search-input')?.value || '';
   const parsed = parseSearchForAuthor(rawInput);
@@ -446,10 +495,14 @@ async function searchPosts() {
   }
 }
 
+// "직접 만들기" 버튼: 신규 제작 페이지(custom-maker.html)로 이동
 function goWritePage() {
   window.location.href = '../custom-maker.html';
 }
 
+// 페이지 최초 진입 시 목록을 채우는 메인 초기화 함수.
+// URL의 ?search=@닉네임 형태(마이페이지 프로필에서 넘어오는 링크)까지 고려해서 검색창을
+// 미리 채우고, ?mine=1이면 비로그인 시 로그인 페이지로 유도한 뒤 내 닉네임으로 강제 필터링한다.
 async function initBoard() {
   const urlParams = new URLSearchParams(window.location.search);
   const urlSearch = urlParams.get('search') || '';
@@ -502,6 +555,10 @@ async function initBoard() {
   }
 }
 
+// 페이지 부트스트랩: 헤더/푸터 로드(loadCommon) + 링크 위임 등록 + 목록 초기화 + 검색창
+// 엔터 키 처리. 아래 여러 즉시실행함수들은 모두 "?search=@닉네임" 링크로 들어왔을 때 검색창에
+// 값이 확실히 채워지도록 여러 타이밍(스크립트 실행 시점/DOM 준비 시점)에서 중복으로 시도하는
+// 방어적 코드다 — 프로필 페이지 등 외부에서 넘어오는 딥링크가 안정적으로 동작하게 하기 위함.
 function initCustomBoard() {
   if (typeof loadCommon === 'function') loadCommon();
   setupPostLinkDelegation();

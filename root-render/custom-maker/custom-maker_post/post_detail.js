@@ -1,4 +1,10 @@
 // post_detail.js
+// 커스텀 티어 게시글 "상세" 페이지 스크립트. 크게 세 파트로 구성된다:
+//   1) 게시글 조회/렌더링 — 읽기 전용 티어표(renderReadOnlyTier), 조회수·추천·작성자 표시
+//   2) 게시글 액션 — 추천(좋아요), 공유, 수정(작성자만), 삭제(작성자만), 신고
+//   3) 댓글 — 목록 조회, 새 댓글/답글(대댓글) 작성, 수정, 삭제, 신고, 알림 딥링크로 특정 댓글 스크롤
+// 서버가 최종 권한(작성자 검증 등)을 검사하므로, 이 파일의 isPostOwner/isSameAuthor 같은
+// 클라이언트 판정은 버튼 노출 여부를 정하는 UX용이며 보안 경계가 아니다.
 
 const POST_ID_STORAGE_KEY = 'selectedPostId';
 const REPORT_REASONS = ['도배 및 테러행위', '비방 및 모욕행위', '광고형 댓글', '기타'];
@@ -20,6 +26,7 @@ let currentTierIndex = 0;
 let tierDefinitions = DEFAULT_TIER_DEFINITIONS;
 let savedTierState = {};
 
+// 게시글/댓글 API 호출용 서버 주소 판별 (common.js getApiBase()와 동일 로직의 자체 fallback)
 function getTierApiBase() {
   const { protocol, hostname, port } = window.location;
 
@@ -37,6 +44,8 @@ function getTierApiBase() {
   return '';
 }
 
+// 로그인 토큰(Authorization 헤더)을 붙인 API 헤더를 만든다. common.js가 로드돼 있으면
+// getAuthHeaders()를 그대로 위임하고, 없으면 최소한 Content-Type만 있는 헤더로 대체한다.
 function apiHeaders(extra = {}) {
   if (typeof getAuthHeaders === 'function') return getAuthHeaders(extra);
   return { 'Content-Type': 'application/json', ...extra };
@@ -67,10 +76,15 @@ function getLoggedInUser() {
   return null;
 }
 
+// 게시글 소유자 판정 (isSameAuthor의 게시글 전용 alias)
 function isPostOwner(post, user) {
   return isSameAuthor(post, user);
 }
 
+// 게시글/댓글 공용 "작성자 == 현재 로그인 사용자" 판정.
+// 이메일이 둘 다 있으면 이메일로 정확 비교(가장 신뢰도 높음), 없으면 닉네임 문자열로 대체 비교한다.
+// 닉네임 비교는 동명이인일 경우 오탐 가능성이 있지만, 이메일이 없던 과거 데이터 호환을 위해
+// 의도적으로 남겨둔 완화된 규칙이다 — 실제 수정/삭제 권한은 서버가 다시 검증한다.
 function isSameAuthor(record, user) {
   if (!record || !user) return false;
 
@@ -85,6 +99,8 @@ function isSameAuthor(record, user) {
   return Boolean(recordAuthor && userName && recordAuthor === userName);
 }
 
+// 사용자 입력 텍스트를 이스케이프한 뒤 줄바꿈만 <br>로 되살려 HTML로 안전하게 표시한다
+// (contenteditable로 입력받은 댓글은 순수 텍스트로 저장되므로, 표시할 때 줄바꿈을 복원해야 함)
 function nl2br(text) {
   if (!text) return '';
   return escapeHtml(text).replace(/\n/g, '<br>');
@@ -102,6 +118,7 @@ function formatCommentDate(dateStr) {
   });
 }
 
+// 현재 로드된 게시글(currentPost)의 id를 문자열로 반환. 댓글 API 호출 등 곳곳에서 재사용
 function getCurrentPostId() {
   if (!currentPost) return '';
   const raw = currentPost._id ?? currentPost.id;
@@ -109,6 +126,7 @@ function getCurrentPostId() {
   return typeof raw === 'object' && typeof raw.toString === 'function' ? raw.toString() : String(raw);
 }
 
+// 헤더의 "댓글 N"과 댓글 섹션 제목의 "(N)" 두 곳을 동시에 갱신
 function updateCommentCount(count) {
   const headerCount = document.getElementById('comment-count-header');
   const sectionCount = document.getElementById('comment-count');
@@ -143,6 +161,11 @@ function isValidPostId(id) {
   return typeof id === 'string' && /^[a-fA-F0-9]{24}$/.test(id);
 }
 
+// 이 페이지에 어떤 게시글을 보여줘야 하는지, 여러 경로를 순서대로 시도해서 id를 찾는다.
+// 우선순위: ?id=/?postId=/?post_id= 쿼리 → path 안에 24자리 id가 박혀있는 경우 →
+// 해시(#id=... 또는 #24자리id) → 마지막으로 목록 페이지에서 클릭 시 저장해둔 sessionStorage.
+// 이렇게 여러 경로를 지원하는 이유는 알림 딥링크, 구버전 링크, 목록 카드 클릭 등 진입 경로가
+// 다양해서 어떤 방식으로 들어와도 게시글을 찾을 수 있게 하기 위함이다.
 function getPostIdFromURL() {
   try {
     const search = window.location.search || '';
@@ -182,6 +205,8 @@ function getPostIdFromURL() {
   return null;
 }
 
+// sessionStorage에 남아있는 "방금 클릭한 게시글 id"를 한 번 읽고 즉시 지운다(소비형).
+// getPostIdFromURL()이 URL에서 id를 못 찾았을 때의 최후 수단으로 쓰인다.
 function consumeStoredPostId() {
   const stored = sessionStorage.getItem(POST_ID_STORAGE_KEY);
   if (!stored || !isValidPostId(stored)) return null;
@@ -189,6 +214,9 @@ function consumeStoredPostId() {
   return stored;
 }
 
+// URL에 ?id=가 없는 경로(해시나 sessionStorage)로 게시글을 찾은 경우, 주소창을 ?id=형태로
+// 맞춰준다. replaceState라 히스토리를 새로 쌓지 않고 현재 URL만 정리하는 방식 — 새로고침해도
+// 같은 게시글이 열리고, 링크를 복사해도 올바른 주소가 공유된다.
 function syncPostIdToUrl(postId) {
   if (!isValidPostId(postId)) return;
   try {
@@ -223,6 +251,8 @@ function resolveAssetPath(path) {
   return getBasePath() + path;
 }
 
+// custom-maker.js의 createCharElement()와 같은 역할이지만, draggable/dataset.id 등 편집용
+// 속성 없이 순수 표시용 카드만 만든다 (상세 페이지는 배치를 바꿀 수 없으므로)
 function createReadOnlyCharElement(char) {
   const div = document.createElement('div');
   div.className = 'char';
@@ -234,6 +264,9 @@ function createReadOnlyCharElement(char) {
   return div;
 }
 
+// 현재 currentTierIndex 등급의 세부 등급 칸을 그리고, savedTierState(게시글에 저장된 배치)를
+// 그대로 채워 넣는다. custom-maker.js의 renderTier()와 거의 동일한 구조지만 읽기 전용이라
+// 드래그/탭 이벤트가 전혀 없다.
 function renderReadOnlyTier() {
   const container = document.getElementById('tier-list');
   const titleEl = document.getElementById('tier-title');
@@ -265,6 +298,7 @@ function renderReadOnlyTier() {
   });
 }
 
+// 이전/다음 등급 버튼에 리스너를 등록. 게시글이 저장하고 있는 tierDefinitions 기준으로 순환한다
 function setupTierNavigation() {
   const prevBtn = document.getElementById('prev-btn');
   const nextBtn = document.getElementById('next-btn');
@@ -284,6 +318,7 @@ function setupTierNavigation() {
   }
 }
 
+// 게시글 헤더/제목/설명/조회수/추천수를 화면에 채우고, 브라우저 탭 제목도 게시글 제목으로 바꾼다
 function renderPostMeta(post) {
   const titleEl = document.querySelector('.post-title');
   const authorEl = document.getElementById('author-name');
@@ -313,6 +348,9 @@ function renderPostMeta(post) {
   document.title = `${post.title} - 커스텀 티어 상세`;
 }
 
+// 게시글을 찾지 못하거나(삭제됨/잘못된 id) 서버 연결이 안 될 때, 페이지 전체를 안내 메시지 +
+// 게시판으로 돌아가는 링크로 갈아치운다. 헤더/댓글 등은 데이터가 없어 애매하게 반쪽만 남기는
+// 대신, 아예 명확한 에러 화면으로 대체하는 방식을 택했다.
 function showPostError(message) {
   const container = document.querySelector('.post-detail-container');
   if (!container) return;
@@ -323,6 +361,9 @@ function showPostError(message) {
     </div>`;
 }
 
+// 상세 페이지의 메인 진입점. 게시글 id를 찾아 서버에서 조회한 뒤, 티어 정의/배치 상태를
+// currentPost에서 뽑아내 모든 하위 렌더링(메타/액션버튼/댓글폼/티어표/댓글목록)을 순서대로 실행한다.
+// 성공하면 sessionStorage에 남아있던 임시 id를 지워 다음 진입에 영향이 없게 정리한다.
 async function loadPostDetail() {
   const postId = getPostIdFromURL() || consumeStoredPostId();
   if (!postId || !isValidPostId(postId)) {
@@ -354,12 +395,14 @@ async function loadPostDetail() {
   }
 }
 
+// "유저관련 게시글 보기" 버튼: 이 게시글 작성자로 필터링된 게시판 목록으로 이동
 function goToUserPosts() {
   if (!currentPost?.author) return;
   // Use getBasePath() to support GitHub Pages subpath deploys (/repo-name/...)
   window.location.href = `${getBasePath()}custom-maker/custom-maker_post/custom-maker_post.html?author=${encodeURIComponent(currentPost.author)}`;
 }
 
+// 헤더의 "댓글 N" 클릭: 페이지 아래 댓글 섹션으로 부드럽게 스크롤만 이동 (하이라이트 없음)
 function scrollToComments() {
   const commentSection = document.querySelector('.comment-section');
   if (commentSection) {
@@ -367,6 +410,9 @@ function scrollToComments() {
   }
 }
 
+// 페이지 진입 시 "특정 댓글로 바로 스크롤해야 하는지" 그 대상 댓글 id를 결정한다.
+// 1순위: URL의 ?comment=댓글id (직접 공유된 링크)
+// 2순위: 알림(notifications)을 클릭해 들어온 경우 common.js가 남겨둔 스크롤 타겟 정보
 function resolveCommentScrollTarget() {
   try {
     const params = new URLSearchParams(window.location.search || '');
@@ -385,6 +431,7 @@ function resolveCommentScrollTarget() {
   return '';
 }
 
+// 대상 댓글 DOM에 하이라이트 클래스를 붙여 시각적으로 강조하고, 2.8초 후 자동으로 제거한다
 function highlightScrollTarget(element) {
   if (!element) return;
   element.classList.add('notification-scroll-highlight');
@@ -392,6 +439,9 @@ function highlightScrollTarget(element) {
   setTimeout(() => element.classList.remove('notification-scroll-highlight'), 2800);
 }
 
+// 지정한 commentId를 가진 댓글 DOM을 찾아 스크롤+하이라이트한다.
+// 댓글 목록은 비동기로 로드되므로, 페이지 진입 직후엔 아직 DOM에 없을 수 있다 — 그럴 땐
+// 150ms 간격으로 최대 40번(약 6초) 재시도해서, 로딩이 끝난 뒤에도 확실히 스크롤되게 한다.
 function scrollToCommentTarget(commentId, retries = 40) {
   if (!commentId) return;
 
@@ -420,6 +470,8 @@ function scrollToCommentTarget(commentId, retries = 40) {
   }
 }
 
+// resolveCommentScrollTarget() + scrollToCommentTarget()을 묶어서 실행하는 헬퍼.
+// loadComments() 완료 직후, 그리고 window load 이벤트에서(보험 차원으로) 각각 호출된다.
 function runNotificationCommentScroll() {
   const commentTarget = resolveCommentScrollTarget();
   if (commentTarget) {
@@ -427,6 +479,9 @@ function runNotificationCommentScroll() {
   }
 }
 
+// 로그인이 필요한 동작(추천/댓글/신고 등) 진입점에서 공통으로 쓰는 가드.
+// 로그인 안 돼 있으면 확인창을 띄우고 동의 시 로그인 페이지로 보낸 뒤 null을 반환해서
+// 호출부가 즉시 동작을 중단하게 한다.
 function requireLoggedIn(message) {
   const user = getLoggedInUser();
   if (user) return user;
@@ -437,16 +492,21 @@ function requireLoggedIn(message) {
   return null;
 }
 
+// 열려있는 모든 답글/수정 입력 박스를 닫는다. 새로운 답글/수정 박스를 열기 전에 먼저 호출해서
+// 화면에 입력창이 여러 개 동시에 떠 있지 않도록 한다 (한 번에 하나만 편집 가능)
 function closeAllCommentActionBoxes() {
   document.querySelectorAll('.post-comment-action-box').forEach(box => box.remove());
 }
 
+// 댓글 객체에서 id를 문자열로 뽑아낸다 (getPostId와 동일한 목적의 댓글 버전)
 function getCommentId(comment) {
   const raw = comment?._id ?? comment?.id;
   if (!raw) return '';
   return typeof raw === 'object' && typeof raw.toString === 'function' ? raw.toString() : String(raw);
 }
 
+// 신고 사유 선택 모달. custom-maker_post.js의 openReportModal()과 거의 동일한 마크업/동작이지만,
+// 이 페이지에서는 게시글 신고와 댓글 신고 양쪽에서 재사용한다(title/onSubmit으로 구분)
 function openReportModal({ title, onSubmit }) {
   closeReportModal();
 
@@ -490,6 +550,8 @@ function closeReportModal() {
   document.getElementById('report-modal')?.remove();
 }
 
+// 로그인 상태·작성자 여부에 따라 수정/삭제/신고/이벤트 버튼의 노출과 추천 버튼 상태를
+// 한 번에 갱신한다. loadPostDetail() 완료 직후, 그리고 신고 성공 후에도 다시 호출된다.
 function updatePostActions() {
   const user = getLoggedInUser();
   const isOwner = isPostOwner(currentPost, user);
@@ -511,6 +573,8 @@ function updatePostActions() {
   updateLikeButtonState();
 }
 
+// 이벤트 참여 버튼은 작성자 본인에게만 보인다 (기능 자체는 handleEventParticipation()에서
+// "준비 중" 안내만 뜨는 미구현 기획 스텁이지만, 노출 로직은 이미 작성자 검사를 반영해둔 상태)
 function updateEventButtonVisibility() {
   const eventBtn = document.getElementById('event-btn');
   const user = getLoggedInUser();
@@ -524,6 +588,8 @@ function updateEventButtonVisibility() {
   }
 }
 
+// currentPost.likedByMe 값에 따라 추천 버튼을 비활성화한다 (한 사람당 한 번만 추천 가능,
+// 서버가 최종 검증하지만 UX상 이미 눌렀다는 걸 바로 보여주기 위한 낙관적(optimistic) 갱신)
 function updateLikeButtonState() {
   const likeBtn = document.getElementById('like-btn');
   if (!likeBtn || !currentPost) return;
@@ -537,6 +603,9 @@ function updateLikeButtonState() {
   }
 }
 
+// 게시글 신고 버튼 클릭 핸들러: 로그인 확인 → 본인 글이면 차단 → 이미 신고했으면 차단 →
+// 사유 모달을 띄우고 선택 결과를 서버로 전송. 성공 시 currentPost.reported를 true로 바꿔
+// 버튼을 "신고됨" 비활성 상태로 즉시 반영한다.
 async function handleReportPost() {
   const postId = getCurrentPostId();
   const user = requireLoggedIn('게시글을 신고하려면 로그인이 필요합니다.');
@@ -579,6 +648,9 @@ async function handleReportPost() {
   });
 }
 
+// "수정하기" 버튼 클릭: 로그인·작성자 확인 후, 게시글 전체 데이터를 sessionStorage에 스냅샷으로
+// 저장해두고 전용 수정 페이지(post_edit.html)로 이동한다. custom-maker.js의 enterEditMode()가
+// 이 스냅샷으로 먼저 화면을 채운 뒤 서버에서 최신본을 재조회해 덮어쓴다.
 function handleEditPost() {
   if (!currentPost) return;
 
@@ -625,6 +697,8 @@ function handleEditPost() {
   window.location.href = `${base}custom-maker/post_edit.html?id=${encodeURIComponent(id)}`;
 }
 
+// "삭제하기" 버튼 클릭: 로그인·작성자·확인창을 통과하면 DELETE 요청. 게시글이 삭제되면
+// 서버 쪽에서 딸린 댓글들도 함께 삭제되는 것을 전제로 하며(연쇄 삭제), 성공 시 목록으로 이동한다.
 async function handleDeletePost() {
   if (!currentPost) return;
 
@@ -665,10 +739,14 @@ async function handleDeletePost() {
   }
 }
 
+// "이벤트 참여" 버튼: 기능 자체는 아직 구현되지 않은 기획 스텁이라 안내 알림만 띄운다
 function handleEventParticipation() {
   alert('이벤트 기능은 준비 중입니다.');
 }
 
+// "추천하기" 버튼 클릭: 로그인 확인 후 PATCH로 좋아요 토글 요청.
+// 서버가 이미 추천했다고 응답하면(likedByMe/에러 메시지로 판단) 클라이언트 상태도 맞춰
+// likedByMe를 true로 동기화해서 버튼이 다시 눌리지 않게 한다.
 async function handleLike() {
   if (!currentPost) return;
 
@@ -707,6 +785,8 @@ async function handleLike() {
   }
 }
 
+// 게시글 액션 버튼(추천/공유/수정/삭제/신고/이벤트)에 클릭 리스너를 한 번에 등록.
+// 공유 버튼은 클립보드 API로 현재 페이지 URL을 복사하는 가장 단순한 구현이다.
 function setupActionButtons() {
   const likeBtn = document.getElementById('like-btn');
   const shareBtn = document.getElementById('share-btn');
@@ -731,6 +811,8 @@ function setupActionButtons() {
   if (eventBtn) eventBtn.addEventListener('click', handleEventParticipation);
 }
 
+// 로그인 여부에 따라 댓글 입력창을 활성/비활성화한다. 비로그인이면 contenteditable을 꺼서
+// 입력 자체를 막고, 로그인 안내 문구(comment-login-hint)를 보여준다.
 function updateCommentFormState() {
   const user = getLoggedInUser();
   const loginHint = document.getElementById('comment-login-hint');
@@ -751,6 +833,9 @@ async function fetchComments(postId) {
   return response.json();
 }
 
+// 댓글 하나에 붙는 액션 버튼들을 만든다. 비로그인이면 아예 버튼을 안 보여주고(빈 문자열),
+// 로그인 상태에서는 누구나 "답변"은 가능, 본인 댓글이면 "수정/삭제", 남의 댓글이면
+// 이미 신고했는지(comment.reported)에 따라 "신고" 또는 비활성화된 "신고됨"을 보여준다.
 function renderCommentActions(comment) {
   const user = getLoggedInUser();
   if (!user) return '';
@@ -773,6 +858,9 @@ function renderCommentActions(comment) {
   return `<div class="post-comment-actions">${buttons.join('')}</div>`;
 }
 
+// 댓글 카드 하나의 HTML을 생성. 답글(parentCommentId가 있음)이면 is-reply 클래스로 들여쓰고
+// 원댓글 인용 블록(quotedMessage)을 위에 붙인다. 댓글 본문에는 id를 붙여(comment-body-*)
+// 답글 작성 시 원문 스니펫을 다시 읽어올 수 있게 한다(getCommentDataFromElement에서 사용).
 function renderCommentItem(comment) {
   const commentId = getCommentId(comment);
   const isReply = Boolean(comment.parentCommentId);
@@ -794,6 +882,9 @@ function renderCommentItem(comment) {
     </article>`;
 }
 
+// 댓글 목록 컨테이너 하나에 클릭 이벤트를 한 번만 위임 등록한다. loadComments()가 목록을
+// 통째로 innerHTML로 다시 그려도(각 댓글 버튼에 리스너를 다시 붙일 필요 없이) data-action
+// 속성만 보고 reply/edit/delete/report를 분기 처리한다. dataset.actionsBound로 중복 등록 방지.
 function setupCommentListActions() {
   const list = document.getElementById('comment-list');
   if (!list || list.dataset.actionsBound === 'true') return;
@@ -817,6 +908,8 @@ function getCommentElement(commentId) {
   return document.querySelector(`.post-comment-item[data-comment-id="${commentId}"]`);
 }
 
+// 답글을 작성할 때 "원댓글 작성자/내용"을 서버에 다시 물어보지 않고, 이미 화면에 렌더링된
+// DOM에서 바로 읽어와 인용문(quotedUser/quotedMessage)으로 재사용한다
 function getCommentDataFromElement(commentId) {
   const el = getCommentElement(commentId);
   if (!el) return null;
@@ -828,6 +921,9 @@ function getCommentDataFromElement(commentId) {
   };
 }
 
+// "답변" 버튼 클릭: 로그인 확인 후 해당 댓글 아래에 답글 입력 박스를 동적으로 삽입한다.
+// 이미 열려있는 다른 답글/수정 박스는 먼저 닫고(closeAllCommentActionBoxes), 같은 댓글에
+// 중복으로 박스가 열리지 않도록 존재 여부를 확인한다.
 function openReplyBox(commentId) {
   if (!requireLoggedIn('답변을 작성하려면 로그인이 필요합니다.')) return;
 
@@ -851,6 +947,8 @@ function openReplyBox(commentId) {
   box.querySelector(`[data-submit-reply="${commentId}"]`)?.addEventListener('click', () => submitReply(commentId));
 }
 
+// "수정" 버튼 클릭: 본인 댓글의 기존 텍스트를 그대로 채운 편집 박스를 삽입한다.
+// openReplyBox와 마찬가지로 다른 박스를 먼저 닫고 중복 삽입을 방지한다.
 function openEditBox(commentId) {
   const user = requireLoggedIn('댓글을 수정하려면 로그인이 필요합니다.');
   if (!user) return;
@@ -884,6 +982,10 @@ function openEditBox(commentId) {
   box.querySelector(`[data-submit-edit="${commentId}"]`)?.addEventListener('click', () => submitEdit(commentId));
 }
 
+// 답글 등록: 원댓글의 작성자/내용을 스니펫(최대 200자 + "...")으로 잘라 quotedMessage로 함께
+// 전송한다. 서버는 parentCommentId로 이 댓글이 답글임을 알고, quotedUser/quotedMessage는
+// 화면에 인용 블록을 보여주기 위한 스냅샷 데이터로 그대로 저장된다(원댓글이 나중에 수정/삭제돼도
+// 답글의 인용문은 작성 당시 내용 그대로 남는다).
 async function submitReply(parentCommentId) {
   const user = getLoggedInUser();
   const postId = getCurrentPostId();
@@ -931,6 +1033,7 @@ async function submitReply(parentCommentId) {
   }
 }
 
+// 댓글 수정 완료: PATCH로 내용만 갱신하고, 성공하면 편집 박스를 닫은 뒤 목록을 통째로 새로 불러온다
 async function submitEdit(commentId) {
   const user = getLoggedInUser();
   const postId = getCurrentPostId();
@@ -972,6 +1075,9 @@ async function submitEdit(commentId) {
   }
 }
 
+// 댓글 신고: 로그인 확인 후 사유 모달을 띄우고 결과를 서버로 전송, 성공 시 목록을 새로고침해서
+// "신고됨" 상태(disabled 버튼)를 즉시 반영한다. 게시글 신고와 달리 본인 댓글 신고 차단이나
+// 이미 신고했는지 사전 검사는 renderCommentActions()가 버튼 자체를 다르게 그려서 처리한다.
 function reportComment(commentId) {
   const postId = getCurrentPostId();
   const user = requireLoggedIn('댓글을 신고하려면 로그인이 필요합니다.');
@@ -1006,6 +1112,9 @@ function reportComment(commentId) {
   });
 }
 
+// 댓글 목록을 서버에서 받아 통째로 다시 그린다. 로딩 중/빈 목록/에러 세 가지 상태를 각각
+// 다른 안내 문구로 처리하고, 렌더링 후 액션 위임 리스너를 (재)바인딩한 뒤 알림 딥링크로
+// 들어왔다면 해당 댓글로 자동 스크롤한다.
 async function loadComments() {
   const list = document.getElementById('comment-list');
   const postId = getCurrentPostId();
@@ -1033,6 +1142,8 @@ async function loadComments() {
   }
 }
 
+// 새 댓글(최상위, 답글 아님) 등록. 1000자 제한을 프론트에서도 미리 검사해 불필요한 요청을
+// 막고, 제출 중 버튼을 잠깐 비활성화해 중복 클릭으로 인한 중복 등록을 방지한다.
 async function submitComment() {
   const inputBox = document.getElementById('comment-input');
   const postId = getCurrentPostId();
@@ -1083,6 +1194,8 @@ async function submitComment() {
   }
 }
 
+// 댓글 삭제: 확인창 통과 후 DELETE 요청, 성공 시 목록을 다시 불러온다.
+// (답글이 딸린 댓글을 지울 때의 처리는 서버 쪽 정책을 따른다)
 async function deleteComment(commentId) {
   const postId = getCurrentPostId();
   const user = getLoggedInUser();
@@ -1113,6 +1226,8 @@ async function deleteComment(commentId) {
   }
 }
 
+// 댓글 입력 폼 초기화: 등록 버튼 클릭 및 Enter 키(Shift+Enter는 줄바꿈으로 남겨두고 일반
+// Enter만 즉시 등록)로 submitComment()를 호출하도록 바인딩한다.
 function setupCommentForm() {
   const submitBtn = document.getElementById('comment-submit-btn');
   const inputBox = document.getElementById('comment-input');
@@ -1135,6 +1250,9 @@ function setupCommentForm() {
 
 let postDetailInitialized = false;
 
+// 페이지 부트스트랩. postDetailInitialized 플래그로 중복 호출을 막는다 —
+// post_detail.html 하단 인라인 스크립트가 DOMContentLoaded에서 한 번 더 호출하기 때문에
+// (스크립트 로드 순서 이슈에 대한 안전망) 이 가드가 없으면 리스너·요청이 두 번씩 실행된다.
 function initPostDetailPage() {
   if (postDetailInitialized) return;
   postDetailInitialized = true;
@@ -1148,6 +1266,9 @@ document.addEventListener('DOMContentLoaded', () => {
   initPostDetailPage();
 });
 
+// 알림 딥링크로 들어온 경우, 댓글 목록이 아직 로드되기 전 시점을 대비해 페이지 전체가 완전히
+// 로드된(load 이벤트) 뒤에도 한 번 더 스크롤을 시도한다 (loadComments() 완료 후 실행되는
+// runNotificationCommentScroll() 호출과는 별개의 보험성 재시도)
 window.addEventListener('load', () => {
   if (resolveCommentScrollTarget()) {
     setTimeout(runNotificationCommentScroll, 400);

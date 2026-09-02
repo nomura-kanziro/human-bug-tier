@@ -12,11 +12,14 @@
   <link rel="stylesheet" href="custom-maker_post.css">
   <link rel="stylesheet" href="post_detail.css">
 </head>
+<!-- data-page="post-detail": 알림(notifications) 딥링크 등에서 "지금 이 페이지가 게시글 상세인지"를
+     판별하는 용도로 쓰일 수 있는 마커 -->
 <body data-page="post-detail">
   <div id="header-placeholder"></div>
 
   <main class="post-detail-container">
 
+    <!-- 작성자 프로필 + 조회/추천/댓글 수 요약. post_detail.js의 renderPostMeta()가 채운다 -->
     <div class="post-header">
       <div class="post-author-profile">
         <img src="../../tier-image/logo.webp" alt="프로필" class="profile-img" id="profile-img">
@@ -25,12 +28,14 @@
 
       <div class="post-meta-row">
         <div class="post-left">
+          <!-- 이 작성자가 쓴 다른 글들만 필터링된 게시판으로 이동 (goToUserPosts) -->
           <button class="user-posts-btn" onclick="goToUserPosts()">유저관련 게시글 보기</button>
           <span class="post-date" id="post-date">-</span>
         </div>
         <div class="post-right">
           <span class="stat">조회 <strong id="post-views">0</strong></span>
           <span class="stat">추천 <strong id="post-likes">0</strong></span>
+          <!-- 댓글 수를 클릭하면 페이지 아래 댓글 섹션으로 부드럽게 스크롤 -->
           <span class="stat comment-link" onclick="scrollToComments()">
             댓글 <strong id="comment-count-header">0</strong>
           </span>
@@ -39,8 +44,11 @@
     </div>
 
     <h1 class="post-title" id="post-title">게시글 제목</h1>
+    <!-- 게시글 내용(설명). 내용이 비어있으면 renderPostMeta()가 hidden 속성으로 아예 숨긴다 -->
     <div class="post-description" id="post-description" hidden></div>
 
+    <!-- 게시된 티어표를 읽기 전용으로 보여주는 영역. custom-maker.js와 달리 드래그/탭 배치 불가,
+         renderReadOnlyTier()가 tierDefinitions·savedTierState로 정적으로 그린다 -->
     <div id="tier-section">
       <div class="tier-nav">
         <button id="prev-btn">← 이전 티어</button>
@@ -51,6 +59,8 @@
       <div id="tier-list" class="tier-list"></div>
     </div>
 
+    <!-- 액션 버튼 모음. edit-btn/delete-btn은 기본 hidden이며 updatePostActions()가 작성자 본인일
+         때만 보여준다. event-btn은 기획 단계로 클릭하면 "준비 중" 안내만 뜬다 -->
     <div class="post-action">
       <button id="like-btn" class="action-btn like-btn">
         ❤️ 추천하기 <span id="like-count">0</span>
@@ -62,6 +72,9 @@
       <button id="event-btn" class="action-btn" type="button" hidden>🎉 이벤트 참여</button>
     </div>
 
+    <!-- 댓글 섹션: 목록 + 새 댓글 입력 폼. 답글/수정 입력창은 post_detail.js가 각 댓글 아래
+         동적으로 삽입한다(openReplyBox/openEditBox). 비로그인이면 입력창이 비활성화되고
+         comment-login-hint 안내가 보인다 -->
     <div class="comment-section">
       <h3>댓글 <span id="comment-count">(0)</span></h3>
       <p id="comment-login-hint" class="comment-login-hint" hidden>댓글을 작성하려면 로그인이 필요합니다.</p>
@@ -79,6 +92,9 @@
   <script src="../../common.js"></script>
   <script src="post_detail.js"></script>
   <script>
+    // post_detail.js는 DOMContentLoaded에서 이미 initPostDetailPage()를 자체 호출하지만,
+    // 스크립트 로드 순서 문제로 그 리스너가 놓친 경우를 대비해 여기서도 한 번 더 호출한다.
+    // initPostDetailPage() 내부에 postDetailInitialized 가드가 있어 중복 실행되지 않는다.
     document.addEventListener('DOMContentLoaded', function () {
       if (typeof window.initPostDetailPage === 'function') {
         window.initPostDetailPage();

@@ -1,4 +1,6 @@
 /* post_detail.css */
+/* 커스텀 티어 게시글 "상세" 페이지 전용 스타일. 티어표 자체(.tier-list 등)는 ../custom-maker.css를
+   그대로 재사용하고, 이 파일은 헤더/액션버튼/댓글 영역만 추가로 꾸민다. */
 
 /* 게시글 헤더 */
 .post-header {
@@ -141,6 +143,8 @@
   background: #333;
 }
 
+/* 수정/삭제/신고 버튼: 각각 파랑/빨강/노랑 계열로 색을 다르게 줘서 위험도를 직관적으로 구분
+   (수정=안전한 파랑, 삭제=경고 빨강, 신고=주의 노랑). 표시 여부는 JS(updatePostActions)가 제어 */
 .edit-btn {
   border-color: #2563eb;
   background: #172554;
@@ -348,6 +352,7 @@
   gap: 12px;
 }
 
+/* 댓글 카드 하나. 최상위 댓글과 답글이 같은 클래스를 쓰고, 답글만 .is-reply가 추가로 붙어 들여쓰기됨 */
 .post-comment-item {
   padding: 14px 16px;
   border: 1px solid #333;
@@ -355,12 +360,15 @@
   background: #1a1a1a;
 }
 
+/* 답글: 왼쪽 여백(margin-left)으로 원댓글에 종속된 느낌을 주고, 배경을 살짝 더 어둡게 해 구분 */
 .post-comment-item.is-reply {
   margin-left: 28px;
   border-color: #2a2a2a;
   background: #151515;
 }
 
+/* 답글 상단에 "OO님 >> 원댓글 내용 일부"를 인용문처럼 보여주는 블록.
+   post_detail.js의 submitReply()가 원댓글 내용을 200자로 잘라 quotedMessage로 저장해둔 걸 표시 */
 .post-comment-quote {
   margin-bottom: 10px;
   padding: 10px 12px;
@@ -375,6 +383,8 @@
   color: #ffc400;
 }
 
+/* 헤더 알림(딥링크)을 타고 특정 댓글로 이동했을 때, scrollToCommentTarget()이 잠깐 이 클래스를
+   붙였다가(2.8초 후 자동 제거) 파란 테두리+배경으로 "이 댓글입니다"를 강조 표시한다 */
 .notification-scroll-highlight {
   outline: 3px solid #2563eb;
   outline-offset: 3px;
@@ -443,6 +453,8 @@
   color: #ffb4b4;
 }
 
+/* 답변/수정 버튼을 누르면 openReplyBox()/openEditBox()가 댓글 카드 안에 동적으로 삽입하는
+   입력 박스 영역. 위쪽에 구분선을 둬서 원댓글 본문과 시각적으로 분리한다 */
 .post-comment-action-box {
   margin-top: 12px;
   padding-top: 12px;
@@ -480,6 +492,7 @@
   font-weight: 700;
 }
 
+/* 댓글 목록의 3가지 상태별 안내 문구 공통 스타일 (로딩 중 / 댓글 없음 / 조회 실패) */
 .comment-empty,
 .comment-loading,
 .comment-error {
@@ -489,6 +502,7 @@
   font-size: 0.92rem;
 }
 
+/* ===== 게시글/댓글 신고 모달 (custom-maker_post.css와 동일한 마크업/스타일을 이 페이지에서도 사용) ===== */
 .report-modal-overlay {
   position: fixed;
   inset: 0;

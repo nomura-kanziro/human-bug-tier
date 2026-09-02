@@ -1,5 +1,9 @@
 /* custom-maker_post/custom-maker_post.css */
+/* 커스텀 티어 게시판 목록(카드 그리드) + 게시글 신고 모달 스타일.
+   기본 레이아웃(.board-container 등)은 custom-maker_post.html 안의 <style>에 있고,
+   이 파일은 그 위에 얹는 부제목/카드/모바일/신고모달 확장 스타일이다. */
 
+/* ?mine=1, ?author= 진입 시 "OO님이 작성한 게시글" 등을 보여주는 부제목 */
 .board-subtitle {
   margin: 8px 0 0;
   color: #8faadc;
@@ -16,6 +20,7 @@
   background: #555;
 }
 
+/* 카드 그리드: 폭이 넓으면 열이 자동으로 늘어나고, 좁아지면 줄어드는 반응형 그리드 (최소 카드 폭 220px) */
 .post-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
@@ -23,10 +28,13 @@
   padding: 20px 0;
 }
 
+/* 카드 자체(.post-card, <a> 링크)와 그 위에 겹쳐 보이는 수정/신고 버튼을 절대 배치하기 위한 기준 컨테이너 */
 .post-card-wrapper {
   position: relative;
 }
 
+/* 카드 우상단에 겹쳐 보이는 버튼: 내 글이면 "수정", 남의 글이면 "신고"만 보인다
+   (custom-maker_post.js createPostCard()가 isPostOwner()로 둘 중 하나만 만들어 붙임) */
 .post-card-wrapper .post-card-report-btn,
 .post-card-wrapper .post-card-edit-btn {
   position: absolute;
@@ -83,6 +91,7 @@
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
 }
 
+/* 썸네일 영역: 16:9 비율 고정 + overflow hidden으로 이미지 비율이 달라도 카드 높이가 흔들리지 않게 함 */
 .post-thumbnail {
   width: 100%;
   aspect-ratio: 16 / 9;
@@ -202,6 +211,9 @@
   line-height: 1.6;
 }
 
+/* ===== 게시글 신고 모달 =====
+   custom-maker_post.js의 openReportModal()이 body 끝에 동적으로 삽입하는 모달.
+   화면 전체를 덮는 반투명 오버레이(.report-modal-overlay) 위에 사유 선택 카드가 뜬다. */
 .report-modal-overlay {
   position: fixed;
   inset: 0;

@@ -8,22 +8,25 @@
   <link rel="stylesheet" href="../Header_Footer.css">
   <link rel="stylesheet" href="custom-maker.css">   <!-- 우리가 새로 만들 CSS -->
   <script src="../common.js"></script>
-  <!-- html2canvas 라이브러리 (PNG 캡처용) -->
+  <!-- html2canvas 라이브러리 (PNG 캡처용): #tier-capture-area DOM을 그대로 이미지로 스냅샷 찍어준다 -->
   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <!-- jsPDF: html2canvas로 뽑은 각 티어 캔버스를 페이지별로 이어 붙여 PDF로 저장할 때 사용 -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 
-  <!-- header/footer 자동 로드 -->
+  <!-- header/footer 자동 로드: common.js의 loadCommon()이 이 두 placeholder에 header.html/footer.html을 fetch해서 채워 넣음 -->
   <div id="header-placeholder"></div>
 
   <div class="maker-container">
     <h1><img src="../tier-image/human_bug_eyes_icon.gif" class="eyes_icon" alt=""> 커스텀 티어 메이커</h1>
+    <!-- PC는 드래그, 모바일은 HTML5 DnD가 불안정해서 "탭으로 선택 → 티어 칸 탭" 방식을 안내 -->
     <p class="mobile-maker-help">모바일: 캐릭터를 <strong>탭</strong>해 선택한 뒤, 위 티어 칸을 <strong>탭</strong>하면 배치됩니다. (PC는 드래그도 가능)</p>
+    <!-- 모바일에서 캐릭터를 선택했을 때 "○○ 선택됨 → 티어 칸을 탭하세요" 안내가 여기 채워짐 (custom-maker.js setCharSelection) -->
     <div id="mobile-place-hint" class="mobile-place-hint" hidden></div>
-    
 
-    <!-- tier-class 스타일 그대로 + 화살표 -->
+
+    <!-- tier-class(공식 티어표) 페이지와 동일한 등급 탐색 UI + 이전/다음 화살표 버튼 -->
     <div class="tier-nav">
       <button id="prev-btn">← 이전 티어</button>
       <h2 id="tier-title">1등급 - 신계 / 슈퍼 그랜드 마스터</h2>
@@ -31,26 +34,29 @@
     </div>
 
     <!-- ✅ tier-nav 밖에, tier-list 중복 제거하고 여기 하나만 -->
+    <!-- #tier-capture-area: PNG/PDF 다운로드 시 html2canvas가 캡처하는 범위(테두리+배경 포함).
+         tier-nav나 action-bar는 이 영역 밖이라 캡처 이미지에 안 찍힌다. -->
     <div id="tier-capture-area">
+      <!-- 실제 등급별 드롭존(.tier/.characters)은 custom-maker.js의 renderTier()가 매번 다시 그려 채움 -->
       <div id="tier-list" class="tier-list"></div>
     </div>
 
     <!-- 설정 버튼들 -->
     <div class="action-bar">
-  
-      <!-- 초기화 버튼 -->
+
+      <!-- 초기화 버튼: 확인창 후 tierState와 localStorage를 비우고 처음부터 다시 그림 -->
       <button id="reset-btn" class="btn btn-reset">
         <span class="btn-text">초기화</span>
         <span class="btn-icon">🗑️</span>
       </button>
-    
-      <!-- 다운로드 버튼 (드롭다운) -->
+
+      <!-- 다운로드 버튼 (드롭다운): 클릭하면 아래 .dropdown-menu가 펼쳐지고 PNG/PDF/JSON 중 선택 -->
       <div class="btn-dropdown">
         <button id="download-btn" class="btn btn-download">
           <span class="btn-text">다운로드</span>
           <span class="btn-icon">⬇️</span>
         </button>
-        
+
         <!-- 클릭하면 펼쳐지는 메뉴 -->
         <div class="dropdown-menu" id="download-menu">
           <button class="dropdown-item" data-type="png">PNG로 저장</button>
@@ -58,22 +64,28 @@
           <button class="dropdown-item" data-type="json">JSON으로 저장</button>
         </div>
       </div>
-    
-      <!-- 업로드 버튼 -->
+
+      <!-- 업로드 버튼: 로그인 필요. 신규 작성이면 "업로드"(POST), 수정 모드/전용 수정 페이지면 "수정완료"(PUT)로
+           custom-maker.js의 updateUploadButtonState()가 라벨을 자동 전환한다 -->
       <button id="upload-btn" class="btn btn-upload">
         <span class="btn-text">업로드</span>
         <span class="btn-icon">🔗</span>
       </button>
-    
+
     </div>
 
-    <!-- 아래쪽 캐릭터 목록 (드래그 가능) -->
+    <!-- 아래쪽 캐릭터 목록 (드래그 가능): tier-class 1~9 페이지에서 파싱해온 전체 캐릭터 풀.
+         이미 티어에 배치된 캐릭터는 renderCharacterPool()이 여기서 제외한다 -->
     <div class="character-pool" id="character-pool-wrap">
       <h3>📦 전체 캐릭터 풀 <span class="pool-hint-pc">(드래그해서 위로)</span><span class="pool-hint-mobile">(탭으로 선택)</span></h3>
       <div id="character-pool" class="characters-pool"></div>
     </div>
   </div>
 
+  <!-- 캐릭터 풀이 화면(뷰포트)에 보이는 동안에만 뜨는 반투명 이동 화살표.
+       ▲ = 티어표 캡처 영역으로 스크롤, ▼ = 풀 목록 맨 아래로 스크롤.
+       PNG 캡처 대상(#tier-capture-area) 밖에 있어서 다운로드 이미지에는 나오지 않는다.
+       표시/숨김은 custom-maker.js의 initPoolMaxWindow()가 IntersectionObserver로 제어. -->
   <div id="pool-viewport-arrows" class="pool-viewport-arrows" hidden>
     <button type="button" id="pool-max-up" class="pool-arrow pool-arrow--up" aria-label="티어표 테이블로 이동">▲</button>
     <button type="button" id="pool-max-down" class="pool-arrow pool-arrow--down" aria-label="전체 캐릭터 풀로 이동">▼</button>
