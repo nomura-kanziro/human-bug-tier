@@ -1,3 +1,9 @@
+<!--
+  news.html - '새 소식' 카테고리 전용 전체 목록 페이지
+  구조는 all_notices.html과 완전히 동일하고(같은 notice.css 클래스, 같은 renderNoticeFullPage 함수),
+  카테고리만 'news'로 다르다. notice.js의 renderNoticeFullPage('news')가 id="notice-full-list"에
+  '새 소식' 전체 목록을 채워 넣는다.
+-->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -19,12 +25,15 @@
       <a href="notice.html" class="back-link">← 공지사항 메인으로</a>
     </div>
 
+    <!-- notice.js renderNoticeFullPage('news')가 fetchNotices('news') 결과로 채움 -->
     <div id="notice-full-list" class="notice-full-list"></div>
     <div id="notice-pagination" class="pagination"></div>
   </div>
 
   <div id="footer-placeholder"></div>
   <script src="../common.js"></script>
+  <!-- notice.js가 URL 경로/파일명(news.html)을 보고(detectPageType) 자동으로
+       renderNoticeFullPage('news')를 실행한다 -->
   <script src="notice.js"></script>
 </body>
 </html>

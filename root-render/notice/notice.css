@@ -14,6 +14,7 @@
   gap: 20px;
 }
 
+/* 전체 공지/새 소식 전체목록 페이지(all_notices.html, news.html)의 카드들을 세로로 나열하는 컨테이너 */
 .notice-full-list {
   max-width: 100%;
   margin: 0 auto;
@@ -41,6 +42,8 @@
   margin-bottom: 0; /* 헤더에서 간격 제어 */
 }
 
+/* notice.html(공지 메인)의 '전체 공지' / '새 소식' 2컬럼 레이아웃.
+   넓은 화면에서는 좌우 나란히, 900px 이하 좁은 화면에서는 아래 미디어쿼리로 1컬럼 세로 쌓기로 전환 */
 .notice-page .notice-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -54,6 +57,7 @@
   }
 }
 
+/* 각 컬럼 상단 소제목("전체 공지"/"새 소식") - 카테고리 색상 점(.notice-dot)과 함께 배치 */
 .notice-col-title {
   font-size: 22px;
   font-weight: 600;
@@ -65,6 +69,7 @@
   gap: 8px;
 }
 
+/* 카테고리 색상 표시용 작은 원. JS(notice.js CATEGORY_COLORS)와 색상을 맞춰 인라인 style로 배경색이 주입됨 */
 .notice-dot {
   width: 10px;
   height: 10px;
@@ -73,16 +78,20 @@
   flex-shrink: 0;
 }
 
+/* '전체 공지' 컬럼 상단 강조선 - 초록(#10b981)으로 새 소식 컬럼과 시각적으로 구분 */
 .notice-col-general {
   border-top: 3px solid #10b981;
   padding-top: 16px;
 }
 
+/* '새 소식' 컬럼 상단 강조선 - 보라(#8b5cf6) */
 .notice-col-news {
   border-top: 3px solid #8b5cf6;
   padding-top: 16px;
 }
 
+/* 목록/상세 카드에 붙는 카테고리 뱃지. 배경/글자/테두리 색은 notice.js getCategoryBadge()에서
+   인라인 style로 주입하므로(카테고리마다 색이 다름) 여기서는 모양(padding/radius/폰트)만 정의 */
 .notice-category-badge {
   display: inline-block;
   padding: 3px 10px;
@@ -91,18 +100,21 @@
   font-weight: 600;
 }
 
+/* 공지/새소식이 하나도 없을 때 목록 자리에 표시되는 안내 문구 스타일 */
 .notice-empty {
   color: #888;
   font-size: 14px;
   padding: 20px 0;
 }
 
+/* 고정(핀) 공지 제목 앞에 붙는 📌 이모지 라벨 */
 .notice-pin-label {
   color: #f59e0b;
   font-size: 14px;
   margin-right: 4px;
 }
 
+/* 유튜브 커뮤니티 글에서 가져와 번역한 공지에 붙는 "YouTube" 뱃지 - 빨간 계열로 출처를 강조 */
 .notice-yt-badge {
   display: inline-block;
   margin-right: 6px;
@@ -117,6 +129,7 @@
   vertical-align: middle;
 }
 
+/* 상세 페이지의 "일본어 원문 보기"/"한국어 번역 보기" 토글 버튼(notice.js setupNoticeOriginalToggle) */
 .notice-original-toggle {
   margin-left: 8px;
   padding: 3px 10px;
@@ -134,6 +147,7 @@
   background: #fef2f2;
 }
 
+/* 고정(isPinned) 공지 카드에 옅은 노란 배경을 덧입혀 목록에서 눈에 띄게 함 */
 .notice-item-pinned {
   background: #fffbeb;
   border-radius: 8px;
@@ -141,6 +155,7 @@
   border: 1px solid #fde68a;
 }
 
+/* 전체목록/새소식 페이지 헤더의 "← 공지사항 메인으로" 링크 */
 .back-link {
   font-size: 14px;
   color: #2563eb;
@@ -152,6 +167,8 @@
   text-decoration: underline;
 }
 
+/* 전체목록 페이지 하단 "총 N개" 표시 영역. 실제 페이지 넘김 기능은 없고(전체를 한 번에 로드)
+   개수만 안내하는 용도 - notice.js renderNoticeFullPage 참고 */
 .pagination {
   margin-top: 40px;
   text-align: center;
@@ -159,6 +176,7 @@
   font-size: 14px;
 }
 
+/* notice.html 공지 메인 페이지의 컬럼 내부 목록(기본 레이아웃 카드들) 세로 간격 */
 .notice-list {
   display: flex;
   flex-direction: column;
@@ -170,6 +188,7 @@
   margin-bottom: 0;
 }
 
+/* 공지 카드 전체를 감싸는 <a> 태그 - 링크 밑줄/기본 색을 지우고 카드 형태로 보이게 함 */
 .notice-item-link {
   display: block;
   text-decoration: none;
@@ -184,6 +203,7 @@
   margin-bottom: 4px;
 }
 
+/* 카드에 마우스를 올리면 제목만 파란색으로 바뀌어 클릭 가능함을 알려줌 */
 .notice-item-link:hover .notice-link {
   color: #2563eb;
 }
@@ -201,6 +221,8 @@
   color: #999;
 }
 
+/* notice.html 공지 메인 페이지 각 컬럼 하단의 "문서 N개 모두 보기 →" 링크
+   (개수 텍스트는 notice.js renderNoticeMainPage에서 별도 API 호출로 채워짐) */
 .notice-more {
   display: inline-block;
   margin-top: 24px;
@@ -219,6 +241,7 @@
   padding-bottom: 80px;
 }
 
+/* 데이터 로딩 중(초기 HTML) / 조회 실패 시(notice.js catch 블록) 표시되는 안내 문구 영역 */
 .notice-detail-loading,
 .notice-detail-error {
   text-align: center;
@@ -227,6 +250,7 @@
   font-size: 16px;
 }
 
+/* 상세 페이지 전체를 감싸는 카드 컨테이너 */
 .notice-detail-card {
   background: #fff;
   border-radius: 16px;
@@ -235,6 +259,7 @@
   overflow: hidden;
 }
 
+/* 카테고리별 카드 상단 색 강조선 - 목록 페이지의 .notice-col-general/.notice-col-news와 동일한 색 규칙 */
 .notice-detail-general {
   border-top: 4px solid #10b981;
 }
@@ -243,6 +268,7 @@
   border-top: 4px solid #8b5cf6;
 }
 
+/* 카드 최상단 바: "← 목록으로" 링크 + 고정/카테고리/유튜브 뱃지들이 나열되는 영역 */
 .notice-detail-topbar {
   display: flex;
   align-items: center;
@@ -281,6 +307,7 @@
   flex-wrap: wrap;
 }
 
+/* 제목/작성자/본문 등 실제 콘텐츠가 들어가는 영역 (topbar 아래) */
 .notice-detail-body {
   padding: 40px 32px 48px;
 }
@@ -311,6 +338,8 @@
   color: #374151;
 }
 
+/* 본문 위에 표시되는 요약문 박스. 왼쪽 색띠(border-left)로 강조하며,
+   카테고리가 'news'면 아래 .news-summary가 색을 보라로 덮어씀 */
 .notice-detail-summary {
   background: #f8fafc;
   border-left: 4px solid #10b981;
@@ -326,6 +355,8 @@
   border-left-color: #8b5cf6;
 }
 
+/* notice.js renderNoticeContent()가 생성한 본문 HTML(문단/목록/인용/이미지 등)의 기본 타이포그래피.
+   아래 이어지는 .notice-detail-content 하위 선택자들은 각 마크다운 요소별 세부 스타일이다. */
 .notice-detail-content {
   font-size: 16px;
   line-height: 1.85;
@@ -409,6 +440,7 @@
   margin: 28px 0;
 }
 
+/* 본문 이미지(![alt](url) 마크다운) 공통 스타일. figure(1장)/gallery(여러 장) 어느 쪽에 있든 동일 적용 */
 .notice-detail-content img.notice-content-img,
 .notice-content-gallery img.notice-content-img,
 .notice-content-figure img.notice-content-img {
@@ -419,10 +451,13 @@
   background: #f3f4f6;
 }
 
+/* 연속 이미지 줄이 1장뿐일 때(notice.js flushImages) 감싸는 figure 여백 */
 .notice-content-figure {
   margin: 16px 0 22px;
 }
 
+/* 연속 이미지 줄이 2장 이상일 때 자동 그리드 갤러리로 배치. 카드 최소 너비 160px 기준으로
+   auto-fit되므로 화면 폭에 따라 한 줄에 들어가는 이미지 개수가 자동으로 조절됨 */
 .notice-content-gallery {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
@@ -436,6 +471,7 @@
   }
 }
 
+/* 본문 맨 아래, "목록 보기" 버튼을 가운데 정렬해 담는 영역 */
 .notice-detail-footer {
   margin-top: 48px;
   padding-top: 24px;
@@ -461,6 +497,7 @@
   background: #333;
 }
 
+/* 목록 카드에 마우스를 올리면 살짝 떠오르는 효과(hover 시 위로 1px + 그림자) */
 .notice-item {
   transition: transform 0.15s, box-shadow 0.15s;
 }
@@ -471,6 +508,7 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
 }
 
+/* 좁은 화면(휴대폰)에서 상세 페이지 여백/제목 크기를 줄여 공간을 절약 */
 @media (max-width: 640px) {
   .notice-detail-body {
     padding: 28px 20px 36px;

@@ -1,3 +1,9 @@
+<!--
+  all_notices.html - '전체 공지' 카테고리 전용 전체 목록 페이지
+  notice.html 메인 화면에서는 최신 5개만 미리보기로 보여주는데, 여기서는 해당 카테고리의
+  공지를 전부(개수 제한 없이) 나열한다. 실제 목록은 notice.js의 renderNoticeFullPage('notice')가
+  id="notice-full-list" 자리에 채워 넣는다.
+-->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -19,12 +25,16 @@
       <a href="notice.html" class="back-link">← 공지사항 메인으로</a>
     </div>
 
+    <!-- notice.js renderNoticeFullPage('notice')가 fetchNotices('notice')(개수 제한 없음) 결과로 채움 -->
     <div id="notice-full-list" class="notice-full-list"></div>
+    <!-- 실제 페이지 넘김 없이 "총 N개"만 표시(전체를 한 번에 로드하는 구조라 페이지네이션 API가 없음) -->
     <div id="notice-pagination" class="pagination"></div>
   </div>
 
   <div id="footer-placeholder"></div>
   <script src="../common.js"></script>
+  <!-- notice.js가 URL 경로에 'all_notices'가 포함된 것을 보고(detectPageType) 자동으로
+       renderNoticeFullPage('notice')를 실행한다 -->
   <script src="notice.js"></script>
 </body>
 </html>

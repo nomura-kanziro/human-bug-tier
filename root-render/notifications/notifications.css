@@ -1,5 +1,14 @@
 /* notifications 전용. common.css / Header_Footer.css 는 수정하지 않는다. */
 
+/* ======================================================
+   알림 전체보기 페이지 (notifications.html / notifications.js)
+   ======================================================
+   구성: 페이지 제목 → 툴바(카테고리 탭 + 정렬 셀렉트) → 알림 카드 리스트.
+   데이터/필터링 로직은 notifications.js가 담당하고, 여기서는 그 결과물(탭 버튼,
+   정렬 셀렉트, .notif-item 카드들)의 생김새만 잡는다. */
+
+/* 본문 전체를 감싸는 컨테이너. 헤더 영역과 겹치지 않도록 위쪽 패딩(60px)을 넉넉히 주고,
+   가운데 정렬 + 최대폭 제한으로 넓은 화면에서도 읽기 좋은 줄 길이를 유지한다. */
 .notif-page {
   max-width: 720px;
   margin: 0 auto;
@@ -12,6 +21,9 @@
   margin: 0 0 24px;
 }
 
+/* 카테고리 탭(좌측)과 정렬 셀렉트(우측)를 한 줄에 나란히 배치하는 툴바.
+   공간이 부족하면(flex-wrap) 줄바꿈되고, 600px 이하에서는 미디어쿼리로 세로 배치로 전환된다.
+   아래쪽 구분선(border-bottom)으로 툴바와 목록 영역을 시각적으로 분리. */
 .notif-toolbar {
   display: flex;
   align-items: center;
@@ -23,11 +35,13 @@
   padding-bottom: 12px;
 }
 
+/* 전체/공지/멘션/이벤트 4개 탭 버튼을 담는 가로 flex 그룹. */
 .notif-tabs {
   display: flex;
   gap: 6px;
 }
 
+/* 탭 버튼 기본(비선택) 모양: 알약(pill) 형태의 무배경 버튼. */
 .notif-tab {
   appearance: none;
   border: none;
@@ -44,11 +58,14 @@
   background: #f3f4f6;
 }
 
+/* 현재 선택된 탭(notifications.js의 bindNotifTabs()가 클릭 시 .active를 토글해줌)만
+   파란 배경 + 흰 글씨로 강조해서 어떤 카테고리를 보고 있는지 한눈에 표시. */
 .notif-tab.active {
   background: #2563eb;
   color: #fff;
 }
 
+/* 정렬/읽음 필터용 네이티브 <select>. 탭과 구분되도록 테두리가 있는 사각형 스타일을 쓴다. */
 .notif-sort-select {
   padding: 8px 12px;
   border-radius: 8px;
@@ -58,12 +75,16 @@
   color: #333;
 }
 
+/* 알림 카드들을 세로로 쌓는 리스트 컨테이너. */
 .notif-list {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
+/* 알림 카드 하나(<button> 요소). 클릭 가능함을 나타내되 카드 형태를 유지하기 위해
+   버튼 기본 스타일 대신 테두리+배경으로 카드처럼 보이게 하고, text-align:left로
+   버튼 기본값(가운데 정렬)을 덮어써서 좌측 정렬 텍스트를 유지한다. */
 .notif-item {
   width: 100%;
   border: 1px solid #eee;
@@ -78,11 +99,14 @@
   background: #f1f5f9;
 }
 
+/* 안 읽은 알림(notifications.js가 item.read가 false일 때 .unread 클래스를 붙임)은
+   옅은 파란 배경으로 강조해서 읽은 알림과 시각적으로 구분되게 한다. */
 .notif-item.unread {
   background: #eff6ff;
   border-color: #dbeafe;
 }
 
+/* 카드 상단 줄: 좌측 라벨(카테고리명)과 우측 시간을 양 끝에 배치. */
 .notif-item-top {
   display: flex;
   justify-content: space-between;
@@ -90,12 +114,16 @@
   margin-bottom: 4px;
 }
 
+/* 알림 종류 라벨(예: "메이커 게시판" 등, common.js의 NOTIFICATION_LABELS 매핑값)을
+   포인트 컬러로 작게 표시. */
 .notif-item-label {
   font-size: 11px;
   font-weight: 700;
   color: #2563eb;
 }
 
+/* 상대 시간 표시("N분 전" 등, common.js의 formatNotificationTime() 결과).
+   줄바꿈되어 라벨과 겹치지 않도록 white-space: nowrap 처리. */
 .notif-item-time {
   font-size: 11px;
   color: #94a3b8;
@@ -109,12 +137,16 @@
   margin-bottom: 2px;
 }
 
+/* 알림 본문 메시지 영역. 알림을 유발한 유저 닉네임(actor)이 있으면 메시지 앞에
+   붙는데, 이 스타일은 그 접두어와 본문 메시지를 함께 감싸는 하나의 텍스트 블록이다. */
 .notif-item-message {
   font-size: 13px;
   color: #64748b;
   line-height: 1.4;
 }
 
+/* 알림이 하나도 없을 때(로딩 중/에러/빈 목록 공통)의 안내 문구 스타일.
+   notifications.js가 이 클래스가 붙은 <p>를 목록 자리에 대신 넣는다. */
 .notif-empty {
   padding: 60px 0;
   text-align: center;
@@ -122,6 +154,8 @@
   font-size: 14px;
 }
 
+/* 모바일 화면 대응: 페이지 여백을 줄이고, 툴바(탭+셀렉트)를 가로 배치 대신
+   세로로 쌓아 좁은 화면에서도 탭과 셀렉트가 잘리지 않게 한다. */
 @media (max-width: 600px) {
   .notif-page {
     padding: 40px 20px 80px;

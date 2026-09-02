@@ -1,3 +1,10 @@
+<!--
+  notice.html - 공지사항 메인 페이지
+  '전체 공지'(초록) / '새 소식'(보라) 두 카테고리를 좌우 2컬럼으로 보여주는 허브 페이지.
+  각 컬럼의 실제 목록 항목(최신 5개 미리보기)은 notice.js의 renderNoticeMainPage()가
+  아래 id="notice-list-general" / "notice-list-news" 자리에 채워 넣는다(정적 HTML은 뼈대만 제공).
+  "문서 모두 보기 →" 링크를 누르면 각각 all_notices.html / news.html 전체목록 페이지로 이동.
+-->
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -9,21 +16,26 @@
   <link rel="stylesheet" href="../Header_Footer.css">
 </head>
 <body>
+  <!-- common.js가 로드 시 header.html/footer.html을 이 자리에 fetch해서 채워 넣는다 -->
   <div id="header-placeholder"></div>
 
   <div class="notice-page">
     <h1 class="notice-title">공지사항</h1>
 
     <div class="notice-grid">
+      <!-- 왼쪽 컬럼: 전체 공지(운영 공지 등 모든 사용자 대상 안내) -->
       <div class="notice-col notice-col-general">
         <h2 class="notice-col-title">
           <span class="notice-dot" style="background:#10b981;"></span>
           전체 공지
         </h2>
+        <!-- notice.js renderNoticeMainPage()가 fetchNotices('notice', 5) 결과로 채움 -->
         <div id="notice-list-general" class="notice-list"></div>
+        <!-- 링크 텍스트("문서 N개 모두 보기")는 JS가 전체 개수를 다시 조회해 채워 넣는다 -->
         <a href="all_notices.html" id="notice-count-general" class="notice-more">문서 모두 보기 →</a>
       </div>
 
+      <!-- 오른쪽 컬럼: 새 소식(업데이트/이벤트 등 뉴스성 안내, 유튜브 번역 글 포함 가능) -->
       <div class="notice-col notice-col-news">
         <h2 class="notice-col-title">
           <span class="notice-dot" style="background:#8b5cf6;"></span>
@@ -37,6 +49,8 @@
 
   <div id="footer-placeholder"></div>
   <script src="../common.js"></script>
+  <!-- notice.js는 DOMContentLoaded 시 detectPageType()으로 이 페이지를 'notice_main'으로 인식하고
+       renderNoticeMainPage()를 자동 실행한다(별도 초기화 코드가 이 파일 안에 필요 없음) -->
   <script src="notice.js"></script>
 </body>
 </html>
