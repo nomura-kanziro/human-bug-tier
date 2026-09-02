@@ -230,7 +230,7 @@
 | 199 | 2026-09-02 | [`b3c185c`](#b3c185c) | feat(index): 메인 행운 뽑기 위젯 스테이지 정리 |
 | 200 | 2026-09-02 | [`a494cb7`](#a494cb7) | feat(tier-class): 세르지오를 라이덴 바로 뒤로 재배치 |
 | 201 | 2026-09-02 | [`828d0b7`](#828d0b7) | feat(tier-class): 호자키 킷페이 2을에서 2갑으로 상승 |
-| 202 | 2026-09-02 | pending | docs(rdmd): 최근 홈·풀 화살표·티어 재배치 반영 |
+| 202 | 2026-09-02 | [`b91c233`](#b91c233) | docs(rdmd): 최근 홈·풀 화살표·티어 재배치 반영 |
 
 ---
 
@@ -3935,15 +3935,15 @@
 
 ---
 
-<a id="pending-202"></a>
+<a id="b91c233"></a>
 
-### 202. 2026-09-02 — pending
+### 202. 2026-09-02 — `b91c233`
 
-- **hash (short)**: pending
-- **hash (full)**: pending
+- **hash (short)**: `b91c233`
+- **hash (full)**: `b91c233bb6feb67204b4b1c2377db7982e1dd8e8`
 - **author**: nomura
 - **message**: docs(rdmd): 최근 홈·풀 화살표·티어 재배치 반영
-- **git**: _(커밋 후 기입)_
+- **git**: `git show b91c233`
 - **범위**: docs / rdmd
 - **요약**: 메인 미리보기·행운 위젯, 풀 화살표, 세르지오·호자키 재배치를 features·frontend record·work-history·스킬에 반영했다.
 - **주요 파일**: `RDMD/features/`, `RDMD/frontend/`, `RDMD/summary/work-history.md`, `.agents/`
