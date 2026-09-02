@@ -7,8 +7,8 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 206 |
-| **기간** | 2026-03-20 ~ 2026-09-02 |
+| **커밋 수** | 207 |
+| **기간** | 2026-03-20 ~ 2026-09-03 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
 > 폴더 안내: [README.md](./README.md)  ·  상세 기능 일지: [../frontend/](../frontend/README.md) · [../backend/](../backend/README.md)
@@ -235,6 +235,7 @@
 | 204 | 2026-09-02 | [`dae05b2`](#dae05b2) | feat(tier-class): 5을 토비구치~에비하라를 5정으로 추락 |
 | 205 | 2026-09-02 | [`4ebfef4`](#4ebfef4) | feat(tier-class): 이전·다음 티어표 페이지 네비 |
 | 206 | 2026-09-02 | [`9fcdcc8`](#9fcdcc8) | chore(common): 사이트 버전을 0.4.2로 변경 |
+| 207 | 2026-09-03 | pending | feat(tier-class): 등급 제목에 티어 아이콘 색 윤광 |
 
 ---
 
@@ -4023,6 +4024,24 @@
 - **범위**: frontend / common
 - **요약**: 푸터 site version과 현재 제품 표기를 0.4.1에서 0.4.2로 올렸다. Render·Cloudflare 푸터 둘 다 맞췄다.
 - **주요 파일**: `root-render/footer.html`, `root-cloudflare/footer.html`, `AGENTS.md`, `CLAUDE.md`, `RDMD/features/overview.md`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-207"></a>
+
+### 207. 2026-09-03 — pending
+
+- **hash (short)**: pending
+- **hash (full)**: pending
+- **author**: nomura
+- **message**: feat(tier-class): 등급 제목에 티어 아이콘 색 윤광
+- **git**: _(커밋 후 기입)_
+- **범위**: frontend / tier-class
+- **요약**: 공식 티어 페이지의 등급 제목에 메인 티어 버튼 아이콘과 같은 색으로 천천히 숨 쉬는 윤광을 넣었다.
+- **주요 파일**: `root-render/tier-class/tier-nav.js`, `root-render/tier-class/tier-nav.css`
 - **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)

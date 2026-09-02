@@ -38,6 +38,12 @@
     if (!main) return;
     if (main.querySelector('.tier-page-nav')) return;
     main.insertBefore(nav, main.firstChild);
+
+    const heading = main.querySelector('h2') || main.querySelector('h1');
+    if (heading) {
+      heading.classList.add('tier-heading');
+      heading.setAttribute('data-tier', String(current));
+    }
   }
 
   if (document.readyState === 'loading') {
