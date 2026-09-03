@@ -246,6 +246,7 @@
 | 215 | 2026-09-03 | [`a9a2a08`](#a9a2a08) | chore(render-sync): 공식 티어표(1~9티어) root-render 반영 |
 | 216 | 2026-09-03 | [`f2cfa65`](#f2cfa65) | chore(render-sync): 공통 스크립트·헤더/푸터·홈·PWA root-render 반영 |
 | 217 | 2026-09-03 | [`pending`](#pending217) | docs(backend): 서버 진입점·라우트에 기능 설명 주석 추가 |
+| 218 | 2026-09-03 | [`pending`](#pending218) | docs(backend): 모델(Mongoose 스키마)에 기능 설명 주석 추가 |
 
 ---
 
@@ -4232,6 +4233,24 @@
 - **범위**: backend / docs
 - **요약**: server.js·config/db.js와 라우트 7개 파일에 미들웨어 체인·엔드포인트별 동작을 설명하는 주석을 추가했다. 라우트 경로·미들웨어 순서·로직은 변경하지 않았다.
 - **주요 파일**: `backend/server.js`, `backend/config/db.js`, `backend/routes/adminRoutes.js`, `backend/routes/authRoutes.js`, `backend/routes/inquiryRoutes.js`, `backend/routes/luckDrawRoutes.js`, `backend/routes/noticeRoutes.js`, `backend/routes/notificationRoutes.js`, `backend/routes/tierRoutes.js`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending218"></a>
+
+### 218. 2026-09-03 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(backend): 모델(Mongoose 스키마)에 기능 설명 주석 추가
+- **git**: `git show pending218`
+- **범위**: backend / docs
+- **요약**: LuckDraw(이력, 최근 5건만 보관)와 LuckProfile(영구 누적 카운터)의 분리 이유를 포함해 11개 모델 파일에 필드·인덱스·서브도큐먼트 구조를 설명하는 주석을 추가했다. 스키마 정의는 변경하지 않았다.
+- **주요 파일**: `backend/models/Admin.js`, `backend/models/Block.js`, `backend/models/Inquiry.js`, `backend/models/LuckDraw.js`, `backend/models/LuckProfile.js`, `backend/models/Notice.js`, `backend/models/Notification.js`, `backend/models/TierLike.js`, `backend/models/TierList.js`, `backend/models/TierPostComment.js`, `backend/models/User.js`
 - **관련 RDMD**: _(선택)_
 
 [▲ 목차로](#목차)
