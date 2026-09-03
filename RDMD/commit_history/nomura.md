@@ -247,6 +247,7 @@
 | 216 | 2026-09-03 | [`f2cfa65`](#f2cfa65) | chore(render-sync): 공통 스크립트·헤더/푸터·홈·PWA root-render 반영 |
 | 217 | 2026-09-03 | [`pending`](#pending217) | docs(backend): 서버 진입점·라우트에 기능 설명 주석 추가 |
 | 218 | 2026-09-03 | [`pending`](#pending218) | docs(backend): 모델(Mongoose 스키마)에 기능 설명 주석 추가 |
+| 219 | 2026-09-03 | [`pending`](#pending219) | docs(backend): 미들웨어·유틸리티에 기능 설명 주석 추가 |
 
 ---
 
@@ -4251,6 +4252,24 @@
 - **범위**: backend / docs
 - **요약**: LuckDraw(이력, 최근 5건만 보관)와 LuckProfile(영구 누적 카운터)의 분리 이유를 포함해 11개 모델 파일에 필드·인덱스·서브도큐먼트 구조를 설명하는 주석을 추가했다. 스키마 정의는 변경하지 않았다.
 - **주요 파일**: `backend/models/Admin.js`, `backend/models/Block.js`, `backend/models/Inquiry.js`, `backend/models/LuckDraw.js`, `backend/models/LuckProfile.js`, `backend/models/Notice.js`, `backend/models/Notification.js`, `backend/models/TierLike.js`, `backend/models/TierList.js`, `backend/models/TierPostComment.js`, `backend/models/User.js`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending219"></a>
+
+### 219. 2026-09-03 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(backend): 미들웨어·유틸리티에 기능 설명 주석 추가
+- **git**: `git show pending219`
+- **범위**: backend / docs
+- **요약**: 이메일 다중 공급자 폴백(Brevo→Resend→Gmail), KST 날짜 계산, JWT 서명/검증, 일본어→한국어 번역, 유튜브 커뮤니티 동기화 등 11개 미들웨어·유틸 파일에 동작 원리 주석을 추가했다. 함수 시그니처와 로직은 변경하지 않았다.
+- **주요 파일**: `backend/middleware/auth.js`, `backend/utils/appUrl.js`, `backend/utils/checkBlocked.js`, `backend/utils/getClientIp.js`, `backend/utils/jwtAuth.js`, `backend/utils/kstDate.js`, `backend/utils/mail.js`, `backend/utils/notificationService.js`, `backend/utils/ownership.js`, `backend/utils/translateJaKo.js`, `backend/utils/youtubeCommunitySync.js`
 - **관련 RDMD**: _(선택)_
 
 [▲ 목차로](#목차)

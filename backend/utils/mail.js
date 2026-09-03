@@ -25,15 +25,20 @@ const EMAIL_NOT_CONFIGURED_MSG =
 const EMAIL_SEND_FAILED_MSG =
   '이메일 발송에 실패했습니다. 잠시 후 다시 시도하거나 관리자에게 문의해주세요.';
 
+/* ------ 환경변수에서 각 발송 방식별 자격증명/설정을 읽어오는 getter 모음 ------ */
+
 // Google이 보여주는 'abcd efgh ijkl mnop' 형식 공백까지 제거 (그대로 붙여넣어도 동작하도록)
 function getEmailPass() {
   return (process.env.EMAIL_APP_PASSWORD || '').replace(/\s+/g, '');
 }
 
+// Gmail SMTP 계정의 로그인 이메일 주소.
 function getEmailUser() {
   return (process.env.EMAIL_USER || '').trim();
 }
 
+// API 키류(Resend/Brevo) 공통 정제: 앞뒤 공백, 실수로 감싸 넣은 따옴표,
+// 중간에 섞여 들어간 공백(줄바꿈 등 복붙 실수)까지 제거해 그대로 헤더에 넣어도 안전하게 만든다.
 function sanitizeSecret(value) {
   return String(value || '')
     .trim()
@@ -41,6 +46,7 @@ function sanitizeSecret(value) {
     .replace(/\s+/g, '');
 }
 
+// Resend API 키(RESEND_API_KEY).
 function getResendApiKey() {
   return sanitizeSecret(process.env.RESEND_API_KEY);
 }
@@ -98,6 +104,10 @@ function brevoApiError(status, body) {
   return err;
 }
 
+// Brevo는 등록된 발신자(sender) 중 "활성화(인증)된" 것으로만 발송할 수 있으므로,
+// 실제 발송 전에 Senders API를 조회해 활성 발신자 목록을 가져오고 그 중 하나를 고른다.
+// BREVO_FROM으로 지정한 주소가 활성 목록에 있으면 그것을, 없으면 활성 발신자 중
+// 첫 번째로 대체 사용한다(설정 실수로 메일이 아예 안 나가는 것보다는 낫다는 판단).
 async function resolveBrevoSender() {
   const preferred = getBrevoFrom().toLowerCase();
   const response = await fetch(BREVO_SENDERS_URL, { headers: brevoHeaders() });
@@ -133,6 +143,8 @@ async function resolveBrevoSender() {
   return { id: chosen.id };
 }
 
+// 세 방식(Brevo/Resend/Gmail) 중 하나라도 최소 조건(키 또는 계정+비번)이
+// 설정되어 있으면 true. sendAppMail()이 실제로 시도해볼 방식이 하나라도 있는지 판단하는 데 쓰인다.
 function hasEmailConfig() {
   return (
     Boolean(getBrevoApiKey()) ||
@@ -232,6 +244,10 @@ async function resolveSmtpIPv4() {
   return null;
 }
 
+// 주어진 포트 설정(465/secure 또는 587/STARTTLS)으로 Nodemailer transport를 생성한다.
+// resolveSmtpIPv4()로 얻은 IPv4 주소가 있으면 host를 그 IP로 직접 지정하되,
+// TLS 인증서 검증용 SNI(servername)는 원래 도메인(smtp.gmail.com)으로 유지해
+// 인증서 불일치 오류 없이 IPv6 문제만 우회한다. IPv4 조회에 실패하면 도메인+family:4로 폴백.
 async function createGmailTransport(portConfig) {
   const common = {
     port: portConfig.port,
@@ -258,6 +274,9 @@ async function createGmailTransport(portConfig) {
   return nodemailer.createTransport({ ...common, host: SMTP_HOST, family: 4 });
 }
 
+// transporter를 지연 생성 + 캐싱한다. workingPortIndex가 가리키는(마지막으로 성공했거나
+// 아직 시도 안 된) 포트 설정으로 만들고, 연결 실패 시 sendViaGmail 쪽에서
+// transporter = null 로 초기화해 다음 호출 때 새로 만들도록 한다.
 async function getTransporter() {
   if (!hasEmailConfig()) return null;
   if (!transporter) {
