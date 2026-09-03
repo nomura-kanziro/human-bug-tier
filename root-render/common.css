@@ -66,9 +66,14 @@ img {
 }
 
 /* ====================== 3개 큰 상자 (Quick Nav) ======================
-   홈 화면의 "커스텀 메이커 / 행운 뽑기" 같은 큰 카드 영역. quick-card 하나가
-   기능 하나(예: 커스텀 메이커)를 나타내고, 마우스를 올리면(.sub-menu) 하위 링크들이
-   아래로 펼쳐지는 아코디언 효과가 있다(96번째 줄 sub-menu 애니메이션 참고). */
+   홈 화면의 "티어표 / 커스텀 메이커 / 행운 뽑기" 큰 카드 영역. quick-card 하나가
+   기능 하나를 나타내고, 마우스를 올리면(.sub-menu) 하위 링크들이 아래로 펼쳐지는
+   아코디언 효과가 있다(sub-menu 애니메이션 부분 참고).
+   각 카드는 data-scroll-target 속성값(HTML에 이미 있음, #home-tiers 등)으로
+   서로 구분해서 카드마다 다른 포인트 컬러(--accent-1/--accent-2)를 CSS 변수로 지정한다.
+   아이콘 배지(h3::before)와 상단 그라디언트 바(::before)도 이 변수를 그대로 재사용해서
+   카드 전체가 하나의 색 톤으로 통일되도록 했다 — 이렇게 하면 HTML은 하나도 안 건드리고
+   순수 CSS만으로 3개 카드를 서로 다른 테마로 꾸밀 수 있다. */
 .quick-nav {
   padding: 40px 20px;
   max-width: 1200px;
@@ -79,29 +84,101 @@ img {
   justify-content: center;
 }
 
+/* 카드별 포인트 컬러 지정: 티어표=인디고/시안, 커스텀 메이커=골드(아래 home-maker-preview
+   다크+골드 테마와 통일), 행운 뽑기=오렌지/앰버(아래 home-luck-preview 테마와 통일).
+   이렇게 홈 화면 안의 다른 섹션들과 색을 맞춰서 페이지 전체가 하나로 이어져 보이게 한다. */
+.quick-card[data-scroll-target="#home-tiers"] {
+  --accent-1: #6366f1;
+  --accent-2: #06b6d4;
+  --accent-soft: #eef2ff;
+  --accent-shadow: rgba(99, 102, 241, 0.28);
+}
+
+.quick-card[data-scroll-target="#home-maker-preview"] {
+  --accent-1: #b45309;
+  --accent-2: #ffcc00;
+  --accent-soft: #fff7e0;
+  --accent-shadow: rgba(217, 119, 6, 0.28);
+}
+
+.quick-card[data-scroll-target="#home-luck-preview"] {
+  --accent-1: #f97316;
+  --accent-2: #fbbf24;
+  --accent-soft: #fff3e0;
+  --accent-shadow: rgba(249, 115, 22, 0.28);
+}
+
 .quick-card {
+  --accent-1: #6366f1;
+  --accent-2: #06b6d4;
+  --accent-soft: #eef2ff;
+  --accent-shadow: rgba(99, 102, 241, 0.22);
   flex: 1;
   min-width: 280px;
-  background: #fff;
-  border: 1px solid #ddd;
-  border-radius: 16px;
-  padding: 24px;
+  background: linear-gradient(165deg, #ffffff 0%, #fbfbfd 60%, var(--accent-soft) 160%);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 20px;
+  padding: 28px 24px 24px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
+}
+
+/* 카드 맨 위 얇은 그라디언트 라인 — 카드별 포인트 컬러 2개를 좌→우로 잇는다 */
+.quick-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
 }
 
 .quick-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+  border-color: transparent;
+  box-shadow: 0 20px 34px -8px var(--accent-shadow), 0 8px 16px rgba(15, 23, 42, 0.06);
 }
 
 .quick-card h3 {
-  font-size: 1.5rem;
-  margin-bottom: 16px;
+  font-size: 1.3rem;
+  margin: 0 0 16px;
   text-align: center;
-  color: #111;
+  color: #14161a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 카드 아이콘 배지 — 카드마다 다른 이모지를 h3 위에 원형 배지로 얹는다.
+   attr()로 HTML에서 값을 끌어올 수는 없어서(각 카드 h3에 별도 속성이 없음),
+   위에서 지정한 [data-scroll-target="..."] 선택자로 카드별 이모지를 직접 지정한다. */
+.quick-card h3::before {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  font-size: 24px;
+  background: var(--accent-soft);
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.06);
+}
+
+.quick-card[data-scroll-target="#home-tiers"] h3::before {
+  content: '🏆';
+}
+
+.quick-card[data-scroll-target="#home-maker-preview"] h3::before {
+  content: '🎨';
+}
+
+.quick-card[data-scroll-target="#home-luck-preview"] h3::before {
+  content: '🍀';
 }
 
 /* 서브 메뉴 애니메이션 — quick-card 하위 링크 목록은 평소엔 max-height:0으로 접혀서
@@ -131,7 +208,7 @@ img {
 .sub-menu a {
   display: block;
   padding: 10px 12px;
-  background: #f8f8f8;
+  background: rgba(15, 23, 42, 0.035);
   border-radius: 8px;
   text-decoration: none;
   color: #333;
@@ -139,9 +216,11 @@ img {
   transition: all 0.2s ease;
 }
 
+/* 서브메뉴 링크 hover도 카드별 포인트 컬러(--accent-1 → --accent-2 그라디언트)를 그대로
+   물려받아서 위 아이콘 배지·상단 라인과 같은 톤으로 보이게 한다 */
 .sub-grid a:hover,
 .sub-menu a:hover {
-  background: #111;
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
   color: white;
 }
 
@@ -459,7 +538,19 @@ img {
   .quick-card {
     min-width: 100%;
     flex: 1 1 100%;
-    padding: 18px 16px;
+    padding: 20px 16px 16px;
+  }
+
+  /* 모바일에서는 카드 세로 여백이 좁으니 아이콘 배지를 살짝 줄여서 답답하지 않게 함 */
+  .quick-card h3 {
+    font-size: 1.15rem;
+    gap: 8px;
+  }
+
+  .quick-card h3::before {
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
   }
 
   /* 모바일: 호버 없이 서브메뉴 노출 */

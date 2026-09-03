@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 223 |
+| **커밋 수** | 224 |
 | **기간** | 2026-03-20 ~ 2026-09-03 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -251,6 +251,7 @@
 | 220 | 2026-09-03 | [`82ccf99`](#82ccf99) | docs(backend): 인증·관리자·차단 컨트롤러에 기능 설명 주석 추가 |
 | 221 | 2026-09-03 | [`4693334`](#4693334) | docs(backend): 행운 뽑기·공지·알림 컨트롤러에 기능 설명 주석 추가 |
 | 222 | 2026-09-03 | [`fb053dc`](#fb053dc) | docs(backend): 티어·문의 컨트롤러에 기능 설명 주석 추가 |
+| 223 | 2026-09-04 | [`pending`](#pending223) | style(home): 홈 화면 퀵 네비게이션 카드 디자인 개선 |
 
 ---
 
@@ -4327,6 +4328,24 @@
 - **범위**: backend / docs
 - **요약**: 커스텀 티어 게시글 CRUD(mine=true 본인 글 예외 로직 포함), 티어 신고 관리, 게시글 댓글/답글, 문의하기(Contact Us) 컨트롤러 4개에 동작 원리 주석을 추가했다. 검증·응답 형식은 변경하지 않았다.
 - **주요 파일**: `backend/controllers/tierController.js`, `backend/controllers/adminTierReportController.js`, `backend/controllers/tierCommentController.js`, `backend/controllers/inquiryController.js`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending223"></a>
+
+### 223. 2026-09-04 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: style(home): 홈 화면 퀵 네비게이션 카드 디자인 개선
+- **git**: `git show pending223`
+- **범위**: frontend / render-only / common
+- **요약**: 홈 화면(index.html)의 퀵 네비게이션 카드 3개(티어표/커스텀 메이커/행운 뽑기)가 전부 흰 배경으로 단조로웠던 것을, 카드마다 다른 포인트 컬러(인디고·골드·오렌지, 아래 커스텀 메이커·행운 뽑기 미리보기 섹션 톤과 통일)와 원형 아이콘 배지(🏆/🎨/🍀), 은은한 그라디언트 배경·호버 글로우 그림자로 꾸몄다. HTML·JS는 건드리지 않고 common.css만 수정했다.
+- **주요 파일**: `root-render/common.css`
 - **관련 RDMD**: _(선택)_
 
 [▲ 목차로](#목차)
