@@ -248,6 +248,7 @@
 | 217 | 2026-09-03 | [`pending`](#pending217) | docs(backend): 서버 진입점·라우트에 기능 설명 주석 추가 |
 | 218 | 2026-09-03 | [`pending`](#pending218) | docs(backend): 모델(Mongoose 스키마)에 기능 설명 주석 추가 |
 | 219 | 2026-09-03 | [`pending`](#pending219) | docs(backend): 미들웨어·유틸리티에 기능 설명 주석 추가 |
+| 220 | 2026-09-03 | [`pending`](#pending220) | docs(backend): 인증·관리자·차단 컨트롤러에 기능 설명 주석 추가 |
 
 ---
 
@@ -4270,6 +4271,24 @@
 - **범위**: backend / docs
 - **요약**: 이메일 다중 공급자 폴백(Brevo→Resend→Gmail), KST 날짜 계산, JWT 서명/검증, 일본어→한국어 번역, 유튜브 커뮤니티 동기화 등 11개 미들웨어·유틸 파일에 동작 원리 주석을 추가했다. 함수 시그니처와 로직은 변경하지 않았다.
 - **주요 파일**: `backend/middleware/auth.js`, `backend/utils/appUrl.js`, `backend/utils/checkBlocked.js`, `backend/utils/getClientIp.js`, `backend/utils/jwtAuth.js`, `backend/utils/kstDate.js`, `backend/utils/mail.js`, `backend/utils/notificationService.js`, `backend/utils/ownership.js`, `backend/utils/translateJaKo.js`, `backend/utils/youtubeCommunitySync.js`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending220"></a>
+
+### 220. 2026-09-03 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(backend): 인증·관리자·차단 컨트롤러에 기능 설명 주석 추가
+- **git**: `git show pending220`
+- **범위**: backend / docs
+- **요약**: 회원가입·로그인·비밀번호 재설정(SHA-256 해시 저장 방식 포함), 관리자 계정 관리, 유저/IP 차단 처리 컨트롤러 3개에 요청 처리 흐름을 설명하는 주석을 추가했다. 검증 규칙·응답 형식은 변경하지 않았다.
+- **주요 파일**: `backend/controllers/authController.js`, `backend/controllers/adminController.js`, `backend/controllers/blockController.js`
 - **관련 RDMD**: _(선택)_
 
 [▲ 목차로](#목차)
