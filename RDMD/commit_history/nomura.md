@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 216 |
+| **커밋 수** | 223 |
 | **기간** | 2026-03-20 ~ 2026-09-03 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -245,12 +245,12 @@
 | 214 | 2026-09-03 | [`78515a9`](#78515a9) | chore(render-sync): 인증(로그인·가입·비번찾기)·문의 root-render 반영 |
 | 215 | 2026-09-03 | [`a9a2a08`](#a9a2a08) | chore(render-sync): 공식 티어표(1~9티어) root-render 반영 |
 | 216 | 2026-09-03 | [`f2cfa65`](#f2cfa65) | chore(render-sync): 공통 스크립트·헤더/푸터·홈·PWA root-render 반영 |
-| 217 | 2026-09-03 | [`pending`](#pending217) | docs(backend): 서버 진입점·라우트에 기능 설명 주석 추가 |
-| 218 | 2026-09-03 | [`pending`](#pending218) | docs(backend): 모델(Mongoose 스키마)에 기능 설명 주석 추가 |
-| 219 | 2026-09-03 | [`pending`](#pending219) | docs(backend): 미들웨어·유틸리티에 기능 설명 주석 추가 |
-| 220 | 2026-09-03 | [`pending`](#pending220) | docs(backend): 인증·관리자·차단 컨트롤러에 기능 설명 주석 추가 |
-| 221 | 2026-09-03 | [`pending`](#pending221) | docs(backend): 행운 뽑기·공지·알림 컨트롤러에 기능 설명 주석 추가 |
-| 222 | 2026-09-03 | [`pending`](#pending222) | docs(backend): 티어·문의 컨트롤러에 기능 설명 주석 추가 |
+| 217 | 2026-09-03 | [`87d9803`](#87d9803) | docs(backend): 서버 진입점·라우트에 기능 설명 주석 추가 |
+| 218 | 2026-09-03 | [`c7dab90`](#c7dab90) | docs(backend): 모델(Mongoose 스키마)에 기능 설명 주석 추가 |
+| 219 | 2026-09-03 | [`99ab058`](#99ab058) | docs(backend): 미들웨어·유틸리티에 기능 설명 주석 추가 |
+| 220 | 2026-09-03 | [`82ccf99`](#82ccf99) | docs(backend): 인증·관리자·차단 컨트롤러에 기능 설명 주석 추가 |
+| 221 | 2026-09-03 | [`4693334`](#4693334) | docs(backend): 행운 뽑기·공지·알림 컨트롤러에 기능 설명 주석 추가 |
+| 222 | 2026-09-03 | [`fb053dc`](#fb053dc) | docs(backend): 티어·문의 컨트롤러에 기능 설명 주석 추가 |
 
 ---
 
@@ -4225,15 +4225,15 @@
 
 ---
 
-<a id="pending217"></a>
+<a id="87d9803"></a>
 
-### 217. 2026-09-03 — `pending`
+### 217. 2026-09-03 — `87d9803`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `87d9803`
+- **hash (full)**: `87d9803b8ca5b8840ebb8cc7955cae6f94755592`
 - **author**: nomura
 - **message**: docs(backend): 서버 진입점·라우트에 기능 설명 주석 추가
-- **git**: `git show pending217`
+- **git**: `git show 87d9803`
 - **범위**: backend / docs
 - **요약**: server.js·config/db.js와 라우트 7개 파일에 미들웨어 체인·엔드포인트별 동작을 설명하는 주석을 추가했다. 라우트 경로·미들웨어 순서·로직은 변경하지 않았다.
 - **주요 파일**: `backend/server.js`, `backend/config/db.js`, `backend/routes/adminRoutes.js`, `backend/routes/authRoutes.js`, `backend/routes/inquiryRoutes.js`, `backend/routes/luckDrawRoutes.js`, `backend/routes/noticeRoutes.js`, `backend/routes/notificationRoutes.js`, `backend/routes/tierRoutes.js`
@@ -4243,15 +4243,15 @@
 
 ---
 
-<a id="pending218"></a>
+<a id="c7dab90"></a>
 
-### 218. 2026-09-03 — `pending`
+### 218. 2026-09-03 — `c7dab90`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `c7dab90`
+- **hash (full)**: `c7dab90ce60c88243815e14d51f3ec77230c964c`
 - **author**: nomura
 - **message**: docs(backend): 모델(Mongoose 스키마)에 기능 설명 주석 추가
-- **git**: `git show pending218`
+- **git**: `git show c7dab90`
 - **범위**: backend / docs
 - **요약**: LuckDraw(이력, 최근 5건만 보관)와 LuckProfile(영구 누적 카운터)의 분리 이유를 포함해 11개 모델 파일에 필드·인덱스·서브도큐먼트 구조를 설명하는 주석을 추가했다. 스키마 정의는 변경하지 않았다.
 - **주요 파일**: `backend/models/Admin.js`, `backend/models/Block.js`, `backend/models/Inquiry.js`, `backend/models/LuckDraw.js`, `backend/models/LuckProfile.js`, `backend/models/Notice.js`, `backend/models/Notification.js`, `backend/models/TierLike.js`, `backend/models/TierList.js`, `backend/models/TierPostComment.js`, `backend/models/User.js`
@@ -4261,15 +4261,15 @@
 
 ---
 
-<a id="pending219"></a>
+<a id="99ab058"></a>
 
-### 219. 2026-09-03 — `pending`
+### 219. 2026-09-03 — `99ab058`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `99ab058`
+- **hash (full)**: `99ab0580e745e6ac2fd77e8fe4d2e048d5b62f3d`
 - **author**: nomura
 - **message**: docs(backend): 미들웨어·유틸리티에 기능 설명 주석 추가
-- **git**: `git show pending219`
+- **git**: `git show 99ab058`
 - **범위**: backend / docs
 - **요약**: 이메일 다중 공급자 폴백(Brevo→Resend→Gmail), KST 날짜 계산, JWT 서명/검증, 일본어→한국어 번역, 유튜브 커뮤니티 동기화 등 11개 미들웨어·유틸 파일에 동작 원리 주석을 추가했다. 함수 시그니처와 로직은 변경하지 않았다.
 - **주요 파일**: `backend/middleware/auth.js`, `backend/utils/appUrl.js`, `backend/utils/checkBlocked.js`, `backend/utils/getClientIp.js`, `backend/utils/jwtAuth.js`, `backend/utils/kstDate.js`, `backend/utils/mail.js`, `backend/utils/notificationService.js`, `backend/utils/ownership.js`, `backend/utils/translateJaKo.js`, `backend/utils/youtubeCommunitySync.js`
@@ -4279,15 +4279,15 @@
 
 ---
 
-<a id="pending220"></a>
+<a id="82ccf99"></a>
 
-### 220. 2026-09-03 — `pending`
+### 220. 2026-09-03 — `82ccf99`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `82ccf99`
+- **hash (full)**: `82ccf997569d812c77d22abbdb9e89ec268c932c`
 - **author**: nomura
 - **message**: docs(backend): 인증·관리자·차단 컨트롤러에 기능 설명 주석 추가
-- **git**: `git show pending220`
+- **git**: `git show 82ccf99`
 - **범위**: backend / docs
 - **요약**: 회원가입·로그인·비밀번호 재설정(SHA-256 해시 저장 방식 포함), 관리자 계정 관리, 유저/IP 차단 처리 컨트롤러 3개에 요청 처리 흐름을 설명하는 주석을 추가했다. 검증 규칙·응답 형식은 변경하지 않았다.
 - **주요 파일**: `backend/controllers/authController.js`, `backend/controllers/adminController.js`, `backend/controllers/blockController.js`
@@ -4297,15 +4297,15 @@
 
 ---
 
-<a id="pending221"></a>
+<a id="4693334"></a>
 
-### 221. 2026-09-03 — `pending`
+### 221. 2026-09-03 — `4693334`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `4693334`
+- **hash (full)**: `4693334b4eee3ab46b0a28c5a7103265263408b7`
 - **author**: nomura
 - **message**: docs(backend): 행운 뽑기·공지·알림 컨트롤러에 기능 설명 주석 추가
-- **git**: `git show pending221`
+- **git**: `git show 4693334`
 - **범위**: backend / docs
 - **요약**: 오늘의 행운 뽑기 확률·포인트 계산(LuckDraw/LuckProfile 분리 구조 활용), 공지 핀 고정·유튜브 동기화, 알림 읽음 처리 컨트롤러 4개에 동작 원리 주석을 추가했다. 확률 가중치·포인트 표·로직은 변경하지 않았다.
 - **주요 파일**: `backend/controllers/luckDrawController.js`, `backend/controllers/noticeController.js`, `backend/controllers/notificationController.js`, `backend/data/luckPool.js`
@@ -4315,15 +4315,15 @@
 
 ---
 
-<a id="pending222"></a>
+<a id="fb053dc"></a>
 
-### 222. 2026-09-03 — `pending`
+### 222. 2026-09-03 — `fb053dc`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `fb053dc`
+- **hash (full)**: `fb053dc6103e64624069eacabc3034ef6531da5e`
 - **author**: nomura
 - **message**: docs(backend): 티어·문의 컨트롤러에 기능 설명 주석 추가
-- **git**: `git show pending222`
+- **git**: `git show fb053dc`
 - **범위**: backend / docs
 - **요약**: 커스텀 티어 게시글 CRUD(mine=true 본인 글 예외 로직 포함), 티어 신고 관리, 게시글 댓글/답글, 문의하기(Contact Us) 컨트롤러 4개에 동작 원리 주석을 추가했다. 검증·응답 형식은 변경하지 않았다.
 - **주요 파일**: `backend/controllers/tierController.js`, `backend/controllers/adminTierReportController.js`, `backend/controllers/tierCommentController.js`, `backend/controllers/inquiryController.js`
