@@ -251,7 +251,7 @@
 | 220 | 2026-09-03 | [`82ccf99`](#82ccf99) | docs(backend): 인증·관리자·차단 컨트롤러에 기능 설명 주석 추가 |
 | 221 | 2026-09-03 | [`4693334`](#4693334) | docs(backend): 행운 뽑기·공지·알림 컨트롤러에 기능 설명 주석 추가 |
 | 222 | 2026-09-03 | [`fb053dc`](#fb053dc) | docs(backend): 티어·문의 컨트롤러에 기능 설명 주석 추가 |
-| 223 | 2026-09-04 | [`pending`](#pending223) | style(home): 홈 화면 퀵 네비게이션 카드 디자인 개선 |
+| 223 | 2026-09-04 | [`4ac9dce`](#4ac9dce) | style(home): 홈 화면 퀵 네비게이션 카드 디자인 개선 |
 
 ---
 
@@ -4334,15 +4334,15 @@
 
 ---
 
-<a id="pending223"></a>
+<a id="4ac9dce"></a>
 
-### 223. 2026-09-04 — `pending`
+### 223. 2026-09-04 — `4ac9dce`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `4ac9dce`
+- **hash (full)**: `4ac9dcecf0f7ad813ca69a6b928398217ca3a3c1`
 - **author**: nomura
 - **message**: style(home): 홈 화면 퀵 네비게이션 카드 디자인 개선
-- **git**: `git show pending223`
+- **git**: `git show 4ac9dce`
 - **범위**: frontend / render-only / common
 - **요약**: 홈 화면(index.html)의 퀵 네비게이션 카드 3개(티어표/커스텀 메이커/행운 뽑기)가 전부 흰 배경으로 단조로웠던 것을, 카드마다 다른 포인트 컬러(인디고·골드·오렌지, 아래 커스텀 메이커·행운 뽑기 미리보기 섹션 톤과 통일)와 원형 아이콘 배지(🏆/🎨/🍀), 은은한 그라디언트 배경·호버 글로우 그림자로 꾸몄다. HTML·JS는 건드리지 않고 common.css만 수정했다.
 - **주요 파일**: `root-render/common.css`
