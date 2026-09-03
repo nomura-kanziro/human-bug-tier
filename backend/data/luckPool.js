@@ -1,6 +1,17 @@
-// 오늘의 행운 티어용 캐릭터 풀 (1차: 티어당 4~8명만 안전 등록).
-// 이미지 경로는 tier-class/tierN.html 의 <img src> 를 그대로 따르며,
-// 사이트 루트 기준 상대경로 (프론트에서 getBasePath() + encodeURI(imagePath) 로 조립).
+/* ======================================================================
+ * 행운 뽑기용 캐릭터 데이터 풀
+ * ----------------------------------------------------------------------
+ * 오늘의 행운 티어용 캐릭터 풀 (1차: 티어당 4~8명만 안전 등록).
+ * luckDrawController.js가 DAILY_TIER_WEIGHTS로 먼저 티어(1~9)를 하나 뽑은 뒤,
+ * 이 객체에서 해당 티어 키(module.exports[tier])의 배열 중 한 명을
+ * pickCharacter()로 균등 확률(랜덤 인덱스)로 골라 결과에 사용한다.
+ *
+ * 데이터 형태: { [티어번호]: [{ name, imagePath }, ...] }
+ *  - name      : 캐릭터 표시 이름(한국어).
+ *  - imagePath : tier-class/tierN.html 의 <img src>를 그대로 따르는,
+ *                사이트 루트 기준 상대경로. 실제 사용 시 프론트에서
+ *                getBasePath() + encodeURI(imagePath) 로 절대 URL을 조립한다.
+ * ====================================================================== */
 module.exports = {
   1: [
     { name: '우류 타츠오미', imagePath: 'tier-image/1 tier/uryu2paze.jpg' },

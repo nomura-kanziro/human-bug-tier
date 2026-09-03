@@ -249,6 +249,7 @@
 | 218 | 2026-09-03 | [`pending`](#pending218) | docs(backend): 모델(Mongoose 스키마)에 기능 설명 주석 추가 |
 | 219 | 2026-09-03 | [`pending`](#pending219) | docs(backend): 미들웨어·유틸리티에 기능 설명 주석 추가 |
 | 220 | 2026-09-03 | [`pending`](#pending220) | docs(backend): 인증·관리자·차단 컨트롤러에 기능 설명 주석 추가 |
+| 221 | 2026-09-03 | [`pending`](#pending221) | docs(backend): 행운 뽑기·공지·알림 컨트롤러에 기능 설명 주석 추가 |
 
 ---
 
@@ -4289,6 +4290,24 @@
 - **범위**: backend / docs
 - **요약**: 회원가입·로그인·비밀번호 재설정(SHA-256 해시 저장 방식 포함), 관리자 계정 관리, 유저/IP 차단 처리 컨트롤러 3개에 요청 처리 흐름을 설명하는 주석을 추가했다. 검증 규칙·응답 형식은 변경하지 않았다.
 - **주요 파일**: `backend/controllers/authController.js`, `backend/controllers/adminController.js`, `backend/controllers/blockController.js`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending221"></a>
+
+### 221. 2026-09-03 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(backend): 행운 뽑기·공지·알림 컨트롤러에 기능 설명 주석 추가
+- **git**: `git show pending221`
+- **범위**: backend / docs
+- **요약**: 오늘의 행운 뽑기 확률·포인트 계산(LuckDraw/LuckProfile 분리 구조 활용), 공지 핀 고정·유튜브 동기화, 알림 읽음 처리 컨트롤러 4개에 동작 원리 주석을 추가했다. 확률 가중치·포인트 표·로직은 변경하지 않았다.
+- **주요 파일**: `backend/controllers/luckDrawController.js`, `backend/controllers/noticeController.js`, `backend/controllers/notificationController.js`, `backend/data/luckPool.js`
 - **관련 RDMD**: _(선택)_
 
 [▲ 목차로](#목차)
