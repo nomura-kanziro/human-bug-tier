@@ -270,7 +270,7 @@
 | 239 | 2026-09-04 | [`e5e84f7`](#e5e84f7) | fix(server): API 우선 등록 및 파비콘·확장 콘솔 정리 |
 | 240 | 2026-09-04 | [`3369978`](#3369978) | chore(backend): server.js 설명 주석 복원 |
 | 241 | 2026-09-04 | [`09dfe6c`](#09dfe6c) | docs: 기존 주석 삭제 금지 인수인계 |
-| 242 | 2026-09-04 | [`pending`](#pending242) | chore(common): 사이트 버전을 0.4.3으로 변경 |
+| 242 | 2026-09-04 | [`fd1bf0d`](#fd1bf0d) | chore(common): 사이트 버전을 0.4.3으로 변경 |
 
 ---
 
@@ -4697,15 +4697,15 @@
 
 ---
 
-<a id="pending242"></a>
+<a id="fd1bf0d"></a>
 
-### 242. 2026-09-04 — `pending`
+### 242. 2026-09-04 — `fd1bf0d`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `fd1bf0d`
+- **hash (full)**: `fd1bf0dbcb6c504544a8ae5260c7755563c667b6`
 - **author**: nomura
 - **message**: chore(common): 사이트 버전을 0.4.3으로 변경
-- **git**: `git show pending242`
+- **git**: `git show fd1bf0d`
 - **범위**: frontend / render-only / docs
 - **요약**: root-render 푸터의 site version 표기를 0.4.2 → 0.4.3으로 올리고, CLAUDE.md·AGENTS.md·RDMD/features/overview.md·react-rewrite.md·team/README.md의 현재 버전 표기도 함께 맞췄다. root-cloudflare/footer.html은 이번 세션 작업 범위(render.com만)에서 제외되어 0.4.2로 그대로 남아있다 — 필요 시 별도로 맞춰야 함.
 - **주요 파일**: `root-render/footer.html`, `CLAUDE.md`, `AGENTS.md`, `RDMD/features/overview.md`, `RDMD/features/react-rewrite.md`, `team/README.md`
