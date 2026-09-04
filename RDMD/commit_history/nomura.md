@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 245 |
+| **커밋 수** | 248 |
 | **기간** | 2026-03-20 ~ 2026-09-04 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -274,6 +274,9 @@
 | 243 | 2026-09-04 | [`e2a3af0`](#e2a3af0) | chore(assets): tier-media 안에 tier-image 서브폴더로 이미지 재정리 |
 | 244 | 2026-09-04 | [`4e083b0`](#4e083b0) | refactor(frontend): 이미지 경로를 tier-media/tier-image 기준으로 갱신 |
 | 245 | 2026-09-04 | [`7e2e1ea`](#7e2e1ea) | fix(backend): tier-media/tier-image 3단계 폴더 이력 자동 분기 |
+| 246 | 2026-09-05 | [`pending`](#pending246) | feat(theme): 사이트 전체 초기 로딩 화면(네온 링) 신규 파일 |
+| 247 | 2026-09-05 | [`pending`](#pending247) | feat(common): 헤더/푸터 삽입 완료 시 로딩 화면 숨김 신호 연동 |
+| 248 | 2026-09-05 | [`pending`](#pending248) | feat(frontend): 전 페이지에 로딩 화면 마크업·스크립트 삽입 |
 
 ---
 
@@ -4766,6 +4769,60 @@
 - **범위**: backend
 - **요약**: `utils/tierMediaDir.js`의 getTierMediaDir()가 root-render일 때 반환하는 접두사를 'tier-media'에서 'tier-media/tier-image'로 바꾸고(root-cloudflare는 여전히 'tier-image' 그대로), resolveTierMediaPath()가 세 가지 옛 접두사(tier-image/, tier-media/, tier-media/tier-image/) 중 가장 긴 것부터 먼저 매치해서 제거한 뒤 현재 접두사를 다시 붙이도록 정규식을 확장했다. 이 함수를 쓰는 luckDrawController.js(뽑기 결과 imagePath)와 server.js(파비콘 라우트)는 코드 변경 없이 그대로 정상 동작. luckPool.js의 하드코딩된 경로 문자열도 tier-media/tier-image로 갱신. STATIC_ROOT=root-render로 로컬 실행해 파비콘·새 경로 이미지 200, 옛 평평한 tier-media/logo.webp 경로는 404임을 직접 확인함.
 - **주요 파일**: `backend/utils/tierMediaDir.js`, `backend/data/luckPool.js`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending246"></a>
+
+### 246. 2026-09-05 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(theme): 사이트 전체 초기 로딩 화면(네온 링) 신규 파일
+- **git**: `git show pending246`
+- **범위**: frontend / render-only
+- **요약**: Uiverse.io(SelfMadeSystem)의 로더 기법(SVG stroke-dasharray/dashoffset로 "계속 스스로 그려지는" 네온 대시 선, 원본: https://uiverse.io/SelfMadeSystem/orange-crab-82, GitHub 미러 uiverse-io/galaxy에서 원본 코드를 직접 확인)을 그대로 가져와 사이트 로고 원형 테두리에 적용한 로딩 오버레이를 신규 파일 2개(loading-screen.css/js)로 만들었다. 로고는 3.6초 주기로 은은하게 브리딩(breathe)하고, 링은 색을 로고의 붉은 눈동자 톤(#e11d48)으로 맞췄다. 처음엔 숨김 기준을 window의 'load'(모든 이미지 로드 완료)로 뒀다가 캐릭터 이미지가 수십 장인 tier-class 페이지에서 페이지 전환이 심하게 느려지는 문제가 있어, "헤더/푸터가 자리 잡은 시점" 기준으로 바꾸고(다음 커밋) 페이드 트랜지션도 0.5s→0.15s, 최소 노출 200ms→0으로 줄였다 — 최종적으로 이미 이 상태로 커밋.
+- **주요 파일**: `root-render/loading-screen.css`(신규), `root-render/loading-screen.js`(신규)
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending247"></a>
+
+### 247. 2026-09-05 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(common): 헤더/푸터 삽입 완료 시 로딩 화면 숨김 신호 연동
+- **git**: `git show pending247`
+- **범위**: frontend / render-only / common
+- **요약**: common.js의 loadCommon()/fallbackLoadHeaderFooter()가 header.html/footer.html 삽입과 관련 초기화(프로필·알림·후원 버튼 등)를 다 끝낸 직후 `window.hideSiteLoadingScreen()`을 호출하도록 연결했다. 이렇게 하면 로딩 화면이 "페이지를 실제로 쓸 수 있는 시점"에 맞춰 사라지고, 그 아래 캐릭터 이미지 수십 장이 다 받아지는 것은 기다리지 않는다.
+- **주요 파일**: `root-render/common.js`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending248"></a>
+
+### 248. 2026-09-05 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(frontend): 전 페이지에 로딩 화면 마크업·스크립트 삽입
+- **git**: `git show pending248`
+- **범위**: frontend / render-only
+- **요약**: root-render의 실제 페이지 29개 전부의 <head>에 loading-screen.css 링크·loading-screen.js 스크립트를, <body> 맨 앞에 오버레이 마크업(네온 링 SVG + 로고 이미지)을 삽입했다. common.js가 없는 로그인류 5개 페이지는 DOMContentLoaded 시점에 바로 숨겨지도록 loading-screen.js가 자체적으로 처리.
+- **주요 파일**: `root-render/index.html`, `root-render/tier-class/tier1.html`~`tier9.html`, `root-render/custom-maker/*`, `root-render/admin/*`, `root-render/user_login/*`, `root-render/notice/*`, `root-render/luck-draw/luck-draw.html`, `root-render/my-page/my-page.html`, `root-render/notifications/notifications.html`, `root-render/Contact_us/contact_us.html`
 - **관련 RDMD**: _(선택)_
 
 [▲ 목차로](#목차)
