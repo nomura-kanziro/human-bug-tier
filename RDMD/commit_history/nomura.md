@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 227 |
+| **커밋 수** | 236 |
 | **기간** | 2026-03-20 ~ 2026-09-03 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -255,6 +255,15 @@
 | 224 | 2026-09-04 | [`50c81fc`](#50c81fc) | chore(assets): root-render tier-image 폴더를 tier-media로 이름 변경 |
 | 225 | 2026-09-04 | [`2f17ad8`](#2f17ad8) | refactor(frontend): 이미지 경로를 tier-media 기준으로 갱신 |
 | 226 | 2026-09-04 | [`b0ff2ef`](#b0ff2ef) | fix(backend): tier-image·tier-media 폴더명 배포 root별 자동 분기 |
+| 227 | 2026-09-04 | [`pending`](#pending227) | feat(theme): 라이트/다크 테마 엔진 구축 |
+| 228 | 2026-09-04 | [`pending`](#pending228) | feat(theme): 헤더 테마 토글 버튼과 동기화 로직 연동 |
+| 229 | 2026-09-04 | [`pending`](#pending229) | style(theme): 공통 헤더/푸터·홈 화면 다크 모드 색상 보정 |
+| 230 | 2026-09-04 | [`pending`](#pending230) | feat(theme): 전 페이지에 테마 스크립트·스타일·토글 삽입 |
+| 231 | 2026-09-04 | [`pending`](#pending231) | style(theme): 공식 티어표 다크 모드 색상 보정 |
+| 232 | 2026-09-04 | [`pending`](#pending232) | style(theme): 커스텀 메이커·게시판 다크 모드 색상 보정 |
+| 233 | 2026-09-04 | [`pending`](#pending233) | style(theme): 관리자 페이지 다크 모드 색상 보정 |
+| 234 | 2026-09-04 | [`pending`](#pending234) | style(theme): 로그인·회원가입 다크 모드 색상 보정 |
+| 235 | 2026-09-04 | [`pending`](#pending235) | style(theme): 공지·행운뽑기·마이페이지·알림·문의 다크 모드 색상 보정 |
 
 ---
 
@@ -4403,6 +4412,168 @@
 - **범위**: backend
 - **요약**: 백엔드 서버 하나가 root-cloudflare(폴더명 tier-image 그대로)와 root-render(폴더명 tier-media) 두 프론트를 STATIC_ROOT/RENDER 환경변수로 전환하며 공용으로 서빙하는 구조라서, 이미지 폴더명을 한쪽만 바꾸면 다른 쪽이 깨지는 문제가 있었다. 새 유틸 `utils/tierMediaDir.js`(getTierMediaDir/resolveTierMediaPath)로 "지금 서빙 중인 root"에 따라 폴더명을 자동으로 골라 쓰도록 해서, server.js의 파비콘 라우트와 luckDrawController.js의 뽑기 결과 imagePath(신규 뽑기·DB 이력 조회 둘 다) 양쪽에 적용했다. luckPool.js의 하드코딩된 경로 문자열도 tier-media로 갱신(정규화 로직이 있어 실질적으로는 불필요하지만 기본값을 새 이름으로 맞춤). STATIC_ROOT=root-render로 로컬 실행해 파비콘·이미지 200, 구 tier-image 경로 404를 직접 확인함.
 - **주요 파일**: `backend/utils/tierMediaDir.js`(신규), `backend/server.js`, `backend/controllers/luckDrawController.js`, `backend/data/luckPool.js`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending227"></a>
+
+### 227. 2026-09-04 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(theme): 라이트/다크 테마 엔진 구축
+- **git**: `git show pending227`
+- **범위**: frontend / render-only
+- **요약**: 신규 파일 `theme.css`(디자인 토큰 CSS 변수 + 토글 스위치 모양)와 `theme.js`(테마 판정·저장·전환 로직)로 사이트 전체 라이트/다크 테마 엔진을 만들었다. 수동 설정(localStorage.hbtTheme)이 있으면 그 값을 우선 쓰고, 없으면 현재 시각 기준 자동값(오전 7시~밤 10시 전=라이트, 그 외=다크)을 쓰며, 30분 주기·탭 재방문 시 자동값을 재확인한다.
+- **주요 파일**: `root-render/theme.css`(신규), `root-render/theme.js`(신규)
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending228"></a>
+
+### 228. 2026-09-04 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(theme): 헤더 테마 토글 버튼과 동기화 로직 연동
+- **git**: `git show pending228`
+- **범위**: frontend / render-only / common
+- **요약**: header.html에 알약 모양 테마 토글 스위치(☀️/🌙)를 추가했다. header.html은 common.js가 나중에 fetch로 삽입하므로, 삽입 직후 시점에 토글 버튼의 현재 상태(is-dark 클래스 등)를 실제 테마와 맞추도록 common.js의 loadCommon()/fallbackLoadHeaderFooter() 양쪽에 theme.js가 제공하는 동기화 함수 호출을 추가했다.
+- **주요 파일**: `root-render/header.html`, `root-render/common.js`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending229"></a>
+
+### 229. 2026-09-04 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: style(theme): 공통 헤더/푸터·홈 화면 다크 모드 색상 보정
+- **git**: `git show pending229`
+- **범위**: frontend / render-only / common
+- **요약**: theme.css의 전역 안전망이 못 잡는, 이 3개 파일이 직접 하드코딩한 색(알림 패널, 프로필 드롭다운, 후원 버튼, 홈 화면 퀵카드 제목, 공지 모달, 행운 뽑기/커스텀 메이커 미리보기 카드 등)에 [data-theme="dark"] 보정 규칙을 추가했다. 기존 라이트 모드 규칙은 전혀 건드리지 않았다.
+- **주요 파일**: `root-render/common.css`, `root-render/Header_Footer.css`, `root-render/index-home.css`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending230"></a>
+
+### 230. 2026-09-04 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(theme): 전 페이지에 테마 스크립트·스타일·토글 삽입
+- **git**: `git show pending230`
+- **범위**: frontend / render-only
+- **요약**: root-render의 실제 페이지 29개 전부의 <head> 맨 앞에 첫 렌더링 깜빡임(FOUC) 방지용 인라인 스크립트와 theme.css 링크를, <head> 또는 스크립트 목록에 theme.js를 삽입했다. 공용 헤더가 없는 로그인류 5개 페이지(admin-login, login, sign_up, find_account, reset_password)에는 우상단 고정 토글 버튼을 별도로 추가했다.
+- **주요 파일**: `root-render/index.html`, `root-render/tier-class/tier1.html`~`tier9.html`, `root-render/custom-maker/*`, `root-render/admin/*`, `root-render/user_login/*`, `root-render/notice/*`, `root-render/luck-draw/luck-draw.html`, `root-render/my-page/my-page.html`, `root-render/notifications/notifications.html`, `root-render/Contact_us/contact_us.html`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending231"></a>
+
+### 231. 2026-09-04 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: style(theme): 공식 티어표 다크 모드 색상 보정
+- **git**: `git show pending231`
+- **범위**: frontend / render-only / tier-class
+- **요약**: tier1~9.css 각각의 고유 테마 색(금색/은색/청동색 등)을 유지하면서 다크 배경에서도 카드 경계·글자가 보이도록 [data-theme="dark"] 규칙을 추가했다. tier-nav.css의 이전/다음 버튼·등급 라벨도 함께 보정. tier-responsive.css는 색상이 없는 레이아웃 전용이라 변경하지 않았다.
+- **주요 파일**: `root-render/tier-class/tier1.css`~`tier9.css`, `root-render/tier-class/tier-nav.css`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending232"></a>
+
+### 232. 2026-09-04 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: style(theme): 커스텀 메이커·게시판 다크 모드 색상 보정
+- **git**: `git show pending232`
+- **범위**: frontend / render-only / custom-maker
+- **요약**: 티어 제작 캔버스·캐릭터 풀·업로드 모달(custom-maker.css), 게시판 카드·신고 모달(custom-maker_post.css), 게시글 상세·댓글 스레드(post_detail.css)에 다크 모드 보정을 추가했다. 페이지 배경에 직접 놓여 검게 묻힐 뻔한 제목·댓글 텍스트도 함께 수정.
+- **주요 파일**: `root-render/custom-maker/custom-maker.css`, `root-render/custom-maker/custom-maker_post/custom-maker_post.css`, `root-render/custom-maker/custom-maker_post/post_detail.css`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending233"></a>
+
+### 233. 2026-09-04 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: style(theme): 관리자 페이지 다크 모드 색상 보정
+- **git**: `git show pending233`
+- **범위**: frontend / render-only / admin
+- **요약**: 관리자 로그인 카드(admin-login.css)와 댓글·신고·공지·차단 관리 대시보드(comment-management.css)에 다크 모드를 적용했다. comment-detail.html은 별도 CSS 파일 없이 인라인 <style>을 쓰는 페이지라 그 안의 .detail-card/.quote(브루탈리즘 검정 테두리 카드)도 함께 보정했다.
+- **주요 파일**: `root-render/admin/admin-login.css`, `root-render/admin/comments/comment-management.css`, `root-render/admin/comments/comment-detail.html`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending234"></a>
+
+### 234. 2026-09-04 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: style(theme): 로그인·회원가입 다크 모드 색상 보정
+- **git**: `git show pending234`
+- **범위**: frontend / render-only / user_login
+- **요약**: 로그인·회원가입·아이디/비번찾기·비번재설정 카드형 레이아웃(login.css/sign_up.css/find_account.css)에 다크 모드를 적용했다. HTML에 인라인으로 박힌 style="color:#000" 제목처럼 외부 스타일시트가 못 이기는 부분은 !important로 처리했다.
+- **주요 파일**: `root-render/user_login/login.css`, `root-render/user_login/sign_up.css`, `root-render/user_login/find_account.css`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending235"></a>
+
+### 235. 2026-09-04 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: style(theme): 공지·행운뽑기·마이페이지·알림·문의 다크 모드 색상 보정
+- **git**: `git show pending235`
+- **범위**: frontend / render-only
+- **요약**: 공지사항(notice.css), 오늘의 행운 뽑기(luck-draw.css, 앰버/골드 톤 유지), 마이페이지(my-page.css), 알림 상세(notifications.css), 문의하기(contact_us.css, 브루탈리즘 검정 테두리 톤 유지) 5개 CSS에 각 페이지 고유 색감을 살린 다크 모드 보정을 추가했다.
+- **주요 파일**: `root-render/notice/notice.css`, `root-render/luck-draw/luck-draw.css`, `root-render/my-page/my-page.css`, `root-render/notifications/notifications.css`, `root-render/Contact_us/contact_us.css`
 - **관련 RDMD**: _(선택)_
 
 [▲ 목차로](#목차)
