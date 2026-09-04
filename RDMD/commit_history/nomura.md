@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 238 |
+| **커밋 수** | 239 |
 | **기간** | 2026-03-20 ~ 2026-09-04 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -266,7 +266,8 @@
 | 235 | 2026-09-04 | [`a5a2a90`](#a5a2a90) | style(theme): 공지·행운뽑기·마이페이지·알림·문의 다크 모드 색상 보정 |
 | 236 | 2026-09-04 | [`97d8649`](#97d8649) | feat(auth): 가입 메일 Gmail 우선 및 관리자 직접 인증 |
 | 237 | 2026-09-04 | [`a43060c`](#a43060c) | feat(admin): 회원 목록에 가입일 표시 |
-| 238 | 2026-09-04 | pending | fix(admin): 회원 인증하기 요청과 저장 수정 |
+| 238 | 2026-09-04 | [`5a20c8d`](#5a20c8d) | fix(admin): 회원 인증하기 요청과 저장 수정 |
+| 239 | 2026-09-04 | pending | fix(server): API 우선 등록 및 파비콘·확장 콘솔 정리 |
 
 ---
 
@@ -4619,18 +4620,36 @@
 
 ---
 
-<a id="pending-238"></a>
+<a id="5a20c8d"></a>
 
-### 238. 2026-09-04 — pending
+### 238. 2026-09-04 — `5a20c8d`
+
+- **hash (short)**: `5a20c8d`
+- **hash (full)**: `5a20c8df09dbf1c7f7c1f97e886a4937cd94d92c`
+- **author**: nomura
+- **message**: fix(admin): 회원 인증하기 요청과 저장 수정
+- **git**: `git show 5a20c8d`
+- **범위**: backend / admin
+- **요약**: 인증하기를 POST+JSON 본문으로 보내고, isVerified는 $set, 토큰은 $unset으로 저장한다. POST/PUT/PATCH 모두 받는다.
+- **주요 파일**: `backend/controllers/adminController.js`, `backend/routes/adminRoutes.js`, `root-render/admin/comments/comment-management.js`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-239"></a>
+
+### 239. 2026-09-04 — pending
 
 - **hash (short)**: pending
 - **hash (full)**: pending
 - **author**: nomura
-- **message**: fix(admin): 회원 인증하기 요청과 저장 수정
+- **message**: fix(server): API 우선 등록 및 파비콘·확장 콘솔 정리
 - **git**: _(커밋 후 기입)_
-- **범위**: backend / admin
-- **요약**: 인증하기를 POST+JSON 본문으로 보내고, isVerified는 $set, 토큰은 $unset으로 저장한다. POST/PUT/PATCH 모두 받는다.
-- **주요 파일**: `backend/controllers/adminController.js`, `backend/routes/adminRoutes.js`, `root-render/admin/comments/comment-management.js`
+- **범위**: backend
+- **요약**: /api 라우트를 정적 파일보다 앞에 붙였다. 파비콘은 로고를 여러 경로에서 찾고 없으면 500을 내지 않는다. /api/ext는 확장이 치는 주소라 204로 무시한다.
+- **주요 파일**: `backend/server.js`
 - **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)
