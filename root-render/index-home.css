@@ -359,3 +359,59 @@
 .home-tiers-section .tiers {
   padding: 0;
 }
+
+/* ======================================================================
+   다크 모드 — 홈 화면 전용 세부 보정.
+   theme.css의 안전망이 .quick-card 같은 공통 패턴은 이미 처리하지만, 이 파일의
+   커스텀 메이커/행운 뽑기 미리보기 카드는 각자 고유한 그라디언트 배경(어두운 골드 카드,
+   밝은 앰버 카드)이라 여기서 개별 대응한다.
+   ====================================================================== */
+[data-theme="dark"] .home-tiers-header h2,
+[data-theme="dark"] .home-luck-preview h2,
+[data-theme="dark"] .home-maker-preview h2 {
+  color: var(--text-primary);
+}
+
+/* 커스텀 메이커 카드는 원래도 어두운 배경(다크 카드)이라 그대로 둬도 자연스럽지만,
+   페이지 배경과 완전히 같은 검정이 되지 않도록 살짝 밝은 톤을 유지해 카드 경계가 보이게 한다 */
+[data-theme="dark"] .home-maker-preview-inner {
+  background: linear-gradient(145deg, #1c1c1c 0%, #232323 55%, #191919 100%);
+  box-shadow: 0 18px 40px var(--shadow-color);
+}
+[data-theme="dark"] .home-maker-board {
+  background: #0a0a0a;
+  border-color: rgba(255, 204, 0, 0.25);
+}
+
+/* 행운 뽑기 카드는 원래 밝은 크림/앰버 배경이라 다크 모드에서 통째로 어둡게 뒤집는다 */
+[data-theme="dark"] .home-luck-inner {
+  background: linear-gradient(120deg, #241c10 0%, #1c1c1c 48%, #241a10 100%);
+  border-color: #4a3a1a;
+}
+[data-theme="dark"] .home-luck-desc {
+  color: var(--text-secondary);
+}
+[data-theme="dark"] .home-luck-widget {
+  background: var(--bg-elevated);
+  box-shadow: 0 10px 24px var(--shadow-color);
+}
+[data-theme="dark"] .home-luck-stage {
+  background: rgba(217, 119, 6, 0.12);
+  border-color: #4a3a1a;
+}
+[data-theme="dark"] .home-luck-placeholder-mark,
+[data-theme="dark"] .home-luck-loading #home-luck-reel {
+  background: rgba(217, 119, 6, 0.22);
+}
+[data-theme="dark"] .home-luck-placeholder-text,
+[data-theme="dark"] .home-luck-status,
+[data-theme="dark"] .home-luck-guest {
+  color: var(--text-muted);
+}
+[data-theme="dark"] .home-luck-static {
+  background: rgba(217, 119, 6, 0.18);
+  color: #fbbf24;
+}
+[data-theme="dark"] .home-luck-name {
+  color: var(--text-primary);
+}

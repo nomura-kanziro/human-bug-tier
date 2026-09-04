@@ -603,3 +603,84 @@ img {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* ======================================================================
+   다크 모드 — 이 파일(홈 화면 index.html 본문)이 다루는 요소 전용 세부 보정.
+   theme.css의 안전망이 .quick-card/.notice-column 등 배경은 이미 어둡게 깔아주지만,
+   여기서 명시적으로 색을 지정해 둔 글자·테두리·모달까지는 손대지 않으므로 개별 대응한다.
+   ====================================================================== */
+[data-theme="dark"] .tier-card {
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .quick-card h3 {
+  color: var(--text-primary);
+}
+[data-theme="dark"] .sub-grid a,
+[data-theme="dark"] .sub-menu a {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .notice-header h2,
+[data-theme="dark"] .notice-column-header {
+  color: var(--text-primary);
+}
+[data-theme="dark"] .notice-item {
+  border-color: var(--border-color);
+}
+[data-theme="dark"] .notice-item:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-hover);
+}
+[data-theme="dark"] .notice-item .date,
+[data-theme="dark"] .notice-section .notice-empty {
+  color: var(--text-muted);
+}
+[data-theme="dark"] .notice-item .desc {
+  color: var(--text-secondary);
+}
+[data-theme="dark"] .notice-section .notice-view-all {
+  color: var(--text-secondary) !important;
+}
+[data-theme="dark"] .notice-section .notice-view-all:hover {
+  color: var(--text-primary) !important;
+}
+[data-theme="dark"] .notice-section .notice-item-title {
+  color: var(--text-primary);
+}
+
+/* 공지사항 모달 */
+[data-theme="dark"] .notice-modal {
+  background: var(--overlay-bg);
+}
+[data-theme="dark"] .modal-content {
+  background: var(--bg-elevated);
+  box-shadow: 0 20px 40px var(--shadow-color);
+}
+[data-theme="dark"] .modal-header,
+[data-theme="dark"] .modal-footer {
+  border-color: var(--border-color);
+}
+[data-theme="dark"] .modal-title {
+  color: var(--text-primary);
+}
+[data-theme="dark"] .modal-close-btn {
+  color: var(--text-muted);
+}
+[data-theme="dark"] .modal-close-btn:hover {
+  color: var(--text-primary);
+}
+[data-theme="dark"] .modal-date {
+  color: var(--text-muted);
+}
+[data-theme="dark"] .modal-body {
+  color: var(--text-secondary);
+}
+[data-theme="dark"] .modal-close-button {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+[data-theme="dark"] .modal-close-button:hover {
+  background: var(--border-strong);
+}

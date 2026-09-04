@@ -891,3 +891,141 @@ a.nav-soon {
   cursor: not-allowed;
   font-style: italic;
 }
+
+/* ======================================================================
+   다크 모드 — 이 파일이 다루는 헤더/푸터 요소 전용 세부 보정.
+   theme.css가 header/footer/.dropdown/.side-menu 등 큰 틀은 이미 어둡게 깔아주지만,
+   후원·알림·프로필 아이콘처럼 밝은 배경(#f3f4f6 등)을 하드코딩한 작은 버튼들과
+   알림 목록의 글자색·구분선까지는 손대지 않으므로 여기서 개별적으로 보정한다.
+   ====================================================================== */
+[data-theme="dark"] .logo-text,
+[data-theme="dark"] .fot-text {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] header {
+  border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] footer {
+  border-top-color: var(--border-color);
+}
+
+[data-theme="dark"] .header-sponsor-btn {
+  background: var(--bg-hover);
+  color: #d8b48c; /* 어두운 배경에서도 구분되는 은은한 커피색 */
+}
+[data-theme="dark"] .header-sponsor-btn:hover {
+  background: var(--bg-subtle);
+  color: #e9c9a3;
+}
+
+[data-theme="dark"] .menu-btn:active {
+  background: var(--bg-hover);
+}
+
+[data-theme="dark"] .notification-bell-btn {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+[data-theme="dark"] .notification-bell-btn:hover {
+  background: var(--bg-subtle);
+}
+
+[data-theme="dark"] .notification-panel-header,
+[data-theme="dark"] .user-profile-panel-header {
+  background: var(--bg-subtle);
+  border-bottom-color: var(--border-color);
+}
+[data-theme="dark"] .notification-panel-header strong,
+[data-theme="dark"] .user-profile-panel-info strong {
+  color: var(--text-primary);
+}
+[data-theme="dark"] .user-profile-panel-info span {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .notification-settings-btn {
+  color: var(--text-secondary);
+}
+[data-theme="dark"] .notification-settings-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .notification-item {
+  background: var(--bg-elevated);
+  border-bottom-color: var(--border-color);
+}
+[data-theme="dark"] .notification-item:hover {
+  background: var(--bg-hover);
+}
+[data-theme="dark"] .notification-item.unread {
+  background: rgba(37, 99, 235, 0.16);
+}
+[data-theme="dark"] .notification-item-title {
+  color: var(--text-primary);
+}
+[data-theme="dark"] .notification-item-message {
+  color: var(--text-secondary);
+}
+[data-theme="dark"] .notification-item-time,
+[data-theme="dark"] .notification-empty {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .user-profile-panel-item {
+  color: var(--text-primary);
+}
+[data-theme="dark"] .user-profile-panel-item:hover {
+  background: var(--bg-hover);
+}
+
+/* 알림 설정 모달 — .notification-settings-modal 자체는 배경이 없는 오버레이 래퍼이고
+   실제 카드는 .notification-settings-card 이므로 여기만 어둡게 하면 충분 */
+[data-theme="dark"] .notification-settings-backdrop {
+  background: var(--overlay-bg);
+}
+[data-theme="dark"] .notification-settings-card {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+[data-theme="dark"] .notification-settings-header h3 {
+  color: var(--text-primary);
+}
+[data-theme="dark"] .notification-settings-close {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+[data-theme="dark"] .notification-setting-row {
+  border-bottom-color: var(--border-color);
+  color: var(--text-secondary);
+}
+[data-theme="dark"] .notification-specific-toggle {
+  color: var(--text-primary);
+}
+[data-theme="dark"] .notification-settings-divider {
+  border-top-color: var(--border-color);
+}
+[data-theme="dark"] .notification-settings-delete {
+  background: var(--bg-elevated);
+  border-color: #7f1d1d;
+  color: #fca5a5;
+}
+[data-theme="dark"] .notification-settings-delete:hover {
+  background: rgba(220, 38, 38, 0.15);
+}
+
+[data-theme="dark"] .side-menu ul li a {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .nav-item > a {
+  color: var(--text-secondary);
+}
+[data-theme="dark"] .nav-item > a:hover {
+  color: var(--text-primary);
+}
+[data-theme="dark"] .dropdown a {
+  color: var(--text-primary);
+}
