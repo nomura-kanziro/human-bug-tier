@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 240 |
+| **커밋 수** | 241 |
 | **기간** | 2026-03-20 ~ 2026-09-04 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -268,7 +268,8 @@
 | 237 | 2026-09-04 | [`a43060c`](#a43060c) | feat(admin): 회원 목록에 가입일 표시 |
 | 238 | 2026-09-04 | [`5a20c8d`](#5a20c8d) | fix(admin): 회원 인증하기 요청과 저장 수정 |
 | 239 | 2026-09-04 | [`e5e84f7`](#e5e84f7) | fix(server): API 우선 등록 및 파비콘·확장 콘솔 정리 |
-| 240 | 2026-09-04 | pending | chore(backend): server.js 설명 주석 복원 |
+| 240 | 2026-09-04 | [`3369978`](#3369978) | chore(backend): server.js 설명 주석 복원 |
+| 241 | 2026-09-04 | pending | docs: 기존 주석 삭제 금지 인수인계 |
 
 ---
 
@@ -4657,18 +4658,36 @@
 
 ---
 
-<a id="pending-240"></a>
+<a id="3369978"></a>
 
-### 240. 2026-09-04 — pending
+### 240. 2026-09-04 — `3369978`
 
-- **hash (short)**: pending
-- **hash (full)**: pending
+- **hash (short)**: `3369978`
+- **hash (full)**: `3369978488524fa6b56d907316cc37211f1fe42c`
 - **author**: nomura
 - **message**: chore(backend): server.js 설명 주석 복원
-- **git**: _(커밋 후 기입)_
+- **git**: `git show 3369978`
 - **범위**: backend
 - **요약**: API 우선 등록으로 고치면서 빠졌던 server.js 설명 주석을 되돌렸다. 바뀐 동작(파비콘 후보, /api/ext, JSON 404)만 주석 문구에 반영했다.
 - **주요 파일**: `backend/server.js`
 - **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-241"></a>
+
+### 241. 2026-09-04 — pending
+
+- **hash (short)**: pending
+- **hash (full)**: pending
+- **author**: nomura
+- **message**: docs: 기존 주석 삭제 금지 인수인계
+- **git**: _(커밋 후 기입)_
+- **범위**: docs / agents
+- **요약**: 기존 주석은 삭제하지 않고 문구만 고치도록 `.agents` 정본과 Grok·Claude·Codex 팩, team, RDMD 가이드에 인수인계했다. 사람이 “지워”라고 하기 전까지 AI는 주석을 지우지 않는다.
+- **주요 파일**: `.agents/common-rules.md`, `AGENTS.md`, `CLAUDE.md`, `.groks/`, `.claude/`, `.codex/`, `team/`
+- **관련 RDMD**: `RDMD/guides/coding-conventions.md`
 
 [▲ 목차로](#목차)
