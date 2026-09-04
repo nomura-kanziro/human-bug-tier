@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 248 |
+| **커밋 수** | 249 |
 | **기간** | 2026-03-20 ~ 2026-09-04 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -277,6 +277,7 @@
 | 246 | 2026-09-05 | [`ac8e778`](#ac8e778) | feat(theme): 사이트 전체 초기 로딩 화면(네온 링) 신규 파일 |
 | 247 | 2026-09-05 | [`1a6ec54`](#1a6ec54) | feat(common): 헤더/푸터 삽입 완료 시 로딩 화면 숨김 신호 연동 |
 | 248 | 2026-09-05 | [`d4051c0`](#d4051c0) | feat(frontend): 전 페이지에 로딩 화면 마크업·스크립트 삽입 |
+| 249 | 2026-09-05 | [`pending`](#pending249) | chore(assets): tier-media 안에 tier-video 폴더 추가 |
 
 ---
 
@@ -4823,6 +4824,24 @@
 - **범위**: frontend / render-only
 - **요약**: root-render의 실제 페이지 29개 전부의 <head>에 loading-screen.css 링크·loading-screen.js 스크립트를, <body> 맨 앞에 오버레이 마크업(네온 링 SVG + 로고 이미지)을 삽입했다. common.js가 없는 로그인류 5개 페이지는 DOMContentLoaded 시점에 바로 숨겨지도록 loading-screen.js가 자체적으로 처리.
 - **주요 파일**: `root-render/index.html`, `root-render/tier-class/tier1.html`~`tier9.html`, `root-render/custom-maker/*`, `root-render/admin/*`, `root-render/user_login/*`, `root-render/notice/*`, `root-render/luck-draw/luck-draw.html`, `root-render/my-page/my-page.html`, `root-render/notifications/notifications.html`, `root-render/Contact_us/contact_us.html`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending249"></a>
+
+### 249. 2026-09-05 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: chore(assets): tier-media 안에 tier-video 폴더 추가
+- **git**: `git show pending249`
+- **범위**: frontend / render-only / assets
+- **요약**: `root-render/tier-media/`가 이미지 전용(tier-image/)뿐 아니라 영상도 담을 수 있는 상위 폴더라는 애초 의도에 맞춰, 앞으로 영상 파일을 넣을 `tier-media/tier-video/` 폴더를 미리 만들어 뒀다. Git은 빈 폴더를 추적하지 않으므로 커밋에 잡히도록 `.gitkeep` 빈 파일을 넣었다 — 실제 영상 파일이 들어가면 이 파일은 지워도 된다.
+- **주요 파일**: `root-render/tier-media/tier-video/.gitkeep`(신규)
 - **관련 RDMD**: _(선택)_
 
 [▲ 목차로](#목차)
