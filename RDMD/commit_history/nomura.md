@@ -267,7 +267,7 @@
 | 236 | 2026-09-04 | [`97d8649`](#97d8649) | feat(auth): 가입 메일 Gmail 우선 및 관리자 직접 인증 |
 | 237 | 2026-09-04 | [`a43060c`](#a43060c) | feat(admin): 회원 목록에 가입일 표시 |
 | 238 | 2026-09-04 | [`5a20c8d`](#5a20c8d) | fix(admin): 회원 인증하기 요청과 저장 수정 |
-| 239 | 2026-09-04 | pending | fix(server): API 우선 등록 및 파비콘·확장 콘솔 정리 |
+| 239 | 2026-09-04 | [`e5e84f7`](#e5e84f7) | fix(server): API 우선 등록 및 파비콘·확장 콘솔 정리 |
 
 ---
 
@@ -4638,15 +4638,15 @@
 
 ---
 
-<a id="pending-239"></a>
+<a id="e5e84f7"></a>
 
-### 239. 2026-09-04 — pending
+### 239. 2026-09-04 — `e5e84f7`
 
-- **hash (short)**: pending
-- **hash (full)**: pending
+- **hash (short)**: `e5e84f7`
+- **hash (full)**: `e5e84f725a63c3c7b5d3880dcd855f8a111bd208`
 - **author**: nomura
 - **message**: fix(server): API 우선 등록 및 파비콘·확장 콘솔 정리
-- **git**: _(커밋 후 기입)_
+- **git**: `git show e5e84f7`
 - **범위**: backend
 - **요약**: /api 라우트를 정적 파일보다 앞에 붙였다. 파비콘은 로고를 여러 경로에서 찾고 없으면 500을 내지 않는다. /api/ext는 확장이 치는 주소라 204로 무시한다.
 - **주요 파일**: `backend/server.js`
