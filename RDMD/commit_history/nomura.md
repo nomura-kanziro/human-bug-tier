@@ -269,7 +269,7 @@
 | 238 | 2026-09-04 | [`5a20c8d`](#5a20c8d) | fix(admin): 회원 인증하기 요청과 저장 수정 |
 | 239 | 2026-09-04 | [`e5e84f7`](#e5e84f7) | fix(server): API 우선 등록 및 파비콘·확장 콘솔 정리 |
 | 240 | 2026-09-04 | [`3369978`](#3369978) | chore(backend): server.js 설명 주석 복원 |
-| 241 | 2026-09-04 | pending | docs: 기존 주석 삭제 금지 인수인계 |
+| 241 | 2026-09-04 | [`09dfe6c`](#09dfe6c) | docs: 기존 주석 삭제 금지 인수인계 |
 
 ---
 
@@ -4676,15 +4676,15 @@
 
 ---
 
-<a id="pending-241"></a>
+<a id="09dfe6c"></a>
 
-### 241. 2026-09-04 — pending
+### 241. 2026-09-04 — `09dfe6c`
 
-- **hash (short)**: pending
-- **hash (full)**: pending
+- **hash (short)**: `09dfe6c`
+- **hash (full)**: `09dfe6cb9d83ae7ca8b046d6be64e1d4e09cb9b0`
 - **author**: nomura
 - **message**: docs: 기존 주석 삭제 금지 인수인계
-- **git**: _(커밋 후 기입)_
+- **git**: `git show 09dfe6c`
 - **범위**: docs / agents
 - **요약**: 기존 주석은 삭제하지 않고 문구만 고치도록 `.agents` 정본과 Grok·Claude·Codex 팩, team, RDMD 가이드에 인수인계했다. 사람이 “지워”라고 하기 전까지 AI는 주석을 지우지 않는다.
 - **주요 파일**: `.agents/common-rules.md`, `AGENTS.md`, `CLAUDE.md`, `.groks/`, `.claude/`, `.codex/`, `team/`
