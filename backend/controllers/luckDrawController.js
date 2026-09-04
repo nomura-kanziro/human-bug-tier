@@ -20,6 +20,7 @@ const LuckDraw = require('../models/LuckDraw');
 const LuckProfile = require('../models/LuckProfile');
 const luckPool = require('../data/luckPool');
 const { getKstDateString } = require('../utils/kstDate');
+const { resolveTierMediaPath } = require('../utils/tierMediaDir');
 
 // 합계 100 — 가중치가 그대로 퍼센트가 되도록 구성.
 // 확률 등급(높음→낮음): {5,6} > {4,7} > {8} > {9,3} > {2} > {1} (4티어 -2%, 7티어 +2% 조정)
@@ -79,7 +80,9 @@ function buildDrawResult() {
     mode: 'daily_tier',
     tier,
     characterName: character.name,
-    imagePath: character.imagePath,
+    // luckPool.js에 하드코딩된 값이 tier-image/tier-media 어느 쪽이든, 지금 활성화된
+    // 프론트(root-cloudflare/root-render)에 실제로 존재하는 폴더명으로 보정해서 내려준다.
+    imagePath: resolveTierMediaPath(character.imagePath),
     tierPageUrl: `tier-class/tier${tier}.html`,
     drawDate: getKstDateString(),
   };
@@ -93,7 +96,9 @@ function toResultShape(doc) {
     mode: doc.mode,
     tier: doc.tier,
     characterName: doc.characterName,
-    imagePath: doc.imagePath,
+    // 과거(폴더 개명 이전)에 저장된 이력 문서는 "tier-image/..."를 그대로 갖고 있을 수 있으므로
+    // 여기서도 동일하게 보정한다 — 별도 DB 마이그레이션 없이 옛 기록도 이미지가 깨지지 않는다.
+    imagePath: resolveTierMediaPath(doc.imagePath),
     tierPageUrl: `tier-class/tier${doc.tier}.html`,
     drawDate: doc.drawDate,
   };

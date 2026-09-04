@@ -128,8 +128,11 @@ connectDB().then(async (connected) => {
 });
 
 // 브라우저가 자동 요청하는 /favicon.ico를 사이트 로고로 응답 (없으면 콘솔에 404 에러가 계속 찍힘)
+// 캐릭터 이미지 폴더명이 root-render는 tier-media, root-cloudflare는 tier-image로 서로 달라서
+// (2026-09 개명, 자세한 이유는 utils/tierMediaDir.js 참고) getTierMediaDir()로 지금 활성 폴더명을 구한다.
+const { getTierMediaDir } = require('./utils/tierMediaDir');
 app.get('/favicon.ico', (req, res) => {
-  res.sendFile(path.join(projectRoot, 'tier-image', 'logo.webp'));
+  res.sendFile(path.join(projectRoot, getTierMediaDir(), 'logo.webp'));
 });
 
 // 헬스 체크 (DB 연결 상태 포함 — 시크릿 값은 노출하지 않음)
