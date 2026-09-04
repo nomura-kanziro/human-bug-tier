@@ -277,7 +277,7 @@
 | 246 | 2026-09-05 | [`ac8e778`](#ac8e778) | feat(theme): 사이트 전체 초기 로딩 화면(네온 링) 신규 파일 |
 | 247 | 2026-09-05 | [`1a6ec54`](#1a6ec54) | feat(common): 헤더/푸터 삽입 완료 시 로딩 화면 숨김 신호 연동 |
 | 248 | 2026-09-05 | [`d4051c0`](#d4051c0) | feat(frontend): 전 페이지에 로딩 화면 마크업·스크립트 삽입 |
-| 249 | 2026-09-05 | [`pending`](#pending249) | chore(assets): tier-media 안에 tier-video 폴더 추가 |
+| 249 | 2026-09-05 | [`a60185a`](#a60185a) | chore(assets): tier-media 안에 tier-video 폴더 추가 |
 
 ---
 
@@ -4830,15 +4830,15 @@
 
 ---
 
-<a id="pending249"></a>
+<a id="a60185a"></a>
 
-### 249. 2026-09-05 — `pending`
+### 249. 2026-09-05 — `a60185a`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `a60185a`
+- **hash (full)**: `a60185adb21f7a6380d43b9e725172f26a06c6d7`
 - **author**: nomura
 - **message**: chore(assets): tier-media 안에 tier-video 폴더 추가
-- **git**: `git show pending249`
+- **git**: `git show a60185a`
 - **범위**: frontend / render-only / assets
 - **요약**: `root-render/tier-media/`가 이미지 전용(tier-image/)뿐 아니라 영상도 담을 수 있는 상위 폴더라는 애초 의도에 맞춰, 앞으로 영상 파일을 넣을 `tier-media/tier-video/` 폴더를 미리 만들어 뒀다. Git은 빈 폴더를 추적하지 않으므로 커밋에 잡히도록 `.gitkeep` 빈 파일을 넣었다 — 실제 영상 파일이 들어가면 이 파일은 지워도 된다.
 - **주요 파일**: `root-render/tier-media/tier-video/.gitkeep`(신규)
