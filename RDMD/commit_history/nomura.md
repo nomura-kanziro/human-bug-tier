@@ -265,7 +265,7 @@
 | 234 | 2026-09-04 | [`09ce365`](#09ce365) | style(theme): 로그인·회원가입 다크 모드 색상 보정 |
 | 235 | 2026-09-04 | [`a5a2a90`](#a5a2a90) | style(theme): 공지·행운뽑기·마이페이지·알림·문의 다크 모드 색상 보정 |
 | 236 | 2026-09-04 | [`97d8649`](#97d8649) | feat(auth): 가입 메일 Gmail 우선 및 관리자 직접 인증 |
-| 237 | 2026-09-04 | pending | feat(admin): 회원 목록에 가입일 표시 |
+| 237 | 2026-09-04 | [`a43060c`](#a43060c) | feat(admin): 회원 목록에 가입일 표시 |
 
 ---
 
@@ -4600,15 +4600,15 @@
 
 ---
 
-<a id="pending-237"></a>
+<a id="a43060c"></a>
 
-### 237. 2026-09-04 — pending
+### 237. 2026-09-04 — `a43060c`
 
-- **hash (short)**: pending
-- **hash (full)**: pending
+- **hash (short)**: `a43060c`
+- **hash (full)**: `a43060c010311f726b6e80b45cac3f3598fb32bf`
 - **author**: nomura
 - **message**: feat(admin): 회원 목록에 가입일 표시
-- **git**: _(커밋 후 기입)_
+- **git**: `git show a43060c`
 - **범위**: frontend / admin
 - **요약**: 관리자 등록 사용자 표에 가입일(createdAt) 열을 넣었다. API는 원래 내려주고 있었고, 화면에만 없었다.
 - **주요 파일**: `root-render/admin/comments/comment-management.html`, `root-render/admin/comments/comment-management.js`
