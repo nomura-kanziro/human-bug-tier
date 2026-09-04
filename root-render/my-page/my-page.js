@@ -29,10 +29,10 @@ const MY_PAGE_TIER_LABELS = {
 // 이 함수가 모든 경우를 getBasePath() 기준 상대경로로 통일해준다.
 // thumbnail이 아예 없으면 기본 로고 이미지를 대신 보여준다.
 function myPageResolveAsset(path) {
-  if (!path) return getBasePath() + 'tier-media/logo.webp';
-  // tier-image → tier-media 폴더 개명(2026-09) 이전에 저장된 게시글 대비:
-  // DB에 남아있는 옛 "/tier-image/..." 경로를 새 폴더명으로 보정한다.
-  path = path.replace(/^(\.{2}\/|\/)?tier-image\//, '$1tier-media/');
+  if (!path) return getBasePath() + 'tier-media/tier-image/logo.webp';
+  // 폴더 구조가 두 번 바뀌었으므로(① tier-image → ② tier-media → ③ tier-media/tier-image, 2026-09)
+  // DB에 남아있는 옛 접두사(둘 중 하나)를 최신 접두사로 보정한다.
+  path = path.replace(/^(\.{2}\/|\/)?(?:tier-media\/tier-image\/|tier-image\/|tier-media\/)/, '$1tier-media/tier-image/');
   if (path.startsWith('data:') || path.startsWith('blob:') || path.startsWith('http')) return path;
   if (path.startsWith('/')) return getBasePath() + path.slice(1);
   if (path.startsWith('../')) return getBasePath() + path.replace(/^\.\.\//, '');

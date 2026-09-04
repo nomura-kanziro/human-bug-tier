@@ -76,12 +76,12 @@ custom-maker/
 ## 유지보수 가이드
 
 ### 새 캐릭터 추가 방법
-1. `tier-media/` 폴더에 이미지 추가
+1. `tier-media/tier-image/` 폴더에 이미지 추가
 2. tier-class HTML에 캐릭터 정보 추가 (또는 별도 데이터 소스)
 3. `loadCharactersFromTierClass()`가 해당 페이지를 파싱하여 풀에 추가
 
 ### 이미지 경로 문제
-- 저장된 데이터는 `/tier-media/xxx.png` 형식
+- 저장된 데이터는 `/tier-media/tier-image/xxx.png` 형식
 - 실제 렌더링 시 `resolveAssetPath()` 또는 `getBasePath()` 적용
 - GitHub Pages 배포 시 반드시 `getBasePath()` 확인
 

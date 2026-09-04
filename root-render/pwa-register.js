@@ -50,7 +50,7 @@
     if (!document.querySelector('link[rel="apple-touch-icon"]')) {
       const apple = document.createElement('link');
       apple.rel = 'apple-touch-icon';
-      apple.href = base + 'tier-media/pwa/icon-192.png';
+      apple.href = base + 'tier-media/tier-image/pwa/icon-192.png';
       document.head.appendChild(apple);
     }
     // 서비스워커 미지원 브라우저이거나 file:// 로 직접 연 경우(로컬 더블클릭 실행)는 등록 시도 자체를 건너뜀

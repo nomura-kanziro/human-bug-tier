@@ -350,10 +350,10 @@ function getThumbnail(post) {
 // 배포 깊이에 맞는 실제 표시 경로로 변환한다. custom-maker.js의 resolveMakerPreviewPath와
 // 같은 역할을 게시판 목록 페이지에서 담당하는 버전.
 function resolveAssetPath(path) {
-  if (!path) return getBasePath() + 'tier-media/logo.webp';
-  // tier-image → tier-media 폴더 개명(2026-09) 이전에 저장된 게시글 대비:
-  // DB에 남아있는 옛 "/tier-image/..." 경로를 새 폴더명으로 보정한다.
-  path = path.replace(/^(\.{2}\/|\/)?tier-image\//, '$1tier-media/');
+  if (!path) return getBasePath() + 'tier-media/tier-image/logo.webp';
+  // 폴더 구조가 두 번 바뀌었으므로(① tier-image → ② tier-media → ③ tier-media/tier-image, 2026-09)
+  // DB에 남아있는 옛 접두사(둘 중 하나)를 최신 접두사로 보정한다.
+  path = path.replace(/^(\.{2}\/|\/)?(?:tier-media\/tier-image\/|tier-image\/|tier-media\/)/, '$1tier-media/tier-image/');
   if (path.startsWith('data:') || path.startsWith('blob:')) return path;
   if (path.startsWith('http')) return path;
   if (path.startsWith('/')) {
@@ -394,7 +394,7 @@ function createPostCard(post) {
   card.dataset.postId = id;
   card.innerHTML = `
     <div class="post-thumbnail">
-      <img src="${escapeHtml(getThumbnail(post))}" alt="${escapeHtml(post.title)}" onerror="this.src='../../tier-media/logo.webp'">
+      <img src="${escapeHtml(getThumbnail(post))}" alt="${escapeHtml(post.title)}" onerror="this.src='../../tier-media/tier-image/logo.webp'">
     </div>
     <div class="post-info">
       <h3 class="post-title">${escapeHtml(post.title)}</h3>
