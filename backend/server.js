@@ -4,9 +4,9 @@
 // 이 파일 하나가 이 프로젝트의 "풀스택 서버"이다.
 //   1. 환경변수(.env) 로드
 //   2. Express 앱 생성 + 전역 미들웨어(CORS, JSON 파서) 등록
-//   3. 프론트엔드 정적 파일 서빙 (root-cloudflare 또는 root-render)
-//   4. MongoDB 연결 (실패해도 서버는 계속 뜸 — DB 없는 개발도 가능)
-//   5. /api/* 라우터 등록
+//   3. /api/* 라우터 등록 (정적 파일보다 먼저 — POST /api/... 가 404 나지 않게)
+//   4. 프론트엔드 정적 파일 서빙 (root-cloudflare 또는 root-render)
+//   5. MongoDB 연결 (실패해도 서버는 계속 뜸 — DB 없는 개발도 가능)
 //   6. 전역 에러 핸들러 + 포트 리슨 + 프로세스 레벨 예외 처리
 // 즉, `npm start`로 이 파일을 실행하면 프론트(정적 HTML/CSS/JS)와
 // 백엔드 API가 동일 포트(기본 5000)에서 함께 서비스된다.
@@ -54,8 +54,28 @@ app.use(cors());
 // JSON 바디 파서 — 티어 데이터(캐릭터 배치 정보) 등 페이로드가 커질 수 있어 기본 100kb보다 넉넉한 2mb로 상향
 app.use(express.json({ limit: '2mb' }));
 
+// 캐릭터 이미지 폴더명이 root-render는 tier-media, root-cloudflare는 tier-image로 서로 달라서
+// (2026-09 개명, 자세한 이유는 utils/tierMediaDir.js 참고) getTierMediaDir()로 지금 활성 폴더명을 구한다.
 const { getTierMediaDir } = require('./utils/tierMediaDir');
 
+// ====== 정적 루트 결정 (파일은 API 등록 뒤에 서빙) ======
+// 이 서버를 실행하면 frontend + API가 모두 같은 포트(기본 5000)에서 제공됨.
+//
+// 로컬 / Cloudflare Tunnel:
+//   ../root-cloudflare
+// Render.com:
+//   ../root-render  (`RENDER=true`)
+// 강제: STATIC_ROOT=root-cloudflare | root-render
+//
+// 로컬 개발 추천 방법 (5000 통일):
+//   cd backend
+//   npm start
+//   → http://localhost:5000 에서 전체 앱 (프론트 + API) 사용
+// STATIC_ROOT 환경변수 > RENDER=true 여부 > 기본값(root-cloudflare) 순으로
+// "정적 프론트 파일을 어느 폴더에서 읽어올지" 결정한다.
+// - 로컬/Cloudflare Tunnel: root-cloudflare
+// - Render.com 배포: root-render (Render가 RENDER=true를 자동 주입)
+// - STATIC_ROOT를 직접 지정하면 위 두 경우를 무시하고 강제 지정 가능
 function resolveStaticRoot() {
   const fromEnv = (process.env.STATIC_ROOT || '').trim();
   if (fromEnv) {
@@ -71,7 +91,10 @@ if (!fs.existsSync(projectRoot)) {
   console.error('정적 프론트 폴더가 없습니다:', projectRoot);
 }
 
-// ====== API는 정적 파일보다 먼저 ======
+// 헬스 체크 (DB 연결 상태 포함 — 시크릿 값은 노출하지 않음)
+// 배포 플랫폼(Render 등)의 헬스체크 또는 수동 점검용 엔드포인트.
+// DB 연결 상태, 이메일 발송 설정 여부, 실제 메일 링크에 쓰일 base URL,
+// 유튜브 커뮤니티 동기화 상태를 한번에 보여주되 MONGO_URI 값 등 민감 정보는 응답에 넣지 않는다.
 app.get('/health', (req, res) => {
   const { hasEmailConfig, getEmailProvider } = require('./utils/mail');
   const { getAppBaseUrl } = require('./utils/appUrl');
@@ -88,17 +111,24 @@ app.get('/health', (req, res) => {
     db: dbStatus,
     emailConfigured: hasEmailConfig(),
     emailProvider: getEmailProvider(),
+    // 실제로 메일 링크에 쓰일 base URL (APP_URL > RENDER_EXTERNAL_URL > 요청 Host 순)
     resolvedAppUrl: getAppBaseUrl(req),
     timestamp: new Date().toISOString(),
     youtubeSync: require('./utils/youtubeCommunitySync').getYoutubeSyncStatus(),
   });
 });
 
-// 에디터/브라우저 확장 프로그램이 치는 주소. 우리 API가 아님 — 콘솔 404만 막음
+// 에디터/브라우저 확장 프로그램이 치는 주소(/api/ext/activate 등). 우리 API가 아님.
+// 콘솔에 404가 반복되지 않게 204만 돌려준다.
 app.use('/api/ext', (req, res) => {
   res.status(204).end();
 });
 
+// ====== 기능별 API 라우터 등록 (정적 파일보다 먼저) ======
+// 각 라우터 파일이 실제 엔드포인트와 인증 미들웨어(requireAuth/requireAdmin 등)를 정의한다.
+// 여기서는 "어떤 URL 접두사가 어떤 기능으로 연결되는지"만 배선한다.
+// 예전에 정적 서빙을 먼저 두면 POST /api/admin/users/:id/verify 가 구 프로세스/미등록 시
+// HTML 404로만 보여 원인 파악이 어려웠다. API를 앞에 두고, 못 찾는 /api 는 JSON 404.
 const tierRoutes = require('./routes/tierRoutes');
 const authRoutes = require('./routes/authRoutes');
 const inquiryRoutes = require('./routes/inquiryRoutes');
@@ -107,14 +137,15 @@ const noticeRoutes = require('./routes/noticeRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const luckDrawRoutes = require('./routes/luckDrawRoutes');
 
-app.use('/api/tierlists', tierRoutes);
-app.use('/api/auth', authRoutes);
-app.use('/api/inquiries', inquiryRoutes);
-app.use('/api/admin', adminRoutes);
-app.use('/api/notices', noticeRoutes);
-app.use('/api/notifications', notificationRoutes);
-app.use('/api/luck-draw', luckDrawRoutes);
+app.use('/api/tierlists', tierRoutes);       // 공식/커스텀 티어 게시글 + 댓글
+app.use('/api/auth', authRoutes);            // 회원가입/로그인/아이디찾기/비번재설정
+app.use('/api/inquiries', inquiryRoutes);    // 문의하기 게시판 + 답변
+app.use('/api/admin', adminRoutes);          // 관리자 로그인 + 회원/차단/신고 관리
+app.use('/api/notices', noticeRoutes);       // 공지사항/새소식
+app.use('/api/notifications', notificationRoutes); // 헤더 알림
+app.use('/api/luck-draw', luckDrawRoutes);   // 오늘의 행운 티어 뽑기
 
+// 위에 등록된 /api/* 중 아무 라우트에도 안 걸린 요청
 app.use('/api', (req, res) => {
   res.status(404).json({
     error: '없는 API입니다.',
@@ -123,7 +154,9 @@ app.use('/api', (req, res) => {
   });
 });
 
+// ====== 정적 프론트엔드 파일 서빙 ======
 // express.static: projectRoot 아래 파일들(HTML/CSS/JS/이미지 등)을 URL 경로 그대로 서빙.
+// 예: root-render/notice/notice.html → GET /notice/notice.html
 app.use(express.static(projectRoot));
 
 // 깔끔한 URL 대응 (예: /notice → notice.html, /api/* 는 제외)
@@ -163,6 +196,8 @@ connectDB().then(async (connected) => {
   }
 });
 
+// 브라우저가 자동 요청하는 /favicon.ico 를 사이트 로고로 응답.
+// 파일이 없으면 sendFile이 500을 내므로, 여러 후보 경로를 찾고 없으면 204.
 app.get('/favicon.ico', (req, res) => {
   const candidates = [
     path.join(projectRoot, getTierMediaDir(), 'logo.webp'),
