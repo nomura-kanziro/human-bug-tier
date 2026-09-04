@@ -560,3 +560,70 @@
   background: #dc3545;
   color: #fff;
 }
+
+/* ======================================================================
+   다크 모드 — 게시글 상세 페이지 전용 세부 보정.
+   댓글 카드·액션 버튼 등은 원래도 어두운 배경으로 설계돼 있어 대부분 그대로 자연스럽지만,
+   상단 작성자명/제목/댓글 섹션 제목은 흰 페이지를 전제로 검정(#000/#111) 글자색이
+   하드코딩돼 있어 다크 모드에서는 그대로 보이지 않는다. 여기서 그 부분과, 페이지 배경이
+   어두워지며 카드와 구분이 흐려지는 요소, 그리고 라이트 전용 신고 모달
+   (custom-maker_post.css와 동일 마크업)을 보정한다.
+   ====================================================================== */
+[data-theme="dark"] .post-header {
+  border-top-color: var(--border-color);
+  border-bottom-color: var(--border-color);
+}
+[data-theme="dark"] .author-name,
+[data-theme="dark"] .post-title,
+[data-theme="dark"] .comment-section h3 {
+  color: var(--text-primary);
+}
+[data-theme="dark"] .post-description {
+  background: var(--bg-elevated);
+}
+[data-theme="dark"] .post-comment-item {
+  background: var(--bg-elevated);
+  border-color: var(--border-color);
+}
+[data-theme="dark"] .post-comment-item.is-reply {
+  background: var(--bg-subtle);
+  border-color: var(--border-color);
+}
+[data-theme="dark"] .comment-input-box {
+  background: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text-primary);
+}
+[data-theme="dark"] .comment-input-box:focus {
+  background: var(--bg-hover);
+  border-color: var(--border-strong);
+}
+
+/* 수정/삭제/신고 버튼 — 색의 의미(파랑/빨강/주황)는 유지하되, 더 어두워진 페이지
+   배경 위에서도 잘 도드라지도록 테두리를 한 톤 밝게 조정 */
+[data-theme="dark"] .edit-btn {
+  border-color: #3b82f6;
+}
+[data-theme="dark"] .delete-btn {
+  border-color: #b91c1c;
+}
+[data-theme="dark"] .report-btn {
+  border-color: #b45309;
+}
+
+/* 게시글/댓글 신고 모달 — 라이트 전용 흰 카드를 다크 카드로 전환 */
+[data-theme="dark"] .report-modal-card {
+  background: var(--bg-elevated);
+  box-shadow: 0 10px 30px var(--shadow-color);
+}
+[data-theme="dark"] .report-modal-card h3 {
+  color: var(--text-primary);
+}
+[data-theme="dark"] .report-reason-btn {
+  border-color: var(--border-strong);
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+}
+[data-theme="dark"] .report-reason-btn:hover {
+  background: var(--bg-hover);
+}

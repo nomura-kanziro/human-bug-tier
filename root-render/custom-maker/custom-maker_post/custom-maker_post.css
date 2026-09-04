@@ -271,3 +271,48 @@
   background: #dc3545;
   color: #fff;
 }
+
+/* ======================================================================
+   다크 모드 — 커스텀 티어 게시판 목록(카드 그리드) + 신고 모달 전용 세부 보정.
+   카드 자체(.post-card 등)는 이미 어두운 배경(#1f1f1f)으로 설계돼 있어 큰 변경이
+   필요 없지만, 페이지 배경이 theme.css의 --bg-page로 더 어두워지면 카드와 색이 거의
+   같아져 경계가 흐려지므로 테마 변수로 살짝 띄운다. 신고 모달은 원래 흰 배경 카드라
+   다크 모드에서는 통째로 뒤집어야 한다.
+   ====================================================================== */
+[data-theme="dark"] .post-card {
+  background-color: var(--bg-elevated);
+  border-color: var(--border-color);
+}
+[data-theme="dark"] .post-card:hover {
+  box-shadow: 0 10px 20px var(--shadow-color);
+}
+[data-theme="dark"] .post-thumbnail {
+  background-color: var(--bg-subtle);
+}
+[data-theme="dark"] .empty-message {
+  color: var(--text-muted);
+}
+[data-theme="dark"] .board-controls #view-all-board-btn {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+[data-theme="dark"] .board-controls #view-all-board-btn:hover {
+  background: var(--border-strong);
+}
+
+/* 게시글 신고 모달 — 라이트 전용 흰 카드를 다크 카드로 전환 */
+[data-theme="dark"] .report-modal-card {
+  background: var(--bg-elevated);
+  box-shadow: 0 10px 30px var(--shadow-color);
+}
+[data-theme="dark"] .report-modal-card h3 {
+  color: var(--text-primary);
+}
+[data-theme="dark"] .report-reason-btn {
+  border-color: var(--border-strong);
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+}
+[data-theme="dark"] .report-reason-btn:hover {
+  background: var(--bg-hover);
+}

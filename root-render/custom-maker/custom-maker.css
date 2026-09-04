@@ -632,3 +632,78 @@ body.char-selected-mode .characters {
     -webkit-overflow-scrolling: touch;
   }
 }
+
+/* ======================================================================
+   다크 모드 — 커스텀 티어 메이커(제작 화면) 전용 세부 보정.
+   이 파일의 기본 색은 원래도 티어표(tier-class)와 통일감을 주려고 검정+골드로
+   설계돼 있어 사이트가 다크 모드로 바뀌어도 크게 어색하지 않다. 다만 페이지 배경(body)이
+   theme.css의 --bg-page(아주 어두운 회색)로 바뀌면 티어보드 자체 배경(#111)과 색이 거의
+   같아져 버려 "카드"로서의 경계가 사라진다. 그래서 캔버스·풀 목록·모달을 테마 변수로
+   한 톤 밝게 띄워 페이지 배경과 구분되도록 보정한다.
+   ====================================================================== */
+[data-theme="dark"] .tier-list,
+[data-theme="dark"] #tier-capture-area {
+  background: var(--bg-elevated);
+  border-color: rgba(255, 204, 0, 0.35);
+}
+[data-theme="dark"] .characters {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 204, 0, 0.25);
+}
+[data-theme="dark"] .char {
+  background: var(--bg-subtle);
+}
+[data-theme="dark"] .tier-name {
+  background: rgba(255, 255, 255, 0.06);
+}
+[data-theme="dark"] .character-pool,
+[data-theme="dark"] .characters-pool {
+  background: var(--bg-elevated);
+}
+[data-theme="dark"] .mobile-maker-help {
+  color: var(--text-secondary);
+}
+[data-theme="dark"] .mobile-place-hint {
+  box-shadow: 0 4px 14px var(--shadow-color);
+}
+
+/* 업로드/수정 모달 */
+[data-theme="dark"] .upload-modal-card {
+  background: var(--bg-elevated);
+  border-color: var(--border-color);
+  box-shadow: 0 24px 60px var(--shadow-color);
+}
+[data-theme="dark"] .upload-modal-field span {
+  color: var(--text-secondary);
+}
+[data-theme="dark"] .upload-modal-field input[type="text"],
+[data-theme="dark"] .upload-modal-field textarea {
+  background: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text-primary);
+}
+[data-theme="dark"] .upload-modal-thumb-preview {
+  background: var(--bg-subtle);
+  border-color: var(--border-color);
+}
+[data-theme="dark"] .upload-modal-file-btn {
+  background: var(--bg-subtle);
+}
+[data-theme="dark"] .upload-modal-thumb-reset,
+[data-theme="dark"] .upload-modal-cancel {
+  background: var(--bg-subtle);
+  color: var(--text-secondary);
+  border-color: var(--border-strong);
+}
+[data-theme="dark"] .upload-modal-hint {
+  color: var(--text-muted);
+}
+
+/* 다운로드 드롭다운 메뉴 */
+[data-theme="dark"] .dropdown-menu {
+  background: var(--bg-elevated);
+  box-shadow: 0 10px 30px var(--shadow-color);
+}
+[data-theme="dark"] .dropdown-item {
+  background: var(--bg-subtle);
+}
