@@ -19,21 +19,23 @@ description: >
 
 ## 현재
 
-- 바닐라 **0.4.1** — `root-cloudflare/` · `root-render/` + `backend/`
-- **지금 실무 = Render.com** (`root-render/` + `backend/`)
+- 바닐라 **0.4.3** — `root-render/` + `backend/` (Render 실무, 정본)
+- **React 앵 = `root-cloudflare/`** (Vite+React 18+Router 6). 2026-09-05 창시자 지시로 **1~3단계 이식 완료**. 4단계~ 지시 대기
+- backend 기본 정적 루트 = `root-cloudflare/dist` (미빌드면 빈 화면)
 - **Cloudflare 추가 작업 금지**
-- React **구현은 창시자 지시 전 금지**
 
 ## Do
 
-1. 기획·패리티만 안내
-2. 지시 후에만 단계적 이식, 바닐라와 동작 비교
-3. `requireAdmin` · SHA-256 재설정 · 토큰 규칙 유지
+1. 다음 단계는 지시 후 `react-rewrite.md` 순서로, `root-render/` 바닐라와 동작 바교
+2. `root-cloudflare/src/` 에서 작업. 바닐라 CSS·클래스명 그대로, 이미지는 `tierImageUrl()`
+3. 티어 데이터 = `root-render/tier-class` 정본 → `npm run extract:tiers`
+4. `requireAdmin` · SHA-256 재설정 · 토큰 규칙 유지
+5. 검증: `npm run build`(root-cloudflare) → `npm start`(backend) → `:5000`
 
 ## Do not
 
-- 지시 없이 Vite/Next/CRA 스캐폴드
-- 바닐라 삭제, Express→Workers, CF CI 재개
+- 지시 없이 4단계 이후 이식
+- `root-render/` 바닐라 삭제, Express→Workers, CF CI 재개
 - Pages = 풀기능
 
 ## Checklist

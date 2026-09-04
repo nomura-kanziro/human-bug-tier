@@ -14,7 +14,7 @@
 
 휴먼버그대학교 캐릭터 **공식 티어표** + **커스텀 티어 제작/게시판** +  
 회원·공지·문의·관리자 기능을 갖춘 **바닐라 HTML/CSS/JS (`0.4.3`) + Express/MongoDB** 사이트.  
-프론트는 `root-cloudflare/`(로컬 기본) · `root-render/`(Render). **지금 실무는 Render.com만.** Cloudflare 배포 작업은 중지. 정식 버전 React는 기획만. 구현 지시 전 스캐폴드 금지.
+프론트는 `root-render/`(바닐라, Render 실무) · `root-cloudflare/`(**React 정식 버전**, Vite 빌드 `dist/`를 로컬 기본 서빙). **지금 실무 배포는 Render.com만.** Cloudflare 배포 작업은 중지. React 는 2026-09-05 창시자 지시로 **1~3단계(레이아웃·홈·티어·공지) 이식 완료**, 4단계~는 지시 전 구현 금지.
 
 ## 로컬 실행 (필수)
 
@@ -94,8 +94,8 @@ env 로드: 루트 `.env` 후 `backend/.env` (동일 키는 backend 우선)
 ## 폴더 한눈에
 
 ```
-root-cloudflare/                       # Cloudflare · 로컬 프론트 (티어/커스텀/공지/로그인/관리자/PWA)
-root-render/                           # Render.com 전용 프론트
+root-cloudflare/                       # React 정식 버전 (Vite) — npm run build → dist/ 를 backend 가 서빙
+root-render/                           # Render.com 전용 바닐라 프론트 (실무 정본)
 backend/                               # Express + Mongo + 정적 서빙
 RDMD/                                  # 기록·가이드
 CLOUDFLARE.md                          # 배포 정본

@@ -1,8 +1,27 @@
-# React 정식 버전 — 기획 (아직 구현하지 않음)
+# React 정식 버전 — 기획 + 이식 현황
 
-**상태**: 기획만. 코드 이식 **지시 있을 때만**.  
-**날짜**: 2026-09-01  
-**현재 제품**: 바닐라 HTML/CSS/JS `0.4.3` (`root-cloudflare/` · `root-render/`) + Express/Mongo `backend/`
+**상태**: **2026-09-05 창시자 지시로 구현 시작.** 1~3단계(스캐폴드·레이아웃·공개 페이지) 완료, 4단계~는 지시 대기.  
+**날짜**: 2026-09-01 기획 · 2026-09-05 1~3단계 이식  
+**현재 제품**: 바닐라 HTML/CSS/JS `0.4.3` (`root-render/`, Render 실무) + Express/Mongo `backend/`  
+**React 앵**: `root-cloudflare/` (Vite + React 18 + React Router 6, `0.5.0`) — `npm run build` → `dist/` 를 backend 가 서빙
+
+---
+
+## 이식 현황 (2026-09-05)
+
+| 단계 | 상태 | 비고 |
+|------|------|------|
+| 0 기획 | ✅ | 이 문서 |
+| 1 라우트·API 클라이언트 | ✅ | `src/lib/api.js`, `src/App.jsx` |
+| 2 레이아웃 | ✅ | 헤더/푸터/알림벨/프로필 드롭다운/테마 토글/로딩 화면 |
+| 3 공개 페이지 | ✅ | 홈(퀵카드·공지 미리보기·행운 위젯·티어 카드), `/tier/1~9`, 공지 메인/전체/새소식/상세 |
+| 4 인증 | ⏳ | `PendingPage` 자리만 |
+| 5 커스텀·게시판 | ⏳ | |
+| 6 뽑기·마이페이지 | ⏳ | 홈 위젯만 완료 |
+| 7 관리자 | ⏳ | |
+| 8 배포 | ⏳ | Render 는 여전히 `root-render/` 바닐라. React 배포는 별도 지시 |
+
+상세: `root-cloudflare/README.md`, `RDMD/frontend/12-react/01-react-phase1-3-record.md`
 
 ---
 
@@ -13,24 +32,25 @@
 
 ---
 
-## 지금 하는 일 (2026-09-01 선언)
+## 지금 하는 일 (2026-09-01 선언 → 2026-09-05 갱신)
 
-**실무는 Render.com만.** 프론트는 `root-render/`, API는 `backend/`. Render가 쓰는 env·정적 서빙·버그만 고친다.
+**실무 배포는 Render.com만.** 프론트는 `root-render/`, API는 `backend/`. Render가 쓰는 env·정적 서빙·버그만 고친다.  
+**React 이식은 `root-cloudflare/` 에서 단계별로 진행** (창시자 지시 받음). 한 단계마다 바닐라와 동작 바교.
 
-하지 않는 것: Cloudflare Pages/CI/Wrangler, React 스캐폴드.
+하지 않는 것: Cloudflare Pages/CI/Wrangler.
 
 ## 지금 하지 말 것
 
 | 금지 | 이유 |
 |------|------|
-| React 앱 스캐폴드·의존성 설치 | 창시자 지시 전 |
-| 바닐라 페이지를 JSX로 바꾸기 | 기획 단계 |
+| 4단계 이후(인증·게시판·관리자 등)를 지시 없이 이식 | 단계별 지시·패리티 확인 후 진행 |
+| `root-render/` 바닐라 삭제·변경 | Render 실무 배포 정본. 티어 데이터 원본도 여기 |
 | Cloudflare Pages/CI/시크릿 추가 작업 | 배포 작업 일시 중지 |
 | `backend/server.js`를 Workers/`fetch`로 바꾸기 | 백엔드는 유지 |
 | mongoose → D1/KV | 동일 |
 
-로컬 정본은 그대로: `cd backend && npm start` → http://localhost:5000/  
-프론트 소스: 로컬·Pages = `root-cloudflare/`, Render = `root-render/`
+로컬 정본: `cd root-cloudflare && npm run build` → `cd backend && npm start` → http://localhost:5000/ (React dist)  
+Render 화면 확인: `STATIC_ROOT=root-render`
 
 ---
 

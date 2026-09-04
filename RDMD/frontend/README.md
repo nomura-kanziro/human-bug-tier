@@ -23,6 +23,7 @@ RDMD/frontend/
 ├── 09-deploy-path/      # getBasePath · API Base · 배포 경로
 ├── 10-luck-draw/        # 행운 뽑기 (오늘의 행운 티어)
 └── 11-my-page/          # 유저 프로필 드롭다운 + 마이페이지
+└── 12-react/            # 정식 버전 React 이식 (root-cloudflare)
 ```
 
 파일명 규칙: `{순서}-{기능키워드}-record.md`
@@ -137,6 +138,12 @@ RDMD/frontend/
 | 파일 | legacy | 요약 |
 |------|--------|------|
 | [01-my-page-record.md](./11-my-page/01-my-page-record.md) | — | 유저 프로필 드롭다운 + 마이페이지(게시글·뽑기 집계) |
+
+## 12-react
+
+| 파일 | legacy | 요약 |
+|------|--------|------|
+| [01-react-phase1-3-record.md](./12-react/01-react-phase1-3-record.md) | — | root-cloudflare 를 Vite+React 로 교체 — 1~3단계(스캐폴드·레이아웃·홈/티어/공지) |
 
 ---
 
