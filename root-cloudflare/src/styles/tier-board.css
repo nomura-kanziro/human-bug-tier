@@ -1,0 +1,377 @@
+/* ========================================================
+   tier-board.css — 공식 티어표 보드 (1~9 등급 공용, 단일 페이지)
+   ========================================================
+   바닐라는 등급마다 tier1.css ~ tier9.css 를 따로 두고 페이지 자체를 갈아끼웠다.
+   React 는 한 페이지 안에서 navbar 로 등급만 바꾸므로, 등급별로 다른 값은 전부
+   CSS 변수로 빼고 `.tier-scope[data-tier="N"]` 한 블록에서 그 변수만 덮어쓴다.
+   변수는 래퍼(<main class="tier-scope">)에 얹히므로 보드와 상단 navbar 가 같은 색을 공유한다.
+
+   → 등급 추가·색 변경 시 건드릴 곳은 "등급별 테마" 블록 한 곳뿐이고, 레이아웃
+     규칙(.tier-row/.char/...)은 중복되지 않는다. 이벤트로 등급 구성이 바뀌어도
+     스타일이 서로 꼬이지 않게 하기 위한 구조.
+   → 변수가 없는 등급이면 기본값(2등급 흑백 테마)으로 그려져 깨지지 않는다. */
+
+.tier-scope {
+  /* 기본 테마 = 2등급(흑백). 아래 [data-tier] 블록이 등급별로 덮어쓴다 */
+  --board-border: #222;
+  --board-bg: #000;
+  --board-text: #fff;
+  --row-line: #444;
+  --label-bg: #111;
+  --label-text: var(--board-text);
+  --label-glow: none;
+  --card-border: #ffffff;
+  --card-bg: rgba(255, 255, 255, 0.05);
+  --card-text: var(--board-text);
+  --img-border: #ffffff;
+  --board-shadow: none;
+
+  padding: 30px;
+  text-align: center;
+}
+
+/* ====================== 등급별 테마 (여기만 고치면 됨) ====================== */
+.tier-scope[data-tier="1"] {
+  --board-border: #7ecbff;
+  --board-bg: #000;
+  --board-text: #fff;
+  --row-line: #3a5a78;
+  --label-bg: #111;
+  --label-text: #9ad8ff;
+  --label-glow: 0 0 8px rgba(110, 200, 255, 0.45);
+  --card-border: rgba(126, 203, 255, 0.75);
+  --card-text: #dff4ff;
+  --img-border: rgba(180, 230, 255, 0.7);
+  --board-shadow:
+    0 0 18px rgba(110, 190, 255, 0.35),
+    inset 0 0 40px rgba(80, 170, 255, 0.08);
+}
+
+.tier-scope[data-tier="2"] {
+  --board-border: #222;
+  --board-bg: #000;
+  --board-text: #fff;
+  --row-line: #444;
+  --label-bg: #111;
+  --card-border: #ffffff;
+  --img-border: #ffffff;
+}
+
+.tier-scope[data-tier="3"] {
+  --board-border: #ffcc00;
+  --board-bg: #031049;
+  --board-text: #ffcc00;
+  --row-line: #ffcc00;
+  --label-bg: #0a1f7e;
+  --card-border: #ffcc00;
+  --img-border: #ffcc00;
+}
+
+.tier-scope[data-tier="4"] {
+  --board-border: #ffffff;
+  --board-bg: #031049;
+  --board-text: #ffffff;
+  --row-line: #ffffff;
+  --label-bg: #0a1f7e;
+  --card-border: #ffffff;
+  --img-border: #ffffff;
+}
+
+.tier-scope[data-tier="5"] {
+  --board-border: #ffffff;
+  --board-bg: #5c11b1;
+  --board-text: #ffffff;
+  --row-line: #ffffff;
+  --label-bg: #2a0549;
+  --card-border: #ffffff;
+  --img-border: #ffffff;
+}
+
+.tier-scope[data-tier="6"] {
+  --board-border: #000000;
+  --board-bg: #fffb00;
+  --board-text: #000000;
+  --row-line: #000000;
+  --label-bg: #ddd900;
+  --card-border: #000000;
+  --img-border: #000000;
+}
+
+.tier-scope[data-tier="7"] {
+  --board-border: #000000;
+  --board-bg: #bdbdbd;
+  --board-text: #000000;
+  --row-line: #000000;
+  --label-bg: #999999;
+  --card-border: #000000;
+  --img-border: #000000;
+}
+
+.tier-scope[data-tier="8"] {
+  --board-border: #000000;
+  --board-bg: #cf6712;
+  --board-text: #000000;
+  --row-line: #000000;
+  --label-bg: #a74b00;
+  --card-border: #000000;
+  --img-border: #000000;
+}
+
+.tier-scope[data-tier="9"] {
+  --board-border: #000000;
+  --board-bg: #ffffff;
+  --board-text: #000000;
+  --row-line: #000000;
+  --label-bg: #f1f1f1;
+  --card-border: #000000;
+  --img-border: #000000;
+}
+
+/* ====================== 보드 본체 ====================== */
+.tier-board {
+  position: relative;
+  width: 95%;
+  margin: 0 auto;
+  border: 2px solid var(--board-border);
+  background-color: var(--board-bg);
+  color: var(--board-text);
+  padding: 10px;
+  overflow: hidden;
+  box-shadow: var(--board-shadow);
+}
+
+/* ====================== 1등급 전용 보석 연출 ======================
+   반짝이 입자(::before)와 대각선 빛 쓸림(::after). 선택자에 등급을 고정해 두어
+   다른 등급으로 전환하면 의사요소 자체가 사라진다(잔상·꼬임 없음). */
+.tier-scope[data-tier="1"] .tier-board::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(180, 230, 255, 0.55) 0 1.5px, transparent 3px),
+    radial-gradient(circle at 72% 18%, rgba(126, 203, 255, 0.5) 0 1px, transparent 3px),
+    radial-gradient(circle at 40% 70%, rgba(200, 240, 255, 0.45) 0 1.5px, transparent 3px),
+    radial-gradient(circle at 86% 62%, rgba(150, 220, 255, 0.5) 0 1px, transparent 3px),
+    radial-gradient(circle at 12% 82%, rgba(126, 203, 255, 0.4) 0 1px, transparent 3px);
+  animation: gem-sparkle 4.5s ease-in-out infinite;
+  z-index: 0;
+}
+
+.tier-scope[data-tier="1"] .tier-board::after {
+  content: "";
+  position: absolute;
+  top: -40%;
+  left: -30%;
+  width: 45%;
+  height: 180%;
+  pointer-events: none;
+  background: linear-gradient(
+    115deg,
+    transparent 0%,
+    rgba(160, 220, 255, 0.08) 40%,
+    rgba(210, 240, 255, 0.28) 50%,
+    rgba(160, 220, 255, 0.08) 60%,
+    transparent 100%
+  );
+  animation: gem-sweep 6s ease-in-out infinite;
+  z-index: 1;
+}
+
+.tier-scope[data-tier="1"] .char {
+  position: relative;
+  overflow: hidden;
+}
+
+/* 카드마다 시작 시점을 어긋나게 해 순차적으로 반짝이게 */
+.tier-scope[data-tier="1"] .char::after {
+  content: "";
+  position: absolute;
+  top: -30%;
+  left: -70%;
+  width: 45%;
+  height: 160%;
+  background: linear-gradient(120deg, transparent, rgba(190, 235, 255, 0.55), transparent);
+  transform: rotate(18deg);
+  animation: gem-facet 3.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.tier-scope[data-tier="1"] .char:nth-child(2n)::after { animation-delay: 0.6s; }
+.tier-scope[data-tier="1"] .char:nth-child(3n)::after { animation-delay: 1.2s; }
+.tier-scope[data-tier="1"] .char:nth-child(4n)::after { animation-delay: 1.8s; }
+
+@keyframes gem-sparkle {
+  0%, 100% { opacity: 0.35; }
+  50% { opacity: 1; }
+}
+
+@keyframes gem-sweep {
+  0% { transform: translateX(0); }
+  55%, 100% { transform: translateX(320%); }
+}
+
+@keyframes gem-facet {
+  0%, 12% { opacity: 0; transform: translateX(0) rotate(18deg); }
+  20% { opacity: 1; }
+  38% { opacity: 0; transform: translateX(320%) rotate(18deg); }
+  55%, 100% { opacity: 0; transform: translateX(0) rotate(18deg); }
+}
+
+/* ====================== 공통 레이아웃 (등급 무관) ====================== */
+.tier-board .tier-row {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  border-top: 1px solid var(--row-line);
+}
+
+.tier-board .tier-row:first-child {
+  border-top: none;
+}
+
+.tier-board .tier-label {
+  width: 80px;
+  flex-shrink: 0;
+  background-color: var(--label-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: var(--label-text);
+  text-shadow: var(--label-glow);
+}
+
+.tier-board .tier-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 5px;
+  background-color: var(--label-bg);
+  justify-content: flex-start;
+  flex: 1;
+}
+
+.tier-board .char {
+  border: 1px solid var(--card-border);
+  background: var(--card-bg);
+  border-radius: 4px;
+  padding: 2px;
+  text-align: center;
+  width: 100px;
+  font-size: xx-small;
+  display: inline-block;
+}
+
+.tier-board .char img {
+  display: block;
+  margin: 0 auto 5px;
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border: 1px solid var(--img-border);
+  border-radius: 4px;
+}
+
+.tier-board .char span {
+  display: block;
+  color: var(--card-text);
+}
+
+/* ====================== 등급 전환 navbar ======================
+   한 페이지 안에서 1~9 등급을 오가는 탭. 활성 탭은 그 등급의 보드 테마색을 그대로
+   입어(위 변수 재사용) 어떤 표를 보고 있는지 색으로도 구분된다. */
+.tier-switch-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 18px;
+  width: 95%;
+}
+
+.tier-switch-btn {
+  min-width: 52px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border-color, #d0d0d0);
+  background: var(--bg-card, #fff);
+  color: var(--text-primary, #222);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  line-height: 1;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.tier-switch-btn:hover:not([disabled]) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.14);
+}
+
+.tier-switch-btn.is-active {
+  background: var(--board-bg);
+  color: var(--board-text);
+  border-color: var(--board-border);
+  box-shadow: 0 0 0 2px var(--board-border) inset;
+}
+
+/* 좌우 이동 버튼 — 첫/마지막 등급에서는 비활성 */
+.tier-switch-arrow {
+  min-width: 44px;
+  font-size: 16px;
+}
+
+.tier-switch-btn[disabled] {
+  opacity: 0.35;
+  cursor: default;
+  transform: none;
+  box-shadow: none;
+}
+
+/* 등급 제목 아래 짧은 설명 (홈 티어 카드와 같은 문구) */
+.tier-board-desc {
+  text-align: center;
+  margin: -18px 0 22px;
+  opacity: 0.75;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .tier-scope {
+    padding: 16px 8px;
+  }
+
+  .tier-board {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+  }
+
+  .tier-board .tier-row {
+    flex-direction: column;
+  }
+
+  .tier-board .tier-label {
+    width: 100%;
+    min-height: 40px;
+    box-sizing: border-box;
+  }
+
+  .tier-board .char {
+    width: 96px;
+    max-width: 96px;
+  }
+
+  .tier-switch-nav {
+    width: 100%;
+    gap: 4px;
+  }
+
+  .tier-switch-btn {
+    min-width: 40px;
+    padding: 7px 9px;
+    font-size: 13px;
+  }
+}

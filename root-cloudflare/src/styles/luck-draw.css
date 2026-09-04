@@ -1,0 +1,381 @@
+/* luck-draw 페이지 전용. common.css / Header_Footer.css 는 수정하지 않는다. */
+
+/* ====== 페이지 레이아웃 ====== */
+/* 콘텐츠 전체를 카드형 리스트처럼 보이게 가운데 정렬된 좁은 폭 컬럼으로 제한. */
+.luck-draw-page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 60px 40px 100px;
+}
+
+.luck-draw-page h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0 0 8px;
+}
+
+.luck-desc {
+  color: #666;
+  margin: 0 0 28px;
+}
+
+/* ====== 탭 (오늘의 행운 티어 / 랜덤 뽑기) ====== */
+/* 실제 탭 전환(active 토글, 해시 동기화)은 luck-draw.js가 담당하고,
+   여기서는 활성 탭에만 주황색 밑줄 강조를 준다. */
+.luck-draw-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid #eee;
+}
+
+.luck-tab {
+  appearance: none;
+  border: none;
+  background: none;
+  font-size: 15px;
+  font-weight: 600;
+  color: #999;
+  padding: 10px 14px;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+.luck-tab.active {
+  color: #f59e0b;
+  border-bottom-color: #f59e0b;
+}
+
+/* "랜덤 뽑기"처럼 아직 미구현이라 버튼 자체에 disabled 속성이 붙은 탭용 시각적 처리. */
+.luck-tab:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* 비활성 탭 패널은 완전히 숨기고(레이아웃에서 제외), .active가 붙은 패널만 노출.
+   JS가 URL 해시에 맞춰 이 클래스를 토글한다. */
+.luck-tab-panel {
+  display: none;
+}
+
+.luck-tab-panel.active {
+  display: block;
+}
+
+/* 안내 배지 — GitHub Pages 등 백엔드 없는 정적 배포 환경에서만 JS가 hidden을 풀어 노출. */
+.luck-static-guard {
+  background: #fef3c7;
+  color: #92400e;
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+/* ====== 뽑기 버튼 ====== */
+/* 상태(대기 중/쿨다운/횟수 소진)에 따라 텍스트와 disabled만 JS가 바꾸고, 스타일은 고정. */
+.luck-draw-btn {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.luck-draw-btn:disabled {
+  background: #d1d5db;
+  cursor: not-allowed;
+}
+
+.luck-draw-status {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: #888;
+  text-align: center;
+}
+
+/* ====== 뽑기 로딩(긴장감용) — 버튼 클릭 후 10초간 결과를 숨기고 보여준다 ======
+   어두운 배경 위에 원형 숫자 릴 + 진행 바를 배치해 "슬롯머신이 돌아가는" 느낌을 낸다.
+   릴의 숫자 순환은 luck-draw.js가 setInterval로 textContent를 바꾸는 방식이고,
+   진행 바는 JS가 width를 0%→100%로 바꿀 때 아래 transition이 애니메이션을 만든다. */
+.luck-draw-loading {
+  margin-top: 24px;
+  padding: 32px 20px;
+  border-radius: 16px;
+  background: #111827;
+  text-align: center;
+}
+
+/* 원형 숫자 릴 — 펄스(커졌다 작아졌다 + 은은한 그림자 확산) 애니메이션으로 "돌아가는 중" 느낌 강조. */
+.luck-draw-loading-reel {
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  color: #fff;
+  font-size: 30px;
+  font-weight: 800;
+  animation: luck-loading-pulse 0.5s ease-in-out infinite alternate;
+}
+
+/* 릴이 확대/축소를 반복하며 그림자가 바깥으로 퍼졌다 사라지는 펄스 효과 (0.5초 주기로 무한 반복). */
+@keyframes luck-loading-pulse {
+  from { transform: scale(1); box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.5); }
+  to { transform: scale(1.08); box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+}
+
+.luck-draw-loading-text {
+  color: #e5e7eb;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0 0 16px;
+}
+
+/* 진행 바 트랙(배경) — 안의 -fill 요소가 실제 채워지는 부분. */
+.luck-draw-loading-bar {
+  width: 100%;
+  max-width: 260px;
+  height: 8px;
+  margin: 0 auto;
+  border-radius: 999px;
+  background: #374151;
+  overflow: hidden;
+}
+
+/* 진행 바 채움. 초기 width는 0%이며, luck-draw.js의 startDrawSuspense()가
+   width를 100%로 바꾸면서 인라인 style로 넣는 transition(DRAW_SUSPENSE_MS=10s, linear)이
+   실제 애니메이션 속도를 결정한다 — 즉 이 CSS는 정적 기본값만 정의한다. */
+.luck-draw-loading-bar-fill {
+  width: 0%;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #f59e0b, #f97316);
+}
+
+/* ====== 결과 카드 ====== */
+/* 뽑기 결과(캐릭터 이미지/티어/이름/포인트 배지/링크)를 담는 카드. luck-draw.js의 renderResult()가
+   hidden을 해제하고 내부 요소들의 텍스트·src를 채운다. */
+.luck-result-card {
+  margin-top: 28px;
+  padding: 28px;
+  border-radius: 16px;
+  background: #fafafa;
+  border: 1px solid #eee;
+  text-align: center;
+}
+
+.luck-result-image {
+  width: 140px;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #f59e0b;
+  margin: 0 auto 16px;
+  display: block;
+}
+
+.luck-result-tier {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #92400e;
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 8px;
+}
+
+.luck-result-name {
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+/* 획득 포인트 배지 기본(양수) 스타일 — 초록 계열. 1~5티어처럼 +포인트일 때 표시. */
+.luck-result-points {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #ecfdf5;
+  color: #059669;
+  font-weight: 700;
+  font-size: 13px;
+  margin-bottom: 12px;
+}
+
+/* 음수 포인트(6~9티어)일 때 luck-draw.js가 이 클래스를 추가로 붙여 빨간 계열로 덮어쓴다. */
+.luck-result-points-minus {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+.luck-result-tier-link {
+  display: inline-block;
+  color: #f97316;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+/* 비회원이 뽑았을 때만 노출되는 "저장되지 않음 + 로그인 유도" 안내 박스. */
+.luck-guest-notice {
+  margin: 16px 0 0;
+  padding: 12px;
+  background: #fff7ed;
+  border-radius: 10px;
+  font-size: 13px;
+  color: #9a3412;
+}
+
+.luck-guest-notice a {
+  color: #f97316;
+  font-weight: 700;
+  margin-left: 6px;
+}
+
+/* ====== 확률표 ====== */
+/* 서버 상수(티어별 당첨 확률·포인트)를 renderProbabilityTable()이 채우는 3열 표. */
+.luck-probability-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 40px;
+  font-size: 14px;
+}
+
+.luck-probability-table caption {
+  text-align: left;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.luck-probability-table th,
+.luck-probability-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #eee;
+  text-align: left;
+}
+
+/* ====== 내 뽑기 기록 (회원 전용) ====== */
+/* renderHistory()가 항목마다 -item 행을 채우고, 비회원이거나 기록이 없으면 -empty 안내 문구가 대신 들어간다. */
+.luck-history {
+  margin-top: 40px;
+}
+
+.luck-history h2 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
+
+.luck-history-item {
+  padding: 10px 12px;
+  border-radius: 8px;
+  background: #fafafa;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.luck-history-empty {
+  color: #999;
+  font-size: 14px;
+}
+
+/* 모바일 폭에서는 좌우 여백을 줄여 화면을 더 넓게 활용. */
+@media (max-width: 600px) {
+  .luck-draw-page {
+    padding: 40px 20px 80px;
+  }
+}
+
+/* ======================================================================
+   다크 모드 — 행운 뽑기 전용 세부 보정.
+   이 페이지는 앰버/골드 톤이 정체성이라(홈 화면 행운 위젯과 동일 계열),
+   완전히 무채색으로 desaturate하지 않고 index-home.css의 다크 앰버 처리
+   방식(rgba(217,119,6,…) 배경 + #fbbf24 계열 글자)을 그대로 이어서 쓴다.
+   ====================================================================== */
+[data-theme="dark"] .luck-desc,
+[data-theme="dark"] .luck-draw-status {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .luck-draw-tabs {
+  border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .luck-tab {
+  color: var(--text-muted);
+}
+
+/* 활성 탭/뽑기 버튼/결과 링크의 주황 계열은 다크 배경에서도 그대로 잘 보이므로 유지 */
+
+[data-theme="dark"] .luck-static-guard {
+  background: rgba(217, 119, 6, 0.18);
+  color: #fbbf24;
+}
+
+[data-theme="dark"] .luck-draw-btn:disabled {
+  background: var(--bg-hover);
+  color: var(--text-muted);
+}
+
+/* 뽑기 로딩 무대는 원래도 짙은 남색(#111827)이라 다크 페이지 배경과 거의 같은 밝기가
+   되어 경계가 사라지므로, 살짝 밝은 톤 + 은은한 테두리로 카드 구분을 살린다 */
+[data-theme="dark"] .luck-draw-loading {
+  background: var(--bg-elevated);
+  box-shadow: 0 8px 24px var(--shadow-color);
+}
+
+[data-theme="dark"] .luck-draw-loading-bar {
+  background: var(--bg-subtle);
+}
+
+[data-theme="dark"] .luck-result-card {
+  background: var(--bg-elevated);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .luck-result-name {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .luck-result-tier {
+  background: rgba(217, 119, 6, 0.2);
+  color: #fbbf24;
+}
+
+[data-theme="dark"] .luck-result-points {
+  background: rgba(5, 150, 105, 0.18);
+  color: #34d399;
+}
+
+[data-theme="dark"] .luck-result-points-minus {
+  background: rgba(220, 38, 38, 0.18);
+  color: #f87171;
+}
+
+[data-theme="dark"] .luck-guest-notice {
+  background: rgba(217, 119, 6, 0.14);
+  color: #fbbf24;
+}
+
+[data-theme="dark"] .luck-probability-table th,
+[data-theme="dark"] .luck-probability-table td {
+  border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .luck-history-item {
+  background: var(--bg-elevated);
+}
+
+[data-theme="dark"] .luck-history-empty {
+  color: var(--text-muted);
+}
