@@ -6,7 +6,7 @@
 
 - `tier1.html` ~ `tier9.html`
 - 각 페이지에 해당 티어 캐릭터 이미지와 간단한 설명
-- 이미지 소스: `../tier-image/`
+- 이미지 소스: `../tier-media/`
 
 ## 사용 방법
 메인 페이지 또는 상단 네비게이션에서 **티어표** 메뉴를 통해 접근.
@@ -14,7 +14,7 @@
 ## 유지보수
 
 ### 새 캐릭터 추가
-1. `tier-image/` 폴더에 이미지 추가
+1. `tier-media/` 폴더에 이미지 추가
 2. 해당 tier HTML에 캐릭터 카드 추가
 3. 커스텀 메이커에서 자동으로 인식되도록 하려면 `custom-maker.js`의 `loadCharactersFromTierClass()`가 해당 HTML을 파싱합니다.
 

@@ -1006,7 +1006,7 @@ function updateEditModeChrome() {
   if (!editingPostId) {
     if (banner) banner.hidden = true;
     if (titleEl && titleEl.dataset.editTitle === '1' && !isPostEditPage()) {
-      titleEl.innerHTML = `<img src="../tier-image/human_bug_eyes_icon.gif" class="eyes_icon" alt=""> 커스텀 티어 메이커`;
+      titleEl.innerHTML = `<img src="../tier-media/human_bug_eyes_icon.gif" class="eyes_icon" alt=""> 커스텀 티어 메이커`;
       delete titleEl.dataset.editTitle;
     }
     if (!isPostEditPage()) document.title = '커스텀 티어 메이커';
@@ -1015,7 +1015,7 @@ function updateEditModeChrome() {
 
   if (titleEl) {
     titleEl.dataset.editTitle = '1';
-    titleEl.innerHTML = `<img src="../tier-image/human_bug_eyes_icon.gif" class="eyes_icon" alt=""> 게시글 수정`;
+    titleEl.innerHTML = `<img src="../tier-media/human_bug_eyes_icon.gif" class="eyes_icon" alt=""> 게시글 수정`;
   }
   document.title = `게시글 수정 - ${editingDefaults.title || '커스텀 티어'}`;
 
@@ -1157,15 +1157,15 @@ function getThumbnailFromState() {
       if (char?.img) return char.img;
     }
   }
-  return '../tier-image/logo.webp';
+  return '../tier-media/logo.webp';
 }
 
-// 서버(DB)에 저장할 이미지 경로를 "루트 기준 절대경로"(/tier-image/...)로 통일한다.
+// 서버(DB)에 저장할 이미지 경로를 "루트 기준 절대경로"(/tier-media/...)로 통일한다.
 // 화면에 보여줄 때는 getBasePath()로 상대경로화하지만, DB에는 배포 경로 깊이와 무관하게
 // 항상 동일한 절대경로 형태로 저장해야 나중에 어느 페이지에서 불러오든 일관되게 보정할 수 있다.
 // data URL(base64로 인코딩한 업로드 이미지)은 그대로 보존, http 절대 URL은 pathname만 추출.
 function normalizeImgForBoard(img) {
-  if (!img) return '/tier-image/logo.webp';
+  if (!img) return '/tier-media/logo.webp';
   if (img.startsWith('data:image/')) return img;
 
   try {
@@ -1215,10 +1215,13 @@ function buildUploadPayload(title, description, user, thumbnail) {
   };
 }
 
-// normalizeImgForBoard()와 반대 방향: DB에 저장된 루트 절대경로(/tier-image/...)를
+// normalizeImgForBoard()와 반대 방향: DB에 저장된 루트 절대경로(/tier-media/...)를
 // 업로드 모달 미리보기(<img>)에서 화면에 실제로 보이도록 getBasePath() 깊이를 붙여 되돌린다.
+// tier-image → tier-media 폴더 개명(2026-09) 이전에 저장된 게시글은 "/tier-image/..." 값을
+// 그대로 갖고 있으므로, 표시 직전에 새 폴더명으로 보정해서 옛 게시글 이미지도 깨지지 않게 한다.
 function resolveMakerPreviewPath(path) {
-  if (!path) return '../tier-image/logo.webp';
+  if (!path) return '../tier-media/logo.webp';
+  path = path.replace(/^(\.{2}\/|\/)?tier-image\//, '$1tier-media/');
   if (path.startsWith('data:') || path.startsWith('blob:') || path.startsWith('http')) return path;
   if (typeof getBasePath === 'function' && path.startsWith('/')) {
     return getBasePath() + path.slice(1);

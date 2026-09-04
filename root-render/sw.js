@@ -18,9 +18,9 @@ const SHELL_URLS = [
   './header.html',
   './footer.html',
   './manifest.webmanifest',
-  './tier-image/pwa/icon-192.png',
-  './tier-image/pwa/icon-512.png',
-  './tier-image/logo.webp'
+  './tier-media/pwa/icon-192.png',
+  './tier-media/pwa/icon-512.png',
+  './tier-media/logo.webp'
 ];
 
 // install: 서비스워커가 처음 설치될 때 셸 파일들을 한 번에 캐시에 채워 넣는다.

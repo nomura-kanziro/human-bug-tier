@@ -238,7 +238,10 @@ async function fetchPostDetail(id) {
 }
 
 function resolveAssetPath(path) {
-  if (!path) return getBasePath() + 'tier-image/logo.webp';
+  if (!path) return getBasePath() + 'tier-media/logo.webp';
+  // tier-image → tier-media 폴더 개명(2026-09) 이전에 저장된 게시글 대비:
+  // DB에 남아있는 옛 "/tier-image/..." 경로를 새 폴더명으로 보정한다.
+  path = path.replace(/^(\.{2}\/|\/)?tier-image\//, '$1tier-media/');
   if (path.startsWith('http')) return path;
   if (path.startsWith('/')) {
     // GH Pages subpath or root deploys: prefix correctly
@@ -258,7 +261,7 @@ function createReadOnlyCharElement(char) {
   div.className = 'char';
   const imgSrc = resolveAssetPath(char.img);
   div.innerHTML = `
-    <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(char.name)}" onerror="this.src=(window.getBasePath ? getBasePath() : '../../') + 'tier-image/logo.webp'">
+    <img src="${escapeHtml(imgSrc)}" alt="${escapeHtml(char.name)}" onerror="this.src=(window.getBasePath ? getBasePath() : '../../') + 'tier-media/logo.webp'">
     <p>${escapeHtml(char.name)}</p>
   `;
   return div;

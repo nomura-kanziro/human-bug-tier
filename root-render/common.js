@@ -105,7 +105,7 @@ function getBasePath() {
 // 컨테이너 안의 절대경로(/로 시작) 링크·이미지를 상대경로로 자동 보정
 // ========================================================
 // header.html/footer.html은 fetch로 통째로 불러와서 innerHTML로 끼워 넣는 방식이라,
-// 그 안에 있는 <a href="/xxx">나 <img src="tier-image/...">처럼 "루트 기준" 경로는
+// 그 안에 있는 <a href="/xxx">나 <img src="tier-media/...">처럼 "루트 기준" 경로는
 // 페이지가 몇 단계 깊이에 있든 상관없이 항상 getBasePath() 결과를 앞에 붙여줘야 정확히 연결된다.
 // loadCommon()에서 header/footer를 삽입한 직후 반드시 호출한다.
 function fixRootLinksInElement(container) {
@@ -129,7 +129,7 @@ function fixRootLinksInElement(container) {
     if (val.startsWith('/')) {
       el.setAttribute(attr, base + val.substring(1));
     } else if (!val.includes('/')) {
-      // e.g. "tier-image/xx.png" or just "logo.webp" treat as root relative
+      // e.g. "tier-media/xx.png" or just "logo.webp" treat as root relative
       el.setAttribute(attr, base + val);
     }
   });
@@ -338,14 +338,14 @@ window.clearNotificationScrollTarget = function clearNotificationScrollTarget() 
 function getProfileImageSrc() {
   const stored = localStorage.getItem('profileImage');
   if (stored) return stored;
-  return getBasePath() + 'tier-image/logo.webp';
+  return getBasePath() + 'tier-media/logo.webp';
 }
 
 // <img>가 깨졌을 때(저장된 base64가 손상됐거나 잘못된 URL일 때) 로고 이미지로 자동 대체.
 // { once: true }라 한 번만 발동하고 리스너가 자동 해제됨(무한 루프 방지).
 function bindProfileImageFallback(img) {
   if (!img) return;
-  const fallback = getBasePath() + 'tier-image/logo.webp';
+  const fallback = getBasePath() + 'tier-media/logo.webp';
   img.addEventListener('error', () => {
     if (img.src !== fallback) img.src = fallback;
   }, { once: true });
@@ -395,7 +395,7 @@ function closeMenu() {
 function fixImagePaths(base) {
   const logoImg = document.querySelector('#header-placeholder .logo-img');
   if (logoImg) {
-    logoImg.src = base + 'tier-image/logo.webp';
+    logoImg.src = base + 'tier-media/logo.webp';
     console.log('✅ [common.js] 로고 이미지 경로 보정 완료 →', logoImg.src);
   }
 }
@@ -570,7 +570,7 @@ function ensurePwaAssets(base) {
     if (!document.querySelector('link[rel="apple-touch-icon"]')) {
       const apple = document.createElement('link');
       apple.rel = 'apple-touch-icon';
-      apple.href = base + 'tier-image/pwa/icon-192.png';
+      apple.href = base + 'tier-media/pwa/icon-192.png';
       document.head.appendChild(apple);
     }
 

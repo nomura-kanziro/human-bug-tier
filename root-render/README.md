@@ -39,7 +39,7 @@ npm start
 3. Render가 `RENDER=true`를 넣으면 이 폴더가 정적 루트다.
 4. 확인: `https://<서비스>.onrender.com/` 과 `/health`
 
-포함: `index.html`, `common.js`, 티어/커스텀/공지/로그인/관리자/마이페이지/행운뽑기/알림, `tier-image/`, PWA.
+포함: `index.html`, `common.js`, 티어/커스텀/공지/로그인/관리자/마이페이지/행운뽑기/알림, `tier-media/`, PWA.
 
 제외: `backend/`, `.env`, RDMD, 에이전트 스킬.
 
