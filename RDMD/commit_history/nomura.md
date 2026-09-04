@@ -284,11 +284,11 @@
 | 253 | 2026-09-05 | [`62fdf77`](#62fdf77) | feat(react): 공개 페이지 — 홈·공식 티어 1~9·공지 + 옴 URL 리다이렉트 |
 | 254 | 2026-09-05 | [`8f32cc2`](#8f32cc2) | feat(backend): React dist 기본 서빙 및 SPA 폴백 |
 | 255 | 2026-09-05 | [`ead20ee`](#ead20ee) | docs(react): README·react-rewrite 현황·스킬·RDMD 기록 갱신 |
-| 256 | 2026-09-05 | [`pending`](#react-256) | refactor(react): 티어별 CSS 9개를 변수 기반 tier-board.css 하나로 통합 |
-| 257 | 2026-09-05 | [`pending`](#react-257) | feat(react): 공식 티어표를 한 페이지 + 내부 navbar 로 전환 |
-| 258 | 2026-09-05 | [`pending`](#react-258) | feat(react): 커스텀 메이커 React 내부 구현 |
-| 259 | 2026-09-05 | [`pending`](#react-259) | feat(react): 행운 뽑기 React 내부 구현 |
-| 260 | 2026-09-05 | [`pending`](#react-260) | docs(react): 티어표·메이커·뽑기 이식 문서·스킬 갱신 |
+| 256 | 2026-09-05 | [`085f457`](#085f457) | refactor(react): 티어별 CSS 9개를 변수 기반 tier-board.css 하나로 통합 |
+| 257 | 2026-09-05 | [`9178968`](#9178968) | feat(react): 공식 티어표를 한 페이지 + 내부 navbar 로 전환 |
+| 258 | 2026-09-05 | [`53dd8cf`](#53dd8cf) | feat(react): 커스텀 메이커 React 내부 구현 |
+| 259 | 2026-09-05 | [`b7316b9`](#b7316b9) | feat(react): 행운 뽑기 React 내부 구현 |
+| 260 | 2026-09-05 | [`6cf73ae`](#6cf73ae) | docs(react): 티어표·메이커·뽑기 이식 문서·스킬 갱신 |
 
 ---
 
@@ -4967,15 +4967,15 @@
 
 ---
 
-<a id="react-256"></a>
+<a id="085f457"></a>
 
-### 256. 2026-09-05 — `pending`
+### 256. 2026-09-05 — `085f457`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `085f457`
+- **hash (full)**: `085f457a2755bd76232d2ec1c2faba6821928caf`
 - **author**: nomura
 - **message**: refactor(react): 티어별 CSS 9개를 변수 기반 tier-board.css 하나로 통합
-- **git**: `git show <hash>`
+- **git**: `git show 085f457`
 - **범위**: frontend / react / tier-class
 - **요약**: 바닐라는 등급마다 `tierN.css` 를 따로 두고 페이지를 통째로 갈아끼웠다. 한 페이지에서 등급만 바꾸려면 그 방식이 쓰이지 않아, 등급별로 다른 값(배경·테두리·라벨·카드·구분선 색)을 전부 CSS 변수로 뽑아 `.tier-scope[data-tier="N"]` 블록 **한 곳**에 모았다. 변수를 래퍼에 얹어 보드와 navbar 활성 탭이 같은 색을 공유하게 했고(색 정의 이원화 방지), 1등급 보석 연출은 선택자에 등급을 고정해 전환 시 잔상이 남지 않는다. 변수가 없는 등급이 들어와도 기본값(흑백)으로 그려져 깨지지 않는다. 또 `tiers.json` 에서 등급·세부등급·캐릭터 풀을 파생시키는 `data/tiers.js` 를 두어, 이벤트로 구성이 바뀜도 티어표와 커스텀 메이커가 한 번에 따라오게 했다.
 - **주요 파일**: `root-cloudflare/src/styles/tier-board.css`(신규), `root-cloudflare/src/data/tiers.js`(신규), `root-cloudflare/src/styles/tier/tier1~9.css`·`tier-responsive.css`(삭제)
@@ -4985,15 +4985,15 @@
 
 ---
 
-<a id="react-257"></a>
+<a id="9178968"></a>
 
-### 257. 2026-09-05 — `pending`
+### 257. 2026-09-05 — `9178968`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `9178968`
+- **hash (full)**: `9178968f5182445ad063053467cfe4e24045f24d`
 - **author**: nomura
 - **message**: feat(react): 공식 티어표를 한 페이지 + 내부 navbar 로 전환
-- **git**: `git show <hash>`
+- **git**: `git show 9178968`
 - **범위**: frontend / react / tier-class
 - **요약**: `TierPage` 하나가 1~9등급을 전부 담당한다. 상단 navbar(1~9 + ← →, ←→ 키)를 누르면 `navigate(replace)` 로 URL 만 바뀌고 컴포넌트는 유지되어 리마운트 없이 표만 교체된다(뒤로가기 기록도 안 쌓임). `/tier` 로 들어오면 첫 등급으로 보내고, 범위 밖 번호도 안전하게 처리한다.
 - **주요 파일**: `root-cloudflare/src/pages/TierPage.jsx`, `root-cloudflare/src/App.jsx`
@@ -5003,15 +5003,15 @@
 
 ---
 
-<a id="react-258"></a>
+<a id="53dd8cf"></a>
 
-### 258. 2026-09-05 — `pending`
+### 258. 2026-09-05 — `53dd8cf`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `53dd8cf`
+- **hash (full)**: `53dd8cf33b6b21f6ddf9163150ea10f65035ce43`
 - **author**: nomura
 - **message**: feat(react): 커스텀 메이커 React 내부 구현
-- **git**: `git show <hash>`
+- **git**: `git show 53dd8cf`
 - **범위**: frontend / react / custom-maker
 - **요약**: 바닐라를 불러오는 게 아니라 React 로 직접 구현했다. 캐릭터 풀은 tier-class HTML 을 fetch·파싱하던 방식 대신 `tiers.js` 에서 즉시 파생(요청 0회, 340명)하고 세부등급도 하드코딩 없이 데이터에서 얻는다(바닐라 메이커에 빠져 있던 5등급 정급이 자동으로 나타남). PC 드래그(카드 앞 삽입·풀로 회수)와 모바일 탭 배치, 초기화, PNG·PDF·JSON 저장, 게시판 업로드(제목·내용·썸네일 압축) 모두 포함. PNG/PDF 는 화면 등급을 9번 바꾸지 않고 화면 밖 export 컨테이너에 전 등급을 한 번에 렌더해 순서대로 캡처하므로 편집 화면이 흔들리지 않는다. 저장 형식(`"<0-based 등급>_<세부등급>"`)과 localStorage 키는 게시판 DB 호환을 위해 그대로 유지. html2canvas/jsPDF 는 다운로드를 누를 때만 CDN 에서 1회 로드한다.
 - **주요 파일**: `root-cloudflare/src/pages/CustomMaker.jsx`, `root-cloudflare/src/lib/makerState.js`, `root-cloudflare/src/lib/loadScript.js`, `root-cloudflare/src/styles/custom-maker.css`
@@ -5021,15 +5021,15 @@
 
 ---
 
-<a id="react-259"></a>
+<a id="b7316b9"></a>
 
-### 259. 2026-09-05 — `pending`
+### 259. 2026-09-05 — `b7316b9`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `b7316b9`
+- **hash (full)**: `b7316b94bb68db169ce06deef363e5db3d35f42c`
 - **author**: nomura
 - **message**: feat(react): 행운 뽑기 React 내부 구현
-- **git**: `git show <hash>`
+- **git**: `git show b7316b9`
 - **범위**: frontend / react / luck-draw
 - **요약**: 확률·포인트표(서버 값), 10초 서스펜스 연출(릴 90ms 순환 + 진행 바), 결과 카드(포인트 배지·티어표 링크), 회원 남은 횟수·쿨다운 카운트다운, 게스트 24시간 안내·결과 복원, 최근 이력을 구현했다. 판정은 전부 서버가 하고 프론트는 표시만 한다. 진행 바는 `drawing` 이 true 가 된 뒤에야 DOM 이 생기므로 effect 에서 폭을 주도록 해 애니메이션이 생략되던 문제를 잡았다. 게스트 상태는 홈 미니 위젯과 같은 키를 공유한다.
 - **주요 파일**: `root-cloudflare/src/pages/LuckDraw.jsx`, `root-cloudflare/src/styles/luck-draw.css`, `root-cloudflare/src/App.jsx`
@@ -5039,15 +5039,15 @@
 
 ---
 
-<a id="react-260"></a>
+<a id="6cf73ae"></a>
 
-### 260. 2026-09-05 — `pending`
+### 260. 2026-09-05 — `6cf73ae`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `6cf73ae`
+- **hash (full)**: `6cf73ae28f67450cc8fe6817077bc59e4cf49bb8`
 - **author**: nomura
 - **message**: docs(react): 티어표·메이커·뽑기 이식 문서·스킬 갱신
-- **git**: `git show <hash>`
+- **git**: `git show 6cf73ae`
 - **범위**: docs / agents
 - **요약**: `root-cloudflare/README.md` 에 이식 현황·단일 페이지 티어표 구조·규칙을 반영하고, `react-rewrite.md` 현황표에 커스텀 메이커·행운 뽑기 완료를 추가했다. `.agents`/`.claude` 스킬에는 "등급별 색·세부등급을 흔리지 말 것(변수 블록·tiers.js 한 곳 유지)" 규칙을 명시. 상세 기록은 `12-react/02-react-tier-maker-luck-record.md` 신규.
 - **주요 파일**: `root-cloudflare/README.md`, `RDMD/features/react-rewrite.md`, `RDMD/frontend/12-react/02-react-tier-maker-luck-record.md`, `RDMD/frontend/README.md`, `.agents/react-rewrite/skill.md`, `.claude/skills/react-rewrite/SKILL.md`
