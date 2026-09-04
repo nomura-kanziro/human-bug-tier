@@ -5,7 +5,8 @@
 //   1. seedAdmin() - 서버 부팅 시 .env의 관리자 계정 정보로 최초 1회 Admin 문서 생성
 //   2. login()     - 관리자 전용 로그인 (일반 유저 로그인과 완전히 별도의 Admin 컬렉션/토큰)
 //   3. getUsers()  - 관리자 대시보드용 전체 회원 목록 조회
-//   4. deleteUser()- 회원 탈퇴 처리 시 해당 유저와 관련된 모든 데이터를 연쇄 삭제
+//   4. verifyUser()- 메일 없이 회원가입 이메일 인증 완료 처리
+//   5. deleteUser()- 회원 탈퇴 처리 시 해당 유저와 관련된 모든 데이터를 연쇄 삭제
 //
 // 인증 토큰: signAdminToken()으로 발급한 JWT는 페이로드에 isAdmin:true가 들어가며,
 //   일반 유저 토큰(authController.signUserToken, 7일 만료)과 달리 24시간 만료로 짧게 잡혀 있다.
@@ -115,6 +116,45 @@ const getUsers = async (req, res) => {
 };
 
 // ========================================================
+// 회원 이메일 인증 (PATCH /api/admin/users/:id/verify)
+// ========================================================
+// 인증 메일이 안 온 계정을 관리자가 직접 isVerified=true 로 만든다.
+// 인증 토큰은 더 이상 필요 없으므로 지운다.
+const verifyUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (!mongoose.Types.ObjectId.isValid(id)) {
+      return res.status(400).json({ error: '올바르지 않은 사용자입니다.' });
+    }
+
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: '사용자를 찾을 수 없습니다.' });
+    }
+
+    if (user.isVerified) {
+      return res.json({
+        message: '이미 인증된 회원입니다.',
+        isVerified: true,
+      });
+    }
+
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    user.verificationTokenExpires = undefined;
+    await user.save();
+
+    res.json({
+      message: '이메일 인증을 완료했습니다. 이제 로그인할 수 있습니다.',
+      isVerified: true,
+    });
+  } catch (err) {
+    console.error('사용자 인증 에러:', err);
+    res.status(500).json({ error: '사용자 인증 처리 실패' });
+  }
+};
+
+// ========================================================
 // 회원 삭제 (DELETE /api/admin/users/:id) - 연쇄 삭제(cascade) 포함
 // ========================================================
 // 단순히 User 문서 하나만 지우면 다른 컬렉션에 그 유저가 남긴 흔적(게시글/댓글/좋아요/알림/
@@ -208,4 +248,4 @@ const deleteUser = async (req, res) => {
   }
 };
 
-module.exports = { seedAdmin, login, getUsers, deleteUser };
+module.exports = { seedAdmin, login, getUsers, verifyUser, deleteUser };

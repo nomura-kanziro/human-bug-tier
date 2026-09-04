@@ -1044,6 +1044,10 @@ function renderUserList() {
           ? `<span class="badge badge-blocked">차단중 (${getRemainingLabel(block.expiresAt)})</span>`
           : '<span class="badge badge-active">정상</span>'}</td>
         <td style="white-space:nowrap;">
+          ${user.isVerified
+            ? ''
+            : `<button type="button" class="verify-user-btn" data-user-id="${escapeHtml(String(userId))}" data-nickname="${escapeHtml(user.nickname)}">인증하기</button>`
+          }
           ${isBlocked
             ? `<button type="button" class="unblock-btn" data-block-id="${block._id}">차단 해제</button>`
             : `<button type="button" class="block-btn block-user-btn" data-nickname="${escapeHtml(user.nickname)}">차단</button>`
@@ -1066,9 +1070,43 @@ function renderUserList() {
     btn.addEventListener('click', () => unblock(btn.dataset.blockId));
   });
 
+  tbody.querySelectorAll('.verify-user-btn').forEach(btn => {
+    btn.addEventListener('click', () => verifyRegisteredUser(btn.dataset.userId, btn.dataset.nickname));
+  });
+
   tbody.querySelectorAll('.delete-user-btn').forEach(btn => {
     btn.addEventListener('click', () => deleteRegisteredUser(btn.dataset.userId, btn.dataset.nickname));
   });
+}
+
+async function verifyRegisteredUser(userId, nickname) {
+  if (!userId) {
+    alert('❌ 사용자 정보를 찾을 수 없습니다.');
+    return;
+  }
+
+  const label = nickname || '이 회원';
+  if (!confirm(`${label} 님을 이메일 인증 완료 처리할까요?\n인증 메일을 받지 못한 경우 이 버튼으로 로그인할 수 있게 합니다.`)) {
+    return;
+  }
+
+  try {
+    const response = await fetch(`${getApiBase()}/api/admin/users/${encodeURIComponent(userId)}/verify`, {
+      method: 'PATCH',
+      headers: getAdminAuthHeaders(),
+    });
+    const data = await response.json().catch(() => ({}));
+
+    if (response.ok) {
+      alert('✅ ' + (data.message || '인증을 완료했습니다.'));
+      await loadUsers();
+    } else {
+      alert('❌ ' + (data.error || '인증 처리 실패'));
+    }
+  } catch (err) {
+    console.error(err);
+    alert('❌ 서버와 연결할 수 없습니다.');
+  }
 }
 
 async function deleteRegisteredUser(userId, nickname) {

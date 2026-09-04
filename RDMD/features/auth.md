@@ -22,8 +22,9 @@ user_login/
 ### 회원가입
 
 1. `POST /api/auth/register` (nickname, email, password)  
-2. `EMAIL_*` 설정 시 인증 메일 발송  
-3. 미설정 시 `isVerified: true` 로 즉시 통과 (개발 편의)
+2. 메일 설정 시 인증 메일 발송 — **가입 메일은 Gmail SMTP를 먼저** (`sendSignupMail`). Brevo/Resend는 Gmail이 없거나 실패할 때만. `SIGNUP_MAIL_SKIP_API=false`면 예전처럼 Brevo→Resend→Gmail.  
+3. 미설정 시 `isVerified: true` 로 즉시 통과 (개발 편의)  
+4. 메일이 안 오면 계정은 만들어져 있음. 관리자가 `PATCH /api/admin/users/:id/verify` 로 직접 인증 가능.
 
 ### 로그인
 

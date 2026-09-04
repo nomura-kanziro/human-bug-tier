@@ -27,6 +27,7 @@ const { getAppBaseUrl } = require('../utils/appUrl');
 const {
   hasEmailConfig,
   sendAppMail,
+  sendSignupMail,
   EMAIL_NOT_CONFIGURED_MSG,
   EMAIL_SEND_FAILED_MSG,
 } = require('../utils/mail');
@@ -139,7 +140,7 @@ const register = async (req, res) => {
       const verificationUrl = `${getAppBaseUrl(req)}/api/auth/verify/${verificationToken}`;
 
       try {
-        await sendAppMail({
+        await sendSignupMail({
           to: email,
           subject: 'human-bug-tier 회원가입 인증 메일',
           html: `
@@ -170,7 +171,7 @@ const register = async (req, res) => {
         console.error('이메일 발송 실패:', emailErr.message || emailErr);
         res.status(201).json({
           message:
-            '회원가입은 완료되었으나 인증 메일 발송에 실패했습니다. 관리자에게 문의해주세요.',
+            '회원가입은 완료되었으나 인증 메일 발송에 실패했습니다. 메일함을 확인하거나, 관리자에게 직접 인증을 요청해 주세요.',
           detail: emailFailDetail(emailErr) || undefined,
         });
       }

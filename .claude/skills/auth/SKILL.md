@@ -17,7 +17,7 @@ description: >
 - `user_login/*`, `auth_api.js`
 - `backend/controllers/authController.js`, `models/User.js`, `routes/authRoutes.js`
 - `backend/utils/jwtAuth.js`, `appUrl.js`
-- `backend/utils/mail.js` — Brevo→Resend→Gmail 자동 대체 발송 (`RDMD/backend/03-auth/05-mail-provider-fallback-record.md`)
+- `backend/utils/mail.js` — 찾기/재설정은 Brevo→Resend→Gmail. 가입 인증은 `sendSignupMail`(Gmail 우선, Brevo/Resend 건너뜀)
 - `common.js` → `getAuthHeaders`
 
 ## Read first
@@ -32,7 +32,7 @@ description: >
 2. API base = auth_api / getApiBase 동일 규칙
 3. localStorage: `authToken`, `user` 키 유지
 4. `adminAuthToken` 과 섞지 말 것
-5. **가입** EMAIL 미설정 → 즉시 `isVerified` 폴백 유지
+5. **가입** EMAIL 미설정 → 즉시 `isVerified` 폴백 유지. 메일 실패 계정은 관리자 **인증하기** (`PATCH /api/admin/users/:id/verify`)
 6. **비번 찾기** 가짜 성공 금지: EMAIL 설정 자체가 없으면 **503**, 설정된 provider가 전부 실패하면 **502** + 토큰 롤백. `sendAppMail()` 은 설정된 provider(Brevo/Resend/Gmail)를 전부 순서대로 시도하니, 하나가 막혀도(예: Brevo 계정 미승인) 나머지가 설정돼 있으면 자동으로 성공함 — 502가 뜬다는 건 **설정된 전부**가 실패했다는 뜻. provider가 2개 이상 설정돼 전부 실패하면 `providerDetail`에 각각의 원인이 `Brevo: ... / Resend: ... / Gmail: ...` 로 합쳐져서 나옴(마지막 것 하나만 보고 판단 금지)
 7. `RESEND_API_KEY` 만 등록해도 도메인 미인증이면 Resend 계정 가입 이메일에만 발송됨(스팸 방지 정책) — 임의 수신자 발송은 resend.com 도메인 인증 필요
 8. `detail` 에 `ETIMEDOUT`/`ESOCKET`/`ECONNREFUSED`/`ECONNECTION` 이 보이면 Gmail SMTP 포트가 호스팅에서 막힌 것(Render 등) — 재시도해도 안 뚫림, Resend/Brevo(HTTPS)로 전환 필요

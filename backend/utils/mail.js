@@ -145,12 +145,20 @@ async function resolveBrevoSender() {
 
 // 세 방식(Brevo/Resend/Gmail) 중 하나라도 최소 조건(키 또는 계정+비번)이
 // 설정되어 있으면 true. sendAppMail()이 실제로 시도해볼 방식이 하나라도 있는지 판단하는 데 쓰인다.
+function hasGmailConfig() {
+  return Boolean((process.env.EMAIL_USER || '').trim() && getEmailPass());
+}
+
 function hasEmailConfig() {
-  return (
-    Boolean(getBrevoApiKey()) ||
-    Boolean(getResendApiKey()) ||
-    Boolean((process.env.EMAIL_USER || '').trim() && getEmailPass())
-  );
+  return Boolean(getBrevoApiKey()) || Boolean(getResendApiKey()) || hasGmailConfig();
+}
+
+/** 가입 인증 메일만 Brevo/Resend를 건너뛰고 Gmail부터 쓸지. 기본은 Gmail이 있으면 건너뜀. */
+function shouldSkipApiForSignupMail() {
+  const raw = String(process.env.SIGNUP_MAIL_SKIP_API || '').trim().toLowerCase();
+  if (raw === 'false' || raw === '0' || raw === 'no') return false;
+  if (raw === 'true' || raw === '1' || raw === 'yes') return true;
+  return hasGmailConfig();
 }
 
 /**
@@ -162,7 +170,7 @@ function getEmailProvider() {
   const providers = [];
   if (getBrevoApiKey()) providers.push('brevo');
   if (getResendApiKey()) providers.push('resend');
-  if ((process.env.EMAIL_USER || '').trim() && getEmailPass()) providers.push('gmail-smtp');
+  if (hasGmailConfig()) providers.push('gmail-smtp');
   return providers.length ? providers.join(',') : 'none';
 }
 
@@ -278,7 +286,7 @@ async function createGmailTransport(portConfig) {
 // 아직 시도 안 된) 포트 설정으로 만들고, 연결 실패 시 sendViaGmail 쪽에서
 // transporter = null 로 초기화해 다음 호출 때 새로 만들도록 한다.
 async function getTransporter() {
-  if (!hasEmailConfig()) return null;
+  if (!hasGmailConfig()) return null;
   if (!transporter) {
     transporter = await createGmailTransport(SMTP_PORT_CANDIDATES[workingPortIndex]);
   }
@@ -345,7 +353,7 @@ async function sendAppMail({ to, subject, html }) {
   const providers = [];
   if (getBrevoApiKey()) providers.push({ name: 'Brevo', send: sendViaBrevo });
   if (getResendApiKey()) providers.push({ name: 'Resend', send: sendViaResend });
-  if (getEmailUser() && getEmailPass()) providers.push({ name: 'Gmail', send: sendViaGmail });
+  if (hasGmailConfig()) providers.push({ name: 'Gmail', send: sendViaGmail });
 
   let lastErr;
   const failures = []; // 전부 실패했을 때, "마지막 것만" 보여주면 중간에 실패한 provider의 진짜 원인이 묻힌다.
@@ -381,6 +389,26 @@ async function sendAppMail({ to, subject, html }) {
   throw lastErr;
 }
 
+/**
+ * 회원가입 인증 메일 전용.
+ * EMAIL_USER + APP 비밀번호가 있으면 Brevo/Resend를 건너뛰고 Gmail SMTP로 먼저 보낸다.
+ * Gmail이 없거나 실패하면 기존 sendAppMail(Brevo→Resend→Gmail)로 폴백.
+ * SIGNUP_MAIL_SKIP_API=false 이면 처음부터 공용 체인만 쓴다.
+ */
+async function sendSignupMail({ to, subject, html }) {
+  if (shouldSkipApiForSignupMail() && hasGmailConfig()) {
+    try {
+      await sendViaGmail({ to, subject, html });
+      return;
+    } catch (gmailErr) {
+      console.warn(
+        `✉️  가입 메일 Gmail 실패 — 공용 체인(Brevo/Resend)으로 폴백: ${gmailErr.message || gmailErr}`
+      );
+    }
+  }
+  await sendAppMail({ to, subject, html });
+}
+
 const PROVIDER_DISPLAY_NAMES = { brevo: 'Brevo API', resend: 'Resend API', 'gmail-smtp': 'Gmail SMTP' };
 
 /** 서버 기동 시 한 줄 안내 (시크릿 값 출력 금지) */
@@ -391,6 +419,9 @@ function logEmailConfigStatus() {
       .map((p) => PROVIDER_DISPLAY_NAMES[p] || p)
       .join(' → ');
     console.log(`✉️  이메일 발송: 설정됨 (${providerNames})`);
+    if (shouldSkipApiForSignupMail() && hasGmailConfig()) {
+      console.log('✉️  회원가입 인증 메일: Gmail SMTP 우선 (Brevo/Resend 건너뜀)');
+    }
     if (!(process.env.APP_URL || '').trim() && !(process.env.RENDER_EXTERNAL_URL || '').trim()) {
       console.warn(
         '⚠️  APP_URL 미설정 — 메일 링크는 요청 Host(x-forwarded-*)로 생성됩니다. Render에서는 APP_URL 설정을 권장합니다.'
@@ -408,8 +439,10 @@ function logEmailConfigStatus() {
 
 module.exports = {
   hasEmailConfig,
+  hasGmailConfig,
   getEmailProvider,
   sendAppMail,
+  sendSignupMail,
   logEmailConfigStatus,
   EMAIL_NOT_CONFIGURED_MSG,
   EMAIL_SEND_FAILED_MSG,

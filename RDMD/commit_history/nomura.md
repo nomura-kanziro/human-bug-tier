@@ -264,6 +264,7 @@
 | 233 | 2026-09-04 | [`35aeb29`](#35aeb29) | style(theme): 관리자 페이지 다크 모드 색상 보정 |
 | 234 | 2026-09-04 | [`09ce365`](#09ce365) | style(theme): 로그인·회원가입 다크 모드 색상 보정 |
 | 235 | 2026-09-04 | [`a5a2a90`](#a5a2a90) | style(theme): 공지·행운뽑기·마이페이지·알림·문의 다크 모드 색상 보정 |
+| 236 | 2026-09-04 | pending | feat(auth): 가입 메일 Gmail 우선 및 관리자 직접 인증 |
 
 ---
 
@@ -4575,5 +4576,23 @@
 - **요약**: 공지사항(notice.css), 오늘의 행운 뽑기(luck-draw.css, 앰버/골드 톤 유지), 마이페이지(my-page.css), 알림 상세(notifications.css), 문의하기(contact_us.css, 브루탈리즘 검정 테두리 톤 유지) 5개 CSS에 각 페이지 고유 색감을 살린 다크 모드 보정을 추가했다.
 - **주요 파일**: `root-render/notice/notice.css`, `root-render/luck-draw/luck-draw.css`, `root-render/my-page/my-page.css`, `root-render/notifications/notifications.css`, `root-render/Contact_us/contact_us.css`
 - **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-236"></a>
+
+### 236. 2026-09-04 — pending
+
+- **hash (short)**: pending
+- **hash (full)**: pending
+- **author**: nomura
+- **message**: feat(auth): 가입 메일 Gmail 우선 및 관리자 직접 인증
+- **git**: _(커밋 후 기입)_
+- **범위**: backend / auth / admin
+- **요약**: 회원가입 인증 메일은 Gmail이 있으면 Brevo/Resend를 건너뛴다. 메일이 안 오면 관리자가 회원 목록에서 인증하기로 직접 처리할 수 있다.
+- **주요 파일**: `backend/utils/mail.js`, `backend/controllers/authController.js`, `backend/controllers/adminController.js`, `root-render/admin/comments/comment-management.js`
+- **관련 RDMD**: `RDMD/backend/03-auth/08-signup-gmail-and-admin-verify-record.md`
 
 [▲ 목차로](#목차)

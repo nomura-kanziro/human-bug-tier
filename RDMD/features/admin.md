@@ -56,6 +56,7 @@ admin/
 - 만료 시간 설정 · 해제  
 - 모델: `Block`  
 - 회원 삭제: `DELETE /api/admin/users/:id` (`requireAdmin`) — 계정과 해당 닉네임의 커스텀 게시글·댓글·문의·알림·차단 기록을 함께 제거  
+- 회원 직접 인증: `PATCH /api/admin/users/:id/verify` (`requireAdmin`) — 인증 메일이 안 온 계정을 `isVerified=true` 로 처리. 대시보드 회원 표 **인증하기** 버튼
 
 ### 5. 티어 신고 관리
 

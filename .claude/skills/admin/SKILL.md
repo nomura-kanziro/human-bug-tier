@@ -29,6 +29,7 @@ description: >
 
 - 공지 **수정**: PUT/PATCH `/api/notices/:id` (관리 페이지 수정 버튼)
 - 회원 삭제: `DELETE /api/admin/users/:id` (`requireAdmin`)
+- 미인증 회원 직접 인증: `PATCH /api/admin/users/:id/verify` + 대시보드 **인증하기**
 - 헤더 프로필 아이콘 = 일반 유저와 **완전히 같은** 드롭다운(`.user-profile-panel`, `my-page` 스킬 참고). 예전 전체화면 모달(`showAdminModal`)과 관리자 전용 축소 메뉴 둘 다 제거됨 — 지금은 마이페이지/게시판/사진변경/로그아웃 + "관리하기" 한 줄. 이유: 테스트 계정이 티 나면 안 됨(사용자 요청)
 - 관리자도 `authToken` 이 세팅돼 있어(`admin-login.js`) `/api/luck-draw/*`, `/api/tierlists?mine=true` 등 일반 회원 API를 그대로 쓸 수 있음(검증 완료) — 백엔드 변경 불필요
 

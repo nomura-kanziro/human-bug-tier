@@ -56,6 +56,7 @@ RDMD/backend/
 | [05-mail-provider-fallback-record.md](./03-auth/05-mail-provider-fallback-record.md) | — | 이메일 provider 자동 대체(Brevo→Resend→Gmail), Brevo 미활성 대응 |
 | [06-gmail-smtp-timeout-hint-record.md](./03-auth/06-gmail-smtp-timeout-hint-record.md) | — | Gmail SMTP ETIMEDOUT = Render 포트 차단, 진단 힌트 추가 |
 | [07-mail-aggregated-error-record.md](./03-auth/07-mail-aggregated-error-record.md) | — | 발송 실패 시 시도한 provider 전부의 원인을 합쳐서 표시(Resend 도메인 미인증 함정 포함) |
+| [08-signup-gmail-and-admin-verify-record.md](./03-auth/08-signup-gmail-and-admin-verify-record.md) | — | 가입 메일 Gmail 우선 + 관리자 직접 인증 |
 
 ## 04-notice — 공지
 
