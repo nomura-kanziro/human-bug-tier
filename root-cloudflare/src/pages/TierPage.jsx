@@ -1,59 +1,97 @@
-// 공식 1~9 티어표 페이지 (tier-class/tierN.html + tier-nav.js 이식)
-//  - 데이터: src/data/tiers.json (scripts/extract-tiers.mjs 가 root-render 바닐라 HTML에서 추출)
-//  - 스타일: tierN.css 는 body/main 규칙까지 포함한 페이지 전용 CSS라서 전역 import 하면 서로 덮어쓴다.
-//    그래서 ?inline 으로 문자열로 받아 <style> 로 주입하고 언마운트 시 제거한다(바닐라와 같은 적용 범위).
-//  - .char 마크업(img + span)은 커스텀 메이커가 캐릭터 풀을 파싱하는 구조이므로 그대로 유지한다.
-import { Fragment, useEffect } from 'react';
-import { Link, Navigate, useParams } from 'react-router-dom';
-import tiers from '../data/tiers.json';
+// ========================================================
+// TierPage — 공식 티어표 (1~9 등급을 한 페이지에서 navbar 로 전환)
+// ========================================================
+// 바닐라는 tier1.html ~ tier9.html 9개 페이지였지만, 여기서는 한 페이지 안에서 등급만
+// 바꾼다. URL(/tier/:n)은 공유·새로고침용으로 계속 동기화하되 replace 로 갈아끼워
+// 뒤로가기 기록이 등급 전환마다 쌓이지 않게 한다.
+//
+// 데이터는 전부 src/data/tiers.js(= tiers.json, 바닐라 HTML 정본에서 생성)에서 온다.
+// 등급 수·세부등급·캐릭터가 이벤트로 바뀌어도 이 컴포넌트는 손댈 필요가 없다.
+import { Fragment, useCallback, useEffect, useMemo } from 'react';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { TIERS, TIER_BY_NUMBER, TIER_NUMBERS } from '../data/tiers';
 import { tierImageUrl } from '../lib/paths';
-import '../styles/tier-responsive.css';
 import '../styles/tier-nav.css';
-
-const tierCss = import.meta.glob('../styles/tier/tier*.css', { query: '?inline', import: 'default', eager: true });
-
-function useTierStyle(n) {
-  useEffect(() => {
-    const css = tierCss[`../styles/tier/tier${n}.css`];
-    if (!css) return undefined;
-    const style = document.createElement('style');
-    style.dataset.tierStyle = String(n);
-    style.textContent = css;
-    document.head.appendChild(style);
-    return () => style.remove();
-  }, [n]);
-}
-
-function NavBtn({ kind, label, to, enabled }) {
-  if (enabled) return <Link className={`tier-page-nav-btn ${kind}`} to={to}>{label}</Link>;
-  return <span className={`tier-page-nav-btn ${kind} is-disabled`} aria-disabled="true">{label}</span>;
-}
+import '../styles/tier-board.css';
 
 export default function TierPage() {
   const { n } = useParams();
-  const num = Number(n);
-  const data = tiers[num];
-  useTierStyle(num);
+  const navigate = useNavigate();
+
+  // 잘못된 번호(문자, 범위 밖)면 첫 등급으로 떨어뜨린다 — 등급 구성이 바뀌어도 안전
+  const current = Number(n);
+  const data = TIER_BY_NUMBER[current] || null;
+
+  const index = useMemo(() => TIER_NUMBERS.indexOf(current), [current]);
+  const prev = index > 0 ? TIER_NUMBERS[index - 1] : null;
+  const next = index >= 0 && index < TIER_NUMBERS.length - 1 ? TIER_NUMBERS[index + 1] : null;
+
+  // 등급 전환 = 라우트 replace. 같은 컴포넌트가 유지되므로 리마운트 없이 표만 바뀐다.
+  const goTier = useCallback((tier) => {
+    if (tier == null) return;
+    navigate(`/tier/${tier}`, { replace: true });
+  }, [navigate]);
 
   useEffect(() => {
     if (data) document.title = `${data.title} | 휴버대 티어표`;
   }, [data]);
 
-  if (!data || num < 1 || num > 9) return <Navigate to="/" replace />;
+  // ← → 키로도 등급 이동
+  useEffect(() => {
+    const onKey = (e) => {
+      if (e.target.closest?.('input, textarea')) return;
+      if (e.key === 'ArrowLeft') goTier(prev);
+      if (e.key === 'ArrowRight') goTier(next);
+    };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [goTier, prev, next]);
+
+  if (!data) return <Navigate to={`/tier/${TIER_NUMBERS[0]}`} replace />;
 
   return (
-    <main>
-      <nav className="tier-page-nav" aria-label="이전·다음 티어표">
-        <NavBtn kind="prev" label="← 이전 티어표" to={`/tier/${num - 1}`} enabled={num > 1} />
-        <span className="tier-page-nav-current">{num}티어</span>
-        <NavBtn kind="next" label="다음 티어표 →" to={`/tier/${num + 1}`} enabled={num < 9} />
+    <main className="tier-scope" data-tier={current}>
+      <nav className="tier-switch-nav" aria-label="등급 전환">
+        <button
+          type="button"
+          className="tier-switch-btn tier-switch-arrow"
+          onClick={() => goTier(prev)}
+          disabled={prev == null}
+          aria-label="이전 등급"
+        >
+          ←
+        </button>
+        {TIERS.map((t) => (
+          <button
+            type="button"
+            key={t.tier}
+            className={`tier-switch-btn${t.tier === current ? ' is-active' : ''}`}
+            onClick={() => goTier(t.tier)}
+            aria-current={t.tier === current ? 'page' : undefined}
+            title={t.desc}
+          >
+            {t.tier}티어
+          </button>
+        ))}
+        <button
+          type="button"
+          className="tier-switch-btn tier-switch-arrow"
+          onClick={() => goTier(next)}
+          disabled={next == null}
+          aria-label="다음 등급"
+        >
+          →
+        </button>
       </nav>
-      <h2 className="tier-heading" data-tier={num}>{data.title}</h2>
-      <section className="tier-table">
+
+      <h2 className="tier-heading" data-tier={current}>{data.title}</h2>
+      <p className="tier-board-desc">{data.desc}</p>
+
+      <section className="tier-board" data-tier={current}>
         {data.rows.map((row, ri) => (
-          <div className="tier-row" key={ri}>
+          <div className="tier-row" key={`${current}-${row.label}-${ri}`}>
             <div className="tier-label">
-              {row.label.split('\n').map((part, i, arr) => (
+              {row.labelLines.map((part, i, arr) => (
                 <Fragment key={i}>{part}{i < arr.length - 1 && <br />}</Fragment>
               ))}
             </div>
@@ -62,7 +100,7 @@ export default function TierPage() {
                 item.break
                   ? <div key={ci} style={{ flexBasis: '100%' }} />
                   : (
-                    <div className="char" key={ci}>
+                    <div className="char" key={`${item.name || item.alt}-${ci}`}>
                       <img src={tierImageUrl(item.img)} alt={item.alt} loading="lazy" />
                       {item.name && <span>{item.name}</span>}
                     </div>

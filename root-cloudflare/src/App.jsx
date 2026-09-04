@@ -1,10 +1,12 @@
 // 라우트 정의 — RDMD/features/react-rewrite.md 의 패리티 표와 1:1
 //  이식 완료(1~3단계): / , /tier/:n , /notice , /notice/all , /notice/news , /notice/:id
 //  이식 대기(4단계~): PendingPage 로 자리만 잡아둠 (URL 구조 확정용)
-import { Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import Layout from './components/Layout';
+import CustomMaker from './pages/CustomMaker';
 import Home from './pages/Home';
 import LegacyRedirect from './pages/LegacyRedirect';
+import LuckDraw from './pages/LuckDraw';
 import NoticeDetail from './pages/NoticeDetail';
 import NoticeHome from './pages/NoticeHome';
 import NoticeList from './pages/NoticeList';
@@ -16,6 +18,8 @@ export default function App() {
     <Routes>
       <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
+        {/* 티어표는 한 페이지 + 내부 navbar. /tier 로 오면 1티어부터 */}
+        <Route path="/tier" element={<Navigate to="/tier/1" replace />} />
         <Route path="/tier/:n" element={<TierPage />} />
         <Route path="/notice" element={<NoticeHome />} />
         <Route path="/notice/all" element={<NoticeList category="notice" />} />
@@ -27,10 +31,10 @@ export default function App() {
         <Route path="/notice/:id" element={<NoticeDetail />} />
 
         {/* 4단계~ 이식 대기 */}
-        <Route path="/custom-maker" element={<PendingPage title="커스텀 메이커" />} />
+        <Route path="/custom-maker" element={<CustomMaker />} />
+        <Route path="/luck-draw" element={<LuckDraw />} />
         <Route path="/board" element={<PendingPage title="커스텀 게시판" />} />
         <Route path="/board/*" element={<PendingPage title="커스텀 게시판" />} />
-        <Route path="/luck-draw" element={<PendingPage title="행운 뽑기" />} />
         <Route path="/my-page" element={<PendingPage title="마이페이지" />} />
         <Route path="/notifications" element={<PendingPage title="알림" />} />
         <Route path="/inquiry" element={<PendingPage title="문의하기" />} />
