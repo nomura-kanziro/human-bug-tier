@@ -1,0 +1,684 @@
+/* ====================== 전체 공지 / 새 소식 페이지 너비 조절 ====================== */
+.notice-page {
+  max-width: 1100px;     /* 너비 조절 */
+  margin: 0 auto;
+  padding: 60px 40px;    /* 좌우 여백 증가 */
+}
+
+/* 헤더(제목 + 뒤로가기)와 목록 사이 간격 확보 */
+.notice-header {
+  margin-bottom: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+/* 전체 공지/새 소식 전체목록 페이지(all_notices.html, news.html)의 카드들을 세로로 나열하는 컨테이너 */
+.notice-full-list {
+  max-width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 8px; /* 항목간 간격 - 더 작게 조정 */
+}
+
+/* 카드형 공지 항목 - 내부 여백을 충분히 주고 배경/경계 적용
+   .notice-full-list 아래의 .notice-item에만 적용하여 기존 리스트 스타일과 충돌 방지 */
+.notice-full-list .notice-item {
+  padding: 5px 10px; /* 세로 패딩을 더 줄여 전체 높이를 약 2배 축소 */
+  background: #fafafa;
+  border-radius: 12px;
+  border: 1px solid #eee;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+  overflow: visible; /* 내부 내용 전부 표시 */
+  white-space: pre-wrap; /* 줄바꿈 유지 */
+  word-break: break-word;
+}
+
+.notice-title {
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 0; /* 헤더에서 간격 제어 */
+}
+
+/* notice.html(공지 메인)의 '전체 공지' / '새 소식' 2컬럼 레이아웃.
+   넓은 화면에서는 좌우 나란히, 900px 이하 좁은 화면에서는 아래 미디어쿼리로 1컬럼 세로 쌓기로 전환 */
+.notice-page .notice-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+}
+
+@media (max-width: 900px) {
+  .notice-page .notice-grid {
+    grid-template-columns: 1fr;
+    gap: 50px;
+  }
+}
+
+/* 각 컬럼 상단 소제목("전체 공지"/"새 소식") - 카테고리 색상 점(.notice-dot)과 함께 배치 */
+.notice-col-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* 카테고리 색상 표시용 작은 원. JS(notice.js CATEGORY_COLORS)와 색상을 맞춰 인라인 style로 배경색이 주입됨 */
+.notice-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+/* '전체 공지' 컬럼 상단 강조선 - 초록(#10b981)으로 새 소식 컬럼과 시각적으로 구분 */
+.notice-col-general {
+  border-top: 3px solid #10b981;
+  padding-top: 16px;
+}
+
+/* '새 소식' 컬럼 상단 강조선 - 보라(#8b5cf6) */
+.notice-col-news {
+  border-top: 3px solid #8b5cf6;
+  padding-top: 16px;
+}
+
+/* 목록/상세 카드에 붙는 카테고리 뱃지. 배경/글자/테두리 색은 notice.js getCategoryBadge()에서
+   인라인 style로 주입하므로(카테고리마다 색이 다름) 여기서는 모양(padding/radius/폰트)만 정의 */
+.notice-category-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* 공지/새소식이 하나도 없을 때 목록 자리에 표시되는 안내 문구 스타일 */
+.notice-empty {
+  color: #888;
+  font-size: 14px;
+  padding: 20px 0;
+}
+
+/* 고정(핀) 공지 제목 앞에 붙는 📌 이모지 라벨 */
+.notice-pin-label {
+  color: #f59e0b;
+  font-size: 14px;
+  margin-right: 4px;
+}
+
+/* 유튜브 커뮤니티 글에서 가져와 번역한 공지에 붙는 "YouTube" 뱃지 - 빨간 계열로 출처를 강조 */
+.notice-yt-badge {
+  display: inline-block;
+  margin-right: 6px;
+  padding: 2px 8px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  vertical-align: middle;
+}
+
+/* 상세 페이지의 "일본어 원문 보기"/"한국어 번역 보기" 토글 버튼(notice.js setupNoticeOriginalToggle) */
+.notice-original-toggle {
+  margin-left: 8px;
+  padding: 3px 10px;
+  border: 1px solid #fecaca;
+  border-radius: 999px;
+  background: #fff;
+  color: #b91c1c;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.notice-original-toggle:hover,
+.notice-original-toggle[aria-pressed="true"] {
+  background: #fef2f2;
+}
+
+/* 고정(isPinned) 공지 카드에 옅은 노란 배경을 덧입혀 목록에서 눈에 띄게 함 */
+.notice-item-pinned {
+  background: #fffbeb;
+  border-radius: 8px;
+  padding: 8px 10px;
+  border: 1px solid #fde68a;
+}
+
+/* 전체목록/새소식 페이지 헤더의 "← 공지사항 메인으로" 링크 */
+.back-link {
+  font-size: 14px;
+  color: #2563eb;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.back-link:hover {
+  text-decoration: underline;
+}
+
+/* 전체목록 페이지 하단 "총 N개" 표시 영역. 실제 페이지 넘김 기능은 없고(전체를 한 번에 로드)
+   개수만 안내하는 용도 - notice.js renderNoticeFullPage 참고 */
+.pagination {
+  margin-top: 40px;
+  text-align: center;
+  color: #666;
+  font-size: 14px;
+}
+
+/* notice.html 공지 메인 페이지의 컬럼 내부 목록(기본 레이아웃 카드들) 세로 간격 */
+.notice-list {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* 기존 .notice-item의 하단 구분선은 전체 목록 페이지(.notice-full-list)에서는 사용하지 않음 */
+.notice-full-list .notice-item:last-child {
+  margin-bottom: 0;
+}
+
+/* 공지 카드 전체를 감싸는 <a> 태그 - 링크 밑줄/기본 색을 지우고 카드 형태로 보이게 함 */
+.notice-item-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.notice-link {
+  font-weight: 500;
+  color: #111;
+  text-decoration: none;
+  display: block;
+  margin-bottom: 4px;
+}
+
+/* 카드에 마우스를 올리면 제목만 파란색으로 바뀌어 클릭 가능함을 알려줌 */
+.notice-item-link:hover .notice-link {
+  color: #2563eb;
+}
+
+.notice-desc {
+  font-size: 14px; /* 약간 작게 하여 공간 절약 */
+  color: #555;
+  line-height: 1.35; /* 줄간격 축소 */
+  margin: 4px 0 4px; /* 위아래 여백 축소 */
+  white-space: pre-wrap; /* 줄바꿈을 보존하여 전체 텍스트가 보이도록 함 */
+}
+
+.notice-date {
+  font-size: 13px;
+  color: #999;
+}
+
+/* notice.html 공지 메인 페이지 각 컬럼 하단의 "문서 N개 모두 보기 →" 링크
+   (개수 텍스트는 notice.js renderNoticeMainPage에서 별도 API 호출로 채워짐) */
+.notice-more {
+  display: inline-block;
+  margin-top: 24px;
+  font-size: 14px;
+  color: #2563eb;
+  text-decoration: none;
+}
+
+.notice-more:hover {
+  text-decoration: underline;
+}
+
+/* ====================== 공지 상세 페이지 ====================== */
+.notice-detail-page {
+  padding-top: 48px;
+  padding-bottom: 80px;
+}
+
+/* 데이터 로딩 중(초기 HTML) / 조회 실패 시(notice.js catch 블록) 표시되는 안내 문구 영역 */
+.notice-detail-loading,
+.notice-detail-error {
+  text-align: center;
+  padding: 120px 20px;
+  color: #888;
+  font-size: 16px;
+}
+
+/* 상세 페이지 전체를 감싸는 카드 컨테이너 */
+.notice-detail-card {
+  background: #fff;
+  border-radius: 16px;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
+}
+
+/* 카테고리별 카드 상단 색 강조선 - 목록 페이지의 .notice-col-general/.notice-col-news와 동일한 색 규칙 */
+.notice-detail-general {
+  border-top: 4px solid #10b981;
+}
+
+.notice-detail-news {
+  border-top: 4px solid #8b5cf6;
+}
+
+/* 카드 최상단 바: "← 목록으로" 링크 + 고정/카테고리/유튜브 뱃지들이 나열되는 영역 */
+.notice-detail-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 32px;
+  background: #f9fafb;
+  border-bottom: 1px solid #e5e7eb;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.notice-detail-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #2563eb;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid #dbeafe;
+  transition: background 0.2s;
+}
+
+.notice-detail-back:hover {
+  background: #eff6ff;
+  text-decoration: none;
+}
+
+.notice-detail-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* 제목/작성자/본문 등 실제 콘텐츠가 들어가는 영역 (topbar 아래) */
+.notice-detail-body {
+  padding: 40px 32px 48px;
+}
+
+.notice-detail-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #111;
+  line-height: 1.35;
+  margin: 0 0 20px;
+  word-break: break-word;
+}
+
+.notice-detail-info {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  padding-bottom: 24px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.notice-detail-author {
+  font-weight: 600;
+  color: #374151;
+}
+
+/* 본문 위에 표시되는 요약문 박스. 왼쪽 색띠(border-left)로 강조하며,
+   카테고리가 'news'면 아래 .news-summary가 색을 보라로 덮어씀 */
+.notice-detail-summary {
+  background: #f8fafc;
+  border-left: 4px solid #10b981;
+  padding: 16px 20px;
+  border-radius: 0 10px 10px 0;
+  margin-bottom: 32px;
+  font-size: 15px;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.notice-detail-summary.news-summary {
+  border-left-color: #8b5cf6;
+}
+
+/* notice.js renderNoticeContent()가 생성한 본문 HTML(문단/목록/인용/이미지 등)의 기본 타이포그래피.
+   아래 이어지는 .notice-detail-content 하위 선택자들은 각 마크다운 요소별 세부 스타일이다. */
+.notice-detail-content {
+  font-size: 16px;
+  line-height: 1.85;
+  color: #1f2937;
+  word-break: break-word;
+}
+
+.notice-detail-content p {
+  margin: 0 0 18px;
+}
+
+.notice-detail-content p:last-child {
+  margin-bottom: 0;
+}
+
+.notice-detail-content ul {
+  margin: 0 0 18px;
+  padding-left: 22px;
+}
+
+.notice-detail-content li {
+  margin-bottom: 6px;
+}
+
+.notice-detail-content strong {
+  font-weight: 700;
+  color: #111827;
+}
+
+.notice-detail-content em {
+  font-style: italic;
+}
+
+.notice-detail-content h2,
+.notice-detail-content h3,
+.notice-detail-content h4 {
+  margin: 28px 0 12px;
+  line-height: 1.4;
+  color: #111827;
+}
+
+.notice-detail-content h2 { font-size: 22px; font-weight: 700; }
+.notice-detail-content h3 { font-size: 19px; font-weight: 600; }
+.notice-detail-content h4 { font-size: 17px; font-weight: 600; }
+
+.notice-detail-content ol {
+  margin: 0 0 18px;
+  padding-left: 22px;
+}
+
+.notice-detail-content blockquote {
+  margin: 0 0 18px;
+  padding: 10px 18px;
+  border-left: 3px solid #d1d5db;
+  color: #4b5563;
+  background: #f9fafb;
+  border-radius: 0 8px 8px 0;
+}
+
+.notice-detail-content code {
+  background: #f3f4f6;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 0.92em;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  color: #b91c1c;
+}
+
+.notice-detail-content del {
+  color: #9ca3af;
+}
+
+.notice-detail-content a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.notice-detail-content hr {
+  border: none;
+  border-top: 1px solid #e5e7eb;
+  margin: 28px 0;
+}
+
+/* 본문 이미지(![alt](url) 마크다운) 공통 스타일. figure(1장)/gallery(여러 장) 어느 쪽에 있든 동일 적용 */
+.notice-detail-content img.notice-content-img,
+.notice-content-gallery img.notice-content-img,
+.notice-content-figure img.notice-content-img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+  background: #f3f4f6;
+}
+
+/* 연속 이미지 줄이 1장뿐일 때(notice.js flushImages) 감싸는 figure 여백 */
+.notice-content-figure {
+  margin: 16px 0 22px;
+}
+
+/* 연속 이미지 줄이 2장 이상일 때 자동 그리드 갤러리로 배치. 카드 최소 너비 160px 기준으로
+   auto-fit되므로 화면 폭에 따라 한 줄에 들어가는 이미지 개수가 자동으로 조절됨 */
+.notice-content-gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 10px;
+  margin: 16px 0 22px;
+}
+
+@media (max-width: 700px) {
+  .notice-content-gallery {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 본문 맨 아래, "목록 보기" 버튼을 가운데 정렬해 담는 영역 */
+.notice-detail-footer {
+  margin-top: 48px;
+  padding-top: 24px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: center;
+}
+
+.notice-detail-list-btn {
+  padding: 12px 28px;
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.notice-detail-list-btn:hover {
+  background: #333;
+}
+
+/* 목록 카드에 마우스를 올리면 살짝 떠오르는 효과(hover 시 위로 1px + 그림자) */
+.notice-item {
+  transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.notice-full-list .notice-item:hover,
+.notice-list .notice-item:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* 좁은 화면(휴대폰)에서 상세 페이지 여백/제목 크기를 줄여 공간을 절약 */
+@media (max-width: 640px) {
+  .notice-detail-body {
+    padding: 28px 20px 36px;
+  }
+
+  .notice-detail-topbar {
+    padding: 16px 20px;
+  }
+
+  .notice-detail-title {
+    font-size: 24px;
+  }
+}
+
+/* ======================================================================
+   다크 모드 — 공지사항 전용 세부 보정.
+   theme.css의 안전망이 #notice-modal-content 등 공통 카드는 이미 처리하지만,
+   목록/상세 카드 내부의 하드코딩된 회색·뱃지·마크다운 본문 색은 이 파일에서 개별 대응한다.
+   ====================================================================== */
+[data-theme="dark"] .notice-full-list .notice-item {
+  background: var(--bg-elevated);
+  border-color: var(--border-color);
+  box-shadow: 0 1px 4px var(--shadow-color);
+}
+
+[data-theme="dark"] .notice-col-title {
+  border-bottom-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .notice-empty,
+[data-theme="dark"] .pagination,
+[data-theme="dark"] .notice-detail-loading,
+[data-theme="dark"] .notice-detail-error {
+  color: var(--text-muted);
+}
+
+/* 고정 공지 📌 라벨은 원래도 앰버 계열이라 색상 정체성은 유지하고 살짝 밝혀서 대비만 보정 */
+[data-theme="dark"] .notice-pin-label {
+  color: #fbbf24;
+}
+
+[data-theme="dark"] .notice-item-pinned {
+  background: rgba(217, 119, 6, 0.12);
+  border-color: #4a3a1a;
+}
+
+/* YouTube 출처 뱃지 — 빨강 계열 정체성 유지, 다크 배경에서 튀지 않도록 톤 조정 */
+[data-theme="dark"] .notice-yt-badge {
+  color: #f87171;
+  background: rgba(220, 38, 38, 0.16);
+  border-color: rgba(248, 113, 113, 0.4);
+}
+
+[data-theme="dark"] .notice-original-toggle {
+  background: var(--bg-elevated);
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.4);
+}
+[data-theme="dark"] .notice-original-toggle:hover,
+[data-theme="dark"] .notice-original-toggle[aria-pressed="true"] {
+  background: rgba(220, 38, 38, 0.16);
+}
+
+[data-theme="dark"] .back-link,
+[data-theme="dark"] .notice-more,
+[data-theme="dark"] .notice-item-link:hover .notice-link {
+  color: var(--link-color);
+}
+
+[data-theme="dark"] .notice-link {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .notice-desc {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .notice-date {
+  color: var(--text-muted);
+}
+
+/* 상세 카드 전체 컨테이너/상단 바 */
+[data-theme="dark"] .notice-detail-card {
+  background: var(--bg-elevated);
+  border-color: var(--border-color);
+  box-shadow: 0 8px 30px var(--shadow-color);
+}
+
+[data-theme="dark"] .notice-detail-topbar {
+  background: var(--bg-subtle);
+  border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .notice-detail-back {
+  color: var(--link-color);
+  background: var(--bg-elevated);
+  border-color: rgba(110, 168, 254, 0.35);
+}
+[data-theme="dark"] .notice-detail-back:hover {
+  background: rgba(110, 168, 254, 0.12);
+}
+
+[data-theme="dark"] .notice-detail-title,
+[data-theme="dark"] .notice-detail-content strong,
+[data-theme="dark"] .notice-detail-content h2,
+[data-theme="dark"] .notice-detail-content h3,
+[data-theme="dark"] .notice-detail-content h4 {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .notice-detail-info {
+  border-bottom-color: var(--border-color);
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .notice-detail-author {
+  color: var(--text-secondary);
+}
+
+/* 요약 박스 — 좌측 강조선(초록/보라)은 그대로 두고 배경/글자만 다크에 맞춤 */
+[data-theme="dark"] .notice-detail-summary {
+  background: var(--bg-subtle);
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .notice-detail-content {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .notice-detail-content blockquote {
+  border-left-color: var(--border-strong);
+  color: var(--text-secondary);
+  background: var(--bg-subtle);
+}
+
+[data-theme="dark"] .notice-detail-content code {
+  background: var(--bg-subtle);
+  color: #f87171;
+}
+
+[data-theme="dark"] .notice-detail-content del {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .notice-detail-content a {
+  color: var(--link-color);
+}
+
+[data-theme="dark"] .notice-detail-content hr,
+[data-theme="dark"] .notice-detail-footer {
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .notice-detail-content img.notice-content-img,
+[data-theme="dark"] .notice-content-gallery img.notice-content-img,
+[data-theme="dark"] .notice-content-figure img.notice-content-img {
+  background: var(--bg-subtle);
+}
+
+[data-theme="dark"] .notice-detail-list-btn {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+}
+[data-theme="dark"] .notice-detail-list-btn:hover {
+  background: var(--border-strong);
+}
+
+[data-theme="dark"] .notice-full-list .notice-item:hover,
+[data-theme="dark"] .notice-list .notice-item:hover {
+  box-shadow: 0 4px 12px var(--shadow-color);
+}

@@ -1,0 +1,686 @@
+/* ========================================================
+   common.css — 홈(index.html) 전용 스타일
+   ========================================================
+   header.html/footer.html 자체의 스타일은 Header_Footer.css에 따로 있고,
+   이 파일은 index.html 본문(소개 문구, 퀵 네비 카드, 공지 미리보기, 공지 모달)만 담당한다.
+   다른 페이지(tier-class, custom-maker 등)는 각자 폴더 안의 .css를 쓴다. */
+
+/* 텍스트 자동 확대 방지 — 모바일 사파리에서 화면 회전 시 폰트가 커지는 걸 막는다 */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: "Noto Sans KR", sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  color: #000000;
+  overflow-x: hidden;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* 소개 — 홈 상단의 제목/설명 문구 영역 */
+.intro {
+  text-align: center; /* 안의 모든 내용을 가운데 정렬 */
+  margin: 20px auto;
+}
+
+/* 티어 카드 — 홈 화면에서 1~9티어 페이지로 바로가는 3열 그리드(index.html의 .tiers 안에
+   .tier-card 9개, 클릭하면 tier-class/tierN.html로 이동). 아래 quick-card와는 별개 영역. */
+.tiers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding: 20px;
+}
+
+.tier-card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+  text-align: center;
+}
+
+.tier-card:hover {
+  transform: scale(1.05);
+}
+
+.tier-icon {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 10px;
+}
+
+.tier-title {
+  font-weight: bold;
+  font-size: 18px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+/* ====================== 3개 큰 상자 (Quick Nav) ======================
+   홈 화면의 "티어표 / 커스텀 메이커 / 행운 뽑기" 큰 카드 영역. quick-card 하나가
+   기능 하나를 나타내고, 마우스를 올리면(.sub-menu) 하위 링크들이 아래로 펼쳐지는
+   아코디언 효과가 있다(sub-menu 애니메이션 부분 참고).
+   각 카드는 data-scroll-target 속성값(HTML에 이미 있음, #home-tiers 등)으로
+   서로 구분해서 카드마다 다른 포인트 컬러(--accent-1/--accent-2)를 CSS 변수로 지정한다.
+   아이콘 배지(h3::before)와 상단 그라디언트 바(::before)도 이 변수를 그대로 재사용해서
+   카드 전체가 하나의 색 톤으로 통일되도록 했다 — 이렇게 하면 HTML은 하나도 안 건드리고
+   순수 CSS만으로 3개 카드를 서로 다른 테마로 꾸밀 수 있다. */
+.quick-nav {
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* 카드별 포인트 컬러 지정: 티어표=인디고/시안, 커스텀 메이커=골드(아래 home-maker-preview
+   다크+골드 테마와 통일), 행운 뽑기=오렌지/앰버(아래 home-luck-preview 테마와 통일).
+   이렇게 홈 화면 안의 다른 섹션들과 색을 맞춰서 페이지 전체가 하나로 이어져 보이게 한다. */
+.quick-card[data-scroll-target="#home-tiers"] {
+  --accent-1: #6366f1;
+  --accent-2: #06b6d4;
+  --accent-soft: #eef2ff;
+  --accent-shadow: rgba(99, 102, 241, 0.28);
+}
+
+.quick-card[data-scroll-target="#home-maker-preview"] {
+  --accent-1: #b45309;
+  --accent-2: #ffcc00;
+  --accent-soft: #fff7e0;
+  --accent-shadow: rgba(217, 119, 6, 0.28);
+}
+
+.quick-card[data-scroll-target="#home-luck-preview"] {
+  --accent-1: #f97316;
+  --accent-2: #fbbf24;
+  --accent-soft: #fff3e0;
+  --accent-shadow: rgba(249, 115, 22, 0.28);
+}
+
+.quick-card {
+  --accent-1: #6366f1;
+  --accent-2: #06b6d4;
+  --accent-soft: #eef2ff;
+  --accent-shadow: rgba(99, 102, 241, 0.22);
+  flex: 1;
+  min-width: 280px;
+  background: linear-gradient(165deg, #ffffff 0%, #fbfbfd 60%, var(--accent-soft) 160%);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: 20px;
+  padding: 28px 24px 24px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.05);
+}
+
+/* 카드 맨 위 얇은 그라디언트 라인 — 카드별 포인트 컬러 2개를 좌→우로 잇는다 */
+.quick-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+}
+
+.quick-card:hover {
+  transform: translateY(-8px);
+  border-color: transparent;
+  box-shadow: 0 20px 34px -8px var(--accent-shadow), 0 8px 16px rgba(15, 23, 42, 0.06);
+}
+
+.quick-card h3 {
+  font-size: 1.3rem;
+  margin: 0 0 16px;
+  text-align: center;
+  color: #14161a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+/* 카드 아이콘 배지 — 카드마다 다른 이모지를 h3 위에 원형 배지로 얹는다.
+   attr()로 HTML에서 값을 끌어올 수는 없어서(각 카드 h3에 별도 속성이 없음),
+   위에서 지정한 [data-scroll-target="..."] 선택자로 카드별 이모지를 직접 지정한다. */
+.quick-card h3::before {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  font-size: 24px;
+  background: var(--accent-soft);
+  box-shadow: inset 0 0 0 1px rgba(15, 23, 42, 0.06);
+}
+
+.quick-card[data-scroll-target="#home-tiers"] h3::before {
+  content: '🏆';
+}
+
+.quick-card[data-scroll-target="#home-maker-preview"] h3::before {
+  content: '🎨';
+}
+
+.quick-card[data-scroll-target="#home-luck-preview"] h3::before {
+  content: '🍀';
+}
+
+/* 서브 메뉴 애니메이션 — quick-card 하위 링크 목록은 평소엔 max-height:0으로 접혀서
+   안 보이다가(.sub-menu), 카드에 마우스를 올리면(.quick-card:hover .sub-menu) max-height가
+   커지면서 부드럽게 펼쳐진다. display:none 대신 max-height를 쓰는 이유는 transition
+   애니메이션을 걸기 위함(display는 애니메이션이 안 됨). 모바일에서는 hover가 없으므로
+   아래쪽 @media (max-width: 768px) 블록에서 항상 펼쳐진 상태로 강제 전환한다. */
+.sub-menu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease;
+  opacity: 0;
+}
+
+.quick-card:hover .sub-menu {
+  max-height: 400px;
+  opacity: 1;
+}
+
+.sub-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.sub-grid a,
+.sub-menu a {
+  display: block;
+  padding: 10px 12px;
+  background: rgba(15, 23, 42, 0.035);
+  border-radius: 8px;
+  text-decoration: none;
+  color: #333;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+/* 서브메뉴 링크 hover도 카드별 포인트 컬러(--accent-1 → --accent-2 그라디언트)를 그대로
+   물려받아서 위 아이콘 배지·상단 라인과 같은 톤으로 보이게 한다 */
+.sub-grid a:hover,
+.sub-menu a:hover {
+  background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+  color: white;
+}
+
+/* 공지사항 아이템 호버 효과 강화 (선택) */
+.notice-item {
+  transition: all 0.2s ease;
+}
+
+.notice-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
+
+/* 모달 내용 가독성 */
+#notice-modal-content {
+  line-height: 1.7;
+}
+
+/* ====================== 공지사항 섹션 ======================
+   홈 화면 하단의 "전체 공지 / 새 소식" 2단 미리보기 카드(notice/notice.js가
+   API로 받아온 목록을 이 안에 렌더링). ⚠️ 아래로 내려가면 .notice-section과
+   .notice-grid 셀렉터가 여러 번(148줄대 / 232줄대 / 262줄대) 다시 나오는데,
+   전부 같은 클래스에 속성을 추가/덮어쓰는 방식으로 여러 번 수정된 흔적이다 —
+   나중 규칙이 CSS 특성상 우선 적용되므로, 실제 최종값을 알고 싶으면 파일 아래쪽
+   (더 나중에 나오는) 정의를 봐야 한다. 새로 손댈 때는 합쳐서 정리하는 게 좋다. */
+.notice-section {
+  margin-bottom: 48px; /* 티어 섹션과 여백 통일 */
+}
+
+.notice-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.notice-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.notice-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width: 1024px) {
+  .notice-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.notice-column {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* 살짝만 그림자 */
+}
+
+.notice-column-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.notice-item {
+  padding: 14px 16px;
+  border-radius: 12px;
+  border: 1px solid #f3f4f6;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.notice-item:hover {
+  border-color: #d1d5db;
+  background: #fafafa;
+}
+
+.notice-item:last-child {
+  margin-bottom: 0;
+}
+
+.notice-item .title {
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notice-item .date {
+  font-size: 12px;
+  color: #9ca3af;
+  white-space: nowrap;
+}
+
+.notice-item .desc {
+  font-size: 14px;
+  color: #6b7280;
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+/* 공지사항 레이아웃 강제 정렬 (대칭 맞춤) */
+.notice-section {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+  margin-bottom: 60px;
+}
+
+.notice-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  width: 100%;
+}
+
+@media (min-width: 1024px) {
+  .notice-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.notice-column {
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+/* 공지사항 상자 살짝 더 넓게 */
+.notice-section {
+  max-width: 1520px;   /* 기존 7xl(1280px)보다 조금 더 넓게 */
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+.notice-section .notice-view-all {
+  font-size: 14px;
+  color: #6b7280 !important;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.notice-section .notice-view-all:hover {
+  color: #111111 !important;
+}
+
+.notice-section .notice-item-link {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+.notice-section .notice-item-title {
+  font-weight: 600;
+  color: #111;
+}
+
+.notice-section .notice-empty {
+  color: #9ca3af;
+  font-size: 14px;
+  padding: 12px 0;
+}
+
+/* ====================== 공지사항 모달 ======================
+   홈 화면 미리보기 카드를 클릭했을 때 뜨는 팝업(common.js의 showNoticeModal()이 열고 닫음).
+   기본은 display:none으로 숨겨져 있다가, JS가 .show 클래스를 추가하면 flex로 표시되며
+   화면 전체를 반투명 배경(overlay)으로 덮는다. */
+.notice-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.65);
+  z-index: 9999;
+  align-items: center;
+  justify-content: center;
+}
+
+.notice-modal.show {
+  display: flex;
+}
+
+.modal-content {
+  background: #fff;
+  width: 100%;
+  max-width: 520px;
+  margin: 20px;
+  border-radius: 20px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+}
+
+.modal-header {
+  padding: 24px 28px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.modal-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #111;
+  margin: 0;
+}
+
+.modal-close-btn {
+  width: 36px;
+  height: 36px;
+  font-size: 28px;
+  line-height: 1;
+  color: #999;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-close-btn:hover {
+  color: #333;
+}
+
+.modal-date {
+  padding: 0 28px;
+  font-size: 13px;
+  color: #888;
+  margin-top: 8px;
+}
+
+.modal-body {
+  padding: 8px 28px 28px;
+  font-size: 15.5px;
+  line-height: 1.7;
+  color: #444;
+  white-space: pre-line;
+}
+
+.modal-footer {
+  padding: 20px 28px 28px;
+  border-top: 1px solid #f1f1f1;
+  text-align: right;
+}
+
+.modal-close-button {
+  padding: 12px 32px;
+  background: #222;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.modal-close-button:hover {
+  background: #000;
+}
+
+/* 공지사항 헤더와 상자 사이 간격 벌리기 */
+.notice-section .notice-header {
+  margin-bottom: 32px;     /* ← 이 숫자를 조정하면 됩니다 */
+}
+
+/* 필요하면 더 벌리고 싶을 때 */
+.notice-section .notice-grid {
+  margin-top: 8px;         /* 추가 여백 */
+}
+
+.notice-column-header {
+  margin-bottom: 28px !important;
+}
+/* ====================== 모바일 공통 (메인 등) ======================
+   768px 이하 화면(태블릿 세로/폰)에서 홈 화면 레이아웃을 재조정.
+   핵심은 quick-card의 sub-menu를 hover 없이 항상 펼쳐두는 것(터치 기기는 hover 개념이
+   없어서, 위쪽 PC용 규칙만으로는 하위 메뉴를 영영 못 열게 되기 때문). */
+@media (max-width: 768px) {
+  .intro {
+    margin: 12px 12px 8px;
+    padding: 0 4px;
+  }
+
+  .intro h1 {
+    font-size: 1.35rem;
+    line-height: 1.3;
+  }
+
+  .intro p {
+    font-size: 0.95rem;
+    line-height: 1.5;
+  }
+
+  .quick-nav {
+    padding: 16px 12px 24px;
+    gap: 12px;
+  }
+
+  .quick-card {
+    min-width: 100%;
+    flex: 1 1 100%;
+    padding: 20px 16px 16px;
+  }
+
+  /* 모바일에서는 카드 세로 여백이 좁으니 아이콘 배지를 살짝 줄여서 답답하지 않게 함 */
+  .quick-card h3 {
+    font-size: 1.15rem;
+    gap: 8px;
+  }
+
+  .quick-card h3::before {
+    width: 44px;
+    height: 44px;
+    font-size: 20px;
+  }
+
+  /* 모바일: 호버 없이 서브메뉴 노출 */
+  .quick-card .sub-menu {
+    max-height: none;
+    opacity: 1;
+    overflow: visible;
+  }
+
+  .sub-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .sub-grid a {
+    display: block;
+    padding: 10px 6px;
+    min-height: 44px;
+    text-align: center;
+    box-sizing: border-box;
+  }
+
+  .tiers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .tier-card {
+    padding: 14px 10px;
+  }
+
+  .notice-section {
+    padding-left: 12px;
+    padding-right: 12px;
+    margin-bottom: 32px;
+  }
+
+  .notice-column {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tiers {
+    grid-template-columns: 1fr;
+  }
+
+  .sub-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ======================================================================
+   다크 모드 — 이 파일(홈 화면 index.html 본문)이 다루는 요소 전용 세부 보정.
+   theme.css의 안전망이 .quick-card/.notice-column 등 배경은 이미 어둡게 깔아주지만,
+   여기서 명시적으로 색을 지정해 둔 글자·테두리·모달까지는 손대지 않으므로 개별 대응한다.
+   ====================================================================== */
+[data-theme="dark"] .tier-card {
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .quick-card h3 {
+  color: var(--text-primary);
+}
+[data-theme="dark"] .sub-grid a,
+[data-theme="dark"] .sub-menu a {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .notice-header h2,
+[data-theme="dark"] .notice-column-header {
+  color: var(--text-primary);
+}
+[data-theme="dark"] .notice-item {
+  border-color: var(--border-color);
+}
+[data-theme="dark"] .notice-item:hover {
+  border-color: var(--border-strong);
+  background: var(--bg-hover);
+}
+[data-theme="dark"] .notice-item .date,
+[data-theme="dark"] .notice-section .notice-empty {
+  color: var(--text-muted);
+}
+[data-theme="dark"] .notice-item .desc {
+  color: var(--text-secondary);
+}
+[data-theme="dark"] .notice-section .notice-view-all {
+  color: var(--text-secondary) !important;
+}
+[data-theme="dark"] .notice-section .notice-view-all:hover {
+  color: var(--text-primary) !important;
+}
+[data-theme="dark"] .notice-section .notice-item-title {
+  color: var(--text-primary);
+}
+
+/* 공지사항 모달 */
+[data-theme="dark"] .notice-modal {
+  background: var(--overlay-bg);
+}
+[data-theme="dark"] .modal-content {
+  background: var(--bg-elevated);
+  box-shadow: 0 20px 40px var(--shadow-color);
+}
+[data-theme="dark"] .modal-header,
+[data-theme="dark"] .modal-footer {
+  border-color: var(--border-color);
+}
+[data-theme="dark"] .modal-title {
+  color: var(--text-primary);
+}
+[data-theme="dark"] .modal-close-btn {
+  color: var(--text-muted);
+}
+[data-theme="dark"] .modal-close-btn:hover {
+  color: var(--text-primary);
+}
+[data-theme="dark"] .modal-date {
+  color: var(--text-muted);
+}
+[data-theme="dark"] .modal-body {
+  color: var(--text-secondary);
+}
+[data-theme="dark"] .modal-close-button {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+[data-theme="dark"] .modal-close-button:hover {
+  background: var(--border-strong);
+}

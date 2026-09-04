@@ -1,0 +1,1924 @@
+{
+  "1": {
+    "tier": 1,
+    "title": "1등급 - 신계 / 슈퍼 그랜드 마스터",
+    "rows": [
+      {
+        "label": "갑급",
+        "items": [
+          {
+            "img": "1 tier/uryu3paze.webp",
+            "alt": "우류 타츠오미",
+            "name": ""
+          },
+          {
+            "img": "1 tier/uryu2paze.jpg",
+            "alt": "우류 타츠오미",
+            "name": "우류 타츠오미"
+          },
+          {
+            "img": "1 tier/uryu1paze.jpg",
+            "alt": "우류 타츠오미",
+            "name": ""
+          }
+        ]
+      },
+      {
+        "label": "을급",
+        "items": [
+          {
+            "img": "1 tier/tsurugi.jpg",
+            "alt": "츠루기 시노부",
+            "name": "츠루기 시노부"
+          },
+          {
+            "img": "1 tier/nomura.jpg",
+            "alt": "노무라 칸지로",
+            "name": "*노무라 칸지로"
+          },
+          {
+            "img": "1 tier/sakaki choske.jpg",
+            "alt": "사카키 쵸스케",
+            "name": "사카키 쵸스케"
+          },
+          {
+            "img": "1 tier/toma tatsunosin.jpg",
+            "alt": "토마 타츠노신",
+            "name": "토마 타츠노신"
+          },
+          {
+            "img": "1 tier/orion.jpg",
+            "alt": "오리온",
+            "name": "오리온"
+          },
+          {
+            "img": "1 tier/toshiya.jpg",
+            "alt": "누에 토시야",
+            "name": "누에 토시야"
+          },
+          {
+            "img": "1 tier/heiji.jpg",
+            "alt": "헤이지",
+            "name": "*헤이지"
+          },
+          {
+            "img": "1 tier/suo ritsu.jpg",
+            "alt": "스오 리츠",
+            "name": "스오 리츠"
+          },
+          {
+            "img": "1 tier/shiden.jpg",
+            "alt": "시덴",
+            "name": "시덴"
+          },
+          {
+            "img": "1 tier/yamamoto gosho.jpg",
+            "alt": "야마모토 고쇼",
+            "name": "*야마모토 고쇼"
+          },
+          {
+            "img": "1 tier/mist.jpg",
+            "alt": "미스트",
+            "name": "미스트"
+          }
+        ]
+      },
+      {
+        "label": "병급",
+        "items": [
+          {
+            "img": "1 tier/nue tomoya.jpg",
+            "alt": "누에 토모야",
+            "name": "누에 토모야"
+          },
+          {
+            "img": "1 tier/gen unran.jpg",
+            "alt": "겐 운란",
+            "name": "겐 운란"
+          },
+          {
+            "img": "1 tier/sera renjiro.jpg",
+            "alt": "세라 렌지로",
+            "name": "세라 렌지로"
+          },
+          {
+            "img": "1 tier/bath.jpg",
+            "alt": "바스",
+            "name": "바스"
+          },
+          {
+            "img": "1 tier/iba kanto.jpg",
+            "alt": "이바 칸토",
+            "name": "*이바 칸토"
+          },
+          {
+            "img": "1 tier/akaki eikichi.png",
+            "alt": "아카기 에이키치",
+            "name": "*아카기 에이키치"
+          },
+          {
+            "img": "1 tier/sakurai.jpg",
+            "alt": "사쿠라이",
+            "name": "*사쿠라이"
+          }
+        ]
+      },
+      {
+        "label": "정급",
+        "items": [
+          {
+            "img": "1 tier/raiden.jpg",
+            "alt": "라이덴",
+            "name": "라이덴"
+          },
+          {
+            "img": "1 tier/seruzio.jpg",
+            "alt": "세르지오",
+            "name": "*세르지오"
+          },
+          {
+            "img": "1 tier/jake.jpg",
+            "alt": "제이크",
+            "name": "제이크"
+          },
+          {
+            "img": "1 tier/inhao brother 2.jpg",
+            "alt": "인하오",
+            "name": "인하오"
+          },
+          {
+            "img": "1 tier/inhao brother 1.jpg",
+            "alt": "형제",
+            "name": "형제"
+          },
+          {
+            "img": "1 tier/seikiji.jpg",
+            "alt": "세이키치",
+            "name": "세이키치"
+          },
+          {
+            "img": "1 tier/aoyagi kouga.jpg",
+            "alt": "아오야기 코우가",
+            "name": "아오야기 코우가"
+          },
+          {
+            "img": "1 tier/machida tomoyasu.jpg",
+            "alt": "마치다 토모야스",
+            "name": "마치다 토모야스"
+          },
+          {
+            "img": "1 tier/sai.jpg",
+            "alt": "사이",
+            "name": "*사이"
+          },
+          {
+            "img": "1 tier/shamo.jpg",
+            "alt": "샤모",
+            "name": "샤모"
+          },
+          {
+            "img": "1 tier/suiran.jpg",
+            "alt": "스이란",
+            "name": "스이란"
+          }
+        ]
+      }
+    ]
+  },
+  "2": {
+    "tier": 2,
+    "title": "2등급 - 뒷세계의 전설 / 그랜드 마스터",
+    "rows": [
+      {
+        "label": "갑급",
+        "items": [
+          {
+            "img": "2 tier/mikato irochita.jpg",
+            "alt": "미카도 이로치타",
+            "name": "*미카도 이로치타"
+          },
+          {
+            "img": "2 tier/hakamada hidero.jpg",
+            "alt": "하카마다 히데코",
+            "name": "하카마다 히데코"
+          },
+          {
+            "img": "2 tier/moriwaka.jpg",
+            "alt": "모리와카 토시로",
+            "name": "모리와카 토시로"
+          },
+          {
+            "img": "2 tier/ichijyo komei.jpg",
+            "alt": "이치죠 코메이",
+            "name": "이치죠 코메이"
+          },
+          {
+            "img": "2 tier/kosaka shintaro.jpg",
+            "alt": "코사카 신타로",
+            "name": "코사카_신타로"
+          },
+          {
+            "img": "2 tier/davits.jpg",
+            "alt": "다비츠",
+            "name": "다비츠"
+          },
+          {
+            "img": "2 tier/hozaki kikpei.jpg",
+            "alt": "호자키 킷페이",
+            "name": "호자키 킷페이"
+          }
+        ]
+      },
+      {
+        "label": "을급",
+        "items": [
+          {
+            "img": "2 tier/hyakuda goro.png",
+            "alt": "햐쿠타 고로",
+            "name": "햐쿠타 고로"
+          },
+          {
+            "img": "2 tier/togari genya.jpg",
+            "alt": "토가리 겐야",
+            "name": "토가리 겐야"
+          },
+          {
+            "img": "2 tier/sorimachi koziro.jpg",
+            "alt": "소리마치 코지로",
+            "name": "소리마치 코지로"
+          }
+        ]
+      },
+      {
+        "label": "병급",
+        "items": [
+          {
+            "img": "2 tier/ichigo rintaro.png",
+            "alt": "이치고 린타로",
+            "name": "*이치고 린타로"
+          },
+          {
+            "img": "2 tier/sanada ryosuke.jpg",
+            "alt": "사나다 료스케",
+            "name": "*사나다 료스케"
+          },
+          {
+            "img": "2 tier/izyuin shigeo.jpg",
+            "alt": "이쥬인 시게오",
+            "name": "이쥬인 시게오"
+          },
+          {
+            "img": "2 tier/igunashio.jpg",
+            "alt": "이그나시오",
+            "name": "*이그나시오"
+          },
+          {
+            "img": "2 tier/agatsuma kyoya.jpg",
+            "alt": "아가츠마 쿄야",
+            "name": "아가츠마 쿄야"
+          },
+          {
+            "img": "2 tier/kinpo satoru.jpg",
+            "alt": "킨포 사토루",
+            "name": "킨포 사토루"
+          },
+          {
+            "img": "2 tier/pink.jpg",
+            "alt": "핑크",
+            "name": "핑크"
+          },
+          {
+            "img": "2 tier/yakushimaru.jpg",
+            "alt": "야쿠시마루 야키라",
+            "name": "야쿠시마루 야키라"
+          },
+          {
+            "img": "2 tier/sarumusa.png",
+            "alt": "육살무사",
+            "name": "*육살무사"
+          }
+        ]
+      },
+      {
+        "label": "정급",
+        "items": [
+          {
+            "img": "2 tier/zyogasaki kenshi.jpg",
+            "alt": "죠가사키 켄시",
+            "name": "죠가사키 켄시"
+          },
+          {
+            "img": "2 tier/mori kohei.jpg",
+            "alt": "모리 코헤이",
+            "name": "모리 코헤이"
+          },
+          {
+            "img": "2 tier/kunitachi masakuni.jpg",
+            "alt": "쿠니타치 마사쿠니",
+            "name": "쿠니타치 마사쿠니"
+          },
+          {
+            "img": "2 tier/kita kintaro.jpg",
+            "alt": "키타 킨타로",
+            "name": "키타 킨타로"
+          },
+          {
+            "img": "2 tier/akagawa arimoto.jpg",
+            "alt": "아키가와 아리모토",
+            "name": "*아키가와 아리모토"
+          },
+          {
+            "img": "2 tier/eizi.png",
+            "alt": "에이지",
+            "name": "에이지"
+          },
+          {
+            "img": "2 tier/churasu.jpg",
+            "alt": "타코 & 츄러스",
+            "name": "츄러스"
+          },
+          {
+            "img": "2 tier/kani.jpg",
+            "alt": "카니",
+            "name": "카니"
+          },
+          {
+            "img": "2 tier/matsuo kuranosuke.jpg",
+            "alt": "*마츠오 쿠라노스케",
+            "name": "*마츠오 쿠라노스케"
+          }
+        ]
+      }
+    ]
+  },
+  "3": {
+    "tier": 3,
+    "title": "3등급 - 톱 클래스 무투파 / 마스터",
+    "rows": [
+      {
+        "label": "갑급",
+        "items": [
+          {
+            "img": "3 tier/ginda eikaku.jpg",
+            "alt": "긴다 에이카쿠",
+            "name": "긴다 에이카쿠"
+          },
+          {
+            "img": "3 tier/tatsumi haruki.jpg",
+            "alt": "타츠미 하루키",
+            "name": "타츠미 하루키"
+          },
+          {
+            "img": "3 tier/ibu hayato.jpg",
+            "alt": "이부 하야토",
+            "name": "이부 하야토"
+          },
+          {
+            "img": "3 tier/wanaka soichiro.png",
+            "alt": "와나카 소이치로",
+            "name": "와나카 소이치로"
+          },
+          {
+            "img": "3 tier/aso sena.jpg",
+            "alt": "아소 세나",
+            "name": "아소 세나"
+          },
+          {
+            "img": "3 tier/louis.jpg",
+            "alt": "루이스",
+            "name": "루이스"
+          },
+          {
+            "img": "3 tier/yagira kazumotsu.jpg",
+            "alt": "야기라 카즈미츠",
+            "name": "야기라 카즈미츠"
+          },
+          {
+            "img": "3 tier/shinoyagi takeshi.jpg",
+            "alt": "시노미야 타케시",
+            "name": "시노미야 타케시"
+          },
+          {
+            "img": "3 tier/inuwashi.jpg",
+            "alt": "이누와시",
+            "name": "이누와시"
+          },
+          {
+            "img": "3 tier/pabian junia.png",
+            "alt": "파비앙 주니어",
+            "name": "파비앙 주니어"
+          },
+          {
+            "img": "3 tier/park seojun.jpg",
+            "alt": "박서준",
+            "name": "박서준"
+          },
+          {
+            "img": "3 tier/jeaf.jpg",
+            "alt": "제프",
+            "name": "제프"
+          },
+          {
+            "img": "3 tier/hida kotetsuro.jpg",
+            "alt": "히다 코테츠로",
+            "name": "히다 코테츠로"
+          },
+          {
+            "img": "3 tier/sengoku.jpg",
+            "alt": "센고쿠 카오루",
+            "name": "센고쿠 카오루"
+          },
+          {
+            "img": "3 tier/node hajime.jpg",
+            "alt": "노다 하지메",
+            "name": "노다 하지메"
+          },
+          {
+            "img": "3 tier/jinnai kento.jpg",
+            "alt": "*진나이 켄토",
+            "name": "*진나이 켄토"
+          },
+          {
+            "img": "3 tier/pavolo.jpg",
+            "alt": "파블로",
+            "name": "파블로"
+          },
+          {
+            "img": "3 tier/uryon.jpg",
+            "alt": "시노노메 류세이",
+            "name": "*우룡"
+          },
+          {
+            "img": "3 tier/baruro.jpg",
+            "alt": "시노노메 류세이",
+            "name": "*발로"
+          },
+          {
+            "img": "3 tier/yamana ryuhei.jpg",
+            "alt": "야마나 류헤이",
+            "name": "야마나 류헤이"
+          },
+          {
+            "img": "3 tier/kuyata.jpg",
+            "alt": "쿠와타",
+            "name": "쿠와타"
+          },
+          {
+            "img": "3 tier/kagero.jpg",
+            "alt": "카게로",
+            "name": "카게로"
+          },
+          {
+            "img": "3 tier/shiina kathumi.jpg",
+            "alt": "텐노지 공기",
+            "name": "*시이나 카츠미"
+          }
+        ]
+      },
+      {
+        "label": "을급",
+        "items": [
+          {
+            "img": "3 tier/kido jyoichiro.jpg",
+            "alt": "키도 죠이치로",
+            "name": "키도 죠이치로"
+          },
+          {
+            "img": "3 tier/shinonome ryusei.jpg",
+            "alt": "시노노메 류세이",
+            "name": "시노노메 류세이"
+          },
+          {
+            "img": "3 tier/akimoto shiro.jpg",
+            "alt": "아키모토 시로",
+            "name": "아키모토 시로"
+          },
+          {
+            "img": "3 tier/sunaga hisaya.jpg",
+            "alt": "스나가 히사야",
+            "name": "스나가 히사야"
+          },
+          {
+            "img": "3 tier/shibuya.png",
+            "alt": "시부야 다이치",
+            "name": "시부야 다이치"
+          },
+          {
+            "img": "3 tier/muguruma kenshin.png",
+            "alt": "무구루마 켄신",
+            "name": "무구루마 켄신"
+          },
+          {
+            "img": "3 tier/kuga kotetsu.jpg",
+            "alt": "*시이나 카즈미",
+            "name": "쿠가 코테츠"
+          },
+          {
+            "img": "3 tier/inue hotaru.jpg",
+            "alt": "개돼지의 형",
+            "name": "이누이 호타로"
+          },
+          {
+            "img": "3 tier/mabuchi haruto.jpg",
+            "alt": "마부치 하루토",
+            "name": "마부치 하루토"
+          },
+          {
+            "img": "3 tier/takano.jpg",
+            "alt": "타카노",
+            "name": "타카노"
+          },
+          {
+            "img": "3 tier/yagami masatora.jpg",
+            "alt": "게이단체 no.2",
+            "name": "*야가미 마사토라"
+          },
+          {
+            "img": "3 tier/sendo nariyoshi.jpg",
+            "alt": "부채인간",
+            "name": "*센도 나리요시"
+          }
+        ]
+      },
+      {
+        "label": "병급",
+        "items": [
+          {
+            "img": "3 tier/inoue tsumugi.jpg",
+            "alt": "이노우에 추무기",
+            "name": "이노우에 추무기"
+          },
+          {
+            "img": "3 tier/yabe mitsuharu.jpg",
+            "alt": "야베 미츠하루",
+            "name": "야베 미츠하루"
+          },
+          {
+            "img": "3 tier/isyado takashi.jpg",
+            "alt": "이샤도 타카시",
+            "name": "이샤도 타카시"
+          },
+          {
+            "img": "3 tier/nanami kazuchika.jpg",
+            "alt": "그저 나버지ㅠㅠ",
+            "name": "나나미 카즈치카"
+          },
+          {
+            "img": "3 tier/tako.jpg",
+            "alt": "타코",
+            "name": "타코"
+          },
+          {
+            "img": "3 tier/shinjyo kyotaro.jpg",
+            "alt": "전기톱",
+            "name": "신죠 쿄타로"
+          },
+          {
+            "img": "3 tier/takajyo rentaro.jpg",
+            "alt": "기분좋게 추락했다고 스포했어요",
+            "name": "타카죠 렌타로"
+          },
+          {
+            "img": "3 tier/kominato keiichi.jpg",
+            "alt": "노무라랑 같은 놈",
+            "name": "코니마토 케이이치"
+          },
+          {
+            "img": "3 tier/hirose taisei.jpg",
+            "alt": "히로세 타이세이",
+            "name": "히로세 타이세이"
+          },
+          {
+            "img": "3 tier/shiraishi reiji.jpg",
+            "alt": "시라이시 레이지",
+            "name": "*시라이시 레이지"
+          },
+          {
+            "img": "3 tier/hachizuka.jpg",
+            "alt": "단역치고 강한 샛끼",
+            "name": "하치즈카"
+          },
+          {
+            "img": "3 tier/gihado.jpg",
+            "alt": "누구?",
+            "name": "*기하드"
+          },
+          {
+            "img": "3 tier/FREI.jpg",
+            "alt": "전기 따잇 안아줘요!",
+            "name": "*프레이"
+          }
+        ]
+      },
+      {
+        "label": "정급",
+        "items": [
+          {
+            "img": "3 tier/aoyama ungi.jpg",
+            "alt": "기분좋게 아오한다고 스포하지 마세요.",
+            "name": "아오야마 루키"
+          },
+          {
+            "img": "3 tier/hukase daiya.jpg",
+            "alt": "상반된 이명",
+            "name": "후카세 다이야"
+          },
+          {
+            "img": "3 tier/nagato aoi.jpg",
+            "alt": "나가토 아오이",
+            "name": "나가토 아오이"
+          },
+          {
+            "img": "3 tier/aki naoharu.jpg",
+            "alt": "아키 나오하루",
+            "name": "아키 나오하루"
+          },
+          {
+            "img": "3 tier/banrai.jpg",
+            "alt": "호자키 킷페이",
+            "name": "*반라이"
+          },
+          {
+            "img": "3 tier/ayukawa tetsuji.jpg",
+            "alt": "아유카와 테츠지",
+            "name": "아유카와 테츠지"
+          },
+          {
+            "img": "3 tier/futura.png",
+            "alt": "푸아그라",
+            "name": "*푸트라"
+          },
+          {
+            "img": "3 tier/diablo.png",
+            "alt": "디아블로4 하고 싶다",
+            "name": "*디아블로"
+          },
+          {
+            "img": "3 tier/senoo ryujin.jpg",
+            "alt": "킨포 사토루",
+            "name": "*세노오 류진"
+          },
+          {
+            "img": "3 tier/nitro.jpg",
+            "alt": "*마츠오 쿠라노스케",
+            "name": "*니트로"
+          },
+          {
+            "img": "3 tier/katori.jpg",
+            "alt": "와씹좆 소아성애로",
+            "name": "*카토리 아즈마히코"
+          },
+          {
+            "img": "3 tier/yoonje.jpg",
+            "alt": "파블로",
+            "name": "*윤재"
+          },
+          {
+            "img": "3 tier/kishibe.jpg",
+            "alt": "아깝게 낭비된 단역",
+            "name": "*키시베"
+          },
+          {
+            "img": "3 tier/mapi.jpg",
+            "alt": "이새끼 진짜 뭐임?",
+            "name": "*마피"
+          }
+        ]
+      }
+    ]
+  },
+  "4": {
+    "tier": 4,
+    "title": "4등급 - 준 톱클래스 무투파 / 다이아몬드",
+    "rows": [
+      {
+        "label": "갑급",
+        "items": [
+          {
+            "img": "4 tier/what san.jpg",
+            "alt": "사천왕 중 최약체",
+            "name": "왓산"
+          },
+          {
+            "img": "4 tier/nagase koichi.jpg",
+            "alt": "나가세 코이치",
+            "name": "나가세 코이치"
+          },
+          {
+            "img": "4 tier/tantan.jpg",
+            "alt": "탄탄",
+            "name": "탄탄"
+          },
+          {
+            "img": "4 tier/banba yuziro.jpg",
+            "alt": "유지로 성애자",
+            "name": "반바 유지로"
+          },
+          {
+            "img": "4 tier/tanaka.jpg",
+            "alt": "대갈통 뚜따",
+            "name": "암살자 타나카(진짜)"
+          }
+        ]
+      },
+      {
+        "label": "을급",
+        "items": [
+          {
+            "img": "4 tier/kurebayashi ziro.jpg",
+            "alt": "주먹빨",
+            "name": "쿠레바야시 지로"
+          },
+          {
+            "img": "4 tier/kondo sinpeita.png",
+            "alt": "콘도 파도~",
+            "name": "*콘도 신페이타"
+          },
+          {
+            "img": "4 tier/ashizawa.jpg",
+            "alt": "염산",
+            "name": "아시자와 츠네히코"
+          },
+          {
+            "img": "4 tier/halbe.jpg",
+            "alt": "크아아아악!!!소이치로!!!",
+            "name": "이즈미 킨노스케"
+          },
+          {
+            "img": "4 tier/dark sword.png",
+            "alt": "할배 원조",
+            "name": "어둠의 검사"
+          },
+          {
+            "img": "4 tier/mayuzumi toshiyuki.jpg",
+            "alt": "생긴 것만 보면 우류도 찢게 생김",
+            "name": "마유즈미 토시유키"
+          },
+          {
+            "img": "4 tier/hosoyamada.jpg",
+            "alt": "저격왕인데 기본빵 병신",
+            "name": "호소야마다"
+          },
+          {
+            "img": "4 tier/sakuraba keigo.jpg",
+            "alt": "상반된 이명",
+            "name": "사쿠라바 케이고"
+          },
+          {
+            "img": "4 tier/kumozako junichi.jpg",
+            "alt": "상반된 이명",
+            "name": "쿠모자키 준이치"
+          },
+          {
+            "img": "4 tier/tosaken.jpg",
+            "alt": "안습",
+            "name": "토사켄"
+          },
+          {
+            "img": "4 tier/jimin.jpg",
+            "alt": "윤재보다 더 허무함",
+            "name": "지민"
+          }
+        ]
+      },
+      {
+        "label": "병급",
+        "items": [
+          {
+            "img": "4 tier/kudo kiyoshi.jpg",
+            "alt": "내가 쓰레기니깐 너네도 쓰레기겠지",
+            "name": "쿠도 키요시"
+          },
+          {
+            "img": "4 tier/asakura jyun.jpg",
+            "alt": "ㅈ토게 담당일진",
+            "name": "아사쿠라 쥰"
+          },
+          {
+            "img": "4 tier/kurusu mitsunari.jpg",
+            "alt": "자칭 천재",
+            "name": "쿠루스 미츠나리"
+          },
+          {
+            "img": "4 tier/pancho.png",
+            "alt": "판쵸",
+            "name": "판쵸"
+          },
+          {
+            "img": "4 tier/inukai yoshiro.jpg",
+            "alt": "",
+            "name": "이누카이 요시로"
+          },
+          {
+            "img": "4 tier/tokito yuuki.jpg",
+            "alt": "",
+            "name": "토키토 유우키"
+          },
+          {
+            "img": "4 tier/ayatsuji masashi.jpg",
+            "alt": "",
+            "name": "*아야츠시 마사시"
+          },
+          {
+            "img": "4 tier/yamada yasuo.jpg",
+            "alt": "",
+            "name": "야마다 야스오"
+          },
+          {
+            "img": "4 tier/shindo kenicchi.jpg",
+            "alt": "",
+            "name": "신도 켄이치"
+          },
+          {
+            "img": "4 tier/sakakibara.jpg",
+            "alt": "사카키?",
+            "name": "사카키바라 야마네"
+          },
+          {
+            "img": "4 tier/saeki.webp",
+            "alt": "",
+            "name": "*사에키"
+          }
+        ]
+      },
+      {
+        "label": "정급",
+        "items": [
+          {
+            "img": "4 tier/tatsumoto masayuki.jpg",
+            "alt": "",
+            "name": "타츠모토 마사유키"
+          },
+          {
+            "img": "4 tier/yuuma.jpg",
+            "alt": "-삽-",
+            "name": "유우마 다이스케"
+          },
+          {
+            "img": "4 tier/kamihara taku.jpg",
+            "alt": "",
+            "name": "카미하라 타쿠"
+          },
+          {
+            "img": "4 tier/shirata.jpg",
+            "alt": "상반된 이명",
+            "name": "시타라 노리아키"
+          },
+          {
+            "img": "4 tier/yasumi masashi.jpg",
+            "alt": "",
+            "name": "야스미 마사시"
+          },
+          {
+            "img": "4 tier/hishiyama.jpg",
+            "alt": "",
+            "name": "히시야마"
+          },
+          {
+            "img": "4 tier/min.jpg",
+            "alt": "",
+            "name": "민"
+          },
+          {
+            "img": "4 tier/hujita.jpg",
+            "alt": "",
+            "name": "후지타"
+          },
+          {
+            "img": "4 tier/eagle.jpg",
+            "alt": "",
+            "name": "*이글"
+          },
+          {
+            "img": "4 tier/shizuu.jpg",
+            "alt": "",
+            "name": "*시추"
+          },
+          {
+            "img": "4 tier/hanako.webp",
+            "alt": "",
+            "name": "*하나코"
+          }
+        ]
+      }
+    ]
+  },
+  "5": {
+    "tier": 5,
+    "title": "5등급 - 중견급 무투파 & 탈사제급 / 플레티넘",
+    "rows": [
+      {
+        "label": "갑급",
+        "items": [
+          {
+            "img": "5 tier/umise shogo.jpg",
+            "alt": "",
+            "name": "우미세 쇼고"
+          },
+          {
+            "img": "5 tier/kamido.jpg",
+            "alt": "고자",
+            "name": "카미도 신이치"
+          },
+          {
+            "img": "5 tier/togashi soji.jpg",
+            "alt": "",
+            "name": "토가시 소지"
+          },
+          {
+            "img": "5 tier/saionji kengo.jpg",
+            "alt": "",
+            "name": "사이온지 켄고"
+          },
+          {
+            "img": "5 tier/kito jyoji.jpg",
+            "alt": "",
+            "name": "키토 죠지"
+          },
+          {
+            "img": "5 tier/mukadetsuka.jpg",
+            "alt": "",
+            "name": "무카데즈카"
+          },
+          {
+            "img": "5 tier/karasuma matsuki.jpg",
+            "alt": "",
+            "name": "*카라스마 마즈키"
+          },
+          {
+            "img": "5 tier/kaido tomonari.jpg",
+            "alt": "",
+            "name": "*카이도 토모나리"
+          },
+          {
+            "img": "5 tier/kawauchigumi no guner.jpg",
+            "alt": "",
+            "name": "카와우치구미의 명사수"
+          },
+          {
+            "img": "5 tier/sugamo.png",
+            "alt": "",
+            "name": "*스가모"
+          },
+          {
+            "img": "5 tier/daks.jpg",
+            "alt": "",
+            "name": "*닥스"
+          },
+          {
+            "img": "5 tier/sawada.webp",
+            "alt": "",
+            "name": "*사와다"
+          }
+        ]
+      },
+      {
+        "label": "을급",
+        "items": [
+          {
+            "img": "5 tier/naguro kyohei.jpg",
+            "alt": "",
+            "name": "나구모 쿄헤이"
+          },
+          {
+            "img": "5 tier/muroya shuto.jpg",
+            "alt": "",
+            "name": "무로야 슈토"
+          },
+          {
+            "img": "5 tier/nue miwa.jpg",
+            "alt": "",
+            "name": "누에 미와"
+          },
+          {
+            "img": "5 tier/kotoge kabuto.jpg",
+            "alt": "",
+            "name": "코토게 카부토"
+          },
+          {
+            "img": "5 tier/ayanokozi nobu.jpg",
+            "alt": "",
+            "name": "아야노코지 노부"
+          },
+          {
+            "img": "5 tier/kakunaka masaki.jpg",
+            "alt": "",
+            "name": "카쿠나카 마사키"
+          },
+          {
+            "img": "5 tier/takasago akio.jpg",
+            "alt": "",
+            "name": "타카사고 아키오"
+          },
+          {
+            "img": "5 tier/iitoyo sakutaro.jpg",
+            "alt": "",
+            "name": "이이토요 사쿠타로"
+          },
+          {
+            "img": "5 tier/loi.jpg",
+            "alt": "",
+            "name": "로이"
+          }
+        ]
+      },
+      {
+        "label": "병급",
+        "items": [
+          {
+            "img": "5 tier/samezu seizi.jpg",
+            "alt": "",
+            "name": "사메즈 세이지"
+          },
+          {
+            "img": "5 tier/kazuki shion.jpg",
+            "alt": "",
+            "name": "카즈키 시온"
+          },
+          {
+            "img": "5 tier/hayami taiki.webp",
+            "alt": "",
+            "name": "하야미 타이키"
+          },
+          {
+            "img": "5 tier/nirasawa shinziro.jpg",
+            "alt": "",
+            "name": "니라사와 신지로"
+          },
+          {
+            "img": "5 tier/tashibana kiyohiro.jpg",
+            "alt": "",
+            "name": "타치바나 키요히로"
+          },
+          {
+            "img": "5 tier/sakamoto kyuta.jpg",
+            "alt": "",
+            "name": "사카모토 큐타"
+          },
+          {
+            "img": "5 tier/john.png",
+            "alt": "",
+            "name": "존"
+          },
+          {
+            "img": "5 tier/den.png",
+            "alt": "",
+            "name": "덴"
+          },
+          {
+            "img": "5 tier/takuma shunsuke.jpg",
+            "alt": "",
+            "name": "타쿠마 슌스케"
+          },
+          {
+            "img": "5 tier/hesusu.jpg",
+            "alt": "",
+            "name": "*헤수스"
+          },
+          {
+            "img": "5 tier/hitman tanaka.jpg",
+            "alt": "",
+            "name": "*히트맨 타나카"
+          },
+          {
+            "img": "5 tier/okabe kengo.jpg",
+            "alt": "",
+            "name": "*오카베 켄고"
+          },
+          {
+            "img": "5 tier/miyazawa eitoku.jpg",
+            "alt": "",
+            "name": "미야자와 에이토쿠"
+          }
+        ]
+      },
+      {
+        "label": "정급",
+        "items": [
+          {
+            "img": "5 tier/kishimiti ryutaro.jpg",
+            "alt": "",
+            "name": "키시모토 류타로"
+          },
+          {
+            "img": "5 tier/sagara sosei.webp",
+            "alt": "",
+            "name": "사가라 소세이"
+          },
+          {
+            "img": "5 tier/nojima kakeru.webp",
+            "alt": "",
+            "name": "노지마 카케루"
+          },
+          {
+            "img": "5 tier/tobiguchi.jpg",
+            "alt": "",
+            "name": "토비구치"
+          },
+          {
+            "img": "5 tier/ruku kurobane.jpg",
+            "alt": "",
+            "name": "루크 쿠로바네"
+          },
+          {
+            "img": "5 tier/kokusho hideki.jpg",
+            "alt": "",
+            "name": "코쿠쇼 히데키"
+          },
+          {
+            "img": "5 tier/yoshioka.jpg",
+            "alt": "",
+            "name": "요시오카"
+          },
+          {
+            "img": "5 tier/asukaba.png",
+            "alt": "",
+            "name": "아스카바"
+          },
+          {
+            "img": "5 tier/ebihara.png",
+            "alt": "",
+            "name": "에비하라"
+          }
+        ]
+      }
+    ]
+  },
+  "6": {
+    "tier": 6,
+    "title": "6등급 - 중하위권 무투파 or 정예 사제 / 골드",
+    "rows": [
+      {
+        "label": "갑급",
+        "items": [
+          {
+            "img": "6 tier/rokawa takao.webp",
+            "alt": "",
+            "name": "루카와 타카오"
+          },
+          {
+            "img": "6 tier/moriwaka.webp",
+            "alt": "",
+            "name": "모리카와"
+          },
+          {
+            "img": "6 tier/kurosawa kotaro.webp",
+            "alt": "",
+            "name": "쿠로사와 코타로"
+          },
+          {
+            "img": "6 tier/hinagata chiei.webp",
+            "alt": "",
+            "name": "히나가타 지에이"
+          },
+          {
+            "img": "6 tier/numata.webp",
+            "alt": "",
+            "name": "누마타"
+          },
+          {
+            "img": "6 tier/kanemaru.webp",
+            "alt": "",
+            "name": "*카네마루"
+          },
+          {
+            "img": "6 tier/hashiba kazunari.webp",
+            "alt": "",
+            "name": "*하시바 카즈나리"
+          },
+          {
+            "img": "6 tier/kisaragi.webp",
+            "alt": "",
+            "name": "*키사라기"
+          },
+          {
+            "img": "6 tier/ozaki takao.webp",
+            "alt": "",
+            "name": "*오자키 타카오"
+          },
+          {
+            "img": "6 tier/nikaido shohei.webp",
+            "alt": "",
+            "name": "니카이도 쇼헤이"
+          },
+          {
+            "img": "6 tier/otaguro.webp",
+            "alt": "",
+            "name": "*오오타구로"
+          }
+        ]
+      },
+      {
+        "label": "을급",
+        "items": [
+          {
+            "img": "6 tier/nishi tippei.webp",
+            "alt": "",
+            "name": "니시 팃페이"
+          },
+          {
+            "img": "6 tier/fujimiya.webp",
+            "alt": "",
+            "name": "후지미야"
+          },
+          {
+            "img": "6 tier/gasoline brothers.webp",
+            "alt": "",
+            "name": "가솔린 형제"
+          },
+          {
+            "img": "6 tier/minamida.webp",
+            "alt": "",
+            "name": "미나미다"
+          },
+          {
+            "img": "6 tier/akutsu toshiro.webp",
+            "alt": "",
+            "name": "아쿠츠 토시로"
+          },
+          {
+            "img": "6 tier/urata junshi.webp",
+            "alt": "",
+            "name": "우라타 준시"
+          },
+          {
+            "img": "6 tier/tachibana.webp",
+            "alt": "",
+            "name": "타치바나"
+          },
+          {
+            "img": "6 tier/kikukawa.webp",
+            "alt": "",
+            "name": "키쿠카와"
+          },
+          {
+            "img": "6 tier/yoshinaga tatsuo.webp",
+            "alt": "",
+            "name": "요시나가 타츠오"
+          },
+          {
+            "img": "6 tier/usami junpei.webp",
+            "alt": "",
+            "name": "우사미 쥰페이"
+          },
+          {
+            "img": "6 tier/futaba kiichi.png",
+            "alt": "",
+            "name": "후타바 기이치"
+          },
+          {
+            "img": "6 tier/karigome ikki.webp",
+            "alt": "",
+            "name": "카리고메 잇키"
+          }
+        ]
+      },
+      {
+        "label": "병급",
+        "items": [
+          {
+            "img": "6 tier/sako yamato.webp",
+            "alt": "",
+            "name": "사코 야마토"
+          },
+          {
+            "img": "6 tier/takatsuki.webp",
+            "alt": "",
+            "name": "타카츠키"
+          },
+          {
+            "img": "6 tier/mamiya kyohei.webp",
+            "alt": "",
+            "name": "마미야 쿄헤이"
+          },
+          {
+            "img": "6 tier/karin.webp",
+            "alt": "",
+            "name": "카린"
+          },
+          {
+            "img": "6 tier/sayuri.webp",
+            "alt": "",
+            "name": "사유리"
+          },
+          {
+            "img": "6 tier/shikko.webp",
+            "alt": "",
+            "name": "싯코"
+          },
+          {
+            "img": "6 tier/ajisai.webp",
+            "alt": "",
+            "name": "아지사이"
+          },
+          {
+            "img": "6 tier/suzumiya saemi.webp",
+            "alt": "",
+            "name": "스즈미야 사에미"
+          },
+          {
+            "img": "6 tier/kosugata hinata.webp",
+            "alt": "",
+            "name": "*코스가타 히나타"
+          },
+          {
+            "img": "6 tier/yoshimoto.webp",
+            "alt": "",
+            "name": "요시모토"
+          },
+          {
+            "img": "6 tier/nishikawa.webp",
+            "alt": "",
+            "name": "니시카와"
+          },
+          {
+            "img": "6 tier/harukoma.webp",
+            "alt": "",
+            "name": "*하루코마"
+          },
+          {
+            "img": "6 tier/ebihara.webp",
+            "alt": "",
+            "name": "*에비하라"
+          }
+        ]
+      }
+    ]
+  },
+  "7": {
+    "tier": 7,
+    "title": "7등급 - 하위권 무투파 or 우수한 사제 / 실버",
+    "rows": [
+      {
+        "label": "갑급",
+        "items": [
+          {
+            "img": "7 tier/nikishido.webp",
+            "alt": "",
+            "name": "니시키도"
+          },
+          {
+            "img": "7 tier/handa tamio.webp",
+            "alt": "",
+            "name": "한다 타미오"
+          },
+          {
+            "img": "7 tier/honda.webp",
+            "alt": "",
+            "name": "혼다"
+          },
+          {
+            "img": "7 tier/matsuyama yusuke.webp",
+            "alt": "",
+            "name": "마츠야마 유우스케"
+          },
+          {
+            "img": "7 tier/nozaki.webp",
+            "alt": "",
+            "name": "노자키"
+          },
+          {
+            "img": "7 tier/nick yamaoka.webp",
+            "alt": "",
+            "name": "닉 야마오카"
+          },
+          {
+            "img": "7 tier/takahashi shuya.webp",
+            "alt": "",
+            "name": "타카하시 슈야"
+          },
+          {
+            "img": "7 tier/miyato tatsuki.webp",
+            "alt": "",
+            "name": "미야토 타츠키"
+          },
+          {
+            "img": "7 tier/inamura.webp",
+            "alt": "",
+            "name": "이나무라"
+          },
+          {
+            "img": "7 tier/sonobe.webp",
+            "alt": "",
+            "name": "*소노베"
+          },
+          {
+            "img": "7 tier/matsumura mitsuru.webp",
+            "alt": "",
+            "name": "마츠무라 미츠루"
+          },
+          {
+            "img": "7 tier/urushiyama.png",
+            "alt": "",
+            "name": "우루시야마"
+          }
+        ]
+      },
+      {
+        "label": "을급",
+        "items": [
+          {
+            "img": "7 tier/kanda naomichi.webp",
+            "alt": "",
+            "name": "칸다 나오미치"
+          },
+          {
+            "img": "7 tier/katakura.webp",
+            "alt": "",
+            "name": "카타쿠라"
+          },
+          {
+            "img": "7 tier/kojima.webp",
+            "alt": "",
+            "name": "코지마"
+          },
+          {
+            "img": "7 tier/kitaoka ryuta.webp",
+            "alt": "",
+            "name": "키타오카 류타"
+          },
+          {
+            "img": "7 tier/katakura.webp",
+            "alt": "",
+            "name": "카타쿠라"
+          },
+          {
+            "img": "7 tier/takamizawa toma.webp",
+            "alt": "",
+            "name": "타카미자와 토마"
+          },
+          {
+            "img": "7 tier/abiru kanta.webp",
+            "alt": "",
+            "name": "아비루 칸타"
+          },
+          {
+            "img": "7 tier/pomeranian.webp",
+            "alt": "",
+            "name": "포메라니안"
+          },
+          {
+            "img": "7 tier/tsukata.webp",
+            "alt": "",
+            "name": "츠카타"
+          },
+          {
+            "img": "7 tier/oozono ginji.webp",
+            "alt": "",
+            "name": "오오조노 긴지"
+          },
+          {
+            "img": "7 tier/tsuchida.webp",
+            "alt": "",
+            "name": "츠치다"
+          },
+          {
+            "img": "7 tier/fujisaki.webp",
+            "alt": "",
+            "name": "후지사키"
+          },
+          {
+            "img": "7 tier/kashiwagi tsubasa.webp",
+            "alt": "",
+            "name": "카시와기 츠바사"
+          }
+        ]
+      },
+      {
+        "label": "병급",
+        "items": [
+          {
+            "img": "7 tier/ootake norifumi.webp",
+            "alt": "",
+            "name": "오오타케 노리후미"
+          },
+          {
+            "img": "7 tier/mitsuike.webp",
+            "alt": "",
+            "name": "미츠이케"
+          },
+          {
+            "img": "7 tier/komori kenji.webp",
+            "alt": "",
+            "name": "코모리 켄지"
+          },
+          {
+            "img": "7 tier/nitori masao.webp",
+            "alt": "",
+            "name": "니토리 마사오"
+          },
+          {
+            "img": "7 tier/kotani.webp",
+            "alt": "",
+            "name": "코타니"
+          },
+          {
+            "img": "7 tier/sekiya.png",
+            "alt": "",
+            "name": "세키야"
+          },
+          {
+            "img": "7 tier/midorikaya.png",
+            "alt": "",
+            "name": "미도리카와"
+          },
+          {
+            "img": "7 tier/kudo kosei.webp",
+            "alt": "",
+            "name": "쿠도 코세이"
+          },
+          {
+            "img": "7 tier/shibahara.webp",
+            "alt": "",
+            "name": "시바하라"
+          },
+          {
+            "img": "7 tier/mineda.webp",
+            "alt": "",
+            "name": "미네다"
+          },
+          {
+            "img": "7 tier/komori kenji.webp",
+            "alt": "",
+            "name": "코모리"
+          },
+          {
+            "img": "7 tier/maenishi related.webp",
+            "alt": "",
+            "name": "마에니시"
+          }
+        ]
+      }
+    ]
+  },
+  "8": {
+    "tier": 8,
+    "title": "8등급 - 평범한 사제 수준의 전투력 / 브론즈",
+    "rows": [
+      {
+        "label": "갑급",
+        "items": [
+          {
+            "img": "8 tier/ieiri.webp",
+            "alt": "",
+            "name": "이에이리"
+          },
+          {
+            "img": "8 tier/miyamoto.webp",
+            "alt": "",
+            "name": "미야모토"
+          },
+          {
+            "img": "8 tier/yamai mitsuru.webp",
+            "alt": "",
+            "name": "야마이 미츠루"
+          },
+          {
+            "img": "8 tier/murai.webp",
+            "alt": "",
+            "name": "무라이"
+          },
+          {
+            "img": "8 tier/furuya.webp",
+            "alt": "",
+            "name": "후루야"
+          }
+        ]
+      },
+      {
+        "label": "을급",
+        "items": [
+          {
+            "img": "8 tier/saito hiroshi.webp",
+            "alt": "",
+            "name": "사이토 히로시"
+          },
+          {
+            "img": "8 tier/kitamura.webp",
+            "alt": "",
+            "name": "키타무라"
+          },
+          {
+            "img": "8 tier/akasaka shotaro.webp",
+            "alt": "",
+            "name": "아카사카 쇼타로"
+          },
+          {
+            "img": "8 tier/yamamiso.jpg",
+            "alt": "",
+            "name": "야마미소"
+          },
+          {
+            "img": "8 tier/isomirim.jpg",
+            "alt": "",
+            "name": "이소미림"
+          },
+          {
+            "img": "8 tier/nue kyoichi.webp",
+            "alt": "",
+            "name": "누에 쿄이치"
+          }
+        ]
+      },
+      {
+        "label": "병급",
+        "items": [
+          {
+            "img": "8 tier/mogi koshiro.webp",
+            "alt": "",
+            "name": "모기 코시로"
+          },
+          {
+            "img": "8 tier/tsurumaki.webp",
+            "alt": "",
+            "name": "츠루마키"
+          },
+          {
+            "img": "8 tier/kida kei.webp",
+            "alt": "",
+            "name": "키다 케이"
+          },
+          {
+            "img": "8 tier/dinosaur kids izumi.webp",
+            "alt": "",
+            "name": "공룡키즈 이즈미"
+          },
+          {
+            "img": "8 tier/saijo hidero.webp",
+            "alt": "",
+            "name": "사이죠 히데로"
+          },
+          {
+            "img": "8 tier/fuji.webp",
+            "alt": "",
+            "name": "후지"
+          }
+        ]
+      }
+    ]
+  },
+  "9": {
+    "tier": 9,
+    "title": "9등급 - 비전투원 또는 전투력 측정 단서 없음 / 언랭크",
+    "rows": [
+      {
+        "label": "미묘사\n인원들",
+        "items": [
+          {
+            "img": "9 tier/ginda eizan.webp",
+            "alt": "",
+            "name": "긴다 에이잔"
+          },
+          {
+            "img": "9 tier/akizuki kiichi.webp",
+            "alt": "",
+            "name": "아키즈키 기이치"
+          },
+          {
+            "img": "9 tier/akizuki shuichi.webp",
+            "alt": "",
+            "name": "아키즈키 슈이치"
+          },
+          {
+            "img": "9 tier/mikuni sadaharu.webp",
+            "alt": "",
+            "name": "미쿠니 사다하루"
+          },
+          {
+            "img": "9 tier/amou keiji.webp",
+            "alt": "",
+            "name": "아모우 케이지"
+          },
+          {
+            "img": "9 tier/kusaka kojirou.webp",
+            "alt": "",
+            "name": "쿠사카 코지로"
+          },
+          {
+            "img": "9 tier/kamishiro yoshinobu.webp",
+            "alt": "",
+            "name": "카미시로 요시노부"
+          },
+          {
+            "img": "9 tier/sakuma yoshishige.webp",
+            "alt": "",
+            "name": "사쿠마 요시시게"
+          },
+          {
+            "img": "9 tier/katsuragi captain.webp",
+            "alt": "",
+            "name": "카츠라기 조장"
+          },
+          {
+            "img": "9 tier/fujimoto tatakatsu.webp",
+            "alt": "",
+            "name": "후지모토 타타카츠"
+          },
+          {
+            "img": "9 tier/himuro.webp",
+            "alt": "",
+            "name": "히무로"
+          },
+          {
+            "img": "9 tier/godai chihaya.webp",
+            "alt": "",
+            "name": "고다이 치히야"
+          },
+          {
+            "img": "9 tier/kazetani.webp",
+            "alt": "",
+            "name": "카제티니"
+          },
+          {
+            "img": "9 tier/kamokawa.webp",
+            "alt": "",
+            "name": "카모카와"
+          },
+          {
+            "img": "9 tier/mido kosaku.webp",
+            "alt": "",
+            "name": "카케무사 미도 코사쿠"
+          },
+          {
+            "img": "9 tier/namioka tsunekichi.webp",
+            "alt": "",
+            "name": "나미오카 츠네키치"
+          },
+          {
+            "img": "9 tier/mizuno yota.webp",
+            "alt": "",
+            "name": "미즈노 요타"
+          },
+          {
+            "img": "9 tier/chiae.webp",
+            "alt": "",
+            "name": "치애"
+          },
+          {
+            "img": "9 tier/hanazawa iori.webp",
+            "alt": "",
+            "name": "하나자와 이오리"
+          },
+          {
+            "img": "9 tier/kawauchi captain.webp",
+            "alt": "",
+            "name": "카와우치 조장"
+          },
+          {
+            "img": "9 tier/tanishi.webp",
+            "alt": "",
+            "name": "타니시"
+          },
+          {
+            "img": "9 tier/natsume.webp",
+            "alt": "",
+            "name": "나츠메"
+          },
+          {
+            "img": "9 tier/namase.webp",
+            "alt": "",
+            "name": "나마세"
+          },
+          {
+            "img": "9 tier/shimizu.webp",
+            "alt": "",
+            "name": "시미즈"
+          },
+          {
+            "img": "9 tier/nambara.webp",
+            "alt": "",
+            "name": "난바라"
+          },
+          {
+            "img": "9 tier/oonuki momoko.webp",
+            "alt": "",
+            "name": "오오누키 모모코"
+          },
+          {
+            "img": "9 tier/kiritani.webp",
+            "alt": "",
+            "name": "키리타니"
+          },
+          {
+            "break": true
+          },
+          {
+            "img": "9 tier/mido kosaku.webp",
+            "alt": "",
+            "name": "*미도 코사쿠"
+          },
+          {
+            "img": "9 tier/sakurada shigenobu.webp",
+            "alt": "",
+            "name": "*사쿠라다 시게노부"
+          },
+          {
+            "img": "9 tier/montero.webp",
+            "alt": "",
+            "name": "*몬테로"
+          },
+          {
+            "img": "9 tier/benan tadashi.webp",
+            "alt": "",
+            "name": "*베난 타다시"
+          },
+          {
+            "img": "9 tier/daimaru yasukimi.webp",
+            "alt": "",
+            "name": "*다이마루 야스키미"
+          },
+          {
+            "img": "9 tier/nue kankachi.webp",
+            "alt": "",
+            "name": "*누에 칸카치"
+          },
+          {
+            "img": "9 tier/aden.webp",
+            "alt": "",
+            "name": "*아덴"
+          },
+          {
+            "img": "9 tier/tokiwa tetsu.webp",
+            "alt": "",
+            "name": "*토키와 테츠"
+          },
+          {
+            "img": "9 tier/yashiki mashinari.webp",
+            "alt": "",
+            "name": "*야시키 마시나리"
+          },
+          {
+            "img": "9 tier/suzuran.webp",
+            "alt": "",
+            "name": "*스즈란"
+          },
+          {
+            "img": "9 tier/kuwata yuji.webp",
+            "alt": "",
+            "name": "*쿠와타 유지"
+          },
+          {
+            "img": "9 tier/togari buyer.jpg",
+            "alt": "",
+            "name": "*토가리 구매자"
+          },
+          {
+            "img": "9 tier/unknown maskman.webp",
+            "alt": "",
+            "name": "*성상불명의 마스크맨"
+          },
+          {
+            "img": "9 tier/kannari.webp",
+            "alt": "",
+            "name": "*칸나리"
+          },
+          {
+            "img": "9 tier/win.webp",
+            "alt": "",
+            "name": "*윈"
+          },
+          {
+            "img": "9 tier/yashiki mashinari.webp",
+            "alt": "",
+            "name": "*야사키 마사나리"
+          },
+          {
+            "img": "9 tier/higashiyama.webp",
+            "alt": "",
+            "name": "*히가시야마"
+          },
+          {
+            "img": "9 tier/komikato.webp",
+            "alt": "",
+            "name": "*코미카토"
+          },
+          {
+            "img": "9 tier/fukusaki.webp",
+            "alt": "",
+            "name": "*후쿠사키"
+          },
+          {
+            "img": "9 tier/togo tatsuya.webp",
+            "alt": "",
+            "name": "*토고 타츠야"
+          },
+          {
+            "img": "9 tier/nomi naruhito.webp",
+            "alt": "",
+            "name": "*노미 나루히토"
+          },
+          {
+            "img": "9 tier/kondo takeru.webp",
+            "alt": "",
+            "name": "*곤도 타케루"
+          },
+          {
+            "img": "9 tier/satake hirohumi.png",
+            "alt": "사타케 히로후미",
+            "name": "*사타케 히로후미"
+          }
+        ]
+      }
+    ]
+  }
+}

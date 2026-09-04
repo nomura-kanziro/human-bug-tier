@@ -1,0 +1,130 @@
+/* ========================================================
+   tier9.css — 9등급(비전투원 또는 전투력 측정 단서 없음 / 언랭크) 페이지 전용 스타일
+   ========================================================
+   tier1~9.css는 body/main/h2/.tier-table/.tier-row/.char/.tier-label/
+   .tier-cards 구조를 공유하고 등급별 배경·테두리 색만 다르다. 1등급(tier1.css)만
+   반짝이는 보석 상자 애니메이션이 있고, 이 파일은 애니메이션 없이 흰 바탕(가장
+   낮은/미분류 등급이라 무채색) 테마만 입힌 단순한 버전이다. */
+
+/* 페이지 배경 — 옅은 회색 바탕(등급표 바깥 여백 영역) */
+body {
+  font-family: "Pretendard", sans-serif;
+  background-color: #e7e7e7;
+  color: #000000;
+  margin: 0;
+  padding: 0;
+  }
+
+main {
+  padding: 30px;
+  text-align: center;
+}
+
+/* 등급 제목(h2). tier-nav.js가 tier-heading 클래스를 붙이면 tier-nav.css의
+   윤광 애니메이션이 추가로 적용된다 */
+h2 {
+  font-size: 1.6rem;
+  margin-bottom: 30px;
+}
+
+/* 등급표 바깥 박스 — 흰 배경 + 검은 테두리로 이 등급의 테마색을 낸다 */
+.tier-table {
+  width: 95%;
+  margin: 0 auto;
+  border: 2px solid #000000;
+  background-color: #ffffff;
+  color: #000000;
+  padding: 10px;
+}
+
+/* 세부등급 한 줄. 9등급은 "미묘사 인원들" 한 줄만 있어 다른 등급의 갑/을/병/정급
+   구분 없이 캐릭터가 전부 한 행에 나열된다. 위 줄과 구분선(border-top)으로 나눈다 */
+.tier-row {
+  display: flex;
+  border-top: 1px solid #000000;
+}
+
+/* 캐릭터 카드 한 장(이미지 + 이름 span) */
+.char {
+      border: 1px solid #000000;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 4px;
+      padding: 2px;
+      text-align: center;
+      width: 100px;
+      font-size: xx-small;
+      display: inline-block;
+      text-align: center;
+    }
+
+/* 캐릭터 썸네일. 100x100으로 잘라 표시(실제로는 아래 .tier-cards img가 같은 img
+   요소를 80x80으로 다시 덮어써서 최종적으로 80px로 보임 — 명세 참고) */
+.char img {
+  display: block;
+  margin: 0 auto 5px; /* 아래쪽 간격 */
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+}
+
+/* 왼쪽 세로 라벨 칸("미묘사 인원들" 표시) */
+.tier-label {
+  width: 80px;
+  background-color: #f1f1f1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+/* 라벨 오른쪽의 카드 나열 영역 — flex-wrap으로 카드가 많으면 자동 줄바꿈 */
+.tier-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 5px;
+  background-color: #f1f1f1;
+  justify-content: flex-start;
+}
+
+/* .char img와 같은 img 요소를 다시 선택해 80x80으로 덮어쓴다. 우선순위가 동일해
+   파일에서 나중에 나오는 이 규칙이 최종 적용되므로 화면에는 80px로 렌더링된다 */
+.tier-cards img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border: 1px solid #000000;
+  border-radius: 4px;
+}
+
+/* ======================================================================
+   다크 모드 — 9등급(언랭크) 페이지 전용 보정.
+   가장 낮은/미분류 등급이라 원래도 무채색(흰 배경 + 검은 글자)이었다. 다크
+   모드에서도 그 무채색 정체성을 그대로 이어가되, 이 등급만은 고유 강조색이
+   없으므로 하드코딩 대신 theme.css 공용 변수를 그대로 써서 가장 "일반적인"
+   다크 카드로 보이게 한다 */
+[data-theme="dark"] .tier-table {
+  background-color: var(--bg-elevated);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+  box-shadow: 0 10px 28px var(--shadow-color);
+}
+
+[data-theme="dark"] .tier-row {
+  border-top-color: var(--border-color);
+}
+
+[data-theme="dark"] .char {
+  border-color: var(--border-strong);
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .tier-label,
+[data-theme="dark"] .tier-cards {
+  background-color: var(--bg-subtle);
+}
+
+[data-theme="dark"] .tier-cards img {
+  border-color: var(--border-strong);
+}

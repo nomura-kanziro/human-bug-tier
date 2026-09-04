@@ -1,0 +1,417 @@
+/* ======================================================================
+   index-home.css — 메인 홈(index.html) 전용 스타일
+   퀵 네비게이션 카드, 커스텀 메이커 미리보기(어두운 카드), 행운 뽑기 미리보기 위젯(밝은 카드),
+   공식 티어 그리드 섹션 간격을 담당한다. 공통 헤더/푸터/기본 톤은 common.css·Header_Footer.css가 맡고
+   이 파일은 홈 화면에만 존재하는 요소들만 다룬다.
+   ====================================================================== */
+
+/* 퀵 카드 · 공지 · 미리보기 · 티어표 가로 폭 통일: 모든 섹션이 동일한 max-width(1200px)와
+   좌우 패딩을 공유하도록 한 번에 묶어 지정 — 섹션마다 폭이 제각각이면 시선이 좌우로 흔들리기 때문 */
+.quick-nav,
+.notice-section,
+.home-maker-preview,
+.home-luck-preview,
+.home-tiers-section {
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  box-sizing: border-box;
+}
+
+/* ====================== 커스텀 메이커 미리보기 (어두운 카드) ======================
+   index.html의 #home-maker-preview 섹션. 왼쪽엔 소개문+버튼(.home-maker-copy),
+   오른쪽엔 갑/을/병 줄로 배치된 캐릭터 미니어처(.home-maker-board, 순수 장식용 정적 이미지). */
+.home-maker-preview {
+  margin-top: 8px;
+  margin-bottom: 28px;
+}
+
+.home-maker-preview-inner {
+  display: flex;
+  gap: 36px;
+  align-items: center;
+  padding: 36px 40px;
+  border-radius: 20px;
+  background: linear-gradient(145deg, #141414 0%, #1c1c1c 55%, #111 100%);
+  color: #f5f5f5;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+}
+
+.home-maker-copy {
+  flex: 1 1 280px;
+}
+
+.home-maker-kicker {
+  margin: 0 0 8px;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #ffcc00;
+}
+
+.home-maker-preview h2 {
+  margin: 0 0 10px;
+  font-size: 1.55rem;
+}
+
+.home-maker-desc {
+  margin: 0 0 20px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.72);
+  font-size: 0.95rem;
+}
+
+.home-maker-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.home-maker-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border-radius: 999px;
+  text-decoration: none;
+  font-weight: 700;
+  font-size: 0.92rem;
+}
+
+.home-maker-btn-primary {
+  background: #ffcc00;
+  color: #111;
+}
+
+.home-maker-btn-ghost {
+  border: 1px solid rgba(255, 204, 0, 0.45);
+  color: #ffcc00;
+}
+
+.home-maker-board {
+  flex: 1 1 300px;
+  min-width: 240px;
+  padding: 16px;
+  border: 1px solid rgba(255, 204, 0, 0.35);
+  border-radius: 14px;
+  background: #0d0d0d;
+}
+
+.home-maker-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.home-maker-row:last-child {
+  margin-bottom: 0;
+}
+
+.home-maker-label {
+  flex: 0 0 36px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ffcc00;
+  color: #ffcc00;
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.home-maker-slots {
+  display: flex;
+  gap: 8px;
+  flex: 1;
+}
+
+.home-maker-slots img,
+.home-maker-empty {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  object-fit: cover;
+  object-position: top;
+}
+
+.home-maker-empty {
+  border: 1px dashed rgba(255, 204, 0, 0.35);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* 모바일: 좌우 2단이던 메이커 미리보기 카드를 세로로 쌓음 */
+@media (max-width: 768px) {
+  .home-maker-preview-inner {
+    flex-direction: column;
+    padding: 24px 18px;
+    gap: 22px;
+  }
+
+  .home-maker-board {
+    width: 100%;
+  }
+}
+
+/* ====================== 행운 뽑기 미리보기 (밝은 카드) ======================
+   index.html의 #home-luck-preview 섹션. 왼쪽은 소개문(.home-luck-copy), 오른쪽은
+   실제로 클릭해 뽑을 수 있는 위젯(.home-luck-widget) — 동작 로직은 index-home.js가 담당하고
+   여기서는 버튼/스테이지(placeholder·loading·result 3단 전환)의 모양만 정의한다. */
+.home-luck-preview {
+  margin-bottom: 36px;
+}
+
+.home-luck-inner {
+  display: flex;
+  gap: 32px;
+  align-items: stretch;
+  padding: 28px 32px;
+  border-radius: 20px;
+  border: 1px solid #f3e0b8;
+  background: linear-gradient(120deg, #fffbeb 0%, #fff 48%, #fff7ed 100%);
+}
+
+.home-luck-copy {
+  flex: 1 1 240px;
+}
+
+.home-luck-kicker {
+  margin: 0 0 8px;
+  font-size: 0.75rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: #d97706;
+}
+
+.home-luck-preview h2 {
+  margin: 0 0 8px;
+  font-size: 1.4rem;
+}
+
+.home-luck-desc {
+  margin: 0 0 14px;
+  color: #57534e;
+  line-height: 1.55;
+  font-size: 0.95rem;
+}
+
+.home-luck-more {
+  color: #b45309;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.home-luck-widget {
+  flex: 1 1 260px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 18px;
+  border-radius: 16px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(180, 83, 9, 0.08);
+}
+
+.home-luck-btn {
+  width: 100%;
+  padding: 12px 16px;
+  border: none;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.home-luck-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* 뽑기 결과가 표시되는 고정 높이 무대: placeholder(대기)/loading(뽑는 중)/result(결과) 중
+   하나만 [hidden] 없이 보이고 나머지 둘은 JS(index-home.js의 showStage())가 hidden 속성을 토글해 숨긴다 */
+.home-luck-stage {
+  min-height: 92px;
+  display: flex;
+  align-items: center;
+  padding: 12px 14px;
+  border-radius: 12px;
+  background: #fff7ed;
+  border: 1px dashed #f3d19a;
+}
+
+.home-luck-placeholder,
+.home-luck-loading,
+.home-luck-result {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  margin: 0;
+}
+
+/* [hidden] 속성이 붙은 스테이지는 무조건 숨김 — 세 상태 중 정확히 하나만 보이도록 강제 */
+.home-luck-placeholder[hidden],
+.home-luck-loading[hidden],
+.home-luck-result[hidden] {
+  display: none !important;
+}
+
+.home-luck-placeholder-mark,
+.home-luck-loading #home-luck-reel {
+  flex: 0 0 64px;
+  width: 64px;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: #ffedd5;
+  color: #d97706;
+  font-size: 1.5rem;
+  font-weight: 800;
+}
+
+.home-luck-placeholder-text {
+  font-size: 0.88rem;
+  line-height: 1.45;
+  color: #a16207;
+}
+
+.home-luck-status,
+.home-luck-guest {
+  margin: 0;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: #78716c;
+}
+
+.home-luck-guest {
+  margin-top: 4px;
+}
+
+.home-luck-static {
+  background: #fef3c7;
+  color: #92400e;
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+.home-luck-result img {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 10px;
+  flex: 0 0 64px;
+}
+
+.home-luck-result-copy {
+  min-width: 0;
+}
+
+.home-luck-tier {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #d97706;
+}
+
+.home-luck-name {
+  font-weight: 700;
+  font-size: 0.98rem;
+}
+
+/* 모바일: 홈 화면 전 섹션 좌우 패딩을 줄이고, 행운 뽑기 카드도 세로 1단으로 전환 */
+@media (max-width: 768px) {
+  .quick-nav,
+  .notice-section,
+  .home-maker-preview,
+  .home-luck-preview,
+  .home-tiers-section {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .home-luck-inner {
+    flex-direction: column;
+    padding: 22px 16px;
+  }
+}
+
+/* ====================== 공식 티어표 섹션 ======================
+   index.html 맨 아래 1~9티어 카드 그리드(.tiers)를 감싸는 섹션. 그리드 자체 스타일(.tiers/.tier-card)은
+   common.css에 정의되어 있고, 여기서는 홈 화면에서의 섹션 여백만 추가로 조정한다. */
+.home-tiers-section {
+  margin-bottom: 48px;
+}
+
+.home-tiers-header h2 {
+  margin: 0 0 16px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.home-tiers-section .tiers {
+  padding: 0;
+}
+
+/* ======================================================================
+   다크 모드 — 홈 화면 전용 세부 보정.
+   theme.css의 안전망이 .quick-card 같은 공통 패턴은 이미 처리하지만, 이 파일의
+   커스텀 메이커/행운 뽑기 미리보기 카드는 각자 고유한 그라디언트 배경(어두운 골드 카드,
+   밝은 앰버 카드)이라 여기서 개별 대응한다.
+   ====================================================================== */
+[data-theme="dark"] .home-tiers-header h2,
+[data-theme="dark"] .home-luck-preview h2,
+[data-theme="dark"] .home-maker-preview h2 {
+  color: var(--text-primary);
+}
+
+/* 커스텀 메이커 카드는 원래도 어두운 배경(다크 카드)이라 그대로 둬도 자연스럽지만,
+   페이지 배경과 완전히 같은 검정이 되지 않도록 살짝 밝은 톤을 유지해 카드 경계가 보이게 한다 */
+[data-theme="dark"] .home-maker-preview-inner {
+  background: linear-gradient(145deg, #1c1c1c 0%, #232323 55%, #191919 100%);
+  box-shadow: 0 18px 40px var(--shadow-color);
+}
+[data-theme="dark"] .home-maker-board {
+  background: #0a0a0a;
+  border-color: rgba(255, 204, 0, 0.25);
+}
+
+/* 행운 뽑기 카드는 원래 밝은 크림/앰버 배경이라 다크 모드에서 통째로 어둡게 뒤집는다 */
+[data-theme="dark"] .home-luck-inner {
+  background: linear-gradient(120deg, #241c10 0%, #1c1c1c 48%, #241a10 100%);
+  border-color: #4a3a1a;
+}
+[data-theme="dark"] .home-luck-desc {
+  color: var(--text-secondary);
+}
+[data-theme="dark"] .home-luck-widget {
+  background: var(--bg-elevated);
+  box-shadow: 0 10px 24px var(--shadow-color);
+}
+[data-theme="dark"] .home-luck-stage {
+  background: rgba(217, 119, 6, 0.12);
+  border-color: #4a3a1a;
+}
+[data-theme="dark"] .home-luck-placeholder-mark,
+[data-theme="dark"] .home-luck-loading #home-luck-reel {
+  background: rgba(217, 119, 6, 0.22);
+}
+[data-theme="dark"] .home-luck-placeholder-text,
+[data-theme="dark"] .home-luck-status,
+[data-theme="dark"] .home-luck-guest {
+  color: var(--text-muted);
+}
+[data-theme="dark"] .home-luck-static {
+  background: rgba(217, 119, 6, 0.18);
+  color: #fbbf24;
+}
+[data-theme="dark"] .home-luck-name {
+  color: var(--text-primary);
+}

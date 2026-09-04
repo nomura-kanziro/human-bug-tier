@@ -1,0 +1,148 @@
+/* ======================================================================
+   loading-screen.css — 사이트 전체 초기 로딩 화면
+   ======================================================================
+   페이지 접속 직후, 헤더/푸터가 자리 잡을 때까지 화면 전체를 덮는 오버레이
+   (캐릭터 이미지 등 나머지 리소스는 기다리지 않음 — loading-screen.js 참고).
+   Uiverse.io(SelfMadeSystem)의 로더 기법("자체적으로 계속 그려지는 네온 대시
+   선"을 SVG stroke-dasharray/dashoffset로 구현하는 방식, 원본:
+   https://uiverse.io/SelfMadeSystem/orange-crab-82)을 그대로 가져오되,
+   임의의 아이콘 대신 우리 사이트 로고의 원형 테두리를 따라 붉은 네온 선이
+   계속 돌아가도록 만들고, 로고 자체는 은은하게 숨쉬듯 밝아졌다 어두워지는
+   브리딩(breathe) 효과를 함께 준다.
+   표시/숨김 타이밍(언제 사라지는지)은 loading-screen.js 참고 — 이 파일은
+   "항상 보이는 상태"의 모양만 담당하고, JS가 .is-hidden 클래스만 붙였다 뗀다.
+   ⚠️ 사라지는 트랜지션은 일부러 아주 짧게(0.15s) 뒀다 — 처음엔 0.5s로 만들었다가,
+   실제 콘텐츠는 이미 준비됐는데도 매 페이지 전환마다 페이드 연출 때문에 0.5초
+   이상 화면이 막힌 것처럼 느껴져 체감 속도가 눈에 띄게 느려지는 문제가 있었다
+   (2026-09 수정). 로딩 자체를 숨기는 "판단 시점"은 loading-screen.js가 최대한
+   빠르게 잡아주므로, 여기 트랜지션은 "뚝 끊기지 않을 정도"로만 짧게 남긴다. */
+
+/* 화면 전체를 덮는 고정 오버레이. 헤더/모달보다도 위(z-index 최상단)에 그려야
+   그 아래로 로딩 중인 페이지 내용이 언뜻 비치지 않는다. */
+.site-loading-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg-page, #fff);
+  transition: opacity 0.15s ease, visibility 0.15s ease;
+}
+
+/* loading-screen.js가 "이제 다 로드됐다"고 판단하면 이 클래스를 붙인다.
+   opacity/visibility를 함께 써서 트랜지션 동안은 자연스럽게 사라지고,
+   트랜지션이 끝나면 완전히 안 보이고 클릭도 안 되게(pointer-events:none) 한다. */
+.site-loading-screen.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.site-loading-inner {
+  position: relative;
+  width: 9em;
+  height: 9em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 로고 이미지를 감싸는 SVG와 정확히 같은 영역(absolute inset:0)에 겹쳐서,
+   네온 링이 로고의 실제 원형 테두리를 따라 도는 것처럼 보이게 한다. */
+.site-loading-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+/* 로고 이미지 자체. border-radius로 원형 클리핑해서 원본 이미지 모서리가
+   사각형으로 남더라도(배경이 흰색이든 투명이든) 항상 깔끔한 원으로 보이게 한다. */
+.site-loading-logo {
+  width: 78%;
+  height: 78%;
+  border-radius: 50%;
+  object-fit: cover;
+  animation: site-loading-breathe 3.6s ease-in-out infinite;
+}
+
+/* 네온 선이 지나갈 경로를 은은하게 항상 보여주는 안내용 배경 링(대시 애니메이션 없음) */
+.site-loading-track {
+  fill: none;
+  stroke: var(--border-color, #e2e2e6);
+  stroke-width: 1.4;
+}
+
+/* 실제로 빙글빙글 도는 네온 대시 선. pathLength="360"을 준 <circle>에 적용되며,
+   원본 uiverse 로더와 동일하게 dashArray(선 길이가 커졌다 작아짐)와
+   dashOffset(선 위치가 계속 회전)를 동시에 애니메이션해서 "빛이 흐르는" 효과를 낸다. */
+.site-loading-dash {
+  fill: none;
+  stroke: #e11d48;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  animation: site-loading-dashArray var(--sped, 3s) ease-in-out infinite,
+    site-loading-dashOffset var(--sped, 3s) linear infinite;
+}
+
+/* 바깥쪽(큰) 링은 네온 글로우(drop-shadow)를 얹어 더 강조 — 원본의 .big 클래스와 같은 역할 */
+.site-loading-dash.big {
+  stroke-width: 2;
+  filter: drop-shadow(0 0 3px #e11d48) drop-shadow(0 0 6px rgba(225, 29, 72, 0.5));
+}
+
+@keyframes site-loading-dashArray {
+  0% {
+    stroke-dasharray: 0 1 359 0;
+  }
+  50% {
+    stroke-dasharray: 0 359 1 0;
+  }
+  100% {
+    stroke-dasharray: 359 1 0 0;
+  }
+}
+
+@keyframes site-loading-dashOffset {
+  0% {
+    stroke-dashoffset: -5;
+  }
+  100% {
+    stroke-dashoffset: -365;
+  }
+}
+
+/* 로고가 숨쉬듯 은은하게 밝아졌다 어두워지는 효과 — 원본의 .fill 페이드와 같은 타이밍(주기 중 30~55%) */
+@keyframes site-loading-breathe {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 0 transparent);
+    opacity: 0.92;
+  }
+  30%,
+  55% {
+    filter: drop-shadow(0 0 10px rgba(225, 29, 72, 0.45));
+    opacity: 1;
+  }
+}
+
+.site-loading-text {
+  margin-top: 1.6em;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary, #55565c);
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+/* 동작 최소화(prefers-reduced-motion)를 설정한 사용자를 위한 배려 —
+   빙글빙글 도는 네온 선과 브리딩 펄스를 끄고 정지된 모양으로만 보여준다. */
+@media (prefers-reduced-motion: reduce) {
+  .site-loading-dash,
+  .site-loading-logo {
+    animation: none !important;
+  }
+}

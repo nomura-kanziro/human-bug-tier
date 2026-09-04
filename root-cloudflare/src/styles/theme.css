@@ -1,0 +1,235 @@
+/* ======================================================================
+   theme.css — 라이트/다크 테마 공용 스타일 (전 페이지 링크)
+   ======================================================================
+   이 파일은 모든 HTML 페이지의 <head>에 공통으로 링크되어 있다(각 페이지 <head>
+   맨 앞의 인라인 스크립트가 <html data-theme="light|dark">를 첫 렌더링 전에 미리
+   정해두고, 이 파일은 그 속성값에 따라 실제 색을 바꿔준다). 동작 원리·자동 전환
+   시각(오전 7시/밤 10시) 로직은 theme.js 참고.
+
+   두 가지 역할을 담당:
+   ① CSS 변수(디자인 토큰) 선언 — :root에 라이트 기본값, [data-theme="dark"]에 다크 값.
+      새로 만드는 UI(예: 이 파일의 토글 스위치)는 이 변수를 쓰면 테마 전환에 자동 대응된다.
+   ② "안전망" 다크 오버라이드 — 기존 페이지별 CSS 파일들은 색을 대부분 리터럴
+      값(#fff, #333 등)으로 하드코딩해 뒀기 때문에, 변수만으로는 즉시 다크 모드가
+      적용되지 않는다. 그래서 header/footer, 카드류, 버튼, 입력창, 모달처럼 여러
+      페이지에 공통으로 등장하는 패턴을 [data-theme="dark"] 선택자로 여기서 한 번에
+      덮어써서 "최소한 전 페이지가 다크에서도 읽기 불편하지 않게" 만든다. 특정 페이지
+      전용 요소(티어표 카드 색, 커스텀 메이커 보드 등)의 세밀한 보정은 각 폴더의 CSS
+      파일 맨 아래에 별도로 추가되어 있다.
+   ====================================================================== */
+
+/* ====================== ① 디자인 토큰 (CSS 변수) ====================== */
+:root {
+  --bg-page: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-subtle: #f7f7f8;
+  --bg-hover: #f1f1f3;
+  --text-primary: #171717;
+  --text-secondary: #55565c;
+  --text-muted: #8a8b91;
+  --border-color: #e2e2e6;
+  --border-strong: #cfd0d5;
+  --link-color: #2563eb;
+  --shadow-color: rgba(15, 15, 20, 0.08);
+  --overlay-bg: rgba(0, 0, 0, 0.45);
+  --input-bg: #ffffff;
+  --input-border: #d7d7dc;
+  --scrollbar-track: #f1f1f3;
+  --scrollbar-thumb: #c7c7cf;
+}
+
+:root[data-theme="dark"] {
+  --bg-page: #121214;
+  --bg-elevated: #1c1c1f;
+  --bg-subtle: #202024;
+  --bg-hover: #2a2a2f;
+  --text-primary: #eeeeef;
+  --text-secondary: #b7b8bd;
+  --text-muted: #8a8b91;
+  --border-color: #303035;
+  --border-strong: #3d3d43;
+  --link-color: #6ea8fe;
+  --shadow-color: rgba(0, 0, 0, 0.45);
+  --overlay-bg: rgba(0, 0, 0, 0.65);
+  --input-bg: #1a1a1d;
+  --input-border: #3a3a40;
+  --scrollbar-track: #1c1c1f;
+  --scrollbar-thumb: #45454c;
+}
+
+/* 다크 모드 전환에 부드러운 느낌을 주는 공용 트랜지션 — 색이 "뚝" 바뀌지 않게 함.
+   과하게 모든 요소에 걸면 렌더링 비용이 커지므로 배경/글자/테두리 정도로만 제한. */
+[data-theme] body,
+[data-theme] header,
+[data-theme] footer {
+  transition: background-color 0.25s ease, color 0.25s ease, border-color 0.25s ease;
+}
+
+/* ====================== ② 안전망 다크 오버라이드 ====================== */
+
+/* 페이지 기본 배경/글자색 — common.css가 안 걸린 페이지(로그인류 등)까지 포함해
+   모든 페이지가 최소한 이 색으로는 깔린다 */
+[data-theme="dark"] body {
+  background: var(--bg-page);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] a {
+  color: var(--link-color);
+}
+
+/* 스크롤바(웹킷 계열) — 밝은 트랙이 다크 배경 위에서 튀는 것 방지 */
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 999px;
+}
+
+/* 헤더/푸터 — 전 페이지 공통 요소(Header_Footer.css의 기본 흰 배경을 덮어씀) */
+[data-theme="dark"] header,
+[data-theme="dark"] footer,
+[data-theme="dark"] .side-menu {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+[data-theme="dark"] .side-menu {
+  box-shadow: -2px 0 10px var(--shadow-color);
+}
+[data-theme="dark"] .logo-text,
+[data-theme="dark"] .nav-item > a,
+[data-theme="dark"] .side-menu ul li a,
+[data-theme="dark"] footer .fot-text {
+  color: var(--text-primary);
+}
+[data-theme="dark"] .dropdown,
+[data-theme="dark"] .notification-panel,
+[data-theme="dark"] .user-profile-panel {
+  background: var(--bg-elevated);
+  border-color: var(--border-color);
+  box-shadow: 0 10px 24px var(--shadow-color);
+}
+[data-theme="dark"] .dropdown a {
+  color: var(--text-primary);
+}
+[data-theme="dark"] .dropdown a:hover,
+[data-theme="dark"] .sub-grid a:hover,
+[data-theme="dark"] .sub-menu a:hover {
+  background: var(--bg-hover);
+}
+
+/* 카드/컨테이너류 — 여러 페이지에서 반복되는 흰 배경 박스 패턴을 폭넓게 덮음 */
+[data-theme="dark"] .quick-card,
+[data-theme="dark"] .notice-column,
+[data-theme="dark"] .tier-card,
+[data-theme="dark"] .post-card,
+[data-theme="dark"] .char,
+[data-theme="dark"] .home-luck-widget,
+[data-theme="dark"] .home-luck-stage,
+[data-theme="dark"] .notification-settings-modal,
+[data-theme="dark"] #notice-modal-content,
+[data-theme="dark"] .comment-item,
+[data-theme="dark"] .answer-card {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+[data-theme="dark"] .quick-card {
+  background: linear-gradient(165deg, var(--bg-elevated) 0%, var(--bg-subtle) 100%);
+}
+
+/* 입력창/폼 — 로그인·문의·게시글 작성 등 전 페이지 폼 요소 공용 */
+[data-theme="dark"] input,
+[data-theme="dark"] textarea,
+[data-theme="dark"] select {
+  background: var(--input-bg);
+  color: var(--text-primary);
+  border-color: var(--input-border);
+}
+[data-theme="dark"] input::placeholder,
+[data-theme="dark"] textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* 모달/오버레이 배경 — 대부분의 모달이 반투명 검정 오버레이를 쓰므로 어둡게 더 강조 */
+[data-theme="dark"] .modal-overlay,
+[data-theme="dark"] .notice-modal,
+[data-theme="dark"] .report-modal-overlay {
+  background: var(--overlay-bg);
+}
+
+/* ====================== 라이트/다크 토글 스위치 ======================
+   header.html에 삽입되는 알약(pill) 모양 스위치. 좌우에 해/달 아이콘을 두고,
+   가운데 동그란 thumb이 좌우로 슬라이드한다. 실제 테마 전환 로직은 theme.js가
+   [data-theme-toggle] 클릭을 감지해서 처리하고, 여기서는 모양만 담당한다. */
+.theme-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  padding: 4px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.theme-toggle-icon {
+  font-size: 13px;
+  opacity: 0.55;
+  transition: opacity 0.2s ease;
+}
+
+.theme-toggle-btn.is-dark .theme-toggle-icon-moon,
+.theme-toggle-btn:not(.is-dark) .theme-toggle-icon-sun {
+  opacity: 1;
+}
+
+.theme-toggle-track {
+  position: relative;
+  width: 40px;
+  height: 22px;
+  background: #d8d9de;
+  border-radius: 999px;
+  transition: background-color 0.25s ease;
+  flex: 0 0 auto;
+}
+
+.theme-toggle-btn.is-dark .theme-toggle-track {
+  background: #4b4b52;
+}
+
+.theme-toggle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 18px;
+  height: 18px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  transition: transform 0.25s ease;
+}
+
+.theme-toggle-btn.is-dark .theme-toggle-thumb {
+  transform: translateX(18px);
+}
+
+@media (max-width: 768px) {
+  .theme-toggle-icon {
+    display: none; /* 좁은 화면에서는 스위치만 보이고 해/달 텍스트 아이콘은 숨김 */
+  }
+}
+
+/* 로그인·회원가입 등 공용 헤더(header.html)가 없는 단독 페이지용 — 우상단에 고정 배치.
+   버튼 자체의 모양(.theme-toggle-*)은 위 정의를 그대로 재사용하고 위치만 덧붙인다. */
+.theme-toggle-floating {
+  position: fixed;
+  top: 14px;
+  right: 14px;
+  z-index: 1000;
+  background: var(--bg-elevated);
+  border-radius: 999px;
+  box-shadow: 0 2px 8px var(--shadow-color);
+}
