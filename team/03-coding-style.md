@@ -11,7 +11,8 @@
 
 - 들여쓰기: 기존 파일 스타일 따르기 (섞지 말 것)  
 - 의미 있는 이름: `getAdminAuthHeaders`, `loadNotices`  
-- 주석은 “왜” 위주 (자명한 코드에 장문 주석 지양)  
+- 주석은 “왜” 위주. 자명한 한 줄에 **새로** 장문을 달지는 말 것  
+- **이미 있는 설명 주석은 삭제하지 말 것.** 동작이 바뀌면 그 주석 문구만 고친다. 사람이 “지워”라고 하기 전엔 유지 (AI 포함)  
 - 커밋 메시지: `feat(admin): ...` / `fix(path): ...` — **type·scope 영어**, **콜론 뒤 한국어**  
   - 상세: [04-prohibitions.md](./04-prohibitions.md) · [commit_history README](../RDMD/commit_history/README.md)
 

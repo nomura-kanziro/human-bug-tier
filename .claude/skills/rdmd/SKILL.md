@@ -38,6 +38,7 @@ description: >
 - 루트에 `backend_N.md` / `informationN.md` 재생성
 - 존재하지 않는 커밋 해시 날조
 - features 와 일지 모순 방치
+- 규칙 문서·스킬에서 기존 설명 문단을 무단 삭제 (내용 수정만)
 
 ## Tasks
 

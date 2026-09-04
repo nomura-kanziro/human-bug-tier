@@ -11,7 +11,8 @@ ChatGPT Codex / Codex VS Code 확장과 함께 쓰도록 맞춰 두었습니다.
 4. **`codex/<기능>/skill.md`** — Codex 주 골격 보강  
 5. 충돌 시 **`.agents` 우선** (약화 금지). Grok = Admin AI  
 6. 배경 `RDMD/`, 사람 `team/`  
-7. 작업 후: **커밋·푸시 전** `RDMD/commit_history/{작성자}.md` 작성 필수 안내 + 기능 record 권장
+7. 작업 후: **커밋·푸시 전** `RDMD/commit_history/{작성자}.md` 작성 필수 안내 + 기능 record 권장  
+8. **기존 주석 삭제 금지** (`.agents/common-rules.md` D-5). 코드가 바뀌면 주석 문구만 수정.
 
 사람은 온보딩·체크리스트로도 사용 가능.
 

@@ -45,6 +45,7 @@ middleware/auth.js, utils/
 - node_modules 수정
 - 시크릿 하드코딩
 - 무인증 삭제/관리 API
+- **기존 주석 삭제** (`server.js` 등). 라우트 순서를 바꿔도 설명 주석은 남기고, 바뀐 점만 문구 수정
 
 ## Checklist
 

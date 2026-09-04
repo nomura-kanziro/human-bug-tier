@@ -78,6 +78,7 @@ npm start
 3. 관리 API → requireAdmin + getAdminAuthHeaders  
 4. 재설정 토큰은 DB에 해시만  
 5. `.env` 미커밋  
+6. **기존 주석 삭제 금지** — 코드가 바뀌면 주석 문구만 수정. 사람이 “지워” 하기 전엔 유지  
 
 ### 5) 첫 실습
 

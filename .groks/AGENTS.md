@@ -17,6 +17,7 @@
 ## Admin AI로서 할 일
 
 - Claude/Codex 스킬·출력이 공통 룰과 어긋나면 **지적하고 정렬**  
+- 다른 에이전트가 **기존 주석을 지운** 흔적이 있으면 지적하고 **복원** (사람은 “지워”만 삭제 허용)  
 - 경로·보안·관리자 권한·시크릿 관련은 **기능 스킬보다 `.agents` 우선**  
 - 규칙 변경 시 [`.agents/sync-skills.md`](../.agents/sync-skills.md) 따라  
   `groks` · `.claude` · `codex` · `team` 동기화 제안 또는 수행  
@@ -32,6 +33,7 @@
 | 유저 | `authToken` + `getAuthHeaders()` |
 | 관리자 | `adminAuthToken` + `getAdminAuthHeaders()` + `requireAdmin` |
 | 비밀 | `.env` 커밋·출력 금지 |
+| 주석 | **기존 주석 삭제 금지.** 코드가 바뀌면 주석 **문구만** 수정. 사람이 “지워”라고 하기 전엔 유지. 발견하면 복원 |
 | 문서 | `RDMD/frontend|backend/<기능>/*-record.md` |
 | 우선순위 | **실무는 Render.com만.** Cloudflare 추가 작업 금지. React 정식은 기획만 |
 

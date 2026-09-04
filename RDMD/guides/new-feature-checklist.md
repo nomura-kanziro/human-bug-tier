@@ -26,6 +26,7 @@
 - [ ] (메일 링크) `appUrl.js`  
 - [ ] (알림) `notificationService`  
 - [ ] `backend/README.md` API 표 한 줄 업데이트  
+- [ ] `server.js` 등 기존 설명 주석을 지우지 않음 (순서만 바꿔도 주석은 남김)  
 
 ---
 

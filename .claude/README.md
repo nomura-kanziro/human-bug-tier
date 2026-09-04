@@ -7,6 +7,8 @@ Claude Code가 자동으로 찾는 프로젝트 스킬 위치입니다.
 — 번외 AI는 여기만 사용. Claude 팩은 주 골격 보강.  
 **사람 규칙**: [`team/`](../team/README.md)
 
+**주석**: 기존 설명 주석은 삭제 금지. 코드가 바뀌면 문구만 수정. 사람이 “지워” 하기 전엔 유지 (`.agents/common-rules.md` D-5).
+
 ```
 .claude/
 ├── README.md                 ← 지금 이 파일

@@ -84,6 +84,7 @@ npm start
 3. 관리 API → `requireAdmin` + `getAdminAuthHeaders()`  
 4. 비번 재설정 토큰은 DB에 **해시만**  
 5. `.env` 는 git에 넣지 않음  
+6. **기존 주석 삭제 금지** — 코드가 바뀌면 주석 문구만 수정. 사람이 “지워” 하기 전엔 유지 (`.agents/common-rules.md` D-5)  
 
 ### 5) 첫 실습 시나리오
 

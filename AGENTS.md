@@ -52,6 +52,7 @@ npm start
 | 관리자 | `adminAuthToken` + `getAdminAuthHeaders()` + **`requireAdmin`** |
 | 비번 재설정 | 랜덤 토큰 + **SHA-256 해시만 DB** |
 | 비밀 | `.env` 커밋·출력 금지 |
+| 주석 | **기존 주석 삭제 금지.** 코드가 바뀌면 주석 **문구만** 수정. 사람이 “지워”라고 하기 전엔 유지 |
 | 문서 | 큰 변경 → `RDMD/frontend|backend/<기능>/*-record.md` |
 
 ## 에이전트별 스킬 위치

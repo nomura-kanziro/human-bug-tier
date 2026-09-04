@@ -58,7 +58,7 @@
 | 파일 | 내용 |
 |------|------|
 | [hierarchy.md](./hierarchy.md) | 사람 > Grok > 기타 AI |
-| [common-rules.md](./common-rules.md) | 전 AI MUST |
+| [common-rules.md](./common-rules.md) | 전 AI MUST (D-5: 기존 주석 삭제 금지) |
 | [authority-matrix.md](./authority-matrix.md) | 권한 표 |
 | [sync-skills.md](./sync-skills.md) | 정본→전용 팩 동기화 |
 

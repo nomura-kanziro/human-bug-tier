@@ -40,6 +40,7 @@ middleware/auth.js, utils/
 - node_modules 수정
 - 시크릿 하드코딩
 - 무인증 삭제/관리 API
+- **기존 주석 삭제**. 동작이 바뀌면 주석 문구만 고친다. 사람이 “지워” 하기 전엔 유지
 
 ## Checklist
 

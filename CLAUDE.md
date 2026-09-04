@@ -72,6 +72,7 @@ env 로드: 루트 `.env` 후 `backend/.env` (동일 키는 backend 우선)
 | 관리자 | `adminAuthToken` + `getAdminAuthHeaders()` + 서버 **`requireAdmin`** |
 | 비번 재설정 | 랜덤 토큰 + **SHA-256 해시만 DB** (JWT URL 방식 금지) |
 | 비밀 | `.env` 커밋·출력 금지. `.env.example` 만 공유 |
+| 주석 | **기존 주석 삭제 금지.** 코드가 바뀌면 주석 **문구만** 수정. 사람이 “지워”라고 하기 전엔 유지 |
 | 문서 | 큰 변경 → `RDMD/frontend|backend/<기능>/*-record.md` + features/guides |
 
 ## 문서 지도 (사람 + AI)
