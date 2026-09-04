@@ -482,6 +482,10 @@ function loadCommon() {
 
     ensurePwaAssets(base);
 
+    // 헤더/푸터까지 자리를 잡았으니 초기 로딩 화면을 치운다. 캐릭터 이미지 등
+    // 나머지 리소스는 여기서 기다리지 않는다(loading-screen.js 상단 주석 참고).
+    if (window.hideSiteLoadingScreen) window.hideSiteLoadingScreen();
+
     console.log('✅ [common.js] Header & Footer + 모든 이벤트 완전 로드 완료!');
   })
   .catch(err => {
@@ -513,6 +517,8 @@ function fallbackLoadHeaderFooter(base) {
     renderNotificationBell();
     renderHeaderLoginButton();
     renderSponsorButton();
+
+    if (window.hideSiteLoadingScreen) window.hideSiteLoadingScreen();
 
     console.log('✅ Header & Footer + 모든 이벤트 완전 로드 완료!');
   })
