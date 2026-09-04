@@ -8,6 +8,12 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <!-- 라이트/다크 테마 FOUC(첫 렌더링 깜빡임) 방지: CSS가 로드되기 전에 즉시
+       <html data-theme="light|dark">를 정해둔다. 저장된 값이 없으면(한 번도 토글을
+       안 눌렀으면) 현재 시각 기준 자동값(오전 7시~밤 10시 전=라이트, 그 외=다크)을 쓴다.
+       상세 로직/토글 클릭 처리는 theme.js 참고. -->
+  <script>(function(){try{var t=localStorage.getItem('hbtTheme');if(t!=='light'&&t!=='dark'){var h=new Date().getHours();t=(h>=7&&h<22)?'light':'dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="../theme.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>공지사항 - 휴버대 티어표</title>
@@ -48,6 +54,7 @@
   </div>
 
   <div id="footer-placeholder"></div>
+  <script src="../theme.js"></script>
   <script src="../common.js"></script>
   <!-- notice.js는 DOMContentLoaded 시 detectPageType()으로 이 페이지를 'notice_main'으로 인식하고
        renderNoticeMainPage()를 자동 실행한다(별도 초기화 코드가 이 파일 안에 필요 없음) -->

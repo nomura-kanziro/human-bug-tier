@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <!-- 라이트/다크 테마 FOUC(첫 렌더링 깜빡임) 방지: CSS가 로드되기 전에 즉시
+       <html data-theme="light|dark">를 정해둔다. 저장된 값이 없으면(한 번도 토글을
+       안 눌렀으면) 현재 시각 기준 자동값(오전 7시~밤 10시 전=라이트, 그 외=다크)을 쓴다.
+       상세 로직/토글 클릭 처리는 theme.js 참고. -->
+  <script>(function(){try{var t=localStorage.getItem('hbtTheme');if(t!=='light'&&t!=='dark'){var h=new Date().getHours();t=(h>=7&&h<22)?'light':'dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="../theme.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>행운 뽑기 - 휴버대 티어표</title>
@@ -93,6 +99,7 @@
   <div id="footer-placeholder"></div>
   <!-- 로드 순서 중요: common.js(getApiBase/getAuthHeaders 등 전역 유틸) →
        luck-draw-api.js(그 유틸을 쓰는 fetch 래퍼) → luck-draw.js(페이지 로직, 위 두 파일의 함수를 호출). -->
+  <script src="../theme.js"></script>
   <script src="../common.js"></script>
   <script src="luck-draw-api.js"></script>
   <script src="luck-draw.js"></script>

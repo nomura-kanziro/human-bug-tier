@@ -8,6 +8,12 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <!-- 라이트/다크 테마 FOUC(첫 렌더링 깜빡임) 방지: CSS가 로드되기 전에 즉시
+       <html data-theme="light|dark">를 정해둔다. 저장된 값이 없으면(한 번도 토글을
+       안 눌렀으면) 현재 시각 기준 자동값(오전 7시~밤 10시 전=라이트, 그 외=다크)을 쓴다.
+       상세 로직/토글 클릭 처리는 theme.js 참고. -->
+  <script>(function(){try{var t=localStorage.getItem('hbtTheme');if(t!=='light'&&t!=='dark'){var h=new Date().getHours();t=(h>=7&&h<22)?'light':'dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="../../theme.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>댓글 상세 관리 - 휴버대 티어표</title>
@@ -59,6 +65,22 @@
       gap: 10px;
       flex-wrap: wrap;
     }
+
+    /* 다크 모드 — .detail-card/.quote는 검정 테두리+검정 오프셋 그림자(브루탈리즘 톤)라
+       다크 배경에서는 그대로 두면 테두리·그림자가 페이지 배경에 묻혀 안 보이게 된다.
+       그래서 var(--border-strong)로 밝혀서 카드 윤곽이 계속 보이게 한다.
+       .answer-card는 theme.css의 전역 안전망(.answer-card 셀렉터)이 이미 처리해서 여기선 생략. */
+    [data-theme="dark"] .detail-card {
+      background: var(--bg-elevated);
+      border-color: var(--border-strong);
+      box-shadow: 8px 8px 0 var(--border-strong);
+      color: var(--text-primary);
+    }
+    [data-theme="dark"] .quote {
+      background: var(--bg-subtle);
+      border-color: var(--border-color);
+      color: var(--text-secondary);
+    }
   </style>
 </head>
 <body>
@@ -79,6 +101,7 @@
 
   <!-- 로드 순서: common.js(공통 유틸/헤더·푸터) → admin_api.js(관리자 토큰 헤더) →
        comment-detail.js(이 페이지의 실제 렌더링/삭제 로직) -->
+  <script src="../../theme.js"></script>
   <script src="../../common.js"></script>
   <script src="../admin_api.js"></script>
   <script src="comment-detail.js"></script>

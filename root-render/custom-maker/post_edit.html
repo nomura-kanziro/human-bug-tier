@@ -1,6 +1,12 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+  <!-- 라이트/다크 테마 FOUC(첫 렌더링 깜빡임) 방지: CSS가 로드되기 전에 즉시
+       <html data-theme="light|dark">를 정해둔다. 저장된 값이 없으면(한 번도 토글을
+       안 눌렀으면) 현재 시각 기준 자동값(오전 7시~밤 10시 전=라이트, 그 외=다크)을 쓴다.
+       상세 로직/토글 클릭 처리는 theme.js 참고. -->
+  <script>(function(){try{var t=localStorage.getItem('hbtTheme');if(t!=='light'&&t!=='dark'){var h=new Date().getHours();t=(h>=7&&h<22)?'light':'dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <link rel="stylesheet" href="../theme.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>게시글 수정 - 커스텀 티어</title>
@@ -8,6 +14,7 @@
   <link rel="stylesheet" href="../Header_Footer.css">
   <!-- custom-maker.css 그대로 재사용 (신규 제작 페이지와 100% 동일한 레이아웃/스타일) -->
   <link rel="stylesheet" href="custom-maker.css">
+  <script src="../theme.js"></script>
   <script src="../common.js"></script>
   <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
