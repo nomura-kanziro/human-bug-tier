@@ -178,3 +178,49 @@ body {
   cursor: pointer;
   background: #8faadc;
 }
+
+/* ======================================================================
+   다크 모드 — 회원가입 페이지 전용 세부 보정.
+   login.css와 레이아웃/색상 팔레트를 공유하는 자매 페이지라 보정 방식도 동일하다.
+   ====================================================================== */
+[data-theme="dark"] body {
+  background: var(--bg-page);
+}
+
+[data-theme="dark"] .login-wrapper {
+  background: var(--bg-page);
+  box-shadow: 0 0 30px var(--shadow-color);
+}
+
+[data-theme="dark"] .login-box {
+  background: var(--bg-elevated);
+}
+
+/* h2에 style="color:#000"가 인라인으로 박혀 있어(HTML은 수정 범위 밖) !important로 덮어씀 */
+[data-theme="dark"] .login-box h2 {
+  color: var(--text-primary) !important;
+}
+
+/* input에 border: 1px solid #ccc가 .login-box input(더 높은 특이도)으로 박혀 있어
+   theme.css 공용 input 규칙보다 우선 적용되므로 여기서 별도로 덮어씀 */
+[data-theme="dark"] .login-box input {
+  border-color: var(--input-border);
+}
+
+/* "이미 계정이 있으신가요?" 링크도 style="color:#555"가 인라인으로 박혀 있어 !important 필요 */
+[data-theme="dark"] .find-btn {
+  color: var(--text-secondary) !important;
+}
+
+[data-theme="dark"] .find-btn:hover {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .back-btn {
+  color: var(--link-color);
+}
+
+/* 장식용 컬러 패널 — 원색 그대로 두면 다크 배경 위에서 과하게 튀므로 톤을 낮춘 그라디언트로 대체 */
+[data-theme="dark"] .side-panel {
+  background: linear-gradient(135deg, #4f6d99 0%, #34496b 100%);
+}

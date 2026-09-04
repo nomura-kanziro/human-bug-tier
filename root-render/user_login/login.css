@@ -215,3 +215,50 @@ body {
     margin-top: 16px;
   }
 }
+
+/* ======================================================================
+   다크 모드 — 로그인 페이지 전용 세부 보정.
+   이 페이지는 공용 헤더가 없는 단독 페이지라 body 배경/로그인 박스/장식 패널을
+   전부 이 파일이 직접 하드코딩하고 있어 theme.css의 안전망만으로는 덮이지 않는다.
+   ====================================================================== */
+[data-theme="dark"] body {
+  background: var(--bg-page);
+}
+
+[data-theme="dark"] .login-wrapper {
+  background: var(--bg-page);
+  box-shadow: 0 0 30px var(--shadow-color);
+}
+
+[data-theme="dark"] .login-box {
+  background: var(--bg-elevated);
+}
+
+/* h2에 style="color:#000"가 인라인으로 박혀 있어(HTML은 수정 범위 밖) 일반 선택자로는
+   못 이기므로 !important로 덮어씀 */
+[data-theme="dark"] .login-box h2 {
+  color: var(--text-primary) !important;
+}
+
+[data-theme="dark"] .find-btn {
+  color: var(--link-color);
+}
+
+[data-theme="dark"] .find-btn:hover {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .back-btn {
+  color: var(--link-color);
+}
+
+/* 장식용 컬러 패널 — 원색 그대로 두면 다크 배경 위에서 과하게 튀므로 톤을 낮춘 그라디언트로 대체 */
+[data-theme="dark"] .side-panel {
+  background: linear-gradient(135deg, #4f6d99 0%, #34496b 100%);
+}
+
+@media (max-width: 768px) {
+  [data-theme="dark"] .login-wrapper {
+    box-shadow: 0 8px 24px var(--shadow-color);
+  }
+}
