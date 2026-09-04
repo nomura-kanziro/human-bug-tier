@@ -14,6 +14,7 @@
        상세 로직/토글 클릭 처리는 theme.js 참고. -->
   <script>(function(){try{var t=localStorage.getItem('hbtTheme');if(t!=='light'&&t!=='dark'){var h=new Date().getHours();t=(h>=7&&h<22)?'light':'dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <link rel="stylesheet" href="../theme.css">
+  <link rel="stylesheet" href="../loading-screen.css">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>알림 - 휴버대 티어표</title>
@@ -23,6 +24,20 @@
   <link rel="stylesheet" href="notifications.css">
 </head>
 <body>
+  <!-- 사이트 전체 초기 로딩 화면: 모든 리소스가 준비될 때까지 화면을 덮는 오버레이.
+       모양은 loading-screen.css, 표시/숨김 타이밍은 loading-screen.js가 담당한다. -->
+  <div class="site-loading-screen" id="site-loading-screen" role="status" aria-live="polite" aria-label="불러오는 중">
+    <div class="site-loading-inner">
+      <svg class="site-loading-svg" viewBox="0 0 100 100" aria-hidden="true">
+        <circle class="site-loading-track" cx="50" cy="50" r="37"></circle>
+        <circle class="site-loading-track" cx="50" cy="50" r="30"></circle>
+        <circle pathLength="360" class="site-loading-dash big" style="--sped:3.6s" cx="50" cy="50" r="37"></circle>
+        <circle pathLength="360" class="site-loading-dash" style="--sped:2s" cx="50" cy="50" r="30"></circle>
+      </svg>
+      <img src="../tier-media/tier-image/logo.webp" alt="" class="site-loading-logo">
+    </div>
+    <p class="site-loading-text">불러오는 중…</p>
+  </div>
   <!-- common.js가 fetch로 header.html을 읽어와 이 자리에 채워 넣는다(헤더/알림벨/프로필 포함). -->
   <div id="header-placeholder"></div>
 
@@ -58,6 +73,7 @@
   <!-- common.js가 footer.html을 채워 넣는 자리. -->
   <div id="footer-placeholder"></div>
   <script src="../theme.js"></script>
+  <script src="../loading-screen.js"></script>
   <script src="../common.js"></script>
   <script src="notifications.js"></script>
 </body>

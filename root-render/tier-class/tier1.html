@@ -7,6 +7,7 @@
        상세 로직/토글 클릭 처리는 theme.js 참고. -->
   <script>(function(){try{var t=localStorage.getItem('hbtTheme');if(t!=='light'&&t!=='dark'){var h=new Date().getHours();t=(h>=7&&h<22)?'light':'dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <link rel="stylesheet" href="../theme.css">
+  <link rel="stylesheet" href="../loading-screen.css">
   <!-- ======================================================================
        1등급(신계 / 슈퍼 그랜드 마스터) 공식 티어표 페이지
        tier1~9.html은 전부 같은 골격(head 링크/스크립트 구성, header/footer
@@ -32,10 +33,25 @@
   <link rel="stylesheet" href="tier-nav.css">
   <link rel="stylesheet" href="../Header_Footer.css">
   <script src="../theme.js"></script>
+  <script src="../loading-screen.js"></script>
   <script defer src="../common.js"></script>
   <script defer src="tier-nav.js"></script>
 </head>
 <body>
+  <!-- 사이트 전체 초기 로딩 화면: 모든 리소스가 준비될 때까지 화면을 덮는 오버레이.
+       모양은 loading-screen.css, 표시/숨김 타이밍은 loading-screen.js가 담당한다. -->
+  <div class="site-loading-screen" id="site-loading-screen" role="status" aria-live="polite" aria-label="불러오는 중">
+    <div class="site-loading-inner">
+      <svg class="site-loading-svg" viewBox="0 0 100 100" aria-hidden="true">
+        <circle class="site-loading-track" cx="50" cy="50" r="37"></circle>
+        <circle class="site-loading-track" cx="50" cy="50" r="30"></circle>
+        <circle pathLength="360" class="site-loading-dash big" style="--sped:3.6s" cx="50" cy="50" r="37"></circle>
+        <circle pathLength="360" class="site-loading-dash" style="--sped:2s" cx="50" cy="50" r="30"></circle>
+      </svg>
+      <img src="../tier-media/tier-image/logo.webp" alt="" class="site-loading-logo">
+    </div>
+    <p class="site-loading-text">불러오는 중…</p>
+  </div>
   <!-- common.js가 fetch로 header.html을 불러와 이 자리에 삽입한다(로그인 여부에 따라 메뉴 구성이 달라짐) -->
   <div id="header-placeholder"></div>
 
