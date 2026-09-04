@@ -522,3 +522,163 @@
     font-size: 24px;
   }
 }
+
+/* ======================================================================
+   다크 모드 — 공지사항 전용 세부 보정.
+   theme.css의 안전망이 #notice-modal-content 등 공통 카드는 이미 처리하지만,
+   목록/상세 카드 내부의 하드코딩된 회색·뱃지·마크다운 본문 색은 이 파일에서 개별 대응한다.
+   ====================================================================== */
+[data-theme="dark"] .notice-full-list .notice-item {
+  background: var(--bg-elevated);
+  border-color: var(--border-color);
+  box-shadow: 0 1px 4px var(--shadow-color);
+}
+
+[data-theme="dark"] .notice-col-title {
+  border-bottom-color: var(--border-color);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .notice-empty,
+[data-theme="dark"] .pagination,
+[data-theme="dark"] .notice-detail-loading,
+[data-theme="dark"] .notice-detail-error {
+  color: var(--text-muted);
+}
+
+/* 고정 공지 📌 라벨은 원래도 앰버 계열이라 색상 정체성은 유지하고 살짝 밝혀서 대비만 보정 */
+[data-theme="dark"] .notice-pin-label {
+  color: #fbbf24;
+}
+
+[data-theme="dark"] .notice-item-pinned {
+  background: rgba(217, 119, 6, 0.12);
+  border-color: #4a3a1a;
+}
+
+/* YouTube 출처 뱃지 — 빨강 계열 정체성 유지, 다크 배경에서 튀지 않도록 톤 조정 */
+[data-theme="dark"] .notice-yt-badge {
+  color: #f87171;
+  background: rgba(220, 38, 38, 0.16);
+  border-color: rgba(248, 113, 113, 0.4);
+}
+
+[data-theme="dark"] .notice-original-toggle {
+  background: var(--bg-elevated);
+  color: #f87171;
+  border-color: rgba(248, 113, 113, 0.4);
+}
+[data-theme="dark"] .notice-original-toggle:hover,
+[data-theme="dark"] .notice-original-toggle[aria-pressed="true"] {
+  background: rgba(220, 38, 38, 0.16);
+}
+
+[data-theme="dark"] .back-link,
+[data-theme="dark"] .notice-more,
+[data-theme="dark"] .notice-item-link:hover .notice-link {
+  color: var(--link-color);
+}
+
+[data-theme="dark"] .notice-link {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .notice-desc {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .notice-date {
+  color: var(--text-muted);
+}
+
+/* 상세 카드 전체 컨테이너/상단 바 */
+[data-theme="dark"] .notice-detail-card {
+  background: var(--bg-elevated);
+  border-color: var(--border-color);
+  box-shadow: 0 8px 30px var(--shadow-color);
+}
+
+[data-theme="dark"] .notice-detail-topbar {
+  background: var(--bg-subtle);
+  border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .notice-detail-back {
+  color: var(--link-color);
+  background: var(--bg-elevated);
+  border-color: rgba(110, 168, 254, 0.35);
+}
+[data-theme="dark"] .notice-detail-back:hover {
+  background: rgba(110, 168, 254, 0.12);
+}
+
+[data-theme="dark"] .notice-detail-title,
+[data-theme="dark"] .notice-detail-content strong,
+[data-theme="dark"] .notice-detail-content h2,
+[data-theme="dark"] .notice-detail-content h3,
+[data-theme="dark"] .notice-detail-content h4 {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .notice-detail-info {
+  border-bottom-color: var(--border-color);
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .notice-detail-author {
+  color: var(--text-secondary);
+}
+
+/* 요약 박스 — 좌측 강조선(초록/보라)은 그대로 두고 배경/글자만 다크에 맞춤 */
+[data-theme="dark"] .notice-detail-summary {
+  background: var(--bg-subtle);
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .notice-detail-content {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .notice-detail-content blockquote {
+  border-left-color: var(--border-strong);
+  color: var(--text-secondary);
+  background: var(--bg-subtle);
+}
+
+[data-theme="dark"] .notice-detail-content code {
+  background: var(--bg-subtle);
+  color: #f87171;
+}
+
+[data-theme="dark"] .notice-detail-content del {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .notice-detail-content a {
+  color: var(--link-color);
+}
+
+[data-theme="dark"] .notice-detail-content hr,
+[data-theme="dark"] .notice-detail-footer {
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .notice-detail-content img.notice-content-img,
+[data-theme="dark"] .notice-content-gallery img.notice-content-img,
+[data-theme="dark"] .notice-content-figure img.notice-content-img {
+  background: var(--bg-subtle);
+}
+
+[data-theme="dark"] .notice-detail-list-btn {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+}
+[data-theme="dark"] .notice-detail-list-btn:hover {
+  background: var(--border-strong);
+}
+
+[data-theme="dark"] .notice-full-list .notice-item:hover,
+[data-theme="dark"] .notice-list .notice-item:hover {
+  box-shadow: 0 4px 12px var(--shadow-color);
+}

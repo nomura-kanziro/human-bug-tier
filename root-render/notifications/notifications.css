@@ -170,3 +170,51 @@
     width: 100%;
   }
 }
+
+/* ======================================================================
+   다크 모드 — 알림 상세 페이지 전용 세부 보정.
+   .notif-sort-select는 <select> 태그라 theme.css 안전망이 이미 처리하므로
+   생략하고, 카드/탭/안읽음 강조 등 이 파일 고유의 하드코딩 색만 보정한다.
+   ====================================================================== */
+[data-theme="dark"] .notif-toolbar {
+  border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .notif-tab {
+  color: var(--text-muted);
+}
+[data-theme="dark"] .notif-tab:hover {
+  background: var(--bg-hover);
+}
+[data-theme="dark"] .notif-tab.active {
+  background: var(--link-color);
+  color: var(--bg-page);
+}
+
+[data-theme="dark"] .notif-item {
+  background: var(--bg-elevated);
+  border-color: var(--border-color);
+}
+[data-theme="dark"] .notif-item:hover {
+  background: var(--bg-hover);
+}
+
+/* 안읽음 강조 — 원래도 옅은 파랑 하이라이트라 정체성은 유지하되 다크 배경에 맞게 톤 조정 */
+[data-theme="dark"] .notif-item.unread {
+  background: rgba(110, 168, 254, 0.12);
+  border-color: rgba(110, 168, 254, 0.35);
+}
+
+[data-theme="dark"] .notif-item-label {
+  color: var(--link-color);
+}
+
+[data-theme="dark"] .notif-item-time,
+[data-theme="dark"] .notif-item-message,
+[data-theme="dark"] .notif-empty {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .notif-item-title {
+  color: var(--text-primary);
+}

@@ -212,3 +212,49 @@
     grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
   }
 }
+
+/* ======================================================================
+   다크 모드 — 마이페이지 전용 세부 보정.
+   프로필/통계/목록 카드가 모두 같은 옅은 회색(#fafafa) 배경 패턴을 반복해서
+   쓰고 있어 theme.css 안전망의 일반 카드 규칙 대상이 아닌 항목만 여기서 채운다.
+   ====================================================================== */
+[data-theme="dark"] .my-page-identity p {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .my-page-avatar {
+  border-color: #4a6fa5;
+}
+
+[data-theme="dark"] .my-page-stat-card {
+  background: var(--bg-elevated);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .my-page-stat-value {
+  color: var(--link-color);
+}
+
+[data-theme="dark"] .my-page-stat-label,
+[data-theme="dark"] .my-page-post-meta,
+[data-theme="dark"] .my-page-empty {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .my-page-section-header a {
+  color: var(--link-color);
+}
+
+[data-theme="dark"] .my-page-post-item,
+[data-theme="dark"] .my-page-draw-item {
+  background: var(--bg-elevated);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .my-page-post-item:hover {
+  background: var(--bg-hover);
+}
+
+[data-theme="dark"] .my-page-post-thumb {
+  background: var(--bg-subtle);
+}

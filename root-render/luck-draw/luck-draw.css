@@ -295,3 +295,87 @@
     padding: 40px 20px 80px;
   }
 }
+
+/* ======================================================================
+   다크 모드 — 행운 뽑기 전용 세부 보정.
+   이 페이지는 앰버/골드 톤이 정체성이라(홈 화면 행운 위젯과 동일 계열),
+   완전히 무채색으로 desaturate하지 않고 index-home.css의 다크 앰버 처리
+   방식(rgba(217,119,6,…) 배경 + #fbbf24 계열 글자)을 그대로 이어서 쓴다.
+   ====================================================================== */
+[data-theme="dark"] .luck-desc,
+[data-theme="dark"] .luck-draw-status {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .luck-draw-tabs {
+  border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .luck-tab {
+  color: var(--text-muted);
+}
+
+/* 활성 탭/뽑기 버튼/결과 링크의 주황 계열은 다크 배경에서도 그대로 잘 보이므로 유지 */
+
+[data-theme="dark"] .luck-static-guard {
+  background: rgba(217, 119, 6, 0.18);
+  color: #fbbf24;
+}
+
+[data-theme="dark"] .luck-draw-btn:disabled {
+  background: var(--bg-hover);
+  color: var(--text-muted);
+}
+
+/* 뽑기 로딩 무대는 원래도 짙은 남색(#111827)이라 다크 페이지 배경과 거의 같은 밝기가
+   되어 경계가 사라지므로, 살짝 밝은 톤 + 은은한 테두리로 카드 구분을 살린다 */
+[data-theme="dark"] .luck-draw-loading {
+  background: var(--bg-elevated);
+  box-shadow: 0 8px 24px var(--shadow-color);
+}
+
+[data-theme="dark"] .luck-draw-loading-bar {
+  background: var(--bg-subtle);
+}
+
+[data-theme="dark"] .luck-result-card {
+  background: var(--bg-elevated);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .luck-result-name {
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .luck-result-tier {
+  background: rgba(217, 119, 6, 0.2);
+  color: #fbbf24;
+}
+
+[data-theme="dark"] .luck-result-points {
+  background: rgba(5, 150, 105, 0.18);
+  color: #34d399;
+}
+
+[data-theme="dark"] .luck-result-points-minus {
+  background: rgba(220, 38, 38, 0.18);
+  color: #f87171;
+}
+
+[data-theme="dark"] .luck-guest-notice {
+  background: rgba(217, 119, 6, 0.14);
+  color: #fbbf24;
+}
+
+[data-theme="dark"] .luck-probability-table th,
+[data-theme="dark"] .luck-probability-table td {
+  border-bottom-color: var(--border-color);
+}
+
+[data-theme="dark"] .luck-history-item {
+  background: var(--bg-elevated);
+}
+
+[data-theme="dark"] .luck-history-empty {
+  color: var(--text-muted);
+}
