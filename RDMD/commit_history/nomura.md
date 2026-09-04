@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 241 |
+| **커밋 수** | 242 |
 | **기간** | 2026-03-20 ~ 2026-09-04 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -270,6 +270,7 @@
 | 239 | 2026-09-04 | [`e5e84f7`](#e5e84f7) | fix(server): API 우선 등록 및 파비콘·확장 콘솔 정리 |
 | 240 | 2026-09-04 | [`3369978`](#3369978) | chore(backend): server.js 설명 주석 복원 |
 | 241 | 2026-09-04 | [`09dfe6c`](#09dfe6c) | docs: 기존 주석 삭제 금지 인수인계 |
+| 242 | 2026-09-04 | [`pending`](#pending242) | chore(common): 사이트 버전을 0.4.3으로 변경 |
 
 ---
 
@@ -4586,6 +4587,8 @@
 
 ---
 
+---
+
 <a id="97d8649"></a>
 
 ### 236. 2026-09-04 — `97d8649`
@@ -4689,5 +4692,23 @@
 - **요약**: 기존 주석은 삭제하지 않고 문구만 고치도록 `.agents` 정본과 Grok·Claude·Codex 팩, team, RDMD 가이드에 인수인계했다. 사람이 “지워”라고 하기 전까지 AI는 주석을 지우지 않는다.
 - **주요 파일**: `.agents/common-rules.md`, `AGENTS.md`, `CLAUDE.md`, `.groks/`, `.claude/`, `.codex/`, `team/`
 - **관련 RDMD**: `RDMD/guides/coding-conventions.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending242"></a>
+
+### 242. 2026-09-04 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: chore(common): 사이트 버전을 0.4.3으로 변경
+- **git**: `git show pending242`
+- **범위**: frontend / render-only / docs
+- **요약**: root-render 푸터의 site version 표기를 0.4.2 → 0.4.3으로 올리고, CLAUDE.md·AGENTS.md·RDMD/features/overview.md·react-rewrite.md·team/README.md의 현재 버전 표기도 함께 맞췄다. root-cloudflare/footer.html은 이번 세션 작업 범위(render.com만)에서 제외되어 0.4.2로 그대로 남아있다 — 필요 시 별도로 맞춰야 함.
+- **주요 파일**: `root-render/footer.html`, `CLAUDE.md`, `AGENTS.md`, `RDMD/features/overview.md`, `RDMD/features/react-rewrite.md`, `team/README.md`
+- **관련 RDMD**: _(선택)_
 
 [▲ 목차로](#목차)

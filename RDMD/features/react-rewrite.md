@@ -2,7 +2,7 @@
 
 **상태**: 기획만. 코드 이식 **지시 있을 때만**.  
 **날짜**: 2026-09-01  
-**현재 제품**: 바닐라 HTML/CSS/JS `0.4.2` (`root-cloudflare/` · `root-render/`) + Express/Mongo `backend/`
+**현재 제품**: 바닐라 HTML/CSS/JS `0.4.3` (`root-cloudflare/` · `root-render/`) + Express/Mongo `backend/`
 
 ---
 
