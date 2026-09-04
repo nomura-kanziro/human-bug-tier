@@ -71,11 +71,12 @@ const { getTierMediaDir } = require('./utils/tierMediaDir');
 //   cd backend
 //   npm start
 //   → http://localhost:5000 에서 전체 앱 (프론트 + API) 사용
-// STATIC_ROOT 환경변수 > RENDER=true 여부 > 기본값(root-cloudflare) 순으로
+// STATIC_ROOT 환경변수 > RENDER=true 여부 > 기본값(root-cloudflare/dist) 순으로
 // "정적 프론트 파일을 어느 폴더에서 읽어올지" 결정한다.
-// - 로컬/Cloudflare Tunnel: root-cloudflare
-// - Render.com 배포: root-render (Render가 RENDER=true를 자동 주입)
-// - STATIC_ROOT를 직접 지정하면 위 두 경우를 무시하고 강제 지정 가능
+// - 로컬 기본: root-cloudflare/dist (React 빌드 결과물. `cd root-cloudflare && npm run build` 필요)
+//   dist 가 아직 없으면 root-cloudflare 폴더 자체를 가리켜 "빌드하세요" 안내가 뜨게 둔다
+// - Render.com 배포: root-render (Render가 RENDER=true를 자동 주입) — 바닐라 정본, 실무 배포
+// - STATIC_ROOT를 직접 지정하면 위 두 경우를 무시하고 강제 지정 가능 (예: STATIC_ROOT=root-render 로 로컬에서 Render 화면 확인)
 function resolveStaticRoot() {
   const fromEnv = (process.env.STATIC_ROOT || '').trim();
   if (fromEnv) {
@@ -84,12 +85,20 @@ function resolveStaticRoot() {
   if (process.env.RENDER === 'true') {
     return path.join(__dirname, '..', 'root-render');
   }
+  const reactDist = path.join(__dirname, '..', 'root-cloudflare', 'dist');
+  if (fs.existsSync(path.join(reactDist, 'index.html'))) {
+    return reactDist;
+  }
   return path.join(__dirname, '..', 'root-cloudflare');
 }
 const projectRoot = resolveStaticRoot();
 if (!fs.existsSync(projectRoot)) {
   console.error('정적 프론트 폴더가 없습니다:', projectRoot);
 }
+// React(SPA) 루트인지 여부 — dist/index.html 이 있고 바닐라 조각(header.html)이 없으면 SPA 로 본다.
+// SPA 는 /tier/1 처럼 실제 파일이 없는 주소도 index.html 을 내려줘야 클라이언트 라우터가 처리할 수 있다.
+const isSpaRoot = fs.existsSync(path.join(projectRoot, 'index.html'))
+  && !fs.existsSync(path.join(projectRoot, 'header.html'));
 
 // 헬스 체크 (DB 연결 상태 포함 — 시크릿 값은 노출하지 않음)
 // 배포 플랫폼(Render 등)의 헬스체크 또는 수동 점검용 엔드포인트.
@@ -176,6 +185,13 @@ app.use((req, res, next) => {
     return res.sendFile(htmlCandidate);
   }
 
+  // SPA(React dist) 폴백: 확장자 없는 경로(/tier/1, /notice/…)와 옛 바닐라 주소(*.html)는 전부 index.html 로 넘겨
+  // 클라이언트 라우터가 화면을 그리거나 새 라우트로 리다이렉트하게 한다. 그 외 확장자 요청(.js/.css/.png 등)은 진짜 404 로 둔다.
+  const ext = path.extname(req.path).toLowerCase();
+  if (isSpaRoot && (!ext || ext === '.html')) {
+    return res.sendFile(path.join(projectRoot, 'index.html'));
+  }
+
   next();
 });
 
@@ -201,10 +217,11 @@ connectDB().then(async (connected) => {
 app.get('/favicon.ico', (req, res) => {
   const candidates = [
     path.join(projectRoot, getTierMediaDir(), 'logo.webp'),
+    path.join(projectRoot, 'tier-media', 'tier-image', 'logo.webp'),
     path.join(projectRoot, 'tier-media', 'logo.webp'),
     path.join(projectRoot, 'tier-image', 'logo.webp'),
-    path.join(__dirname, '..', 'root-render', 'tier-media', 'logo.webp'),
-    path.join(__dirname, '..', 'root-cloudflare', 'tier-image', 'logo.webp'),
+    path.join(__dirname, '..', 'root-render', 'tier-media', 'tier-image', 'logo.webp'),
+    path.join(__dirname, '..', 'root-cloudflare', 'public', 'tier-media', 'tier-image', 'logo.webp'),
   ];
   const file = candidates.find((f) => fs.existsSync(f));
   if (!file) {
