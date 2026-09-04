@@ -252,9 +252,9 @@
 | 221 | 2026-09-03 | [`4693334`](#4693334) | docs(backend): 행운 뽑기·공지·알림 컨트롤러에 기능 설명 주석 추가 |
 | 222 | 2026-09-03 | [`fb053dc`](#fb053dc) | docs(backend): 티어·문의 컨트롤러에 기능 설명 주석 추가 |
 | 223 | 2026-09-04 | [`4ac9dce`](#4ac9dce) | style(home): 홈 화면 퀵 네비게이션 카드 디자인 개선 |
-| 224 | 2026-09-04 | [`pending`](#pending224) | chore(assets): root-render tier-image 폴더를 tier-media로 이름 변경 |
-| 225 | 2026-09-04 | [`pending`](#pending225) | refactor(frontend): 이미지 경로를 tier-media 기준으로 갱신 |
-| 226 | 2026-09-04 | [`pending`](#pending226) | fix(backend): tier-image·tier-media 폴더명 배포 root별 자동 분기 |
+| 224 | 2026-09-04 | [`50c81fc`](#50c81fc) | chore(assets): root-render tier-image 폴더를 tier-media로 이름 변경 |
+| 225 | 2026-09-04 | [`2f17ad8`](#2f17ad8) | refactor(frontend): 이미지 경로를 tier-media 기준으로 갱신 |
+| 226 | 2026-09-04 | [`b0ff2ef`](#b0ff2ef) | fix(backend): tier-image·tier-media 폴더명 배포 root별 자동 분기 |
 
 ---
 
@@ -4355,15 +4355,15 @@
 
 ---
 
-<a id="pending224"></a>
+<a id="50c81fc"></a>
 
-### 224. 2026-09-04 — `pending`
+### 224. 2026-09-04 — `50c81fc`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `50c81fc`
+- **hash (full)**: `50c81fc20a467760f9b9c1024c61e41b14046947`
 - **author**: nomura
 - **message**: chore(assets): root-render tier-image 폴더를 tier-media로 이름 변경
-- **git**: `git show pending224`
+- **git**: `git show 50c81fc`
 - **범위**: frontend / render-only / assets
 - **요약**: `root-render/tier-image/`(358개 파일)를 `root-render/tier-media/`로 이름만 바꿨다(내용 변경 없음, git rename으로 추적됨). 이미지뿐 아니라 영상 등 다른 미디어도 앞으로 함께 담을 수 있도록 폴더 목적을 넓히기 위한 순수 리네임 커밋 — 경로를 참조하는 코드 쪽 수정은 다음 커밋(225번)에서 진행.
 - **주요 파일**: `root-render/tier-media/**` (구 `root-render/tier-image/**`)
@@ -4373,15 +4373,15 @@
 
 ---
 
-<a id="pending225"></a>
+<a id="2f17ad8"></a>
 
-### 225. 2026-09-04 — `pending`
+### 225. 2026-09-04 — `2f17ad8`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `2f17ad8`
+- **hash (full)**: `2f17ad885b6fd691fe566024b1116bd8a79e9268`
 - **author**: nomura
 - **message**: refactor(frontend): 이미지 경로를 tier-media 기준으로 갱신
-- **git**: `git show pending225`
+- **git**: `git show 2f17ad8`
 - **범위**: frontend / render-only
 - **요약**: 224번 커밋으로 이름이 바뀐 폴더에 맞춰 root-render의 모든 html·js·manifest 내 "tier-image" 리터럴 경로를 "tier-media"로 일괄 갱신했다. 그와 별개로, 이미 DB에 저장된 커스텀 메이커 게시글은 폴더 개명 이전 값("/tier-image/...")을 그대로 갖고 있을 수 있어서, 저장된 경로를 화면에 표시하기 직전 변환하는 4개 함수(custom-maker.js의 resolveMakerPreviewPath, custom-maker_post.js·post_detail.js의 resolveAssetPath, my-page.js의 myPageResolveAsset)에 옛 접두사를 새 접두사로 보정하는 로직을 추가해, DB 마이그레이션 없이도 기존 게시글 이미지가 깨지지 않게 했다.
 - **주요 파일**: `root-render/index.html`, `root-render/header.html`, `root-render/common.js`, `root-render/sw.js`, `root-render/pwa-register.js`, `root-render/manifest.webmanifest`, `root-render/tier-class/tier1.html`~`tier9.html`, `root-render/custom-maker/*`, `root-render/custom-maker/custom-maker_post/*`, `root-render/my-page/my-page.js`, `root-render/user_login/*.html`, `root-render/admin/admin-login.html`, `root-render/Contact_us/contact_us.html`
@@ -4391,15 +4391,15 @@
 
 ---
 
-<a id="pending226"></a>
+<a id="b0ff2ef"></a>
 
-### 226. 2026-09-04 — `pending`
+### 226. 2026-09-04 — `b0ff2ef`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `b0ff2ef`
+- **hash (full)**: `b0ff2efdf8cea79c805f4b8e1a67466eeb255b65`
 - **author**: nomura
 - **message**: fix(backend): tier-image·tier-media 폴더명 배포 root별 자동 분기
-- **git**: `git show pending226`
+- **git**: `git show b0ff2ef`
 - **범위**: backend
 - **요약**: 백엔드 서버 하나가 root-cloudflare(폴더명 tier-image 그대로)와 root-render(폴더명 tier-media) 두 프론트를 STATIC_ROOT/RENDER 환경변수로 전환하며 공용으로 서빙하는 구조라서, 이미지 폴더명을 한쪽만 바꾸면 다른 쪽이 깨지는 문제가 있었다. 새 유틸 `utils/tierMediaDir.js`(getTierMediaDir/resolveTierMediaPath)로 "지금 서빙 중인 root"에 따라 폴더명을 자동으로 골라 쓰도록 해서, server.js의 파비콘 라우트와 luckDrawController.js의 뽑기 결과 imagePath(신규 뽑기·DB 이력 조회 둘 다) 양쪽에 적용했다. luckPool.js의 하드코딩된 경로 문자열도 tier-media로 갱신(정규화 로직이 있어 실질적으로는 불필요하지만 기본값을 새 이름으로 맞춤). STATIC_ROOT=root-render로 로컬 실행해 파비콘·이미지 200, 구 tier-image 경로 404를 직접 확인함.
 - **주요 파일**: `backend/utils/tierMediaDir.js`(신규), `backend/server.js`, `backend/controllers/luckDrawController.js`, `backend/data/luckPool.js`
