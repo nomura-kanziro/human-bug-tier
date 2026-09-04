@@ -777,3 +777,196 @@ tr.row-pinned {
 .tier-maker-section .row-reported {
     background: #fff5f5;
 }
+
+/* ======================================================================
+   다크 모드 — 이 파일이 다루는 관리자 대시보드 세부 보정.
+   theme.css 안전망이 input/textarea/select, header/footer, 공용 모달 등은 이미
+   처리하지만, .admin-table/.admin-main처럼 이 파일 전용 흰 배경 박스와, 문의/
+   커스텀메이커/공지/차단 섹션별 파스텔 배지·강조 로우는 다크 배경 위에서 그대로
+   두면 지나치게 밝아 보이므로 여기서 개별 보정한다. 필터 바(.filter-nav 계열)나
+   버튼류처럼 원래도 채도 높은 단색 배경에 흰 글자를 쓰는 요소는 라이트/다크 모두
+   잘 보이므로 손대지 않았다. comment-detail.html도 이 파일을 그대로 재사용하므로
+   (comment-detail.js가 그리는 .filter-nav/.admin-table류) 함께 적용된다.
+   ====================================================================== */
+
+[data-theme="dark"] .admin-main {
+    background-color: var(--bg-page);
+}
+
+[data-theme="dark"] .page-title,
+[data-theme="dark"] .subsection-title {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .notice-admin-section,
+[data-theme="dark"] .block-section {
+    background: var(--bg-subtle);
+    border-color: var(--border-color);
+}
+
+/* 공지 분류 select — ID 선택자라 theme.css의 공용 select 다크 보정보다 우선
+   적용되어 버리므로(하드코딩된 흰 배경이 그대로 남음) 여기서 별도로 덮어씀 */
+[data-theme="dark"] #notice-category,
+[data-theme="dark"] #notice-list-filter {
+    background: var(--input-bg);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .notice-form-card {
+    background: var(--bg-elevated);
+    border-color: var(--border-color);
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+[data-theme="dark"] .notice-format-hint {
+    color: var(--text-muted);
+}
+[data-theme="dark"] .notice-format-hint code {
+    background: var(--bg-subtle);
+    color: var(--text-primary);
+}
+
+/* 공지 서식 삽입 툴바 */
+[data-theme="dark"] .notice-editor-toolbar {
+    background: var(--bg-subtle);
+    border-color: var(--border-color);
+}
+[data-theme="dark"] .notice-tool-btn {
+    color: var(--text-secondary);
+}
+[data-theme="dark"] .notice-tool-btn:hover {
+    background: var(--bg-hover);
+}
+[data-theme="dark"] .notice-tool-btn.is-active {
+    background: rgba(16, 185, 129, 0.18);
+    color: #34d399;
+}
+[data-theme="dark"] .notice-tool-sep {
+    background: var(--border-color);
+}
+[data-theme="dark"] .notice-preview-pane {
+    background: rgba(16, 185, 129, 0.06);
+}
+[data-theme="dark"] .notice-preview-empty {
+    color: var(--text-muted);
+}
+
+[data-theme="dark"] .notice-cancel-btn {
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+[data-theme="dark"] .notice-cancel-btn:hover {
+    background: var(--bg-hover);
+}
+
+/* 상태 배지류 — 라이트 파스텔 배경을 다크 배경에 그대로 두면 지나치게 밝게
+   튀므로, 같은 색조를 유지하는 반투명 배경 + 밝은 글자색으로 조정 */
+[data-theme="dark"] .badge-notice {
+    background: rgba(16, 185, 129, 0.18);
+    color: #34d399;
+}
+[data-theme="dark"] .badge-news {
+    background: rgba(139, 92, 246, 0.2);
+    color: #c4b5fd;
+}
+[data-theme="dark"] .badge-youtube {
+    background: rgba(220, 38, 38, 0.18);
+    color: #fca5a5;
+    border-color: rgba(252, 165, 165, 0.35);
+}
+[data-theme="dark"] .badge-pinned {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+}
+[data-theme="dark"] .badge-verified {
+    background: rgba(40, 167, 69, 0.22);
+    color: #6ee7b7;
+}
+[data-theme="dark"] .badge-unverified {
+    background: rgba(255, 193, 7, 0.2);
+    color: #fcd34d;
+}
+[data-theme="dark"] .badge-blocked {
+    background: rgba(220, 53, 69, 0.22);
+    color: #f7a1ab;
+}
+[data-theme="dark"] .badge-active {
+    background: rgba(23, 162, 184, 0.22);
+    color: #7dd3e8;
+}
+[data-theme="dark"] .badge-type {
+    background: var(--bg-hover);
+    color: var(--text-secondary);
+}
+[data-theme="dark"] .badge-tier-normal {
+    background: rgba(99, 102, 241, 0.2);
+    color: #a5b4fc;
+}
+[data-theme="dark"] .badge-tier-reported {
+    background: rgba(220, 38, 38, 0.2);
+    color: #fca5a5;
+}
+
+/* 유튜브 커뮤니티 자동 가져오기 안내 바 */
+[data-theme="dark"] .youtube-sync-bar {
+    background: rgba(220, 53, 69, 0.08);
+}
+[data-theme="dark"] .youtube-sync-copy strong {
+    color: #f87171;
+}
+[data-theme="dark"] .youtube-sync-copy span {
+    color: var(--text-muted);
+}
+
+[data-theme="dark"] .notice-pin-count {
+    color: #34d399;
+}
+
+[data-theme="dark"] tr.row-pinned {
+    background: rgba(245, 158, 11, 0.12);
+}
+
+/* 공용 테이블 (문의/공지/차단/커스텀메이커 테이블 모두 해당) */
+[data-theme="dark"] .admin-table {
+    background: var(--bg-elevated);
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+[data-theme="dark"] .admin-table th,
+[data-theme="dark"] .admin-table td {
+    border-color: var(--border-color);
+}
+[data-theme="dark"] .admin-table th {
+    background: var(--bg-subtle);
+    color: var(--text-primary);
+}
+[data-theme="dark"] .admin-table tr:hover {
+    background-color: var(--bg-hover);
+}
+[data-theme="dark"] .admin-table tr.row-blocked {
+    background-color: rgba(220, 53, 69, 0.16);
+}
+[data-theme="dark"] .tier-maker-section .row-reported {
+    background: rgba(220, 38, 38, 0.1);
+}
+
+[data-theme="dark"] .empty-row td {
+    color: var(--text-muted);
+}
+
+/* 신고 사유 툴팁 팝업 */
+[data-theme="dark"] .report-popup {
+    background: var(--bg-elevated);
+    border-color: var(--border-strong);
+    box-shadow: 4px 4px 10px var(--shadow-color);
+    color: var(--text-primary);
+}
+
+/* 채도 높은 색상 필터 바(파랑/빨강 등) 위에 흰 테두리로 떠 있는 입력창들 —
+   theme.css의 공용 input 다크 보정이 배경/글자색만 바꾸고 테두리는 클래스
+   특정도 차이로 그대로 남아 흰 테두리와 어긋나 보일 수 있어 반투명 흰 테두리로
+   통일한다 (#search-input은 ID 선택자라 원래 흰 테두리가 유지됨) */
+[data-theme="dark"] .block-text-input,
+[data-theme="dark"] .block-custom-days {
+    border-color: rgba(255, 255, 255, 0.55);
+}

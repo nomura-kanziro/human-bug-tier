@@ -106,3 +106,24 @@ body {
   width: 50%;
   background: #8faadc;
 }
+
+/* ======================================================================
+   다크 모드 — 관리자 로그인 화면 전용 세부 보정.
+   body 기본 배경/글자색은 theme.css 안전망이 이미 처리하므로 여기서는 흰색으로
+   하드코딩된 .login-box(로그인 폼 패널)와 브라우저 기본 배경을 쓰는 input만
+   보정한다. .login-wrapper(검은 카드)·.side-panel(색상 패널)·버튼류는 원래도
+   테마와 무관하게 잘 보이는 톤이라 그대로 둔다.
+   ====================================================================== */
+[data-theme="dark"] .login-wrapper {
+  box-shadow: 0 0 30px var(--shadow-color);
+}
+
+[data-theme="dark"] .login-box {
+  background: var(--bg-elevated);
+}
+
+[data-theme="dark"] .login-box input {
+  background: var(--input-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--input-border);
+}
