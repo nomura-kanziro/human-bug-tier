@@ -14,14 +14,17 @@
 | 0 기획 | ✅ | 이 문서 |
 | 1 라우트·API 클라이언트 | ✅ | `src/lib/api.js`, `src/App.jsx` |
 | 2 레이아웃 | ✅ | 헤더/푸터/알림벨/프로필 드롭다운/테마 토글/로딩 화면 |
-| 3 공개 페이지 | ✅ | 홈(퀵카드·공지 미리보기·행운 위젯·티어 카드), `/tier/1~9`, 공지 메인/전체/새소식/상세 |
+| 3 공개 페이지 | ✅ | 홈, `/tier/1~9`(**한 페이지 + 내부 navbar**), 공지 메인/전체/새소식/상세 |
+| 5-1 커스텀 메이커(제작) | ✅ | 드래그·탭 배치, PNG/PDF/JSON, 게시판 업로드 |
+| 6-1 행운 뽑기 | ✅ | 확률표·서스펜스 연출·회원 쿨다운·게스트 24h·이력 |
 | 4 인증 | ⏳ | `PendingPage` 자리만 |
-| 5 커스텀·게시판 | ⏳ | |
-| 6 뽑기·마이페이지 | ⏳ | 홈 위젯만 완료 |
-| 7 관리자 | ⏳ | |
+| 5-2 게시판 | ⏳ | 상세·댓글·좋아요·신고·본인 글 수정 |
+| 6-2 마이페이지 | ⏳ | |
+| 7 관리자·문의·알림상세 | ⏳ | |
 | 8 배포 | ⏳ | Render 는 여전히 `root-render/` 바닐라. React 배포는 별도 지시 |
 
-상세: `root-cloudflare/README.md`, `RDMD/frontend/12-react/01-react-phase1-3-record.md`
+상세: `root-cloudflare/README.md`, `RDMD/frontend/12-react/01-react-phase1-3-record.md`,
+`RDMD/frontend/12-react/02-react-tier-maker-luck-record.md`
 
 ---
 

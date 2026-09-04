@@ -144,6 +144,7 @@ RDMD/frontend/
 | 파일 | legacy | 요약 |
 |------|--------|------|
 | [01-react-phase1-3-record.md](./12-react/01-react-phase1-3-record.md) | — | root-cloudflare 를 Vite+React 로 교체 — 1~3단계(스캐폴드·레이아웃·홈/티어/공지) |
+| [02-react-tier-maker-luck-record.md](./12-react/02-react-tier-maker-luck-record.md) | — | 공식 티어표 단일 페이지 navbar + 커스텀 메이커·행운 뽑기 React 이식 |
 
 ---
 

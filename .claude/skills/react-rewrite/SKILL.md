@@ -20,21 +20,26 @@ description: >
 ## 현재
 
 - 바닐라 **0.4.3** — `root-render/` + `backend/` (Render 실무, 정본)
-- **React 앵 = `root-cloudflare/`** (Vite+React 18+Router 6). 2026-09-05 창시자 지시로 **1~3단계 이식 완료**. 4단계~ 지시 대기
+- **React 앵 = `root-cloudflare/`** (Vite+React 18+Router 6). 2026-09-05 지시로
+  레이아웃·홈·공지·**공식 티어표**·**커스텀 메이커**·**행운 뽑기** 이식 완료.
+  나머지(인증·게시판·마이페이지·문의·알림상세·관리자)는 지시 대기
+- 티어표는 한 페이지 + 내부 navbar. 등급별 색 = `tier-board.css` 변수 블록 한 곳
 - backend 기본 정적 루트 = `root-cloudflare/dist` (미빌드면 빈 화면)
 - **Cloudflare 추가 작업 금지**
 
 ## Do
 
-1. 다음 단계는 지시 후 `react-rewrite.md` 순서로, `root-render/` 바닐라와 동작 바교
+1. 다음 단계는 지시 후 `react-rewrite.md` 순서로, `root-render/` 바닐라와 동작 비교
 2. `root-cloudflare/src/` 에서 작업. 바닐라 CSS·클래스명 그대로, 이미지는 `tierImageUrl()`
-3. 티어 데이터 = `root-render/tier-class` 정본 → `npm run extract:tiers`
-4. `requireAdmin` · SHA-256 재설정 · 토큰 규칙 유지
-5. 검증: `npm run build`(root-cloudflare) → `npm start`(backend) → `:5000`
+3. 티어·캐릭터는 `src/data/tiers.js` 하나만 본다. 변경은 `root-render/tier-class` → `npm run extract:tiers`
+4. 커스텀 메이커 저장 형식·localStorage 키는 게시판 DB 와 호환 유지
+5. `requireAdmin` · SHA-256 재설정 · 토큰 규칙 유지
+6. 검증: `npm run build`(root-cloudflare) → `npm start`(backend) → `:5000`
 
 ## Do not
 
-- 지시 없이 4단계 이후 이식
+- 지시 없이 남은 영역 이식
+- 등급별 색·세부등급 하드코딩 (변수 블록·tiers.js 한 곳 유지)
 - `root-render/` 바닐라 삭제, Express→Workers, CF CI 재개
 - Pages = 풀기능
 
