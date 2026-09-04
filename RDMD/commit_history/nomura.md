@@ -271,9 +271,9 @@
 | 240 | 2026-09-04 | [`3369978`](#3369978) | chore(backend): server.js 설명 주석 복원 |
 | 241 | 2026-09-04 | [`09dfe6c`](#09dfe6c) | docs: 기존 주석 삭제 금지 인수인계 |
 | 242 | 2026-09-04 | [`fd1bf0d`](#fd1bf0d) | chore(common): 사이트 버전을 0.4.3으로 변경 |
-| 243 | 2026-09-04 | [`pending`](#pending243) | chore(assets): tier-media 안에 tier-image 서브폴더로 이미지 재정리 |
-| 244 | 2026-09-04 | [`pending`](#pending244) | refactor(frontend): 이미지 경로를 tier-media/tier-image 기준으로 갱신 |
-| 245 | 2026-09-04 | [`pending`](#pending245) | fix(backend): tier-media/tier-image 3단계 폴더 이력 자동 분기 |
+| 243 | 2026-09-04 | [`e2a3af0`](#e2a3af0) | chore(assets): tier-media 안에 tier-image 서브폴더로 이미지 재정리 |
+| 244 | 2026-09-04 | [`4e083b0`](#4e083b0) | refactor(frontend): 이미지 경로를 tier-media/tier-image 기준으로 갱신 |
+| 245 | 2026-09-04 | [`7e2e1ea`](#7e2e1ea) | fix(backend): tier-media/tier-image 3단계 폴더 이력 자동 분기 |
 
 ---
 
@@ -4718,15 +4718,15 @@
 
 ---
 
-<a id="pending243"></a>
+<a id="e2a3af0"></a>
 
-### 243. 2026-09-04 — `pending`
+### 243. 2026-09-04 — `e2a3af0`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `e2a3af0`
+- **hash (full)**: `e2a3af0f085389ba6e536e419feac82eac1651a6`
 - **author**: nomura
 - **message**: chore(assets): tier-media 안에 tier-image 서브폴더로 이미지 재정리
-- **git**: `git show pending243`
+- **git**: `git show e2a3af0`
 - **범위**: frontend / render-only / assets
 - **요약**: `root-render/tier-media/` 바로 아래 있던 이미지·gif 358개를 `root-render/tier-media/tier-image/`로 한 단계 더 넣었다(내용 변경 없음, git rename으로 추적됨). tier-media를 이미지 전용이 아니라 영상 등 다른 미디어 종류도 함께 담을 상위 폴더로 쓰기 위한 순수 리네임 커밋 — 경로를 참조하는 코드 쪽 수정은 다음 커밋(244번)에서 진행.
 - **주요 파일**: `root-render/tier-media/tier-image/**` (구 `root-render/tier-media/**`)
@@ -4736,15 +4736,15 @@
 
 ---
 
-<a id="pending244"></a>
+<a id="4e083b0"></a>
 
-### 244. 2026-09-04 — `pending`
+### 244. 2026-09-04 — `4e083b0`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `4e083b0`
+- **hash (full)**: `4e083b09094c88195d6a8d40fc6ca9073ab935c1`
 - **author**: nomura
 - **message**: refactor(frontend): 이미지 경로를 tier-media/tier-image 기준으로 갱신
-- **git**: `git show pending244`
+- **git**: `git show 4e083b0`
 - **범위**: frontend / render-only
 - **요약**: 243번 커밋으로 한 단계 더 들어간 폴더에 맞춰 root-render의 모든 html·js·manifest·README 내 "tier-media/" 리터럴 경로를 "tier-media/tier-image/"로 일괄 갱신했다. 폴더 구조가 두 번 바뀌었으므로(tier-image → tier-media → tier-media/tier-image), DB에 저장된 커스텀 메이커 게시글 이미지 경로를 화면에 표시하기 직전 변환하는 4개 함수(custom-maker.js의 resolveMakerPreviewPath, custom-maker_post.js·post_detail.js의 resolveAssetPath, my-page.js의 myPageResolveAsset)가 세 시점의 옛 접두사를 전부 인식해 최신 경로로 보정하도록 정규식을 확장했다. DB 마이그레이션은 여전히 불필요.
 - **주요 파일**: `root-render/index.html`, `root-render/header.html`, `root-render/common.js`, `root-render/sw.js`, `root-render/pwa-register.js`, `root-render/manifest.webmanifest`, `root-render/tier-class/tier1.html`~`tier9.html`, `root-render/custom-maker/*`, `root-render/custom-maker/custom-maker_post/*`, `root-render/my-page/my-page.js`, `root-render/user_login/*.html`, `root-render/admin/admin-login.html`, `root-render/Contact_us/contact_us.html`
@@ -4754,15 +4754,15 @@
 
 ---
 
-<a id="pending245"></a>
+<a id="7e2e1ea"></a>
 
-### 245. 2026-09-04 — `pending`
+### 245. 2026-09-04 — `7e2e1ea`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `7e2e1ea`
+- **hash (full)**: `7e2e1ea7e3930d782818bb74d895e7f526b2a5c9`
 - **author**: nomura
 - **message**: fix(backend): tier-media/tier-image 3단계 폴더 이력 자동 분기
-- **git**: `git show pending245`
+- **git**: `git show 7e2e1ea`
 - **범위**: backend
 - **요약**: `utils/tierMediaDir.js`의 getTierMediaDir()가 root-render일 때 반환하는 접두사를 'tier-media'에서 'tier-media/tier-image'로 바꾸고(root-cloudflare는 여전히 'tier-image' 그대로), resolveTierMediaPath()가 세 가지 옛 접두사(tier-image/, tier-media/, tier-media/tier-image/) 중 가장 긴 것부터 먼저 매치해서 제거한 뒤 현재 접두사를 다시 붙이도록 정규식을 확장했다. 이 함수를 쓰는 luckDrawController.js(뽑기 결과 imagePath)와 server.js(파비콘 라우트)는 코드 변경 없이 그대로 정상 동작. luckPool.js의 하드코딩된 경로 문자열도 tier-media/tier-image로 갱신. STATIC_ROOT=root-render로 로컬 실행해 파비콘·새 경로 이미지 200, 옛 평평한 tier-media/logo.webp 경로는 404임을 직접 확인함.
 - **주요 파일**: `backend/utils/tierMediaDir.js`, `backend/data/luckPool.js`
