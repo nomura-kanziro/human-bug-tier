@@ -64,8 +64,19 @@
     </nav>
   </div>
 
-  <!-- 오른쪽 그룹: 후원 버튼 + 로그인 버튼(또는 로그인 시 프로필/알림, common.js가 동적 삽입) + 모바일 햄버거 -->
+  <!-- 오른쪽 그룹: 밝기 테마 토글 + 후원 버튼 + 로그인 버튼(또는 로그인 시 프로필/알림, common.js가 동적 삽입) + 모바일 햄버거 -->
   <div class="header-right">
+    <!-- 라이트/다크 테마 토글 스위치. 클릭 처리는 theme.js가 [data-theme-toggle] 클릭을
+         이벤트 위임으로 감지해서 담당하며(이 버튼 자체엔 별도 스크립트 불필요), 현재 테마
+         상태(is-dark 클래스/aria-checked)도 theme.js가 페이지 로드 시 자동으로 맞춰준다.
+         오전 7시~밤 10시는 자동 라이트, 그 외 시간대는 자동 다크가 기본값이며, 이 스위치를
+         한 번 누르면 그 값이 자동 전환보다 우선해서 계속 유지된다(localStorage.hbtTheme). -->
+    <button type="button" id="theme-toggle-btn" class="theme-toggle-btn" data-theme-toggle
+            role="switch" aria-checked="false" aria-label="다크 모드 전환" title="화면 밝기 전환">
+      <span class="theme-toggle-icon theme-toggle-icon-sun" aria-hidden="true">☀️</span>
+      <span class="theme-toggle-track"><span class="theme-toggle-thumb"></span></span>
+      <span class="theme-toggle-icon theme-toggle-icon-moon" aria-hidden="true">🌙</span>
+    </button>
     <!-- 후원 링크는 common.js 맨 위 SPONSOR_PROFILE_URL 에 넣으세요 -->
     <a href="#" id="header-sponsor-btn" class="header-sponsor-btn" title="후원하기" aria-label="후원하기">
       <svg class="header-sponsor-icon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true" focusable="false">

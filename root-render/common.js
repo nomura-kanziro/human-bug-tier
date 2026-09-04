@@ -464,6 +464,10 @@ function loadCommon() {
     fixRootLinksInElement(document.getElementById('header-placeholder'));
     fixRootLinksInElement(document.getElementById('footer-placeholder'));
 
+    // 방금 막 삽입된 헤더 안의 다크모드 토글 스위치를 현재 테마 상태로 맞춘다
+    // (theme.js는 <head>에서 먼저 로드되지만, 그 시점엔 이 버튼이 아직 DOM에 없었기 때문)
+    if (window.syncThemeToggleUI) window.syncThemeToggleUI();
+
     // ★★★ 핵심: 이벤트 부착 + 이미지 보정 + 푸터 링크 보정
     attachHeaderEvents();
     fixImagePaths(base);
@@ -498,7 +502,9 @@ function fallbackLoadHeaderFooter(base) {
 
     fixRootLinksInElement(document.getElementById('header-placeholder'));
     fixRootLinksInElement(document.getElementById('footer-placeholder'));
-    
+
+    if (window.syncThemeToggleUI) window.syncThemeToggleUI();
+
     attachHeaderEvents();
     fixImagePaths(base);
     fixFooterLinks(base);
