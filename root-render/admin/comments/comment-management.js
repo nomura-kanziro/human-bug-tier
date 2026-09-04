@@ -1193,12 +1193,20 @@ async function addBlockFromInput(value, durationDays) {
 // findBlockByValue(닉네임 매칭)로 매번 다시 계산해서 배지와 버튼(차단/차단해제)을 그린다.
 // 렌더링 후 각 행의 버튼에 이벤트를 다시 붙이는 이유는 renderAdminNoticeList와 동일
 // (innerHTML 교체로 이전 리스너가 사라지므로).
+function formatJoinedAt(value) {
+  if (!value) return '-';
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return '-';
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 function renderUserList() {
   const tbody = document.getElementById('user-list');
   if (!tbody) return;
 
   if (!registeredUsers.length) {
-    tbody.innerHTML = '<tr class="empty-row"><td colspan="6">등록된 사용자가 없습니다.</td></tr>';
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="7">등록된 사용자가 없습니다.</td></tr>';
     return;
   }
 
@@ -1212,6 +1220,7 @@ function renderUserList() {
         <td>${idx + 1}</td>
         <td><strong>${escapeHtml(user.nickname)}</strong></td>
         <td>${escapeHtml(user.email)}</td>
+        <td>${escapeHtml(formatJoinedAt(user.createdAt))}</td>
         <td>${user.isVerified
           ? '<span class="badge badge-verified">✔ 인증완료</span>'
           : '<span class="badge badge-unverified">미인증</span>'}</td>

@@ -1018,12 +1018,20 @@ async function addBlockFromInput(value, durationDays) {
   }
 }
 
+function formatJoinedAt(value) {
+  if (!value) return '-';
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return '-';
+  const pad = (n) => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
 function renderUserList() {
   const tbody = document.getElementById('user-list');
   if (!tbody) return;
 
   if (!registeredUsers.length) {
-    tbody.innerHTML = '<tr class="empty-row"><td colspan="6">등록된 사용자가 없습니다.</td></tr>';
+    tbody.innerHTML = '<tr class="empty-row"><td colspan="7">등록된 사용자가 없습니다.</td></tr>';
     return;
   }
 
@@ -1037,6 +1045,7 @@ function renderUserList() {
         <td>${idx + 1}</td>
         <td><strong>${escapeHtml(user.nickname)}</strong></td>
         <td>${escapeHtml(user.email)}</td>
+        <td>${escapeHtml(formatJoinedAt(user.createdAt))}</td>
         <td>${user.isVerified
           ? '<span class="badge badge-verified">✔ 인증완료</span>'
           : '<span class="badge badge-unverified">미인증</span>'}</td>
