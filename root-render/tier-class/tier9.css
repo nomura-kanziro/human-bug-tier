@@ -96,3 +96,35 @@ h2 {
   border: 1px solid #000000;
   border-radius: 4px;
 }
+
+/* ======================================================================
+   다크 모드 — 9등급(언랭크) 페이지 전용 보정.
+   가장 낮은/미분류 등급이라 원래도 무채색(흰 배경 + 검은 글자)이었다. 다크
+   모드에서도 그 무채색 정체성을 그대로 이어가되, 이 등급만은 고유 강조색이
+   없으므로 하드코딩 대신 theme.css 공용 변수를 그대로 써서 가장 "일반적인"
+   다크 카드로 보이게 한다 */
+[data-theme="dark"] .tier-table {
+  background-color: var(--bg-elevated);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+  box-shadow: 0 10px 28px var(--shadow-color);
+}
+
+[data-theme="dark"] .tier-row {
+  border-top-color: var(--border-color);
+}
+
+[data-theme="dark"] .char {
+  border-color: var(--border-strong);
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .tier-label,
+[data-theme="dark"] .tier-cards {
+  background-color: var(--bg-subtle);
+}
+
+[data-theme="dark"] .tier-cards img {
+  border-color: var(--border-strong);
+}

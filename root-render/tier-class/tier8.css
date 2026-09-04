@@ -95,3 +95,34 @@ h2 {
   border: 1px solid #000000;
   border-radius: 4px;
 }
+
+/* ======================================================================
+   다크 모드 — 8등급(브론즈) 페이지 전용 보정.
+   원래 동색(#cf6712) 배경 + 검은 글자는 다크 모드 페이지에서 상대적으로
+   밝고 채도가 높아 튄다. 브론즈 정체성은 유지하되 짙은 카퍼 배경 + 밝은
+   브론즈 글자로 뒤집는다 */
+[data-theme="dark"] .tier-table {
+  background-color: #4a2810;
+  border-color: #cf6712;
+  color: #f0c090;
+  box-shadow: 0 10px 28px var(--shadow-color);
+}
+
+[data-theme="dark"] .tier-row {
+  border-top-color: #6a3d16;
+}
+
+[data-theme="dark"] .char {
+  border-color: #8a4e1c;
+  background: rgba(207, 103, 18, 0.08);
+  color: #f0c090;
+}
+
+[data-theme="dark"] .tier-label,
+[data-theme="dark"] .tier-cards {
+  background-color: #3a1f0a;
+}
+
+[data-theme="dark"] .tier-cards img {
+  border-color: #cf6712;
+}

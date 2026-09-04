@@ -166,3 +166,25 @@
     font-size: 0.82rem;
   }
 }
+
+/* ======================================================================
+   다크 모드 — 이전/다음 티어 네비 + 등급 제목 보정.
+   버튼은 원래도 검정 배경이라 유지되지만 테두리(#333)가 다크 모드 페이지
+   배경과 거의 구분이 안 되고, 가운데 "N등급" 표시(.tier-page-nav-current)는
+   아예 #222(거의 검정) 글자라 다크 배경에서 안 보인다. 등급 제목 글로우
+   색상(--tier-glow-*)은 이미 반투명 컬러라 다크 배경에서도 잘 보이므로
+   그대로 둔다 */
+[data-theme="dark"] .tier-page-nav-btn {
+  background: var(--bg-elevated);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .tier-page-nav-btn:hover {
+  background: var(--bg-hover);
+  border-color: var(--border-strong);
+}
+
+[data-theme="dark"] .tier-page-nav-current {
+  color: var(--text-primary);
+}

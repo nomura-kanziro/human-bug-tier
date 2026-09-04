@@ -95,3 +95,22 @@ h2 {
   border: 1px solid #ffffff;
   border-radius: 4px;
 }
+
+/* ======================================================================
+   다크 모드 — 5등급(플래티넘) 페이지 전용 보정.
+   보라색 배경은 다크 모드 페이지 위에서도 충분히 어둡지만 채도가 높아 다소
+   튀어 보일 수 있어 톤을 한 단계 낮추고 그림자를 더한다. 보라색 정체성
+   자체는 유지한다 */
+[data-theme="dark"] .tier-table {
+  background-color: #4a0e8f;
+  box-shadow: 0 10px 28px var(--shadow-color);
+}
+
+[data-theme="dark"] .tier-label,
+[data-theme="dark"] .tier-cards {
+  background-color: #200438;
+}
+
+[data-theme="dark"] .char {
+  border-color: #e8e8e8;
+}

@@ -95,3 +95,35 @@ h2 {
   border: 1px solid #000000;
   border-radius: 4px;
 }
+
+/* ======================================================================
+   다크 모드 — 6등급(골드) 페이지 전용 보정.
+   원래 배경은 형광에 가까운 밝은 노랑(#fffb00)이라 다크 모드에서 그대로 두면
+   페이지 전체에서 눈부시게 튄다. 골드 정체성은 유지하되 배경을 짙은 앰버로
+   뒤집고 글자·테두리에 밝은 골드를 써서 여전히 "6등급 = 골드"임을 알아볼 수
+   있게 한다 */
+[data-theme="dark"] .tier-table {
+  background-color: #3a3200;
+  border-color: #ffd400;
+  color: #ffe066;
+  box-shadow: 0 10px 28px var(--shadow-color);
+}
+
+[data-theme="dark"] .tier-row {
+  border-top-color: #5c4f0a;
+}
+
+[data-theme="dark"] .char {
+  border-color: #7a6a10;
+  background: rgba(255, 212, 0, 0.06);
+  color: #ffe066;
+}
+
+[data-theme="dark"] .tier-label,
+[data-theme="dark"] .tier-cards {
+  background-color: #2b2500;
+}
+
+[data-theme="dark"] .tier-cards img {
+  border-color: #ffd400;
+}

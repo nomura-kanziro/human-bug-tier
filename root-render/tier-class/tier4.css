@@ -95,3 +95,15 @@ h2 {
   border: 1px solid #ffffff;
   border-radius: 4px;
 }
+
+/* ======================================================================
+   다크 모드 — 4등급(다이아몬드) 페이지 전용 보정.
+   남색+흰색 조합은 이미 어두운 편이라 색 자체는 유지하고, 다크 모드 페이지
+   배경과의 경계를 살리는 그림자만 추가한다 */
+[data-theme="dark"] .tier-table {
+  box-shadow: 0 10px 28px var(--shadow-color);
+}
+
+[data-theme="dark"] .char {
+  border-color: #e8e8e8;
+}

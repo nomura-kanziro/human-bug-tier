@@ -96,3 +96,27 @@ h2 {
   border: 1px solid rgb(255, 255, 255);
   border-radius: 4px;
 }
+
+/* ======================================================================
+   다크 모드 — 2등급(그랜드 마스터) 페이지 전용 보정.
+   검은 배경 + 짙은 회색(#222) 테두리 조합은 라이트 모드의 옅은 회색 페이지
+   위에서는 잘 구분됐지만, 다크 모드 페이지 배경(--bg-page, 거의 검정)과
+   겹치면 테두리가 거의 안 보이게 된다. 테두리를 밝은 회색으로 올리고 그림자를
+   더해 박스 경계를 되살린다. 흑백 미니멀 테마 자체는 유지 */
+[data-theme="dark"] .tier-table {
+  border-color: #6a6a6a;
+  box-shadow: 0 10px 28px var(--shadow-color);
+}
+
+[data-theme="dark"] .tier-row {
+  border-top-color: #555;
+}
+
+[data-theme="dark"] .char {
+  border-color: #b8b8b8;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+[data-theme="dark"] .tier-cards img {
+  border-color: #b8b8b8;
+}
