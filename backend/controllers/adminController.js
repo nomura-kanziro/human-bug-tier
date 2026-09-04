@@ -106,9 +106,14 @@ const getUsers = async (req, res) => {
   try {
     const users = await User.find()
       .select('nickname email ip isVerified createdAt')
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .lean();
 
-    res.json(users);
+    res.json(users.map((user) => ({
+      ...user,
+      _id: String(user._id),
+      id: String(user._id),
+    })));
   } catch (err) {
     console.error('사용자 목록 조회 에러:', err);
     res.status(500).json({ error: '사용자 목록 조회 실패' });
@@ -127,26 +132,31 @@ const verifyUser = async (req, res) => {
       return res.status(400).json({ error: '올바르지 않은 사용자입니다.' });
     }
 
-    const user = await User.findById(id);
-    if (!user) {
+    const existing = await User.findById(id).select('isVerified');
+    if (!existing) {
       return res.status(404).json({ error: '사용자를 찾을 수 없습니다.' });
     }
 
-    if (user.isVerified) {
+    if (existing.isVerified) {
       return res.json({
         message: '이미 인증된 회원입니다.',
         isVerified: true,
       });
     }
 
-    user.isVerified = true;
-    user.verificationToken = undefined;
-    user.verificationTokenExpires = undefined;
-    await user.save();
+    // save()+undefined 는 필드를 null 로 남겨 unique 인덱스/미반영이 날 수 있음
+    const user = await User.findByIdAndUpdate(
+      id,
+      {
+        $set: { isVerified: true },
+        $unset: { verificationToken: 1, verificationTokenExpires: 1 },
+      },
+      { new: true, runValidators: false }
+    ).select('nickname email isVerified');
 
     res.json({
       message: '이메일 인증을 완료했습니다. 이제 로그인할 수 있습니다.',
-      isVerified: true,
+      isVerified: Boolean(user && user.isVerified),
     });
   } catch (err) {
     console.error('사용자 인증 에러:', err);

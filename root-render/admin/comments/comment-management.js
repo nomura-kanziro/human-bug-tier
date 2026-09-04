@@ -1255,7 +1255,11 @@ function renderUserList() {
   });
 
   tbody.querySelectorAll('.verify-user-btn').forEach(btn => {
-    btn.addEventListener('click', () => verifyRegisteredUser(btn.dataset.userId, btn.dataset.nickname));
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-user-id') || btn.dataset.userId || '';
+      const nick = btn.getAttribute('data-nickname') || btn.dataset.nickname || '';
+      verifyRegisteredUser(id, nick);
+    });
   });
 
   tbody.querySelectorAll('.delete-user-btn').forEach(btn => {
@@ -1279,8 +1283,9 @@ async function verifyRegisteredUser(userId, nickname) {
 
   try {
     const response = await fetch(`${getApiBase()}/api/admin/users/${encodeURIComponent(userId)}/verify`, {
-      method: 'PATCH',
+      method: 'POST',
       headers: getAdminAuthHeaders(),
+      body: JSON.stringify({}),
     });
     const data = await response.json().catch(() => ({}));
 

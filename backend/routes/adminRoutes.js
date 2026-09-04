@@ -32,6 +32,8 @@ router.post('/login', login);
 // 회원 목록 조회 / 회원 강제 탈퇴(작성 글·댓글·좋아요·알림·차단·문의까지 함께 정리)
 router.get('/users', requireAdmin, getUsers);
 router.patch('/users/:id/verify', requireAdmin, verifyUser);
+router.post('/users/:id/verify', requireAdmin, verifyUser);
+router.put('/users/:id/verify', requireAdmin, verifyUser);
 router.delete('/users/:id', requireAdmin, deleteUser);
 // 닉네임 또는 IP 차단 목록 조회/추가/해제 (blockController — 만료된 차단은 조회 시 자동 정리)
 router.get('/blocks', requireAdmin, getBlocks);
