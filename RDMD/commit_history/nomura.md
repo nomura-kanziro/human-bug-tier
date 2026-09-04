@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 256 |
+| **커밋 수** | 255 |
 | **기간** | 2026-03-20 ~ 2026-09-04 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -278,13 +278,12 @@
 | 247 | 2026-09-05 | [`1a6ec54`](#1a6ec54) | feat(common): 헤더/푸터 삽입 완료 시 로딩 화면 숨김 신호 연동 |
 | 248 | 2026-09-05 | [`d4051c0`](#d4051c0) | feat(frontend): 전 페이지에 로딩 화면 마크업·스크립트 삽입 |
 | 249 | 2026-09-05 | [`a60185a`](#a60185a) | chore(assets): tier-media 안에 tier-video 폴더 추가 |
-| 250 | 2026-09-05 | [`pending`](#react-250) | refactor(react): root-cloudflare 바닐라 프론트 제거 및 Vite+React 스캐폴드 |
-| 251 | 2026-09-05 | [`pending`](#react-251) | feat(react): API 클라이언트·인증 컨텍스트·테마·경로 유틸 |
-| 252 | 2026-09-05 | [`pending`](#react-252) | feat(react): 레이아웃 — 헤더/푸터/알림벨/프로필 드롭다운/로딩 화면 |
-| 253 | 2026-09-05 | [`pending`](#react-253) | feat(react): 공개 페이지 — 홈·공식 티어 1~9·공지 + 옴 URL 리다이렉트 |
-| 254 | 2026-09-05 | [`pending`](#react-254) | feat(backend): React dist 기본 서빙 및 SPA 폴백 |
-| 255 | 2026-09-05 | [`pending`](#react-255) | docs(react): README·react-rewrite 현황·스킬·RDMD 기록 갱신 |
-| 256 | 2026-09-05 | [`pending`](#react-256) | docs(commit_history): 250~255번 커밋 해시 기입 |
+| 250 | 2026-09-05 | [`4616abe`](#4616abe) | refactor(react): root-cloudflare 바닐라 프론트 제거 및 Vite+React 스캐폴드 |
+| 251 | 2026-09-05 | [`ab3e5c6`](#ab3e5c6) | feat(react): API 클라이언트·인증 컨텍스트·테마·경로 유틸 |
+| 252 | 2026-09-05 | [`eb35006`](#eb35006) | feat(react): 레이아웃 — 헤더/푸터/알림벨/프로필 드롭다운/로딩 화면 |
+| 253 | 2026-09-05 | [`62fdf77`](#62fdf77) | feat(react): 공개 페이지 — 홈·공식 티어 1~9·공지 + 옴 URL 리다이렉트 |
+| 254 | 2026-09-05 | [`8f32cc2`](#8f32cc2) | feat(backend): React dist 기본 서빙 및 SPA 폴백 |
+| 255 | 2026-09-05 | [`ead20ee`](#ead20ee) | docs(react): README·react-rewrite 현황·스킬·RDMD 기록 갱신 |
 
 ---
 
@@ -4855,15 +4854,15 @@
 
 ---
 
-<a id="react-250"></a>
+<a id="4616abe"></a>
 
-### 250. 2026-09-05 — `pending`
+### 250. 2026-09-05 — `4616abe`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `4616abe`
+- **hash (full)**: `4616abeb69fde945ba73e57527c43de450aafdd5`
 - **author**: nomura
 - **message**: refactor(react): root-cloudflare 바닐라 프론트 제거 및 Vite+React 스캐폴드
-- **git**: `git show <hash>`
+- **git**: `git show 4616abe`
 - **범위**: frontend / react / root-cloudflare
 - **요약**: 창시자 지시(2026-09-05)로 `root-cloudflare/` 의 바닐라 프론트(common.js·header/footer·tier-class·notice·custom-maker·user_login·admin·luck-draw·my-page·notifications·Contact_us·tier-image·sw/pwa)를 전부 제거하고 Vite+React 18+React Router 6 앵을 스캐폴드했다. `package.json`/`vite.config.js`(/api → :5000 프록시)/`index.html`(테마 FOUC 방지 인라인)/`.gitignore` 추가. 바닐라 CSS 는 `src/styles/` 로, 캐릭터·로고·PWA 이미지는 `public/tier-media/tier-image/` 로 그대로 복사. `scripts/extract-tiers.mjs` 가 `root-render/tier-class/tier1~9.html` 을 파싱해 `src/data/tiers.json`(30행·343카드, 원본과 일치 검증)을 생성. 바닐라 정본은 `root-render/` 에 그대로 있다.
 - **주요 파일**: `root-cloudflare/package.json`, `vite.config.js`, `index.html`, `.gitignore`, `scripts/extract-tiers.mjs`, `src/data/tiers.json`, `src/styles/**`, `public/manifest.webmanifest`, `public/tier-media/**`
@@ -4873,15 +4872,15 @@
 
 ---
 
-<a id="react-251"></a>
+<a id="ab3e5c6"></a>
 
-### 251. 2026-09-05 — `pending`
+### 251. 2026-09-05 — `ab3e5c6`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `ab3e5c6`
+- **hash (full)**: `ab3e5c60d79506df9186b692536ebc98de41a445`
 - **author**: nomura
 - **message**: feat(react): API 클라이언트·인증 컨텍스트·테마·경로 유틸
-- **git**: `git show <hash>`
+- **git**: `git show ab3e5c6`
 - **범위**: frontend / react / lib
 - **요약**: 바닐라 common.js 의 핵심 규칙을 모듈로 이식. `api.js`(getApiBase: 개발포트→localhost:5000 / 동일오리진→'' / GH Pages→GITHUB_STATIC, getAuthHeaders·getAdminAuthHeaders, apiRequest 래퍼), `paths.js`(tierImageUrl 이미지 접두사 정그화, legacyToRoute 바닐라 URL→라우트), `theme.js`(useTheme 훅, hbtTheme 수동/자동 07~22시), `notifications.js`(딥링크·sessionStorage 페이로드 동일), `noticeFormat.js`(공지 마크다운 렌더러·날짜 포맷), `noticeApi.js`(캠시 포함 fetch). `AuthContext` 는 바닐라와 같은 localStorage 키를 읽어 로그인 상태를 공유하고 로그아웃·프로필 사진 변경을 제공.
 - **주요 파일**: `root-cloudflare/src/lib/api.js`, `paths.js`, `theme.js`, `notifications.js`, `noticeFormat.js`, `noticeApi.js`, `src/context/AuthContext.jsx`
@@ -4891,15 +4890,15 @@
 
 ---
 
-<a id="react-252"></a>
+<a id="eb35006"></a>
 
-### 252. 2026-09-05 — `pending`
+### 252. 2026-09-05 — `eb35006`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `eb35006`
+- **hash (full)**: `eb3500689d1d7ec82e5bf908f8dcdf118872c24a`
 - **author**: nomura
 - **message**: feat(react): 레이아웃 — 헤더/푸터/알림벨/프로필 드롭다운/로딩 화면
-- **git**: `git show <hash>`
+- **git**: `git show eb35006`
 - **범위**: frontend / react / layout
 - **요약**: header.html·footer.html·common.js 의 헤더 로직을 컴포넌트로 이식. `Header`(데스크탑 드롭다운 3개 + 모바일 사이드 아코디언, 알림·프로필 패널 상호배타를 단일 panel state 로), `ThemeToggle`, `SponsorButton`, `NotificationBell`(60초 배지 폴링·50건 목록·읽음 PATCH·설정 모달·기록 삭제), `UserProfileMenu`(관리자만 🛠 관리하기 추가), `Footer`(site version 0.5.0), `LoadingScreen`, `Layout`(라우트 이동 시 스크롤 상단). 마크업 클래스명을 바닐라와 동일하게 유지해 기존 CSS 그대로 동작.
 - **주요 파일**: `root-cloudflare/src/components/Header.jsx`, `Footer.jsx`, `ThemeToggle.jsx`, `SponsorButton.jsx`, `NotificationBell.jsx`, `UserProfileMenu.jsx`, `LoadingScreen.jsx`, `Layout.jsx`
@@ -4909,15 +4908,15 @@
 
 ---
 
-<a id="react-253"></a>
+<a id="62fdf77"></a>
 
-### 253. 2026-09-05 — `pending`
+### 253. 2026-09-05 — `62fdf77`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `62fdf77`
+- **hash (full)**: `62fdf77f13d8858c4192157c1e1961d5c14034b4`
 - **author**: nomura
 - **message**: feat(react): 공개 페이지 — 홈·공식 티어 1~9·공지 + 옴 URL 리다이렉트
-- **git**: `git show <hash>`
+- **git**: `git show 62fdf77`
 - **범위**: frontend / react / pages
 - **요약**: `Home`(소개·퀵카드 스크롤·공지/새소식 2건·메이커 미리보기·`HomeLuckWidget` 행운 뽑기 위젯·티어 카드 9개), `TierPage`(tiers.json 렌더, tierN.css 는 ?inline 로 마운트 중에만 <style> 주입, 이전/다음 네비·윤광 data-tier), `NoticeHome`/`NoticeList`/`NoticeDetail`(카테고리 뒤 버전·개수 문구·마크다운·유튜브 원문 토글·selectedNoticeId 폴백), `NoticeListItem`(home/full/default 3 레이아웃), `PendingPage`(4단계~ 자리표시), `LegacyRedirect`(*.html → 새 라우트). `App.jsx` 라우트·`main.jsx` 전역 CSS 순서. `:5000` 에서 홈/티어/공지/리다이렉트/404/로그인 헤더 수동 검증.
 - **주요 파일**: `root-cloudflare/src/App.jsx`, `main.jsx`, `src/pages/Home.jsx`, `TierPage.jsx`, `NoticeHome.jsx`, `NoticeList.jsx`, `NoticeDetail.jsx`, `PendingPage.jsx`, `LegacyRedirect.jsx`, `src/components/NoticeListItem.jsx`, `HomeLuckWidget.jsx`
@@ -4927,15 +4926,15 @@
 
 ---
 
-<a id="react-254"></a>
+<a id="8f32cc2"></a>
 
-### 254. 2026-09-05 — `pending`
+### 254. 2026-09-05 — `8f32cc2`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `8f32cc2`
+- **hash (full)**: `8f32cc2066c7e25f73e4b6c1c8024e155375a33b`
 - **author**: nomura
 - **message**: feat(backend): React dist 기본 서빙 및 SPA 폴백
-- **git**: `git show <hash>`
+- **git**: `git show 8f32cc2`
 - **범위**: backend / static
 - **요약**: `resolveStaticRoot()` 기본값을 `root-cloudflare/dist`(index.html 있을 때)로 바꾸고, dist 가 없으면 예전처럼 폴더 자체로 폴백. `RENDER=true`/`STATIC_ROOT` 분기는 그대로라 Render 배포 동작은 변함 없다. SPA 루트(`isSpaRoot`: dist/index.html 있고 header.html 없음)에서는 확장자 없는 경로와 `.html` 요청을 index.html 로 폴백해 클라이언트 라우터가 처리. favicon 후보에 `tier-media/tier-image/logo.webp`·`root-cloudflare/public/...` 추가. 기존 주석은 문구만 갱신.
 - **주요 파일**: `backend/server.js`
@@ -4945,36 +4944,18 @@
 
 ---
 
-<a id="react-255"></a>
+<a id="ead20ee"></a>
 
-### 255. 2026-09-05 — `pending`
+### 255. 2026-09-05 — `ead20ee`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `ead20ee`
+- **hash (full)**: `ead20eebc2aa6023505da0113f9d54dbd465d37f`
 - **author**: nomura
 - **message**: docs(react): README·react-rewrite 현황·스킬·RDMD 기록 갱신
-- **git**: `git show <hash>`
+- **git**: `git show ead20ee`
 - **범위**: docs / agents
 - **요약**: `root-cloudflare/README.md` 를 React 앵 실행·구조·이식 현황·규칙로 전면 개편. `RDMD/features/react-rewrite.md` 를 "기획만" → "1~3단계 완료, 4단계~ 지시 대기" 로 갱신. `.agents`/`.claude` react-rewrite 스킬, `CLAUDE.md`, `AGENTS.md` 상태 문구 동기화. 상세 작업 기록 `RDMD/frontend/12-react/01-react-phase1-3-record.md` 신규 + frontend README 인덱스.
 - **주요 파일**: `root-cloudflare/README.md`, `RDMD/features/react-rewrite.md`, `RDMD/frontend/12-react/01-react-phase1-3-record.md`, `RDMD/frontend/README.md`, `.agents/react-rewrite/skill.md`, `.claude/skills/react-rewrite/SKILL.md`, `CLAUDE.md`, `AGENTS.md`
 - **관련 RDMD**: [../features/react-rewrite.md](../features/react-rewrite.md)
-
-[▲ 목차로](#목차)
-
----
-
-<a id="react-256"></a>
-
-### 256. 2026-09-05 — `pending`
-
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
-- **author**: nomura
-- **message**: docs(commit_history): 250~255번 커밋 해시 기입
-- **git**: `git show <hash>`
-- **범위**: docs / commit_history
-- **요약**: 250~255번 커밋의 확정 해시를 목차·상세 바로 기입했다.
-- **주요 파일**: `RDMD/commit_history/nomura.md`
-- **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)
