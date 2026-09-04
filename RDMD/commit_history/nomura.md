@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 236 |
+| **커밋 수** | 237 |
 | **기간** | 2026-03-20 ~ 2026-09-03 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -264,7 +264,8 @@
 | 233 | 2026-09-04 | [`35aeb29`](#35aeb29) | style(theme): 관리자 페이지 다크 모드 색상 보정 |
 | 234 | 2026-09-04 | [`09ce365`](#09ce365) | style(theme): 로그인·회원가입 다크 모드 색상 보정 |
 | 235 | 2026-09-04 | [`a5a2a90`](#a5a2a90) | style(theme): 공지·행운뽑기·마이페이지·알림·문의 다크 모드 색상 보정 |
-| 236 | 2026-09-04 | pending | feat(auth): 가입 메일 Gmail 우선 및 관리자 직접 인증 |
+| 236 | 2026-09-04 | [`97d8649`](#97d8649) | feat(auth): 가입 메일 Gmail 우선 및 관리자 직접 인증 |
+| 237 | 2026-09-04 | pending | feat(admin): 회원 목록에 가입일 표시 |
 
 ---
 
@@ -4581,18 +4582,36 @@
 
 ---
 
-<a id="pending-236"></a>
+<a id="97d8649"></a>
 
-### 236. 2026-09-04 — pending
+### 236. 2026-09-04 — `97d8649`
 
-- **hash (short)**: pending
-- **hash (full)**: pending
+- **hash (short)**: `97d8649`
+- **hash (full)**: `97d8649e21b4034e83142d62cc7977dff72ee5e7`
 - **author**: nomura
 - **message**: feat(auth): 가입 메일 Gmail 우선 및 관리자 직접 인증
-- **git**: _(커밋 후 기입)_
+- **git**: `git show 97d8649`
 - **범위**: backend / auth / admin
 - **요약**: 회원가입 인증 메일은 Gmail이 있으면 Brevo/Resend를 건너뛴다. 메일이 안 오면 관리자가 회원 목록에서 인증하기로 직접 처리할 수 있다.
 - **주요 파일**: `backend/utils/mail.js`, `backend/controllers/authController.js`, `backend/controllers/adminController.js`, `root-render/admin/comments/comment-management.js`
 - **관련 RDMD**: `RDMD/backend/03-auth/08-signup-gmail-and-admin-verify-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-237"></a>
+
+### 237. 2026-09-04 — pending
+
+- **hash (short)**: pending
+- **hash (full)**: pending
+- **author**: nomura
+- **message**: feat(admin): 회원 목록에 가입일 표시
+- **git**: _(커밋 후 기입)_
+- **범위**: frontend / admin
+- **요약**: 관리자 등록 사용자 표에 가입일(createdAt) 열을 넣었다. API는 원래 내려주고 있었고, 화면에만 없었다.
+- **주요 파일**: `root-render/admin/comments/comment-management.html`, `root-render/admin/comments/comment-management.js`
+- **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)
