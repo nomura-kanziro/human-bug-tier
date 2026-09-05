@@ -7,8 +7,8 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 260 |
-| **기간** | 2026-03-20 ~ 2026-09-04 |
+| **커밋 수** | 261 |
+| **기간** | 2026-03-20 ~ 2026-09-05 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
 > 폴더 안내: [README.md](./README.md)  ·  상세 기능 일지: [../frontend/](../frontend/README.md) · [../backend/](../backend/README.md)
@@ -289,6 +289,7 @@
 | 258 | 2026-09-05 | [`53dd8cf`](#53dd8cf) | feat(react): 커스텀 메이커 React 내부 구현 |
 | 259 | 2026-09-05 | [`b7316b9`](#b7316b9) | feat(react): 행운 뽑기 React 내부 구현 |
 | 260 | 2026-09-05 | [`6cf73ae`](#6cf73ae) | docs(react): 티어표·메이커·뽑기 이식 문서·스킬 갱신 |
+| 261 | 2026-09-05 | [`pending`](#pending261) | chore(common): 사이트 버전을 0.4.4로 변경 |
 
 ---
 
@@ -5052,5 +5053,23 @@
 - **요약**: `root-cloudflare/README.md` 에 이식 현황·단일 페이지 티어표 구조·규칙을 반영하고, `react-rewrite.md` 현황표에 커스텀 메이커·행운 뽑기 완료를 추가했다. `.agents`/`.claude` 스킬에는 "등급별 색·세부등급을 흔리지 말 것(변수 블록·tiers.js 한 곳 유지)" 규칙을 명시. 상세 기록은 `12-react/02-react-tier-maker-luck-record.md` 신규.
 - **주요 파일**: `root-cloudflare/README.md`, `RDMD/features/react-rewrite.md`, `RDMD/frontend/12-react/02-react-tier-maker-luck-record.md`, `RDMD/frontend/README.md`, `.agents/react-rewrite/skill.md`, `.claude/skills/react-rewrite/SKILL.md`
 - **관련 RDMD**: [../features/react-rewrite.md](../features/react-rewrite.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending261"></a>
+
+### 261. 2026-09-05 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: chore(common): 사이트 버전을 0.4.4로 변경
+- **git**: `git show pending261`
+- **범위**: frontend / render-only / docs
+- **요약**: root-render 푸터의 site version 표기를 0.4.3 → 0.4.4로 올리고, CLAUDE.md·AGENTS.md·RDMD/features/overview.md·react-rewrite.md·team/README.md의 현재 버전 표기도 함께 맞췄다. root-cloudflare/footer.html(React 정식 버전)은 이번 세션 작업 범위(render.com만) 밖이라 별도 확인 필요.
+- **주요 파일**: `root-render/footer.html`, `CLAUDE.md`, `AGENTS.md`, `RDMD/features/overview.md`, `RDMD/features/react-rewrite.md`, `team/README.md`
+- **관련 RDMD**: _(선택)_
 
 [▲ 목차로](#목차)

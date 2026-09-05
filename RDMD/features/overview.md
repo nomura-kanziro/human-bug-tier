@@ -1,6 +1,6 @@
 # 전체 기능 맵
 
-> **현재**: 바닐라 `0.4.3` — **실무 프론트는 `root-render/` + `backend/` (Render).**  
+> **현재**: 바닐라 `0.4.4` — **실무 프론트는 `root-render/` + `backend/` (Render).**  
 > `root-cloudflare/`는 보관·로컬 기본 정적 루트일 수 있으나 **Cloudflare 배포 작업은 중지.**  
 > **정식 버전 React 이식**은 기획만: [react-rewrite.md](./react-rewrite.md). 구현은 창시자 지시 후.
 

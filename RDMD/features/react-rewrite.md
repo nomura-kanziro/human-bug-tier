@@ -2,7 +2,7 @@
 
 **상태**: **2026-09-05 창시자 지시로 구현 시작.** 1~3단계(스캐폴드·레이아웃·공개 페이지) 완료, 4단계~는 지시 대기.  
 **날짜**: 2026-09-01 기획 · 2026-09-05 1~3단계 이식  
-**현재 제품**: 바닐라 HTML/CSS/JS `0.4.3` (`root-render/`, Render 실무) + Express/Mongo `backend/`  
+**현재 제품**: 바닐라 HTML/CSS/JS `0.4.4` (`root-render/`, Render 실무) + Express/Mongo `backend/`  
 **React 앵**: `root-cloudflare/` (Vite + React 18 + React Router 6, `0.5.0`) — `npm run build` → `dist/` 를 backend 가 서빙
 
 ---
