@@ -289,7 +289,7 @@
 | 258 | 2026-09-05 | [`53dd8cf`](#53dd8cf) | feat(react): 커스텀 메이커 React 내부 구현 |
 | 259 | 2026-09-05 | [`b7316b9`](#b7316b9) | feat(react): 행운 뽑기 React 내부 구현 |
 | 260 | 2026-09-05 | [`6cf73ae`](#6cf73ae) | docs(react): 티어표·메이커·뽑기 이식 문서·스킬 갱신 |
-| 261 | 2026-09-05 | [`pending`](#pending261) | chore(common): 사이트 버전을 0.4.4로 변경 |
+| 261 | 2026-09-05 | [`35b0fe6`](#35b0fe6) | chore(common): 사이트 버전을 0.4.4로 변경 |
 
 ---
 
@@ -5058,15 +5058,15 @@
 
 ---
 
-<a id="pending261"></a>
+<a id="35b0fe6"></a>
 
-### 261. 2026-09-05 — `pending`
+### 261. 2026-09-05 — `35b0fe6`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `35b0fe6`
+- **hash (full)**: `35b0fe68c8730c2aa2c56f17c75c0e6e12e1d999`
 - **author**: nomura
 - **message**: chore(common): 사이트 버전을 0.4.4로 변경
-- **git**: `git show pending261`
+- **git**: `git show 35b0fe6`
 - **범위**: frontend / render-only / docs
 - **요약**: root-render 푸터의 site version 표기를 0.4.3 → 0.4.4로 올리고, CLAUDE.md·AGENTS.md·RDMD/features/overview.md·react-rewrite.md·team/README.md의 현재 버전 표기도 함께 맞췄다. root-cloudflare/footer.html(React 정식 버전)은 이번 세션 작업 범위(render.com만) 밖이라 별도 확인 필요.
 - **주요 파일**: `root-render/footer.html`, `CLAUDE.md`, `AGENTS.md`, `RDMD/features/overview.md`, `RDMD/features/react-rewrite.md`, `team/README.md`
