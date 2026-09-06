@@ -291,7 +291,7 @@
 | 260 | 2026-09-05 | [`6cf73ae`](#6cf73ae) | docs(react): 티어표·메이커·뽑기 이식 문서·스킬 갱신 |
 | 261 | 2026-09-05 | [`35b0fe6`](#35b0fe6) | chore(common): 사이트 버전을 0.4.4로 변경 |
 | 262 | 2026-09-07 | [`924dd53`](#924dd53) | chore(common): 사이트 버전을 0.4.5로 변경 |
-| 263 | 2026-09-07 | [`pending`](#pending263) | feat(home): 퀵카드 하위 메뉴 hover 시 전용 아이콘 교체 애니메이션 |
+| 263 | 2026-09-07 | [`28c7cfb`](#28c7cfb) | feat(home): 퀵카드 하위 메뉴 hover 시 전용 아이콘 교체 애니메이션 |
 
 ---
 
@@ -5096,15 +5096,15 @@
 
 ---
 
-<a id="pending263"></a>
+<a id="28c7cfb"></a>
 
-### 263. 2026-09-07 — `pending`
+### 263. 2026-09-07 — `28c7cfb`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `28c7cfb`
+- **hash (full)**: `28c7cfbef73d509b36e30fd97fd19b2f7466efaa`
 - **author**: nomura
 - **message**: feat(home): 퀵카드 하위 메뉴 hover 시 전용 아이콘 교체 애니메이션
-- **git**: `git show pending263`
+- **git**: `git show 28c7cfb`
 - **범위**: frontend / render-only / common
 - **요약**: 홈 화면 퀵 카드(티어표/커스텀 메이커/행운 뽑기) 아이콘 배지에 하위 메뉴 hover 반응을 추가했다. 티어표 카드는 1~9티어 링크마다 logo2-1~9.png로 아이콘이 바뀌고, 커스텀 메이커·행운 뽑기 카드도 새로 받은 전용 아이콘(logo-create.png=제작하기, logo-board.png=게시판, logo-Daily-Tier.png=오늘의 행운 티어)으로 바뀐다. 배경 이미지는 트랜지션이 안 걸려서 별도 ::after 오버레이 레이어를 opacity/scale/rotate로 튕기듯(cubic-bezier) 나타나게 했고, 전용 아이콘이 없는 "준비 중" 링크(이벤트/랜덤 뽑기)는 배지가 통통 튀는 공용 바운스 반응만 탄다. 자바스크립트 없이 CSS :has()만으로 처리.
 - **주요 파일**: `root-render/common.css`, `root-render/index.html`, `root-render/tier-media/tier-image/logo-create.png`(신규), `root-render/tier-media/tier-image/logo-board.png`(신규), `root-render/tier-media/tier-image/logo-Daily-Tier.png`(신규)
