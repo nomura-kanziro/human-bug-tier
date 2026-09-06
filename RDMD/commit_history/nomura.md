@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 263 |
+| **커밋 수** | 264 |
 | **기간** | 2026-03-20 ~ 2026-09-07 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -292,6 +292,7 @@
 | 261 | 2026-09-05 | [`35b0fe6`](#35b0fe6) | chore(common): 사이트 버전을 0.4.4로 변경 |
 | 262 | 2026-09-07 | [`924dd53`](#924dd53) | chore(common): 사이트 버전을 0.4.5로 변경 |
 | 263 | 2026-09-07 | [`28c7cfb`](#28c7cfb) | feat(home): 퀵카드 하위 메뉴 hover 시 전용 아이콘 교체 애니메이션 |
+| 264 | 2026-09-07 | [`pending`](#pending264) | fix(auth): 미인증 계정 재가입 시 이메일 영구 차단 문제 수정 |
 
 ---
 
@@ -5108,6 +5109,24 @@
 - **범위**: frontend / render-only / common
 - **요약**: 홈 화면 퀵 카드(티어표/커스텀 메이커/행운 뽑기) 아이콘 배지에 하위 메뉴 hover 반응을 추가했다. 티어표 카드는 1~9티어 링크마다 logo2-1~9.png로 아이콘이 바뀌고, 커스텀 메이커·행운 뽑기 카드도 새로 받은 전용 아이콘(logo-create.png=제작하기, logo-board.png=게시판, logo-Daily-Tier.png=오늘의 행운 티어)으로 바뀐다. 배경 이미지는 트랜지션이 안 걸려서 별도 ::after 오버레이 레이어를 opacity/scale/rotate로 튕기듯(cubic-bezier) 나타나게 했고, 전용 아이콘이 없는 "준비 중" 링크(이벤트/랜덤 뽑기)는 배지가 통통 튀는 공용 바운스 반응만 탄다. 자바스크립트 없이 CSS :has()만으로 처리.
 - **주요 파일**: `root-render/common.css`, `root-render/index.html`, `root-render/tier-media/tier-image/logo-create.png`(신규), `root-render/tier-media/tier-image/logo-board.png`(신규), `root-render/tier-media/tier-image/logo-Daily-Tier.png`(신규)
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending264"></a>
+
+### 264. 2026-09-07 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: fix(auth): 미인증 계정 재가입 시 이메일 영구 차단 문제 수정
+- **git**: `git show pending264`
+- **범위**: backend / auth
+- **요약**: 회원가입 시 이메일 중복 체크가 인증 완료 여부와 무관하게 무조건 막아서, 인증 메일 발송 실패(Brevo/Resend/Gmail 문제)로 인증을 못 끝낸 계정의 이메일이 영구히 재가입 불가능해지는 문제가 있었다. 실제 DB에서 이 상태로 막힌 계정(limjinheng0210@gmail.com)을 확인 후 수정: 기존 계정이 미인증 상태면 지우고 새로 가입시키고, 인증 완료된 계정은 그대로 막는다. 별도 테스트 서버로 두 시나리오(미인증 재가입 성공/인증완료 재가입 차단) 모두 검증함.
+- **주요 파일**: `backend/controllers/authController.js`
 - **관련 RDMD**: _(선택)_
 
 [▲ 목차로](#목차)

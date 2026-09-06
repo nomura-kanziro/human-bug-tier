@@ -102,7 +102,13 @@ function rejectIfEmailNotConfigured(res) {
 // 회원가입 (POST /api/auth/register)
 // ========================================================
 // 처리 순서:
-//   1. email 중복 체크 (이미 가입된 이메일이면 400)
+//   1. email 중복 체크 — 이미 "인증 완료된" 계정이 있으면 400.
+//      인증을 못 끝낸(isVerified=false) 이전 가입 시도가 있으면, 그 계정은 지우고
+//      새로 가입시킨다(2026-09 수정). 예전엔 인증 여부와 무관하게 이메일이 있기만
+//      하면 무조건 막았는데, 인증 메일 발송 실패(Brevo/Resend/Gmail 문제 등)로 한 번
+//      막힌 이메일이 영구히 재가입 불가능해지는 문제가 있었다 — 실제로 이 문제 때문에
+//      같은 사용자가 이메일을 조금씩 바꿔가며 여러 번 가입을 시도한 흔적(미인증 계정
+//      여러 개)이 DB에서 확인됐다. 검증된 계정은 여전히 그대로 보호된다.
 //   2. 비밀번호 bcrypt 해시(salt rounds 10) + 이메일 인증용 JWT(verificationToken, 1시간 만료) 발급
 //      - 이 JWT는 로그인 토큰(signUserToken)과는 별개로, verifyEmail()에서 링크 클릭 시에만 검증됨
 //   3. User 문서 저장 (가입 시점 IP도 getClientIp()로 함께 기록)
@@ -112,14 +118,21 @@ function rejectIfEmailNotConfigured(res) {
 // 주의: 메일 발송이 실패하더라도(catch 블록) 이미 User는 저장이 끝난 상태이므로
 //      회원가입 자체는 완료된 것으로 간주하고 HTTP 201을 그대로 응답한다.
 //      (계정은 생성됐지만 인증 메일만 못 받은 상태 → 응답 message로 안내, detail에 실패 사유 포함)
-//      이는 의도된 동작이며 버그가 아니다.
+//      이는 의도된 동작이며 버그가 아니다. (다만 위 1번 수정 덕분에, 이 상태로 막힌
+//      계정이라도 같은 이메일로 다시 가입을 시도하면 더 이상 영구히 막히지 않는다.)
 const register = async (req, res) => {
   try {
     const { email, password, nickname } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ error: '이미 존재하는 이메일입니다.' });
+      if (existingUser.isVerified) {
+        return res.status(400).json({ error: '이미 존재하는 이메일입니다.' });
+      }
+      // 인증 메일이 발송 실패 등으로 안 와서 인증을 못 끝낸 이전 가입 시도는
+      // 그 이메일을 영구히 막아버리지 않도록 정리하고 새로 가입할 수 있게 해준다.
+      // (검증된 계정은 위에서 그대로 막고, 미인증 계정만 재가입 시 덮어쓴다)
+      await User.deleteOne({ _id: existingUser._id });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
