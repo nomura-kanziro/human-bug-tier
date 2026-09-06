@@ -7,8 +7,8 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 261 |
-| **기간** | 2026-03-20 ~ 2026-09-05 |
+| **커밋 수** | 262 |
+| **기간** | 2026-03-20 ~ 2026-09-07 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
 > 폴더 안내: [README.md](./README.md)  ·  상세 기능 일지: [../frontend/](../frontend/README.md) · [../backend/](../backend/README.md)
@@ -290,6 +290,7 @@
 | 259 | 2026-09-05 | [`b7316b9`](#b7316b9) | feat(react): 행운 뽑기 React 내부 구현 |
 | 260 | 2026-09-05 | [`6cf73ae`](#6cf73ae) | docs(react): 티어표·메이커·뽑기 이식 문서·스킬 갱신 |
 | 261 | 2026-09-05 | [`35b0fe6`](#35b0fe6) | chore(common): 사이트 버전을 0.4.4로 변경 |
+| 262 | 2026-09-07 | [`pending`](#pending262) | chore(common): 사이트 버전을 0.4.5로 변경 |
 
 ---
 
@@ -5069,6 +5070,24 @@
 - **git**: `git show 35b0fe6`
 - **범위**: frontend / render-only / docs
 - **요약**: root-render 푸터의 site version 표기를 0.4.3 → 0.4.4로 올리고, CLAUDE.md·AGENTS.md·RDMD/features/overview.md·react-rewrite.md·team/README.md의 현재 버전 표기도 함께 맞췄다. root-cloudflare/footer.html(React 정식 버전)은 이번 세션 작업 범위(render.com만) 밖이라 별도 확인 필요.
+- **주요 파일**: `root-render/footer.html`, `CLAUDE.md`, `AGENTS.md`, `RDMD/features/overview.md`, `RDMD/features/react-rewrite.md`, `team/README.md`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending262"></a>
+
+### 262. 2026-09-07 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: chore(common): 사이트 버전을 0.4.5로 변경
+- **git**: `git show pending262`
+- **범위**: frontend / render-only / docs
+- **요약**: root-render 푸터의 site version 표기를 0.4.4 → 0.4.5로 올리고, CLAUDE.md·AGENTS.md·RDMD/features/overview.md·react-rewrite.md·team/README.md의 현재 버전 표기도 함께 맞췄다. 이번 버전은 라이트/다크 모드, 초기 로딩 화면, 홈 화면 퀵 카드 아이콘·호버 애니메이션 반영분을 포함한다. root-cloudflare/footer.html(React 정식 버전)은 이번 세션 작업 범위(render.com만) 밖이라 별도 확인 필요.
 - **주요 파일**: `root-render/footer.html`, `CLAUDE.md`, `AGENTS.md`, `RDMD/features/overview.md`, `RDMD/features/react-rewrite.md`, `team/README.md`
 - **관련 RDMD**: _(선택)_
 
