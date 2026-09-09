@@ -153,12 +153,16 @@ function hasEmailConfig() {
   return Boolean(getBrevoApiKey()) || Boolean(getResendApiKey()) || hasGmailConfig();
 }
 
-/** 가입 인증 메일만 Brevo/Resend를 건너뛰고 Gmail부터 쓸지. 기본은 Gmail이 있으면 건너뜀. */
+/** 가입 인증 메일만 Brevo/Resend를 건너뛰고 Gmail부터 쓸지. 기본은 건너뛰지 않음(2026-09 수정).
+ * 예전 기본값은 "Gmail 설정돼 있으면 무조건 Gmail부터"였는데, Render는 SMTP 아웃바운드
+ * 포트 자체를 막아서 Gmail이 Render에서는 항상 실패한다 — 즉 가입 메일만 매번 확실히
+ * 실패하는 시도를 먼저 하고서야 Brevo/Resend로 폴백하는 낭비 구조였다. 이제 기본은
+ * 다른 메일(비번찾기 등)과 똑같이 sendAppMail의 표준 순서(Brevo→Resend→Gmail)를 그대로
+ * 따르고, SIGNUP_MAIL_SKIP_API=true로 명시했을 때만 옛날처럼 Gmail을 먼저 시도한다. */
 function shouldSkipApiForSignupMail() {
   const raw = String(process.env.SIGNUP_MAIL_SKIP_API || '').trim().toLowerCase();
-  if (raw === 'false' || raw === '0' || raw === 'no') return false;
   if (raw === 'true' || raw === '1' || raw === 'yes') return true;
-  return hasGmailConfig();
+  return false;
 }
 
 /**
@@ -391,9 +395,10 @@ async function sendAppMail({ to, subject, html }) {
 
 /**
  * 회원가입 인증 메일 전용.
- * EMAIL_USER + APP 비밀번호가 있으면 Brevo/Resend를 건너뛰고 Gmail SMTP로 먼저 보낸다.
- * Gmail이 없거나 실패하면 기존 sendAppMail(Brevo→Resend→Gmail)로 폴백.
- * SIGNUP_MAIL_SKIP_API=false 이면 처음부터 공용 체인만 쓴다.
+ * 기본은 다른 메일과 동일하게 sendAppMail의 표준 순서(Brevo→Resend→Gmail)를 그대로 탄다
+ * (2026-09 수정 — 이유는 shouldSkipApiForSignupMail() 주석 참고, Render의 SMTP 차단 때문).
+ * SIGNUP_MAIL_SKIP_API=true로 명시했을 때만 Gmail SMTP를 먼저 시도하고, 실패하면
+ * 그때 표준 체인(Brevo→Resend→Gmail)으로 폴백한다.
  */
 async function sendSignupMail({ to, subject, html }) {
   if (shouldSkipApiForSignupMail() && hasGmailConfig()) {
