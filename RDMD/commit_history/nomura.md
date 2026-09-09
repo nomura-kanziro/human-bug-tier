@@ -293,7 +293,7 @@
 | 262 | 2026-09-07 | [`924dd53`](#924dd53) | chore(common): 사이트 버전을 0.4.5로 변경 |
 | 263 | 2026-09-07 | [`28c7cfb`](#28c7cfb) | feat(home): 퀵카드 하위 메뉴 hover 시 전용 아이콘 교체 애니메이션 |
 | 264 | 2026-09-07 | [`25c4f34`](#25c4f34) | fix(auth): 미인증 계정 재가입 시 이메일 영구 차단 문제 수정 |
-| 265 | 2026-09-10 | [`pending`](#mail-265) | fix(auth): 가입 인증 메일도 Brevo→Resend→Gmail 표준 순서를 기본으로 사용 |
+| 265 | 2026-09-10 | [`1c7f473`](#1c7f473) | fix(auth): 가입 인증 메일도 Brevo→Resend→Gmail 표준 순서를 기본으로 사용 |
 
 ---
 
@@ -5134,15 +5134,15 @@
 
 ---
 
-<a id="mail-265"></a>
+<a id="1c7f473"></a>
 
-### 265. 2026-09-10 — `pending`
+### 265. 2026-09-10 — `1c7f473`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `1c7f473`
+- **hash (full)**: `1c7f473cb78d23839b6aa1ad3aecf44628900213`
 - **author**: nomura
 - **message**: fix(auth): 가입 인증 메일도 Brevo→Resend→Gmail 표준 순서를 기본으로 사용
-- **git**: `git show <hash>`
+- **git**: `git show 1c7f473`
 - **범위**: backend / auth / mail
 - **요약**: `shouldSkipApiForSignupMail()` 의 기본값을 "Gmail 설정되어 있으면 무조건 Gmail 먼저"에서 "기본은 건너똔지 않음"으로 바꿔, 가입 인증 메일도 다른 메일(비번찾기 등)과 같은 `sendAppMail` 표준 순서(Brevo→Resend→Gmail)를 탄다. Render는 SMTP 아웃바운드 포트 자체를 막아 Gmail이 항상 실패하므로, 예전처럼 가입 메일만 Gmail을 먼저 시도하고 실패한 뒤에야 Brevo/Resend로 폴백하던 낭비 구조를 없았다. `SIGNUP_MAIL_SKIP_API=true` 로 명시했을 때만 예전처럼 Gmail을 먼저 시도하고 실패 시 표준 체인으로 폴백한다. `sendAppMail()` 자체는 이미 설정된 모든 방식을 우선순위대로 다 시도하고(하나 실패해도 다음 방식으로 계속), 전부 실패 시 각 provider의 실패 사유를 모두 이어붙여 에러 메시지로 내려준다(단일 장애점 방지).
 - **주요 파일**: `backend/utils/mail.js`
