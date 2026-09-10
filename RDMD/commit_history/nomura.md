@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 268 |
+| **커밋 수** | 270 |
 | **기간** | 2026-03-20 ~ 2026-09-07 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -297,6 +297,8 @@
 | 266 | 2026-09-10 | [`04f2599`](#04f2599) | fix(custom-maker): PNG 다운로드 이미지에 등급 제목 표시 |
 | 267 | 2026-09-10 | [`d760691`](#d760691) | fix(tier-class): 3티어에서 마피 캐릭터 제거 |
 | 268 | 2026-09-10 | [`201556c`](#201556c) | chore(common): 사이트 버전을 0.4.6으로 변경 |
+| 269 | 2026-09-11 | [`8ef92cf`](#8ef92cf) | feat(tier-class): 5티어에 하야미 타이키 추가 |
+| 270 | 2026-09-11 | [`39218a6`](#39218a6) | chore(common): 사이트 버전을 0.4.7로 변경 |
 
 ---
 
@@ -5202,6 +5204,42 @@
 - **git**: `git show 201556c`
 - **범위**: frontend / render-only / common
 - **요약**: 푸터의 사이트 버전 표기를 0.4.5 → 0.4.6 으로 수동 갱신했다.
+- **주요 파일**: `root-render/footer.html`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="8ef92cf"></a>
+
+### 269. 2026-09-11 — `8ef92cf`
+
+- **hash (short)**: `8ef92cf`
+- **hash (full)**: `8ef92cf09908b6887084b394ab53fc4a6a99f443`
+- **author**: nomura
+- **message**: feat(tier-class): 5티어에 하야미 타이키 추가
+- **git**: `git show 8ef92cf`
+- **범위**: frontend / render-only / tier-class
+- **요약**: 5티어 페이지의 해당 세부등급 칸에 "하야미 타이키" 캐릭터 카드를 사메즈 세이지 뒤에 추가하고, 해당 이미지 파일을 `5 tier/` 폴더에 함께 추가했다.
+- **주요 파일**: `root-render/tier-class/tier5.html`, `root-render/tier-media/tier-image/5 tier/hayami taiki.jpg`(신규)
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="39218a6"></a>
+
+### 270. 2026-09-11 — `39218a6`
+
+- **hash (short)**: `39218a6`
+- **hash (full)**: `39218a646fb721e361b3aa6559123c93296c25d9`
+- **author**: nomura
+- **message**: chore(common): 사이트 버전을 0.4.7로 변경
+- **git**: `git show 39218a6`
+- **범위**: frontend / render-only / common
+- **요약**: 푸터의 사이트 버전 표기를 0.4.6 → 0.4.7 로 수동 갱신했다.
 - **주요 파일**: `root-render/footer.html`
 - **관련 RDMD**: _(없음)_
 
