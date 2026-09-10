@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 266 |
+| **커밋 수** | 267 |
 | **기간** | 2026-03-20 ~ 2026-09-07 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -295,6 +295,7 @@
 | 264 | 2026-09-07 | [`25c4f34`](#25c4f34) | fix(auth): 미인증 계정 재가입 시 이메일 영구 차단 문제 수정 |
 | 265 | 2026-09-10 | [`1c7f473`](#1c7f473) | fix(auth): 가입 인증 메일도 Brevo→Resend→Gmail 표준 순서를 기본으로 사용 |
 | 266 | 2026-09-10 | [`04f2599`](#04f2599) | fix(custom-maker): PNG 다운로드 이미지에 등급 제목 표시 |
+| 267 | 2026-09-10 | [`pending`](#pending267) | fix(tier-class): 3티어에서 마피 캐릭터 제거 |
 
 ---
 
@@ -5165,6 +5166,24 @@
 - **범위**: frontend / render-only / custom-maker
 - **요약**: 커스텀 메이커에서 PNG로 저장하면 파일 안에 몇 등급인지 표시가 없어서, 파일명(tier-1.png 등)이 바뀌거나 낱장으로 흩어지면 이미지만으로 등급을 알 수 없었다. PDF 다운로드는 이미 캡처 직전에 등급 제목(h2)을 임시로 끼워넣는 트릭이 있었는데 PNG에는 없어서 생긴 차이였다. PNG도 PDF와 동일하게 캡처 대상을 #tier-capture-area로 맞추고, 캡처 직전에 등급 제목을 임시 삽입했다가 캡처 후 제거(실패해도 finally로 항상 정리)하도록 수정했다.
 - **주요 파일**: `root-render/custom-maker/custom-maker.js`
+- **관련 RDMD**: _(선택)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending267"></a>
+
+### 267. 2026-09-10 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: fix(tier-class): 3티어에서 마피 캐릭터 제거
+- **git**: `git show pending267`
+- **범위**: frontend / render-only / tier-class
+- **요약**: 3티어 페이지에서 "마피"(3 tier/mapi.jpg) 캐릭터 카드를 제거했다. 창시자가 IDE에서 직접 지운 변경을 확인 후 커밋.
+- **주요 파일**: `root-render/tier-class/tier3.html`
 - **관련 RDMD**: _(선택)_
 
 [▲ 목차로](#목차)
