@@ -632,16 +632,27 @@ document.querySelectorAll('.dropdown-item').forEach(item => {
 // 9개 등급을 전부 하나씩 renderTier()로 바꿔가며 각각 캡처해서 tier-1.png ~ tier-9.png로
 // 총 9장을 순서대로 다운로드한다. 렌더링 후 바로 캡처하면 이미지 로드가 덜 끝난 상태일 수
 // 있어서 setTimeout으로 약간의 대기 시간을 두는 방어적 처리가 곳곳에 들어가 있다.
+// 캡처 대상은 PDF와 동일하게 #tier-capture-area이고(테두리·배경 포함 영역), PDF와 마찬가지로
+// 캡처 직전에만 등급 제목(h2)을 맨 앞에 임시로 끼워넣었다가 캡처 후 바로 제거한다 — 파일명
+// (tier-1.png 등)만으로는 파일이 낱장으로 흩어지거나 이름이 바뀌면 몇 등급인지 알 수 없으므로,
+// 이미지 안에도 "몇 등급인지" 글자가 직접 찍히게 하기 위함(2026-09 수정).
 async function downloadAllTiersAsPNG() {
   saveCurrentTierState();
   const originalTierIndex = currentTierIndex;
-  const tierListElement = document.getElementById('tier-list');
+  const tierListElement = document.getElementById('tier-capture-area');
   if (!tierListElement) { alert('티어 테이블을 찾을 수 없습니다.'); return; }
 
   for (let i = 0; i < tierData.length; i++) {
     currentTierIndex = i;
     renderTier();
     await new Promise(r => setTimeout(r, 450)); // 렌더링·이미지 로드가 끝날 시간을 벌어준다
+
+    // 캡처 직전에만 제목(h2)을 맨 앞에 임시 삽입 → 캡처 → 바로 제거 (실제 DOM 구조는 그대로 유지)
+    const titleText = document.getElementById('tier-title').textContent;
+    const tempTitle = document.createElement('h2');
+    tempTitle.textContent = titleText;
+    tempTitle.style.cssText = 'color:#ffcc00; text-align:center; margin:0 0 10px; font-size:1.1rem; padding:10px 0;';
+    tierListElement.insertBefore(tempTitle, tierListElement.firstChild);
 
     try {
       const canvas = await html2canvas(tierListElement, { scale: 2, backgroundColor: '#111111', logging: false });
@@ -652,6 +663,8 @@ async function downloadAllTiersAsPNG() {
       await new Promise(r => setTimeout(r, 650));
     } catch (err) {
       console.error(`❌ tier-${i + 1} 캡처 실패:`, err);
+    } finally {
+      tierListElement.removeChild(tempTitle);
     }
   }
 
@@ -660,10 +673,10 @@ async function downloadAllTiersAsPNG() {
 }
 
 // ─── PDF 다운로드 ─────────────────────────────────────────────
-// PNG와 같은 방식으로 9개 등급을 순회하며 캡처하되, 이번엔 낱장 이미지가 아니라 jsPDF로
-// A4 세로 페이지에 한 등급씩 이어붙여 all-tiers.pdf 한 파일로 합친다.
-// PNG와 달리 캡처 대상은 #tier-capture-area(테두리·배경 포함 영역)이고, 캡처 직전에
-// 등급 제목(h2)을 임시로 DOM에 끼워넣었다가 캡처 후 바로 제거해서 PDF 페이지 안에
+// PNG(downloadAllTiersAsPNG)와 같은 방식으로 9개 등급을 순회하며 캡처하되, 이번엔 낱장
+// 이미지가 아니라 jsPDF로 A4 세로 페이지에 한 등급씩 이어붙여 all-tiers.pdf 한 파일로 합친다.
+// PNG와 동일하게 캡처 대상은 #tier-capture-area(테두리·배경 포함 영역)이고, 캡처 직전에
+// 등급 제목(h2)을 임시로 DOM에 끼워넣었다가 캡처 후 바로 제거해서 페이지 안에
 // "몇 등급인지" 제목이 함께 찍히게 하는 트릭을 쓴다.
 async function downloadAllTiersAsPDF() {
   saveCurrentTierState();

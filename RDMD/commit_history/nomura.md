@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 265 |
+| **커밋 수** | 266 |
 | **기간** | 2026-03-20 ~ 2026-09-07 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -294,6 +294,7 @@
 | 263 | 2026-09-07 | [`28c7cfb`](#28c7cfb) | feat(home): 퀵카드 하위 메뉴 hover 시 전용 아이콘 교체 애니메이션 |
 | 264 | 2026-09-07 | [`25c4f34`](#25c4f34) | fix(auth): 미인증 계정 재가입 시 이메일 영구 차단 문제 수정 |
 | 265 | 2026-09-10 | [`1c7f473`](#1c7f473) | fix(auth): 가입 인증 메일도 Brevo→Resend→Gmail 표준 순서를 기본으로 사용 |
+| 266 | 2026-09-10 | [`pending`](#pending266) | fix(custom-maker): PNG 다운로드 이미지에 등급 제목 표시 |
 
 ---
 
@@ -5147,5 +5148,23 @@
 - **요약**: `shouldSkipApiForSignupMail()` 의 기본값을 "Gmail 설정되어 있으면 무조건 Gmail 먼저"에서 "기본은 건너똔지 않음"으로 바꿔, 가입 인증 메일도 다른 메일(비번찾기 등)과 같은 `sendAppMail` 표준 순서(Brevo→Resend→Gmail)를 탄다. Render는 SMTP 아웃바운드 포트 자체를 막아 Gmail이 항상 실패하므로, 예전처럼 가입 메일만 Gmail을 먼저 시도하고 실패한 뒤에야 Brevo/Resend로 폴백하던 낭비 구조를 없았다. `SIGNUP_MAIL_SKIP_API=true` 로 명시했을 때만 예전처럼 Gmail을 먼저 시도하고 실패 시 표준 체인으로 폴백한다. `sendAppMail()` 자체는 이미 설정된 모든 방식을 우선순위대로 다 시도하고(하나 실패해도 다음 방식으로 계속), 전부 실패 시 각 provider의 실패 사유를 모두 이어붙여 에러 메시지로 내려준다(단일 장애점 방지).
 - **주요 파일**: `backend/utils/mail.js`
 - **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending266"></a>
+
+### 266. 2026-09-10 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: fix(custom-maker): PNG 다운로드 이미지에 등급 제목 표시
+- **git**: `git show pending266`
+- **범위**: frontend / render-only / custom-maker
+- **요약**: 커스텀 메이커에서 PNG로 저장하면 파일 안에 몇 등급인지 표시가 없어서, 파일명(tier-1.png 등)이 바뀌거나 낱장으로 흩어지면 이미지만으로 등급을 알 수 없었다. PDF 다운로드는 이미 캡처 직전에 등급 제목(h2)을 임시로 끼워넣는 트릭이 있었는데 PNG에는 없어서 생긴 차이였다. PNG도 PDF와 동일하게 캡처 대상을 #tier-capture-area로 맞추고, 캡처 직전에 등급 제목을 임시 삽입했다가 캡처 후 제거(실패해도 finally로 항상 정리)하도록 수정했다.
+- **주요 파일**: `root-render/custom-maker/custom-maker.js`
+- **관련 RDMD**: _(선택)_
 
 [▲ 목차로](#목차)
