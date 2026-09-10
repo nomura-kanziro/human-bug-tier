@@ -295,7 +295,7 @@
 | 264 | 2026-09-07 | [`25c4f34`](#25c4f34) | fix(auth): 미인증 계정 재가입 시 이메일 영구 차단 문제 수정 |
 | 265 | 2026-09-10 | [`1c7f473`](#1c7f473) | fix(auth): 가입 인증 메일도 Brevo→Resend→Gmail 표준 순서를 기본으로 사용 |
 | 266 | 2026-09-10 | [`04f2599`](#04f2599) | fix(custom-maker): PNG 다운로드 이미지에 등급 제목 표시 |
-| 267 | 2026-09-10 | [`pending`](#pending267) | fix(tier-class): 3티어에서 마피 캐릭터 제거 |
+| 267 | 2026-09-10 | [`d760691`](#d760691) | fix(tier-class): 3티어에서 마피 캐릭터 제거 |
 
 ---
 
@@ -5172,15 +5172,15 @@
 
 ---
 
-<a id="pending267"></a>
+<a id="d760691"></a>
 
-### 267. 2026-09-10 — `pending`
+### 267. 2026-09-10 — `d760691`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `d760691`
+- **hash (full)**: `d760691025a45813e0b1c8cabc8972278e565296`
 - **author**: nomura
 - **message**: fix(tier-class): 3티어에서 마피 캐릭터 제거
-- **git**: `git show pending267`
+- **git**: `git show d760691`
 - **범위**: frontend / render-only / tier-class
 - **요약**: 3티어 페이지에서 "마피"(3 tier/mapi.jpg) 캐릭터 카드를 제거했다. 창시자가 IDE에서 직접 지운 변경을 확인 후 커밋.
 - **주요 파일**: `root-render/tier-class/tier3.html`
