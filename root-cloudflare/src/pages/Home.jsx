@@ -38,7 +38,7 @@ function QuickCard({ target, title, children }) {
         go();
       }}
     >
-      <h3>{title}</h3>
+      <h3><span className="quick-card-icon" aria-hidden="true" />{title}</h3>
       <div className="sub-menu">{children}</div>
     </div>
   );
