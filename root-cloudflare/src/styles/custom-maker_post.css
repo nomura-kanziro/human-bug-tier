@@ -1,0 +1,318 @@
+/* custom-maker_post/custom-maker_post.css */
+/* 커스텀 티어 게시판 목록(카드 그리드) + 게시글 신고 모달 스타일.
+   기본 레이아웃(.board-container 등)은 custom-maker_post.html 안의 <style>에 있고,
+   이 파일은 그 위에 얹는 부제목/카드/모바일/신고모달 확장 스타일이다. */
+
+/* ?mine=1, ?author= 진입 시 "OO님이 작성한 게시글" 등을 보여주는 부제목 */
+.board-subtitle {
+  margin: 8px 0 0;
+  color: #8faadc;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.board-controls #view-all-board-btn {
+  background: #444;
+  color: #fff;
+}
+
+.board-controls #view-all-board-btn:hover {
+  background: #555;
+}
+
+/* 카드 그리드: 폭이 넓으면 열이 자동으로 늘어나고, 좁아지면 줄어드는 반응형 그리드 (최소 카드 폭 220px) */
+.post-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  padding: 20px 0;
+}
+
+/* 카드 자체(.post-card, <a> 링크)와 그 위에 겹쳐 보이는 수정/신고 버튼을 절대 배치하기 위한 기준 컨테이너 */
+.post-card-wrapper {
+  position: relative;
+}
+
+/* 카드 우상단에 겹쳐 보이는 버튼: 내 글이면 "수정", 남의 글이면 "신고"만 보인다
+   (custom-maker_post.js createPostCard()가 isPostOwner()로 둘 중 하나만 만들어 붙임) */
+.post-card-wrapper .post-card-report-btn,
+.post-card-wrapper .post-card-edit-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.78rem;
+  cursor: pointer;
+}
+
+.post-card-wrapper .post-card-report-btn {
+  border: 1px solid #6b4e16;
+  background: rgba(42, 34, 16, 0.92);
+  color: #ffd76a;
+}
+
+.post-card-wrapper .post-card-edit-btn {
+  border: 1px solid #2563eb;
+  background: rgba(23, 37, 84, 0.92);
+  color: #93c5fd;
+}
+
+.post-card-wrapper .post-card-edit-btn:hover {
+  background: #1e3a8a;
+  color: #fff;
+}
+
+.post-card-wrapper .post-card-report-btn:hover:not(:disabled) {
+  background: #3d3115;
+  color: #fff;
+}
+
+.post-card-wrapper .post-card-report-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.post-card {
+  display: block;
+  background-color: #1f1f1f;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid #333;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+  color: inherit;
+}
+
+.post-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* 썸네일 영역: 16:9 비율 고정 + overflow hidden으로 이미지 비율이 달라도 카드 높이가 흔들리지 않게 함 */
+.post-thumbnail {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background-color: #111;
+  overflow: hidden;
+}
+
+.post-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s;
+}
+
+.post-card:hover .post-thumbnail img {
+  transform: scale(1.05);
+}
+
+.post-info {
+  padding: 14px 16px;
+}
+
+.post-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+  font-size: 0.85rem;
+}
+
+/* ====================== 모바일 게시판 ====================== */
+@media (max-width: 768px) {
+  .board-container {
+    max-width: 100% !important;
+    margin: 16px auto !important;
+    padding: 0 12px !important;
+  }
+
+  .board-header h1 {
+    font-size: 1.35rem !important;
+    line-height: 1.3;
+  }
+
+  .board-controls {
+    flex-direction: column !important;
+    align-items: stretch !important;
+  }
+
+  .board-controls input {
+    width: 100%;
+    font-size: 16px;
+    min-height: 44px;
+    box-sizing: border-box;
+  }
+
+  .board-controls button {
+    width: 100%;
+    min-height: 44px;
+  }
+
+  .post-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 12px 0;
+  }
+
+  .board-table {
+    display: block;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .board-table th,
+  .board-table td {
+    padding: 12px 10px;
+    font-size: 0.9rem;
+    white-space: nowrap;
+  }
+}
+
+/* 제목 스타일 (번호 대신 제목을 메인으로) */
+.post-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #fff;
+  margin: 0 0 10px 0;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;      /* 제목 2줄까지만 표시 */
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.post-author {
+  color: #aaa;
+}
+
+.post-date {
+  color: #888;
+  font-size: 0.8rem;
+}
+
+.post-stats {
+  display: flex;
+  gap: 12px;
+  font-size: 0.8rem;
+  color: #aaa;
+}
+
+.empty-message {
+  grid-column: 1 / -1;
+  width: 100%;
+  text-align: center;
+  padding: 60px 20px;
+  color: #888;
+  line-height: 1.6;
+}
+
+/* ===== 게시글 신고 모달 =====
+   custom-maker_post.js의 openReportModal()이 body 끝에 동적으로 삽입하는 모달.
+   화면 전체를 덮는 반투명 오버레이(.report-modal-overlay) 위에 사유 선택 카드가 뜬다. */
+.report-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.report-modal-card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.report-modal-card h3 {
+  margin: 0 0 18px;
+  font-size: 1.1rem;
+  color: #111;
+}
+
+.report-modal-reasons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.report-reason-btn,
+.report-modal-cancel {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.report-reason-btn {
+  border: 2px solid #111;
+  background: #fff;
+  color: #111;
+}
+
+.report-reason-btn:hover {
+  background: #f5f5f5;
+}
+
+.report-modal-cancel {
+  margin-top: 16px;
+  border: none;
+  background: #dc3545;
+  color: #fff;
+}
+
+/* ======================================================================
+   다크 모드 — 커스텀 티어 게시판 목록(카드 그리드) + 신고 모달 전용 세부 보정.
+   카드 자체(.post-card 등)는 이미 어두운 배경(#1f1f1f)으로 설계돼 있어 큰 변경이
+   필요 없지만, 페이지 배경이 theme.css의 --bg-page로 더 어두워지면 카드와 색이 거의
+   같아져 경계가 흐려지므로 테마 변수로 살짝 띄운다. 신고 모달은 원래 흰 배경 카드라
+   다크 모드에서는 통째로 뒤집어야 한다.
+   ====================================================================== */
+[data-theme="dark"] .post-card {
+  background-color: var(--bg-elevated);
+  border-color: var(--border-color);
+}
+[data-theme="dark"] .post-card:hover {
+  box-shadow: 0 10px 20px var(--shadow-color);
+}
+[data-theme="dark"] .post-thumbnail {
+  background-color: var(--bg-subtle);
+}
+[data-theme="dark"] .empty-message {
+  color: var(--text-muted);
+}
+[data-theme="dark"] .board-controls #view-all-board-btn {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+[data-theme="dark"] .board-controls #view-all-board-btn:hover {
+  background: var(--border-strong);
+}
+
+/* 게시글 신고 모달 — 라이트 전용 흰 카드를 다크 카드로 전환 */
+[data-theme="dark"] .report-modal-card {
+  background: var(--bg-elevated);
+  box-shadow: 0 10px 30px var(--shadow-color);
+}
+[data-theme="dark"] .report-modal-card h3 {
+  color: var(--text-primary);
+}
+[data-theme="dark"] .report-reason-btn {
+  border-color: var(--border-strong);
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+}
+[data-theme="dark"] .report-reason-btn:hover {
+  background: var(--bg-hover);
+}

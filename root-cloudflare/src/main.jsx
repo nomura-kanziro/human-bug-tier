@@ -12,6 +12,7 @@ import './styles/common.css';
 import './styles/notice.css';
 import './styles/Header_Footer.css';
 import './styles/index-home.css';
+import './styles/react-extra.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

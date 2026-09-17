@@ -1,0 +1,629 @@
+/* post_detail.css */
+/* 커스텀 티어 게시글 "상세" 페이지 전용 스타일. 티어표 자체(.tier-list 등)는 ../custom-maker.css를
+   그대로 재사용하고, 이 파일은 헤더/액션버튼/댓글 영역만 추가로 꾸민다. */
+
+/* 게시글 헤더 */
+.post-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 24px;
+  margin-bottom: 20px;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-top: 1px solid #333;
+  border-bottom: 1px solid #333;
+}
+
+/* 1번째 줄: 프로필 */
+.post-author-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.profile-img {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #444;
+}
+
+.author-name {
+  font-weight: 600;
+  font-size: 1.05rem;
+  color: #000000;
+}
+
+/* 2번째 줄 전체 */
+.post-meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* 왼쪽 (버튼 + 날짜) */
+.post-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-posts-btn {
+  padding: 6px 12px;
+  background: #2a2a2a;
+  color: #ccc;
+  border: 1px solid #444;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.user-posts-btn:hover {
+  background: #3a3a3a;
+  color: #fff;
+}
+
+.post-date {
+  color: #aaa;
+  font-size: 0.9rem;
+}
+
+/* 오른쪽 (조회 | 추천 | 댓글) */
+.post-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.stat {
+  font-size: 0.9rem;
+  color: #ccc;
+}
+
+.comment-link {
+  cursor: pointer;
+}
+
+.comment-link:hover {
+  color: #ffc400;
+  text-decoration: underline;
+}
+
+/* 제목 */
+.post-title {
+  font-size: 1.6rem;
+  margin: 10px auto 24px;
+  color: #000000;
+  text-align: center;
+}
+
+.post-description {
+  width: 95%;
+  max-width: 2800px;
+  margin: 0 auto 24px;
+  padding: 14px 18px;
+  box-sizing: border-box;
+  border: 2px solid #ffcc00;
+  border-radius: 8px;
+  background: #111;
+  color: #fff;
+  font-size: 0.98rem;
+  line-height: 1.7;
+  text-align: left;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.post-description[hidden] {
+  display: none !important;
+}
+
+/* 액션 버튼 */
+.post-action {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 20px auto;
+  justify-content: center;
+}
+
+.action-btn {
+  padding: 10px 18px;
+  border: 1px solid #444;
+  background: #1f1f1f;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.action-btn:hover {
+  background: #333;
+}
+
+/* 수정/삭제/신고 버튼: 각각 파랑/빨강/노랑 계열로 색을 다르게 줘서 위험도를 직관적으로 구분
+   (수정=안전한 파랑, 삭제=경고 빨강, 신고=주의 노랑). 표시 여부는 JS(updatePostActions)가 제어 */
+.edit-btn {
+  border-color: #2563eb;
+  background: #172554;
+  color: #93c5fd;
+}
+
+.edit-btn:hover {
+  background: #1e3a8a;
+  color: #fff;
+}
+
+.delete-btn {
+  border-color: #8b2e2e;
+  background: #3a1a1a;
+  color: #ffb4b4;
+}
+
+.delete-btn:hover {
+  background: #5c2020;
+  color: #fff;
+}
+
+.report-btn {
+  border-color: #6b4e16;
+  background: #2a2210;
+  color: #ffd76a;
+}
+
+.report-btn:hover:not(:disabled) {
+  background: #3d3115;
+  color: #fff;
+}
+
+.report-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* 댓글 섹션 — 티어표(.tier-list)와 동일한 가로 폭 */
+.post-detail-container .comment-section {
+  width: 95%;
+  max-width: 2800px;
+  margin: 40px auto 0;
+  padding: 0 20px 20px;
+  box-sizing: border-box;
+}
+
+.comment-section h3 {
+  margin: 0 0 16px;
+  color: #111;
+}
+
+.comment-login-hint {
+  margin: 0 0 12px;
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.comment-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: stretch;
+}
+
+.comment-form button {
+  flex-shrink: 0;
+  align-self: stretch;
+}
+
+/* contenteditable 댓글 입력창 스타일 */
+.comment-input-box {
+  flex: 1;
+  min-height: 60px;
+  max-height: 150px;
+  padding: 12px 14px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  background: #1a1a1a;
+  color: #fff;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  overflow-y: auto;
+  outline: none;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* placeholder 스타일 */
+.comment-input-box:empty:before {
+  content: attr(data-placeholder);
+  color: #666;
+  pointer-events: none;
+}
+
+/* focus 스타일 */
+.comment-input-box:focus {
+  border-color: #666;
+  background: #222;
+}
+
+/* ====================== 모바일 상세 ====================== */
+@media (max-width: 768px) {
+  .post-detail-container {
+    padding: 0 12px 24px;
+    box-sizing: border-box;
+  }
+
+  .post-title {
+    font-size: 1.25rem;
+    margin: 12px 0 18px;
+    word-break: keep-all;
+  }
+
+  .post-description {
+    width: 100%;
+    max-width: 100%;
+    margin-bottom: 18px;
+    padding: 12px 14px;
+    font-size: 0.92rem;
+  }
+
+  .post-meta-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .post-left,
+  .post-right {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .post-action {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .action-btn {
+    flex: 1 1 calc(50% - 8px);
+    min-height: 44px;
+    text-align: center;
+  }
+
+  .post-detail-container .comment-section {
+    width: 100%;
+    padding: 0 0 20px;
+  }
+
+  .comment-form {
+    flex-direction: column;
+  }
+
+  .comment-form button {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 16px;
+  }
+
+  .comment-input-box {
+    font-size: 16px;
+    min-height: 72px;
+  }
+
+  .tier-list {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 12px !important;
+    overflow-x: auto;
+  }
+
+  .tier {
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .tier-name {
+    width: 100%;
+    margin-right: 0;
+    margin-bottom: 8px;
+  }
+}
+
+.comment-form button {
+  padding: 0 20px;
+  min-width: 72px;
+  background: #ffc400;
+  color: #111;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.comment-form button:disabled {
+  background: #555;
+  color: #999;
+  cursor: not-allowed;
+}
+
+.comment-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* 댓글 카드 하나. 최상위 댓글과 답글이 같은 클래스를 쓰고, 답글만 .is-reply가 추가로 붙어 들여쓰기됨 */
+.post-comment-item {
+  padding: 14px 16px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background: #1a1a1a;
+}
+
+/* 답글: 왼쪽 여백(margin-left)으로 원댓글에 종속된 느낌을 주고, 배경을 살짝 더 어둡게 해 구분 */
+.post-comment-item.is-reply {
+  margin-left: 28px;
+  border-color: #2a2a2a;
+  background: #151515;
+}
+
+/* 답글 상단에 "OO님 >> 원댓글 내용 일부"를 인용문처럼 보여주는 블록.
+   post_detail.js의 submitReply()가 원댓글 내용을 200자로 잘라 quotedMessage로 저장해둔 걸 표시 */
+.post-comment-quote {
+  margin-bottom: 10px;
+  padding: 10px 12px;
+  border-left: 3px solid #ffc400;
+  background: rgba(255, 196, 0, 0.08);
+  color: #ccc;
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.post-comment-quote strong {
+  color: #ffc400;
+}
+
+/* 헤더 알림(딥링크)을 타고 특정 댓글로 이동했을 때, scrollToCommentTarget()이 잠깐 이 클래스를
+   붙였다가(2.8초 후 자동 제거) 파란 테두리+배경으로 "이 댓글입니다"를 강조 표시한다 */
+.notification-scroll-highlight {
+  outline: 3px solid #2563eb;
+  outline-offset: 3px;
+  background: rgba(37, 99, 235, 0.08);
+  transition: outline-color 0.3s ease, background 0.3s ease;
+}
+
+.post-comment-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.post-comment-author {
+  font-weight: 600;
+  color: #ffc400;
+  font-size: 0.92rem;
+}
+
+.post-comment-date {
+  color: #888;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.post-comment-body {
+  color: #eee;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.post-comment-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.post-comment-action-btn {
+  padding: 4px 10px;
+  border: 1px solid #666;
+  border-radius: 6px;
+  background: transparent;
+  color: #ccc;
+  font-size: 0.82rem;
+  cursor: pointer;
+}
+
+.post-comment-action-btn:hover:not(:disabled) {
+  background: #2a2a2a;
+  color: #fff;
+}
+
+.post-comment-action-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.post-comment-action-btn.danger:hover:not(:disabled) {
+  border-color: #8b2e2e;
+  color: #ffb4b4;
+}
+
+/* 답변/수정 버튼을 누르면 openReplyBox()/openEditBox()가 댓글 카드 안에 동적으로 삽입하는
+   입력 박스 영역. 위쪽에 구분선을 둬서 원댓글 본문과 시각적으로 분리한다 */
+.post-comment-action-box {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #333;
+}
+
+.post-comment-action-box .comment-input-box {
+  min-height: 72px;
+}
+
+.post-comment-action-btns {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.post-comment-action-btns button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.88rem;
+  cursor: pointer;
+}
+
+.post-comment-action-btns .cancel-btn {
+  border: 1px solid #666;
+  background: transparent;
+  color: #ccc;
+}
+
+.post-comment-action-btns .submit-btn {
+  border: none;
+  background: #ffc400;
+  color: #111;
+  font-weight: 700;
+}
+
+/* 댓글 목록의 3가지 상태별 안내 문구 공통 스타일 (로딩 중 / 댓글 없음 / 조회 실패) */
+.comment-empty,
+.comment-loading,
+.comment-error {
+  padding: 24px 12px;
+  text-align: center;
+  color: #888;
+  font-size: 0.92rem;
+}
+
+/* ===== 게시글/댓글 신고 모달 (custom-maker_post.css와 동일한 마크업/스타일을 이 페이지에서도 사용) ===== */
+.report-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.report-modal-card {
+  width: 100%;
+  max-width: 420px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.report-modal-card h3 {
+  margin: 0 0 18px;
+  font-size: 1.1rem;
+  color: #111;
+}
+
+.report-modal-reasons {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.report-reason-btn,
+.report-modal-cancel {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.report-reason-btn {
+  border: 2px solid #111;
+  background: #fff;
+  color: #111;
+}
+
+.report-reason-btn:hover {
+  background: #f5f5f5;
+}
+
+.report-modal-cancel {
+  margin-top: 16px;
+  border: none;
+  background: #dc3545;
+  color: #fff;
+}
+
+/* ======================================================================
+   다크 모드 — 게시글 상세 페이지 전용 세부 보정.
+   댓글 카드·액션 버튼 등은 원래도 어두운 배경으로 설계돼 있어 대부분 그대로 자연스럽지만,
+   상단 작성자명/제목/댓글 섹션 제목은 흰 페이지를 전제로 검정(#000/#111) 글자색이
+   하드코딩돼 있어 다크 모드에서는 그대로 보이지 않는다. 여기서 그 부분과, 페이지 배경이
+   어두워지며 카드와 구분이 흐려지는 요소, 그리고 라이트 전용 신고 모달
+   (custom-maker_post.css와 동일 마크업)을 보정한다.
+   ====================================================================== */
+[data-theme="dark"] .post-header {
+  border-top-color: var(--border-color);
+  border-bottom-color: var(--border-color);
+}
+[data-theme="dark"] .author-name,
+[data-theme="dark"] .post-title,
+[data-theme="dark"] .comment-section h3 {
+  color: var(--text-primary);
+}
+[data-theme="dark"] .post-description {
+  background: var(--bg-elevated);
+}
+[data-theme="dark"] .post-comment-item {
+  background: var(--bg-elevated);
+  border-color: var(--border-color);
+}
+[data-theme="dark"] .post-comment-item.is-reply {
+  background: var(--bg-subtle);
+  border-color: var(--border-color);
+}
+[data-theme="dark"] .comment-input-box {
+  background: var(--input-bg);
+  border-color: var(--input-border);
+  color: var(--text-primary);
+}
+[data-theme="dark"] .comment-input-box:focus {
+  background: var(--bg-hover);
+  border-color: var(--border-strong);
+}
+
+/* 수정/삭제/신고 버튼 — 색의 의미(파랑/빨강/주황)는 유지하되, 더 어두워진 페이지
+   배경 위에서도 잘 도드라지도록 테두리를 한 톤 밝게 조정 */
+[data-theme="dark"] .edit-btn {
+  border-color: #3b82f6;
+}
+[data-theme="dark"] .delete-btn {
+  border-color: #b91c1c;
+}
+[data-theme="dark"] .report-btn {
+  border-color: #b45309;
+}
+
+/* 게시글/댓글 신고 모달 — 라이트 전용 흰 카드를 다크 카드로 전환 */
+[data-theme="dark"] .report-modal-card {
+  background: var(--bg-elevated);
+  box-shadow: 0 10px 30px var(--shadow-color);
+}
+[data-theme="dark"] .report-modal-card h3 {
+  color: var(--text-primary);
+}
+[data-theme="dark"] .report-reason-btn {
+  border-color: var(--border-strong);
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+}
+[data-theme="dark"] .report-reason-btn:hover {
+  background: var(--bg-hover);
+}

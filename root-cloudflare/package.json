@@ -8,7 +8,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "extract:tiers": "node scripts/extract-tiers.mjs"
+    "extract:tiers": "node scripts/extract-tiers.mjs",
+    "sync:render": "node scripts/sync-from-render.mjs && node scripts/extract-tiers.mjs"
   },
   "dependencies": {
     "react": "^18.3.1",

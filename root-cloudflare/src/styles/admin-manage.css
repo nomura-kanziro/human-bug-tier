@@ -1,0 +1,988 @@
+/* ========================================================
+   comment-management.css - 관리자 대시보드 공통 스타일
+   ========================================================
+   comment-management.html의 4개 섹션(문의/커스텀메이커/공지/차단)이 공유하는
+   레이아웃(.admin-main), 테이블(.admin-table), 배지(.badge-*), 필터 바(.filter-nav) 등을
+   한 파일에 모아둔다. 섹션마다 살짝 다른 강조색(파랑=문의, 보라=커스텀메이커,
+   초록=공지, 빨강=차단)을 써서 스크롤하다 지금 어느 섹션인지 한눈에 구분되게 했다.
+   ======================================================== */
+
+.admin-main {
+    background-color: #ffffff;
+    padding: 40px 20px;
+    min-height: 80vh;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.page-title {
+    color: #333;
+    font-size: 26px;
+    font-weight: 800;
+    margin-bottom: 20px;
+}
+
+/* 맨 아래 차단 관리 섹션 제목: 위쪽에 빨간 강조선(구분선) */
+.section-title {
+    margin-top: 0;
+    padding-top: 20px;
+    border-top: 3px solid #dc3545;
+}
+
+/* 공지 섹션 전체를 감싸는 회색 카드형 배경 (커스텀메이커/차단 섹션도 동일 톤의
+   .block-section 등을 별도로 두고 있음 - 시각적으로 "섹션 구획"임을 표시) */
+.notice-admin-section {
+    margin-top: 60px;
+    padding: 28px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+}
+
+/* 공지 섹션 제목: 위쪽에 초록 강조선 (공지 섹션 전체의 테마 컬러 #10b981과 통일) */
+.notice-section-title {
+    border-top: 3px solid #10b981;
+    padding-top: 20px;
+    margin-top: 0;
+}
+
+.filter-nav.notice-filter-nav {
+    background: #10b981;
+}
+
+.filter-nav.notice-list-filter-nav {
+    background: #10b981;
+    margin-bottom: 12px;
+}
+
+.notice-filter-left {
+    width: 100%;
+    background: #10b981;
+}
+
+/* 공지 분류 select 틀을 공지 등록 버튼(#10b981) 색과 동일하게 */
+#notice-category {
+    border: 2px solid #10b981;
+    background: white;
+    color: #333;
+}
+
+#notice-category:focus {
+    border-color: #059669;
+    outline: none;
+}
+
+/* 공지 분류 (목록) select 틀도 초록으로 */
+#notice-list-filter {
+    border: 2px solid #10b981;
+    background: white;
+    color: #333;
+}
+
+#notice-list-filter:focus {
+    border-color: #059669;
+    outline: none;
+}
+
+
+
+/* 공지 분류 (목록) select 틀도 초록으로 */
+/* 참고: 위와 동일한 #notice-list-filter 규칙이 실수로 중복 작성되어 있음(효과는 동일해서
+   무해하지만 정리 대상). 동작에 영향이 없어 이번 주석 작업에서는 그대로 둔다. */
+#notice-list-filter {
+    border: 2px solid #10b981;
+    background: white;
+    color: #333;
+}
+
+#notice-list-filter:focus {
+    border-color: #059669;
+    outline: none;
+}
+
+/* 공지 작성/수정 폼을 감싸는 흰 카드. is-editing 상태(수정 모드일 때)는 아래에서
+   초록 테두리+은은한 그림자로 "지금 기존 공지를 고치는 중"임을 시각적으로 강조한다 */
+.notice-form-card {
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.notice-form-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 14px;
+    margin-bottom: 12px;
+    box-sizing: border-box;
+}
+
+.notice-form-input:focus,
+.notice-form-textarea:focus {
+    outline: none;
+    border-color: #10b981;
+}
+
+.notice-form-textarea {
+    width: 100%;
+    min-height: 140px;
+    padding: 12px 14px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 14px;
+    resize: vertical;
+    box-sizing: border-box;
+    font-family: inherit;
+    line-height: 1.6;
+}
+
+.notice-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+    flex-wrap: wrap;
+}
+
+.notice-format-hint {
+    margin: 8px 0 0;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+.notice-format-hint code {
+    background: #f3f4f6;
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 12px;
+    color: #111827;
+}
+
+/* 서식 삽입 버튼들이 나열되는 툴바. textarea 바로 위에 붙어서 하나의 입력 상자처럼
+   보이도록 아래쪽 테두리를 없애고(border-bottom: none) textarea의 위쪽 모서리와
+   맞물리게 border-radius를 맞췄다 (.notice-editor-toolbar + .notice-form-textarea 참고) */
+.notice-editor-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-wrap: wrap;
+    padding: 8px 10px;
+    border: 2px solid #e9ecef;
+    border-bottom: none;
+    border-radius: 8px 8px 0 0;
+    background: #f9fafb;
+}
+
+.notice-tool-btn {
+    padding: 6px 10px;
+    border: 1px solid transparent;
+    border-radius: 6px;
+    background: transparent;
+    font-size: 13px;
+    color: #374151;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.notice-tool-btn:hover {
+    background: #e5e7eb;
+}
+
+.notice-tool-btn.is-active {
+    background: #d1fae5;
+    border-color: #10b981;
+    color: #047857;
+}
+
+.notice-tool-sep {
+    width: 1px;
+    height: 18px;
+    background: #d1d5db;
+    margin: 0 4px;
+}
+
+.notice-tool-spacer {
+    flex: 1 1 auto;
+}
+
+.notice-editor-toolbar + .notice-form-textarea {
+    border-radius: 0 0 8px 8px;
+    margin-bottom: 0;
+}
+
+/* 미리보기 패널: "👁 미리보기" 토글을 켰을 때만 표시(hidden 속성으로 제어).
+   점선 테두리로 "실제 공지가 아닌 미리보기 중"임을 은연중에 표시한다 */
+.notice-preview-pane {
+    margin-top: 12px;
+    padding: 20px;
+    border: 1px dashed #10b981;
+    border-radius: 8px;
+    background: #f8fffc;
+    max-height: 420px;
+    overflow-y: auto;
+}
+
+.notice-preview-empty {
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+.notice-form-card.is-editing {
+    border-color: #10b981;
+    box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.15);
+}
+
+.notice-post-btn {
+    padding: 12px 28px;
+    background: #10b981;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.notice-post-btn:hover {
+    background: #059669;
+}
+
+.notice-cancel-btn {
+    padding: 12px 20px;
+    background: #fff;
+    color: #374151;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.notice-cancel-btn:hover {
+    background: #f3f4f6;
+}
+
+.notice-edit-btn {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+    margin-right: 4px;
+}
+
+.notice-edit-btn:hover {
+    background: #2563eb;
+}
+
+.badge-notice {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.badge-news {
+    background: #ede9fe;
+    color: #5b21b6;
+}
+
+.badge-youtube {
+    background: #fef2f2;
+    color: #b91c1c;
+    border: 1px solid #fecaca;
+    margin-left: 6px;
+}
+
+/* 유튜브 커뮤니티 자동 가져오기 상태 바. 공지 섹션(초록)과 구분되는 빨강 톤을 써서
+   "이건 자동화 기능 안내"라는 걸 별도 영역으로 눈에 띄게 했다 */
+.youtube-sync-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 0 0 20px;
+    padding: 16px 18px;
+    border: 1px dashed #fca5a5;
+    border-radius: 10px;
+    background: #fff7f7;
+}
+
+.youtube-sync-copy {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    min-width: 0;
+}
+
+.youtube-sync-copy strong {
+    color: #991b1b;
+    font-size: 14px;
+}
+
+.youtube-sync-copy span {
+    color: #6b7280;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.youtube-sync-btn {
+    flex-shrink: 0;
+    padding: 10px 16px;
+    background: #b91c1c;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 13px;
+}
+
+.youtube-sync-btn:hover {
+    background: #991b1b;
+}
+
+.youtube-sync-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+}
+
+@media (max-width: 700px) {
+    .youtube-sync-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+}
+
+.notice-pin-count {
+    font-size: 14px;
+    font-weight: 600;
+    color: #059669;
+    margin-left: 8px;
+}
+
+/* 공지 고정(핀) / 고정 해제 버튼. 고정은 주황, 해제는 회색(.unpin)으로 구분해서
+   눌렀을 때 어떤 상태로 바뀔지 색만 보고도 짐작할 수 있게 했다 */
+.pin-btn {
+    background: #f59e0b;
+    color: white;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.pin-btn:hover {
+    background: #d97706;
+}
+
+.pin-btn.unpin {
+    background: #6c757d;
+}
+
+.pin-btn.unpin:hover {
+    background: #5a6268;
+}
+
+.badge-pinned {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.notice-admin-table td:nth-child(4),
+.notice-admin-table td:nth-child(5) {
+    text-align: left;
+    max-width: 220px;
+    word-break: break-word;
+}
+
+tr.row-pinned {
+    background: #fffbeb;
+}
+
+.subsection-title {
+    margin: 32px 0 12px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #333;
+}
+
+/* ---- 공용 테이블 스타일 (문의/공지/차단/커스텀메이커 테이블 모두 이 클래스를 사용) ---- */
+.admin-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background: #fff;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.admin-table th, .admin-table td {
+    padding: 12px;
+    border: 1px solid #e9ecef;
+    text-align: center;
+    font-size: 14px;
+}
+
+.admin-table th {
+    background: #f1f3f5;
+    font-weight: 700;
+    color: #333;
+}
+
+.admin-table tr:hover {
+    background-color: #f8f9fa;
+}
+
+.admin-table tr.row-blocked {
+    background-color: #ffebee;
+    opacity: 0.85;
+}
+
+/* ---- 관리 액션 버튼 색상 규칙: 빨강=삭제(위험), 회색=일반 액션(상세/해제),
+   초록=차단 해제(긍정적 조치) - 버튼 색만 보고도 어떤 종류의 동작인지 짐작 가능하게 함 ---- */
+.verify-user-btn {
+    background: #0d9488;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+    margin-right: 6px;
+}
+
+.verify-user-btn:hover {
+    background: #0f766e;
+}
+
+.danger-btn {
+    background: #dc3545;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.danger-btn:hover {
+    background: #c82333;
+}
+
+.action-btn {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.action-btn:hover {
+    background: #5a6268;
+}
+
+.unblock-btn {
+    background: #28a745;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.unblock-btn:hover {
+    background: #218838;
+}
+
+.block-btn {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.block-btn:hover {
+    background: #c82333;
+}
+
+/* ---- 상태 배지(알약 모양 라벨) 공용 스타일 + 색상별 의미 ---- */
+.badge {
+    display: inline-block;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-verified {
+    background: #d4edda;
+    color: #155724;
+}
+
+.badge-unverified {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.badge-blocked {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.badge-active {
+    background: #d1ecf1;
+    color: #0c5460;
+}
+
+.badge-type {
+    background: #e9ecef;
+    color: #495057;
+}
+
+.empty-row td {
+    color: #888;
+    padding: 28px;
+}
+
+/* 차단 관리 섹션 전체를 감싸는 카드 (.notice-admin-section과 동일한 톤, 배경만 공유) */
+.block-section {
+    margin-top: 60px;
+    padding: 28px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #e9ecef;
+}
+
+/* 신고 사유 툴팁 팝업 (JS의 showReportTooltip이 클릭 위치 계산 후 이 클래스로 동적 생성).
+   position:absolute이므로 JS에서 top/left를 직접 지정해 원하는 위치에 띄운다 */
+.report-popup {
+    position: absolute;
+    background: #fff;
+    border: 3px solid #111;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.2);
+    padding: 14px 18px;
+    border-radius: 8px;
+    font-size: 15px;
+    color: #111;
+    white-space: nowrap;
+    width: auto;
+    max-width: 320px;
+    z-index: 99999;
+    box-sizing: border-box;
+}
+
+/* ---- 필터/탐색 바 공용 스타일. 기본은 파란 배경(문의 섹션 색)이고, 각 섹션이
+   자기 테마 색을 덧씌운다(.block-filter-nav=빨강, .notice-filter-nav=초록,
+   .tier-filter-nav=보라 - 아래 각 규칙 참고) ---- */
+.filter-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #007bff;
+    color: white;
+    padding: 12px 20px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.block-filter-nav {
+    background: linear-gradient(135deg, #dc3545, #c82333);
+}
+
+.filter-left, .filter-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.block-filter-left {
+    width: 100%;
+}
+
+.filter-title {
+    font-weight: 700;
+    margin-right: 8px;
+    white-space: nowrap;
+}
+
+.filter-btn {
+    padding: 8px 16px;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.filter-btn.active {
+    background: white;
+    color: #007bff;
+    font-weight: 700;
+}
+
+.filter-select {
+    padding: 8px 12px;
+    border: 2px solid #fff;
+    border-radius: 6px;
+    font-size: 14px;
+    background: white;
+    color: #333;
+    cursor: pointer;
+}
+
+.block-text-input {
+    flex: 1;
+    min-width: 180px;
+    padding: 10px 14px;
+    border: 2px solid #fff;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.block-duration-select {
+    min-width: 130px;
+}
+
+.block-custom-days {
+    width: 140px;
+    padding: 10px 12px;
+    border: 2px solid #fff;
+    border-radius: 6px;
+    font-size: 14px;
+    display: none;
+}
+
+.block-custom-days.visible {
+    display: block;
+}
+
+.block-add-btn {
+    padding: 10px 24px;
+    background: white;
+    color: #dc3545;
+    border: 2px solid #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.block-add-btn:hover {
+    background: #fff5f5;
+}
+
+.search-group {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+#search-input {
+    padding: 10px 14px;
+    border: 2px solid #fff;
+    border-radius: 6px;
+    width: 280px;
+    font-size: 14px;
+}
+
+.search-btn {
+    padding: 10px 24px;
+    background: #fff;
+    color: #007bff;
+    border: 2px solid #fff;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.control-bar {
+    margin-bottom: 8px;
+}
+
+.pagination {
+    margin: 25px 0;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.block-table {
+    margin-top: 0;
+}
+
+@media (max-width: 900px) {
+    .filter-nav {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-left, .filter-right, .block-filter-left {
+        width: 100%;
+    }
+
+    #search-input, .block-text-input {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+.admin-table .action-btn + .danger-btn,
+.admin-table .block-btn + .danger-btn,
+.admin-table .unblock-btn + .danger-btn {
+    margin-left: 4px;
+}
+
+/* ---- 커스텀 메이커(tier-maker) 섹션 전용 색상: 보라 톤(#6366f1)으로
+   문의(파랑)·공지(초록)·차단(빨강) 섹션과 시각적으로 구분 ---- */
+.tier-maker-section .subsection-title {
+    margin: 18px 0 10px;
+    font-size: 1.05rem;
+}
+
+.tier-section-title {
+    border-top: 3px solid #6366f1;
+    padding-top: 20px;
+    margin-top: 0;
+}
+
+.tier-filter-nav {
+    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    margin-bottom: 12px;
+}
+
+.badge-tier-normal {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+.badge-tier-reported {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.tier-maker-section .row-reported {
+    background: #fff5f5;
+}
+
+/* ======================================================================
+   다크 모드 — 이 파일이 다루는 관리자 대시보드 세부 보정.
+   theme.css 안전망이 input/textarea/select, header/footer, 공용 모달 등은 이미
+   처리하지만, .admin-table/.admin-main처럼 이 파일 전용 흰 배경 박스와, 문의/
+   커스텀메이커/공지/차단 섹션별 파스텔 배지·강조 로우는 다크 배경 위에서 그대로
+   두면 지나치게 밝아 보이므로 여기서 개별 보정한다. 필터 바(.filter-nav 계열)나
+   버튼류처럼 원래도 채도 높은 단색 배경에 흰 글자를 쓰는 요소는 라이트/다크 모두
+   잘 보이므로 손대지 않았다. comment-detail.html도 이 파일을 그대로 재사용하므로
+   (comment-detail.js가 그리는 .filter-nav/.admin-table류) 함께 적용된다.
+   ====================================================================== */
+
+[data-theme="dark"] .admin-main {
+    background-color: var(--bg-page);
+}
+
+[data-theme="dark"] .page-title,
+[data-theme="dark"] .subsection-title {
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .notice-admin-section,
+[data-theme="dark"] .block-section {
+    background: var(--bg-subtle);
+    border-color: var(--border-color);
+}
+
+/* 공지 분류 select — ID 선택자라 theme.css의 공용 select 다크 보정보다 우선
+   적용되어 버리므로(하드코딩된 흰 배경이 그대로 남음) 여기서 별도로 덮어씀 */
+[data-theme="dark"] #notice-category,
+[data-theme="dark"] #notice-list-filter {
+    background: var(--input-bg);
+    color: var(--text-primary);
+}
+
+[data-theme="dark"] .notice-form-card {
+    background: var(--bg-elevated);
+    border-color: var(--border-color);
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+[data-theme="dark"] .notice-format-hint {
+    color: var(--text-muted);
+}
+[data-theme="dark"] .notice-format-hint code {
+    background: var(--bg-subtle);
+    color: var(--text-primary);
+}
+
+/* 공지 서식 삽입 툴바 */
+[data-theme="dark"] .notice-editor-toolbar {
+    background: var(--bg-subtle);
+    border-color: var(--border-color);
+}
+[data-theme="dark"] .notice-tool-btn {
+    color: var(--text-secondary);
+}
+[data-theme="dark"] .notice-tool-btn:hover {
+    background: var(--bg-hover);
+}
+[data-theme="dark"] .notice-tool-btn.is-active {
+    background: rgba(16, 185, 129, 0.18);
+    color: #34d399;
+}
+[data-theme="dark"] .notice-tool-sep {
+    background: var(--border-color);
+}
+[data-theme="dark"] .notice-preview-pane {
+    background: rgba(16, 185, 129, 0.06);
+}
+[data-theme="dark"] .notice-preview-empty {
+    color: var(--text-muted);
+}
+
+[data-theme="dark"] .notice-cancel-btn {
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+[data-theme="dark"] .notice-cancel-btn:hover {
+    background: var(--bg-hover);
+}
+
+/* 상태 배지류 — 라이트 파스텔 배경을 다크 배경에 그대로 두면 지나치게 밝게
+   튀므로, 같은 색조를 유지하는 반투명 배경 + 밝은 글자색으로 조정 */
+[data-theme="dark"] .badge-notice {
+    background: rgba(16, 185, 129, 0.18);
+    color: #34d399;
+}
+[data-theme="dark"] .badge-news {
+    background: rgba(139, 92, 246, 0.2);
+    color: #c4b5fd;
+}
+[data-theme="dark"] .badge-youtube {
+    background: rgba(220, 38, 38, 0.18);
+    color: #fca5a5;
+    border-color: rgba(252, 165, 165, 0.35);
+}
+[data-theme="dark"] .badge-pinned {
+    background: rgba(245, 158, 11, 0.2);
+    color: #fbbf24;
+}
+[data-theme="dark"] .badge-verified {
+    background: rgba(40, 167, 69, 0.22);
+    color: #6ee7b7;
+}
+[data-theme="dark"] .badge-unverified {
+    background: rgba(255, 193, 7, 0.2);
+    color: #fcd34d;
+}
+[data-theme="dark"] .badge-blocked {
+    background: rgba(220, 53, 69, 0.22);
+    color: #f7a1ab;
+}
+[data-theme="dark"] .badge-active {
+    background: rgba(23, 162, 184, 0.22);
+    color: #7dd3e8;
+}
+[data-theme="dark"] .badge-type {
+    background: var(--bg-hover);
+    color: var(--text-secondary);
+}
+[data-theme="dark"] .badge-tier-normal {
+    background: rgba(99, 102, 241, 0.2);
+    color: #a5b4fc;
+}
+[data-theme="dark"] .badge-tier-reported {
+    background: rgba(220, 38, 38, 0.2);
+    color: #fca5a5;
+}
+
+/* 유튜브 커뮤니티 자동 가져오기 안내 바 */
+[data-theme="dark"] .youtube-sync-bar {
+    background: rgba(220, 53, 69, 0.08);
+}
+[data-theme="dark"] .youtube-sync-copy strong {
+    color: #f87171;
+}
+[data-theme="dark"] .youtube-sync-copy span {
+    color: var(--text-muted);
+}
+
+[data-theme="dark"] .notice-pin-count {
+    color: #34d399;
+}
+
+[data-theme="dark"] tr.row-pinned {
+    background: rgba(245, 158, 11, 0.12);
+}
+
+/* 공용 테이블 (문의/공지/차단/커스텀메이커 테이블 모두 해당) */
+[data-theme="dark"] .admin-table {
+    background: var(--bg-elevated);
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+[data-theme="dark"] .admin-table th,
+[data-theme="dark"] .admin-table td {
+    border-color: var(--border-color);
+}
+[data-theme="dark"] .admin-table th {
+    background: var(--bg-subtle);
+    color: var(--text-primary);
+}
+[data-theme="dark"] .admin-table tr:hover {
+    background-color: var(--bg-hover);
+}
+[data-theme="dark"] .admin-table tr.row-blocked {
+    background-color: rgba(220, 53, 69, 0.16);
+}
+[data-theme="dark"] .tier-maker-section .row-reported {
+    background: rgba(220, 38, 38, 0.1);
+}
+
+[data-theme="dark"] .empty-row td {
+    color: var(--text-muted);
+}
+
+/* 신고 사유 툴팁 팝업 */
+[data-theme="dark"] .report-popup {
+    background: var(--bg-elevated);
+    border-color: var(--border-strong);
+    box-shadow: 4px 4px 10px var(--shadow-color);
+    color: var(--text-primary);
+}
+
+/* 채도 높은 색상 필터 바(파랑/빨강 등) 위에 흰 테두리로 떠 있는 입력창들 —
+   theme.css의 공용 input 다크 보정이 배경/글자색만 바꾸고 테두리는 클래스
+   특정도 차이로 그대로 남아 흰 테두리와 어긋나 보일 수 있어 반투명 흰 테두리로
+   통일한다 (#search-input은 ID 선택자라 원래 흰 테두리가 유지됨) */
+[data-theme="dark"] .block-text-input,
+[data-theme="dark"] .block-custom-days {
+    border-color: rgba(255, 255, 255, 0.55);
+}

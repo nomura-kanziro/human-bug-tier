@@ -301,6 +301,15 @@
 | 270 | 2026-09-11 | [`39218a6`](#39218a6) | chore(common): 사이트 버전을 0.4.7로 변경 |
 | 271 | 2026-09-17 | [`8e777db`](#8e777db) | feat(custom-maker): 티어표 꾸미기와 원래 상태 복원 추가 |
 | 272 | 2026-09-17 | [`bdb2e6f`](#bdb2e6f) | chore(common): 사이트 버전을 0.5.0으로 변경 |
+| 273 | 2026-09-18 | [`pending`](#c273) | chore(react): 동기화 스크립트 신설 및 CSS·티어데이터·이미지 최신화 |
+| 274 | 2026-09-18 | [`pending`](#c274) | fix(react): 티어 이미지 경로 이중 인코딩(%2520) 404 수정 |
+| 275 | 2026-09-18 | [`pending`](#c275) | feat(react): 홈 퀵카드 하위 메뉴 아이콘 반영 |
+| 276 | 2026-09-18 | [`pending`](#c276) | feat(react): 로그인·회원가입·아이디 및 비밀번호 찾기 페이지 이식 |
+| 277 | 2026-09-18 | [`pending`](#c277) | feat(react): 커스텀 메이커 꾸미기 및 게시판(목록·상세·본인 글 수정) 이식 |
+| 278 | 2026-09-18 | [`pending`](#c278) | feat(react): 마이페이지·알림·문의 페이지 이식 |
+| 279 | 2026-09-18 | [`pending`](#c279) | feat(react): 관리자 로그인·대시보드·문의 상세 이식 |
+| 280 | 2026-09-18 | [`pending`](#c280) | feat(react): 신규 페이지 라우트 연결 |
+| 281 | 2026-09-18 | [`pending`](#c281) | docs(react): 바닐라 기능 100% 반영 완료 문서·스킬팩 갱신 |
 
 ---
 
@@ -5280,5 +5289,167 @@
 - **요약**: 푸터 사이트 버전을 0.4.7 → 0.5.0으로 올리고, 현재 제품 표기 문서(AGENTS.md, CLAUDE.md, overview, team README, react-rewrite)도 0.5.0에 맞췄다. 이번 버전은 커스텀 티어표 꾸미기 반영분이다.
 - **주요 파일**: `root-render/footer.html`, `AGENTS.md`, `CLAUDE.md`, `team/README.md`, `RDMD/features/overview.md`, `RDMD/features/react-rewrite.md`
 - **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="c273"></a>
+
+### 273. 2026-09-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: chore(react): 동기화 스크립트 신설 및 CSS·티어데이터·이미지 최신화
+- **git**: `git show <hash>`
+- **범위**: frontend (root-cloudflare)
+- **요약**: `root-render/` 바닐라를 손으로 복사하지 않고 한 명령(`npm run sync:render`)으로 다시 맞출 수 있게 스크립트를 만들었다. CSS 19개(신규 9개 포함) 재동기화, `tiers.json` 재추출(3티어 62→61명, 5티어 43→44명 등 드리프트 보정), `tier-media` 신규 이미지(하야미 타이키, 퀵카드 아이콘 3종) 반영, manifest 아이콘 경로 절대화. React 전용 스타일을 담을 `react-extra.css` 기반도 함께 추가.
+- **주요 파일**: `root-cloudflare/scripts/sync-from-render.mjs`, `root-cloudflare/package.json`, `root-cloudflare/src/data/tiers.json`, `root-cloudflare/src/styles/common.css`, `root-cloudflare/src/styles/custom-maker.css`, `root-cloudflare/src/styles/react-extra.css`, `root-cloudflare/src/main.jsx`, `root-cloudflare/public/manifest.webmanifest`
+- **관련 RDMD**: [12-react/03-react-parity-complete-record.md](../frontend/12-react/03-react-parity-complete-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="c274"></a>
+
+### 274. 2026-09-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: fix(react): 티어 이미지 경로 이중 인코딩(%2520) 404 수정
+- **git**: `git show <hash>`
+- **범위**: frontend (root-cloudflare)
+- **요약**: `tierImageUrl()`이 이미 인코딩된 DB 경로(`1%20tier/…`)를 다시 `encodeURI()`해 `%2520`이 되며 이미지가 404 나던 문제를 수정. 디코딩 후 다시 인코딩하도록 고쳤다.
+- **주요 파일**: `root-cloudflare/src/lib/paths.js`
+- **관련 RDMD**: [12-react/03-react-parity-complete-record.md](../frontend/12-react/03-react-parity-complete-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="c275"></a>
+
+### 275. 2026-09-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(react): 홈 퀵카드 하위 메뉴 아이콘 반영
+- **git**: `git show <hash>`
+- **범위**: frontend (root-cloudflare)
+- **요약**: 바닐라 홈 화면의 퀵카드 hover 아이콘(`.quick-card-icon`)을 React `Home.jsx`에도 반영했다.
+- **주요 파일**: `root-cloudflare/src/pages/Home.jsx`
+- **관련 RDMD**: [12-react/03-react-parity-complete-record.md](../frontend/12-react/03-react-parity-complete-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="c276"></a>
+
+### 276. 2026-09-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(react): 로그인·회원가입·아이디 및 비밀번호 찾기 페이지 이식
+- **git**: `git show <hash>`
+- **범위**: frontend (root-cloudflare)
+- **요약**: 바닐라 `user_login/` 4개 페이지(로그인/회원가입/아이디·비밀번호 찾기/비밀번호 재설정)를 React 로 이식했다. 공용 헤더 없는 단독 화면을 위한 `AuthShell` 래퍼와 `authApi.js`를 새로 만들고, `ThemeToggle` 에 우상단 고정용 `floating` 옵션을 추가했다.
+- **주요 파일**: `root-cloudflare/src/components/AuthShell.jsx`, `root-cloudflare/src/lib/authApi.js`, `root-cloudflare/src/pages/Login.jsx`, `root-cloudflare/src/pages/SignUp.jsx`, `root-cloudflare/src/pages/FindAccount.jsx`, `root-cloudflare/src/pages/ResetPassword.jsx`, `root-cloudflare/src/components/ThemeToggle.jsx`
+- **관련 RDMD**: [12-react/03-react-parity-complete-record.md](../frontend/12-react/03-react-parity-complete-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="c277"></a>
+
+### 277. 2026-09-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(react): 커스텀 메이커 꾸미기 및 게시판(목록·상세·본인 글 수정) 이식
+- **git**: `git show <hash>`
+- **범위**: frontend (root-cloudflare)
+- **요약**: 커스텀 메이커에 꾸미기(테두리 색·배경 이펙트·등급별 테마)를 추가하고, 게시판 목록(`Board`)·상세(`PostDetail`, 댓글/답변/좋아요/신고)·본인 글 수정(`PostEdit`)을 이식했다. `PostEdit`은 바닐라처럼 `CustomMaker`를 `editId` 로 재사용하며, 수정 모드에서는 localStorage 에 저장하지 않는다.
+- **주요 파일**: `root-cloudflare/src/lib/tierStyle.js`, `root-cloudflare/src/components/DecoratePanel.jsx`, `root-cloudflare/src/lib/makerState.js`, `root-cloudflare/src/lib/boardApi.js`, `root-cloudflare/src/components/ReportModal.jsx`, `root-cloudflare/src/pages/CustomMaker.jsx`, `root-cloudflare/src/pages/PostEdit.jsx`, `root-cloudflare/src/pages/Board.jsx`, `root-cloudflare/src/pages/PostDetail.jsx`
+- **관련 RDMD**: [12-react/03-react-parity-complete-record.md](../frontend/12-react/03-react-parity-complete-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="c278"></a>
+
+### 278. 2026-09-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(react): 마이페이지·알림·문의 페이지 이식
+- **git**: `git show <hash>`
+- **범위**: frontend (root-cloudflare)
+- **요약**: 마이페이지(통계 5종·내 게시글·최근 뽑기), 알림 전체보기(탭 4개·정렬/읽음 필터), 문의사항(작성·답변·인용 답변·수정·삭제·신고)을 React 로 이식했다.
+- **주요 파일**: `root-cloudflare/src/pages/MyPage.jsx`, `root-cloudflare/src/pages/Notifications.jsx`, `root-cloudflare/src/pages/Inquiry.jsx`
+- **관련 RDMD**: [12-react/03-react-parity-complete-record.md](../frontend/12-react/03-react-parity-complete-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="c279"></a>
+
+### 279. 2026-09-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(react): 관리자 로그인·대시보드·문의 상세 이식
+- **git**: `git show <hash>`
+- **범위**: frontend (root-cloudflare)
+- **요약**: 관리자 로그인, 대시보드 4섹션(문의 관리·커스텀 메이커 신고 관리·공지 작성/수정/고정/유튜브 동기화·회원·차단 관리), 문의 상세 페이지를 이식했다. 관리자 API 호출은 `adminRequest()`(= `apiRequest(..., { admin: true })`) 하나로 통일했다.
+- **주요 파일**: `root-cloudflare/src/lib/api.js`, `root-cloudflare/src/lib/adminApi.js`, `root-cloudflare/src/lib/paths.js`, `root-cloudflare/src/components/AdminPagination.jsx`, `root-cloudflare/src/components/NoticeEditor.jsx`, `root-cloudflare/src/pages/AdminLogin.jsx`, `root-cloudflare/src/pages/AdminDashboard.jsx`, `root-cloudflare/src/pages/AdminCommentDetail.jsx`
+- **관련 RDMD**: [12-react/03-react-parity-complete-record.md](../frontend/12-react/03-react-parity-complete-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="c280"></a>
+
+### 280. 2026-09-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(react): 신규 페이지 라우트 연결
+- **git**: `git show <hash>`
+- **범위**: frontend (root-cloudflare)
+- **요약**: 인증·게시판·마이페이지·알림·문의·관리자 등 새로 만든 페이지들을 `App.jsx` 라우트에 연결해 `PendingPage` 자리표시자를 전부 걷어냈다.
+- **주요 파일**: `root-cloudflare/src/App.jsx`
+- **관련 RDMD**: [12-react/03-react-parity-complete-record.md](../frontend/12-react/03-react-parity-complete-record.md)
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="c281"></a>
+
+### 281. 2026-09-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(react): 바닐라 기능 100% 반영 완료 문서·스킬팩 갱신
+- **git**: `git show <hash>`
+- **범위**: docs
+- **요약**: `root-render/` 기능이 React(`root-cloudflare/`)에 100% 반영 완료됐음을 `react-rewrite.md`·`root-cloudflare/README.md`·4개 에이전트 스킬팩(.agents/.claude/.codex/.groks)·RDMD frontend 인덱스에 반영하고, 이식 기록 문서를 새로 추가했다.
+- **주요 파일**: `RDMD/features/react-rewrite.md`, `root-cloudflare/README.md`, `.agents/react-rewrite/skill.md`, `.claude/skills/react-rewrite/SKILL.md`, `.codex/react-rewrite/skill.md`, `.groks/react-rewrite/grok_skill.md`, `RDMD/frontend/12-react/03-react-parity-complete-record.md`, `RDMD/frontend/README.md`
+- **관련 RDMD**: [12-react/03-react-parity-complete-record.md](../frontend/12-react/03-react-parity-complete-record.md)
 
 [▲ 목차로](#목차)

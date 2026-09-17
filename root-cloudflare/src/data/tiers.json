@@ -677,11 +677,6 @@
             "img": "3 tier/kishibe.jpg",
             "alt": "아깝게 낭비된 단역",
             "name": "*키시베"
-          },
-          {
-            "img": "3 tier/mapi.jpg",
-            "alt": "이새끼 진짜 뭐임?",
-            "name": "*마피"
           }
         ]
       }
@@ -1029,6 +1024,11 @@
             "img": "5 tier/samezu seizi.jpg",
             "alt": "",
             "name": "사메즈 세이지"
+          },
+          {
+            "img": "5 tier/hayami taiki.jpg",
+            "alt": "",
+            "name": "하야미 타이키"
           },
           {
             "img": "5 tier/kazuki shion.jpg",
