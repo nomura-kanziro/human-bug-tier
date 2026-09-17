@@ -300,7 +300,7 @@
 | 269 | 2026-09-11 | [`8ef92cf`](#8ef92cf) | feat(tier-class): 5티어에 하야미 타이키 추가 |
 | 270 | 2026-09-11 | [`39218a6`](#39218a6) | chore(common): 사이트 버전을 0.4.7로 변경 |
 | 271 | 2026-09-17 | [`8e777db`](#8e777db) | feat(custom-maker): 티어표 꾸미기와 원래 상태 복원 추가 |
-| 272 | 2026-09-17 | [`pending`](#pending-272) | chore(common): 사이트 버전을 0.5.0으로 변경 |
+| 272 | 2026-09-17 | [`bdb2e6f`](#bdb2e6f) | chore(common): 사이트 버전을 0.5.0으로 변경 |
 
 ---
 
@@ -5267,15 +5267,15 @@
 
 ---
 
-<a id="pending-272"></a>
+<a id="bdb2e6f"></a>
 
-### 272. 2026-09-17 — `pending`
+### 272. 2026-09-17 — `bdb2e6f`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `bdb2e6f`
+- **hash (full)**: `bdb2e6f2dfc22ba8eba8fca1f642d5207b331c62`
 - **author**: nomura
 - **message**: chore(common): 사이트 버전을 0.5.0으로 변경
-- **git**: `git show pending`
+- **git**: `git show bdb2e6f`
 - **범위**: frontend / render-only / common / docs
 - **요약**: 푸터 사이트 버전을 0.4.7 → 0.5.0으로 올리고, 현재 제품 표기 문서(AGENTS.md, CLAUDE.md, overview, team README, react-rewrite)도 0.5.0에 맞췄다. 이번 버전은 커스텀 티어표 꾸미기 반영분이다.
 - **주요 파일**: `root-render/footer.html`, `AGENTS.md`, `CLAUDE.md`, `team/README.md`, `RDMD/features/overview.md`, `RDMD/features/react-rewrite.md`
