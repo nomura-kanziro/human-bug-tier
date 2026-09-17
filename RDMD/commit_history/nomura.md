@@ -310,7 +310,7 @@
 | 279 | 2026-09-18 | [`e0e7267`](#e0e7267) | feat(react): 관리자 로그인·대시보드·문의 상세 이식 |
 | 280 | 2026-09-18 | [`d65beef`](#d65beef) | feat(react): 신규 페이지 라우트 연결 |
 | 281 | 2026-09-18 | [`6baf912`](#6baf912) | docs(react): 바닐라 기능 100% 반영 완료 문서·스킬팩 갱신 |
-| 282 | 2026-09-18 | [`pending`](#c282) | fix(react): 홈 퀵카드 hover 아이콘 교체가 React 라우트에서 안 되던 문제 수정 |
+| 282 | 2026-09-18 | [`5a9b388`](#5a9b388) | fix(react): 홈 퀵카드 hover 아이콘 교체가 React 라우트에서 안 되던 문제 수정 |
 
 ---
 
@@ -5456,15 +5456,15 @@
 
 ---
 
-<a id="c282"></a>
+<a id="5a9b388"></a>
 
-### 282. 2026-09-18 — `pending`
+### 282. 2026-09-18 — `5a9b388`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `5a9b388`
+- **hash (full)**: `5a9b388562a1fa92ea4f5dbfe92440b6e179ed8a`
 - **author**: nomura
 - **message**: fix(react): 홈 퀵카드 hover 아이콘 교체가 React 라우트에서 안 되던 문제 수정
-- **git**: `git show <hash>`
+- **git**: `git show 5a9b388`
 - **범위**: frontend (root-cloudflare)
 - **요약**: 바닐라 `common.css`의 홈 퀵카드 hover 아이콘 교체 효과(`.quick-card:has(.sub-grid a[href$="tier1.html"]:hover)` 등)가 `a[href$="...html"]` 선택자를 쓰는데, react-router `<Link>`가 만드는 실제 href(`/tier/1`, `/custom-maker`, `/board`, `/luck-draw#daily`)는 `.html`로 끝나지 않아 하나도 매칭되지 않았다(hover해도 기본 로고만 보이고 전용 아이콘은 안 나타남). `react-extra.css`에 React 경로 기준 동일 규칙을 다시 걸어 해결했다.
 - **주요 파일**: `root-cloudflare/src/styles/react-extra.css`
