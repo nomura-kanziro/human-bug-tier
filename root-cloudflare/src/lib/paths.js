@@ -12,7 +12,11 @@ export function tierImageUrl(rawPath) {
   if (/^(https?:|data:|blob:)/i.test(rawPath)) return rawPath;
   const stripped = String(rawPath).replace(/^(\.\.\/|\.\/|\/)*/, '')
     .replace(/^tier-media\/tier-image\/|^tier-image\/|^tier-media\//, '');
-  return TIER_IMAGE_ROOT + encodeURI(stripped);
+  // DB 에 이미 인코딩된 경로("1%20tier/…")가 섞여 있어 그대로 encodeURI 하면 %2520 이 되어 404 가 난다.
+  // 한 번 디코딩해 원문으로 맞춘 뒤 다시 인코딩한다(디코딩 실패 시 원문 그대로 사용).
+  let decoded = stripped;
+  try { decoded = decodeURI(stripped); } catch { /* 잘못된 % 시퀀스는 원문 유지 */ }
+  return TIER_IMAGE_ROOT + encodeURI(decoded);
 }
 
 export const LOGO_URL = `${TIER_IMAGE_ROOT}logo.webp`;
