@@ -5,6 +5,7 @@
 //   { "<0-based 등급 인덱스>_<세부등급명>": [{ id, name, img }, ...] }
 // 게시판 DB 에 이미 이 형태로 쌓여 있으므로 바꾸면 기존 글이 안 열린다.
 import { ALL_CHARACTERS, stableCharId, TIERS } from '../data/tiers';
+import { buildStylePayload } from './tierStyle';
 
 export const MAKER_STORAGE_KEY = 'customMakerTierState';
 
@@ -111,7 +112,8 @@ export function normalizeImgForBoard(img) {
 
 // 업로드 payload — tierDefinitions(작성 당시 등급 정의)를 함께 저장해 두면
 // 나중에 등급 구성이 바뀌어도 그 글은 작성 시점 그대로 재현할 수 있다.
-export function buildUploadPayload(state, { title, description, user, thumbnail }) {
+// style 은 등급별 꾸미기(테두리 색·배경 이펙트)로, 상세 페이지가 같은 모습으로 그린다.
+export function buildUploadPayload(state, { title, description, user, thumbnail, styleMap }) {
   const normalized = {};
   Object.entries(state).forEach(([key, chars]) => {
     normalized[key] = (chars || []).map((c) => ({ ...c, img: normalizeImgForBoard(c.img) }));
@@ -123,6 +125,7 @@ export function buildUploadPayload(state, { title, description, user, thumbnail 
     tierData: {
       tierState: normalized,
       tierDefinitions: TIERS.map((t) => ({ id: t.tier, title: t.title, subTiers: t.subTiers })),
+      style: buildStylePayload(styleMap),
     },
     author: user.nickname,
     authorEmail: user.email || '',

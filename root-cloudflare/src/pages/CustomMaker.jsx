@@ -7,17 +7,21 @@
 //   - 모바일: 카드를 탭해 선택 → 등급 칸을 탭하면 배치 (DnD 가 불안정해서 별도 경로)
 //   - 다운로드: PNG(등급별 9장) · PDF(1파일) · JSON. 캡처는 화면을 바꾸지 않고
 //     화면 밖 export 컨테이너를 따로 렌더해서 찍으므로 편집 중 화면이 흔들리지 않는다.
+//   - 꾸미기: 등급마다 테두리 색·배경 이펙트. 미리보기·캐처·게시글에 모두 반영된다.
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import DecoratePanel from '../components/DecoratePanel';
 import { useAuth } from '../context/AuthContext';
 import { ALL_CHARACTERS, TIERS } from '../data/tiers';
 import { apiRequest, isStaticPreview } from '../lib/api';
+import { fetchPostById, isSameAuthor, isValidPostId, updatePost } from '../lib/boardApi';
 import { loadHtml2Canvas, loadJsPdf } from '../lib/loadScript';
 import {
   buildJsonExport, buildUploadPayload, compressImageFile, getPlacedKeys, getThumbnailFromState,
-  hasPlacedCharacters, loadMakerState, placeChar, removeChar, saveMakerState, zoneKey,
+  hasPlacedCharacters, loadMakerState, placeChar, rematchToCatalog, removeChar, saveMakerState, zoneKey,
 } from '../lib/makerState';
 import { LOGO_URL, tierImageUrl } from '../lib/paths';
+import { loadTierStyle, normalizeStyleMap, saveTierStyle, tierStyleProps } from '../lib/tierStyle';
 import '../styles/custom-maker.css';
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -52,12 +56,20 @@ function CharCard({ char, selected, onDragStart, onDragEnd, onClick, onDragOver,
   );
 }
 
-export default function CustomMaker() {
+// editId 가 있으면 "본인 글 수정" 모드 (바닐라 post_edit.html 에 해당).
+// 저장된 게시글의 배치·꾸미기를 불러와 편집하고, 업로드 버튼이 "수정완료"(PUT)로 바뀐다.
+export default function CustomMaker({ editId = null }) {
   const navigate = useNavigate();
   const { isLoggedIn, nickname, email } = useAuth();
+  const isEdit = Boolean(editId);
 
   const [index, setIndex] = useState(0);            // 지금 편집 중인 등급 (0-based)
-  const [state, setState] = useState(loadMakerState);
+  const [state, setState] = useState(isEdit ? {} : loadMakerState);
+  const [styleMap, setStyleMap] = useState(isEdit ? {} : loadTierStyle);  // 등급별 꾸미기
+  const [editPost, setEditPost] = useState(null);   // 수정 모드에서 불러온 원본 게시글
+  const [editError, setEditError] = useState('');
+  const [decorateOpen, setDecorateOpen] = useState(false);
+  const [decorateScope, setDecorateScope] = useState('current'); // 'current' | 'all'
   const [selectedId, setSelectedId] = useState(null); // 모바일 탭 선택
   const [exporting, setExporting] = useState(null);   // null | 'png' | 'pdf'
   const [busyText, setBusyText] = useState('');
@@ -68,8 +80,33 @@ export default function CustomMaker() {
 
   const tier = TIERS[index];
 
-  useEffect(() => { document.title = '커스텀 티어 메이커 | 휴버대 티어표'; }, []);
-  useEffect(() => { saveMakerState(state); }, [state]);
+  useEffect(() => {
+    document.title = isEdit ? '게시글 수정 | 휴버대 티어표' : '커스텀 티어 메이커 | 휴버대 티어표';
+  }, [isEdit]);
+
+  // 신규 제작만 localStorage 에 저장한다. 수정 모드까지 저장하면 작업 중이던 내 티어표가 덮어써진다.
+  useEffect(() => { if (!isEdit) saveMakerState(state); }, [state, isEdit]);
+  useEffect(() => { if (!isEdit) saveTierStyle(styleMap); }, [styleMap, isEdit]);
+
+  // 수정 모드: 서버에서 게시글을 받아 배치·꾸미기를 복원하고 소유자인지 확인한다(서버도 다시 검증).
+  useEffect(() => {
+    if (!isEdit) return;
+    if (!isValidPostId(editId)) { setEditError('수정할 게시글이 지정되지 않았습니다.'); return; }
+    fetchPostById(editId)
+      .then((post) => {
+        if (!isSameAuthor(post, { nickname, email })) {
+          setEditError('본인이 작성한 게시글만 수정할 수 있습니다.');
+          return;
+        }
+        setEditPost(post);
+        setState(rematchToCatalog(post.tierData?.tierState || {}));
+        setStyleMap(normalizeStyleMap(post.tierData?.style));
+      })
+      .catch((err) => {
+        console.error(err);
+        setEditError('게시글을 불러올 수 없습니다.');
+      });
+  }, [isEdit, editId, nickname, email]);
 
   const placed = useMemo(() => getPlacedKeys(state), [state]);
   const pool = useMemo(
@@ -209,7 +246,7 @@ export default function CustomMaker() {
     setExporting(type);
   };
 
-  // ── 업로드 ─────────────────────────────────────────────────
+  // ── 업로드 / 수정완료 ──────────────────────────────────────
   const onUploadClick = () => {
     if (isStaticPreview()) { window.alert('서버가 있는 환경에서만 업로드할 수 있습니다.'); return; }
     if (!isLoggedIn) {
@@ -217,18 +254,38 @@ export default function CustomMaker() {
       return;
     }
     if (!hasPlacedCharacters(state)) {
-      window.alert('티어에 배치된 캐릭터가 없습니다.\n캐릭터를 배치한 후 업로드해주세요.');
+      window.alert(isEdit
+        ? '티어에 배치된 캐릭터가 없습니다.\n캐릭터를 배치한 후 저장해주세요.'
+        : '티어에 배치된 캐릭터가 없습니다.\n캐릭터를 배치한 후 업로드해주세요.');
       return;
     }
     setModalOpen(true);
   };
 
+  if (isEdit && editError) {
+    return (
+      <div className="maker-container">
+        <p className="react-state-msg">{editError}</p>
+        <p style={{ textAlign: 'center' }}><Link to="/board">← 게시판으로</Link></p>
+      </div>
+    );
+  }
+  if (isEdit && !editPost) {
+    return <div className="maker-container"><p className="react-state-msg">게시글을 불러오는 중...</p></div>;
+  }
+
   return (
-    <div className="maker-container">
+    <div className={`maker-container${isEdit ? ' maker-container--edit' : ''}`}>
       <h1>
         <img src={`${LOGO_URL.replace('logo.webp', 'human_bug_eyes_icon.gif')}`} className="eyes_icon" alt="" />
-        {' '}커스텀 티어 메이커
+        {' '}{isEdit ? '게시글 수정' : '커스텀 티어 메이커'}
       </h1>
+      {isEdit && (
+        <div className="edit-mode-banner">
+          「<strong>{editPost.title}</strong>」 게시 티어표를 불러왔습니다. 수정 후 <strong>수정완료</strong>를 누르세요.
+          {' '}<Link to={`/board/post?id=${encodeURIComponent(editId)}`}>상세로 돌아가기</Link>
+        </div>
+      )}
       <p className="mobile-maker-help">
         모바일: 캐릭터를 <strong>탭</strong>해 선택한 뒤, 위 티어 칸을 <strong>탭</strong>하면 배치됩니다. (PC는 드래그도 가능)
       </p>
@@ -257,7 +314,7 @@ export default function CustomMaker() {
         ))}
       </div>
 
-      <div id="tier-capture-area">
+      <div id="tier-capture-area" {...tierStyleProps(styleMap, index)}>
         <div id="tier-list" className="tier-list">
           {tier.subTiers.map((sub) => {
             const key = zoneKey(index, sub);
@@ -290,7 +347,26 @@ export default function CustomMaker() {
         </div>
       </div>
 
+      <DecoratePanel
+        hidden={!decorateOpen}
+        styleMap={styleMap}
+        index={index}
+        scope={decorateScope}
+        onScopeChange={setDecorateScope}
+        onChange={setStyleMap}
+      />
+
       <div className="action-bar">
+        <button
+          type="button"
+          className="btn btn-decorate"
+          aria-expanded={decorateOpen}
+          aria-controls="decorate-panel"
+          onClick={() => setDecorateOpen((v) => !v)}
+        >
+          <span className="btn-text">꾸미기</span>
+          <span className="btn-icon">✨</span>
+        </button>
         <button type="button" className="btn btn-reset" onClick={resetAll}>
           <span className="btn-text">초기화</span>
           <span className="btn-icon">🗑️</span>
@@ -309,8 +385,8 @@ export default function CustomMaker() {
         </div>
 
         <button type="button" className="btn btn-upload" onClick={onUploadClick}>
-          <span className="btn-text">업로드</span>
-          <span className="btn-icon">🔗</span>
+          <span className="btn-text">{isEdit ? '수정완료' : '업로드'}</span>
+          <span className="btn-icon">{isEdit ? '✅' : '🔗'}</span>
         </button>
       </div>
 
@@ -334,53 +410,74 @@ export default function CustomMaker() {
         </div>
       </div>
 
-      {/* 캡처 전용 — 화면 밖에 전 등급을 한 번에 렌더해 두고 순서대로 찍는다 */}
+      {/* 캡처 전용 — 화면 밖에 전 등급을 한 번에 렌더해 두고 순서대로 찍는다.
+          꾸미기 변수는 캡처 대상(#tier-capture-area 와 같은 역할)에 그대로 얹어 PNG/PDF 에도 반영한다 */}
       {exporting && (
         <div ref={exportRef} style={{ position: 'fixed', left: -99999, top: 0, width: 900 }} aria-hidden="true">
-          {TIERS.map((t, i) => (
-            <div className="tier-list" data-export-tier={t.tier} key={t.tier} style={{ width: 900 }}>
-              <h2 style={{ color: '#ffcc00', textAlign: 'center', margin: '0 0 10px', fontSize: '1.1rem', padding: '10px 0' }}>
-                {t.title}
-              </h2>
-              {t.subTiers.map((sub) => (
-                <div className="tier" key={sub}>
-                  <div className="tier-name">{sub}</div>
-                  <div className="characters">
-                    {(state[zoneKey(i, sub)] || []).map((char) => (
-                      <div className="char" key={char.id}>
-                        <img src={tierImageUrl(char.img)} alt={char.name} />
-                        <p>{char.name}</p>
+          {TIERS.map((t, i) => {
+            const decorated = tierStyleProps(styleMap, i);
+            return (
+              <div
+                className="tier-capture-area"
+                data-export-tier={t.tier}
+                key={t.tier}
+                {...decorated}
+                style={{ ...decorated.style, width: 900 }}
+              >
+                <h2 style={{ color: 'var(--tier-accent, #ffcc00)', textAlign: 'center', margin: '0 0 10px', fontSize: '1.1rem', padding: '10px 0' }}>
+                  {t.title}
+                </h2>
+                <div className="tier-list">
+                  {t.subTiers.map((sub) => (
+                    <div className="tier" key={sub}>
+                      <div className="tier-name">{sub}</div>
+                      <div className="characters">
+                        {(state[zoneKey(i, sub)] || []).map((char) => (
+                          <div className="char" key={char.id}>
+                            <img src={tierImageUrl(char.img)} alt={char.name} />
+                            <p>{char.name}</p>
+                          </div>
+                        ))}
                       </div>
-                    ))}
-                  </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          ))}
+              </div>
+            );
+          })}
         </div>
       )}
 
       {modalOpen && (
         <UploadModal
           state={state}
+          styleMap={styleMap}
           user={{ nickname, email }}
+          editId={editId}
+          editPost={editPost}
           onClose={() => setModalOpen(false)}
-          onDone={() => { setModalOpen(false); navigate('/board'); }}
+          onDone={(postId) => {
+            setModalOpen(false);
+            navigate(postId ? `/board/post?id=${encodeURIComponent(postId)}` : '/board');
+          }}
         />
       )}
     </div>
   );
 }
 
-// ── 업로드 모달 (제목·내용·썸네일 → POST /api/tierlists) ────────
-function UploadModal({ state, user, onClose, onDone }) {
-  const [title, setTitle] = useState('');
-  const [description, setDescription] = useState('');
-  const [thumb, setThumb] = useState(null); // 사용자가 고른 파일(base64). null 이면 자동 대표 이미지
+// ── 업로드/수정 모달 (제목·내용·썸네일 → POST 또는 PUT /api/tierlists) ────────
+function UploadModal({ state, styleMap, user, editId, editPost, onClose, onDone }) {
+  const isEdit = Boolean(editId);
+  const [title, setTitle] = useState(editPost?.title || '');
+  const [description, setDescription] = useState(editPost?.description || '');
+  // null = 원래 썸네일(수정) 또는 자동 대표 이미지(신규) 유지
+  const [thumb, setThumb] = useState(null);
   const [busy, setBusy] = useState(false);
   const fileRef = useRef(null);
 
-  const preview = thumb || tierImageUrl(getThumbnailFromState(state));
+  const fallbackThumb = editPost?.thumbnail || getThumbnailFromState(state);
+  const preview = thumb || (fallbackThumb.startsWith('data:') ? fallbackThumb : tierImageUrl(fallbackThumb));
 
   const onPickFile = async (e) => {
     const file = e.target.files?.[0];
@@ -400,11 +497,20 @@ function UploadModal({ state, user, onClose, onDone }) {
         title,
         description,
         user,
-        thumbnail: thumb || getThumbnailFromState(state),
+        thumbnail: thumb || fallbackThumb,
+        styleMap,
       });
-      const res = await apiRequest('/api/tierlists', { method: 'POST', body: JSON.stringify(payload) });
+      const res = isEdit
+        ? await updatePost(editId, payload)
+        : await apiRequest('/api/tierlists', { method: 'POST', body: JSON.stringify(payload) });
+
       if (!res.ok) {
-        window.alert(`❌ ${res.data.error || '업로드에 실패했습니다.'}`);
+        window.alert(`❌ ${res.data.error || (isEdit ? '수정에 실패했습니다.' : '업로드에 실패했습니다.')}`);
+        return;
+      }
+      if (isEdit) {
+        window.alert('✅ 게시글 수정이 완료되었습니다.');
+        onDone(editId);
         return;
       }
       if (window.confirm('✅ 게시판에 업로드되었습니다!\n게시판으로 이동할까요?')) onDone();
@@ -420,7 +526,7 @@ function UploadModal({ state, user, onClose, onDone }) {
   return (
     <div className="upload-modal-overlay" onClick={onClose}>
       <div className="upload-modal-card" onClick={(e) => e.stopPropagation()}>
-        <h3>게시판에 업로드</h3>
+        <h3>{isEdit ? '게시글 수정' : '게시판에 업로드'}</h3>
         <label className="upload-modal-field">
           <span>제목</span>
           <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="티어표 제목" maxLength={80} />
@@ -437,12 +543,16 @@ function UploadModal({ state, user, onClose, onDone }) {
             {thumb && <button type="button" className="upload-modal-cancel" onClick={() => setThumb(null)}>기본값으로</button>}
             <input ref={fileRef} type="file" accept="image/*" hidden onChange={onPickFile} />
           </div>
-          <p className="upload-modal-hint">선택하지 않으면 배치된 첫 캐릭터 이미지가 대표 이미지로 쓰입니다.</p>
+          <p className="upload-modal-hint">
+            {isEdit
+              ? '선택하지 않으면 기존 대표 이미지가 그대로 유지됩니다.'
+              : '선택하지 않으면 배치된 첫 캐릭터 이미지가 대표 이미지로 쓰입니다.'}
+          </p>
         </div>
         <div className="upload-modal-actions">
           <button type="button" className="upload-modal-cancel" onClick={onClose} disabled={busy}>취소</button>
           <button type="button" className="upload-modal-submit" onClick={submit} disabled={busy}>
-            {busy ? '업로드 중...' : '업로드'}
+            {busy ? (isEdit ? '저장 중...' : '업로드 중...') : (isEdit ? '수정완료' : '업로드')}
           </button>
         </div>
       </div>
