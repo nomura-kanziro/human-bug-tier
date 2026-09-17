@@ -7,24 +7,30 @@
 
 ---
 
-## 이식 현황 (2026-09-05)
+## 이식 현황 (2026-09-17 — 바닐라 기능 100% 반영 완료)
 
 | 단계 | 상태 | 비고 |
 |------|------|------|
 | 0 기획 | ✅ | 이 문서 |
-| 1 라우트·API 클라이언트 | ✅ | `src/lib/api.js`, `src/App.jsx` |
+| 1 라우트·API 클라이언트 | ✅ | `src/lib/api.js`(+`adminRequest`), `src/App.jsx` |
 | 2 레이아웃 | ✅ | 헤더/푸터/알림벨/프로필 드롭다운/테마 토글/로딩 화면 |
 | 3 공개 페이지 | ✅ | 홈, `/tier/1~9`(**한 페이지 + 내부 navbar**), 공지 메인/전체/새소식/상세 |
-| 5-1 커스텀 메이커(제작) | ✅ | 드래그·탭 배치, PNG/PDF/JSON, 게시판 업로드 |
+| 4 인증 | ✅ | 로그인·회원가입·아이디/비번 찾기·비번 재설정 (`AuthShell` + `lib/authApi.js`) |
+| 5-1 커스텀 메이커(제작) | ✅ | 드래그·탭 배치, PNG/PDF/JSON, 게시판 업로드, **꾸미기(테두리·이펙트)** |
+| 5-2 게시판 | ✅ | 목록·검색(`@닉네임`)·상세·댓글/답변/수정/삭제/신고·좋아요·**본인 글 수정** |
 | 6-1 행운 뽑기 | ✅ | 확률표·서스펜스 연출·회원 쿨다운·게스트 24h·이력 |
-| 4 인증 | ⏳ | `PendingPage` 자리만 |
-| 5-2 게시판 | ⏳ | 상세·댓글·좋아요·신고·본인 글 수정 |
-| 6-2 마이페이지 | ⏳ | |
-| 7 관리자·문의·알림상세 | ⏳ | |
+| 6-2 마이페이지 | ✅ | 통계 카드 5개 + 내 게시글 6건 + 최근 뽑기 5건 |
+| 7-1 문의 | ✅ | 작성·답변(관리자)·답변에 답변(인용)·수정·삭제·신고·알림 딥링크 |
+| 7-2 알림 전체보기 | ✅ | 4탭 + 정렬/읽음 필터 (클라이언트 필터링) |
+| 7-3 관리자 | ✅ | 로그인 / 대시보드 4섹션(문의·커스텀 신고·공지·차단) / 문의 상세 |
 | 8 배포 | ⏳ | Render 는 여전히 `root-render/` 바닐라. React 배포는 별도 지시 |
 
+바닐라 쪽이 바뀌면 `cd root-cloudflare && npm run sync:render` 로 CSS·티어 데이터·`tier-media` 를
+다시 맞춘 뒤 해당 페이지 컴포넌트만 손보면 된다.
+
 상세: `root-cloudflare/README.md`, `RDMD/frontend/12-react/01-react-phase1-3-record.md`,
-`RDMD/frontend/12-react/02-react-tier-maker-luck-record.md`
+`RDMD/frontend/12-react/02-react-tier-maker-luck-record.md`,
+`RDMD/frontend/12-react/03-react-parity-complete-record.md`
 
 ---
 
@@ -46,11 +52,11 @@
 
 | 금지 | 이유 |
 |------|------|
-| 4단계 이후(인증·게시판·관리자 등)를 지시 없이 이식 | 단계별 지시·패리티 확인 후 진행 |
 | `root-render/` 바닐라 삭제·변경 | Render 실무 배포 정본. 티어 데이터 원본도 여기 |
 | Cloudflare Pages/CI/시크릿 추가 작업 | 배포 작업 일시 중지 |
 | `backend/server.js`를 Workers/`fetch`로 바꾸기 | 백엔드는 유지 |
 | mongoose → D1/KV | 동일 |
+| React 를 실무 배포로 전환 | 8단계(배포)는 창시자 지시 후 |
 
 로컬 정본: `cd root-cloudflare && npm run build` → `cd backend && npm start` → http://localhost:5000/ (React dist)  
 Render 화면 확인: `STATIC_ROOT=root-render`

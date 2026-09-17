@@ -146,6 +146,7 @@ RDMD/frontend/
 |------|--------|------|
 | [01-react-phase1-3-record.md](./12-react/01-react-phase1-3-record.md) | — | root-cloudflare 를 Vite+React 로 교체 — 1~3단계(스캐폴드·레이아웃·홈/티어/공지) |
 | [02-react-tier-maker-luck-record.md](./12-react/02-react-tier-maker-luck-record.md) | — | 공식 티어표 단일 페이지 navbar + 커스텀 메이커·행운 뽑기 React 이식 |
+| [03-react-parity-complete-record.md](./12-react/03-react-parity-complete-record.md) | — | 바닐라 기능 100% 반영 — sync:render 스크립트 · 꾸미기 · 인증 · 게시판 · 마이페이지 · 알림 · 문의 · 관리자 |
 
 ---
 

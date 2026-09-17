@@ -31,15 +31,20 @@ npm start
 
 | 단계 | 상태 | 라우트 |
 |------|------|--------|
-| 1 스캐폴드·API 클라이언트 | ✅ | `src/lib/api.js`(getApiBase/getAuthHeaders/apiRequest) |
+| 1 스캐폴드·API 클라이언트 | ✅ | `src/lib/api.js`(getApiBase/getAuthHeaders/getAdminAuthHeaders/apiRequest/adminRequest) |
 | 2 레이아웃(헤더/푸터/알림/프로필/테마/로딩) | ✅ | `src/components/` |
 | 3 공개 페이지 | ✅ | `/` · `/tier/:n` · `/notice` · `/notice/all` · `/notice/news` · `/notice/:id` |
-| 5-1 커스텀 메이커(제작) | ✅ | `/custom-maker` |
+| 4 인증 | ✅ | `/login` `/signup` `/find-account` `/reset-password` |
+| 5-1 커스텀 메이커(제작 + 꾸미기) | ✅ | `/custom-maker` |
+| 5-2 게시판 (목록·상세·본인 글 수정) | ✅ | `/board` `/board/post` `/board/edit` |
 | 6-1 행운 뽑기 | ✅ | `/luck-draw` |
-| 4 인증 | ⏳ `PendingPage` | `/login` `/signup` `/find-account` `/reset-password` |
-| 5-2 게시판 | ⏳ | `/board` `/board/*` |
-| 6-2 마이페이지 | ⏳ | `/my-page` |
-| 7 관리자·문의·알림상세 | ⏳ | `/admin/*` `/inquiry` `/notifications` |
+| 6-2 마이페이지 | ✅ | `/my-page` |
+| 7-1 문의 | ✅ | `/inquiry` |
+| 7-2 알림 전체보기 | ✅ | `/notifications` |
+| 7-3 관리자 | ✅ | `/admin/login` `/admin` `/admin/comment` |
+
+**바닐라(`root-render/`) 기능 100% 반영 완료.** 이후 바닐라 쪽이 바뀌면 `npm run sync:render` 로
+CSS·티어 데이터·`tier-media` 를 다시 맞춘 뒤 해당 페이지 컴포넌트만 손보면 된다.
 
 옵 바닐라 주소(`/tier-class/tier1.html`, `/notice/notice-detail.html?id=…` 등)는 `LegacyRedirect` 가 새 라우트로 보낸다(알림 link 호환).
 
@@ -101,3 +106,14 @@ root-cloudflare/
 | `custom-maker.js`(1300줄, tier-class HTML fetch/파싱) | `pages/CustomMaker.jsx` + `lib/makerState.js` (데이터는 tiers.js 에서 즉시) |
 | `luck-draw.js` + `luck-draw-api.js` | `pages/LuckDraw.jsx` (apiRequest 재사용) |
 | `index-home.js` | `Home`(QuickCard) + `HomeLuckWidget` |
+| `auth_api.js` + login/sign_up/find_account/reset_password | `lib/authApi.js` + `components/AuthShell.jsx` + 4개 페이지 |
+| `custom-maker_post.js` / `post_detail.js` | `lib/boardApi.js` + `pages/Board.jsx` / `pages/PostDetail.jsx` |
+| `post_edit.html` (같은 메이커를 수정 모드로 재사용) | `pages/PostEdit.jsx` → `<CustomMaker editId={id} />` |
+| `my-page.js` | `pages/MyPage.jsx` |
+| `notifications.js` | `pages/Notifications.jsx` (`lib/notifications.js` 공유) |
+| `contact_us.js`(1100줄, 전역 window.* 핸들러) | `pages/Inquiry.jsx` (열린 입력 상자 1개를 `box` state 로 관리) |
+| `admin_api.js` `getAdminAuthHeaders()` | `api.js` 의 `adminRequest()` (`admin: true` 옵션) |
+| `comment-management.js`(1500줄, 4개 섹션) | `pages/AdminDashboard.jsx` + `lib/adminApi.js` + `components/NoticeEditor.jsx` · `AdminPagination.jsx` |
+| `comment-detail.js` | `pages/AdminCommentDetail.jsx` |
+| 목록을 innerHTML 로 통째로 재작성 + 매번 리스너 재바인딩 | state → JSX 재렌더 (리스너 재바인딩 불필요) |
+| 인라인 `style="..."` 문자열 | `styles/react-extra.css` 의 클래스 (동기화 스크립트가 덮어쓰지 않는 파일) |
