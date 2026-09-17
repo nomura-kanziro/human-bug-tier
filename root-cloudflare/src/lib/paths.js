@@ -57,6 +57,7 @@ export function legacyToRoute(href) {
   if (/user_login\/find_account\.html$/i.test(path)) return '/find-account';
   if (/user_login\/reset_password\.html$/i.test(path)) return `/reset-password${search}`;
   if (/admin\/admin-login\.html$/i.test(path)) return '/admin/login';
+  if (/admin\/comments\/comment-detail\.html$/i.test(path)) return `/admin/comment${search}`;
   if (/admin\/comments\/comment-management\.html$/i.test(path)) return '/admin';
   return `${path}${search}`;
 }

@@ -42,14 +42,19 @@ export function getAdminAuthHeaders(extraHeaders = {}) {
 }
 
 // 공용 요청 래퍼. 정적 미리보기(GITHUB_STATIC)면 요청 자체를 하지 않고 에러를 던진다.
+// admin: true 면 관리자 토큰(adminAuthToken)을 쓴다(서버 requireAdmin 과 짝).
 // 반환: { ok, status, data } — 호출부가 res.ok/res.status 를 매번 따로 다루지 않게 한다.
-export async function apiRequest(path, { auth = true, headers = {}, ...options } = {}) {
+export async function apiRequest(path, { auth = true, admin = false, headers = {}, ...options } = {}) {
   const base = getApiBase();
   if (base === GITHUB_STATIC) throw new Error(GITHUB_STATIC);
-  const res = await fetch(`${base}${path}`, {
-    ...options,
-    headers: auth ? getAuthHeaders(headers) : { 'Content-Type': 'application/json', ...headers },
-  });
+  let finalHeaders;
+  if (admin) finalHeaders = getAdminAuthHeaders(headers);
+  else if (auth) finalHeaders = getAuthHeaders(headers);
+  else finalHeaders = { 'Content-Type': 'application/json', ...headers };
+  const res = await fetch(`${base}${path}`, { ...options, headers: finalHeaders });
   const data = await res.json().catch(() => ({}));
   return { ok: res.ok, status: res.status, data };
 }
+
+// 관리자 API 전용 단축 래퍼
+export const adminRequest = (path, options = {}) => apiRequest(path, { ...options, admin: true });
