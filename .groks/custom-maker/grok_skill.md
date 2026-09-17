@@ -35,7 +35,7 @@ description: >
 
 ## Do
 
-1. **제작 화면**: `tierState` / DnD 패턴 유지, 초기화·다운로드 회귀 방지  
+1. **제작 화면**: `tierState` / DnD 패턴 유지, 초기화·다운로드 회귀 방지. 티어표 꾸미기(`tierData.style.byGrade`, 테두리·이펙트)도 캡처/상세와 동기화  
 2. **이미지 경로**: 저장 시 정규화(`normalizeImgForBoard` 등) + 표시 시 `getBasePath`/`resolveAssetPath`  
 3. **API 호출**: `getApiBase()` + 쓰기는 `getAuthHeaders()`  
 4. **댓글·좋아요·신고**: 백엔드 권한·소유권 로직과 프론트 UX 동기화  

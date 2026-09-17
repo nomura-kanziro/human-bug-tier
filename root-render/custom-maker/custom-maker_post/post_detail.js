@@ -25,6 +25,86 @@ let currentPost = null;
 let currentTierIndex = 0;
 let tierDefinitions = DEFAULT_TIER_DEFINITIONS;
 let savedTierState = {};
+let savedTierStyleByGrade = {};
+
+const DEFAULT_TIER_STYLE = { borderColor: '#ffcc00', effect: 'none' };
+const TIER_STYLE_EFFECT_BG = {
+  none: '#111111',
+  glow: '#111111',
+  aurora: '#0b1220',
+  stars: '#07070f',
+  ember: '#140806',
+  frost: '#071018',
+  neon: '#050805',
+  crimson: '#14060a',
+  void: '#07040e',
+  royal: '#120e1c',
+};
+
+function sanitizeHexColor(color) {
+  const raw = String(color || '').trim();
+  const short = raw.match(/^#([0-9a-fA-F]{3})$/);
+  if (short) {
+    return `#${short[1].split('').map((c) => c + c).join('').toLowerCase()}`;
+  }
+  const full = raw.match(/^#([0-9a-fA-F]{6})$/);
+  return full ? `#${full[1].toLowerCase()}` : DEFAULT_TIER_STYLE.borderColor;
+}
+
+function sanitizeEffectName(effect) {
+  const key = String(effect || '').trim();
+  return Object.prototype.hasOwnProperty.call(TIER_STYLE_EFFECT_BG, key) ? key : DEFAULT_TIER_STYLE.effect;
+}
+
+function hexToRgba(hex, alpha) {
+  const h = sanitizeHexColor(hex).slice(1);
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function normalizeStyleMap(raw) {
+  const out = {};
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return out;
+  const source = raw.byGrade && typeof raw.byGrade === 'object' ? raw.byGrade : raw;
+  Object.keys(source).forEach((key) => {
+    const n = Number(key);
+    if (!Number.isInteger(n) || n < 0 || n > 8) return;
+    const item = source[key];
+    if (!item || typeof item !== 'object') return;
+    out[n] = {
+      borderColor: sanitizeHexColor(item.borderColor),
+      effect: sanitizeEffectName(item.effect),
+    };
+  });
+  return out;
+}
+
+function getStyleForGrade(index) {
+  const saved = savedTierStyleByGrade[index];
+  return {
+    borderColor: sanitizeHexColor(saved?.borderColor || DEFAULT_TIER_STYLE.borderColor),
+    effect: sanitizeEffectName(saved?.effect || DEFAULT_TIER_STYLE.effect),
+  };
+}
+
+function applyReadOnlyTierStyle() {
+  const area = document.getElementById('tier-capture-area');
+  if (!area) return;
+  const style = getStyleForGrade(currentTierIndex);
+  const accent = style.borderColor;
+  const effect = style.effect;
+  const bg = TIER_STYLE_EFFECT_BG[effect] || '#111111';
+  const isDefault = accent === DEFAULT_TIER_STYLE.borderColor && effect === DEFAULT_TIER_STYLE.effect;
+  area.style.setProperty('--tier-accent', accent);
+  area.style.setProperty('--tier-accent-soft', hexToRgba(accent, 0.3));
+  area.style.setProperty('--tier-accent-strong', hexToRgba(accent, 0.7));
+  area.style.setProperty('--tier-glow', hexToRgba(accent, 0.45));
+  area.style.setProperty('--tier-bg', bg);
+  area.dataset.effect = effect;
+  area.dataset.decorated = isDefault ? '0' : '1';
+}
 
 // 게시글/댓글 API 호출용 서버 주소 판별 (common.js getApiBase()와 동일 로직의 자체 fallback)
 function getTierApiBase() {
@@ -299,6 +379,8 @@ function renderReadOnlyTier() {
       zone.appendChild(createReadOnlyCharElement(char));
     });
   });
+
+  applyReadOnlyTierStyle();
 }
 
 // 이전/다음 등급 버튼에 리스너를 등록. 게시글이 저장하고 있는 tierDefinitions 기준으로 순환한다
@@ -381,6 +463,7 @@ async function loadPostDetail() {
 
     tierDefinitions = currentPost.tierData?.tierDefinitions || DEFAULT_TIER_DEFINITIONS;
     savedTierState = currentPost.tierData?.tierState || {};
+    savedTierStyleByGrade = normalizeStyleMap(currentPost.tierData?.style);
 
     renderPostMeta(currentPost);
     updatePostActions();

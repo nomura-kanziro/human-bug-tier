@@ -461,14 +461,67 @@ body.pool-arrows-on .pool-viewport-arrows {
 }
 
 /* PNG/PDF 다운로드가 html2canvas로 캡처하는 실제 영역. 배경·테두리를 여기서 그려야
-   캡처 이미지에도 배경/테두리가 함께 찍힌다 (내부 .tier-list는 배경이 없음) */
+   캡처 이미지에도 배경/테두리가 함께 찍힌다 (내부 .tier-list는 배경이 없음).
+   --tier-accent / --tier-bg 는 꾸미기 패널이 JS로 덮어쓴다. */
 #tier-capture-area {
+  --tier-accent: #ffcc00;
+  --tier-accent-soft: rgba(255, 204, 0, 0.3);
+  --tier-accent-strong: rgba(255, 204, 0, 0.7);
+  --tier-glow: rgba(255, 204, 0, 0.45);
+  --tier-bg: #111111;
   width: 95%;
   max-width: 2800px;
   margin: 0 auto;
-  background: #111;       /* ← 여기서 배경 담당 */
-  border: 2px solid #ffcc00;  /* ← 테두리 여기로 이동 */
-  padding: 16px;               /* ← 16px → 0으로 변경 */
+  position: relative;
+  isolation: isolate;
+  background: var(--tier-bg);
+  border: 2px solid var(--tier-accent);
+  padding: 16px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
+}
+
+/* 이펙트 레이어: 캐릭터 카드 뒤에만 깔리도록 z-index 0, 클릭은 통과 */
+#tier-capture-area::before,
+#tier-capture-area::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+#tier-capture-area::after {
+  inset: 10px;
+  border: 0;
+}
+#tier-capture-area > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* 캡처 프레임이 배경·테두리를 담당하므로 안쪽 리스트는 투명 + 가로 가득.
+   그래야 꾸미기 이펙트가 가장자리만 아니라 칸 전체로 깔린다. */
+#tier-capture-area .tier-list {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  background: transparent;
+}
+
+#tier-capture-area .tier-name {
+  border-color: var(--tier-accent);
+}
+#tier-capture-area .characters {
+  border-color: var(--tier-accent-soft);
+}
+#tier-capture-area .char {
+  border-color: var(--tier-accent);
+}
+#tier-capture-area .char:hover {
+  box-shadow: 0 0 15px var(--tier-glow);
+}
+#tier-capture-area .char.selected {
+  outline-color: var(--tier-accent);
+  box-shadow: 0 0 0 3px var(--tier-accent-soft), 0 0 18px var(--tier-glow);
 }
 
 
@@ -481,10 +534,10 @@ body.pool-arrows-on .pool-viewport-arrows {
 }
 
 /* 캐릭터가 선택된 동안(body.char-selected-mode) 모든 드롭존 테두리를 강조해서
-   "탭하면 여기에 배치됩니다"를 유도 */
+   "탭하면 여기에 배치됩니다"를 유도. 꾸미기 액센트 색이 있으면 그걸 따른다. */
 body.char-selected-mode .characters {
-  border-color: #ffcc00 !important;
-  background: rgba(255, 204, 0, 0.06);
+  border-color: var(--tier-accent, #ffcc00) !important;
+  background: var(--tier-accent-soft, rgba(255, 204, 0, 0.06));
 }
 
 .mobile-maker-help {
@@ -706,4 +759,306 @@ body.char-selected-mode .characters {
 }
 [data-theme="dark"] .dropdown-item {
   background: var(--bg-subtle);
+}
+
+/* 꾸민 티어표는 사이트 다크 테마 보정색보다 유저가 고른 색/이펙트가 우선.
+   안쪽 .tier-list 는 항상 투명이라 프레임(#tier-capture-area) 배경이 그대로 비친다. */
+[data-theme="dark"] #tier-capture-area[data-decorated="1"] {
+  background: var(--tier-bg);
+  border-color: var(--tier-accent);
+}
+
+/* ======================================================================
+   티어표 꾸미기 — 배경 이펙트
+   html2canvas가 캡처할 수 있게 mix-blend / backdrop-filter / mask 는 쓰지 않고
+   linear/radial-gradient + box-shadow + 의사요소만 사용한다.
+   ====================================================================== */
+#tier-capture-area[data-effect]:not([data-effect="none"]) .tier-list {
+  background: transparent;
+}
+
+#tier-capture-area[data-effect="glow"] {
+  background:
+    radial-gradient(ellipse at 50% 0%, var(--tier-glow), transparent 58%),
+    var(--tier-bg);
+  box-shadow: inset 0 0 70px var(--tier-accent-soft), 0 0 22px var(--tier-glow);
+}
+
+#tier-capture-area[data-effect="aurora"] {
+  --tier-bg: #0b1220;
+  background:
+    linear-gradient(125deg, rgba(124, 240, 255, 0.22), transparent 42%),
+    linear-gradient(210deg, rgba(167, 139, 250, 0.2), transparent 46%),
+    linear-gradient(20deg, rgba(57, 255, 180, 0.12), transparent 40%),
+    #0b1220;
+  box-shadow: inset 0 0 80px rgba(124, 240, 255, 0.12), 0 0 18px var(--tier-glow);
+}
+#tier-capture-area[data-effect="aurora"]::before {
+  background: linear-gradient(100deg, transparent 20%, rgba(124, 240, 255, 0.14) 50%, transparent 80%);
+  animation: decorate-shimmer 7s linear infinite;
+}
+
+#tier-capture-area[data-effect="stars"] {
+  --tier-bg: #07070f;
+  background-color: #07070f;
+  background-image:
+    radial-gradient(1px 1px at 8% 18%, #fff, transparent),
+    radial-gradient(1px 1px at 22% 72%, #dbeafe, transparent),
+    radial-gradient(1.5px 1.5px at 38% 32%, #fff, transparent),
+    radial-gradient(1px 1px at 54% 12%, #c4b5fd, transparent),
+    radial-gradient(1px 1px at 68% 64%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 82% 28%, #fef9c3, transparent),
+    radial-gradient(1px 1px at 91% 81%, #fff, transparent),
+    radial-gradient(1px 1px at 14% 48%, #a5b4fc, transparent),
+    radial-gradient(1px 1px at 47% 88%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 73% 8%, #fff, transparent);
+  box-shadow: inset 0 0 90px rgba(80, 70, 160, 0.28), 0 0 18px var(--tier-glow);
+}
+
+#tier-capture-area[data-effect="ember"] {
+  --tier-bg: #140806;
+  background:
+    radial-gradient(ellipse at 50% 120%, rgba(255, 90, 20, 0.38), transparent 55%),
+    radial-gradient(ellipse at 20% 100%, rgba(255, 160, 40, 0.18), transparent 40%),
+    #140806;
+  box-shadow: inset 0 -50px 90px rgba(255, 70, 10, 0.22), 0 0 18px var(--tier-glow);
+}
+
+#tier-capture-area[data-effect="frost"] {
+  --tier-bg: #071018;
+  background:
+    radial-gradient(ellipse at 50% -10%, rgba(154, 216, 255, 0.28), transparent 55%),
+    radial-gradient(ellipse at 100% 80%, rgba(180, 230, 255, 0.1), transparent 40%),
+    #071018;
+  box-shadow: inset 0 0 70px rgba(154, 216, 255, 0.16), 0 0 18px var(--tier-glow);
+}
+
+#tier-capture-area[data-effect="neon"] {
+  --tier-bg: #050805;
+  background: #050805;
+  box-shadow:
+    0 0 8px var(--tier-accent),
+    0 0 22px var(--tier-glow),
+    inset 0 0 28px var(--tier-accent-soft);
+}
+
+#tier-capture-area[data-effect="crimson"] {
+  --tier-bg: #14060a;
+  background:
+    radial-gradient(ellipse at 50% 40%, rgba(255, 40, 70, 0.22), transparent 58%),
+    #14060a;
+  box-shadow: inset 0 0 80px rgba(180, 10, 40, 0.28), 0 0 18px var(--tier-glow);
+}
+
+#tier-capture-area[data-effect="void"] {
+  --tier-bg: #07040e;
+  background:
+    radial-gradient(circle at 50% 50%, #1a1028 0%, #07040e 68%);
+  box-shadow: inset 0 0 90px rgba(90, 40, 160, 0.3), 0 0 18px var(--tier-glow);
+}
+
+#tier-capture-area[data-effect="royal"] {
+  --tier-bg: #120e1c;
+  background: linear-gradient(180deg, #1c1530 0%, #120e1c 100%);
+  box-shadow: inset 0 0 70px rgba(212, 175, 55, 0.12), 0 0 16px var(--tier-glow);
+}
+#tier-capture-area[data-effect="royal"]::after {
+  border: 1px solid rgba(212, 175, 55, 0.4);
+}
+
+@keyframes decorate-shimmer {
+  from { transform: translateX(-18%); }
+  to { transform: translateX(18%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #tier-capture-area[data-effect="aurora"]::before {
+    animation: none;
+  }
+}
+
+/* ======================================================================
+   티어표 꾸미기 패널 · 버튼
+   ====================================================================== */
+.btn-decorate.is-open {
+  background: #ffcc00;
+  color: #111;
+}
+
+.decorate-panel {
+  width: 95%;
+  max-width: 2800px;
+  margin: 14px auto 0;
+  padding: 16px 18px 14px;
+  box-sizing: border-box;
+  text-align: left;
+  border: 1px solid rgba(255, 204, 0, 0.45);
+  border-radius: 12px;
+  background: #161616;
+  color: #f4f4f5;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.28);
+}
+
+.decorate-panel[hidden] {
+  display: none !important;
+}
+
+.decorate-panel-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 14px;
+  margin-bottom: 14px;
+}
+
+.decorate-panel-head strong {
+  color: #ffcc00;
+  font-size: 1.05rem;
+}
+
+.decorate-panel-sub {
+  color: #a1a1aa;
+  font-size: 0.85rem;
+}
+
+.decorate-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 10px;
+  margin-bottom: 12px;
+}
+
+.decorate-row-end {
+  margin-bottom: 0;
+  justify-content: flex-end;
+}
+
+.decorate-restore {
+  border-color: #ffcc00;
+  color: #ffcc00;
+}
+
+.decorate-label {
+  flex: 0 0 78px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #d4d4d8;
+}
+
+.decorate-seg {
+  display: inline-flex;
+  border: 1px solid #3f3f46;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.decorate-seg-btn,
+.decorate-mini,
+.decorate-preset,
+.decorate-effect {
+  padding: 7px 12px;
+  border-radius: 8px;
+  border: 1px solid #3f3f46;
+  background: #1f1f1f;
+  color: #e4e4e7;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.decorate-seg-btn {
+  border: 0;
+  border-radius: 0;
+}
+
+.decorate-seg-btn.is-on,
+.decorate-preset.is-on,
+.decorate-effect.is-on {
+  background: #ffcc00;
+  color: #111;
+  border-color: #eab308;
+}
+
+.decorate-mini:hover,
+.decorate-preset:hover,
+.decorate-effect:hover,
+.decorate-seg-btn:hover {
+  filter: brightness(1.12);
+}
+
+.decorate-presets,
+.decorate-effects,
+.decorate-swatches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  flex: 1 1 auto;
+}
+
+.decorate-swatch {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid #3f3f46;
+  cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.25);
+}
+
+.decorate-swatch.is-on {
+  border-color: #fff;
+  box-shadow: 0 0 0 2px #ffcc00;
+}
+
+.decorate-custom-color {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: #a1a1aa;
+}
+
+.decorate-custom-color input[type="color"] {
+  width: 36px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid #3f3f46;
+  border-radius: 6px;
+  background: transparent;
+  cursor: pointer;
+}
+
+[data-theme="dark"] .decorate-panel {
+  background: var(--bg-elevated);
+  border-color: rgba(255, 204, 0, 0.35);
+  box-shadow: 0 12px 32px var(--shadow-color);
+}
+[data-theme="dark"] .decorate-seg-btn,
+[data-theme="dark"] .decorate-mini,
+[data-theme="dark"] .decorate-preset,
+[data-theme="dark"] .decorate-effect {
+  background: var(--bg-subtle);
+  border-color: var(--border-color);
+  color: var(--text-primary);
+}
+[data-theme="dark"] .decorate-restore {
+  border-color: #ffcc00;
+  color: #ffcc00;
+}
+
+@media (max-width: 768px) {
+  .decorate-panel {
+    width: 100%;
+    padding: 14px 12px 12px;
+  }
+  .decorate-label {
+    flex: 0 0 100%;
+  }
+  .decorate-seg-btn,
+  .decorate-mini,
+  .decorate-preset,
+  .decorate-effect {
+    min-height: 40px;
+  }
 }

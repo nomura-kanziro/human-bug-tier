@@ -77,7 +77,11 @@
         <button id="next-btn">다음 티어 →</button>
       </div>
 
-      <div id="tier-list" class="tier-list"></div>
+      <!-- 제작 화면과 같은 #tier-capture-area 래퍼: 게시글에 저장된 테두리 색·배경 이펙트를
+           여기 data-effect / --tier-accent 로 입혀서 상세에서도 꾸민 티어표가 그대로 보이게 한다 -->
+      <div id="tier-capture-area">
+        <div id="tier-list" class="tier-list"></div>
+      </div>
     </div>
 
     <!-- 액션 버튼 모음. edit-btn/delete-btn은 기본 hidden이며 updatePostActions()가 작성자 본인일

@@ -9,6 +9,43 @@ let currentTierIndex = 0;
 // ─── 전역 상태 ───────────────────────────────────────────────
 let tierState = {};
 const STORAGE_KEY = 'customMakerTierState';
+// 티어표 꾸미기(테두리 색·배경 이펙트). 등급(0~8)마다 따로 저장해서 티어표마다 차별점을 둘 수 있다.
+const STYLE_STORAGE_KEY = 'customMakerTierStyle';
+const DEFAULT_TIER_STYLE = { borderColor: '#ffcc00', effect: 'none' };
+const TIER_STYLE_EFFECTS = {
+  none: { label: '없음', bg: '#111111' },
+  glow: { label: '글로우', bg: '#111111' },
+  aurora: { label: '오로라', bg: '#0b1220' },
+  stars: { label: '별빛', bg: '#07070f' },
+  ember: { label: '불씨', bg: '#140806' },
+  frost: { label: '서리', bg: '#071018' },
+  neon: { label: '네온', bg: '#050805' },
+  crimson: { label: '핏빛', bg: '#14060a' },
+  void: { label: '심연', bg: '#07040e' },
+  royal: { label: '로얄', bg: '#120e1c' },
+};
+const TIER_STYLE_PRESETS = {
+  default: { label: '기본 골드', borderColor: '#ffcc00', effect: 'none' },
+  divine: { label: '신계', borderColor: '#ffe566', effect: 'glow' },
+  royal: { label: '로얄', borderColor: '#d4af37', effect: 'royal' },
+  aurora: { label: '오로라', borderColor: '#7cf0ff', effect: 'aurora' },
+  frost: { label: '서리', borderColor: '#9ad8ff', effect: 'frost' },
+  ember: { label: '불꽃', borderColor: '#ff7a3d', effect: 'ember' },
+  neon: { label: '네온', borderColor: '#39ff14', effect: 'neon' },
+  crimson: { label: '핏빛', borderColor: '#ff3b5c', effect: 'crimson' },
+  void: { label: '심연', borderColor: '#a78bfa', effect: 'void' },
+  stars: { label: '별빛', borderColor: '#c4b5fd', effect: 'stars' },
+};
+const TIER_BORDER_SWATCHES = [
+  '#ffcc00', '#ffe566', '#ffffff', '#ff3b5c', '#ff7a3d',
+  '#39ff14', '#7cf0ff', '#9ad8ff', '#a78bfa', '#ff4dcd',
+];
+// 1~9등급을 한 번에 다르게 입힐 때 쓰는 순서 (신계→심연)
+const TIER_AUTO_PRESET_ORDER = [
+  'divine', 'royal', 'neon', 'aurora', 'frost', 'ember', 'stars', 'crimson', 'void',
+];
+let tierStyleByGrade = {};
+let decorateApplyScope = 'current'; // 'current' | 'all'
 
 // tierState 전체를 localStorage에 그대로 저장 (새로고침해도 배치가 안 날아가게)
 function saveToLocalStorage() {
@@ -95,6 +132,290 @@ function rematchTierStateToCatalog(state) {
       .filter(Boolean);
   });
   return next;
+}
+
+// ─── 티어표 꾸미기 (테두리 색 · 배경 이펙트) ─────────────────
+// 게시글/로컬에 저장되는 값은 { byGrade: { "0": { borderColor, effect }, ... } }.
+//  palettes/effect 이름은 화이트리스트만 허용해서, 예전 글이나 잘못된 값이 와도 기본 골드로 떨어지게 한다.
+function sanitizeHexColor(color) {
+  const raw = String(color || '').trim();
+  const short = raw.match(/^#([0-9a-fA-F]{3})$/);
+  if (short) {
+    return `#${short[1].split('').map((c) => c + c).join('').toLowerCase()}`;
+  }
+  const full = raw.match(/^#([0-9a-fA-F]{6})$/);
+  return full ? `#${full[1].toLowerCase()}` : DEFAULT_TIER_STYLE.borderColor;
+}
+
+function sanitizeEffectName(effect) {
+  const key = String(effect || '').trim();
+  return Object.prototype.hasOwnProperty.call(TIER_STYLE_EFFECTS, key) ? key : DEFAULT_TIER_STYLE.effect;
+}
+
+function hexToRgba(hex, alpha) {
+  const h = sanitizeHexColor(hex).slice(1);
+  const r = parseInt(h.slice(0, 2), 16);
+  const g = parseInt(h.slice(2, 4), 16);
+  const b = parseInt(h.slice(4, 6), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
+function normalizeStyleMap(raw) {
+  const out = {};
+  if (!raw || typeof raw !== 'object' || Array.isArray(raw)) return out;
+  const source = raw.byGrade && typeof raw.byGrade === 'object' ? raw.byGrade : raw;
+  Object.keys(source).forEach((key) => {
+    const n = Number(key);
+    if (!Number.isInteger(n) || n < 0 || n > 8) return;
+    const item = source[key];
+    if (!item || typeof item !== 'object') return;
+    out[n] = {
+      borderColor: sanitizeHexColor(item.borderColor),
+      effect: sanitizeEffectName(item.effect),
+    };
+  });
+  return out;
+}
+
+function getStyleForGrade(index) {
+  const i = index == null ? currentTierIndex : index;
+  const saved = tierStyleByGrade[i];
+  return {
+    borderColor: sanitizeHexColor(saved?.borderColor || DEFAULT_TIER_STYLE.borderColor),
+    effect: sanitizeEffectName(saved?.effect || DEFAULT_TIER_STYLE.effect),
+  };
+}
+
+function getCurrentAccent() {
+  return getStyleForGrade(currentTierIndex).borderColor;
+}
+
+function isDefaultStyle(style) {
+  return style.borderColor === DEFAULT_TIER_STYLE.borderColor && style.effect === DEFAULT_TIER_STYLE.effect;
+}
+
+function saveStyleToLocalStorage() {
+  try {
+    localStorage.setItem(STYLE_STORAGE_KEY, JSON.stringify({ byGrade: tierStyleByGrade }));
+  } catch (err) {
+    console.warn('티어표 꾸미기 저장 실패:', err);
+  }
+}
+
+function loadStyleFromLocalStorage() {
+  try {
+    const saved = localStorage.getItem(STYLE_STORAGE_KEY);
+    if (!saved) return;
+    tierStyleByGrade = normalizeStyleMap(JSON.parse(saved));
+  } catch (err) {
+    console.warn('티어표 꾸미기 복원 실패:', err);
+    tierStyleByGrade = {};
+  }
+}
+
+function buildStylePayload() {
+  const byGrade = {};
+  Object.keys(tierStyleByGrade).forEach((key) => {
+    const style = getStyleForGrade(Number(key));
+    if (!isDefaultStyle(style)) byGrade[key] = style;
+  });
+  return { byGrade };
+}
+
+function applyTierStyle(index) {
+  const area = document.getElementById('tier-capture-area');
+  if (!area) return;
+  const style = getStyleForGrade(index);
+  const accent = style.borderColor;
+  const effect = style.effect;
+  const bg = TIER_STYLE_EFFECTS[effect]?.bg || '#111111';
+  area.style.setProperty('--tier-accent', accent);
+  area.style.setProperty('--tier-accent-soft', hexToRgba(accent, 0.3));
+  area.style.setProperty('--tier-accent-strong', hexToRgba(accent, 0.7));
+  area.style.setProperty('--tier-glow', hexToRgba(accent, 0.45));
+  area.style.setProperty('--tier-bg', bg);
+  area.dataset.effect = effect;
+  area.dataset.decorated = isDefaultStyle(style) ? '0' : '1';
+}
+
+function setStyleForTargets(partial) {
+  const next = {
+    ...getStyleForGrade(currentTierIndex),
+    ...partial,
+  };
+  next.borderColor = sanitizeHexColor(next.borderColor);
+  next.effect = sanitizeEffectName(next.effect);
+
+  const applyToAll = decorateApplyScope === 'all';
+  if (applyToAll) {
+    for (let i = 0; i < 9; i += 1) {
+      if (isDefaultStyle(next)) delete tierStyleByGrade[i];
+      else tierStyleByGrade[i] = { ...next };
+    }
+  } else if (isDefaultStyle(next)) {
+    delete tierStyleByGrade[currentTierIndex];
+  } else {
+    tierStyleByGrade[currentTierIndex] = next;
+  }
+
+  saveStyleToLocalStorage();
+  applyTierStyle();
+  syncDecoratePanel();
+}
+
+function applyAutoDistinctThemes() {
+  TIER_AUTO_PRESET_ORDER.forEach((presetKey, i) => {
+    const preset = TIER_STYLE_PRESETS[presetKey];
+    if (!preset) return;
+    tierStyleByGrade[i] = {
+      borderColor: sanitizeHexColor(preset.borderColor),
+      effect: sanitizeEffectName(preset.effect),
+    };
+  });
+  saveStyleToLocalStorage();
+  applyTierStyle();
+  syncDecoratePanel();
+}
+
+function resetCurrentGradeStyle() {
+  if (decorateApplyScope === 'all') {
+    tierStyleByGrade = {};
+  } else {
+    delete tierStyleByGrade[currentTierIndex];
+  }
+  saveStyleToLocalStorage();
+  applyTierStyle();
+  syncDecoratePanel();
+}
+
+// 1~9등급 꾸미기를 전부 지우고, 처음 골드 테두리·이펙트 없음 상태로 되돌린다.
+function restoreOriginalTierStyle() {
+  tierStyleByGrade = {};
+  saveStyleToLocalStorage();
+  applyTierStyle();
+  syncDecoratePanel();
+}
+
+function matchingPresetKey(style) {
+  return Object.keys(TIER_STYLE_PRESETS).find((key) => {
+    const preset = TIER_STYLE_PRESETS[key];
+    return preset.borderColor === style.borderColor && preset.effect === style.effect;
+  }) || '';
+}
+
+function syncDecoratePanel() {
+  const panel = document.getElementById('decorate-panel');
+  if (!panel) return;
+  const style = getStyleForGrade(currentTierIndex);
+
+  panel.querySelectorAll('[data-scope]').forEach((btn) => {
+    btn.classList.toggle('is-on', btn.getAttribute('data-scope') === decorateApplyScope);
+  });
+  panel.querySelectorAll('[data-preset]').forEach((btn) => {
+    btn.classList.toggle('is-on', btn.getAttribute('data-preset') === matchingPresetKey(style));
+  });
+  panel.querySelectorAll('[data-swatch]').forEach((btn) => {
+    btn.classList.toggle('is-on', sanitizeHexColor(btn.getAttribute('data-swatch')) === style.borderColor);
+  });
+  panel.querySelectorAll('[data-effect]').forEach((btn) => {
+    btn.classList.toggle('is-on', btn.getAttribute('data-effect') === style.effect);
+  });
+  const colorInput = document.getElementById('decorate-color-input');
+  if (colorInput) colorInput.value = style.borderColor;
+  const resetBtn = document.getElementById('decorate-reset-btn');
+  if (resetBtn) {
+    resetBtn.textContent = decorateApplyScope === 'all' ? '모든 등급 기본값' : '이 등급만 기본값';
+  }
+}
+
+function fillDecorateChoices() {
+  const presets = document.getElementById('decorate-presets');
+  const swatches = document.getElementById('decorate-swatches');
+  const effects = document.getElementById('decorate-effects');
+  if (presets && !presets.childElementCount) {
+    Object.entries(TIER_STYLE_PRESETS).forEach(([key, preset]) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'decorate-preset';
+      btn.dataset.preset = key;
+      btn.textContent = preset.label;
+      presets.appendChild(btn);
+    });
+  }
+  if (swatches && !swatches.childElementCount) {
+    TIER_BORDER_SWATCHES.forEach((color) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'decorate-swatch';
+      btn.dataset.swatch = color;
+      btn.style.background = color;
+      btn.title = color;
+      btn.setAttribute('aria-label', `테두리 색 ${color}`);
+      swatches.appendChild(btn);
+    });
+  }
+  if (effects && !effects.childElementCount) {
+    Object.entries(TIER_STYLE_EFFECTS).forEach(([key, meta]) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'decorate-effect';
+      btn.dataset.effect = key;
+      btn.textContent = meta.label;
+      effects.appendChild(btn);
+    });
+  }
+}
+
+function initDecoratePanel() {
+  const panel = document.getElementById('decorate-panel');
+  const toggle = document.getElementById('decorate-btn');
+  if (!panel || !toggle || panel._decorateBound) return;
+  panel._decorateBound = true;
+  fillDecorateChoices();
+
+  toggle.addEventListener('click', (e) => {
+    e.stopImmediatePropagation();
+    const willOpen = panel.hidden;
+    panel.hidden = !willOpen;
+    toggle.classList.toggle('is-open', willOpen);
+    toggle.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+    if (willOpen) syncDecoratePanel();
+  });
+
+  panel.addEventListener('click', (e) => {
+    const scopeBtn = e.target.closest('[data-scope]');
+    if (scopeBtn) {
+      decorateApplyScope = scopeBtn.getAttribute('data-scope') === 'all' ? 'all' : 'current';
+      syncDecoratePanel();
+      return;
+    }
+    const presetBtn = e.target.closest('[data-preset]');
+    if (presetBtn) {
+      const preset = TIER_STYLE_PRESETS[presetBtn.getAttribute('data-preset')];
+      if (preset) setStyleForTargets({ borderColor: preset.borderColor, effect: preset.effect });
+      return;
+    }
+    const swatchBtn = e.target.closest('[data-swatch]');
+    if (swatchBtn) {
+      setStyleForTargets({ borderColor: swatchBtn.getAttribute('data-swatch') });
+      return;
+    }
+    const effectBtn = e.target.closest('[data-effect]');
+    if (effectBtn) {
+      setStyleForTargets({ effect: effectBtn.getAttribute('data-effect') });
+    }
+  });
+
+  const colorInput = document.getElementById('decorate-color-input');
+  if (colorInput) {
+    colorInput.addEventListener('input', () => {
+      setStyleForTargets({ borderColor: colorInput.value });
+    });
+  }
+  document.getElementById('decorate-auto-btn')?.addEventListener('click', applyAutoDistinctThemes);
+  document.getElementById('decorate-reset-btn')?.addEventListener('click', resetCurrentGradeStyle);
+  document.getElementById('decorate-restore-btn')?.addEventListener('click', restoreOriginalTierStyle);
+  syncDecoratePanel();
 }
 
 // 캐릭터 이름으로부터 항상 같은 id를 만들어내는 함수 (이름 → "char-이름" 슬러그).
@@ -259,6 +580,7 @@ function renderTier() {
   container.innerHTML = html;
 
   loadTierStateToDOM();  // ✅ 비우고 복원
+  applyTierStyle();      // 등급마다 다른 테두리/이펙트가 있으면 이 테이블에 입힘
   // 이벤트는 위임 방식이므로 re-register 불필요 (단, 풀 교체 시엔 필요)
 }
 
@@ -331,7 +653,7 @@ function enableDragAndDrop() {
       const zone = e.target.closest('.characters');
       if (!zone) return;
 
-      zone.style.borderColor = '#ffcc00';
+      zone.style.borderColor = getCurrentAccent();
 
       const dragging = document.querySelector('.char.dragging');
       if (!dragging) return;
@@ -348,14 +670,14 @@ function enableDragAndDrop() {
     tierList.addEventListener('dragleave', (e) => {
       const zone = e.target.closest('.characters');
       if (zone && !zone.contains(e.relatedTarget)) {
-        zone.style.borderColor = 'rgba(255, 204, 0, 0.3)';
+        zone.style.borderColor = '';
       }
     });
 
     tierList.addEventListener('drop', (e) => {
       e.preventDefault();
       const zone = e.target.closest('.characters');
-      if (zone) zone.style.borderColor = 'rgba(255, 204, 0, 0.3)';
+      if (zone) zone.style.borderColor = '';
       saveCurrentTierState();
       renderCharacterPool(); // 풀에서 이 카드 제거
     });
@@ -444,7 +766,7 @@ function enableTapToPlace() {
 
   document.addEventListener('click', (e) => {
     // 다운로드 메뉴 등 버튼은 무시
-    if (e.target.closest('button, a, .btn, .dropdown-menu, .dropdown-item')) return;
+    if (e.target.closest('button, a, .btn, .dropdown-menu, .dropdown-item, .decorate-panel, input, label')) return;
 
     const char = e.target.closest('.char');
     const zone = e.target.closest('.characters.drop-zone, .characters');
@@ -544,12 +866,14 @@ document.getElementById('prev-btn').addEventListener('click', () => {
   saveCurrentTierState();
   currentTierIndex = (currentTierIndex - 1 + tierData.length) % tierData.length;
   renderTier();
+  syncDecoratePanel();
 });
 
 document.getElementById('next-btn').addEventListener('click', () => {
   saveCurrentTierState();
   currentTierIndex = (currentTierIndex + 1) % tierData.length;
   renderTier();
+  syncDecoratePanel();
 });
 
 // ─── 초기화 ──────────────────────────────────────────────────
@@ -651,11 +975,13 @@ async function downloadAllTiersAsPNG() {
     const titleText = document.getElementById('tier-title').textContent;
     const tempTitle = document.createElement('h2');
     tempTitle.textContent = titleText;
-    tempTitle.style.cssText = 'color:#ffcc00; text-align:center; margin:0 0 10px; font-size:1.1rem; padding:10px 0;';
+    const accent = getCurrentAccent();
+    tempTitle.style.cssText = `color:${accent}; text-align:center; margin:0 0 10px; font-size:1.1rem; padding:10px 0;`;
     tierListElement.insertBefore(tempTitle, tierListElement.firstChild);
 
     try {
-      const canvas = await html2canvas(tierListElement, { scale: 2, backgroundColor: '#111111', logging: false });
+      const captureBg = getComputedStyle(tierListElement).getPropertyValue('--tier-bg').trim() || '#111111';
+      const canvas = await html2canvas(tierListElement, { scale: 2, backgroundColor: captureBg, logging: false });
       const link = document.createElement('a');
       link.download = `tier-${i + 1}.png`;
       link.href = canvas.toDataURL('image/png');
@@ -696,10 +1022,12 @@ async function downloadAllTiersAsPDF() {
       const titleText = document.getElementById('tier-title').textContent;
       const tempTitle = document.createElement('h2');
       tempTitle.textContent = titleText;
-      tempTitle.style.cssText = 'color:#ffcc00; text-align:center; margin:0 0 10px; font-size:1.1rem; padding:10px 0;';
+      const accent = getCurrentAccent();
+      tempTitle.style.cssText = `color:${accent}; text-align:center; margin:0 0 10px; font-size:1.1rem; padding:10px 0;`;
       tierListElement.insertBefore(tempTitle, tierListElement.firstChild);
 
-      const canvas = await html2canvas(tierListElement, { scale: 2, backgroundColor: '#111111', logging: false });
+      const captureBg = getComputedStyle(tierListElement).getPropertyValue('--tier-bg').trim() || '#111111';
+      const canvas = await html2canvas(tierListElement, { scale: 2, backgroundColor: captureBg, logging: false });
       tierListElement.removeChild(tempTitle);
 
       // 캡처한 캔버스를 A4 폭(210mm)에 맞춰 비율 유지로 축소, 페이지별로 이어붙임
@@ -757,6 +1085,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   } else {
     loadFromLocalStorage();
+    loadStyleFromLocalStorage();
   }
 
   renderTier();
@@ -764,6 +1093,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   enableDragAndDrop();   // pool / tierList에 위임 리스너 등록
   enableTapToPlace();    // 모바일: 탭 선택 → 티어 칸 탭 배치
   initPoolMaxWindow();
+  initDecoratePanel();
   updateUploadButtonState();
   updateEditModeChrome();
   console.log('✅ custom-maker: 초기 로드 완료', editingPostId ? `(수정 ${editingPostId})` : '(신규)');
@@ -1145,6 +1475,10 @@ async function enterEditMode(postId) {
     tierState = {};
   }
 
+  // 게시글에 저장된 꾸미기(없으면 기본 골드). 예전 글은 style 필드가 없어도 그대로 열린다.
+  tierStyleByGrade = normalizeStyleMap(post.tierData?.style);
+  saveStyleToLocalStorage();
+
   const placedCount = Object.values(tierState).reduce(
     (n, arr) => n + (Array.isArray(arr) ? arr.length : 0),
     0
@@ -1210,6 +1544,7 @@ function normalizeTierStateForUpload(state) {
 // POST(신규 업로드)/PUT(수정) 공용으로 서버에 보낼 요청 본문을 조립한다.
 // tierData 안에 tierState(배치 결과)와 tierDefinitions(등급 정의 스냅샷)를 함께 저장해두면,
 // 나중에 tierData 구조 자체가 바뀌어도 이 게시글은 작성 당시 정의 그대로 재현할 수 있다.
+// style.byGrade 는 티어표 꾸미기(테두리 색·배경 이펙트). 기본값만 쓰면 빈 객체로 남겨 예전 글과 호환.
 function buildUploadPayload(title, description, user, thumbnail) {
   const normalizedState = normalizeTierStateForUpload(tierState);
   const thumb = thumbnail || getThumbnailFromState();
@@ -1220,6 +1555,7 @@ function buildUploadPayload(title, description, user, thumbnail) {
     tierData: {
       tierState: normalizedState,
       tierDefinitions: tierData.map(t => ({ id: t.id, title: t.title, subTiers: t.subTiers })),
+      style: buildStylePayload(),
     },
     author: user.nickname,
     authorEmail: user.email || '',

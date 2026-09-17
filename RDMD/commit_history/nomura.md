@@ -7,8 +7,8 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 270 |
-| **기간** | 2026-03-20 ~ 2026-09-07 |
+| **커밋 수** | 271 |
+| **기간** | 2026-03-20 ~ 2026-09-17 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
 > 폴더 안내: [README.md](./README.md)  ·  상세 기능 일지: [../frontend/](../frontend/README.md) · [../backend/](../backend/README.md)
@@ -299,6 +299,7 @@
 | 268 | 2026-09-10 | [`201556c`](#201556c) | chore(common): 사이트 버전을 0.4.6으로 변경 |
 | 269 | 2026-09-11 | [`8ef92cf`](#8ef92cf) | feat(tier-class): 5티어에 하야미 타이키 추가 |
 | 270 | 2026-09-11 | [`39218a6`](#39218a6) | chore(common): 사이트 버전을 0.4.7로 변경 |
+| 271 | 2026-09-17 | [`pending`](#pending) | feat(custom-maker): 티어표 꾸미기와 원래 상태 복원 추가 |
 
 ---
 
@@ -5242,5 +5243,23 @@
 - **요약**: 푸터의 사이트 버전 표기를 0.4.6 → 0.4.7 로 수동 갱신했다.
 - **주요 파일**: `root-render/footer.html`
 - **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending"></a>
+
+### 271. 2026-09-17 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(custom-maker): 티어표 꾸미기와 원래 상태 복원 추가
+- **git**: `git show pending`
+- **범위**: frontend / render-only / custom-maker / docs
+- **요약**: 커스텀 티어 제작 화면에 티어표 꾸미기를 추가했다. 테두리 색·배경 이펙트를 등급별로 고를 수 있고, 원래 상태로 돌려놓기로 처음 골드 디자인을 복원한다. PNG/PDF와 게시글 상세·수정에도 같은 꾸밈이 남는다.
+- **주요 파일**: `root-render/custom-maker/custom-maker.html`, `custom-maker.js`, `custom-maker.css`, `post_edit.html`, `custom-maker_post/post_detail.html`, `post_detail.js`
+- **관련 RDMD**: [11-tier-decorate-record.md](../frontend/03-custom-maker/11-tier-decorate-record.md)
 
 [▲ 목차로](#목차)

@@ -64,8 +64,55 @@
       <div id="tier-list" class="tier-list"></div>
     </div>
 
+    <!-- 티어표 꾸미기 패널: 액션바의 #decorate-btn으로 열고 닫음.
+         #tier-capture-area 밖이라 PNG/PDF 캡처에는 안 찍힌다. 선택은 바로 위 테이블에 미리보기된다. -->
+    <div id="decorate-panel" class="decorate-panel" hidden>
+      <div class="decorate-panel-head">
+        <strong>티어표 꾸미기</strong>
+        <span class="decorate-panel-sub">테두리 색·배경 이펙트를 고르면 위 테이블에 바로 반영됩니다.</span>
+      </div>
+
+      <div class="decorate-row">
+        <span class="decorate-label">적용 범위</span>
+        <div class="decorate-seg" role="group" aria-label="적용 범위">
+          <button type="button" class="decorate-seg-btn is-on" data-scope="current">이 등급만</button>
+          <button type="button" class="decorate-seg-btn" data-scope="all">모든 등급</button>
+        </div>
+        <button type="button" id="decorate-auto-btn" class="decorate-mini">등급마다 다른 테마</button>
+      </div>
+
+      <div class="decorate-row">
+        <span class="decorate-label">빠른 테마</span>
+        <div class="decorate-presets" id="decorate-presets"></div>
+      </div>
+
+      <div class="decorate-row">
+        <span class="decorate-label">테두리 색</span>
+        <div class="decorate-swatches" id="decorate-swatches"></div>
+        <label class="decorate-custom-color">직접 선택
+          <input type="color" id="decorate-color-input" value="#ffcc00" aria-label="테두리 색 직접 선택">
+        </label>
+      </div>
+
+      <div class="decorate-row">
+        <span class="decorate-label">배경 이펙트</span>
+        <div class="decorate-effects" id="decorate-effects"></div>
+      </div>
+
+      <div class="decorate-row decorate-row-end">
+        <button type="button" id="decorate-reset-btn" class="decorate-mini">이 등급만 기본값</button>
+        <button type="button" id="decorate-restore-btn" class="decorate-mini decorate-restore">원래 상태로 돌려놓기</button>
+      </div>
+    </div>
+
     <!-- 설정 버튼들 -->
     <div class="action-bar">
+
+      <!-- 꾸미기 버튼: 위 패널을 토글. 테이블 바로 아래 액션바 맨 앞이라 미리보기가 보이면서 고를 수 있다 -->
+      <button id="decorate-btn" class="btn btn-decorate" type="button" aria-expanded="false" aria-controls="decorate-panel">
+        <span class="btn-text">꾸미기</span>
+        <span class="btn-icon">✨</span>
+      </button>
 
       <!-- 초기화 버튼: 확인창 후 tierState와 localStorage를 비우고 처음부터 다시 그림 -->
       <button id="reset-btn" class="btn btn-reset">

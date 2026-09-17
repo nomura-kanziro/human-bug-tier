@@ -26,8 +26,9 @@ custom-maker/
 | 모바일 탭 배치 | 캐릭터 탭 선택 → 티어 칸 탭으로 배치 / 풀 탭으로 되돌리기 |
 | 티어 단계 | 1~9등급 보드 |
 | 상태 | `tierState` 객체로 배치 관리 |
-| 초기화 | 보드 비우기 |
-| 다운로드 | **PNG** (html2canvas), **PDF** (jsPDF) |
+| 꾸미기 | 테이블 아래 **꾸미기** 버튼. 테두리 색·배경 이펙트, 이 등급만/모든 등급, 등급마다 다른 테마, **원래 상태로 돌려놓기**. `tierData.style.byGrade`로 저장 |
+| 초기화 | 보드 비우기 (꾸미기 설정은 유지) |
+| 다운로드 | **PNG** (html2canvas), **PDF** (jsPDF) — 꾸민 테두리/이펙트 포함 |
 | 풀 화살표 | 캐릭터 풀이 뷰포트에 들어오면 ▲(티어표) · ▼(풀 맨 아래). 캡처 영역 밖 |
 
 로그인 없이도 제작·다운로드 가능합니다.  
@@ -105,6 +106,7 @@ PUT  /api/tierlists/:id      → 본인 글 수정 (PATCH 동일)
 - [ ] 로그인 없이 댓글 시도 시 UX  
 - [ ] 본인 글만 수정 버튼·PUT 권한  
 - [ ] 모바일 탭 배치 / 데스크톱 DnD  
+- [ ] 꾸미기(테두리·이펙트)가 제작·PNG·상세·수정에 같이 남는지  
 - [ ] 관리자 신고 삭제 후 목록 갱신  
 - [ ] API Base (`getApiBase`) 로컬/Render 일치  
 
@@ -113,3 +115,4 @@ PUT  /api/tierlists/:id      → 본인 글 수정 (PATCH 동일)
 - information15~20, 26  
 - backend_10, 15~20, 26  
 - [07-post-edit-and-mobile-tap-record.md](../frontend/03-custom-maker/07-post-edit-and-mobile-tap-record.md)
+- [11-tier-decorate-record.md](../frontend/03-custom-maker/11-tier-decorate-record.md)
