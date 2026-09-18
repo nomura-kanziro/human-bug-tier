@@ -29,6 +29,7 @@ const MENUS = [
     label: '행운 뽑기',
     items: [
       { to: '/luck-draw#daily', label: '• 오늘의 행운 티어' },
+      { to: '/luck-draw#poker', label: '• 행운 티어 포커' },
       { soon: true, label: '• 랜덤 뽑기 (준비 중)' },
     ],
   },

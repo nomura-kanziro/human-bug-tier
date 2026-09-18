@@ -8,6 +8,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import LuckPokerPanel from '../components/LuckPokerPanel';
 import { apiRequest, isStaticPreview } from '../lib/api';
 import { tierImageUrl } from '../lib/paths';
 import '../styles/luck-draw.css';
@@ -47,7 +48,7 @@ export default function LuckDraw() {
   const { isLoggedIn } = useAuth();
   const isStatic = isStaticPreview();
 
-  const tab = hash === '#random' ? 'random' : 'daily';
+  const tab = hash === '#random' ? 'random' : (hash === '#poker' ? 'poker' : 'daily');
   const [config, setConfig] = useState(null);          // { weights, pointsTable, ... }
   const [status, setStatus] = useState(null);          // 회원: 서버가 준 오늘 상태
   const [history, setHistory] = useState(null);
@@ -213,8 +214,19 @@ export default function LuckDraw() {
         >
           오늘의 행운 티어
         </button>
+        <button
+          type="button"
+          className={`luck-tab${tab === 'poker' ? ' active' : ''}`}
+          onClick={() => navigate('/luck-draw#poker', { replace: true })}
+        >
+          행운 티어 포커
+        </button>
         <button type="button" className="luck-tab" disabled title="준비 중">랜덤 뽑기 (준비 중)</button>
       </div>
+
+      <section className={`luck-tab-panel${tab === 'poker' ? ' active' : ''}`}>
+        <LuckPokerPanel isLoggedIn={isLoggedIn} />
+      </section>
 
       <section className={`luck-tab-panel${tab === 'daily' ? ' active' : ''}`}>
         <h1>오늘의 행운 티어</h1>

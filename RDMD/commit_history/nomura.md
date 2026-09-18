@@ -7,8 +7,8 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 282 |
-| **기간** | 2026-03-20 ~ 2026-09-18 |
+| **커밋 수** | 283 |
+| **기간** | 2026-03-20 ~ 2026-09-19 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
 > 폴더 안내: [README.md](./README.md)  ·  상세 기능 일지: [../frontend/](../frontend/README.md) · [../backend/](../backend/README.md)
@@ -311,6 +311,7 @@
 | 280 | 2026-09-18 | [`d65beef`](#d65beef) | feat(react): 신규 페이지 라우트 연결 |
 | 281 | 2026-09-18 | [`6baf912`](#6baf912) | docs(react): 바닐라 기능 100% 반영 완료 문서·스킬팩 갱신 |
 | 282 | 2026-09-18 | [`5a9b388`](#5a9b388) | fix(react): 홈 퀵카드 hover 아이콘 교체가 React 라우트에서 안 되던 문제 수정 |
+| 283 | 2026-09-19 | [`(pending)`](#pending-283) | feat(luck-draw): 행운 티어 포커 배팅 게임 추가 |
 
 ---
 
@@ -5468,6 +5469,24 @@
 - **범위**: frontend (root-cloudflare)
 - **요약**: 바닐라 `common.css`의 홈 퀵카드 hover 아이콘 교체 효과(`.quick-card:has(.sub-grid a[href$="tier1.html"]:hover)` 등)가 `a[href$="...html"]` 선택자를 쓰는데, react-router `<Link>`가 만드는 실제 href(`/tier/1`, `/custom-maker`, `/board`, `/luck-draw#daily`)는 `.html`로 끝나지 않아 하나도 매칭되지 않았다(hover해도 기본 로고만 보이고 전용 아이콘은 안 나타남). `react-extra.css`에 React 경로 기준 동일 규칙을 다시 걸어 해결했다.
 - **주요 파일**: `root-cloudflare/src/styles/react-extra.css`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-283"></a>
+
+### 283. 2026-09-19 — `(pending)`
+
+- **hash (short)**: _(다음 docs 커밋에서 기입)_
+- **hash (full)**: _(다음 docs 커밋에서 기입)_
+- **author**: nomura
+- **message**: feat(luck-draw): 행운 티어 포커 배팅 게임 추가
+- **git**: _(pending)_
+- **범위**: backend / frontend (root-cloudflare) / luck-draw
+- **요약**: "오늘의 행운 티어" 뽑기로 모은 `LuckProfile.points`를 걸고 하는 포커식 배팅 게임을 추가했다. 서버(`luckPokerController.js`)가 카드(티어 1~9 × 무늬 5종) 추첨·족보 판정(탑~파이브 플러시 16종)·배수 정산을 전담하고, 프론트(`LuckPokerPanel.jsx`)는 배팅 입력과 결과 카드 표시만 담당한다. `LuckDraw.jsx`에 `#poker` 탭을 추가하고 헤더 드롭다운에 링크를 연결했다.
+- **주요 파일**: `backend/controllers/luckPokerController.js`, `backend/routes/luckDrawRoutes.js`, `root-cloudflare/src/components/LuckPokerPanel.jsx`, `root-cloudflare/src/pages/LuckDraw.jsx`, `root-cloudflare/src/styles/luck-poker.css`, `root-cloudflare/src/components/Header.jsx`
 - **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)

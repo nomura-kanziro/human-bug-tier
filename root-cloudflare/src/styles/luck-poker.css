@@ -1,0 +1,212 @@
+/* 행운 티어 포커 전용 스타일 (React 전용 파일 — sync-from-render.mjs 가 덮어쓰지 않는다).
+   레이아웃 뼈대(.luck-draw-page, .luck-tab-panel, .luck-draw-btn, .luck-probability-table)는
+   luck-draw.css 를 그대로 재사용하고, 여기서는 카드·베팅 UI만 추가한다. */
+
+/* ====== 배팅 영역 ====== */
+.poker-betting {
+  margin-bottom: 24px;
+}
+
+.poker-points {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.poker-points strong {
+  color: #f59e0b;
+  font-size: 16px;
+}
+
+.poker-bet-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 14px;
+}
+
+.poker-bet-row label {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.poker-bet-row input {
+  width: 96px;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.poker-bet-unit {
+  font-size: 14px;
+  color: #888;
+  margin-right: 6px;
+}
+
+.poker-bet-chip {
+  padding: 6px 12px;
+  border: 1px solid #f59e0b;
+  border-radius: 999px;
+  background: #fff;
+  color: #b45309;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.poker-bet-chip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ====== 테이블(딜러 / 내 패) ====== */
+.poker-table {
+  margin: 24px 0;
+  padding: 24px 16px;
+  border-radius: 16px;
+  background: #0f2a1d;
+  text-align: center;
+}
+
+.poker-side-title {
+  color: #a7f3d0;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.poker-hand {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.poker-hand-label {
+  margin: 10px 0 0;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+/* 카드 한 장 — 티어 숫자(1~9) + 무늬. 무늬 색은 서버 config 의 color 값으로 결정된다. */
+.poker-card {
+  width: 56px;
+  height: 78px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid #d1d5db;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+}
+
+.poker-card-tier {
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.poker-card-suit {
+  font-size: 18px;
+  line-height: 1;
+}
+
+.poker-card-mark {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.poker-card-red { color: #dc2626; }
+.poker-card-black { color: #111827; }
+.poker-card-green { color: #059669; }
+
+/* 딜링 중에는 뒷면만 보여준다. */
+.poker-card-back {
+  background: repeating-linear-gradient(45deg, #1e40af, #1e40af 6px, #1d4ed8 6px, #1d4ed8 12px);
+  border-color: #1e3a8a;
+}
+
+/* ====== 승패 표시 ====== */
+.poker-verdict {
+  margin: 18px 0;
+  font-size: 20px;
+  font-weight: 800;
+  color: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.poker-verdict-win { color: #34d399; }
+.poker-verdict-lose { color: #f87171; }
+.poker-verdict-push { color: #fbbf24; }
+
+.poker-delta {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.18);
+  color: #34d399;
+  font-size: 14px;
+}
+
+.poker-delta-minus {
+  background: rgba(239, 68, 68, 0.18);
+  color: #f87171;
+}
+
+/* ====== 족보표 ====== */
+.poker-hand-desc {
+  color: #888;
+  font-size: 13px;
+}
+
+/* 이번 판에 내 패가 완성한 족보 줄만 강조. */
+.poker-hand-hit {
+  background: #fef3c7;
+  font-weight: 700;
+}
+
+.poker-suit-note {
+  margin-top: 16px;
+  font-size: 13px;
+  color: #888;
+}
+
+.poker-suit-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: 8px;
+  font-weight: 700;
+}
+
+[data-theme="dark"] .poker-points,
+[data-theme="dark"] .poker-hand-desc,
+[data-theme="dark"] .poker-suit-note {
+  color: #9ca3af;
+}
+
+[data-theme="dark"] .poker-bet-row input {
+  background: #1f2937;
+  border-color: #374151;
+  color: #f3f4f6;
+}
+
+[data-theme="dark"] .poker-bet-chip {
+  background: #1f2937;
+  color: #fbbf24;
+}
+
+[data-theme="dark"] .poker-hand-hit {
+  background: #422006;
+}

@@ -13,6 +13,7 @@
 const express = require('express');
 const router = express.Router();
 const luckDrawController = require('../controllers/luckDrawController');
+const luckPokerController = require('../controllers/luckPokerController');
 const { requireAuth, optionalAuth } = require('../middleware/auth');
 
 // 공개 — 로그인 시 todayDrawn 포함
@@ -26,5 +27,10 @@ router.post('/daily', optionalAuth, luckDrawController.drawDailyTier);
 router.get('/today', requireAuth, luckDrawController.getToday);     // 오늘 남은 횟수/쿨다운/마지막 결과 조회
 router.get('/history', requireAuth, luckDrawController.getHistory); // 뽑기 이력 조회 (최근 5건만 보관, 초과분 자동 삭제)
 router.get('/stats', requireAuth, luckDrawController.getStats);     // 마이페이지용 누적 통계(총 횟수/티어별 카운트/포인트)
+
+// ====== 행운 티어 포커 (뽑기로 모은 포인트를 거는 배팅 게임) ======
+// 배팅에 쓸 포인트가 계정에 묶여 있으므로 플레이는 로그인 전용이다.
+router.get('/poker/config', optionalAuth, luckPokerController.getPokerConfig);
+router.post('/poker/play', requireAuth, luckPokerController.playPoker);
 
 module.exports = router;
