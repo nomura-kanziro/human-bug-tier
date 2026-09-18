@@ -26,6 +26,14 @@ function readProfileImage() {
   return localStorage.getItem('profileImage') || LOGO_URL;
 }
 
+// 서버가 오래 켜져 있다가 다운되거나 재시작될 가능성을 고려해, 토큰 자체의 서버 측 만료
+// (유저 7일/관리자 24시간)와 별개로 클라이언트에서 1시간이 지나면 먼저 로그아웃시킨다.
+// loginAt은 Login.jsx/AdminLogin.jsx가 로그인 성공 시 기록하며, 바닐라 common.js와 같은 키를 쓴다.
+const SESSION_TIMEOUT_MS = 60 * 60 * 1000; // 1시간
+const SESSION_CHECK_INTERVAL_MS = 60 * 1000; // 1분마다 확인
+
+const SESSION_KEYS = ['user', 'authToken', 'adminAuthToken', 'isAdmin', 'adminName', 'adminIp', 'profileImage', 'loginAt'];
+
 export function AuthProvider({ children }) {
   const [identity, setIdentity] = useState(readIdentity);
   const [profileImage, setProfileImage] = useState(readProfileImage);
@@ -41,11 +49,27 @@ export function AuthProvider({ children }) {
     return () => window.removeEventListener('storage', refresh);
   }, [refresh]);
 
+  // 로그인 1시간이 지나면 자동 로그아웃 — 마운트 직후 1회 + 1분마다 확인
+  useEffect(() => {
+    const checkTimeout = () => {
+      const loginAt = Number(localStorage.getItem('loginAt') || 0);
+      if (!loginAt) return;
+      const isLoggedIn = Boolean(localStorage.getItem('authToken')) || localStorage.getItem('isAdmin') === 'true';
+      if (!isLoggedIn || Date.now() - loginAt < SESSION_TIMEOUT_MS) return;
+
+      SESSION_KEYS.forEach((k) => localStorage.removeItem(k));
+      refresh();
+      window.alert('보안을 위해 로그인 후 1시간이 지나 자동으로 로그아웃되었습니다. 다시 로그인해주세요.');
+    };
+    checkTimeout();
+    const timer = setInterval(checkTimeout, SESSION_CHECK_INTERVAL_MS);
+    return () => clearInterval(timer);
+  }, [refresh]);
+
   // 로그아웃 — 유저/관리자 키를 전부 지운다(드롭다운 로그아웃 버튼이 공용이므로 분기 없음)
   const logout = useCallback(() => {
     if (!window.confirm('정말 로그아웃 하시겠습니까?')) return;
-    ['user', 'authToken', 'adminAuthToken', 'isAdmin', 'adminName', 'adminIp', 'profileImage']
-      .forEach((k) => localStorage.removeItem(k));
+    SESSION_KEYS.forEach((k) => localStorage.removeItem(k));
     refresh();
   }, [refresh]);
 

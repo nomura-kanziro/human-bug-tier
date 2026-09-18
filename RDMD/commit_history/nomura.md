@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 287 |
+| **커밋 수** | 289 |
 | **기간** | 2026-03-20 ~ 2026-09-19 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -316,6 +316,8 @@
 | 285 | 2026-09-19 | [`e9573bb`](#e9573bb) | fix(luck-draw): 기존 마이너스 포인트 프로필 0으로 보정하는 마이그레이션 스크립트 추가 |
 | 286 | 2026-09-19 | [`6d61815`](#6d61815) | feat(custom-maker): 등급 이동 UI를 화살표+숫자 페이지네이션으로 개선 |
 | 287 | 2026-09-19 | [`a6dcde4`](#a6dcde4) | fix(board): React 게시판 검색창/레이아웃 CSS 누락 보정 |
+| 288 | 2026-09-19 | [`(pending)`](#pending-288) | feat(auth): 로그인 1시간 경과 시 클라이언트 자동 로그아웃 |
+| 289 | 2026-09-19 | [`(pending)`](#pending-289) | fix(theme): 다크 테마에서 로고/게시판 제목이 안 보이던 문제 보정 |
 
 ---
 
@@ -5566,4 +5568,41 @@
 - **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)
+
+---
+
+<a id="pending-288"></a>
+
+### 288. 2026-09-19 — `(pending)`
+
+- **hash (short)**: _(다음 docs 커밋에서 기입)_
+- **hash (full)**: _(다음 docs 커밋에서 기입)_
+- **author**: nomura
+- **message**: feat(auth): 로그인 1시간 경과 시 클라이언트 자동 로그아웃
+- **git**: _(pending)_
+- **범위**: frontend (root-render) / frontend (root-cloudflare) / auth
+- **요약**: 서버가 오래 켜져 있다가 다운되거나 재시작될 가능성을 고려해, 서버 측 JWT 만료(유저 7일/관리자 24시간)와 별개로 클라이언트가 로그인 후 1시간이 지나면 먼저 세션을 정리하도록 했다. 로그인 성공 시 `localStorage.loginAt`에 타임스탬프를 남기고(바닐라 `login.js`/`admin-login.js`, React `Login.jsx`/`AdminLogin.jsx`), `common.js`(1분 간격 `setInterval` + 페이지 로드 시 확인)와 `AuthContext.jsx`(마운트 시 1회 + 1분 간격)가 1시간 경과 여부를 확인해 초과 시 알림 후 세션을 지운다. `logout()`은 기존 확인창 로직에서 실제 정리 로직만 `clearSession()`으로 분리해 자동 로그아웃과 공유한다.
+- **주요 파일**: `root-render/common.js`, `root-render/user_login/login.js`, `root-render/admin/admin-login.js`, `root-cloudflare/src/context/AuthContext.jsx`, `root-cloudflare/src/pages/Login.jsx`, `root-cloudflare/src/pages/AdminLogin.jsx`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-289"></a>
+
+### 289. 2026-09-19 — `(pending)`
+
+- **hash (short)**: _(다음 docs 커밋에서 기입)_
+- **hash (full)**: _(다음 docs 커밋에서 기입)_
+- **author**: nomura
+- **message**: fix(theme): 다크 테마에서 로고/게시판 제목이 안 보이던 문제 보정
+- **git**: _(pending)_
+- **범위**: frontend (root-render) / frontend (root-cloudflare) / common
+- **요약**: 다크 테마에서 헤더의 `.logo-img`(휴버대 로고, 투명/어두운 선 위주 이미지)가 다크 헤더 배경과 거의 같은 톤이 되어 안 보이던 문제를, 로고 뒤에 은은한 원형 조명(halo)을 깔고 `brightness`/`drop-shadow`로 살짝 밝혀서 고쳤다. 또한 게시판 제목(`.board-header h1`)이 다크 테마에서도 고정 검정(#000)이라 어두운 배경 위에서 안 보이던 문제를 `var(--text-primary)`로 보정했다(바닐라 `custom-maker_post.css` + React `react-extra.css` 양쪽).
+- **주요 파일**: `root-render/Header_Footer.css`, `root-render/custom-maker/custom-maker_post/custom-maker_post.css`, `root-cloudflare/src/styles/Header_Footer.css`, `root-cloudflare/src/styles/react-extra.css`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
 

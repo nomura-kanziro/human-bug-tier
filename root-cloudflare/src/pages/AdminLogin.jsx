@@ -41,6 +41,8 @@ export default function AdminLogin() {
         localStorage.setItem('adminAuthToken', res.data.token);
         localStorage.setItem('authToken', res.data.token);
       }
+      // 1시간 자동 로그아웃(AuthContext) 기준으로 삼는 로그인 시각
+      localStorage.setItem('loginAt', String(Date.now()));
       refresh();
       window.alert('✅ 관리자 로그인 성공!');
       navigate('/admin');

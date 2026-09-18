@@ -47,6 +47,8 @@ async function login() {
                 localStorage.setItem("adminAuthToken", data.token);
                 localStorage.setItem("authToken", data.token);
             }
+            // 1시간 자동 로그아웃(common.js checkSessionTimeout)이 기준으로 삼는 로그인 시각
+            localStorage.setItem("loginAt", String(Date.now()));
 
             alert("✅ 관리자 로그인 성공!");
             window.location.href = getBasePath() + "admin/comments/comment-management.html";

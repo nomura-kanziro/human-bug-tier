@@ -27,6 +27,8 @@ export default function Login() {
         ['isAdmin', 'adminAuthToken', 'adminName', 'adminIp'].forEach((k) => localStorage.removeItem(k));
         localStorage.setItem('user', JSON.stringify(data.user));
         if (data.token) localStorage.setItem('authToken', data.token);
+        // 1시간 자동 로그아웃(AuthContext) 기준으로 삼는 로그인 시각
+        localStorage.setItem('loginAt', String(Date.now()));
         refresh();
         window.alert('로그인 성공!');
         navigate('/');
