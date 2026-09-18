@@ -311,9 +311,9 @@
 | 280 | 2026-09-18 | [`d65beef`](#d65beef) | feat(react): 신규 페이지 라우트 연결 |
 | 281 | 2026-09-18 | [`6baf912`](#6baf912) | docs(react): 바닐라 기능 100% 반영 완료 문서·스킬팩 갱신 |
 | 282 | 2026-09-18 | [`5a9b388`](#5a9b388) | fix(react): 홈 퀵카드 hover 아이콘 교체가 React 라우트에서 안 되던 문제 수정 |
-| 283 | 2026-09-19 | [`(pending)`](#pending-283) | feat(luck-draw): 행운 티어 포커 배팅 게임 추가 |
-| 284 | 2026-09-19 | [`(pending)`](#pending-284) | fix(luck-draw): 오늘의 행운 티어 포인트 0 미만 방지 |
-| 285 | 2026-09-19 | [`(pending)`](#pending-285) | fix(luck-draw): 기존 마이너스 포인트 프로필 0으로 보정하는 마이그레이션 스크립트 추가 |
+| 283 | 2026-09-19 | [`515117f`](#515117f) | feat(luck-draw): 행운 티어 포커 배팅 게임 추가 |
+| 284 | 2026-09-19 | [`3221d2a`](#3221d2a) | fix(luck-draw): 오늘의 행운 티어 포인트 0 미만 방지 |
+| 285 | 2026-09-19 | [`e9573bb`](#e9573bb) | fix(luck-draw): 기존 마이너스 포인트 프로필 0으로 보정하는 마이그레이션 스크립트 추가 |
 
 ---
 
@@ -5477,15 +5477,15 @@
 
 ---
 
-<a id="pending-283"></a>
+<a id="515117f"></a>
 
-### 283. 2026-09-19 — `(pending)`
+### 283. 2026-09-19 — `515117f`
 
-- **hash (short)**: _(다음 docs 커밋에서 기입)_
-- **hash (full)**: _(다음 docs 커밋에서 기입)_
+- **hash (short)**: `515117f`
+- **hash (full)**: `515117f90b5dc4cf8b9054397bc6a5ab81a102a0`
 - **author**: nomura
 - **message**: feat(luck-draw): 행운 티어 포커 배팅 게임 추가
-- **git**: _(pending)_
+- **git**: `git show 515117f`
 - **범위**: backend / frontend (root-cloudflare) / luck-draw
 - **요약**: "오늘의 행운 티어" 뽑기로 모은 `LuckProfile.points`를 걸고 하는 포커식 배팅 게임을 추가했다. 서버(`luckPokerController.js`)가 카드(티어 1~9 × 무늬 5종) 추첨·족보 판정(탑~파이브 플러시 16종)·배수 정산을 전담하고, 프론트(`LuckPokerPanel.jsx`)는 배팅 입력과 결과 카드 표시만 담당한다. `LuckDraw.jsx`에 `#poker` 탭을 추가하고 헤더 드롭다운에 링크를 연결했다.
 - **주요 파일**: `backend/controllers/luckPokerController.js`, `backend/routes/luckDrawRoutes.js`, `root-cloudflare/src/components/LuckPokerPanel.jsx`, `root-cloudflare/src/pages/LuckDraw.jsx`, `root-cloudflare/src/styles/luck-poker.css`, `root-cloudflare/src/components/Header.jsx`
@@ -5495,15 +5495,15 @@
 
 ---
 
-<a id="pending-284"></a>
+<a id="3221d2a"></a>
 
-### 284. 2026-09-19 — `(pending)`
+### 284. 2026-09-19 — `3221d2a`
 
-- **hash (short)**: _(다음 docs 커밋에서 기입)_
-- **hash (full)**: _(다음 docs 커밋에서 기입)_
+- **hash (short)**: `3221d2a`
+- **hash (full)**: `3221d2a047b5003afbc0fcacd7d275ec9156f87b`
 - **author**: nomura
 - **message**: fix(luck-draw): 오늘의 행운 티어 포인트 0 미만 방지
-- **git**: _(pending)_
+- **git**: `git show 3221d2a`
 - **범위**: backend / luck-draw
 - **요약**: `drawDailyTier`에서 낮은 티어(6~9티어)를 뽑아 포인트가 까일 때 `LuckProfile.points`가 마이너스로 내려갈 수 있던 것을 `Math.max(0, ...)`로 0 하한을 두도록 고쳤다. 응답의 `pointsDelta`도 실제로 반영된 증감값(클램프 이후 차이)으로 내려주도록 맞쳤다.
 - **주요 파일**: `backend/controllers/luckDrawController.js`
@@ -5513,15 +5513,15 @@
 
 ---
 
-<a id="pending-285"></a>
+<a id="e9573bb"></a>
 
-### 285. 2026-09-19 — `(pending)`
+### 285. 2026-09-19 — `e9573bb`
 
-- **hash (short)**: _(다음 docs 커밋에서 기입)_
-- **hash (full)**: _(다음 docs 커밋에서 기입)_
+- **hash (short)**: `e9573bb`
+- **hash (full)**: `e9573bb1fb3b690a12b9b60f9f1fc001fbc52018`
 - **author**: nomura
 - **message**: fix(luck-draw): 기존 마이너스 포인트 프로필 0으로 보정하는 마이그레이션 스크립트 추가
-- **git**: _(pending)_
+- **git**: `git show e9573bb`
 - **범위**: backend / luck-draw / scripts
 - **요약**: 포인트 0 하한 로직을 넣기 전에 이미 마이너스로 쌊여 있던 기존 유저 `LuckProfile.points`를 0으로 올려주는 일회성 스크립트(`scripts/fix-negative-luck-points.js`)를 추가하고 운영 DB에 1회 실행했다(대상 1건 보정 확인).
 - **주요 파일**: `backend/scripts/fix-negative-luck-points.js`
