@@ -233,14 +233,17 @@ const drawDailyTier = async (req, res) => {
     }
 
     const result = buildDrawResult();
-    const pointsDelta = getTierPoints(result.tier);
+    const rawDelta = getTierPoints(result.tier);
     const isNewDay = profile.todayDate !== result.drawDate;
 
     // 날짜가 바뀌었으면(KST 기준) 오늘 카운트를 1로 리셋, 아니면 누적.
     profile.todayCount = isNewDay ? 1 : profile.todayCount + 1;
     profile.todayDate = result.drawDate;
     profile.totalDraws += 1;
-    profile.points += pointsDelta;
+    // 포인트는 0 밑으로 내려가지 않는다 — 실제 반영된 증감(pointsDelta)만 응답/표시에 쓴다.
+    const nextPoints = Math.max(0, profile.points + rawDelta);
+    const pointsDelta = nextPoints - profile.points;
+    profile.points = nextPoints;
     // 티어는 숫자가 작을수록 좋은 등급이므로 "더 작은 값"이 나오면 최고 기록 갱신.
     profile.bestTier = profile.bestTier === null || result.tier < profile.bestTier ? result.tier : profile.bestTier;
     profile.tierCounts[result.tier] = (profile.tierCounts[result.tier] || 0) + 1;
