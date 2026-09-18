@@ -1,8 +1,9 @@
 # 전체 기능 맵
 
-> **현재**: 바닐라 `0.5.0` — **실무 프론트는 `root-render/` + `backend/` (Render).**  
-> `root-cloudflare/`는 보관·로컬 기본 정적 루트일 수 있으나 **Cloudflare 배포 작업은 중지.**  
-> **정식 버전 React 이식**은 기획만: [react-rewrite.md](./react-rewrite.md). 구현은 창시자 지시 후.
+> ⛔ **2026-09-19 창시자 지시 — 프론트 작업은 `root-cloudflare/`(React)에만 한다.**  
+> `root-render/`(바닐라, Render)는 **베타 버전에서 업데이트 종료 → 수정 금지**(보관용).  
+> `backend/` 는 공용 API 서버라 계속 작업한다. 정본: [`../../.agents/common-rules.md`](../../.agents/common-rules.md) ０항  
+> React 이식 현황: [react-rewrite.md](./react-rewrite.md) — 바닐라 기능 100% 반영 완료.
 
 ## 서비스 한눈에
 

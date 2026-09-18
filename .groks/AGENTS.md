@@ -35,7 +35,7 @@
 | 비밀 | `.env` 커밋·출력 금지 |
 | 주석 | **기존 주석 삭제 금지.** 코드가 바뀌면 주석 **문구만** 수정. 사람이 “지워”라고 하기 전엔 유지. 발견하면 복원 |
 | 문서 | `RDMD/frontend|backend/<기능>/*-record.md` |
-| 우선순위 | **실무는 Render.com만.** Cloudflare 추가 작업 금지. React 정식은 기획만 |
+| 우선순위 | ✅ **작업은 `root-cloudflare/`(React)에만.** ⛔ `root-render/` 는 베타 종료 — 수정·`sync:render` 금지. Cloudflare **배포**만 지시 대기 |
 
 ## 스킬 · 문서 위치
 

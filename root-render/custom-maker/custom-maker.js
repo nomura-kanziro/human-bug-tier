@@ -581,18 +581,7 @@ function renderTier() {
 
   loadTierStateToDOM();  // ✅ 비우고 복원
   applyTierStyle();      // 등급마다 다른 테두리/이펙트가 있으면 이 테이블에 입힘
-  renderTierPagination(); // 등급 번호 버튼(페이지네이션)도 현재 등급에 맞춰 다시 그림
   // 이벤트는 위임 방식이므로 re-register 불필요 (단, 풀 교체 시엔 필요)
-}
-
-// 등급 번호 버튼(1~9)을 tierData 순서대로 그리고, 지금 보고 있는 등급에 is-active를 붙인다.
-// 클릭 이벤트는 #tier-pagination에 한 번만 위임 등록해두면(아래) 다시 그려도 계속 동작한다.
-function renderTierPagination() {
-  const wrap = document.getElementById('tier-pagination');
-  if (!wrap) return;
-  wrap.innerHTML = tierData.map((t, i) =>
-    `<button type="button" class="tier-switch-btn${i === currentTierIndex ? ' is-active' : ''}" data-tier-index="${i}">${t.id}</button>`
-  ).join('');
 }
 
 // 화면 아래쪽 "전체 캐릭터 풀"을 다시 그린다. 모든 등급에 걸쳐 이미 배치된 캐릭터는
@@ -883,19 +872,6 @@ document.getElementById('prev-btn').addEventListener('click', () => {
 document.getElementById('next-btn').addEventListener('click', () => {
   saveCurrentTierState();
   currentTierIndex = (currentTierIndex + 1) % tierData.length;
-  renderTier();
-  syncDecoratePanel();
-});
-
-// 번호 버튼(페이지네이션) 클릭: 눌린 등급으로 바로 이동. renderTier()가 매번 페이지네이션을
-// 새로 그리므로 위임 방식(#tier-pagination 하나에만 등록)으로 충분하다.
-document.getElementById('tier-pagination').addEventListener('click', (e) => {
-  const btn = e.target.closest('[data-tier-index]');
-  if (!btn) return;
-  const i = Number(btn.dataset.tierIndex);
-  if (!Number.isInteger(i) || i === currentTierIndex) return;
-  saveCurrentTierState();
-  currentTierIndex = i;
   renderTier();
   syncDecoratePanel();
 });

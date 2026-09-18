@@ -77,12 +77,12 @@ npm start
 
 | 폴더 | 쓰는 곳 | 로그인·게시판 |
 |------|---------|----------------|
-| [`root-cloudflare/`](./root-cloudflare/README.md) | 로컬 · Tunnel · Cloudflare Pages | 로컬/Tunnel만 |
-| [`root-render/`](./root-render/README.md) | Render.com | Render에서 됨 |
+| [`root-cloudflare/`](./root-cloudflare/README.md) | ✅ **작업·정식 버전 (React)** | 로컬/Tunnel만 |
+| [`root-render/`](./root-render/README.md) | ⛔ **베타 종료 · 수정 금지** (보관용) | Render에서 됨 |
 
-배포 정본: [`CLOUDFLARE.md`](./CLOUDFLARE.md) — **지금은 Cloudflare 추가 작업을 하지 않음.**  
-**지금 실무는 Render.com만** (`root-render/` + `backend/`).  
-정식 버전 React는 기획만: [`RDMD/features/react-rewrite.md`](./RDMD/features/react-rewrite.md) (구현은 별도 지시)
+> ⛔ **2026-09-19 창시자 지시 — 모든 프론트 작업은 `root-cloudflare/`(React)에만 한다.**  
+> `root-render/`(Render.com 바닐라)는 베타 버전에서 업데이트 종료 — 기능 추가·버그 수정 포함 수정 금지.  
+> `backend/` 는 공용 API 서버라 계속 작업한다. 정본: [`.agents/common-rules.md`](./.agents/common-rules.md) ０항
 
 ### 로컬 — Cloudflare 프론트 (기본)
 
@@ -133,8 +133,9 @@ npx wrangler pages deploy root-cloudflare --project-name=human-bug-tier --branch
 대시보드: Cloudflare → Workers & Pages → `human-bug-tier`  
 목록: `npx wrangler pages deployment list --project-name=human-bug-tier`
 
-### Render.com (레거시, 전체 기능)
+### Render.com (레거시 · ⛔ 작업 금지)
 
+베타 버전에서 업데이트가 종료된 경로다. 이미 떠있는 서비스 유지용이며 **`root-render/` 를 새로 고치지 않는다.**  
 `render.yaml` + Mongo 환경변수. 서버가 `RENDER=true`이면 **`root-render/`** 만 연다. 자세한 변수 이름은 [`DEPLOY.md`](./DEPLOY.md).
 
 ---

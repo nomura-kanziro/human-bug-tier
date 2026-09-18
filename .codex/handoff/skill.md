@@ -15,7 +15,7 @@ description: >
 
 ## 현재 상태
 
-바닐라 0.4.1. **실무는 Render.com만** (`root-render/` + `backend/`). Cloudflare 작업 중지. React 정식은 기획만. 구현 지시 전 금지.
+✅ **작업은 `root-cloudflare/`(React)에만.** ⛔ **`root-render/`(바닐라)는 베타 버전에서 업데이트 종료 — 수정 금지**(보관용). `backend/` 는 공용 API라 계속 작업. (2026-09-19 창시자 지시)
 
 ## Do
 

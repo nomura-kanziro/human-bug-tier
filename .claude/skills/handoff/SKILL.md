@@ -15,8 +15,10 @@ description: >
 
 ## 현재 상태 (반드시 말할 것)
 
-- 바닐라 **0.4.1**. 프론트 `root-cloudflare/` · `root-render/`
-- **지금 실무 = Render.com** (`root-render/` + `backend/`). Cloudflare 추가 작업 중지
+- 프론트는 두 폴더: `root-cloudflare/`(React) · `root-render/`(바닐라)
+- ✅ **작업은 `root-cloudflare/`(React)에만 한다** (2026-09-19 창시자 지시)
+- ⛔ **`root-render/`(Render.com 바닐라)는 베타 버전에서 업데이트 종료 — 수정 금지**(보관용)
+- ⛔ `npm run sync:render` 금지. ✅ `backend/` 는 공용 API 서버라 계속 작업
 - React 정식 버전 = 기획만 `RDMD/features/react-rewrite.md`. 구현 지시 전 금지
 
 ## Do (에이전트가 할 일)

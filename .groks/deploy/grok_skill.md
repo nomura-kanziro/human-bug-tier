@@ -34,7 +34,8 @@ description: >
 
 ## 현재
 
-**실무는 Render.com만.** Cloudflare 배포를 새로 하지 않음. React 정식은 기획만.
+✅ **프론트 작업은 `root-cloudflare/`(React)에만.** ⛔ **`root-render/` 는 베타 종료 — 수정 금지.**  
+⛔ `npm run sync:render` 금지. Cloudflare **배포 인프라**만 지시 대기(코드 작업과 별개). (2026-09-19 지시)
 
 ## Do
 

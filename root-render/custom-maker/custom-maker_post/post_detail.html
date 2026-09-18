@@ -72,12 +72,9 @@
          renderReadOnlyTier()가 tierDefinitions·savedTierState로 정적으로 그린다 -->
     <div id="tier-section">
       <div class="tier-nav">
+        <button id="prev-btn">← 이전 티어</button>
         <h2 id="tier-title">1등급 - 신계 / 슈퍼 그랜드 마스터</h2>
-        <nav class="tier-switch-nav" aria-label="등급 이동">
-          <button id="prev-btn" type="button" class="tier-switch-btn tier-switch-arrow" aria-label="이전 티어">←</button>
-          <div id="tier-pagination" class="tier-switch-pages"></div>
-          <button id="next-btn" type="button" class="tier-switch-btn tier-switch-arrow" aria-label="다음 티어">→</button>
-        </nav>
+        <button id="next-btn">다음 티어 →</button>
       </div>
 
       <!-- 제작 화면과 같은 #tier-capture-area 래퍼: 게시글에 저장된 테두리 색·배경 이펙트를

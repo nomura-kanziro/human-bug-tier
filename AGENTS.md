@@ -17,8 +17,11 @@
 ## 프로젝트
 
 **휴버대 티어표** — 바닐라 HTML/CSS/JS + Express/MongoDB.  
-공식 1~9티어(이미지 폴더 일치) · 커스텀 제작/게시판/**본인 글 수정** · 회원 · 공지(관리자 수정) · 문의 · 관리자 · PWA.  
-**현재 바닐라 0.5.0.** **실무는 Render.com만** (`root-render/` + `backend/`). Cloudflare 작업 중지. React 정식(`root-cloudflare/`)은 2026-09-05 지시로 1~3단계 이식 완료, 다음 단계는 지시 전 구현 금지.
+공식 1~9티어(이미지 폴더 일치) · 커스텀 제작/게시판/**본인 글 수정** · 회원 · 공지(관리자 수정) · 문의 · 관리자 · PWA.
+
+> ⛔ **2026-09-19 창시자 지시 — 작업은 `root-cloudflare/`(React)에만 한다.**  
+> `root-render/`(바닐라, Render.com)는 **베타 버전에서 업데이트 종료 → 수정 금지**.  
+> 정본: [`.agents/common-rules.md`](./.agents/common-rules.md) ０항
 
 ## Codex가 할 일 (순서)
 
@@ -45,6 +48,7 @@ npm start
 
 | 항목 | 규칙 |
 |------|------|
+| **작업 대상** | **`root-cloudflare/`(React)만.** `root-render/` 는 베타 종료 — **수정 금지** |
 | 실행 | 풀스택 = `backend` 포트 **5000** |
 | 경로 | `getBasePath()` / `fixRootLinksInElement` — `/...` 하드코딩 금지 |
 | API Base | `getApiBase()` — 개발 포트→`localhost:5000`, 동일 오리진→`''`, GH Pages→`GITHUB_STATIC` |

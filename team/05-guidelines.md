@@ -31,11 +31,12 @@
 - **필수**: 커밋·푸시 전 `RDMD/commit_history/{본인}.md` 작성  
   → [RDMD/commit_history/README.md](../RDMD/commit_history/README.md)
 
-## 지금 하지 않는 것 (2026-09-01)
+## 지금 하지 않는 것 (2026-09-19 창시자 지시)
 
-- **지금 실무는 Render.com만** (`root-render/` + `backend/`)
-- Cloudflare Pages/CI/시크릿을 더 만지지 않음
-- React/Next 스캐폴드 (정식 버전 이식은 기획 문서만: `RDMD/features/react-rewrite.md`)
+- ⛔ **`root-render/` 수정 금지** — Render.com 바닐라 프론트는 **베타 버전에서 업데이트 종료**(보관용)
+- ⛔ `npm run sync:render` 실행 금지 — React 수정을 바닐라 구본으로 덮어씁
+- ✅ **모든 프론트 작업은 `root-cloudflare/`(React)에만** · `backend/` 는 공용이라 계속 작업
+- Cloudflare Pages/CI/시크릿 같은 **배포 인프라**만 여전히 손대지 않음 (코드 작업과 별개)
 
 ## 문서
 

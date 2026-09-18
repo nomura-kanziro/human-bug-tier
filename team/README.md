@@ -29,12 +29,14 @@ AI 에이전트 공통 룰은 [`.agents/`](../.agents/README.md) 입니다.
 
 **커밋 전 필수**: [`RDMD/commit_history/`](../RDMD/commit_history/README.md) 본인 md 작성 후 커밋·푸시.
 
-## 지금 우선순위 (2026-09-01)
+## 지금 우선순위 (2026-09-19 창시자 지시)
 
-- 제품은 바닐라 **0.5.0**
-- **지금 실무는 Render.com만** — 프론트 `root-render/`, API `backend/`
-- **Cloudflare 배포 작업은 하지 않음**
-- **정식 버전 React**는 기획만 — [`RDMD/features/react-rewrite.md`](../RDMD/features/react-rewrite.md). AI에게 스캐폴드 시키지 말 것
+- ✅ **모든 프론트 작업은 `root-cloudflare/`(React 정식 버전)에만 한다**
+- ⛔ **`root-render/`(Render.com 바닐라)는 베타 버전에서 업데이트 종료 — 수정 금지**(보관용)
+- ⛔ `npm run sync:render` 실행 금지 — React 수정이 바닐라 구본으로 덮어쓰임
+- ✅ `backend/` 는 공용 API 서버라 계속 작업
+- Cloudflare **배포 인프라**(Pages/CI/시크릿)만 여전히 지시 대기 — 코드 작업과 혼동 금지
+- 정본: [`.agents/common-rules.md`](../.agents/common-rules.md) ０항
 
 ## AI와의 관계
 

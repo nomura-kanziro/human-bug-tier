@@ -616,44 +616,6 @@ function registerServiceWorker(base) {
 // 페이지 로드되면 자동 실행
 document.addEventListener('DOMContentLoaded', loadCommon);
 
-// ========================================================
-// 세션 자동 만료 (로그인 1시간 경과 시 자동 로그아웃)
-// ========================================================
-// 서버가 오래 켜져 있다가 다운되거나 재시작될 가능성을 고려해, 토큰 자체의 서버 측
-// 만료(유저 7일/관리자 24시간)와 별개로 클라이언트에서 1시간이 지나면 먼저 로그아웃시켜
-// 세션을 자주 신선하게 유지한다. loginAt은 login.js/admin-login.js가 로그인 성공 시 기록한다.
-const SESSION_TIMEOUT_MS = 60 * 60 * 1000; // 1시간
-const SESSION_CHECK_INTERVAL_MS = 60 * 1000; // 1분마다 확인
-
-// logout()과 자동 로그아웃이 공유하는 실제 정리 로직 (확인창 없이 즉시 지움)
-function clearSession() {
-  localStorage.removeItem('user');
-  localStorage.removeItem('authToken');
-  localStorage.removeItem('adminAuthToken');
-  localStorage.removeItem('isAdmin');
-  localStorage.removeItem('adminName');
-  localStorage.removeItem('adminIp');
-  localStorage.removeItem('profileImage');
-  localStorage.removeItem('loginAt');
-}
-
-function checkSessionTimeout() {
-  const loginAt = Number(localStorage.getItem('loginAt') || 0);
-  if (!loginAt) return;
-
-  const isLoggedIn = Boolean(localStorage.getItem('authToken')) || localStorage.getItem('isAdmin') === 'true';
-  if (!isLoggedIn) return;
-
-  if (Date.now() - loginAt < SESSION_TIMEOUT_MS) return;
-
-  clearSession();
-  alert('보안을 위해 로그인 후 1시간이 지나 자동으로 로그아웃되었습니다. 다시 로그인해주세요.');
-  location.reload();
-}
-
-document.addEventListener('DOMContentLoaded', checkSessionTimeout);
-setInterval(checkSessionTimeout, SESSION_CHECK_INTERVAL_MS);
-
 
 // ========================================================
 // [추가] Admin 프로필 + 모달 기능 (헤더에 동적으로 삽입)
@@ -1396,10 +1358,16 @@ function changeProfileImage() {
 // 로그아웃 — 일반 유저/관리자 로컬스토리지 값을 전부(둘 다) 지운다.
 // 어느 쪽으로 로그인했었는지 따지지 않고 한 번에 정리하는 이유는, 로그아웃 버튼이
 // 일반 유저·관리자 공용 드롭다운 메뉴에 하나만 있기 때문 — 굳이 분기할 필요가 없다.
-// (실제 삭제 로직은 clearSession()에 있고, 여긴 확인창 + 새로고침만 담당한다.)
+// confirm으로 실수 클릭을 방지하고, 확인되면 페이지를 새로고침해서 로그인 전 상태로 되돌린다.
 function logout() {
   if (confirm("정말 로그아웃 하시겠습니까?")) {
-    clearSession();
+    localStorage.removeItem("user");
+    localStorage.removeItem("authToken");
+    localStorage.removeItem("adminAuthToken");
+    localStorage.removeItem("isAdmin");
+    localStorage.removeItem("adminName");
+    localStorage.removeItem("adminIp");
+    localStorage.removeItem("profileImage");
     closeUserProfileMenu();
     location.reload();
   }

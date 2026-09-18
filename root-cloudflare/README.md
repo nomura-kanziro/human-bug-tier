@@ -1,14 +1,17 @@
 # root-cloudflare — 정식 버전 React 프론트 (Vite + React 18 + React Router 6)
 
-2026-09-05 창시자 지시로 이 폴더의 바닐라 프론트를 **React 앱으로 교체**했다.  
-바닐라 전체 기능은 `root-render/`(Render 실무 배포)에 그대로 있다. 기획 정본: `RDMD/features/react-rewrite.md`.
+> ✅ **2026-09-19 창시자 지시 — 모든 프론트 작업은 이 폴더에만 한다.**  
+> `root-render/`(바닐라)는 **베타 버전에서 업데이트 종료 → 수정 금지**(보관용).  
+> 따라서 **`npm run sync:render` 는 더 이상 돌리지 않는다** — 돌리면 `src/styles/*.css` 가 바닐라 구본으로 덮어쓰여져 이곳 수정이 사라진다.  
+> 정본: [`../.agents/common-rules.md`](../.agents/common-rules.md) ０항
+
+바닐라 전체 기능은 이미 100% 반영됐다. 기획 정본: `RDMD/features/react-rewrite.md`.
 
 | 환경 | 정적 루트 |
 |------|-----------|
 | 로컬 `cd backend && npm start` (기본) | **`root-cloudflare/dist/`** (빌드 결과. 없으면 이 폴더 자체 → 아무것도 안 보임, 먼저 빌드) |
-| 로컬에서 Render 화면 확인 | `STATIC_ROOT=root-render` |
-| Render.com (`RENDER=true`) | `root-render/` (바닐라, 실무) |
-| Cloudflare Pages | **작업 중지** (이 폴더를 그대로 올리면 안 됨 — dist 를 올려야 함) |
+| Render.com (`RENDER=true`) | `root-render/` (바닐라, ⛔ 베타 종료) |
+| Cloudflare Pages | **배포 작업만 중지** (올릴 때는 `dist/` 를 올려야 함) |
 
 ## 실행
 
@@ -43,10 +46,10 @@ npm start
 | 7-2 알림 전체보기 | ✅ | `/notifications` |
 | 7-3 관리자 | ✅ | `/admin/login` `/admin` `/admin/comment` |
 
-**바닐라(`root-render/`) 기능 100% 반영 완료.** 이후 바닐라 쪽이 바뀌면 `npm run sync:render` 로
-CSS·티어 데이터·`tier-media` 를 다시 맞춘 뒤 해당 페이지 컴포넌트만 손보면 된다.
+**바닐라(`root-render/`) 기능 100% 반영 완료.** 바닐라는 2026-09-19 부로 동결됐으므로
+이후 모든 수정은 이 폴더의 `src/` 에서 직접 한다 (`npm run sync:render` 금지).
 
-옵 바닐라 주소(`/tier-class/tier1.html`, `/notice/notice-detail.html?id=…` 등)는 `LegacyRedirect` 가 새 라우트로 보낸다(알림 link 호환).
+옛 바닐라 주소(`/tier-class/tier1.html`, `/notice/notice-detail.html?id=…` 등)는 `LegacyRedirect` 가 새 라우트로 보낸다(알림 link 호환).
 
 ### 공식 티어표 — 한 페이지 + 내부 navbar
 

@@ -13,8 +13,11 @@
 ## 프로젝트 한 줄
 
 휴먼버그대학교 캐릭터 **공식 티어표** + **커스텀 티어 제작/게시판** +  
-회원·공지·문의·관리자 기능을 갖춘 **바닐라 HTML/CSS/JS (`0.5.0`) + Express/MongoDB** 사이트.  
-프론트는 `root-render/`(바닐라, Render 실무) · `root-cloudflare/`(**React 정식 버전**, Vite 빌드 `dist/`를 로컬 기본 서빙). **지금 실무 배포는 Render.com만.** Cloudflare 배포 작업은 중지. React 는 2026-09-05 창시자 지시로 **1~3단계(레이아웃·홈·티어·공지) 이식 완료**, 4단계~는 지시 전 구현 금지.
+회원·공지·문의·관리자 기능을 갖춘 **Express/MongoDB** 사이트.
+
+> ⛔ **2026-09-19 창시자 지시 — 프론트 작업은 `root-cloudflare/`(React 정식 버전)에만 한다.**  
+> `root-render/`(바닐라, Render.com 배포)는 **베타 버전에서 업데이트 종료** — 기능 추가·버그 수정 포함 **모든 수정 금지**.  
+> `backend/` 는 공용 API 서버라 계속 작업한다. 정본: [`.agents/common-rules.md`](./.agents/common-rules.md) ０항
 
 ## 로컬 실행 (필수)
 
@@ -39,6 +42,10 @@ env 로드: 루트 `.env` 후 `backend/.env` (동일 키는 backend 우선)
 3. **`.claude/skills/<기능>/SKILL.md`** 로 보강 (Claude 주 골격 팩)
 4. 범위가 넓거나 애매하면 `.claude/skills/project-wide/SKILL.md` 를 읽는다.
 5. 상세 배경·이력은 `RDMD/` (필요 구간만). 공통 룰 충돌 시 Grok/사람 기준.
+
+> 아래 표의 "코드 주요 위치"는 바닐라(`root-render/`) 기준 파일명이다.  
+> **실제 수정은 `root-cloudflare/src/` 의 대응 컴포넌트에만** 한다 (`root-render/` 는 수정 금지).  
+> 예: `common.js` → `src/components/Header.jsx` + `src/lib/*`, `custom-maker/` → `src/pages/CustomMaker.jsx`
 
 | 기능 | 스킬 경로 | 코드 주요 위치 |
 |------|-----------|----------------|
@@ -65,6 +72,7 @@ env 로드: 루트 `.env` 후 `backend/.env` (동일 키는 backend 우선)
 
 | 항목 | 규칙 |
 |------|------|
+| **작업 대상** | **`root-cloudflare/`(React)만.** `root-render/` 는 베타 종료 — **수정 금지** |
 | 실행 | 풀스택 = `backend` 포트 **5000** |
 | 경로 | `getBasePath()` / `fixRootLinksInElement` — 절대 `/...` 하드코딩 금지 |
 | API Base | `getApiBase()` 등 — 개발 포트→`localhost:5000`, 동일 오리진→`''`, GH Pages→`GITHUB_STATIC` |
@@ -94,9 +102,9 @@ env 로드: 루트 `.env` 후 `backend/.env` (동일 키는 backend 우선)
 ## 폴더 한눈에
 
 ```
-root-cloudflare/                       # React 정식 버전 (Vite) — npm run build → dist/ 를 backend 가 서빙
-root-render/                           # Render.com 전용 바닐라 프론트 (실무 정본)
-backend/                               # Express + Mongo + 정적 서빙
+root-cloudflare/                       # ✅ React 정식 버전 (Vite) — 작업은 여기서만. npm run build → dist/ 를 backend 가 서빙
+root-render/                           # ⛔ Render.com 바닐라 프론트 — 베타 종료, 수정 금지(보관용)
+backend/                               # Express + Mongo + 정적 서빙 (공용, 작업 가능)
 RDMD/                                  # 기록·가이드
 CLOUDFLARE.md                          # 배포 정본
 .groks/                                # Grok 스킬

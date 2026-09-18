@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 289 |
+| **커밋 수** | 290 |
 | **기간** | 2026-03-20 ~ 2026-09-19 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -318,6 +318,7 @@
 | 287 | 2026-09-19 | [`a6dcde4`](#a6dcde4) | fix(board): React 게시판 검색창/레이아웃 CSS 누락 보정 |
 | 288 | 2026-09-19 | [`31bf0b2`](#31bf0b2) | feat(auth): 로그인 1시간 경과 시 클라이언트 자동 로그아웃 |
 | 289 | 2026-09-19 | [`887c5e0`](#887c5e0) | fix(theme): 다크 테마에서 로고/게시판 제목이 안 보이던 문제 보정 |
+| 290 | 2026-09-19 | [`(pending)`](#pending-290) | docs(policy): root-render 베타 종료 선언 및 작업 금지·변경 원복 |
 
 ---
 
@@ -5602,6 +5603,24 @@
 - **요약**: 다크 테마에서 헤더의 `.logo-img`(휴버대 로고, 투명/어두운 선 위주 이미지)가 다크 헤더 배경과 거의 같은 톤이 되어 안 보이던 문제를, 로고 뒤에 은은한 원형 조명(halo)을 깔고 `brightness`/`drop-shadow`로 살짝 밝혀서 고쳤다. 또한 게시판 제목(`.board-header h1`)이 다크 테마에서도 고정 검정(#000)이라 어두운 배경 위에서 안 보이던 문제를 `var(--text-primary)`로 보정했다(바닐라 `custom-maker_post.css` + React `react-extra.css` 양쪽).
 - **주요 파일**: `root-render/Header_Footer.css`, `root-render/custom-maker/custom-maker_post/custom-maker_post.css`, `root-cloudflare/src/styles/Header_Footer.css`, `root-cloudflare/src/styles/react-extra.css`
 - **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-290"></a>
+
+### 290. 2026-09-19 — `(pending)`
+
+- **hash (short)**: _(다음 docs 커밋에서 기입)_
+- **hash (full)**: _(다음 docs 커밋에서 기입)_
+- **author**: nomura
+- **message**: docs(policy): root-render 베타 종료 선언 및 작업 금지·변경 원복
+- **git**: _(pending)_
+- **범위**: docs / policy / frontend (root-render 원복)
+- **요약**: 창시자 지시에 따라 **모든 프론트 작업을 `root-cloudflare/`(React)에만 하도록** 정책을 확정했다. `root-render/`(Render.com 바닐라)는 **베타 버전에서 업데이트 종료 → 수정 금지**로 선언하고, 286·288·289번 커밋에서 `root-render/`에 들어갔던 변경 11개 파일(등급 페이지네이션·1시간 자동 로그아웃·다크 테마 보정)을 세션 이전 상태로 **전부 되돌렸다**. 같은 기능의 `root-cloudflare/`·`backend/` 변경은 그대로 유지한다. 정책은 정본(`.agents/common-rules.md` ０항 신설)을 시작으로 진입점(`AGENTS.md`/`CLAUDE.md`), 배포 문서(`CLOUDFLARE.md`/`DEPLOY.md`/`README.md`), 두 폴더 README, RDMD 기능 문서, 4개 에이전트 스킬팩(`.agents`/`.claude`/`.codex`/`.groks`), 사람 규칙(`team/`)까지 일괄 반영했다. `npm run sync:render` 실행도 함께 금지했다 — 돌리면 React 수정이 바닐라 구본으로 덮어쓰이기 때문이다.
+- **주요 파일**: `.agents/common-rules.md`, `AGENTS.md`, `CLAUDE.md`, `README.md`, `CLOUDFLARE.md`, `DEPLOY.md`, `root-render/README.md`, `root-cloudflare/README.md`, `RDMD/features/react-rewrite.md`, `RDMD/features/overview.md`, `.agents/{deploy,project-wide,react-rewrite,handoff}/skill.md`, `.claude/skills/{deploy,project-wide,react-rewrite,handoff}/SKILL.md`, `.codex/{deploy,handoff,react-rewrite}/skill.md`, `.groks/{AGENTS.md,deploy,react-rewrite}`, `team/README.md`, `team/05-guidelines.md`
+- **관련 RDMD**: [features/react-rewrite.md](../features/react-rewrite.md)
 
 [▲ 목차로](#목차)
 

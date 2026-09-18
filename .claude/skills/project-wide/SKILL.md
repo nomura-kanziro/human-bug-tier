@@ -29,12 +29,15 @@ description: >
 6. 큰 변경 후 RDMD · 모듈 README · **`.agents/<기능>/skill.md` 현행화** · (규칙 변경 시) `.claude` 동기화
 7. 종료 시: 요약 + 수동 테스트 + 시크릿 점검
 
-## 현재 우선순위
+## 현재 우선순위 (2026-09-19 창시자 지시)
 
-**실무는 Render.com만.** 바닐라 유지. **Cloudflare 추가 작업 금지.** React는 기획만. 스캐폴드 금지.
+✅ **프론트 작업은 `root-cloudflare/`(React)에만.**  
+⛔ **`root-render/`(바닐라)는 베타 종료 — 수정 금지.** ⛔ **`npm run sync:render` 금지.**  
+✅ `backend/` 는 공용 API 서버라 계속 작업. Cloudflare **배포 인프라**만 지시 대기.
 
 ## Do not
 
+- **`root-render/` 아래 파일 수정** (베타 종료 — `root-cloudflare/`에만)
 - `.env` / 시크릿 커밋·출력
 - URL·API base 하드코딩
 - 관리 기능 무인증 추가

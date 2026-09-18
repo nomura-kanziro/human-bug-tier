@@ -1,9 +1,15 @@
 # React 정식 버전 — 기획 + 이식 현황
 
-**상태**: **2026-09-05 창시자 지시로 구현 시작.** 1~3단계(스캐폴드·레이아웃·공개 페이지) 완료, 4단계~는 지시 대기.  
-**날짜**: 2026-09-01 기획 · 2026-09-05 1~3단계 이식  
-**현재 제품**: 바닐라 HTML/CSS/JS `0.5.0` (`root-render/`, Render 실무) + Express/Mongo `backend/`  
-**React 앵**: `root-cloudflare/` (Vite + React 18 + React Router 6, `0.5.0`) — `npm run build` → `dist/` 를 backend 가 서빙
+> ⛔ **2026-09-19 창시자 지시 — 작업은 `root-cloudflare/`(React)에만 한다.**  
+> `root-render/`(바닐라)는 **베타 버전에서 업데이트 종료 → 수정 금지**.  
+> 아래 “바닐라가 정본” / “실무는 Render.com만” 문구는 **폐기**되었다.  
+> **`npm run sync:render` 는 더 이상 돌리지 않는다** — 돌리면 React 수정이 바닐라 구본으로 덮어쓰여진다.  
+> 정본: [`../../.agents/common-rules.md`](../../.agents/common-rules.md) ０항
+
+**상태**: 바닐라 기능 100% 반영 완료. **2026-09-19부터 React가 유일한 작업 대상.**  
+**날짜**: 2026-09-01 기획 · 2026-09-05 이식 시작 · 2026-09-17 패리티 완료 · 2026-09-19 바닐라 동결  
+**React 앱**: `root-cloudflare/` (Vite + React 18 + React Router 6, `0.5.0`) — `npm run build` → `dist/` 를 backend 가 서빙  
+**보관**: `root-render/` (바닐라, 베타 종료 · 수정 금지)
 
 ---
 
@@ -25,8 +31,7 @@
 | 7-3 관리자 | ✅ | 로그인 / 대시보드 4섹션(문의·커스텀 신고·공지·차단) / 문의 상세 |
 | 8 배포 | ⏳ | Render 는 여전히 `root-render/` 바닐라. React 배포는 별도 지시 |
 
-바닐라 쪽이 바뀌면 `cd root-cloudflare && npm run sync:render` 로 CSS·티어 데이터·`tier-media` 를
-다시 맞춘 뒤 해당 페이지 컴포넌트만 손보면 된다.
+바닐라 쪽은 동결됐다 — `npm run sync:render` 를 돌리지 말고 `root-cloudflare/src/` 를 직접 고친다.
 
 상세: `root-cloudflare/README.md`, `RDMD/frontend/12-react/01-react-phase1-3-record.md`,
 `RDMD/frontend/12-react/02-react-tier-maker-luck-record.md`,
@@ -52,14 +57,13 @@
 
 | 금지 | 이유 |
 |------|------|
-| `root-render/` 바닐라 삭제·변경 | Render 실무 배포 정본. 티어 데이터 원본도 여기 |
-| Cloudflare Pages/CI/시크릿 추가 작업 | 배포 작업 일시 중지 |
+| **`root-render/` 수정** | **베타 종료 · 업데이트 금지** (2026-09-19 지시). 보관용 |
+| **`npm run sync:render` 실행** | 바닐라 구본이 React 수정을 덮어씁 |
+| Cloudflare Pages/CI/시크릿 **배포 작업** | 배포만 일시 중지 (코드 작업은 계속) |
 | `backend/server.js`를 Workers/`fetch`로 바꾸기 | 백엔드는 유지 |
 | mongoose → D1/KV | 동일 |
-| React 를 실무 배포로 전환 | 8단계(배포)는 창시자 지시 후 |
 
-로컬 정본: `cd root-cloudflare && npm run build` → `cd backend && npm start` → http://localhost:5000/ (React dist)  
-Render 화면 확인: `STATIC_ROOT=root-render`
+로컬 정본: `cd root-cloudflare && npm run build` → `cd backend && npm start` → http://localhost:5000/ (React dist)
 
 ---
 

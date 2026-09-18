@@ -18,22 +18,23 @@ description: >
 - `root-cloudflare/README.md` — 라우트 표 · 바닐라↔React 대응 표
 - `RDMD/frontend/12-react/03-react-parity-complete-record.md`
 
-## 현재
+## 현재 (2026-09-19 창시자 지시)
 
-- 바닐라 **0.5.0** — `root-render/` + `backend/` (Render 실무, 정본)
-- **React 앱 = `root-cloudflare/`** (Vite+React 18+Router 6).
-  **바닐라 기능 100% 반영 완료** (2026-09-17) — 홈·티어·공지·커스텀 메이커(꾸미기)·
+- ✅ **`root-cloudflare/`(React)가 유일한 작업 대상** — 모든 신규 기능·버그수정을 여기서만
+- ⛔ **`root-render/`(바닐라)는 베타 종료 — 수정 금지**(보관용)
+- ⛔ **`npm run sync:render` 금지** — 돌리면 `src/styles/*.css` 가 바닐라 구본으로 덮어쓰임.
+  이제 `src/styles/*.css` 도 직접 고쳐도 된다
+- **바닐라 기능 100% 반영 완료** (2026-09-17) — 홈·티어·공지·커스텀 메이커(꾸미기)·
   행운 뽑기·인증·게시판(본인 글 수정 포함)·마이페이지·알림·문의·관리자
-- 남은 건 **8단계 배포뿐** — 창시자 지시 전까지 React 를 실무 배포로 전환하지 않는다
 - 티어표는 한 페이지 + 내부 navbar. 등급별 색 = `tier-board.css` 변수 블록 한 곳
 - backend 기본 정적 루트 = `root-cloudflare/dist` (미빌드면 빈 화면)
-- **Cloudflare 추가 작업 금지**
+- Cloudflare **배포 인프라**만 지시 대기 (코드 작업과 별개)
 
 ## Do
 
-1. 바닐라 CSS·티어 데이터·`tier-media` 가 바뀌면 **`npm run sync:render`** 를 먼저 돌린다 (손으로 복사 금지)
-2. React 전용 스타일은 **`src/styles/react-extra.css`** 에만. 나머지 `src/styles/*.css` 는 동기화 산출물
-3. 티어·캐릭터는 `src/data/tiers.js` 하나만 본다. 변경은 `root-render/tier-class` → `npm run extract:tiers`
+1. **React 가 정본.** 바닐라는 참고만 하고 고치거나 동기화하지 않는다
+2. 스타일은 `src/styles/` 에서 직접 수정. React 전용 규칙은 `react-extra.css` 에 모으면 추적이 쉽다
+3. 티어·캐릭터는 `src/data/tiers.js` 하나만 본다 (하드코딩 금지)
 4. API 는 `lib/api.js` 만 — 유저 `apiRequest`, 관리자 `adminRequest`. 이미지는 `tierImageUrl()`
 5. 커스텀 메이커 저장 형식·localStorage 키는 게시판 DB 와 호환 유지.
    수정 모드(`editId`)에서는 localStorage 저장하지 않는다
@@ -42,10 +43,10 @@ description: >
 
 ## Do not
 
-- 지시 없이 React 를 실무 배포로 전환
-- `src/styles/*.css`(동기화 산출물) 직접 수정
+- **`root-render/` 수정** (베타 종료 — 참고만)
+- **`npm run sync:render` 실행**
 - 등급별 색·세부등급 하드코딩 (변수 블록·tiers.js 한 곳 유지)
-- `root-render/` 바닐라 삭제, Express→Workers, CF CI 재개
+- Express→Workers, CF **배포** CI 재개
 - Pages = 풀기능
 
 ## Checklist

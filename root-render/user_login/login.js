@@ -57,8 +57,6 @@ async function login() {
       // localStorage의 authToken을 자동으로 Authorization 헤더에 실어 보낸다.
       localStorage.setItem('user', JSON.stringify(data.user));
       if (data.token) localStorage.setItem('authToken', data.token);
-      // 1시간 자동 로그아웃(common.js checkSessionTimeout)이 기준으로 삼는 로그인 시각
-      localStorage.setItem('loginAt', String(Date.now()));
       window.location.href = "../index.html";
     } else if (data.blocked) {
       // 관리자가 해당 계정을 차단 처리한 경우 서버가 success:false와 함께 blocked 플래그로 응답

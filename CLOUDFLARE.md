@@ -1,9 +1,20 @@
 # Cloudflare 배포 가이드
 
-> **2026-09-01**: Cloudflare **추가 작업은 일단 하지 않는다.**  
+> **2026-09-19 창시자 지시 (최신 — 아래 2026-09-01 문구를 대체)**  
+> **작업은 `root-cloudflare/`(React)에만 한다.**  
+> `root-render/`(바닐라, Render.com)는 **베타 버전에서 업데이트 종료 → 수정 금지**.  
+> 즉 아래 “지금 실무는 Render.com만” 문구는 **폐기**되었다. 단, Cloudflare **배포 인프라**(Pages/CI/Wrangler/시크릿)를 새로 구성하는 것은 여전히 별도 지시 후에 한다 — **금지된 건 배포 작업이지 `root-cloudflare/` 코드 작업이 아니다.**  
+> 정본: [`.agents/common-rules.md`](./.agents/common-rules.md) ０항
+
+<details>
+<summary>이전 선언 (2026-09-01, 참고용)</summary>
+
+> Cloudflare **추가 작업은 일단 하지 않는다.**  
 > **지금 실무는 Render.com만** (`root-render/` + `backend/`).  
 > 정식 버전은 나중에 React로 다시 만들 예정 — [`RDMD/features/react-rewrite.md`](./RDMD/features/react-rewrite.md).  
-> 이미 올린 Pages 미리보기·이 문서·`root-cloudflare/`는 유지한다. 창시자가 Cloudflare를 다시 시키기 전에는 CI/시크릿/Wrangler를 손대지 말 것.
+> 이미 올린 Pages 미리보기·이 문서·`root-cloudflare/`는 유지한다.
+
+</details>
 
 배포 정본은 이 문서다. Render.com은 쓰지 않는다.
 

@@ -32,11 +32,15 @@ description: >
 6. 큰 변경: RDMD · 모듈 README · **해당 `.agents/<기능>/skill.md` 현행화** · 규칙 변경 시 정본 후 주 골격 팩 동기화
 7. 종료: 요약 + 수동 테스트 + 시크릿 점검
 
-## 현재 우선순위 (2026-09-01)
+## 현재 우선순위 (2026-09-19 창시자 지시 — 최신)
 
-- **지금 실무 = Render.com** (`root-render/` + `backend/`)
-- 바닐라 유지. **Cloudflare 추가 작업 금지**
-- React 정식 버전은 **기획만**. 스캐폴드 금지
+- ✅ **프론트 작업은 `root-cloudflare/`(React)에만** 한다
+- ⛔ **`root-render/`(바닐라)는 베타 종료 — 수정 금지** (기능·버그·CSS 전부)
+- ⛔ **`npm run sync:render` 실행 금지** — React 수정이 바닐라 구본으로 덮어쓰임
+- ✅ `backend/` 는 공용 API 서버라 계속 작업
+- Cloudflare **배포 인프라**(Pages/CI/Wrangler)만 여전히 지시 대기 — 코드 작업과 혼동 금지
+
+정본: `.agents/common-rules.md` ０항
 
 ## Do not
 

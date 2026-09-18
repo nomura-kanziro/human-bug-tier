@@ -49,16 +49,11 @@
     <div id="mobile-place-hint" class="mobile-place-hint" hidden></div>
 
 
-    <!-- tier-class(공식 티어표) 페이지와 동일한 등급 탐색 UI + 화살표·숫자 페이지네이션.
-         #tier-pagination의 번호 버튼은 custom-maker.js의 renderTierPagination()이 tierData
-         길이에 맞춰 채운다(숫자를 눌러 원하는 등급으로 바로 이동) -->
+    <!-- tier-class(공식 티어표) 페이지와 동일한 등급 탐색 UI + 이전/다음 화살표 버튼 -->
     <div class="tier-nav">
+      <button id="prev-btn">← 이전 티어</button>
       <h2 id="tier-title">1등급 - 신계 / 슈퍼 그랜드 마스터</h2>
-      <nav class="tier-switch-nav" aria-label="등급 이동">
-        <button id="prev-btn" type="button" class="tier-switch-btn tier-switch-arrow" aria-label="이전 티어">←</button>
-        <div id="tier-pagination" class="tier-switch-pages"></div>
-        <button id="next-btn" type="button" class="tier-switch-btn tier-switch-arrow" aria-label="다음 티어">→</button>
-      </nav>
+      <button id="next-btn">다음 티어 →</button>
     </div>
 
     <!-- ✅ tier-nav 밖에, tier-list 중복 제거하고 여기 하나만 -->

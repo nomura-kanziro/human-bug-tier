@@ -1,4 +1,10 @@
-# root-render — Render.com 전용 프론트
+# root-render — Render.com 전용 프론트 (⛔ 베타 종료 · 수정 금지)
+
+> ⛔ **2026-09-19 창시자 지시 — 이 폴더는 베타 버전에서 업데이트가 종료됐다.**  
+> **기능 추가·버그 수정·CSS 보정·리팩터 포함 모든 수정을 하지 않는다.**  
+> 모든 프론트 작업은 [`root-cloudflare/`](../root-cloudflare/README.md)(React 정식 버전)에만 한다.  
+> 이 폴더는 이미 떠있는 Render 배포와 과거 기록을 위한 **보관용**이다.  
+> 정본: [`.agents/common-rules.md`](../.agents/common-rules.md) ０항
 
 이 폴더는 **Render.com**이 서빙하는 정적 프론트다.  
 여기서 `npm start` 하지 않는다. 서버는 항상 `backend/`에서 켠다.
@@ -43,4 +49,4 @@ npm start
 
 제외: `backend/`, `.env`, RDMD, 에이전트 스킬.
 
-`root-cloudflare/`를 고쳐도 Render는 여기가 갱신되기 전까지 예전 화면을 유지한다.
+⚠️ 이 폴더는 **더 이상 갱신하지 않는다.** `root-cloudflare/`(React)에서만 작업하므로 두 폴더의 화면은 점점 달라진다 — 이건 의도된 것이고, 맞추려고 `root-render/`를 고치지 않는다.

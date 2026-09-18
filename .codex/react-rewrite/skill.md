@@ -19,7 +19,8 @@ description: >
 
 ## 현재
 
-바닐라 **0.5.0**(`root-render/`, Render 실무 정본) 기능이 React(`root-cloudflare/`)에 **100% 반영 완료**.
+바닐라(`root-render/`) 기능이 React(`root-cloudflare/`)에 **100% 반영 완료**.  
+✅ **2026-09-19부터 React 가 정본이자 유일한 작업 대상.** ⛔ `root-render/` 는 베타 종료 — 수정·`sync:render` 금지.
 남은 건 8단계 배포뿐 — React 실무 배포 전환은 창시자 지시 후. CF 작업 중지.
 
 ## Do
