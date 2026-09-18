@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 284 |
+| **커밋 수** | 285 |
 | **기간** | 2026-03-20 ~ 2026-09-19 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -313,6 +313,7 @@
 | 282 | 2026-09-18 | [`5a9b388`](#5a9b388) | fix(react): 홈 퀵카드 hover 아이콘 교체가 React 라우트에서 안 되던 문제 수정 |
 | 283 | 2026-09-19 | [`(pending)`](#pending-283) | feat(luck-draw): 행운 티어 포커 배팅 게임 추가 |
 | 284 | 2026-09-19 | [`(pending)`](#pending-284) | fix(luck-draw): 오늘의 행운 티어 포인트 0 미만 방지 |
+| 285 | 2026-09-19 | [`(pending)`](#pending-285) | fix(luck-draw): 기존 마이너스 포인트 프로필 0으로 보정하는 마이그레이션 스크립트 추가 |
 
 ---
 
@@ -5506,6 +5507,24 @@
 - **범위**: backend / luck-draw
 - **요약**: `drawDailyTier`에서 낮은 티어(6~9티어)를 뽑아 포인트가 까일 때 `LuckProfile.points`가 마이너스로 내려갈 수 있던 것을 `Math.max(0, ...)`로 0 하한을 두도록 고쳤다. 응답의 `pointsDelta`도 실제로 반영된 증감값(클램프 이후 차이)으로 내려주도록 맞쳤다.
 - **주요 파일**: `backend/controllers/luckDrawController.js`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-285"></a>
+
+### 285. 2026-09-19 — `(pending)`
+
+- **hash (short)**: _(다음 docs 커밋에서 기입)_
+- **hash (full)**: _(다음 docs 커밋에서 기입)_
+- **author**: nomura
+- **message**: fix(luck-draw): 기존 마이너스 포인트 프로필 0으로 보정하는 마이그레이션 스크립트 추가
+- **git**: _(pending)_
+- **범위**: backend / luck-draw / scripts
+- **요약**: 포인트 0 하한 로직을 넣기 전에 이미 마이너스로 쌊여 있던 기존 유저 `LuckProfile.points`를 0으로 올려주는 일회성 스크립트(`scripts/fix-negative-luck-points.js`)를 추가하고 운영 DB에 1회 실행했다(대상 1건 보정 확인).
+- **주요 파일**: `backend/scripts/fix-negative-luck-points.js`
 - **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)
