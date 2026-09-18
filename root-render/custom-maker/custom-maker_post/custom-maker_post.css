@@ -300,6 +300,12 @@
   background: var(--border-strong);
 }
 
+/* 게시판 제목(.board-header h1)은 custom-maker_post.html 인라인 <style>에서 항상 검정(#000)으로
+   고정되어 있어, 다크 모드에서 바딜 배경 위에 그대로 검은 글자가 거의 안 보였다. */
+[data-theme="dark"] .board-header h1 {
+  color: var(--text-primary);
+}
+
 /* 게시글 신고 모달 — 라이트 전용 흰 카드를 다크 카드로 전환 */
 [data-theme="dark"] .report-modal-card {
   background: var(--bg-elevated);

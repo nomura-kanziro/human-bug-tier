@@ -164,6 +164,11 @@
   }
 }
 
+/* 게시판 제목이 고정 검정(#000)이라 다크 테마에서 배경만 어두워지고 글자가 안 보이던 문제 보정 */
+[data-theme="dark"] .board-header h1 {
+  color: var(--text-primary);
+}
+
 /* 신고 사유 표시 아이콘 (관리자 테이블 / 문의 상세) */
 .report-flag {
   color: #dc3545;

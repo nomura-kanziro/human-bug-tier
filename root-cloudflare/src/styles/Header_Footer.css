@@ -903,6 +903,14 @@ a.nav-soon {
   color: var(--text-primary);
 }
 
+/* 로고 이미지(logo.webp)가 어두운 선/투명 배경 위주라 다크 헤더(--bg-elevated)와 거의 같은 톤이 되어
+   거의 안 보이던 문제 — 뒤에 은은한 조명(halo)을 깔고 살짝 밝혀서 어떤 배경에서도 도드라지게 한다 */
+[data-theme="dark"] .logo-img {
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.15) 65%, transparent 100%);
+  filter: drop-shadow(0 0 6px rgba(255, 220, 130, 0.45)) brightness(1.08);
+}
+
 [data-theme="dark"] header {
   border-bottom-color: var(--border-color);
 }
