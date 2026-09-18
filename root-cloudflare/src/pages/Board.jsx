@@ -93,7 +93,7 @@ export default function Board() {
   return (
     <main className="board-container">
       <div className="board-header">
-        <h1>커스텀 티어 게시판</h1>
+        <h1><img src={LOGO_URL.replace('logo.webp', 'human_bug_eyes_icon.gif')} className="eyes_icon" alt="" /> 커스텀 티어 게시판</h1>
         {subtitle && <p id="board-subtitle" className="board-subtitle">{subtitle}</p>}
         {(mine || activeAuthor) && (
           <button type="button" className="view-all-board-btn" onClick={() => setParams(new URLSearchParams())}>
