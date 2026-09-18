@@ -318,7 +318,7 @@
 | 287 | 2026-09-19 | [`a6dcde4`](#a6dcde4) | fix(board): React 게시판 검색창/레이아웃 CSS 누락 보정 |
 | 288 | 2026-09-19 | [`31bf0b2`](#31bf0b2) | feat(auth): 로그인 1시간 경과 시 클라이언트 자동 로그아웃 |
 | 289 | 2026-09-19 | [`887c5e0`](#887c5e0) | fix(theme): 다크 테마에서 로고/게시판 제목이 안 보이던 문제 보정 |
-| 290 | 2026-09-19 | [`(pending)`](#pending-290) | docs(policy): root-render 베타 종료 선언 및 작업 금지·변경 원복 |
+| 290 | 2026-09-19 | [`5d735ba`](#5d735ba) | docs(policy): root-render 베타 종료 선언 및 작업 금지·변경 원복 |
 
 ---
 
@@ -5608,15 +5608,15 @@
 
 ---
 
-<a id="pending-290"></a>
+<a id="5d735ba"></a>
 
-### 290. 2026-09-19 — `(pending)`
+### 290. 2026-09-19 — `5d735ba`
 
-- **hash (short)**: _(다음 docs 커밋에서 기입)_
-- **hash (full)**: _(다음 docs 커밋에서 기입)_
+- **hash (short)**: `5d735ba`
+- **hash (full)**: `5d735ba6b66cf82517497267dcc0d370282add27`
 - **author**: nomura
 - **message**: docs(policy): root-render 베타 종료 선언 및 작업 금지·변경 원복
-- **git**: _(pending)_
+- **git**: `git show 5d735ba`
 - **범위**: docs / policy / frontend (root-render 원복)
 - **요약**: 창시자 지시에 따라 **모든 프론트 작업을 `root-cloudflare/`(React)에만 하도록** 정책을 확정했다. `root-render/`(Render.com 바닐라)는 **베타 버전에서 업데이트 종료 → 수정 금지**로 선언하고, 286·288·289번 커밋에서 `root-render/`에 들어갔던 변경 11개 파일(등급 페이지네이션·1시간 자동 로그아웃·다크 테마 보정)을 세션 이전 상태로 **전부 되돌렸다**. 같은 기능의 `root-cloudflare/`·`backend/` 변경은 그대로 유지한다. 정책은 정본(`.agents/common-rules.md` ０항 신설)을 시작으로 진입점(`AGENTS.md`/`CLAUDE.md`), 배포 문서(`CLOUDFLARE.md`/`DEPLOY.md`/`README.md`), 두 폴더 README, RDMD 기능 문서, 4개 에이전트 스킬팩(`.agents`/`.claude`/`.codex`/`.groks`), 사람 규칙(`team/`)까지 일괄 반영했다. `npm run sync:render` 실행도 함께 금지했다 — 돌리면 React 수정이 바닐라 구본으로 덮어쓰이기 때문이다.
 - **주요 파일**: `.agents/common-rules.md`, `AGENTS.md`, `CLAUDE.md`, `README.md`, `CLOUDFLARE.md`, `DEPLOY.md`, `root-render/README.md`, `root-cloudflare/README.md`, `RDMD/features/react-rewrite.md`, `RDMD/features/overview.md`, `.agents/{deploy,project-wide,react-rewrite,handoff}/skill.md`, `.claude/skills/{deploy,project-wide,react-rewrite,handoff}/SKILL.md`, `.codex/{deploy,handoff,react-rewrite}/skill.md`, `.groks/{AGENTS.md,deploy,react-rewrite}`, `team/README.md`, `team/05-guidelines.md`
