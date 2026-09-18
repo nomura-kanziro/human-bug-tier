@@ -314,8 +314,8 @@
 | 283 | 2026-09-19 | [`515117f`](#515117f) | feat(luck-draw): 행운 티어 포커 배팅 게임 추가 |
 | 284 | 2026-09-19 | [`3221d2a`](#3221d2a) | fix(luck-draw): 오늘의 행운 티어 포인트 0 미만 방지 |
 | 285 | 2026-09-19 | [`e9573bb`](#e9573bb) | fix(luck-draw): 기존 마이너스 포인트 프로필 0으로 보정하는 마이그레이션 스크립트 추가 |
-| 286 | 2026-09-19 | [`(pending)`](#pending-286) | feat(custom-maker): 등급 이동 UI를 화살표+숫자 페이지네이션으로 개선 |
-| 287 | 2026-09-19 | [`(pending)`](#pending-287) | fix(board): React 게시판 검색창/레이아웃 CSS 누락 보정 |
+| 286 | 2026-09-19 | [`6d61815`](#6d61815) | feat(custom-maker): 등급 이동 UI를 화살표+숫자 페이지네이션으로 개선 |
+| 287 | 2026-09-19 | [`a6dcde4`](#a6dcde4) | fix(board): React 게시판 검색창/레이아웃 CSS 누락 보정 |
 
 ---
 
@@ -5533,15 +5533,15 @@
 
 ---
 
-<a id="pending-286"></a>
+<a id="6d61815"></a>
 
-### 286. 2026-09-19 — `(pending)`
+### 286. 2026-09-19 — `6d61815`
 
-- **hash (short)**: _(다음 docs 커밋에서 기입)_
-- **hash (full)**: _(다음 docs 커밋에서 기입)_
+- **hash (short)**: `6d61815`
+- **hash (full)**: `6d6181549bc222b940aaa91dec98aeee780e70ba`
 - **author**: nomura
 - **message**: feat(custom-maker): 등급 이동 UI를 화살표+숫자 페이지네이션으로 개선
-- **git**: _(pending)_
+- **git**: `git show 6d61815`
 - **범위**: frontend (root-render) / frontend (root-cloudflare) / custom-maker
 - **요약**: 커스텀 메이커(제작/수정)와 게시글 상세의 "이전/다음 티어" 화살표뿐이던 등급 이동 UI를, 숫자를 눌러 원하는 등급으로 바로 이동할 수 있는 페이지네이션(`.tier-switch-nav`/`.tier-switch-btn`)으로 바꿨다. 바닐라(`custom-maker.js`/`post_detail.js`)에 `renderTierPagination()`을 추가했고, React(`CustomMaker.jsx`)는 기존에 중복으로 있던 화살표 줄과 번호 탭 줄을 한 줄로 합쳤다. 버튼은 호버 시 떠오르는 골드 그라데이션 필 스타일로 다듬었다.
 - **주요 파일**: `root-render/custom-maker/custom-maker.css`, `root-render/custom-maker/custom-maker.html`, `root-render/custom-maker/custom-maker.js`, `root-render/custom-maker/post_edit.html`, `root-render/custom-maker/custom-maker_post/post_detail.html`, `root-render/custom-maker/custom-maker_post/post_detail.js`, `root-cloudflare/src/pages/CustomMaker.jsx`, `root-cloudflare/src/pages/PostDetail.jsx`, `root-cloudflare/src/styles/custom-maker.css`, `root-cloudflare/src/styles/react-extra.css`
@@ -5551,15 +5551,15 @@
 
 ---
 
-<a id="pending-287"></a>
+<a id="a6dcde4"></a>
 
-### 287. 2026-09-19 — `(pending)`
+### 287. 2026-09-19 — `a6dcde4`
 
-- **hash (short)**: _(다음 docs 커밋에서 기입)_
-- **hash (full)**: _(다음 docs 커밋에서 기입)_
+- **hash (short)**: `a6dcde4`
+- **hash (full)**: `a6dcde4ab25251f7418f3d4db50cdbff667a19b1`
 - **author**: nomura
 - **message**: fix(board): React 게시판 검색창/레이아웃 CSS 누락 보정
-- **git**: _(pending)_
+- **git**: `git show a6dcde4`
 - **범위**: frontend (root-cloudflare) / custom-maker
 - **요약**: React `Board.jsx`가 쓰는 `.board-container`/`.board-toolbar`/`.search-box`/`.write-btn` 클래스에 대응하는 CSS가 어디에도 없어(바닐라는 페이지 인라인 `<style>`에만 있었음) 검색창/헤더가 거의 스타일 없이 보이던 문제를 고쳤다. `react-extra.css`에 바닐라와 동일한 다크/골드 디자인 + 모바일 반응형을 추가하고, 제목 옆 눈알 아이콘도 넣어 바닐라와 맞췄다.
 - **주요 파일**: `root-cloudflare/src/pages/Board.jsx`, `root-cloudflare/src/styles/react-extra.css`
