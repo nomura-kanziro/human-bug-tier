@@ -283,8 +283,77 @@
 .maker-container--edit h1 {
   color: #93c5fd;
 }
-.tier-nav { display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 10px; }
-.tier-nav button { padding: 10px 20px; font-size: 1.2rem; background: #222; color: #ffcc00; border: 2px solid #ffcc00; cursor: pointer; }
+.tier-nav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+#tier-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #ffcc00;
+  text-align: center;
+}
+
+/* 이전/다음 화살표 + 등급 번호 페이지네이션을 한 줄에 두는 네비게이션.
+   숫자 버튼을 직접 눌러 원하는 등급으로 바로 이동할 수 있어, 예전의 화살표만
+   있던 방식보다 등급표 사이를 오가기 쉽다. */
+.tier-switch-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.tier-switch-pages {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.tier-switch-btn {
+  min-width: 40px;
+  height: 40px;
+  padding: 0 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid #3a3a3a;
+  background: #1b1b1b;
+  color: #eee;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease,
+    border-color 0.15s ease, color 0.15s ease;
+}
+
+.tier-switch-btn:hover {
+  transform: translateY(-2px);
+  border-color: #ffcc00;
+  box-shadow: 0 6px 16px rgba(255, 204, 0, 0.18);
+}
+
+.tier-switch-btn.is-active {
+  background: linear-gradient(135deg, #ffcc00, #ff9800);
+  color: #111;
+  border-color: #ffcc00;
+  box-shadow: 0 4px 14px rgba(255, 204, 0, 0.35);
+}
+
+.tier-switch-arrow {
+  min-width: 44px;
+  font-size: 18px;
+}
+
 .character-pool { margin-top: 40px; }
 .characters-pool { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; padding: 20px; background: #1a1a1a; border-radius: 8px; }
 
@@ -586,21 +655,23 @@ body.char-selected-mode .characters {
   }
 
   .tier-nav {
-    flex-wrap: wrap;
     gap: 8px;
     margin-bottom: 12px;
   }
 
-  .tier-nav button {
-    min-height: 44px;
-    padding: 10px 14px;
-    font-size: 0.95rem;
-    flex: 1 1 40%;
+  .tier-switch-btn {
+    min-height: 40px;
+    min-width: 34px;
+    padding: 0 10px;
+    font-size: 0.85rem;
+  }
+
+  .tier-switch-arrow {
+    min-width: 40px;
   }
 
   #tier-title {
     width: 100%;
-    order: -1;
     font-size: 0.95rem;
     margin: 0 0 4px;
     line-height: 1.35;

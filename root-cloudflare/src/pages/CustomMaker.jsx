@@ -295,23 +295,42 @@ export default function CustomMaker({ editId = null }) {
         </div>
       )}
 
-      {/* 등급 이동 — 화살표 + 직접 선택. TIERS 길이만 보고 동작하므로 등급이 늘어도 그대로 작동 */}
+      {/* 등급 이동 — 화살표 + 번호 버튼(페이지네이션)을 한 줄에 두어 원하는 등급으로 바로 이동할 수 있다.
+          TIERS 길이만 보고 동작하므로 등급이 늘어도 그대로 작동한다. */}
       <div className="tier-nav">
-        <button type="button" onClick={() => setIndex((i) => Math.max(0, i - 1))} disabled={index === 0}>← 이전 티어</button>
-        <h2>{tier.title}</h2>
-        <button type="button" onClick={() => setIndex((i) => Math.min(TIERS.length - 1, i + 1))} disabled={index === TIERS.length - 1}>다음 티어 →</button>
-      </div>
-      <div className="tier-switch-nav">
-        {TIERS.map((t, i) => (
+        <h2 id="tier-title">{tier.title}</h2>
+        <nav className="tier-switch-nav" aria-label="등급 이동">
           <button
             type="button"
-            key={t.tier}
-            className={`tier-switch-btn${i === index ? ' is-active' : ''}`}
-            onClick={() => setIndex(i)}
+            className="tier-switch-btn tier-switch-arrow"
+            onClick={() => setIndex((i) => Math.max(0, i - 1))}
+            disabled={index === 0}
+            aria-label="이전 티어"
           >
-            {t.tier}
+            ←
           </button>
-        ))}
+          <div className="tier-switch-pages">
+            {TIERS.map((t, i) => (
+              <button
+                type="button"
+                key={t.tier}
+                className={`tier-switch-btn${i === index ? ' is-active' : ''}`}
+                onClick={() => setIndex(i)}
+              >
+                {t.tier}
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            className="tier-switch-btn tier-switch-arrow"
+            onClick={() => setIndex((i) => Math.min(TIERS.length - 1, i + 1))}
+            disabled={index === TIERS.length - 1}
+            aria-label="다음 티어"
+          >
+            →
+          </button>
+        </nav>
       </div>
 
       <div id="tier-capture-area" {...tierStyleProps(styleMap, index)}>

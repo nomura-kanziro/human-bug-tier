@@ -5,38 +5,14 @@
    동기화할 때마다 덮어쓴다. React 에서만 필요한 규칙은 여기에 모아 두어
    복사 동기화로 사라지지 않게 한다. */
 
-/* 커스텀 메이커 — 등급 직접 선택 탭 (바닐라는 이전/다음 버튼만 있음) */
-.maker-container .tier-switch-nav {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  justify-content: center;
-  margin: 0 auto 16px;
-}
-
-.maker-container .tier-switch-btn {
-  min-width: 40px;
-  padding: 7px 12px;
-  border-radius: 999px;
-  border: 1px solid #444;
-  background: #222;
-  color: #eee;
-  font-size: 14px;
-  font-weight: 600;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.maker-container .tier-switch-btn.is-active {
-  background: #ffcc00;
-  color: #111;
-  border-color: #ffcc00;
-}
-
-/* 첫/마지막 등급에서 이동할 곳이 없다는 걸 시각적으로도 알린다 */
-.tier-nav button[disabled] {
+/* 커스텀 메이커/게시글 상세 — 등급 이동 화살표는 경계(첫/마지막 등급)에서 disabled 를 쓴다.
+   바닐라는 이전/다음이 순환(wrap)이라 disabled 를 쓰지 않으므로, 이 규칙은 React 전용이다.
+   (숫자 페이지네이션·기본 버튼 모양은 custom-maker.css 로 동기화되는 공용 스타일을 그대로 쓴다) */
+.tier-switch-btn[disabled] {
   opacity: 0.35;
   cursor: default;
+  transform: none;
+  box-shadow: none;
 }
 
 /* 로그인·가입 등 단독 페이지: 바닐라는 <body>에 직접 배경을 줬는데 React 는 한 앱이라

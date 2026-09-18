@@ -253,9 +253,37 @@ export default function PostDetail() {
 
       <div id="tier-section">
         <div className="tier-nav">
-          <button type="button" onClick={() => setTierIndex((i) => (i - 1 + definitions.length) % definitions.length)}>← 이전 티어</button>
-          <h2>{current?.title}</h2>
-          <button type="button" onClick={() => setTierIndex((i) => (i + 1) % definitions.length)}>다음 티어 →</button>
+          <h2 id="tier-title">{current?.title}</h2>
+          <nav className="tier-switch-nav" aria-label="등급 이동">
+            <button
+              type="button"
+              className="tier-switch-btn tier-switch-arrow"
+              onClick={() => setTierIndex((i) => (i - 1 + definitions.length) % definitions.length)}
+              aria-label="이전 티어"
+            >
+              ←
+            </button>
+            <div className="tier-switch-pages">
+              {definitions.map((d, i) => (
+                <button
+                  type="button"
+                  key={d.id ?? i}
+                  className={`tier-switch-btn${i === tierIndex ? ' is-active' : ''}`}
+                  onClick={() => setTierIndex(i)}
+                >
+                  {d.id ?? i + 1}
+                </button>
+              ))}
+            </div>
+            <button
+              type="button"
+              className="tier-switch-btn tier-switch-arrow"
+              onClick={() => setTierIndex((i) => (i + 1) % definitions.length)}
+              aria-label="다음 티어"
+            >
+              →
+            </button>
+          </nav>
         </div>
 
         {/* 게시글에 저장된 꾸미기(테두리 색·배경 이펙트)를 그대로 입힌다 */}

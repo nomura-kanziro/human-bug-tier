@@ -381,12 +381,23 @@ function renderReadOnlyTier() {
   });
 
   applyReadOnlyTierStyle();
+  renderTierPagination(); // 등급 번호 버튼도 현재 등급에 맞춰 다시 그림
+}
+
+// 등급 번호 버튼(1~9)을 tierDefinitions 순서대로 그리고, 지금 보고 있는 등급에 is-active를 붙인다.
+function renderTierPagination() {
+  const wrap = document.getElementById('tier-pagination');
+  if (!wrap) return;
+  wrap.innerHTML = tierDefinitions.map((t, i) =>
+    `<button type="button" class="tier-switch-btn${i === currentTierIndex ? ' is-active' : ''}" data-tier-index="${i}">${t.id}</button>`
+  ).join('');
 }
 
 // 이전/다음 등급 버튼에 리스너를 등록. 게시글이 저장하고 있는 tierDefinitions 기준으로 순환한다
 function setupTierNavigation() {
   const prevBtn = document.getElementById('prev-btn');
   const nextBtn = document.getElementById('next-btn');
+  const pagination = document.getElementById('tier-pagination');
 
   if (prevBtn) {
     prevBtn.addEventListener('click', () => {
@@ -398,6 +409,17 @@ function setupTierNavigation() {
   if (nextBtn) {
     nextBtn.addEventListener('click', () => {
       currentTierIndex = (currentTierIndex + 1) % tierDefinitions.length;
+      renderReadOnlyTier();
+    });
+  }
+
+  if (pagination) {
+    pagination.addEventListener('click', (e) => {
+      const btn = e.target.closest('[data-tier-index]');
+      if (!btn) return;
+      const i = Number(btn.dataset.tierIndex);
+      if (!Number.isInteger(i) || i === currentTierIndex) return;
+      currentTierIndex = i;
       renderReadOnlyTier();
     });
   }
