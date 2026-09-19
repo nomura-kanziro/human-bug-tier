@@ -325,7 +325,7 @@
 | 294 | 2026-09-20 | [`26b31a5`](#26b31a5) | tweak(luck-draw): 랜덤 뽑기 배팅 옵션 순서·묶음 티어 배수 조정 |
 | 295 | 2026-09-20 | [`8f1aaf7`](#8f1aaf7) | feat(luck-draw): 랜덤 뽑기 라운드 마감 결과 공개 애니메이션 추가 |
 | 296 | 2026-09-20 | [`62868c2`](#62868c2) | fix(custom-maker,auth): 드롭존 우측 오버플우·관리자 로그인 입력창 정렬 버그 수정 |
-| 297 | 2026-09-20 | [`pending`](#pending) | feat(home): 메인 화면 행운 뽑기 소개를 오늘의 행운 티어·행운 티어 포커·랜덤 뽑기 3모드 안내로 개편 |
+| 297 | 2026-09-20 | [`4366901`](#4366901) | feat(home): 메인 화면 행운 뽑기 소개를 오늘의 행운 티어·행운 티어 포커·랜덤 뽑기 3모드 안내로 개편 |
 
 ---
 
@@ -5741,15 +5741,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="4366901"></a>
 
-### 297. 2026-09-20 — `pending`
+### 297. 2026-09-20 — `4366901`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `4366901`
+- **hash (full)**: `43669010943ede441ecd400b3148dad991669397`
 - **author**: nomura
 - **message**: feat(home): 메인 화면 행운 뽑기 소개를 오늘의 행운 티어·행운 티어 포커·랜덤 뽑기 3모드 안내로 개편
-- **git**: `git show pending`
+- **git**: `git show 4366901`
 - **범위**: frontend (root-cloudflare) / home, luck-draw
 - **요약**: 메인 화면 행운 뽑기 섹션(`home-luck-inner`)의 왼쪽 소개가 "오늘의 행운 티어"만 다루고 있어, 랜덤 뽑기·행운 티어 포커가 추가된 현재 행운 뽑기 전체를 반영하도록 `HomeLuckWidget.jsx`를 수정했다. 제목을 "행운 뽑기"로 바꾸고 설명을 "오늘의 행운 티어로 포인트를 모으고 포커·랜덤 뽑기에서 승부"하는 흐름으로 고쳤으며, 세 모드(`#daily`/`#poker`/`#random`)로 바로 이동하는 링크 목록(`.home-luck-modes`)을 추가했다. 게스트는 오늘의 행운 티어만 체크 가능하다는 안내로 문구를 맞췄다. 오른쪽 위젯 버튼은 기존대로 오늘의 행운 티어 체험 전용이다. `index-home.css`에 목록 스타일과 다크 모드 규칙을 추가했다. `root-render/`(바닐라)는 2026-09-19 지시에 따라 수정하지 않았다.
 - **주요 파일**: `root-cloudflare/src/components/HomeLuckWidget.jsx`, `root-cloudflare/src/styles/index-home.css`
