@@ -319,7 +319,7 @@
 | 288 | 2026-09-19 | [`31bf0b2`](#31bf0b2) | feat(auth): 로그인 1시간 경과 시 클라이언트 자동 로그아웃 |
 | 289 | 2026-09-19 | [`887c5e0`](#887c5e0) | fix(theme): 다크 테마에서 로고/게시판 제목이 안 보이던 문제 보정 |
 | 290 | 2026-09-19 | [`5d735ba`](#5d735ba) | docs(policy): root-render 베타 종료 선언 및 작업 금지·변경 원복 |
-| 291 | 2026-09-20 | [`(pending)`](#pending-291) | feat(luck-draw): 랜덤 뽑기(사다리 게임 스타일) 추가 |
+| 291 | 2026-09-20 | [`e953970`](#e953970) | feat(luck-draw): 랜덤 뽑기(사다리 게임 스타일) 추가 |
 
 ---
 
@@ -5627,15 +5627,15 @@
 
 ---
 
-<a id="pending-291"></a>
+<a id="e953970"></a>
 
-### 291. 2026-09-20 — `(pending)`
+### 291. 2026-09-20 — `e953970`
 
-- **hash (short)**: _(다음 docs 커밋에서 기입)_
-- **hash (full)**: _(다음 docs 커밋에서 기입)_
+- **hash (short)**: `e953970`
+- **hash (full)**: `e95397021d8df59c6f962df9d0a75d08b3c5419b`
 - **author**: nomura
 - **message**: feat(luck-draw): 랜덤 뽑기(사다리 게임 스타일) 추가
-- **git**: _(pending)_
+- **git**: `git show e953970`
 - **범위**: backend / frontend (root-cloudflare) / luck-draw
 - **요약**: 행운 뽑기의 "랜덤 뽑기" 탭(그동안 준비 중이던 자리)을 사다리 게임 스타일 배팅 게임으로 구현했다. "오늘의 행운 티어"와 달리 서버가 관리하는 고정 풀이 아니라 유저가 커스텀 메이커에 직접 배치한 캐릭터(`customMakerTierState`)를 그대로 추첨 대상으로 쓰며, 티어별 배치 개수가 곧 추첨 가중치가 된다. 배팅 종류는 묶음 티어(123/456/789, 1.95배) · 홀짝(1.95배) · 좌우(티어와 무관하게 항상 50:50 별도 추첨, 1.95배) · 같은 티어(1티어 20배 ~ 7~9티어 3.25배, 희귀할수록 고배당) 4가지이며, **승리 시 배팅액×배수를 얻고 패배 시에도 배팅액×배수만큼 그대로 잃는다**(단순 배팅액 상실이 아닌 고위험 규칙, 사용자 명시 요청). 포인트는 기존 규칙대로 0 밑으로 내려가지 않도록 클램프했다. 서버(`luckLadderController.js`)가 가중 랜덤 추첨·좌우 판정·정산을 전담하고, 프론트는 로컬 배치 현황을 모아 보내고 결과만 표시한다.
 - **주요 파일**: `backend/controllers/luckLadderController.js`, `backend/routes/luckDrawRoutes.js`, `root-cloudflare/src/components/LuckLadderPanel.jsx`, `root-cloudflare/src/styles/luck-ladder.css`, `root-cloudflare/src/pages/LuckDraw.jsx`, `root-cloudflare/src/components/Header.jsx`, `root-cloudflare/src/pages/Home.jsx`
