@@ -326,6 +326,7 @@
 | 295 | 2026-09-20 | [`8f1aaf7`](#8f1aaf7) | feat(luck-draw): 랜덤 뽑기 라운드 마감 결과 공개 애니메이션 추가 |
 | 296 | 2026-09-20 | [`62868c2`](#62868c2) | fix(custom-maker,auth): 드롭존 우측 오버플우·관리자 로그인 입력창 정렬 버그 수정 |
 | 297 | 2026-09-20 | [`4366901`](#4366901) | feat(home): 메인 화면 행운 뽑기 소개를 오늘의 행운 티어·행운 티어 포커·랜덤 뽑기 3모드 안내로 개편 |
+| 298 | 2026-09-20 | [`(pending)`](#pending-298) | style(common): 헤더 햄버거 버튼 → X 모양 애니메이션 추가 |
 
 ---
 
@@ -5753,6 +5754,24 @@
 - **범위**: frontend (root-cloudflare) / home, luck-draw
 - **요약**: 메인 화면 행운 뽑기 섹션(`home-luck-inner`)의 왼쪽 소개가 "오늘의 행운 티어"만 다루고 있어, 랜덤 뽑기·행운 티어 포커가 추가된 현재 행운 뽑기 전체를 반영하도록 `HomeLuckWidget.jsx`를 수정했다. 제목을 "행운 뽑기"로 바꾸고 설명을 "오늘의 행운 티어로 포인트를 모으고 포커·랜덤 뽑기에서 승부"하는 흐름으로 고쳤으며, 세 모드(`#daily`/`#poker`/`#random`)로 바로 이동하는 링크 목록(`.home-luck-modes`)을 추가했다. 게스트는 오늘의 행운 티어만 체크 가능하다는 안내로 문구를 맞췄다. 오른쪽 위젯 버튼은 기존대로 오늘의 행운 티어 체험 전용이다. `index-home.css`에 목록 스타일과 다크 모드 규칙을 추가했다. `root-render/`(바닐라)는 2026-09-19 지시에 따라 수정하지 않았다.
 - **주요 파일**: `root-cloudflare/src/components/HomeLuckWidget.jsx`, `root-cloudflare/src/styles/index-home.css`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-298"></a>
+
+### 298. 2026-09-20 — `(pending)`
+
+- **hash (short)**: `(pending)`
+- **hash (full)**: `(pending)`
+- **author**: nomura
+- **message**: style(common): 헤더 햄버거 버튼 → X 모양 애니메이션 추가
+- **git**: `(pending)`
+- **범위**: frontend (root-cloudflare) / common
+- **요약**: 헤더 우측 모바일 사이드메뉴 토글 버튼(`#menuBtn`)이 지금까지는 고정 텍스트 "☰" 한 글자였는데, 이를 3개의 `<span class="hamburger-line">`로 바꿔 메뉴가 열릴 때(`sideOpen`) `is-open` 클래스가 붙으면 위/아래 줄이 각각 45도/-45도 회전하면서 가운데 줄은 투명해져 X 모양으로 부드럽게 전환되고(transition), 닫으면 다시 ☰로 되돌아오도록 만들었다. 색상은 하드코딩 대신 `var(--text-primary)`를 써서 다크 모드에서도 자동으로 대비되도록 했다. 접근성을 위해 `role="button"`/`aria-expanded`/`aria-label`(열기·닫기 문구 전환)도 함께 추가했다.
+- **주요 파일**: `root-cloudflare/src/components/Header.jsx`, `root-cloudflare/src/styles/Header_Footer.css`
 - **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)

@@ -153,19 +153,42 @@ header {
 }
 
 .menu-btn {
-  font-size: 28px;
   cursor: pointer;
   user-select: none;
   min-width: 44px;
   min-height: 44px;
   display: inline-flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
+  gap: 6px;
   border-radius: 8px;
 }
 
 .menu-btn:active {
   background: #f3f4f6;
+}
+
+/* ☰ 3줄 → 클릭 시 X로 회전/합쳐지는 애니메이션. 가운데 줄은 옆으로 빠지며 사라진다 */
+.menu-btn .hamburger-line {
+  width: 24px;
+  height: 2px;
+  background: var(--text-primary, #111827);
+  border-radius: 2px;
+  transition: transform 0.25s ease, opacity 0.2s ease, width 0.2s ease;
+}
+
+.menu-btn.is-open .hamburger-line:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+
+.menu-btn.is-open .hamburger-line:nth-child(2) {
+  opacity: 0;
+  width: 0;
+}
+
+.menu-btn.is-open .hamburger-line:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
 }
 
 /* ====================== 알림 ====================== */

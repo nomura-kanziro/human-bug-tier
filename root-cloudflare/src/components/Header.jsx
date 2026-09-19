@@ -110,7 +110,18 @@ export default function Header() {
             <Link to="/login" id="header-login-btn" className="header-login-btn">로그인</Link>
           </>
         )}
-        <div className="menu-btn" id="menuBtn" onClick={() => setSideOpen((v) => !v)}>☰</div>
+        <div
+          className={`menu-btn${sideOpen ? ' is-open' : ''}`}
+          id="menuBtn"
+          onClick={() => setSideOpen((v) => !v)}
+          role="button"
+          aria-label={sideOpen ? '메뉴 닫기' : '메뉴 열기'}
+          aria-expanded={sideOpen}
+        >
+          <span className="hamburger-line" />
+          <span className="hamburger-line" />
+          <span className="hamburger-line" />
+        </div>
       </div>
 
       {/* 사이드 메뉴(모바일 오프캔버스) — 클릭식 아코디언, 하나 열면 다른 항목은 닫힘 */}
