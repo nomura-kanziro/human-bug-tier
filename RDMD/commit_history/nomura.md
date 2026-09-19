@@ -328,7 +328,7 @@
 | 297 | 2026-09-20 | [`4366901`](#4366901) | feat(home): 메인 화면 행운 뽑기 소개를 오늘의 행운 티어·행운 티어 포커·랜덤 뽑기 3모드 안내로 개편 |
 | 298 | 2026-09-20 | [`2555c8f`](#2555c8f) | style(common): 헤더 햄버거 버튼 → X 모양 애니메이션 추가 |
 | 299 | 2026-09-20 | [`4627055`](#4627055) | fix(common): 사이드 메뉴가 헤더를 가리지 않고 그 아래에서 열리도록 수정 |
-| 300 | 2026-09-20 | [`(pending)`](#pending-300) | style(common): 사이드 메뉴 내 X 닫기 버튼 제거 |
+| 300 | 2026-09-20 | [`6550b47`](#6550b47) | style(common): 사이드 메뉴 내 X 닫기 버튼 제거 |
 
 ---
 
@@ -5798,15 +5798,15 @@
 
 ---
 
-<a id="pending-300"></a>
+<a id="6550b47"></a>
 
-### 300. 2026-09-20 — `(pending)`
+### 300. 2026-09-20 — `6550b47`
 
-- **hash (short)**: `(pending)`
-- **hash (full)**: `(pending)`
+- **hash (short)**: `6550b47`
+- **hash (full)**: `6550b473c4d210769796d1871e9b4be42e9a5db2`
 - **author**: nomura
 - **message**: style(common): 사이드 메뉴 내 X 닫기 버튼 제거
-- **git**: `(pending)`
+- **git**: `git show 6550b47`
 - **범위**: frontend (root-cloudflare) / common
 - **요약**: 직전 커밋(299)에서 사이드 메뉴가 헤더를 더 이상 가리지 않게 되면서, 헤더의 햄버거 버튼(298번에서 X로 애니메이션되도록 만든 바로 그 버튼) 가 열린 상태에서도 그대로 보이고 달수 있게 되어, 사이드 메뉴 패널 안에 따로 있던 "×" 닫기 버튼(`#closeBtn`)이 중복이 되었다. `Header.jsx`에서 이 버튼 div를 제거하고(메뉴 항목 클릭 시 닫는 `closeSide` 호출은 그대로 유지), CSS에서도 이제 쓰이지 않는 `.close-btn` 규칙(기본+모바일 미디어쿼리 둘 다)을 지우고, 그 버튼이 차지하던 상단 여백도 `.side-menu ul`의 `margin-top`을 50px에서 10px로 줄였다.
 - **주요 파일**: `root-cloudflare/src/components/Header.jsx`, `root-cloudflare/src/styles/Header_Footer.css`
