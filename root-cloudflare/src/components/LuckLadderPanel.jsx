@@ -66,7 +66,7 @@ export default function LuckLadderPanel({ isLoggedIn }) {
   const history = data?.history || [];
   const minBet = data?.minBet ?? 1;
   const maxBet = data?.maxBet ?? 100;
-  const groupMult = data?.groupMult ?? 1.95;
+  const groupMult = data?.groupMult ?? 2.5;
   const parityMult = data?.parityMult ?? 1.95;
   const exactMult = data?.exactMult || {};
   const points = data?.points;
@@ -147,6 +147,14 @@ export default function LuckLadderPanel({ isLoggedIn }) {
         )}
 
         <div className="ladder-bet-group">
+          <span className="ladder-bet-group-label">홀수 / 짝수 ({parityMult}배)</span>
+          <div className="ladder-bet-options">
+            <button type="button" disabled={alreadyBet} className={`ladder-opt-btn${betType === 'parity' && betValue === 'odd' ? ' is-active' : ''}`} onClick={() => chooseBet('parity', 'odd')}>홀수</button>
+            <button type="button" disabled={alreadyBet} className={`ladder-opt-btn${betType === 'parity' && betValue === 'even' ? ' is-active' : ''}`} onClick={() => chooseBet('parity', 'even')}>짝수</button>
+          </div>
+        </div>
+
+        <div className="ladder-bet-group">
           <span className="ladder-bet-group-label">묶음 티어 ({groupMult}배)</span>
           <div className="ladder-bet-options">
             {GROUP_ORDER.map((g) => (
@@ -160,14 +168,6 @@ export default function LuckLadderPanel({ isLoggedIn }) {
                 {GROUP_LABELS[g]}
               </button>
             ))}
-          </div>
-        </div>
-
-        <div className="ladder-bet-group">
-          <span className="ladder-bet-group-label">홀수 / 짝수 ({parityMult}배)</span>
-          <div className="ladder-bet-options">
-            <button type="button" disabled={alreadyBet} className={`ladder-opt-btn${betType === 'parity' && betValue === 'odd' ? ' is-active' : ''}`} onClick={() => chooseBet('parity', 'odd')}>홀수</button>
-            <button type="button" disabled={alreadyBet} className={`ladder-opt-btn${betType === 'parity' && betValue === 'even' ? ' is-active' : ''}`} onClick={() => chooseBet('parity', 'even')}>짝수</button>
           </div>
         </div>
 
