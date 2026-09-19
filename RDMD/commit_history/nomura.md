@@ -323,6 +323,7 @@
 | 292 | 2026-09-20 | [`356652c`](#356652c) | refactor(luck-draw): 랜덤 뽑기를 5분 자동 공용 라운드 방식으로 재설계 |
 | 293 | 2026-09-20 | [`9e610fe`](#9e610fe) | fix(luck-draw): 오늘의 행운 티어 티어별 당첨 확률 가중치 조정 |
 | 294 | 2026-09-20 | [`26b31a5`](#26b31a5) | tweak(luck-draw): 랜덤 뽑기 배팅 옵션 순서·묶음 티어 배수 조정 |
+| 295 | 2026-09-20 | [`(pending)`](#pending-295) | feat(luck-draw): 랜덤 뽑기 라운드 마감 결과 공개 애니메이션 추가 |
 
 ---
 
@@ -5696,6 +5697,24 @@
 - **범위**: backend / frontend (root-cloudflare) / luck-draw
 - **요약**: 랜덤 뽑기(사다리 게임) 배팅 UI에서 "홀수/짝수" 옵션을 "묶음 티어" 위로 순서를 바꿨다. 또한 묶음 티어 배수를 1.95배에서 **2.5배**로 올렸다(홀짝 배수 1.95배는 그대로). 서버(`GROUP_MULT`)가 정본이며 프론트 표시값은 `/ladder/round` 응답을 그대로 쓴다.
 - **주요 파일**: `backend/controllers/luckLadderController.js`, `root-cloudflare/src/components/LuckLadderPanel.jsx`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-295"></a>
+
+### 295. 2026-09-20 — `(pending)`
+
+- **hash (short)**: `(pending)`
+- **hash (full)**: `(pending)`
+- **author**: nomura
+- **message**: feat(luck-draw): 랜덤 뽑기 라운드 마감 결과 공개 애니메이션 추가
+- **git**: `(pending)`
+- **범위**: frontend (root-cloudflare) / luck-draw
+- **요약**: 랜덤 뽑기 라운드 카운트다운(`LuckLadderPanel.jsx`)이 0이 되면 "결과 공개 중..." 스피너 배너를 먼저 보여주고, 다음 폴링(최대 5초 뒤)에서 서버가 정산을 마친 이전 라운드의 결과를 히스토리 응답에서 찾아 캐릭터 이미지·이름·티어·홀짝을 팝/포즈 CSS 애니메이션과 함께 카드 형태로 4초간 보여준다(이후 자동 사라짐). 서버 API 변경 없이 기존 `/ladder/round` 응답의 `history` 배열만 이용한다.
+- **주요 파일**: `root-cloudflare/src/components/LuckLadderPanel.jsx`, `root-cloudflare/src/styles/luck-ladder.css`
 - **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)

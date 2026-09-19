@@ -30,6 +30,83 @@
   font-variant-numeric: tabular-nums;
 }
 
+/* ====== 마감 결과 공개 애니메이션 ====== */
+.ladder-reveal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  padding: 18px 16px;
+  border-radius: 12px;
+  background: #111827;
+  animation: ladder-reveal-fade-in 0.3s ease;
+}
+
+.ladder-reveal-waiting {
+  gap: 10px;
+  color: #d1d5db;
+  font-weight: 600;
+}
+
+.ladder-reveal-spinner {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #fbbf24;
+  animation: ladder-reveal-spin 0.8s linear infinite;
+}
+
+.ladder-reveal-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  animation: ladder-reveal-pop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.ladder-reveal-img {
+  width: 56px;
+  height: 56px;
+  object-fit: contain;
+  border-radius: 10px;
+  background: #1f2937;
+  padding: 4px;
+}
+
+.ladder-reveal-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #fff;
+}
+
+.ladder-reveal-name {
+  font-size: 16px;
+  font-weight: 800;
+}
+
+.ladder-reveal-tier,
+.ladder-reveal-parity {
+  font-size: 13px;
+  color: #fbbf24;
+  font-weight: 600;
+}
+
+@keyframes ladder-reveal-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes ladder-reveal-pop {
+  0% { transform: scale(0.6) rotate(-6deg); opacity: 0; }
+  60% { transform: scale(1.08) rotate(2deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+
+@keyframes ladder-reveal-spin {
+  to { transform: rotate(360deg); }
+}
+
 /* ====== 배팅 옵션 ====== */
 .ladder-betting {
   margin-bottom: 24px;

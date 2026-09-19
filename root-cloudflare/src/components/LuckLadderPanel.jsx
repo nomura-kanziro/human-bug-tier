@@ -33,17 +33,28 @@ export default function LuckLadderPanel({ isLoggedIn }) {
   const [bet, setBet] = useState(10);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
+  const [revealing, setRevealing] = useState(false); // 카운트다운이 0이 된 뒤 서버 정산을 기다리는 중
+  const [revealResult, setRevealResult] = useState(null); // 방금 마감된 라운드의 결과(잠깐 보여줌)
   const lastRoundNoRef = useRef(null);
+  const revealTimeoutRef = useRef(null);
 
   const load = async () => {
     if (isStatic) return;
     const res = await apiRequest('/api/luck-draw/ladder/round').catch(() => null);
     if (!res?.ok) return;
+    const prevRoundNo = lastRoundNoRef.current;
     setData(res.data);
     setSecondsLeft(res.data.round.secondsLeft);
-    // 새 라운드로 넘어갔으면 이전 라운드에 남아있던 안내 메시지를 지운다
-    if (lastRoundNoRef.current !== null && lastRoundNoRef.current !== res.data.round.roundNo) {
+    // 새 라운드로 넘어갔으면 방금 끝난 라운드의 결과를 히스토리에서 찾아 잠깐 공개한다
+    if (prevRoundNo !== null && prevRoundNo !== res.data.round.roundNo) {
       setMessage('');
+      const finished = (res.data.history || []).find((h) => h.roundNo === prevRoundNo);
+      setRevealing(false);
+      clearTimeout(revealTimeoutRef.current);
+      if (finished) {
+        setRevealResult(finished);
+        revealTimeoutRef.current = setTimeout(() => setRevealResult(null), 4000);
+      }
     }
     lastRoundNoRef.current = res.data.round.roundNo;
   };
@@ -51,13 +62,23 @@ export default function LuckLadderPanel({ isLoggedIn }) {
   useEffect(() => {
     load();
     const timer = setInterval(load, POLL_MS);
-    return () => clearInterval(timer);
+    return () => {
+      clearInterval(timer);
+      clearTimeout(revealTimeoutRef.current);
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isStatic, isLoggedIn]);
 
   // 폴링 사이에도 카운트다운이 자연스럽게 줄어들도록 1초마다 로컬에서 갱신
   useEffect(() => {
-    const timer = setInterval(() => setSecondsLeft((s) => Math.max(0, s - 1)), 1000);
+    const timer = setInterval(() => {
+      setSecondsLeft((s) => {
+        const next = Math.max(0, s - 1);
+        // 마감 시각이 되면 다음 폴링에서 결과가 오기 전까지 '공개 중' 상태를 보여준다
+        if (s > 0 && next === 0) setRevealing(true);
+        return next;
+      });
+    }, 1000);
     return () => clearInterval(timer);
   }, []);
 
@@ -125,6 +146,26 @@ export default function LuckLadderPanel({ isLoggedIn }) {
         <div className="ladder-round-status">
           <span className="ladder-round-no">#{round.roundNo} 라운드</span>
           <span className="ladder-round-countdown">{formatCountdown(secondsLeft)} 후 마감</span>
+        </div>
+      )}
+
+      {revealResult ? (
+        <div className="ladder-reveal">
+          <div className="ladder-reveal-card">
+            {revealResult.imagePath && (
+              <img className="ladder-reveal-img" src={tierImageUrl(revealResult.imagePath)} alt={revealResult.characterName} />
+            )}
+            <div className="ladder-reveal-info">
+              <span className="ladder-reveal-name">{revealResult.characterName}</span>
+              <span className="ladder-reveal-tier">{revealResult.tier}티어</span>
+              <span className="ladder-reveal-parity">{revealResult.parity === 'odd' ? '홀수' : '짝수'}</span>
+            </div>
+          </div>
+        </div>
+      ) : revealing && (
+        <div className="ladder-reveal ladder-reveal-waiting">
+          <div className="ladder-reveal-spinner" />
+          <span>결과 공개 중...</span>
         </div>
       )}
 
