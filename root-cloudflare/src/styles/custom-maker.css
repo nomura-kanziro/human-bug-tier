@@ -12,6 +12,7 @@
   margin: 30px auto;
   border: none;        /* ← 기존 border: 2px solid #ffcc00 제거 */
   padding: 20px;
+  box-sizing: border-box;   /* ← width에 padding을 포함시켜 #tier-capture-area 안에서 넘치지 않게 함 */
   background: #111;
   min-height: 400px;           /* 기본 높이 (캐릭터 적을 때) */
   transition: min-height 0.3s ease;   /* 부드럽게 커지는 효과 */

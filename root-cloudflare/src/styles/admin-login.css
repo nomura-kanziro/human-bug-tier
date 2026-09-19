@@ -74,6 +74,14 @@
   margin-bottom: 30px;
 }
 
+/* form 자체는 박스를 만들지 않게 해서, 안의 input/button이 .login-box(flex column,
+   align-items:center)의 직속 아이템처럼 취급되어 중앙 정렬되도록 한다. form이 그대로
+   display:block이면 이 flex item은 .login-box 폭 전체로 늘어나 그 안의 input들이
+   왼쪽으로 붙어버린다(일반 로그인 페이지는 form 래퍼가 없어서 이 문제가 없었다). */
+.login-box form {
+  display: contents;
+}
+
 .login-box input {
   width: 240px;
   padding: 10px;
