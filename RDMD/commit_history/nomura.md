@@ -330,7 +330,7 @@
 | 299 | 2026-09-20 | [`4627055`](#4627055) | fix(common): 사이드 메뉴가 헤더를 가리지 않고 그 아래에서 열리도록 수정 |
 | 300 | 2026-09-20 | [`6550b47`](#6550b47) | style(common): 사이드 메뉴 내 X 닫기 버튼 제거 |
 | 301 | 2026-09-20 | [`7ae5de6`](#7ae5de6) | feat(auth): 로그인 후 1시간 경과 로그아웃을 방치(무활동) 1시간 자동 로그아웃으로 변경 |
-| 302 | 2026-09-20 | [`pending`](#pending) | style(custom-maker): 티어 이름표(tier-name)를 강조색 명패 디자인으로 개선 |
+| 302 | 2026-09-20 | [`a58b7fe`](#a58b7fe) | style(custom-maker): 티어 이름표(tier-name)를 강조색 명패 디자인으로 개선 |
 
 ---
 
@@ -5836,15 +5836,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="a58b7fe"></a>
 
-### 302. 2026-09-20 — `pending`
+### 302. 2026-09-20 — `a58b7fe`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `a58b7fe`
+- **hash (full)**: `a58b7fedd5f2a0d83568ee40ef6f903aa650953b`
 - **author**: nomura
 - **message**: style(custom-maker): 티어 이름표(tier-name)를 강조색 명패 디자인으로 개선
-- **git**: `git show pending`
+- **git**: `git show a58b7fe`
 - **범위**: frontend (root-cloudflare) / custom-maker
 - **요약**: 커스텀 메이커 티어표의 세부 등급 이름표(`.tier-name`)가 내용 크기만큼만 위쪽에 작은 회색 박스로 붙어 드롭존과 어울리지 않던 것을 개선했다. `align-self: stretch`로 드롭존 높이만큼 세로로 채우고, 왼쪽 4px 강조선 + 강조색(`--tier-accent`/`--tier-accent-soft`/`--tier-glow`, 없으면 골드) 그라데이션 배경 + 강조색 굵은 글자·글로우·둥근 모서리로 명패 형태로 바꿨다. 꾸미기 패널의 색 변경을 따라가고, html2canvas 캡처 호환을 위해 gradient/box-shadow/text-shadow만 사용했다. 모바일(세로 배치)에서는 위쪽 강조선의 가로 띠가 되며, 새 배경을 가리던 다크 모드 전용 배경 덮어쓰기 규칙은 제거했다.
 - **주요 파일**: `root-cloudflare/src/styles/custom-maker.css`
