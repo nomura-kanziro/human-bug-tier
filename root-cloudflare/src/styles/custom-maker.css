@@ -18,12 +18,22 @@
   transition: min-height 0.3s ease;   /* 부드럽게 커지는 효과 */
 }
 
-/* .tier: 세부 등급(갑급/을급/병급/정급) 한 줄. 왼쪽 이름표 + 오른쪽 드롭존을 가로로 배치 */
+/* .tier: 세부 등급(갑급/을급/병급/정급) 한 줄. 왼쪽 이름표 + 오른쪽 드롭존을 가로로 배치
+   각 줄은 은은한 카드(옅은 배경 + 가는 테두리 + 둥근 모서리)로 감싸 줄 사이가 또렷이 구분되게 한다. */
 .tier {
   display: flex;
-  margin-bottom: 20px;
+  margin-bottom: 14px;
+  padding: 10px;
+  box-sizing: border-box;
   align-items: flex-start;
   min-height: 160px;           /* ← 각 tier 행 최소 높이 (캐릭터 1줄 기준) */
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+.tier:last-child {
+  margin-bottom: 0;
 }
 
 /* 세부 등급 이름표(갑급/을급 등)
@@ -61,28 +71,31 @@
   gap: 12px;
   flex: 1;
   min-height: 140px;           /* ← drop-zone 최소 높이 */
-  padding: 10px;
-  border: 2px dashed rgba(255, 204, 0, 0.3);
-  border-radius: 8px;
+  padding: 12px;
+  box-sizing: border-box;
+  border: 1px dashed rgba(255, 204, 0, 0.3);
+  border-radius: 10px;
   align-content: flex-start;   /* 위쪽부터 차곡차곡 쌓임 */
-  background: rgba(255,255,255,0.02);
+  background: rgba(0, 0, 0, 0.28);   /* 카드 안쪽으로 살짝 패인 트레이 느낌 */
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.35);
 }
 
 /* 캐릭터 카드 한 장. draggable=true라 cursor: grab으로 잡을 수 있음을 표시 */
 .char {
-  border: 1px solid #ffcc00;
-  background: rgba(255,255,255,0.05);
-  border-radius: 8px;
+  border: 1px solid rgba(255, 204, 0, 0.6);
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.03));
+  border-radius: 10px;
   padding: 6px;
   text-align: center;
   width: 110px;
   cursor: grab;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
   transition: all 0.2s;
 }
 
 .char:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 15px #ffcc00;
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.45), 0 0 14px #ffcc00;
 }
 
 .char img {
@@ -416,8 +429,8 @@ body.pool-arrows-on .pool-viewport-arrows {
 /* 드롭존이 비어있을 때만 안내 문구를 표시 (:empty는 캐릭터 카드가 하나도 없을 때만 매치) */
 /* 캐릭터가 많아지면 자동으로 높이 늘어남 */
 .characters:empty::after {
-  content: "여기에 드래그해서 넣으세요";
-  color: rgba(255, 204, 0, 0.4);
+  content: "＋ 여기에 드래그해서 넣으세요";
+  color: rgba(255, 204, 0, 0.45);
   font-size: 0.9rem;
   display: flex;
   align-items: center;
@@ -558,7 +571,9 @@ body.pool-arrows-on .pool-viewport-arrows {
   isolation: isolate;
   background: var(--tier-bg);
   border: 2px solid var(--tier-accent);
-  padding: 16px;
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
   transition: border-color 0.25s ease, box-shadow 0.25s ease, background 0.25s ease;
 }
 
@@ -570,6 +585,7 @@ body.pool-arrows-on .pool-viewport-arrows {
   inset: 0;
   pointer-events: none;
   z-index: 0;
+  border-radius: inherit;   /* 프레임이 둥글어도 이펙트 레이어가 모서리 밖으로 삐져나오지 않게 */
 }
 #tier-capture-area::after {
   inset: 10px;
@@ -593,11 +609,14 @@ body.pool-arrows-on .pool-viewport-arrows {
   border-color: var(--tier-accent-soft);
   border-left-color: var(--tier-accent);
 }
+#tier-capture-area .tier {
+  border-color: var(--tier-accent-soft);
+}
 #tier-capture-area .characters {
   border-color: var(--tier-accent-soft);
 }
 #tier-capture-area .char {
-  border-color: var(--tier-accent);
+  border-color: var(--tier-accent-strong);
 }
 #tier-capture-area .char:hover {
   box-shadow: 0 0 15px var(--tier-glow);
@@ -701,7 +720,8 @@ body.char-selected-mode .characters {
   .tier {
     flex-direction: column;
     min-height: 0;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
+    padding: 8px;
   }
 
   .tier-name {
@@ -734,7 +754,7 @@ body.char-selected-mode .characters {
   }
 
   .characters:empty::after {
-    content: "탭해서 캐릭터 배치";
+    content: "＋ 탭해서 캐릭터 배치";
     font-size: 0.85rem;
   }
 
@@ -788,7 +808,6 @@ body.char-selected-mode .characters {
   border-color: rgba(255, 204, 0, 0.35);
 }
 [data-theme="dark"] .characters {
-  background: rgba(255, 255, 255, 0.03);
   border-color: rgba(255, 204, 0, 0.25);
 }
 [data-theme="dark"] .char {
