@@ -331,7 +331,7 @@
 | 300 | 2026-09-20 | [`6550b47`](#6550b47) | style(common): 사이드 메뉴 내 X 닫기 버튼 제거 |
 | 301 | 2026-09-20 | [`7ae5de6`](#7ae5de6) | feat(auth): 로그인 후 1시간 경과 로그아웃을 방치(무활동) 1시간 자동 로그아웃으로 변경 |
 | 302 | 2026-09-20 | [`a58b7fe`](#a58b7fe) | style(custom-maker): 티어 이름표(tier-name)를 강조색 명패 디자인으로 개선 |
-| 303 | 2026-09-20 | [`pending`](#pending) | style(custom-maker): 티어표 테이블(줄 카드·드롭존·캐릭터 카드·캡처 프레임) 디자인 개선 |
+| 303 | 2026-09-20 | [`00e18fd`](#00e18fd) | style(custom-maker): 티어표 테이블(줄 카드·드롭존·캐릭터 카드·캡처 프레임) 디자인 개선 |
 
 ---
 
@@ -5855,15 +5855,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="00e18fd"></a>
 
-### 303. 2026-09-20 — `pending`
+### 303. 2026-09-20 — `00e18fd`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `00e18fd`
+- **hash (full)**: `00e18fdd831e739ae617e2145ff89d83ebac51b7`
 - **author**: nomura
 - **message**: style(custom-maker): 티어표 테이블(줄 카드·드롭존·캐릭터 카드·캡처 프레임) 디자인 개선
-- **git**: `git show pending`
+- **git**: `git show 00e18fd`
 - **범위**: frontend (root-cloudflare) / custom-maker
 - **요약**: 커스텀 메이커 티어표 테이블 전체를 세련되게 다듬었다. (1) 각 세부 등급 줄(`.tier`)을 옅은 그라데이션 배경·가는 테두리·둥근 모서리·약한 그림자의 카드로 만들어 줄 구분을 또렷하게 했다. (2) 드롭존(`.characters`)은 굵은 점선 박스에서 안쪽이 패인 어두운 트레이(가는 점선 + inset 그림자)로 바꾸고 빈 상태 안내 문구에 `＋`를 붙였다. (3) 캐릭터 카드(`.char`)에 그라데이션·그림자를 주고 hover 시 떠오르는 효과로 바꿨다. (4) 캡처 프레임(`#tier-capture-area`)에 둥근 모서리·그림자를 주고 `::before/::after` 이펙트 레이어에 `border-radius: inherit`을 걸어 모서리 밖 삐져나옴을 막았다. (5) 줄 카드·캐릭터 카드 테두리가 꾸미기 강조색(`--tier-accent-soft/strong`)을 따르게 했고, 트레이 배경을 가리던 다크 모드 드롭존 배경 덮어쓰기를 제거했다. 모바일은 줄 카드 여백만 축소. 게시글 상세도 같은 스타일을 공유하므로 함께 반영된다.
 - **주요 파일**: `root-cloudflare/src/styles/custom-maker.css`
