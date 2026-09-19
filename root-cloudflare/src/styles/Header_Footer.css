@@ -605,13 +605,15 @@ header {
 /* ====================== 사이드 메뉴 ======================
    모바일 햄버거(#menuBtn) 클릭 시 오른쪽에서 슬라이드로 나타나는 오프캔버스 메뉴.
    평소엔 right:-500px로 화면 밖에 숨어있다가, common.js의 toggleMenu()가
-   .is-open 클래스(또는 인라인 style.right='0px')를 붙이면 transition으로 부드럽게 들어온다. */
+   .is-open 클래스(또는 인라인 style.right='0px')를 붙이면 transition으로 부드럽게 들어온다.
+   top/height는 헤더를 가리지 않도록 헤더 실측 높이(--header-h, Header.jsx가 설정)만큼
+   아래로 내리고 그만큼 높이를 줄인다. */
 .side-menu {
   position: fixed;
-  top: 0;
+  top: var(--header-h, 60px);
   right: -500px;
   width: 250px;
-  height: 100%;
+  height: calc(100% - var(--header-h, 60px));
   background: #f9f9f9;
   box-shadow: -2px 0 5px rgba(0,0,0,0.2);
   transition: right 0.3s ease;
@@ -854,7 +856,7 @@ footer a:hover,
     width: min(86vw, 300px);
     right: -100%;
     padding: 16px;
-    padding-top: 48px;
+    padding-top: 24px;
   }
 
   .side-menu.open,

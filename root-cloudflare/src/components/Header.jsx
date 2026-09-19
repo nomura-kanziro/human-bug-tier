@@ -49,6 +49,21 @@ export default function Header() {
   const [panel, setPanel] = useState(null); // 'profile' | 'bell' | null
   const bellRef = useRef(null);
   const profileRef = useRef(null);
+  const headerRef = useRef(null);
+
+  // 사이드 메뉴가 헤더를 가리지 않고 그 아래에서 열리도록, 실제 헤더 높이를 CSS 변수로 노출한다
+  // (헤더 높이는 반응형 padding/폰트 크기에 따라 달라지므로 하드코딩 대신 측정값을 쓴다)
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return undefined;
+    const setHeaderHeight = () => {
+      document.documentElement.style.setProperty('--header-h', `${el.offsetHeight}px`);
+    };
+    setHeaderHeight();
+    const ro = new ResizeObserver(setHeaderHeight);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
 
   // 바깥 클릭 → 열린 패널 닫기 (프로필/알림 공용)
   useEffect(() => {
@@ -65,7 +80,7 @@ export default function Header() {
   const togglePanel = (which) => setPanel((cur) => (cur === which ? null : which));
 
   return (
-    <header>
+    <header ref={headerRef}>
       <div className="left-group">
         <Link to="/" className="logo" id="logo" style={{ cursor: 'pointer', textDecoration: 'none' }}>
           <img src={LOGO_URL} alt="로고" className="logo-img" />
