@@ -26,13 +26,21 @@ function readProfileImage() {
   return localStorage.getItem('profileImage') || LOGO_URL;
 }
 
-// 서버가 오래 켜져 있다가 다운되거나 재시작될 가능성을 고려해, 토큰 자체의 서버 측 만료
-// (유저 7일/관리자 24시간)와 별개로 클라이언트에서 1시간이 지나면 먼저 로그아웃시킨다.
-// loginAt은 Login.jsx/AdminLogin.jsx가 로그인 성공 시 기록하며, 바닐라 common.js와 같은 키를 쓴다.
-const SESSION_TIMEOUT_MS = 60 * 60 * 1000; // 1시간
+// 로그인 상태는 브라우저를 닫아도 유지하되(토큰 서버 만료 유저 7일/관리자 24시간),
+// 활동 없이 방치된 채 1시간이 지나면 클라이언트에서 먼저 자동 로그아웃시킨다.
+// 마지막 활동 시각(lastActiveAt)은 localStorage 에 두어 같은 브라우저의 모든 탭이 공유한다
+// (한 탭에서 활동하면 다른 탭도 방치로 보지 않고, 브라우저를 닫아 둔 시간도 그대로 반영된다).
+// loginAt 은 Login.jsx/AdminLogin.jsx 가 로그인 성공 시 기록하며(바닐라 common.js 와 같은 키),
+// 아직 활동 기록이 없는 로그인 직후에는 loginAt 을 활동 시각 대용으로 쓴다.
+const SESSION_TIMEOUT_MS = 60 * 60 * 1000; // 방치 1시간
 const SESSION_CHECK_INTERVAL_MS = 60 * 1000; // 1분마다 확인
+const ACTIVITY_WRITE_THROTTLE_MS = 10 * 1000; // 활동 시각 기록은 10초에 최대 1번(이벤트 폭주 방지)
+const ACTIVITY_EVENTS = ['mousedown', 'mousemove', 'keydown', 'scroll', 'touchstart', 'wheel'];
 
-const SESSION_KEYS = ['user', 'authToken', 'adminAuthToken', 'isAdmin', 'adminName', 'adminIp', 'profileImage', 'loginAt'];
+const SESSION_KEYS = ['user', 'authToken', 'adminAuthToken', 'isAdmin', 'adminName', 'adminIp', 'profileImage', 'loginAt', 'lastActiveAt'];
+
+const isLoggedInNow = () => Boolean(localStorage.getItem('authToken')) || localStorage.getItem('isAdmin') === 'true';
+const lastActivity = () => Math.max(Number(localStorage.getItem('lastActiveAt') || 0), Number(localStorage.getItem('loginAt') || 0));
 
 export function AuthProvider({ children }) {
   const [identity, setIdentity] = useState(readIdentity);
@@ -49,22 +57,40 @@ export function AuthProvider({ children }) {
     return () => window.removeEventListener('storage', refresh);
   }, [refresh]);
 
-  // 로그인 1시간이 지나면 자동 로그아웃 — 마운트 직후 1회 + 1분마다 확인
+  // 방치 1시간이면 자동 로그아웃 — 마운트 직후 1회 + 1분마다 확인
+  // (마운트 직후 확인이 "브라우저를 닫아 두었다가 1시간 넘어 다시 연 경우"를 잡는다)
   useEffect(() => {
     const checkTimeout = () => {
-      const loginAt = Number(localStorage.getItem('loginAt') || 0);
-      if (!loginAt) return;
-      const isLoggedIn = Boolean(localStorage.getItem('authToken')) || localStorage.getItem('isAdmin') === 'true';
-      if (!isLoggedIn || Date.now() - loginAt < SESSION_TIMEOUT_MS) return;
+      if (!isLoggedInNow()) return;
+      const last = lastActivity();
+      if (!last) return; // 기록이 없는 옛 세션은 첫 활동 때 lastActiveAt 이 생긴다
+      if (Date.now() - last < SESSION_TIMEOUT_MS) return;
 
       SESSION_KEYS.forEach((k) => localStorage.removeItem(k));
       refresh();
-      window.alert('보안을 위해 로그인 후 1시간이 지나 자동으로 로그아웃되었습니다. 다시 로그인해주세요.');
+      window.alert('1시간 동안 활동이 없어 자동으로 로그아웃되었습니다. 다시 로그인해주세요.');
     };
     checkTimeout();
     const timer = setInterval(checkTimeout, SESSION_CHECK_INTERVAL_MS);
     return () => clearInterval(timer);
   }, [refresh]);
+
+  // 사용자 활동(마우스·키보드·스크롤·터치)이 있으면 마지막 활동 시각을 갱신 — 로그인 중일 때만 기록
+  useEffect(() => {
+    let lastWrite = 0;
+    const markActive = () => {
+      const now = Date.now();
+      if (now - lastWrite < ACTIVITY_WRITE_THROTTLE_MS) return;
+      lastWrite = now;
+      if (!isLoggedInNow()) return;
+      // 이미 방치 시간이 지났는데 타이머가 아직 못 돈 경우(절전 복귀 등)에는 활동으로 되살리지 않는다
+      const last = lastActivity();
+      if (last && now - last >= SESSION_TIMEOUT_MS) return;
+      try { localStorage.setItem('lastActiveAt', String(now)); } catch { /* 저장 불가 환경은 무시 */ }
+    };
+    ACTIVITY_EVENTS.forEach((ev) => window.addEventListener(ev, markActive, { passive: true }));
+    return () => ACTIVITY_EVENTS.forEach((ev) => window.removeEventListener(ev, markActive));
+  }, []);
 
   // 로그아웃 — 유저/관리자 키를 전부 지운다(드롭다운 로그아웃 버튼이 공용이므로 분기 없음)
   const logout = useCallback(() => {

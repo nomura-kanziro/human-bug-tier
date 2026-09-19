@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 297 |
+| **커밋 수** | 301 |
 | **기간** | 2026-03-20 ~ 2026-09-20 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -329,6 +329,7 @@
 | 298 | 2026-09-20 | [`2555c8f`](#2555c8f) | style(common): 헤더 햄버거 버튼 → X 모양 애니메이션 추가 |
 | 299 | 2026-09-20 | [`4627055`](#4627055) | fix(common): 사이드 메뉴가 헤더를 가리지 않고 그 아래에서 열리도록 수정 |
 | 300 | 2026-09-20 | [`6550b47`](#6550b47) | style(common): 사이드 메뉴 내 X 닫기 버튼 제거 |
+| 301 | 2026-09-20 | [`pending`](#pending) | feat(auth): 로그인 후 1시간 경과 로그아웃을 방치(무활동) 1시간 자동 로그아웃으로 변경 |
 
 ---
 
@@ -5810,6 +5811,24 @@
 - **범위**: frontend (root-cloudflare) / common
 - **요약**: 직전 커밋(299)에서 사이드 메뉴가 헤더를 더 이상 가리지 않게 되면서, 헤더의 햄버거 버튼(298번에서 X로 애니메이션되도록 만든 바로 그 버튼) 가 열린 상태에서도 그대로 보이고 달수 있게 되어, 사이드 메뉴 패널 안에 따로 있던 "×" 닫기 버튼(`#closeBtn`)이 중복이 되었다. `Header.jsx`에서 이 버튼 div를 제거하고(메뉴 항목 클릭 시 닫는 `closeSide` 호출은 그대로 유지), CSS에서도 이제 쓰이지 않는 `.close-btn` 규칙(기본+모바일 미디어쿼리 둘 다)을 지우고, 그 버튼이 차지하던 상단 여백도 `.side-menu ul`의 `margin-top`을 50px에서 10px로 줄였다.
 - **주요 파일**: `root-cloudflare/src/components/Header.jsx`, `root-cloudflare/src/styles/Header_Footer.css`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending"></a>
+
+### 301. 2026-09-20 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(auth): 로그인 후 1시간 경과 로그아웃을 방치(무활동) 1시간 자동 로그아웃으로 변경
+- **git**: `git show pending`
+- **범위**: frontend (root-cloudflare) / auth
+- **요약**: 기존 `AuthContext.jsx`는 로그인 시각(`loginAt`) 기준 1시간이 지나면 활동 여부와 무관하게 로그아웃시켰다. 로그인 상태는 유지하되 방치된 경우에만 로그아웃하도록 기준을 마지막 활동 시각(`lastActiveAt`)으로 바꿨다. 마우스·키보드·스크롤·터치 이벤트로 로그인 중일 때만 `lastActiveAt`을 10초 스로틀로 localStorage에 기록하고(탭 간 공유), 마운트 직후와 1분마다 `max(lastActiveAt, loginAt)` 기준 1시간 경과를 확인해 로그인 정보를 지우고 안내한다. 브라우저를 닫아 둔 시간도 방치로 계산되며, 이미 방치 시간이 지난 뒤의 첫 활동(절전 복귀 등)은 세션을 되살리지 않는다. 유저·관리자 공통 적용이며 `SESSION_KEYS`에 `lastActiveAt`을 추가했다. 서버 토큰 만료(유저 7일/관리자 24시간)와 `root-render/`(동결)는 변경 없음.
+- **주요 파일**: `root-cloudflare/src/context/AuthContext.jsx`
 - **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)
