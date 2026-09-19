@@ -322,7 +322,7 @@
 | 291 | 2026-09-20 | [`e953970`](#e953970) | feat(luck-draw): 랜덤 뽑기(사다리 게임 스타일) 추가 |
 | 292 | 2026-09-20 | [`356652c`](#356652c) | refactor(luck-draw): 랜덤 뽑기를 5분 자동 공용 라운드 방식으로 재설계 |
 | 293 | 2026-09-20 | [`9e610fe`](#9e610fe) | fix(luck-draw): 오늘의 행운 티어 티어별 당첨 확률 가중치 조정 |
-| 294 | 2026-09-20 | [`(pending)`](#pending-294) | tweak(luck-draw): 랜덤 뽑기 배팅 옵션 순서·묶음 티어 배수 조정 |
+| 294 | 2026-09-20 | [`26b31a5`](#26b31a5) | tweak(luck-draw): 랜덤 뽑기 배팅 옵션 순서·묶음 티어 배수 조정 |
 
 ---
 
@@ -5684,15 +5684,15 @@
 
 ---
 
-<a id="pending-294"></a>
+<a id="26b31a5"></a>
 
-### 294. 2026-09-20 — `(pending)`
+### 294. 2026-09-20 — `26b31a5`
 
-- **hash (short)**: `(pending)`
-- **hash (full)**: `(pending)`
+- **hash (short)**: `26b31a5`
+- **hash (full)**: `26b31a5ba3a0c223b9477c907a5240ded3dd1d2e`
 - **author**: nomura
 - **message**: tweak(luck-draw): 랜덤 뽑기 배팅 옵션 순서·묶음 티어 배수 조정
-- **git**: `(pending)`
+- **git**: `git show 26b31a5`
 - **범위**: backend / frontend (root-cloudflare) / luck-draw
 - **요약**: 랜덤 뽑기(사다리 게임) 배팅 UI에서 "홀수/짝수" 옵션을 "묶음 티어" 위로 순서를 바꿨다. 또한 묶음 티어 배수를 1.95배에서 **2.5배**로 올렸다(홀짝 배수 1.95배는 그대로). 서버(`GROUP_MULT`)가 정본이며 프론트 표시값은 `/ladder/round` 응답을 그대로 쓴다.
 - **주요 파일**: `backend/controllers/luckLadderController.js`, `root-cloudflare/src/components/LuckLadderPanel.jsx`
