@@ -329,7 +329,7 @@
 | 298 | 2026-09-20 | [`2555c8f`](#2555c8f) | style(common): 헤더 햄버거 버튼 → X 모양 애니메이션 추가 |
 | 299 | 2026-09-20 | [`4627055`](#4627055) | fix(common): 사이드 메뉴가 헤더를 가리지 않고 그 아래에서 열리도록 수정 |
 | 300 | 2026-09-20 | [`6550b47`](#6550b47) | style(common): 사이드 메뉴 내 X 닫기 버튼 제거 |
-| 301 | 2026-09-20 | [`pending`](#pending) | feat(auth): 로그인 후 1시간 경과 로그아웃을 방치(무활동) 1시간 자동 로그아웃으로 변경 |
+| 301 | 2026-09-20 | [`7ae5de6`](#7ae5de6) | feat(auth): 로그인 후 1시간 경과 로그아웃을 방치(무활동) 1시간 자동 로그아웃으로 변경 |
 
 ---
 
@@ -5817,15 +5817,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="7ae5de6"></a>
 
-### 301. 2026-09-20 — `pending`
+### 301. 2026-09-20 — `7ae5de6`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `7ae5de6`
+- **hash (full)**: `7ae5de6603b54038d6f747900067d1121877557f`
 - **author**: nomura
 - **message**: feat(auth): 로그인 후 1시간 경과 로그아웃을 방치(무활동) 1시간 자동 로그아웃으로 변경
-- **git**: `git show pending`
+- **git**: `git show 7ae5de6`
 - **범위**: frontend (root-cloudflare) / auth
 - **요약**: 기존 `AuthContext.jsx`는 로그인 시각(`loginAt`) 기준 1시간이 지나면 활동 여부와 무관하게 로그아웃시켰다. 로그인 상태는 유지하되 방치된 경우에만 로그아웃하도록 기준을 마지막 활동 시각(`lastActiveAt`)으로 바꿨다. 마우스·키보드·스크롤·터치 이벤트로 로그인 중일 때만 `lastActiveAt`을 10초 스로틀로 localStorage에 기록하고(탭 간 공유), 마운트 직후와 1분마다 `max(lastActiveAt, loginAt)` 기준 1시간 경과를 확인해 로그인 정보를 지우고 안내한다. 브라우저를 닫아 둔 시간도 방치로 계산되며, 이미 방치 시간이 지난 뒤의 첫 활동(절전 복귀 등)은 세션을 되살리지 않는다. 유저·관리자 공통 적용이며 `SESSION_KEYS`에 `lastActiveAt`을 추가했다. 서버 토큰 만료(유저 7일/관리자 24시간)와 `root-render/`(동결)는 변경 없음.
 - **주요 파일**: `root-cloudflare/src/context/AuthContext.jsx`
