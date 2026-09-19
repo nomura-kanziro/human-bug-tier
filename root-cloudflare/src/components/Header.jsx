@@ -145,7 +145,6 @@ export default function Header() {
         className={`side-menu${sideOpen ? ' is-open' : ''}`}
         style={{ right: sideOpen ? '0px' : '-100%' }}
       >
-        <div className="close-btn" id="closeBtn" onClick={closeSide}>×</div>
         <ul>
           {MENUS.map((menu, i) => (
             <li className={`nav-item side-dropdown${sideActive === i ? ' active' : ''}`} key={menu.label}>

@@ -328,6 +328,7 @@
 | 297 | 2026-09-20 | [`4366901`](#4366901) | feat(home): 메인 화면 행운 뽑기 소개를 오늘의 행운 티어·행운 티어 포커·랜덤 뽑기 3모드 안내로 개편 |
 | 298 | 2026-09-20 | [`2555c8f`](#2555c8f) | style(common): 헤더 햄버거 버튼 → X 모양 애니메이션 추가 |
 | 299 | 2026-09-20 | [`4627055`](#4627055) | fix(common): 사이드 메뉴가 헤더를 가리지 않고 그 아래에서 열리도록 수정 |
+| 300 | 2026-09-20 | [`(pending)`](#pending-300) | style(common): 사이드 메뉴 내 X 닫기 버튼 제거 |
 
 ---
 
@@ -5790,6 +5791,24 @@
 - **git**: `git show 4627055`
 - **범위**: frontend (root-cloudflare) / common
 - **요약**: 모바일 오프캔버스 사이드 메뉴(`#sideMenu`)가 `position:fixed; top:0; height:100%`로 헤더보다 z-index가 높아(1000 vs 100) 열릴 때마다 헤더를 통참로 덮어버리던 문제를 고쳤다. `Header.jsx`가 `<header>`의 실측 높이를 `ResizeObserver`로 재어 `--header-h` CSS 변수로 서문에 노출하고, `.side-menu`의 `top`/`height`를 이 변수 기준으로(`top: var(--header-h)`, `height: calc(100% - var(--header-h))`) 바꿔 헤더 바로 아래에서만 열리고 헤더는 항상 그대로 보이도록 고쳤다(놓이는 반응형 헤더 padding에 따라 높이가 달라지므로 하드코딩 대신 실측). 모바일 미디어쿼리의 `padding-top:48px`(예전에 헤더와 격리려던 여백)도 더 이상 필요 없어 24px로 줄였다. 부가로 헤더 메뉴가 더 이상 메뉴 버튼 자체를 가리지 않게 되면서 열린 상태에서 햄버거(X) 버튼을 다시 클릭해 닫는 것도 가능해졌다.
+- **주요 파일**: `root-cloudflare/src/components/Header.jsx`, `root-cloudflare/src/styles/Header_Footer.css`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-300"></a>
+
+### 300. 2026-09-20 — `(pending)`
+
+- **hash (short)**: `(pending)`
+- **hash (full)**: `(pending)`
+- **author**: nomura
+- **message**: style(common): 사이드 메뉴 내 X 닫기 버튼 제거
+- **git**: `(pending)`
+- **범위**: frontend (root-cloudflare) / common
+- **요약**: 직전 커밋(299)에서 사이드 메뉴가 헤더를 더 이상 가리지 않게 되면서, 헤더의 햄버거 버튼(298번에서 X로 애니메이션되도록 만든 바로 그 버튼) 가 열린 상태에서도 그대로 보이고 달수 있게 되어, 사이드 메뉴 패널 안에 따로 있던 "×" 닫기 버튼(`#closeBtn`)이 중복이 되었다. `Header.jsx`에서 이 버튼 div를 제거하고(메뉴 항목 클릭 시 닫는 `closeSide` 호출은 그대로 유지), CSS에서도 이제 쓰이지 않는 `.close-btn` 규칙(기본+모바일 미디어쿼리 둘 다)을 지우고, 그 버튼이 차지하던 상단 여백도 `.side-menu ul`의 `margin-top`을 50px에서 10px로 줄였다.
 - **주요 파일**: `root-cloudflare/src/components/Header.jsx`, `root-cloudflare/src/styles/Header_Footer.css`
 - **관련 RDMD**: _(없음)_
 
