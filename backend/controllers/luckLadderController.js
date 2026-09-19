@@ -1,118 +1,239 @@
 /* ======================================================================
- * 랜덤 뽑기 (사다리 게임 스타일) 컨트롤러
+ * 랜덤 뽑기 (사다리 게임 스타일, 5분 자동 라운드) 컨트롤러
  * ----------------------------------------------------------------------
- * "오늘의 행운 티어"와 달리, 이 게임은 서버가 관리하는 고정 캐릭터 풀이 아니라
- * 유저가 커스텀 메이커에서 직접 배치한 티어표(내 브라우저의 작업 중 배치)를 그대로
- * 추첨 대상으로 쓴다. 즉 확률은 "유저가 어느 티어에 몇 명을 배치했는가"에 따라
- * 유저마다 다르다 — 서버는 유저가 보내온 "티어별 캐릭터 목록"에서 개수(가중치)만
- * 신뢰하고, 실제 추첨(가중 랜덤)과 배당 정산은 전부 서버에서만 한다.
- *
- * 배팅 종류 4가지 (전부 "이기면 배팅액 × 배수 획득, 지면 배팅액 × 배수 만큼 상실" —
- * 승패 모두 같은 배수가 적용되는 방식. 일반적인 "배팅액만 잃는" 방식보다 손실 폭이 크므로
- * 프론트에서도 반드시 이 사실을 안내해야 한다):
- *   - group  (묶음 티어) : 1~3 / 4~6 / 7~9 티어 중 하나를 골라 그 묶음 안에 걸리면 승리, 배수 1.95
- *   - parity (홀짝 티어) : 홀수(1,3,5,7,9)/짝수(2,4,6,8) 중 하나, 배수 1.95
- *   - side   (좌/우)     : 티어 추첨과는 별개로 서버가 사다리 게임처럼 좌/우를 50:50 으로
- *                          독립 추첨한다 — 실제 사다리(Amidakuji)의 마지막 도착 지점이
- *                          티어 값과 무관하게 좌/우로 갈리는 것과 같은 구조. 배수 1.95
- *   - exact  (같은 티어) : 정확히 하나의 티어를 지목. 1티어(가장 희귀)일수록 배수가 높다
- *                          (1=20, 2·3=12, 4·5·6=6, 7·8·9=3.25)
+ * "오늘의 행운 티어"(개인별 즉시 뽑기)와 달리, 이 게임은 **전체 공용 라운드**로 돈다.
+ *   - 캐릭터 풀은 유저가 커스텀 메이커에 배치한 것이 아니라, 이 사이트가 이미
+ *     `backend/data/luckPool.js`(오늘의 행운 티어와 같은 전용 캐릭터 목록표)에 갖고
+ *     있는 티어별 캐릭터를 그대로 쓴다.
+ *   - 5분마다 서버가 스스로 라운드를 진행한다: 라운드가 열려 있는 5분 동안 누구든
+ *     배팅할 수 있고, 5분이 지나면 서버가 캐릭터 하나를 무작위로 뽑아 그 라운드의
+ *     결과(캐릭터 이름·티어·홀짝 여부)로 확정한 뒤, 그 라운드에 걸린 배팅을 전부
+ *     한 번에 정산하고 곧바로 다음 라운드를 연다 — 유저가 버튼을 눌러야 뽑히는 게
+ *     아니라 서버 타이머로 자동 진행되는 "자동게임"이다.
+ *   - 배팅 종류 3가지(전부 이기면 배팅액 × 배수 획득, 지면 배팅액 × 배수 만큼 상실 —
+ *     luckPokerController/luckDrawController 와 달리 손실도 배수가 붙는 고위험 규칙):
+ *       group  (묶음 티어) : 1~3 / 4~6 / 7~9 티어, 배수 1.95
+ *       parity (홀짝 티어) : 홀수(1,3,5,7,9) / 짝수(2,4,6,8), 배수 1.95
+ *       exact  (같은 티어) : 정확히 한 티어를 지목, 1티어(가장 희귀) 20배 ~ 7~9티어 3.25배
  * ====================================================================== */
 const mongoose = require('mongoose');
+const LuckLadderRound = require('../models/LuckLadderRound');
+const LuckLadderBet = require('../models/LuckLadderBet');
 const LuckProfile = require('../models/LuckProfile');
+const luckPool = require('../data/luckPool');
+const { resolveTierMediaPath } = require('../utils/tierMediaDir');
+
+const ROUND_DURATION_MS = 5 * 60 * 1000; // 5분 턴
+const SCHEDULER_TICK_MS = 5000; // 라운드 마감 여부를 5초마다 확인
 
 const MIN_BET = 1;
 const MAX_BET = 100;
-const TIER_MIN = 1;
-const TIER_MAX = 9;
-
-// 캐릭터 풀 유효성 상한 — 악의적으로 거대한 payload 를 보내는 것만 막는 안전장치일 뿐,
-// 실제 배당 계산에는 영향이 없다(개수만 가중치로 쓰기 때문).
-const MAX_TOTAL_CHARACTERS = 500;
-const MAX_PER_TIER = 200;
 
 const GROUP_MULT = 1.95;
 const PARITY_MULT = 1.95;
-const SIDE_MULT = 1.95;
 const GROUPS = { 123: [1, 2, 3], 456: [4, 5, 6], 789: [7, 8, 9] };
-
-// 티어가 낮은 숫자(=희귀)일수록 배수가 높다. 이 표 하나만 정본이며 프론트는 /ladder/config 로 받아 표시만 한다.
+// 티어가 낮은 숫자(=희귀)일수록 배수가 높다. 이 표 하나만 정본이며 프론트는 /ladder/round 로 받아 표시만 한다.
 const EXACT_MULT = { 1: 20, 2: 12, 3: 12, 4: 6, 5: 6, 6: 6, 7: 3.25, 8: 3.25, 9: 3.25 };
 
 function isDbConnected() {
   return mongoose.connection.readyState === 1;
 }
 
-// 요청 body 의 characters(티어별 캐릭터 배열)를 검증·정리해서 { pool, total } 로 반환.
-// pool[tier] = [{ name, img }, ...] — 배열 길이가 곧 그 티어의 추첨 가중치가 된다.
-function parseTierPool(rawCharacters) {
-  const pool = {};
-  let total = 0;
-  for (let tier = TIER_MIN; tier <= TIER_MAX; tier += 1) {
-    const arr = Array.isArray(rawCharacters?.[tier]) ? rawCharacters[tier] : [];
-    const cleaned = arr
-      .filter((c) => c && typeof c.name === 'string' && c.name.trim())
-      .slice(0, MAX_PER_TIER)
-      .map((c) => ({
-        name: String(c.name).trim().slice(0, 60),
-        img: typeof c.img === 'string' ? c.img.slice(0, 300) : '',
-      }));
-    pool[tier] = cleaned;
-    total += cleaned.length;
-  }
-  return { pool, total };
+function parityOf(tier) {
+  return tier % 2 === 1 ? 'odd' : 'even';
 }
 
-// 가중 랜덤으로 티어 하나 + 그 티어 안에서 캐릭터 하나를 뽑는다.
-// pickWeightedTier(luckDrawController)와 같은 룰렛휠 방식이지만, 여기서는 서버 상수가 아니라
-// 유저가 보내온 pool 의 배열 길이가 곧 가중치다.
-function pickWeightedTierFromPool(pool) {
-  const entries = Object.entries(pool).filter(([, arr]) => arr.length > 0);
-  const total = entries.reduce((sum, [, arr]) => sum + arr.length, 0);
-  let roll = Math.random() * total;
-
-  for (const [tier, arr] of entries) {
-    roll -= arr.length;
-    if (roll < 0) {
-      return { tier: Number(tier), character: arr[Math.floor(Math.random() * arr.length)] };
-    }
-  }
-  const [tier, arr] = entries[entries.length - 1];
-  return { tier: Number(tier), character: arr[arr.length - 1] };
+// backend/data/luckPool.js(오늘의 행운 티어와 같은 전용 캐릭터 목록표)를 평탄화해서
+// 한 번만 만들어 재사용한다 — 서버가 신뢰하는 유일한 캐릭터 소스.
+let flatPool = null;
+function getFlatPool() {
+  if (flatPool) return flatPool;
+  flatPool = [];
+  Object.entries(luckPool).forEach(([tierKey, list]) => {
+    const tier = Number(tierKey);
+    list.forEach((c) => {
+      flatPool.push({ name: c.name, img: resolveTierMediaPath(c.imagePath), tier });
+    });
+  });
+  return flatPool;
 }
 
-// GET /api/luck-draw/ladder/config
-const getLadderConfig = async (req, res) => {
+// 전체 캐릭터 목록표에서 균등 확률로 한 명을 뽑는다 — 라운드 결과 확정용.
+function pickRandomCharacter() {
+  const pool = getFlatPool();
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+function evaluateBet(betType, betValue, tier) {
+  if (betType === 'group') return (GROUPS[betValue] || []).includes(tier);
+  if (betType === 'parity') return parityOf(tier) === betValue;
+  if (betType === 'exact') return Number(betValue) === tier;
+  return false;
+}
+
+function roundPublicShape(round) {
+  const now = Date.now();
+  return {
+    roundNo: round.roundNo,
+    status: round.status,
+    startAt: round.startAt,
+    endAt: round.endAt,
+    secondsLeft: Math.max(0, Math.ceil((round.endAt.getTime() - now) / 1000)),
+  };
+}
+
+function roundResultShape(round) {
+  return {
+    roundNo: round.roundNo,
+    characterName: round.resultCharacterName,
+    imagePath: round.resultImagePath,
+    tier: round.resultTier,
+    parity: round.resultParity,
+  };
+}
+
+async function createRound(roundNo, startMs) {
+  const startAt = new Date(startMs);
+  const endAt = new Date(startMs + ROUND_DURATION_MS);
   try {
+    return await LuckLadderRound.create({ roundNo, startAt, endAt, status: 'open' });
+  } catch (err) {
+    // 동시 요청으로 같은 roundNo 가 이미 생성됐으면(unique 충돌) 그걸 그대로 조회해서 쓴다.
+    if (err.code === 11000) {
+      const existing = await LuckLadderRound.findOne({ roundNo });
+      if (existing) return existing;
+    }
+    throw err;
+  }
+}
+
+// 라운드 하나를 정산: 캐릭터 확정 → 그 라운드에 걸린 미정산 배팅을 전부 판정해
+// LuckProfile.points 를 갱신한다. 이미 정산된 라운드면 아무 것도 하지 않는다.
+async function settleRound(round) {
+  if (round.status !== 'open') return;
+
+  const picked = pickRandomCharacter();
+  round.status = 'settled';
+  round.resultCharacterName = picked.name;
+  round.resultImagePath = picked.img;
+  round.resultTier = picked.tier;
+  round.resultParity = parityOf(picked.tier);
+  await round.save();
+
+  const bets = await LuckLadderBet.find({ roundNo: round.roundNo, settled: false });
+  for (const betDoc of bets) {
+    const win = evaluateBet(betDoc.betType, betDoc.betValue, picked.tier);
+    // 승패 모두 같은 배수를 적용한다 — 이기면 배팅액 × 배수를 얻고, 지면 배팅액 × 배수를 잃는다.
+    const rawDelta = win ? Math.round(betDoc.bet * betDoc.mult) : -Math.round(betDoc.bet * betDoc.mult);
+
+    // eslint-disable-next-line no-await-in-loop
+    let profile = await LuckProfile.findOne({ userId: betDoc.userId });
+    if (!profile) profile = await LuckProfile.create({ userId: betDoc.userId });
+    // 포인트는 0 밑으로 내려가지 않는다 — 실제 반영된 증감만 배팅 기록에 남긴다.
+    const nextPoints = Math.max(0, profile.points + rawDelta);
+    const pointsDelta = nextPoints - profile.points;
+    profile.points = nextPoints;
+    // eslint-disable-next-line no-await-in-loop
+    await profile.save();
+
+    betDoc.settled = true;
+    betDoc.outcome = win ? 'win' : 'lose';
+    betDoc.pointsDelta = pointsDelta;
+    // eslint-disable-next-line no-await-in-loop
+    await betDoc.save();
+  }
+}
+
+// 지금 열려 있어야 할 라운드를 반환한다. 없으면 1번 라운드를 새로 열고,
+// 이미 마감 시각이 지났으면 정산부터 한 뒤 다음 라운드를 연다(서버가 잠깐
+// 내려가 있던 사이 마감 시각이 지난 경우도 이 경로로 자연스럽게 복구된다).
+async function ensureCurrentRound() {
+  if (!isDbConnected()) return null;
+
+  const round = await LuckLadderRound.findOne().sort({ roundNo: -1 });
+  const now = Date.now();
+
+  if (!round) {
+    return createRound(1, now);
+  }
+  if (round.status === 'open' && now >= round.endAt.getTime()) {
+    await settleRound(round);
+    return createRound(round.roundNo + 1, now);
+  }
+  if (round.status === 'settled') {
+    // 정상 흐름이면 settleRound 직후 항상 다음 라운드를 만들어두므로 거의 발생하지 않지만,
+    // 혹시 다음 라운드 생성이 누락된 상태로 남아 있으면 여기서 보정한다.
+    return createRound(round.roundNo + 1, now);
+  }
+  return round;
+}
+
+// 서버 기동 시 1회 호출 — 즉시 라운드를 확인/생성하고, 이후 주기적으로 마감 여부를 확인한다.
+function startLadderScheduler() {
+  ensureCurrentRound().catch((err) => console.error('랜덤 뽑기 라운드 초기화 실패:', err));
+  setInterval(() => {
+    ensureCurrentRound().catch((err) => console.error('랜덤 뽑기 라운드 진행 실패:', err));
+  }, SCHEDULER_TICK_MS);
+}
+
+// GET /api/luck-draw/ladder/round — 지금 진행 중인 라운드 상태 + 내 배팅 + 최근 결과 이력
+const getRoundStatus = async (req, res) => {
+  try {
+    if (!isDbConnected()) {
+      return res.status(503).json({ error: '데이터베이스에 연결되지 않았습니다.' });
+    }
+
+    const round = await ensureCurrentRound();
+    if (!round) {
+      return res.status(503).json({ error: '라운드를 준비하지 못했습니다.' });
+    }
+
+    let myBet = null;
     let points = null;
-    if (req.auth?.sub && isDbConnected()) {
-      const profile = await LuckProfile.findOne({ userId: req.auth.sub });
+    if (req.auth?.sub) {
+      const [betDoc, profile] = await Promise.all([
+        LuckLadderBet.findOne({ roundNo: round.roundNo, userId: req.auth.sub }),
+        LuckProfile.findOne({ userId: req.auth.sub }),
+      ]);
+      if (betDoc) {
+        myBet = {
+          betType: betDoc.betType,
+          betValue: betDoc.betValue,
+          bet: betDoc.bet,
+          mult: betDoc.mult,
+          settled: betDoc.settled,
+          outcome: betDoc.outcome,
+          pointsDelta: betDoc.pointsDelta,
+        };
+      }
       points = profile ? profile.points : 0;
     }
 
+    const history = await LuckLadderRound.find({ status: 'settled' }).sort({ roundNo: -1 }).limit(5);
+
     res.json({
+      ok: true,
+      round: roundPublicShape(round),
+      myBet,
+      history: history.map(roundResultShape),
+      roundDurationSec: ROUND_DURATION_MS / 1000,
       minBet: MIN_BET,
       maxBet: MAX_BET,
-      minTier: TIER_MIN,
-      maxTier: TIER_MAX,
       groupMult: GROUP_MULT,
       parityMult: PARITY_MULT,
-      sideMult: SIDE_MULT,
       exactMult: EXACT_MULT,
       groups: GROUPS,
       points,
     });
   } catch (err) {
-    console.error('랜덤 뽑기(사다리) 설정 조회 에러:', err);
-    res.status(500).json({ error: '설정 조회 실패' });
+    console.error('랜덤 뽑기 라운드 조회 에러:', err);
+    res.status(500).json({ error: '라운드 조회 실패' });
   }
 };
 
-// POST /api/luck-draw/ladder/play  { bet, betType, betValue, characters }
-// characters: { "1": [{name,img}], ..., "9": [...] } — 유저가 커스텀 메이커에 배치한
-// 캐릭터를 티어별로 묶어 보낸 것. 서버는 이 배열 길이만 가중치로 신뢰하고, 실제 추첨·
-// 승패 판정·포인트 정산은 전부 여기서만 한다.
-const playLadder = async (req, res) => {
+// POST /api/luck-draw/ladder/bet  { bet, betType, betValue }
+// 지금 열려 있는 라운드에 배팅 1건을 건다 — 라운드당 유저 1배팅만 허용.
+const placeBet = async (req, res) => {
   try {
     if (!isDbConnected()) {
       return res.status(503).json({ error: '데이터베이스에 연결되지 않았습니다.' });
@@ -124,54 +245,35 @@ const playLadder = async (req, res) => {
     }
 
     const { betType, betValue } = req.body || {};
-    const { pool, total } = parseTierPool(req.body?.characters);
-
-    if (total === 0) {
-      return res.status(400).json({ error: '내 티어표에 배치된 캐릭터가 없습니다. 커스텀 메이커에서 먼저 캐릭터를 배치해주세요.' });
-    }
-    if (total > MAX_TOTAL_CHARACTERS) {
-      return res.status(400).json({ error: '배치된 캐릭터 수가 너무 많습니다.' });
-    }
-
-    // 티어 추첨(가중 랜덤)과 좌/우 추첨(항상 50:50, 티어와 무관)을 각각 한 번씩만 뽑아
-    // 어떤 배팅 종류를 고르든 같은 한 번의 결과로 전부 판정한다.
-    const { tier, character } = pickWeightedTierFromPool(pool);
-    const side = Math.random() < 0.5 ? 'left' : 'right';
-
     let mult;
-    let win;
-
     if (betType === 'group') {
-      const group = GROUPS[betValue];
-      if (!group) return res.status(400).json({ error: '잘못된 배팅 종류입니다.' });
+      if (!GROUPS[betValue]) return res.status(400).json({ error: '잘못된 배팅 종류입니다.' });
       mult = GROUP_MULT;
-      win = group.includes(tier);
     } else if (betType === 'parity') {
-      if (betValue !== 'odd' && betValue !== 'even') {
-        return res.status(400).json({ error: '잘못된 배팅 종류입니다.' });
-      }
+      if (betValue !== 'odd' && betValue !== 'even') return res.status(400).json({ error: '잘못된 배팅 종류입니다.' });
       mult = PARITY_MULT;
-      win = (tier % 2 === 1 ? 'odd' : 'even') === betValue;
-    } else if (betType === 'side') {
-      if (betValue !== 'left' && betValue !== 'right') {
-        return res.status(400).json({ error: '잘못된 배팅 종류입니다.' });
-      }
-      mult = SIDE_MULT;
-      win = side === betValue;
     } else if (betType === 'exact') {
       const target = Number(betValue);
-      if (!Number.isInteger(target) || target < TIER_MIN || target > TIER_MAX) {
+      if (!Number.isInteger(target) || target < 1 || target > 9) {
         return res.status(400).json({ error: '잘못된 배팅 종류입니다.' });
       }
       mult = EXACT_MULT[target];
-      win = target === tier;
     } else {
       return res.status(400).json({ error: '잘못된 배팅 종류입니다.' });
     }
 
+    const round = await ensureCurrentRound();
+    if (!round || round.status !== 'open' || Date.now() >= round.endAt.getTime()) {
+      return res.status(409).json({ error: '라운드가 곧 마감되어 배팅할 수 없습니다. 잠시 후 다시 시도해주세요.' });
+    }
+
+    const already = await LuckLadderBet.findOne({ roundNo: round.roundNo, userId: req.auth.sub });
+    if (already) {
+      return res.status(400).json({ error: '이미 이번 라운드에 배팅했습니다. 다음 라운드를 기다려주세요.' });
+    }
+
     let profile = await LuckProfile.findOne({ userId: req.auth.sub });
     if (!profile) profile = await LuckProfile.create({ userId: req.auth.sub });
-
     if (profile.points < bet) {
       return res.status(400).json({
         error: '보유 포인트가 부족합니다. 오늘의 행운 티어를 뽑아 포인트를 모아주세요.',
@@ -179,32 +281,41 @@ const playLadder = async (req, res) => {
       });
     }
 
-    // 승패 모두 같은 배수를 적용한다 — 이기면 배팅액 × 배수를 얻고, 지면 배팅액 × 배수를 잃는다
-    // (단순히 배팅액만 잃는 방식이 아니다. 사용자 요청에 따른 의도된 고위험 규칙).
-    const rawDelta = win ? Math.round(bet * mult) : -Math.round(bet * mult);
-    // 포인트는 0 밑으로 내려가지 않는다 — 실제 반영된 증감(pointsDelta)만 응답에 쓴다.
-    const nextPoints = Math.max(0, profile.points + rawDelta);
-    const pointsDelta = nextPoints - profile.points;
-    profile.points = nextPoints;
-    await profile.save();
+    let betDoc;
+    try {
+      betDoc = await LuckLadderBet.create({
+        roundNo: round.roundNo,
+        userId: req.auth.sub,
+        betType,
+        betValue: String(betValue),
+        bet,
+        mult,
+      });
+    } catch (err) {
+      if (err.code === 11000) {
+        return res.status(400).json({ error: '이미 이번 라운드에 배팅했습니다. 다음 라운드를 기다려주세요.' });
+      }
+      throw err;
+    }
 
     res.json({
       ok: true,
-      bet,
-      betType,
-      betValue,
-      mult,
-      outcome: win ? 'win' : 'lose',
-      tier,
-      side,
-      character,
-      pointsDelta,
+      round: roundPublicShape(round),
+      myBet: {
+        betType: betDoc.betType,
+        betValue: betDoc.betValue,
+        bet: betDoc.bet,
+        mult: betDoc.mult,
+        settled: false,
+        outcome: null,
+        pointsDelta: 0,
+      },
       points: profile.points,
     });
   } catch (err) {
-    console.error('랜덤 뽑기(사다리) 플레이 에러:', err);
-    res.status(500).json({ error: '게임 진행에 실패했습니다.' });
+    console.error('랜덤 뽑기 배팅 에러:', err);
+    res.status(500).json({ error: '배팅 처리에 실패했습니다.' });
   }
 };
 
-module.exports = { getLadderConfig, playLadder };
+module.exports = { getRoundStatus, placeBet, startLadderScheduler };

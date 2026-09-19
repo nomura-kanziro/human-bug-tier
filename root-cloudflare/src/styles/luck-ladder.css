@@ -1,6 +1,6 @@
-/* 랜덤 뽑기(사다리 게임) 전용 스타일 — React 전용 파일.
+/* 랜덤 뽑기(사다리 게임, 5분 자동 라운드) 전용 스타일 — React 전용 파일.
    레이아웃 뼈대(.luck-draw-page, .luck-tab-panel, .luck-draw-btn, .luck-static-guard)는
-   luck-draw.css 를 그대로 재사용하고, 여기서는 배치 현황·배팅 옵션·결과 카드만 추가한다. */
+   luck-draw.css 를 그대로 재사용하고, 여기서는 라운드 상태·배팅 옵션·이력만 추가한다. */
 
 .ladder-warning {
   margin: 0 0 20px;
@@ -12,59 +12,22 @@
   font-weight: 600;
 }
 
-/* ====== 내 티어표 배치 현황 ====== */
-.ladder-pool-status {
-  margin-bottom: 22px;
-  padding: 14px 16px;
-  border-radius: 12px;
-  background: #fafafa;
-  border: 1px solid #eee;
-}
-
-.ladder-pool-head {
+/* ====== 현재 라운드 상태 ====== */
+.ladder-round-status {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 10px;
-  font-size: 13px;
+  margin-bottom: 18px;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: #111827;
+  color: #fff;
   font-weight: 700;
-  color: #444;
 }
 
-.ladder-refresh-btn {
-  padding: 4px 10px;
-  border: 1px solid #ddd;
-  border-radius: 999px;
-  background: #fff;
-  color: #666;
-  font-size: 12px;
-  cursor: pointer;
-}
-
-.ladder-pool-bars {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-  gap: 6px;
-}
-
-.ladder-pool-row {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 6px 4px;
-  border-radius: 8px;
-  background: #fff;
-  border: 1px solid #eee;
-  font-size: 12px;
-}
-
-.ladder-pool-tier {
-  color: #888;
-}
-
-.ladder-pool-count {
-  font-weight: 700;
-  color: #f59e0b;
+.ladder-round-countdown {
+  color: #fbbf24;
+  font-variant-numeric: tabular-nums;
 }
 
 /* ====== 배팅 옵션 ====== */
@@ -81,6 +44,21 @@
 .ladder-points strong {
   color: #f59e0b;
   font-size: 16px;
+}
+
+/* 이번 라운드에 이미 건 배팅 요약 — 정산 전에는 "결과 대기 중", 정산 후에는 결과를 함께 보여준다 */
+.ladder-my-bet {
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.ladder-my-bet-outcome.is-lose {
+  color: #b91c1c;
 }
 
 .ladder-bet-group {
@@ -116,6 +94,11 @@
   background: linear-gradient(135deg, #f59e0b, #f97316);
   border-color: #f59e0b;
   color: #fff;
+}
+
+.ladder-opt-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 .ladder-bet-row {
@@ -163,98 +146,58 @@
   cursor: not-allowed;
 }
 
-/* ====== 결과 ====== */
-.ladder-result {
-  margin: 24px 0;
-  padding: 24px 16px;
-  border-radius: 16px;
-  background: #111827;
-  text-align: center;
+/* ====== 최근 라운드 결과 이력 ====== */
+.ladder-history {
+  margin-top: 28px;
 }
 
-.ladder-result-dealing {
-  color: #e5e7eb;
-  font-weight: 700;
+.ladder-history h2 {
+  font-size: 16px;
+  margin: 0 0 12px;
 }
 
-.ladder-result-card {
+.ladder-history-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ladder-history-item {
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 16px;
-}
-
-.ladder-result-img {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 3px solid #f59e0b;
-}
-
-.ladder-result-info {
-  text-align: left;
-  color: #fff;
-}
-
-.ladder-result-tier {
-  display: inline-block;
-  padding: 3px 10px;
-  border-radius: 999px;
-  background: #fef3c7;
-  color: #92400e;
-  font-weight: 700;
-  font-size: 12px;
-  margin-bottom: 4px;
-}
-
-.ladder-result-name {
-  font-size: 17px;
-  font-weight: 700;
-}
-
-.ladder-result-side {
-  color: #9ca3af;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #fafafa;
+  border: 1px solid #eee;
   font-size: 13px;
 }
 
-.ladder-verdict {
-  margin-top: 16px;
-  font-size: 20px;
-  font-weight: 800;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
+.ladder-history-img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid #f59e0b;
 }
 
-.ladder-verdict-win { color: #34d399; }
-.ladder-verdict-lose { color: #f87171; }
+.ladder-history-name {
+  font-weight: 700;
+  flex: 1;
+}
 
-.ladder-delta {
-  padding: 3px 10px;
+.ladder-history-tier {
+  color: #92400e;
+  background: #fef3c7;
+  padding: 2px 8px;
   border-radius: 999px;
-  background: rgba(16, 185, 129, 0.18);
-  color: #34d399;
-  font-size: 14px;
+  font-weight: 700;
 }
 
-.ladder-delta-minus {
-  background: rgba(239, 68, 68, 0.18);
-  color: #f87171;
+.ladder-history-parity {
+  color: #888;
 }
 
-[data-theme="dark"] .ladder-pool-status {
-  background: #1f2937;
-  border-color: #374151;
-}
-
-[data-theme="dark"] .ladder-pool-row {
-  background: #111827;
-  border-color: #374151;
-}
-
-[data-theme="dark"] .ladder-pool-head,
 [data-theme="dark"] .ladder-points,
 [data-theme="dark"] .ladder-bet-group-label {
   color: #d1d5db;
@@ -275,6 +218,12 @@
 [data-theme="dark"] .ladder-bet-chip {
   background: #1f2937;
   color: #fbbf24;
+}
+
+[data-theme="dark"] .ladder-history-item {
+  background: #1f2937;
+  border-color: #374151;
+  color: #e5e7eb;
 }
 
 [data-theme="dark"] .ladder-warning {

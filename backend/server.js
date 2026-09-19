@@ -210,6 +210,13 @@ connectDB().then(async (connected) => {
   } catch (err) {
     console.error('관리자 계정 초기화 실패:', err.message);
   }
+
+  try {
+    // 랜덤 뽑기(사다리 게임) 5분 자동 라운드 스케줄러 — DB 연결 후에만 라운드를 만들 수 있다.
+    require('./controllers/luckLadderController').startLadderScheduler();
+  } catch (err) {
+    console.error('랜덤 뽑기 라운드 스케줄러 시작 실패:', err.message);
+  }
 });
 
 // 브라우저가 자동 요청하는 /favicon.ico 를 사이트 로고로 응답.

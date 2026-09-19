@@ -34,8 +34,10 @@ router.get('/stats', requireAuth, luckDrawController.getStats);     // 마이페
 router.get('/poker/config', optionalAuth, luckPokerController.getPokerConfig);
 router.post('/poker/play', requireAuth, luckPokerController.playPoker);
 
-// ====== 랜덤 뽑기 (사다리 게임 스타일 배팅 — 내 커스텀 티어표에 배치한 캐릭터 추첨) ======
-router.get('/ladder/config', optionalAuth, luckLadderController.getLadderConfig);
-router.post('/ladder/play', requireAuth, luckLadderController.playLadder);
+// ====== 랜덤 뽑기 (5분마다 서버가 자동으로 진행하는 사다리 게임 스타일 공용 라운드) ======
+// 캐릭터 추첨은 backend/data/luckPool.js 를 쓰고, 라운드 진행은 luckLadderController의
+// 스케줄러(server.js 에서 startLadderScheduler() 로 기동)가 5분마다 자동으로 담당한다.
+router.get('/ladder/round', optionalAuth, luckLadderController.getRoundStatus); // 현재 라운드 상태 + 내 배팅 + 최근 결과
+router.post('/ladder/bet', requireAuth, luckLadderController.placeBet);        // 현재 라운드에 배팅 1건
 
 module.exports = router;

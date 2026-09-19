@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 291 |
+| **커밋 수** | 292 |
 | **기간** | 2026-03-20 ~ 2026-09-20 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -320,6 +320,7 @@
 | 289 | 2026-09-19 | [`887c5e0`](#887c5e0) | fix(theme): 다크 테마에서 로고/게시판 제목이 안 보이던 문제 보정 |
 | 290 | 2026-09-19 | [`5d735ba`](#5d735ba) | docs(policy): root-render 베타 종료 선언 및 작업 금지·변경 원복 |
 | 291 | 2026-09-20 | [`e953970`](#e953970) | feat(luck-draw): 랜덤 뽑기(사다리 게임 스타일) 추가 |
+| 292 | 2026-09-20 | [`(pending)`](#pending-292) | refactor(luck-draw): 랜덤 뽑기를 5분 자동 공용 라운드 방식으로 재설계 |
 
 ---
 
@@ -5639,6 +5640,24 @@
 - **범위**: backend / frontend (root-cloudflare) / luck-draw
 - **요약**: 행운 뽑기의 "랜덤 뽑기" 탭(그동안 준비 중이던 자리)을 사다리 게임 스타일 배팅 게임으로 구현했다. "오늘의 행운 티어"와 달리 서버가 관리하는 고정 풀이 아니라 유저가 커스텀 메이커에 직접 배치한 캐릭터(`customMakerTierState`)를 그대로 추첨 대상으로 쓰며, 티어별 배치 개수가 곧 추첨 가중치가 된다. 배팅 종류는 묶음 티어(123/456/789, 1.95배) · 홀짝(1.95배) · 좌우(티어와 무관하게 항상 50:50 별도 추첨, 1.95배) · 같은 티어(1티어 20배 ~ 7~9티어 3.25배, 희귀할수록 고배당) 4가지이며, **승리 시 배팅액×배수를 얻고 패배 시에도 배팅액×배수만큼 그대로 잃는다**(단순 배팅액 상실이 아닌 고위험 규칙, 사용자 명시 요청). 포인트는 기존 규칙대로 0 밑으로 내려가지 않도록 클램프했다. 서버(`luckLadderController.js`)가 가중 랜덤 추첨·좌우 판정·정산을 전담하고, 프론트는 로컬 배치 현황을 모아 보내고 결과만 표시한다.
 - **주요 파일**: `backend/controllers/luckLadderController.js`, `backend/routes/luckDrawRoutes.js`, `root-cloudflare/src/components/LuckLadderPanel.jsx`, `root-cloudflare/src/styles/luck-ladder.css`, `root-cloudflare/src/pages/LuckDraw.jsx`, `root-cloudflare/src/components/Header.jsx`, `root-cloudflare/src/pages/Home.jsx`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-292"></a>
+
+### 292. 2026-09-20 — `(pending)`
+
+- **hash (short)**: _(다음 docs 커밋에서 기입)_
+- **hash (full)**: _(다음 docs 커밋에서 기입)_
+- **author**: nomura
+- **message**: refactor(luck-draw): 랜덤 뽑기를 5분 자동 공용 라운드 방식으로 재설계
+- **git**: _(pending)_
+- **범위**: backend / frontend (root-cloudflare) / luck-draw
+- **요약**: 직전 커밋(291)의 "커스텀 메이커 배치 기반 즉시 뽑기" 방식을 폐기하고, 캐릭터 추첨 대상을 이 사이트가 이미 갖고 있는 전용 캐릭터 목록표(`backend/data/luckPool.js`, 오늘의 행운 티어와 동일 소스)로 바꿨다. 게임 방식도 유저가 버튼을 누를 때마다 즉시 뽑는 방식에서, 서버가 5분마다 자동으로 진행하는 **전체 공용 라운드**로 바꿨다 — 라운드가 열려 있는 5분 동안 누구든 배팅(라운드당 1건)을 걸 수 있고, 마감 시각이 되면 서버 스케줄러가 캐릭터 하나를 무작위로 뽑아 그 라운드의 결과(캐릭터 이름·티어·홀짝 여부)로 확정한 뒤 걸린 배팅을 전부 자동 정산하고 곧바로 다음 라운드를 연다. 배팅 종류에서 "좌우"는 결과 항목(이름/티어/홀짝)과 무관해져 제거했고, 묶음 티어·홀짝·같은 티어 3종만 남겼다(배수 체계는 그대로). 라운드/배팅 상태는 새 컬렉션(`LuckLadderRound`, `LuckLadderBet`)에 영속화해 서버가 재시작돼도 마감 시각이 지난 라운드를 자동으로 정산하고 이어서 진행한다.
+- **주요 파일**: `backend/models/LuckLadderRound.js`, `backend/models/LuckLadderBet.js`, `backend/controllers/luckLadderController.js`, `backend/routes/luckDrawRoutes.js`, `backend/server.js`, `root-cloudflare/src/components/LuckLadderPanel.jsx`, `root-cloudflare/src/styles/luck-ladder.css`
 - **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)
