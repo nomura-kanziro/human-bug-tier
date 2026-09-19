@@ -1,4 +1,6 @@
 // 홈 화면 행운 뽑기 미니 위젯 (index-home.js initHomeLuckDraw 이식)
+//  - 왼쪽 소개(.home-luck-copy)는 행운 뽑기 전체(오늘의 행운 티어·행운 티어 포커·랜덤 뽑기)를
+//    안내하고, 오른쪽 위젯 버튼은 그중 "오늘의 행운 티어"(daily) 뽑기만 바로 체험할 수 있다.
 //  - luck-draw 페이지와 같은 API(POST /api/luck-draw/daily)·게스트 키(luckDrawGuestState) 사용
 //  - 게스트는 서버 기록이 없으므로 24시간 재클릭을 localStorage 로만 안내(서버 호출 없음)
 //  - 릴 애니메이션(90ms) + 최소 2.2초 대기 후 결과 표시
@@ -83,8 +85,16 @@ export default function HomeLuckWidget() {
       <div className="home-luck-inner">
         <div className="home-luck-copy">
           <p className="home-luck-kicker">Luck Draw</p>
-          <h2>오늘의 행운 티어</h2>
-          <p className="home-luck-desc">한 번 뽑아 보세요. 회원은 기록이 남고, 게스트는 체크만 할 수 있습니다.</p>
+          <h2>행운 뽑기</h2>
+          <p className="home-luck-desc">
+            오늘의 행운 티어로 포인트를 모으고, 행운 티어 포커와 랜덤 뽑기에서 그 포인트로 승부해 보세요.
+            회원은 기록이 남고, 게스트는 오늘의 행운 티어만 체크할 수 있습니다.
+          </p>
+          <ul className="home-luck-modes">
+            <li><Link to="/luck-draw#daily"><strong>오늘의 행운 티어</strong> 하루 한 번, 티어와 캐릭터 뽑고 포인트 적립</Link></li>
+            <li><Link to="/luck-draw#poker"><strong>행운 티어 포커</strong> 포인트를 걸고 딜러와 포커 승부</Link></li>
+            <li><Link to="/luck-draw#random"><strong>랜덤 뽑기</strong> 5분마다 열리는 공용 라운드에 배팅</Link></li>
+          </ul>
           <Link className="home-luck-more" to="/luck-draw#daily">자세히 보기 →</Link>
         </div>
         <div className="home-luck-widget">

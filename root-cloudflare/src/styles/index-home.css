@@ -198,6 +198,38 @@
   font-size: 0.95rem;
 }
 
+/* 행운 뽑기 세 모드(오늘의 행운 티어/행운 티어 포커/랜덤 뽑기) 안내 목록 —
+   각 줄이 해당 luck-draw 탭(#daily/#poker/#random)으로 바로 이동하는 링크 */
+.home-luck-modes {
+  list-style: none;
+  margin: 0 0 14px;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.home-luck-modes a {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(217, 119, 6, 0.08);
+  color: #57534e;
+  font-size: 0.88rem;
+  line-height: 1.4;
+  text-decoration: none;
+  transition: background 0.2s ease;
+}
+
+.home-luck-modes a:hover {
+  background: rgba(217, 119, 6, 0.16);
+}
+
+.home-luck-modes strong {
+  margin-right: 6px;
+  color: #b45309;
+}
+
 .home-luck-more {
   color: #b45309;
   font-weight: 700;
@@ -390,6 +422,16 @@
 }
 [data-theme="dark"] .home-luck-desc {
   color: var(--text-secondary);
+}
+[data-theme="dark"] .home-luck-modes a {
+  background: rgba(217, 119, 6, 0.14);
+  color: var(--text-secondary);
+}
+[data-theme="dark"] .home-luck-modes a:hover {
+  background: rgba(217, 119, 6, 0.24);
+}
+[data-theme="dark"] .home-luck-modes strong {
+  color: #fbbf24;
 }
 [data-theme="dark"] .home-luck-widget {
   background: var(--bg-elevated);

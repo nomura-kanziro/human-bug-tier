@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 293 |
+| **커밋 수** | 297 |
 | **기간** | 2026-03-20 ~ 2026-09-20 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -325,6 +325,7 @@
 | 294 | 2026-09-20 | [`26b31a5`](#26b31a5) | tweak(luck-draw): 랜덤 뽑기 배팅 옵션 순서·묶음 티어 배수 조정 |
 | 295 | 2026-09-20 | [`8f1aaf7`](#8f1aaf7) | feat(luck-draw): 랜덤 뽑기 라운드 마감 결과 공개 애니메이션 추가 |
 | 296 | 2026-09-20 | [`62868c2`](#62868c2) | fix(custom-maker,auth): 드롭존 우측 오버플우·관리자 로그인 입력창 정렬 버그 수정 |
+| 297 | 2026-09-20 | [`pending`](#pending) | feat(home): 메인 화면 행운 뽑기 소개를 오늘의 행운 티어·행운 티어 포커·랜덤 뽑기 3모드 안내로 개편 |
 
 ---
 
@@ -5734,6 +5735,24 @@
 - **범위**: frontend (root-cloudflare)
 - **요약**: 두 가지 UI 버그를 고쳤다. (1) 커스텀 메이커의 캡쳐 프레임(`#tier-capture-area`) 안에서 `.tier-list`가 `width:100%`(box-sizing:content-box)에 자체 `padding:20px`가 더해져 오른쪽이 프레임 테두리를 넘어 겹치는 문제가 있었다(왼쪽은 margin:0으로 고정되어 보이지 않았을 뿐). `.tier-list`에 `box-sizing: border-box`를 추가해 padding이 width 안에 포함되도록 바로잡았다. (2) 관리자 로그인(`AdminLogin.jsx`)만 입력칸을 `<form>`으로 감싸는데, `.login-box`(flex column + align-items:center)의 직속 자식이 블록 요소인 `<form>` 하나뿐이라 form이 박스 전체 폭(400px)으로 늘어나 그 안 input이 왼쪽으로 붙는 문제가 있었다(일반 유저 로그인은 form 래퍼 없이 input이 직접 flex item이라 정상이었다). `.login-box form { display: contents; }` 로 form이 박스를 만들지 않게 해 안의 input/button이 직접 flex item처럼 취급되어 중앙 정렬되도록 고쳤다.
 - **주요 파일**: `root-cloudflare/src/styles/custom-maker.css`, `root-cloudflare/src/styles/admin-login.css`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending"></a>
+
+### 297. 2026-09-20 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(home): 메인 화면 행운 뽑기 소개를 오늘의 행운 티어·행운 티어 포커·랜덤 뽑기 3모드 안내로 개편
+- **git**: `git show pending`
+- **범위**: frontend (root-cloudflare) / home, luck-draw
+- **요약**: 메인 화면 행운 뽑기 섹션(`home-luck-inner`)의 왼쪽 소개가 "오늘의 행운 티어"만 다루고 있어, 랜덤 뽑기·행운 티어 포커가 추가된 현재 행운 뽑기 전체를 반영하도록 `HomeLuckWidget.jsx`를 수정했다. 제목을 "행운 뽑기"로 바꾸고 설명을 "오늘의 행운 티어로 포인트를 모으고 포커·랜덤 뽑기에서 승부"하는 흐름으로 고쳤으며, 세 모드(`#daily`/`#poker`/`#random`)로 바로 이동하는 링크 목록(`.home-luck-modes`)을 추가했다. 게스트는 오늘의 행운 티어만 체크 가능하다는 안내로 문구를 맞췄다. 오른쪽 위젯 버튼은 기존대로 오늘의 행운 티어 체험 전용이다. `index-home.css`에 목록 스타일과 다크 모드 규칙을 추가했다. `root-render/`(바닐라)는 2026-09-19 지시에 따라 수정하지 않았다.
+- **주요 파일**: `root-cloudflare/src/components/HomeLuckWidget.jsx`, `root-cloudflare/src/styles/index-home.css`
 - **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)
