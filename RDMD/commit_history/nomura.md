@@ -320,7 +320,7 @@
 | 289 | 2026-09-19 | [`887c5e0`](#887c5e0) | fix(theme): 다크 테마에서 로고/게시판 제목이 안 보이던 문제 보정 |
 | 290 | 2026-09-19 | [`5d735ba`](#5d735ba) | docs(policy): root-render 베타 종료 선언 및 작업 금지·변경 원복 |
 | 291 | 2026-09-20 | [`e953970`](#e953970) | feat(luck-draw): 랜덤 뽑기(사다리 게임 스타일) 추가 |
-| 292 | 2026-09-20 | [`(pending)`](#pending-292) | refactor(luck-draw): 랜덤 뽑기를 5분 자동 공용 라운드 방식으로 재설계 |
+| 292 | 2026-09-20 | [`356652c`](#356652c) | refactor(luck-draw): 랜덤 뽑기를 5분 자동 공용 라운드 방식으로 재설계 |
 
 ---
 
@@ -5646,15 +5646,15 @@
 
 ---
 
-<a id="pending-292"></a>
+<a id="356652c"></a>
 
-### 292. 2026-09-20 — `(pending)`
+### 292. 2026-09-20 — `356652c`
 
-- **hash (short)**: _(다음 docs 커밋에서 기입)_
-- **hash (full)**: _(다음 docs 커밋에서 기입)_
+- **hash (short)**: `356652c`
+- **hash (full)**: `356652c8a4bfacbeef2e23a090f3fdc731c54731`
 - **author**: nomura
 - **message**: refactor(luck-draw): 랜덤 뽑기를 5분 자동 공용 라운드 방식으로 재설계
-- **git**: _(pending)_
+- **git**: `git show 356652c`
 - **범위**: backend / frontend (root-cloudflare) / luck-draw
 - **요약**: 직전 커밋(291)의 "커스텀 메이커 배치 기반 즉시 뽑기" 방식을 폐기하고, 캐릭터 추첨 대상을 이 사이트가 이미 갖고 있는 전용 캐릭터 목록표(`backend/data/luckPool.js`, 오늘의 행운 티어와 동일 소스)로 바꿨다. 게임 방식도 유저가 버튼을 누를 때마다 즉시 뽑는 방식에서, 서버가 5분마다 자동으로 진행하는 **전체 공용 라운드**로 바꿨다 — 라운드가 열려 있는 5분 동안 누구든 배팅(라운드당 1건)을 걸 수 있고, 마감 시각이 되면 서버 스케줄러가 캐릭터 하나를 무작위로 뽑아 그 라운드의 결과(캐릭터 이름·티어·홀짝 여부)로 확정한 뒤 걸린 배팅을 전부 자동 정산하고 곧바로 다음 라운드를 연다. 배팅 종류에서 "좌우"는 결과 항목(이름/티어/홀짝)과 무관해져 제거했고, 묶음 티어·홀짝·같은 티어 3종만 남겼다(배수 체계는 그대로). 라운드/배팅 상태는 새 컬렉션(`LuckLadderRound`, `LuckLadderBet`)에 영속화해 서버가 재시작돼도 마감 시각이 지난 라운드를 자동으로 정산하고 이어서 진행한다.
 - **주요 파일**: `backend/models/LuckLadderRound.js`, `backend/models/LuckLadderBet.js`, `backend/controllers/luckLadderController.js`, `backend/routes/luckDrawRoutes.js`, `backend/server.js`, `root-cloudflare/src/components/LuckLadderPanel.jsx`, `root-cloudflare/src/styles/luck-ladder.css`
