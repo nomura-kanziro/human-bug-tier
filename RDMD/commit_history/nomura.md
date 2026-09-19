@@ -326,7 +326,7 @@
 | 295 | 2026-09-20 | [`8f1aaf7`](#8f1aaf7) | feat(luck-draw): 랜덤 뽑기 라운드 마감 결과 공개 애니메이션 추가 |
 | 296 | 2026-09-20 | [`62868c2`](#62868c2) | fix(custom-maker,auth): 드롭존 우측 오버플우·관리자 로그인 입력창 정렬 버그 수정 |
 | 297 | 2026-09-20 | [`4366901`](#4366901) | feat(home): 메인 화면 행운 뽑기 소개를 오늘의 행운 티어·행운 티어 포커·랜덤 뽑기 3모드 안내로 개편 |
-| 298 | 2026-09-20 | [`(pending)`](#pending-298) | style(common): 헤더 햄버거 버튼 → X 모양 애니메이션 추가 |
+| 298 | 2026-09-20 | [`2555c8f`](#2555c8f) | style(common): 헤더 햄버거 버튼 → X 모양 애니메이션 추가 |
 
 ---
 
@@ -5760,15 +5760,15 @@
 
 ---
 
-<a id="pending-298"></a>
+<a id="2555c8f"></a>
 
-### 298. 2026-09-20 — `(pending)`
+### 298. 2026-09-20 — `2555c8f`
 
-- **hash (short)**: `(pending)`
-- **hash (full)**: `(pending)`
+- **hash (short)**: `2555c8f`
+- **hash (full)**: `2555c8f10ce16758ec04cee5cf07b6cb406ecc94`
 - **author**: nomura
 - **message**: style(common): 헤더 햄버거 버튼 → X 모양 애니메이션 추가
-- **git**: `(pending)`
+- **git**: `git show 2555c8f`
 - **범위**: frontend (root-cloudflare) / common
 - **요약**: 헤더 우측 모바일 사이드메뉴 토글 버튼(`#menuBtn`)이 지금까지는 고정 텍스트 "☰" 한 글자였는데, 이를 3개의 `<span class="hamburger-line">`로 바꿔 메뉴가 열릴 때(`sideOpen`) `is-open` 클래스가 붙으면 위/아래 줄이 각각 45도/-45도 회전하면서 가운데 줄은 투명해져 X 모양으로 부드럽게 전환되고(transition), 닫으면 다시 ☰로 되돌아오도록 만들었다. 색상은 하드코딩 대신 `var(--text-primary)`를 써서 다크 모드에서도 자동으로 대비되도록 했다. 접근성을 위해 `role="button"`/`aria-expanded`/`aria-label`(열기·닫기 문구 전환)도 함께 추가했다.
 - **주요 파일**: `root-cloudflare/src/components/Header.jsx`, `root-cloudflare/src/styles/Header_Footer.css`
