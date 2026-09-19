@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 292 |
+| **커밋 수** | 293 |
 | **기간** | 2026-03-20 ~ 2026-09-20 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -321,6 +321,7 @@
 | 290 | 2026-09-19 | [`5d735ba`](#5d735ba) | docs(policy): root-render 베타 종료 선언 및 작업 금지·변경 원복 |
 | 291 | 2026-09-20 | [`e953970`](#e953970) | feat(luck-draw): 랜덤 뽑기(사다리 게임 스타일) 추가 |
 | 292 | 2026-09-20 | [`356652c`](#356652c) | refactor(luck-draw): 랜덤 뽑기를 5분 자동 공용 라운드 방식으로 재설계 |
+| 293 | 2026-09-20 | [`(pending)`](#pending-293) | fix(luck-draw): 오늘의 행운 티어 티어별 당첨 확률 가중치 조정 |
 
 ---
 
@@ -5659,6 +5660,29 @@
 - **요약**: 직전 커밋(291)의 "커스텀 메이커 배치 기반 즉시 뽑기" 방식을 폐기하고, 캐릭터 추첨 대상을 이 사이트가 이미 갖고 있는 전용 캐릭터 목록표(`backend/data/luckPool.js`, 오늘의 행운 티어와 동일 소스)로 바꿨다. 게임 방식도 유저가 버튼을 누를 때마다 즉시 뽑는 방식에서, 서버가 5분마다 자동으로 진행하는 **전체 공용 라운드**로 바꿨다 — 라운드가 열려 있는 5분 동안 누구든 배팅(라운드당 1건)을 걸 수 있고, 마감 시각이 되면 서버 스케줄러가 캐릭터 하나를 무작위로 뽑아 그 라운드의 결과(캐릭터 이름·티어·홀짝 여부)로 확정한 뒤 걸린 배팅을 전부 자동 정산하고 곧바로 다음 라운드를 연다. 배팅 종류에서 "좌우"는 결과 항목(이름/티어/홀짝)과 무관해져 제거했고, 묶음 티어·홀짝·같은 티어 3종만 남겼다(배수 체계는 그대로). 라운드/배팅 상태는 새 컬렉션(`LuckLadderRound`, `LuckLadderBet`)에 영속화해 서버가 재시작돼도 마감 시각이 지난 라운드를 자동으로 정산하고 이어서 진행한다.
 - **주요 파일**: `backend/models/LuckLadderRound.js`, `backend/models/LuckLadderBet.js`, `backend/controllers/luckLadderController.js`, `backend/routes/luckDrawRoutes.js`, `backend/server.js`, `root-cloudflare/src/components/LuckLadderPanel.jsx`, `root-cloudflare/src/styles/luck-ladder.css`
 - **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending-293"></a>
+
+### 293. 2026-09-20 — `(pending)`
+
+- **hash (short)**: _(다음 docs 커밋에서 기입)_
+- **hash (full)**: _(다음 docs 커밋에서 기입)_
+- **author**: nomura
+- **message**: fix(luck-draw): 오늘의 행운 티어 티어별 당첨 확률 가중치 조정
+- **git**: _(pending)_
+- **범위**: backend / luck-draw
+- **요약**: `DAILY_TIER_WEIGHTS`(오늘의 행운 티어 확률표)를 `{1:1,2:3,3:6,4:18,5:20,6:20,7:14,8:12,9:6}` 에서 `{1:1,2:3,3:6,4:19,5:21,6:17,7:14,8:12,9:7}` 로 조정했다(합계 100 유지). 4·5티어 비중을 소폭 올리고 6티어를 낮추는 대신 9티어를 소폭 올려 등급별 분포를 재조정했다.
+- **주요 파일**: `backend/controllers/luckDrawController.js`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+
+[▲ 목차로](#목차)
 
 [▲ 목차로](#목차)
 
