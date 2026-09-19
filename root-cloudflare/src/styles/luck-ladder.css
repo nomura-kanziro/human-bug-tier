@@ -1,0 +1,283 @@
+/* 랜덤 뽑기(사다리 게임) 전용 스타일 — React 전용 파일.
+   레이아웃 뼈대(.luck-draw-page, .luck-tab-panel, .luck-draw-btn, .luck-static-guard)는
+   luck-draw.css 를 그대로 재사용하고, 여기서는 배치 현황·배팅 옵션·결과 카드만 추가한다. */
+
+.ladder-warning {
+  margin: 0 0 20px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+/* ====== 내 티어표 배치 현황 ====== */
+.ladder-pool-status {
+  margin-bottom: 22px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: #fafafa;
+  border: 1px solid #eee;
+}
+
+.ladder-pool-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #444;
+}
+
+.ladder-refresh-btn {
+  padding: 4px 10px;
+  border: 1px solid #ddd;
+  border-radius: 999px;
+  background: #fff;
+  color: #666;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.ladder-pool-bars {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  gap: 6px;
+}
+
+.ladder-pool-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 4px;
+  border-radius: 8px;
+  background: #fff;
+  border: 1px solid #eee;
+  font-size: 12px;
+}
+
+.ladder-pool-tier {
+  color: #888;
+}
+
+.ladder-pool-count {
+  font-weight: 700;
+  color: #f59e0b;
+}
+
+/* ====== 배팅 옵션 ====== */
+.ladder-betting {
+  margin-bottom: 24px;
+}
+
+.ladder-points {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 14px;
+}
+
+.ladder-points strong {
+  color: #f59e0b;
+  font-size: 16px;
+}
+
+.ladder-bet-group {
+  margin-bottom: 14px;
+}
+
+.ladder-bet-group-label {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  color: #555;
+  margin-bottom: 6px;
+}
+
+.ladder-bet-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.ladder-opt-btn {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid #ddd;
+  background: #fff;
+  color: #333;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.ladder-opt-btn.is-active {
+  background: linear-gradient(135deg, #f59e0b, #f97316);
+  border-color: #f59e0b;
+  color: #fff;
+}
+
+.ladder-bet-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 18px 0 14px;
+}
+
+.ladder-bet-row label {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.ladder-bet-row input {
+  width: 96px;
+  padding: 8px 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 700;
+  text-align: right;
+}
+
+.ladder-bet-unit {
+  font-size: 14px;
+  color: #888;
+  margin-right: 6px;
+}
+
+.ladder-bet-chip {
+  padding: 6px 12px;
+  border: 1px solid #f59e0b;
+  border-radius: 999px;
+  background: #fff;
+  color: #b45309;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.ladder-bet-chip:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ====== 결과 ====== */
+.ladder-result {
+  margin: 24px 0;
+  padding: 24px 16px;
+  border-radius: 16px;
+  background: #111827;
+  text-align: center;
+}
+
+.ladder-result-dealing {
+  color: #e5e7eb;
+  font-weight: 700;
+}
+
+.ladder-result-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.ladder-result-img {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #f59e0b;
+}
+
+.ladder-result-info {
+  text-align: left;
+  color: #fff;
+}
+
+.ladder-result-tier {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #92400e;
+  font-weight: 700;
+  font-size: 12px;
+  margin-bottom: 4px;
+}
+
+.ladder-result-name {
+  font-size: 17px;
+  font-weight: 700;
+}
+
+.ladder-result-side {
+  color: #9ca3af;
+  font-size: 13px;
+}
+
+.ladder-verdict {
+  margin-top: 16px;
+  font-size: 20px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.ladder-verdict-win { color: #34d399; }
+.ladder-verdict-lose { color: #f87171; }
+
+.ladder-delta {
+  padding: 3px 10px;
+  border-radius: 999px;
+  background: rgba(16, 185, 129, 0.18);
+  color: #34d399;
+  font-size: 14px;
+}
+
+.ladder-delta-minus {
+  background: rgba(239, 68, 68, 0.18);
+  color: #f87171;
+}
+
+[data-theme="dark"] .ladder-pool-status {
+  background: #1f2937;
+  border-color: #374151;
+}
+
+[data-theme="dark"] .ladder-pool-row {
+  background: #111827;
+  border-color: #374151;
+}
+
+[data-theme="dark"] .ladder-pool-head,
+[data-theme="dark"] .ladder-points,
+[data-theme="dark"] .ladder-bet-group-label {
+  color: #d1d5db;
+}
+
+[data-theme="dark"] .ladder-opt-btn {
+  background: #1f2937;
+  border-color: #374151;
+  color: #e5e7eb;
+}
+
+[data-theme="dark"] .ladder-bet-row input {
+  background: #1f2937;
+  border-color: #374151;
+  color: #f3f4f6;
+}
+
+[data-theme="dark"] .ladder-bet-chip {
+  background: #1f2937;
+  color: #fbbf24;
+}
+
+[data-theme="dark"] .ladder-warning {
+  background: #3f1d1d;
+  color: #fca5a5;
+}

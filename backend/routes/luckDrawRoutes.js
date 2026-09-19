@@ -14,6 +14,7 @@ const express = require('express');
 const router = express.Router();
 const luckDrawController = require('../controllers/luckDrawController');
 const luckPokerController = require('../controllers/luckPokerController');
+const luckLadderController = require('../controllers/luckLadderController');
 const { requireAuth, optionalAuth } = require('../middleware/auth');
 
 // 공개 — 로그인 시 todayDrawn 포함
@@ -32,5 +33,9 @@ router.get('/stats', requireAuth, luckDrawController.getStats);     // 마이페
 // 배팅에 쓸 포인트가 계정에 묶여 있으므로 플레이는 로그인 전용이다.
 router.get('/poker/config', optionalAuth, luckPokerController.getPokerConfig);
 router.post('/poker/play', requireAuth, luckPokerController.playPoker);
+
+// ====== 랜덤 뽑기 (사다리 게임 스타일 배팅 — 내 커스텀 티어표에 배치한 캐릭터 추첨) ======
+router.get('/ladder/config', optionalAuth, luckLadderController.getLadderConfig);
+router.post('/ladder/play', requireAuth, luckLadderController.playLadder);
 
 module.exports = router;

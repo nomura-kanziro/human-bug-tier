@@ -9,6 +9,7 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import LuckPokerPanel from '../components/LuckPokerPanel';
+import LuckLadderPanel from '../components/LuckLadderPanel';
 import { apiRequest, isStaticPreview } from '../lib/api';
 import { tierImageUrl } from '../lib/paths';
 import '../styles/luck-draw.css';
@@ -221,11 +222,21 @@ export default function LuckDraw() {
         >
           행운 티어 포커
         </button>
-        <button type="button" className="luck-tab" disabled title="준비 중">랜덤 뽑기 (준비 중)</button>
+        <button
+          type="button"
+          className={`luck-tab${tab === 'random' ? ' active' : ''}`}
+          onClick={() => navigate('/luck-draw#random', { replace: true })}
+        >
+          랜덤 뽑기
+        </button>
       </div>
 
       <section className={`luck-tab-panel${tab === 'poker' ? ' active' : ''}`}>
         <LuckPokerPanel isLoggedIn={isLoggedIn} />
+      </section>
+
+      <section className={`luck-tab-panel${tab === 'random' ? ' active' : ''}`}>
+        <LuckLadderPanel isLoggedIn={isLoggedIn} />
       </section>
 
       <section className={`luck-tab-panel${tab === 'daily' ? ' active' : ''}`}>

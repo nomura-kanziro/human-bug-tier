@@ -83,7 +83,8 @@ export default function Home() {
         </QuickCard>
         <QuickCard target="#home-luck-preview" title="행운 뽑기">
           <Link to="/luck-draw#daily">• 오늘의 행운 티어</Link>
-          <Soon>• 랜덤 뽑기 (준비 중)</Soon>
+          <Link to="/luck-draw#poker">• 행운 티어 포커</Link>
+          <Link to="/luck-draw#random">• 랜덤 뽑기</Link>
         </QuickCard>
       </section>
 
