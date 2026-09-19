@@ -26,19 +26,31 @@
   min-height: 160px;           /* ← 각 tier 행 최소 높이 (캐릭터 1줄 기준) */
 }
 
-/* 세부 등급 이름표(갑급/을급 등) */
+/* 세부 등급 이름표(갑급/을급 등)
+   드롭존 높이만큼 세로로 꽉 채우는 "명패" 형태: 왼쪽 굵은 강조선 + 강조색 은은한 그라데이션 +
+   강조색 글자. 색은 꾸미기 패널이 바꾸는 --tier-accent 계열을 따라가며, 변수가 없는 곳(게시글 상세 등)은
+   기본 골드로 대체된다. html2canvas 캡처 호환을 위해 gradient/box-shadow/text-shadow 만 사용한다. */
 .tier-name {
-  width: 80px;
-  font-size: 1.1rem;
-  font-weight: bold;
-  border: 1px solid #ffcc00;
+  width: 84px;
+  flex-shrink: 0;
+  align-self: stretch;
+  box-sizing: border-box;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 10px 5px;
-  color: #fff;
-  margin-right: 10px;
+  text-align: center;
+  padding: 10px 6px;
+  margin-right: 12px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: var(--tier-accent, #ffcc00);
+  text-shadow: 0 0 12px var(--tier-glow, rgba(255, 204, 0, 0.45));
+  background: linear-gradient(160deg, var(--tier-accent-soft, rgba(255, 204, 0, 0.3)) 0%, rgba(255, 255, 255, 0.03) 80%);
+  border: 1px solid var(--tier-accent-soft, rgba(255, 204, 0, 0.3));
+  border-left: 4px solid var(--tier-accent, #ffcc00);
+  border-radius: 10px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
 /* .characters: 실제 캐릭터 카드가 놓이는 드롭존. custom-maker.js가 dragover/drop, 탭 배치 이벤트를
@@ -578,7 +590,8 @@ body.pool-arrows-on .pool-viewport-arrows {
 }
 
 #tier-capture-area .tier-name {
-  border-color: var(--tier-accent);
+  border-color: var(--tier-accent-soft);
+  border-left-color: var(--tier-accent);
 }
 #tier-capture-area .characters {
   border-color: var(--tier-accent-soft);
@@ -696,6 +709,9 @@ body.char-selected-mode .characters {
     margin-right: 0;
     margin-bottom: 8px;
     min-height: 40px;
+    padding: 8px 10px;
+    border-left-width: 1px;
+    border-top: 4px solid var(--tier-accent, #ffcc00);
   }
 
   .characters {
@@ -778,9 +794,7 @@ body.char-selected-mode .characters {
 [data-theme="dark"] .char {
   background: var(--bg-subtle);
 }
-[data-theme="dark"] .tier-name {
-  background: rgba(255, 255, 255, 0.06);
-}
+/* .tier-name 은 캡처 프레임(항상 어두운 배경) 위에 놓이는 강조색 명패라 다크 모드 별도 덮어쓰기가 필요 없다 */
 [data-theme="dark"] .character-pool,
 [data-theme="dark"] .characters-pool {
   background: var(--bg-elevated);

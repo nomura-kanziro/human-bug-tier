@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 301 |
+| **커밋 수** | 302 |
 | **기간** | 2026-03-20 ~ 2026-09-20 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -330,6 +330,7 @@
 | 299 | 2026-09-20 | [`4627055`](#4627055) | fix(common): 사이드 메뉴가 헤더를 가리지 않고 그 아래에서 열리도록 수정 |
 | 300 | 2026-09-20 | [`6550b47`](#6550b47) | style(common): 사이드 메뉴 내 X 닫기 버튼 제거 |
 | 301 | 2026-09-20 | [`7ae5de6`](#7ae5de6) | feat(auth): 로그인 후 1시간 경과 로그아웃을 방치(무활동) 1시간 자동 로그아웃으로 변경 |
+| 302 | 2026-09-20 | [`pending`](#pending) | style(custom-maker): 티어 이름표(tier-name)를 강조색 명패 디자인으로 개선 |
 
 ---
 
@@ -5829,6 +5830,24 @@
 - **범위**: frontend (root-cloudflare) / auth
 - **요약**: 기존 `AuthContext.jsx`는 로그인 시각(`loginAt`) 기준 1시간이 지나면 활동 여부와 무관하게 로그아웃시켰다. 로그인 상태는 유지하되 방치된 경우에만 로그아웃하도록 기준을 마지막 활동 시각(`lastActiveAt`)으로 바꿨다. 마우스·키보드·스크롤·터치 이벤트로 로그인 중일 때만 `lastActiveAt`을 10초 스로틀로 localStorage에 기록하고(탭 간 공유), 마운트 직후와 1분마다 `max(lastActiveAt, loginAt)` 기준 1시간 경과를 확인해 로그인 정보를 지우고 안내한다. 브라우저를 닫아 둔 시간도 방치로 계산되며, 이미 방치 시간이 지난 뒤의 첫 활동(절전 복귀 등)은 세션을 되살리지 않는다. 유저·관리자 공통 적용이며 `SESSION_KEYS`에 `lastActiveAt`을 추가했다. 서버 토큰 만료(유저 7일/관리자 24시간)와 `root-render/`(동결)는 변경 없음.
 - **주요 파일**: `root-cloudflare/src/context/AuthContext.jsx`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending"></a>
+
+### 302. 2026-09-20 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: style(custom-maker): 티어 이름표(tier-name)를 강조색 명패 디자인으로 개선
+- **git**: `git show pending`
+- **범위**: frontend (root-cloudflare) / custom-maker
+- **요약**: 커스텀 메이커 티어표의 세부 등급 이름표(`.tier-name`)가 내용 크기만큼만 위쪽에 작은 회색 박스로 붙어 드롭존과 어울리지 않던 것을 개선했다. `align-self: stretch`로 드롭존 높이만큼 세로로 채우고, 왼쪽 4px 강조선 + 강조색(`--tier-accent`/`--tier-accent-soft`/`--tier-glow`, 없으면 골드) 그라데이션 배경 + 강조색 굵은 글자·글로우·둥근 모서리로 명패 형태로 바꿨다. 꾸미기 패널의 색 변경을 따라가고, html2canvas 캡처 호환을 위해 gradient/box-shadow/text-shadow만 사용했다. 모바일(세로 배치)에서는 위쪽 강조선의 가로 띠가 되며, 새 배경을 가리던 다크 모드 전용 배경 덮어쓰기 규칙은 제거했다.
+- **주요 파일**: `root-cloudflare/src/styles/custom-maker.css`
 - **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)
