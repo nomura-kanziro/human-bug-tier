@@ -327,7 +327,7 @@
 | 296 | 2026-09-20 | [`62868c2`](#62868c2) | fix(custom-maker,auth): 드롭존 우측 오버플우·관리자 로그인 입력창 정렬 버그 수정 |
 | 297 | 2026-09-20 | [`4366901`](#4366901) | feat(home): 메인 화면 행운 뽑기 소개를 오늘의 행운 티어·행운 티어 포커·랜덤 뽑기 3모드 안내로 개편 |
 | 298 | 2026-09-20 | [`2555c8f`](#2555c8f) | style(common): 헤더 햄버거 버튼 → X 모양 애니메이션 추가 |
-| 299 | 2026-09-20 | [`(pending)`](#pending-299) | fix(common): 사이드 메뉴가 헤더를 가리지 않고 그 아래에서 열리도록 수정 |
+| 299 | 2026-09-20 | [`4627055`](#4627055) | fix(common): 사이드 메뉴가 헤더를 가리지 않고 그 아래에서 열리도록 수정 |
 
 ---
 
@@ -5779,15 +5779,15 @@
 
 ---
 
-<a id="pending-299"></a>
+<a id="4627055"></a>
 
-### 299. 2026-09-20 — `(pending)`
+### 299. 2026-09-20 — `4627055`
 
-- **hash (short)**: `(pending)`
-- **hash (full)**: `(pending)`
+- **hash (short)**: `4627055`
+- **hash (full)**: `46270557f471c6edaaa8ffbff7975ccadb15d706`
 - **author**: nomura
 - **message**: fix(common): 사이드 메뉴가 헤더를 가리지 않고 그 아래에서 열리도록 수정
-- **git**: `(pending)`
+- **git**: `git show 4627055`
 - **범위**: frontend (root-cloudflare) / common
 - **요약**: 모바일 오프캔버스 사이드 메뉴(`#sideMenu`)가 `position:fixed; top:0; height:100%`로 헤더보다 z-index가 높아(1000 vs 100) 열릴 때마다 헤더를 통참로 덮어버리던 문제를 고쳤다. `Header.jsx`가 `<header>`의 실측 높이를 `ResizeObserver`로 재어 `--header-h` CSS 변수로 서문에 노출하고, `.side-menu`의 `top`/`height`를 이 변수 기준으로(`top: var(--header-h)`, `height: calc(100% - var(--header-h))`) 바꿔 헤더 바로 아래에서만 열리고 헤더는 항상 그대로 보이도록 고쳤다(놓이는 반응형 헤더 padding에 따라 높이가 달라지므로 하드코딩 대신 실측). 모바일 미디어쿼리의 `padding-top:48px`(예전에 헤더와 격리려던 여백)도 더 이상 필요 없어 24px로 줄였다. 부가로 헤더 메뉴가 더 이상 메뉴 버튼 자체를 가리지 않게 되면서 열린 상태에서 햄버거(X) 버튼을 다시 클릭해 닫는 것도 가능해졌다.
 - **주요 파일**: `root-cloudflare/src/components/Header.jsx`, `root-cloudflare/src/styles/Header_Footer.css`
