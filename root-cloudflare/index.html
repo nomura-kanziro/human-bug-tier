@@ -23,12 +23,43 @@ document.documentElement.setAttribute('data-theme',t);})();</script>
        dynamic-subset 은 글자 단위로 쪼개진 파일을 필요한 만큼만 받아서 한글 폰트인데도 가볍다.
        CDN 이 막힌 환경이면 아래 --font-sans 의 시스템 폰트 폴백이 그대로 쓰인다. -->
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+  <!-- media="print" 로 시작해 onload 에서 all 로 바꾸는 비차단 로드 — 외부 CDN 의 CSS 를 렌더 차단으로 걸면
+       느린 네트워크에서 첫 화면(로딩 오버레이 포함) 자체가 폰트 CSS 를 기다리게 된다.
+       폰트는 font-display: swap 이라 늦게 와도 글자가 먼저 보이고 도착하면 바뀐다. -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css"></noscript>
+  <!-- 로딩 오버레이 전용 CSS. 앱 번들 CSS(약 145KB)와 따로 두어, 번들이 내려오는 동안에도
+       오버레이가 첫 화면부터 그려지게 한다. Vite 가 이 링크도 처리해 해시 파일로 내보낸다. -->
+  <link rel="stylesheet" href="/src/styles/loading-screen.css">
+  <!-- 오버레이용 로고는 240px 짜리 사본(31KB). 원본 logo.webp 는 519KB 라 앱 JS 번들(351KB)보다 커서,
+       첫 화면부터 이걸 받으면 좁은 회선에서 JS 와 대역폭을 나눠 써 앱이 뜨는 시각이 2초 넘게 늦어졌다. -->
+  <link rel="preload" as="image" href="/tier-media/tier-image/logo-loading.webp" type="image/webp">
   <link rel="icon" href="/tier-media/tier-image/logo.webp" type="image/webp">
   <link rel="apple-touch-icon" href="/tier-media/tier-image/pwa/icon-192.png">
   <link rel="manifest" href="/manifest.webmanifest">
 </head>
 <body>
+  <!-- 사이트 로딩 오버레이 — 예전엔 React 가 직접 그려서(LoadingScreen.jsx) JS 번들이 다 내려받아져
+       실행된 뒤에야 생기고 마운트 직후 사라졌기 때문에, 정작 기다리는 동안(번들 다운로드 구간)에는
+       빈 화면만 보였다. 바닐라(root-render)처럼 HTML 에 정적으로 두어 첫 화면부터 보이게 하고,
+       치우는 일만 LoadingScreen.jsx 가 앱이 그려진 직후에 한다(연출용 최소 대기 시간 없음).
+       모양은 src/styles/loading-screen.css. -->
+  <div class="site-loading-screen" id="site-loading-screen" role="status" aria-live="polite" aria-label="불러오는 중">
+    <div class="site-loading-inner">
+      <svg class="site-loading-svg" viewBox="0 0 100 100" aria-hidden="true">
+        <circle class="site-loading-track" cx="50" cy="50" r="37"></circle>
+        <circle class="site-loading-track" cx="50" cy="50" r="30"></circle>
+        <circle pathLength="360" class="site-loading-dash big" style="--sped:3.6s" cx="50" cy="50" r="37"></circle>
+        <circle pathLength="360" class="site-loading-dash" style="--sped:2s" cx="50" cy="50" r="30"></circle>
+      </svg>
+      <img src="/tier-media/tier-image/logo-loading.webp" alt="" class="site-loading-logo" width="240" height="240">
+    </div>
+    <p class="site-loading-text">불러오는 중…</p>
+    <p class="site-loading-slow" id="site-loading-slow">생각보다 오래 걸리고 있어요. 잠시만 기다려 주세요…</p>
+  </div>
+  <!-- 앱이 끝내 안 뜨는 경우(번들 다운로드 실패·오프라인 등) 오버레이가 영원히 도는 것처럼 보이지 않게,
+       15초가 지나도 안 치워졌으면 안내 문구만 바꾼다. 앱이 정상적으로 뜨면 이 코드는 아무 일도 하지 않는다. -->
+  <script>setTimeout(function(){var s=document.getElementById('site-loading-slow');if(s&&document.getElementById('site-loading-screen'))s.textContent='불러오지 못했다면 새로고침(F5)을 해 주세요.';},15000);</script>
   <div id="root"></div>
   <script type="module" src="/src/main.jsx"></script>
 </body>

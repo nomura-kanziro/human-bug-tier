@@ -1,21 +1,34 @@
 /* ======================================================================
    loading-screen.css — 사이트 전체 초기 로딩 화면
    ======================================================================
-   페이지 접속 직후, 헤더/푸터가 자리 잡을 때까지 화면 전체를 덮는 오버레이
-   (캐릭터 이미지 등 나머지 리소스는 기다리지 않음 — loading-screen.js 참고).
+   페이지 접속 직후, 앱(헤더/푸터 포함)이 그려질 때까지 화면 전체를 덮는 오버레이
+   (캐릭터 이미지 등 나머지 리소스는 기다리지 않음 — LoadingScreen.jsx 참고).
+   오버레이 마크업은 index.html 에 정적으로 들어 있고(첫 화면부터 보이게), 이 파일은 앱 번들
+   CSS 와 따로 index.html 의 <link> 로 먼저 로드된다 — 그래서 아래 색상은 theme.css 변수가
+   아직 없어도 보이도록 라이트/다크 값을 이 파일 안에도 직접 갖고 있다.
    Uiverse.io(SelfMadeSystem)의 로더 기법("자체적으로 계속 그려지는 네온 대시
    선"을 SVG stroke-dasharray/dashoffset로 구현하는 방식, 원본:
    https://uiverse.io/SelfMadeSystem/orange-crab-82)을 그대로 가져오되,
    임의의 아이콘 대신 우리 사이트 로고의 원형 테두리를 따라 붉은 네온 선이
    계속 돌아가도록 만들고, 로고 자체는 은은하게 숨쉬듯 밝아졌다 어두워지는
    브리딩(breathe) 효과를 함께 준다.
-   표시/숨김 타이밍(언제 사라지는지)은 loading-screen.js 참고 — 이 파일은
+   표시/숨김 타이밍(언제 사라지는지)은 LoadingScreen.jsx 참고 — 이 파일은
    "항상 보이는 상태"의 모양만 담당하고, JS가 .is-hidden 클래스만 붙였다 뗀다.
    ⚠️ 사라지는 트랜지션은 일부러 아주 짧게(0.15s) 뒀다 — 처음엔 0.5s로 만들었다가,
    실제 콘텐츠는 이미 준비됐는데도 매 페이지 전환마다 페이드 연출 때문에 0.5초
    이상 화면이 막힌 것처럼 느껴져 체감 속도가 눈에 띄게 느려지는 문제가 있었다
-   (2026-09 수정). 로딩 자체를 숨기는 "판단 시점"은 loading-screen.js가 최대한
+   (2026-09 수정). 로딩 자체를 숨기는 "판단 시점"은 LoadingScreen.jsx가 최대한
    빠르게 잡아주므로, 여기 트랜지션은 "뚝 끊기지 않을 정도"로만 짧게 남긴다. */
+
+/* 앱 번들 CSS 가 오기 전에도 페이지 바탕이 테마 색으로 깔리게 한다 — 다크 모드 사용자가 첫 화면에서
+   흰 화면 → 검은 화면으로 번쩍이지 않도록(theme.css 의 --bg-page 와 같은 값). */
+html {
+  background: #ffffff;
+}
+
+html[data-theme="dark"] {
+  background: #121214;
+}
 
 /* 화면 전체를 덮는 고정 오버레이. 헤더/모달보다도 위(z-index 최상단)에 그려야
    그 아래로 로딩 중인 페이지 내용이 언뜻 비치지 않는다. */
@@ -28,7 +41,25 @@
   align-items: center;
   justify-content: center;
   background: var(--bg-page, #fff);
+  /* 웹폰트(Pretendard) 대신 시스템 폰트로 고정한다. 오버레이 글자가 첫 페인트에서 웹폰트 다운로드를
+     일으키면, 좁은 회선에서 그 파일들이 JS 번들 다운로드와 대역폭을 나눠 써서 앱이 뜨는 시각 자체가
+     늦어진다(실측: 3.2초 → 5.5초). 로딩 문구는 짧아서 시스템 폰트로 충분하다. */
+  font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', system-ui, sans-serif;
   transition: opacity 0.15s ease, visibility 0.15s ease;
+  /* 처음 80ms 는 투명하게 시작해 서서히 나타난다. 캐시가 있어 앱이 80ms 안에 뜨는 재방문에서는
+     오버레이가 번쩍 보였다 사라지는 깜빡임 없이 아예 안 보이고(LoadingScreen.jsx 가 그 경우 즉시 제거),
+     그보다 오래 걸릴 때부터 보인다. "일부러 지연"이 아니라 콘텐츠를 가리지 않는 투명 구간이다.
+     backwards: 지연 구간에만 from 값을 적용하고 끝나면 원래 스타일로 돌아가야 .is-hidden 이 이긴다. */
+  animation: site-loading-appear 0.12s ease 0.08s backwards;
+}
+
+@keyframes site-loading-appear {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+html[data-theme="dark"] .site-loading-screen {
+  background: var(--bg-page, #121214);
 }
 
 /* loading-screen.js가 "이제 다 로드됐다"고 판단하면 이 클래스를 붙인다.
@@ -38,6 +69,7 @@
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
+  animation: none;
 }
 
 .site-loading-inner {
@@ -69,11 +101,21 @@
   animation: site-loading-breathe 3.6s ease-in-out infinite;
 }
 
+/* 로고는 투명 배경에 검은 잉크 엠블럼이라 어두운 바탕에서는 붉은 링 글로우만 보이고 로고 자체가
+   묻힌다. 다크 모드에서는 밝은 원형 바탕을 깔아 라이트 모드와 같은 모습으로 보이게 한다. */
+html[data-theme="dark"] .site-loading-logo {
+  background: #f4f4f6;
+}
+
 /* 네온 선이 지나갈 경로를 은은하게 항상 보여주는 안내용 배경 링(대시 애니메이션 없음) */
 .site-loading-track {
   fill: none;
   stroke: var(--border-color, #e2e2e6);
   stroke-width: 1.4;
+}
+
+html[data-theme="dark"] .site-loading-track {
+  stroke: var(--border-color, #303035);
 }
 
 /* 실제로 빙글빙글 도는 네온 대시 선. pathLength="360"을 준 <circle>에 적용되며,
@@ -136,6 +178,27 @@
   color: var(--text-secondary, #55565c);
   white-space: nowrap;
   letter-spacing: 0.02em;
+}
+
+html[data-theme="dark"] .site-loading-text {
+  color: var(--text-secondary, #b7b8bd);
+}
+
+/* 정말 오래 걸릴 때만 나타나는 안내 — 6초 뒤에 서서히 나타난다(CSS 만으로 동작해서 JS 번들이
+   안 떠도 보인다). 빨리 뜨는 정상 경우에는 이 시간이 오기 전에 오버레이가 이미 사라진다.
+   15초가 지나도 앱이 안 뜨면 index.html 의 인라인 스크립트가 문구를 "새로고침" 안내로 바꾼다. */
+.site-loading-slow {
+  margin-top: 0.6em;
+  font-size: 0.78rem;
+  color: var(--text-muted, #8a8b91);
+  text-align: center;
+  padding: 0 24px;
+  animation: site-loading-slow-in 0.5s ease 6s both;
+}
+
+@keyframes site-loading-slow-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 /* 동작 최소화(prefers-reduced-motion)를 설정한 사용자를 위한 배려 —

@@ -3,7 +3,6 @@
 // React 도 Layout 밖(라우트에서 제외)에 두고 같은 마크업을 재현한다.
 import { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import LoadingScreen from './LoadingScreen';
 import ThemeToggle from './ThemeToggle';
 import { LOGO_URL } from '../lib/paths';
 // 네 페이지가 공유하는 껍데기 스타일 — 예전엔 페이지 CSS 마다 복사돼 있었다
@@ -14,7 +13,6 @@ export default function AuthShell({ title, children }) {
 
   return (
     <div className="auth-page">
-      <LoadingScreen />
       {/* 공용 헤더가 없는 단독 페이지라 토글을 우상단에 고정으로 띄운다(theme-toggle-floating) */}
       <div className="theme-toggle-floating-wrap">
         <ThemeToggle floating />

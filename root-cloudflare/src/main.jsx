@@ -7,7 +7,6 @@ import { AuthProvider } from './context/AuthContext';
 
 // 전역 CSS — 바닐라 root-render 의 파일을 그대로 가져왔다(클래스명 동일). 순서는 바닐라 <head> 순서와 같다.
 import './styles/theme.css';
-import './styles/loading-screen.css';
 import './styles/common.css';
 import './styles/notice.css';
 import './styles/Header_Footer.css';
