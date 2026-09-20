@@ -335,7 +335,7 @@
 | 304 | 2026-09-20 | [`7de57bf`](#7de57bf) | feat(luck-draw): 포커·랜덤 뽑기 배팅 상한을 보유 포인트로, 패배 시 배팅액만 손실, 포커 카드 한 장씩 딜링 연출 |
 | 305 | 2026-09-20 | [`1929a5c`](#1929a5c) | feat(luck-draw): 행운 티어 포커를 공개 후보 3장 직접 선택식으로 변경(4·5번째는 2초 턴 자동) |
 | 306 | 2026-09-20 | [`e6478dd`](#e6478dd) | fix(tier-class): 9티어 카제타니·카모카와 이미지를 jpg로 교체하고 카제티니 오타를 카제타니로 수정 |
-| 307 | 2026-09-20 | [`pending`](#pending) | fix(tier-class): 5티어 스가모 캐릭터 제거 |
+| 307 | 2026-09-20 | [`0ba93ea`](#0ba93ea) | fix(tier-class): 5티어 스가모 캐릭터 제거 |
 
 ---
 
@@ -5936,15 +5936,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="0ba93ea"></a>
 
-### 307. 2026-09-20 — `pending`
+### 307. 2026-09-20 — `0ba93ea`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `0ba93ea`
+- **hash (full)**: `0ba93ea844860397aa3630cab55b8f18eeb89263`
 - **author**: nomura
 - **message**: fix(tier-class): 5티어 스가모 캐릭터 제거
-- **git**: `git show pending`
+- **git**: `git show 0ba93ea`
 - **범위**: frontend (root-cloudflare) / tier-class(5티어)
 - **요약**: 창시자 지시로 5티어의 `*스가모`(소속 애매) 캐릭터를 티어표에서 제거했다. `tiers.json` 에서 항목만 삭제했고, 이미지 파일(`5 tier/sugamo.png`)은 **일부러 남겼다** — 커스텀 게시글이 `tierData.tierState` 에 이미지 경로를 직접 저장하므로 파일까지 지우면 이미 올라온 글의 썸네일·상세가 깨진다(카탈로그에서 빠진 캐릭터는 `rematchToCatalog` 가 저장 당시 데이터로 계속 보여주도록 설계돼 있음). 캐릭터 id 가 이름 기반(`stableCharId`)이라 다른 캐릭터 id 는 밀리지 않는다. 확인: 빌드 후 `/tier/5` 와 커스텀 메이커 풀에서 스가모가 사라졌고 깨진 이미지는 0개. `root-render/`(수정 금지)는 건드리지 않았다.
 - **주요 파일**: `root-cloudflare/src/data/tiers.json`
