@@ -1,12 +1,14 @@
 // 마이페이지 (my-page/my-page.html + .js 이식)
 //  - 통계 카드 5개 (작성 글 / 받은 좋아요 / 뽑기 횟수 / 최고 등급 / 포인트)
 //  - 내가 쓴 게시글 최근 6개 (최근 행운 뽑기 기록 목록은 창시자 지시로 제거 — 뽑기 이력은 행운 뽑기 페이지에서 본다)
-//  - 관리자도 완전히 같은 화면을 쓴다(관리자 전용 UI 없음 — 진입점은 헤더 드롭다운 "관리하기" 하나)
+//  - 프로필 관리: 사진 변경/기본 이미지 복원(이 브라우저에만 저장), 닉네임 변경(서버 POST /api/profile/nickname)
+//  - 관리자도 완전히 같은 화면을 쓴다(관리자 전용 UI 없음 — 진입점은 헤더 드롭다운 "관리하기" 하나).
+//    다만 관리자 이름은 Admin 체계라 여기서 바꿀 수 없어 관리자에게는 닉네임 변경 버튼만 숨긴다.
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { apiRequest, isStaticPreview } from '../lib/api';
-import { tierImageUrl } from '../lib/paths';
+import { LOGO_URL, tierImageUrl } from '../lib/paths';
 import '../styles/my-page.css';
 
 const TIER_LABELS = {
@@ -35,11 +37,20 @@ const safeGet = async (path, fallback) => {
 
 export default function MyPage() {
   const navigate = useNavigate();
-  const { isLoggedIn, nickname, email, profileImage } = useAuth();
+  const {
+    isLoggedIn, isAdmin, nickname, email, profileImage,
+    changeProfileImage, resetProfileImage, applyIdentity,
+  } = useAuth();
 
   const [posts, setPosts] = useState([]);
   const [luck, setLuck] = useState({ totalDraws: 0, bestTier: null, points: 0 });
   const [loading, setLoading] = useState(true);
+
+  // 프로필 관리(사진·닉네임) 상태
+  const [editingNick, setEditingNick] = useState(false);
+  const [nickInput, setNickInput] = useState('');
+  const [nickBusy, setNickBusy] = useState(false);
+  const [profileMsg, setProfileMsg] = useState(null); // { type: 'ok' | 'error', text }
 
   useEffect(() => { document.title = '마이페이지 | 휴버대 티어표'; }, []);
 
@@ -67,6 +78,66 @@ export default function MyPage() {
 
   if (!isLoggedIn) return null;
 
+  const hasCustomPhoto = profileImage !== LOGO_URL;
+
+  const onChangePhoto = async () => {
+    const result = await changeProfileImage();
+    if (!result) return; // 파일 선택 취소
+    setProfileMsg(result.ok
+      ? { type: 'ok', text: '프로필 사진을 바꿨어요. 사진은 이 브라우저에만 저장돼요.' }
+      : { type: 'error', text: result.error });
+  };
+
+  const onResetPhoto = () => {
+    resetProfileImage();
+    setProfileMsg({ type: 'ok', text: '기본 이미지로 되돌렸어요.' });
+  };
+
+  const openNickEditor = () => {
+    setNickInput(nickname);
+    setProfileMsg(null);
+    setEditingNick(true);
+  };
+
+  const onSubmitNickname = async (e) => {
+    e.preventDefault();
+    const next = nickInput.trim();
+    if (!next || nickBusy) return;
+    if (next === nickname) {
+      setProfileMsg({ type: 'error', text: '현재 닉네임과 같아요.' });
+      return;
+    }
+    if (!window.confirm(`닉네임을 "${next}"(으)로 바꿀까요?\n닉네임은 로그인 아이디로도 쓰이고, 7일에 한 번만 바꿀 수 있어요.`)) return;
+
+    setNickBusy(true);
+    setProfileMsg(null);
+    const res = await apiRequest('/api/profile/nickname', {
+      method: 'POST',
+      body: JSON.stringify({ nickname: next }),
+    }).catch(() => null);
+    setNickBusy(false);
+
+    if (!res) {
+      setProfileMsg({ type: 'error', text: '서버에 연결할 수 없어요. 잠시 후 다시 시도해주세요.' });
+      return;
+    }
+    if (!res.ok) {
+      setProfileMsg({ type: 'error', text: res.data?.error || '닉네임을 바꾸지 못했어요.' });
+      return;
+    }
+
+    // 새 닉네임·새 토큰을 반영 — 아래 게시글 조회 effect 가 닉네임을 의존성으로 갖고 있어 자동으로 다시 불러온다
+    applyIdentity(res.data);
+    setEditingNick(false);
+    const nextDate = res.data.nextChangeAt ? formatDate(res.data.nextChangeAt) : '';
+    setProfileMsg({
+      type: 'ok',
+      text: `닉네임을 "${res.data.user.nickname}"(으)로 바꿨어요.`
+        + (nextDate ? ` 다음 변경은 ${nextDate} 이후에 할 수 있어요.` : '')
+        + (res.data.propagated === false ? ' 일부 기록의 이름은 반영이 늦어질 수 있어요.' : ''),
+    });
+  };
+
   const likeTotal = posts.reduce((sum, p) => sum + (p.likeCount || 0), 0);
   const stats = [
     { value: loading ? '-' : posts.length, label: '작성한 게시글' },
@@ -80,12 +151,51 @@ export default function MyPage() {
   return (
     <div className="my-page">
       <div className="my-page-header">
-        <div className="my-page-avatar">
+        <button type="button" className="my-page-avatar my-page-avatar-btn" onClick={onChangePhoto} aria-label="프로필 사진 변경" title="프로필 사진 변경">
           <img src={profileImage} alt="프로필" />
-        </div>
+          <span className="my-page-avatar-badge" aria-hidden="true">📷</span>
+        </button>
         <div className="my-page-identity">
           <h1>{nickname || '사용자'}</h1>
           <p>{email}</p>
+
+          <div className="my-page-profile-actions">
+            <button type="button" className="my-page-profile-btn" onClick={onChangePhoto}>사진 변경</button>
+            {hasCustomPhoto && (
+              <button type="button" className="my-page-profile-btn" onClick={onResetPhoto}>기본 이미지로</button>
+            )}
+            {!isAdmin && !editingNick && (
+              <button type="button" className="my-page-profile-btn" onClick={openNickEditor}>닉네임 변경</button>
+            )}
+          </div>
+
+          {editingNick && (
+            <form className="my-page-nick-form" onSubmit={onSubmitNickname}>
+              <div className="my-page-nick-row">
+                <input
+                  type="text"
+                  value={nickInput}
+                  maxLength={20}
+                  autoFocus
+                  disabled={nickBusy}
+                  aria-label="새 닉네임"
+                  onChange={(e) => setNickInput(e.target.value)}
+                />
+                <button type="submit" className="my-page-profile-btn is-primary" disabled={nickBusy || !nickInput.trim()}>
+                  {nickBusy ? '변경 중...' : '저장'}
+                </button>
+                <button type="button" className="my-page-profile-btn" disabled={nickBusy} onClick={() => setEditingNick(false)}>취소</button>
+              </div>
+              <p className="my-page-nick-hint">
+                2~20자 · 한글/영문/숫자/_ - . 만 가능(공백·@ 불가) · 7일에 한 번만 변경 ·
+                닉네임은 로그인 아이디로도 쓰이니 바꾼 뒤에는 새 닉네임으로 로그인하세요.
+              </p>
+            </form>
+          )}
+
+          {profileMsg && (
+            <p className={`my-page-profile-msg${profileMsg.type === 'error' ? ' is-error' : ''}`} role="status">{profileMsg.text}</p>
+          )}
         </div>
       </div>
 

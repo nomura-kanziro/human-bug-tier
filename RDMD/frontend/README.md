@@ -139,6 +139,7 @@ RDMD/frontend/
 | 파일 | legacy | 요약 |
 |------|--------|------|
 | [01-my-page-record.md](./11-my-page/01-my-page-record.md) | — | 유저 프로필 드롭다운 + 마이페이지(게시글·뽑기 집계) |
+| [02-profile-management-record.md](./11-my-page/02-profile-management-record.md) | — | 마이페이지 프로필 관리(사진 리사이즈·닉네임 변경) |
 
 ## 12-react
 

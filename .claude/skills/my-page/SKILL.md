@@ -32,6 +32,8 @@ description: >
 4. 게시글 통계는 기존 `tierlists` API 조합. 행운 통계(포인트 포함)는 `luck-draw` 의 `/stats` 응답을 **표시만** — 마이페이지에서 재계산·재저장 금지
 5. `mine=true` 같은 소유자 필터는 서버에서 **요청자==대상** 검증 필수
 6. 경로/API: `getBasePath()` / `getApiBase()` / `getAuthHeaders()` 재사용
+7. **닉네임 변경**(React `MyPage.jsx` → `POST /api/profile/nickname`)은 로그인 아이디이자 글·댓글·알림·문의·뽑기 이력에 복사된 이름·차단 대상이다. `profileController.js` 의 검증(형식·중복·예약어·제재·7일)과 `propagateNickname` 전파를 그대로 거치게 하고, 새로 닉네임을 복사 저장하는 컬렉션을 만들면 `propagateNickname` 에 추가한다
+8. 프로필 사진은 서버 저장 없이 localStorage(`profileImage`, 256px JPEG 리사이즈) — 서버 저장으로 바꾸려면 사용자에게 먼저 확인
 
 ## Do not
 
@@ -39,6 +41,7 @@ description: >
 - 어드민 드롭다운을 일반 유저와 다르게 축소하기 (사용자가 명시적으로 "관리자 티 안 나게" 통일해달라고 요청함)
 - 소유자 필터를 인증 없이 우회 가능하게 두기
 - 패널 메뉴에 `onclick` 재도입 (`data-action` + `addEventListener` 위임 유지)
+- 닉네임 변경 시 `User.nickname` 만 바꾸고 복사본 갱신·새 토큰 발급 빼먹기, 제재/차단/관리자 이름 중복 검사 생략
 
 ## Checklist
 

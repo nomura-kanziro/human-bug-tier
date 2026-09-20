@@ -42,6 +42,44 @@ const SESSION_KEYS = ['user', 'authToken', 'adminAuthToken', 'isAdmin', 'adminNa
 const isLoggedInNow = () => Boolean(localStorage.getItem('authToken')) || localStorage.getItem('isAdmin') === 'true';
 const lastActivity = () => Math.max(Number(localStorage.getItem('lastActiveAt') || 0), Number(localStorage.getItem('loginAt') || 0));
 
+const AVATAR_SIZE = 256;
+
+// 사진 파일을 가운데 정사각형으로 잘라 AVATAR_SIZE 로 줄인 JPEG data URL 로 만든다.
+function resizeToAvatar(file) {
+  return new Promise((resolve, reject) => {
+    const url = URL.createObjectURL(file);
+    const img = new Image();
+    img.onload = () => {
+      try {
+        const side = Math.min(img.naturalWidth, img.naturalHeight);
+        if (!side) throw new Error('이미지를 읽을 수 없어요.');
+        const canvas = document.createElement('canvas');
+        canvas.width = AVATAR_SIZE;
+        canvas.height = AVATAR_SIZE;
+        const ctx = canvas.getContext('2d');
+        // 투명 PNG 가 검게 나오지 않도록 흰 배경을 먼저 깐다
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0, 0, AVATAR_SIZE, AVATAR_SIZE);
+        ctx.drawImage(
+          img,
+          (img.naturalWidth - side) / 2, (img.naturalHeight - side) / 2, side, side,
+          0, 0, AVATAR_SIZE, AVATAR_SIZE,
+        );
+        resolve(canvas.toDataURL('image/jpeg', 0.85));
+      } catch (err) {
+        reject(err);
+      } finally {
+        URL.revokeObjectURL(url);
+      }
+    };
+    img.onerror = () => {
+      URL.revokeObjectURL(url);
+      reject(new Error('이미지를 불러올 수 없어요. 다른 사진을 골라주세요.'));
+    };
+    img.src = url;
+  });
+}
+
 export function AuthProvider({ children }) {
   const [identity, setIdentity] = useState(readIdentity);
   const [profileImage, setProfileImage] = useState(readProfileImage);
@@ -100,22 +138,43 @@ export function AuthProvider({ children }) {
   }, [refresh]);
 
   // 프로필 사진: 서버 업로드 없이 base64 를 localStorage 에만 저장(기기 바꾸면 초기화 — 알려진 한계)
-  const changeProfileImage = useCallback(() => {
+  // 고른 파일은 가운데 정사각형으로 잘라 256px JPEG 로 줄여서 저장한다. 원본을 그대로 넣으면
+  // 큰 사진이 localStorage 용량(약 5MB)을 넘겨 저장이 예외로 끊기기 때문이다.
+  // 반환: 저장 성공 { ok: true } / 실패 { ok: false, error } / 파일 선택을 취소하면 null
+  const changeProfileImage = useCallback(() => new Promise((resolve) => {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
-    input.onchange = (e) => {
+    input.oncancel = () => resolve(null);
+    input.onchange = async (e) => {
       const file = e.target.files?.[0];
-      if (!file) return;
-      const reader = new FileReader();
-      reader.onload = (ev) => {
-        localStorage.setItem('profileImage', String(ev.target.result));
-        setProfileImage(String(ev.target.result));
-      };
-      reader.readAsDataURL(file);
+      if (!file) { resolve(null); return; }
+      if (!file.type.startsWith('image/')) { resolve({ ok: false, error: '이미지 파일만 올릴 수 있어요.' }); return; }
+      try {
+        const dataUrl = await resizeToAvatar(file);
+        localStorage.setItem('profileImage', dataUrl);
+        setProfileImage(dataUrl);
+        resolve({ ok: true });
+      } catch (err) {
+        resolve({ ok: false, error: err.message || '사진을 저장하지 못했어요.' });
+      }
     };
     input.click();
+  }), []);
+
+  // 프로필 사진을 기본 이미지(사이트 로고)로 되돌린다.
+  const resetProfileImage = useCallback(() => {
+    localStorage.removeItem('profileImage');
+    setProfileImage(readProfileImage());
   }, []);
+
+  // 닉네임 변경 성공 응답({ user, token })을 이 기기의 로그인 정보에 반영한다.
+  // 닉네임은 JWT 에도 들어 있어서 토큰을 새로 받은 것으로 바꿔 끼워야 이후 요청이 통과한다.
+  const applyIdentity = useCallback(({ user, token }) => {
+    localStorage.setItem('user', JSON.stringify(user));
+    if (token) localStorage.setItem('authToken', token);
+    refresh();
+  }, [refresh]);
 
   const value = useMemo(() => ({
     ...identity,
@@ -124,7 +183,9 @@ export function AuthProvider({ children }) {
     refresh,
     logout,
     changeProfileImage,
-  }), [identity, profileImage, refresh, logout, changeProfileImage]);
+    resetProfileImage,
+    applyIdentity,
+  }), [identity, profileImage, refresh, logout, changeProfileImage, resetProfileImage, applyIdentity]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

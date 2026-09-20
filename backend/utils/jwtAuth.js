@@ -7,6 +7,8 @@
  * 붙이기 좋은 이름으로 다시 내보내는 역할만 한다.
  * ==================================================================== */
 const jwt = require('jsonwebtoken');
+const mongoose = require('mongoose');
+const User = require('../models/User');
 
 // JWT 서명에 쓸 비밀키. JWT_SECRET이 없으면 개발용 기본값으로 폴백하는데,
 // 운영(Render) 환경에서는 반드시 환경변수로 별도 설정해야 토큰 위조를 막을 수 있다.
@@ -80,18 +82,41 @@ function optionalAuth(req, res, next) {
 
 // 로그인이 반드시 필요한 라우트를 보호한다. 토큰이 없거나 검증 실패 시
 // 여기서 401 응답을 직접 보내고 next()를 호출하지 않으므로 이후 핸들러는 실행되지 않는다.
-function requireAuth(req, res, next) {
+//
+// 회원 토큰에는 닉네임이 박혀 있어서, 마이페이지에서 닉네임을 바꾸면 다른 기기에 남은 옛 토큰은
+// 옛 이름으로 글·댓글을 쓰고 알림도 못 받게 된다. 그래서 회원 토큰은 DB의 현재 닉네임과
+// 대조해서 다르면 401(code: NICKNAME_CHANGED)로 돌려보내 다시 로그인하게 한다.
+// (관리자 토큰은 Admin 체계라 대조하지 않고, DB 연결이 없으면 기존처럼 통과시킨다.)
+async function requireAuth(req, res, next) {
   const token = extractToken(req);
   if (!token) {
     return res.status(401).json({ error: '로그인이 필요합니다.' });
   }
 
+  let payload;
   try {
-    req.auth = verifyToken(token);
-    return next();
+    payload = verifyToken(token);
   } catch (err) {
     return res.status(401).json({ error: '유효하지 않거나 만료된 토큰입니다.' });
   }
+
+  if (!payload.isAdmin && payload.sub && mongoose.connection.readyState === 1) {
+    try {
+      const user = await User.findById(payload.sub).select('nickname').lean();
+      if (user && user.nickname !== payload.nickname) {
+        return res.status(401).json({
+          error: '닉네임이 변경되어 다시 로그인이 필요합니다.',
+          code: 'NICKNAME_CHANGED',
+        });
+      }
+    } catch (err) {
+      // 대조 자체가 실패해도 정상 토큰의 요청까지 막지는 않는다(가용성 우선).
+      console.error('토큰 닉네임 대조 실패:', err);
+    }
+  }
+
+  req.auth = payload;
+  return next();
 }
 
 // 현재 요청의 "행위자(글쓴이)" 정보를 한 곳에서 뽑아내는 헬퍼.

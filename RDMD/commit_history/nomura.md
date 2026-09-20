@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 308 |
+| **커밋 수** | 309 |
 | **기간** | 2026-03-20 ~ 2026-09-20 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -337,6 +337,7 @@
 | 306 | 2026-09-20 | [`e6478dd`](#e6478dd) | fix(tier-class): 9티어 카제타니·카모카와 이미지를 jpg로 교체하고 카제티니 오타를 카제타니로 수정 |
 | 307 | 2026-09-20 | [`0ba93ea`](#0ba93ea) | fix(tier-class): 5티어 스가모 캐릭터 제거 |
 | 308 | 2026-09-20 | [`7acfd1c`](#7acfd1c) | feat(my-page): 마이페이지에서 최근 행운 뽑기 기록 목록 제거 |
+| 309 | 2026-09-20 | [`pending`](#pending) | feat(my-page): 마이페이지에서 프로필 사진·닉네임 변경 (닉네임 변경 API·복사본 전파·옛 토큰 거부) |
 
 ---
 
@@ -5970,6 +5971,25 @@
 - **관련 RDMD**: `RDMD/features/my-page.md`
 
 [▲ 목차로](#목차)
+
+---
+
+<a id="pending"></a>
+
+### 309. 2026-09-20 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(my-page): 마이페이지에서 프로필 사진·닉네임 변경 (닉네임 변경 API·복사본 전파·옛 토큰 거부)
+- **git**: `git show pending`
+- **범위**: backend (auth/profile) + frontend (root-cloudflare) / my-page
+- **요약**: 마이페이지 프로필 영역에서 프로필 사진과 닉네임을 직접 바꿀 수 있게 했다. **닉네임 변경**은 새 API `POST /api/profile/nickname`(`profileController`·`profileRoutes`, 로그인 필수라 공개 전용인 `authRoutes` 와 분리)로 처리한다. 이 사이트에서 닉네임은 로그인 아이디이자 글·댓글·알림·문의·뽑기 이력에 복사된 표시 이름이고 관리자 차단 대상이라, 서버가 (1) 검증 — 2~20자·한글/영문/숫자/`_-.`(공백·`@` 불가)·예약어·대소문자 무시 중복(회원 + `Admin.name`)·제재 중인 계정/차단된 값 거부·**7일 쿨다운**(`User.nicknameChangedAt`), (2) 전파 — 이메일 일치 기준(이메일 없는 옛 기록만 닉네임 일치)으로 `TierList`/`TierPostComment`/`LuckDraw`/`Notification`/`Inquiry` 의 닉네임 복사본 갱신(동명이인 기록·관리자 답변은 보존), (3) 새 JWT 발급을 한 번에 한다. 다른 기기에 남은 옛 토큰은 `requireAuth` 가 DB 닉네임과 대조해 401(`NICKNAME_CHANGED`)로 거부하고, 프론트 `apiRequest` 가 자동 로그아웃 + 안내한다(`requireAuth` 요청마다 `User` 조회 1회 추가). **프로필 사진**은 기존대로 이 브라우저 localStorage 에만 저장하되, 원본을 통째로 넣어 큰 사진이 용량 초과로 조용히 실패하던 문제를 고쳐 가운데 정사각 크롭 후 256px JPEG 로 줄여 저장(18MB 사진 → 수 KB)하고 오류를 안내하며 "기본 이미지로" 복원을 추가했다. 관리자는 이름이 `Admin` 체계라 닉네임 변경 버튼만 숨긴다. 확인: 임시 계정으로 API 40건(검증·전파·쿨다운·옛 토큰·관리자 이름 중복)과 실제 Chrome 클릭 플레이 29건(사진·닉네임·7일 제한·옛 토큰 로그아웃·관리자) 통과, 포커 API 회귀 30건 통과, 임시 데이터는 전부 삭제. 알려진 한계: `User.nickname` unique 인덱스 없음(기존 중복 가능성) — 동시 요청 경합은 못 막고 회원가입에는 닉네임 중복·형식 검사가 없음(범위 밖), 프로필 사진은 기기 간 동기화 안 됨.
+- **주요 파일**: `backend/controllers/profileController.js`(신규), `backend/routes/profileRoutes.js`(신규), `backend/server.js`, `backend/models/User.js`, `backend/utils/jwtAuth.js`, `root-cloudflare/src/pages/MyPage.jsx`, `root-cloudflare/src/styles/my-page.css`, `root-cloudflare/src/context/AuthContext.jsx`, `root-cloudflare/src/components/UserProfileMenu.jsx`, `root-cloudflare/src/lib/api.js`, `.agents/my-page/skill.md`, `.claude/skills/my-page/SKILL.md`
+- **관련 RDMD**: `RDMD/features/my-page.md`, `RDMD/frontend/11-my-page/02-profile-management-record.md`, `RDMD/backend/03-auth/09-nickname-change-record.md`
+
+[▲ 목차로](#목차)
+
 
 
 

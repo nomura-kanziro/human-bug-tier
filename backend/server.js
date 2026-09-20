@@ -145,6 +145,7 @@ const adminRoutes = require('./routes/adminRoutes');
 const noticeRoutes = require('./routes/noticeRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const luckDrawRoutes = require('./routes/luckDrawRoutes');
+const profileRoutes = require('./routes/profileRoutes');
 
 app.use('/api/tierlists', tierRoutes);       // 공식/커스텀 티어 게시글 + 댓글
 app.use('/api/auth', authRoutes);            // 회원가입/로그인/아이디찾기/비번재설정
@@ -153,6 +154,7 @@ app.use('/api/admin', adminRoutes);          // 관리자 로그인 + 회원/차
 app.use('/api/notices', noticeRoutes);       // 공지사항/새소식
 app.use('/api/notifications', notificationRoutes); // 헤더 알림
 app.use('/api/luck-draw', luckDrawRoutes);   // 오늘의 행운 티어 뽑기
+app.use('/api/profile', profileRoutes);      // 마이페이지 프로필(닉네임 변경)
 
 // 위에 등록된 /api/* 중 아무 라우트에도 안 걸린 요청
 app.use('/api', (req, res) => {

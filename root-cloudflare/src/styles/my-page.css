@@ -38,6 +38,36 @@
   object-fit: cover;
 }
 
+/* 아바타를 누르면 사진을 바꿀 수 있어 <button> 으로 쓴다. 버튼 기본 모양은 지우고
+   우하단에 작은 카메라 배지를 얹어 "눌러서 바꾼다"는 걸 알린다. */
+.my-page-avatar-btn {
+  position: relative;
+  padding: 0;
+  background: none;
+  cursor: pointer;
+  overflow: visible;
+}
+
+.my-page-avatar-btn img {
+  border-radius: 50%;
+}
+
+.my-page-avatar-badge {
+  position: absolute;
+  right: -4px;
+  bottom: -4px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border: 1px solid #d5dbe8;
+  font-size: 13px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.15);
+}
+
 .my-page-identity h1 {
   font-size: 24px;
   font-weight: 700;
@@ -48,6 +78,84 @@
   color: #888;
   margin: 0;
   font-size: 14px;
+}
+
+/* ====================== 프로필 관리(사진·닉네임) ======================
+   닉네임/이메일 밑에 작은 버튼 줄을 두고, "닉네임 변경"을 누르면 그 아래에 입력 폼이 펼쳐진다. */
+.my-page-profile-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.my-page-profile-btn {
+  padding: 6px 12px;
+  border: 1px solid #c9d3e6;
+  border-radius: 8px;
+  background: #fff;
+  color: #35507f;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.my-page-profile-btn:hover:not(:disabled) {
+  background: #f2f6fd;
+}
+
+.my-page-profile-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.my-page-profile-btn.is-primary {
+  background: #4a6fa5;
+  border-color: #4a6fa5;
+  color: #fff;
+}
+
+.my-page-profile-btn.is-primary:hover:not(:disabled) {
+  background: #3c5c8c;
+}
+
+.my-page-nick-form {
+  margin-top: 12px;
+}
+
+.my-page-nick-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.my-page-nick-row input {
+  width: 200px;
+  max-width: 100%;
+  padding: 7px 10px;
+  border: 1px solid #c9d3e6;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.my-page-nick-hint {
+  margin: 8px 0 0;
+  max-width: 460px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #888;
+}
+
+/* 저장/오류 안내 한 줄. 오류는 붉게. */
+.my-page-profile-msg {
+  margin: 10px 0 0;
+  font-size: 13px;
+  color: #2f7d4f;
+}
+
+.my-page-profile-msg.is-error {
+  color: #c0392b;
 }
 
 /* ====================== 통계 카드 그리드 (5개) ======================
@@ -194,6 +302,10 @@
   .my-page-stats {
     grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
   }
+
+  .my-page-header {
+    align-items: flex-start;
+  }
 }
 
 /* ======================================================================
@@ -207,6 +319,45 @@
 
 [data-theme="dark"] .my-page-avatar {
   border-color: #4a6fa5;
+}
+
+[data-theme="dark"] .my-page-avatar-badge {
+  background: var(--bg-elevated);
+  border-color: var(--border-color);
+}
+
+[data-theme="dark"] .my-page-profile-btn {
+  background: var(--bg-elevated);
+  border-color: var(--border-color);
+  color: var(--link-color);
+}
+
+[data-theme="dark"] .my-page-profile-btn:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+
+[data-theme="dark"] .my-page-profile-btn.is-primary {
+  background: #4a6fa5;
+  border-color: #4a6fa5;
+  color: #fff;
+}
+
+[data-theme="dark"] .my-page-nick-row input {
+  background: var(--bg-elevated);
+  border-color: var(--border-color);
+  color: inherit;
+}
+
+[data-theme="dark"] .my-page-nick-hint {
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] .my-page-profile-msg {
+  color: #6fcf97;
+}
+
+[data-theme="dark"] .my-page-profile-msg.is-error {
+  color: #ff8a80;
 }
 
 [data-theme="dark"] .my-page-stat-card {

@@ -40,6 +40,8 @@ description: >
 3. `mine=true` 처럼 소유자 전용 필터를 추가할 땐 **요청자 신원과 대상 일치 여부**를 서버에서 반드시 확인
 4. 경로/API: `getBasePath()` / `getApiBase()` / `getAuthHeaders()` 재사용
 5. 이벤트: `addEventListener` + `data-action` 위임 (패널 메뉴에 `onclick` 재도입 금지)
+6. **닉네임 변경**(React `MyPage.jsx` → `POST /api/profile/nickname`)은 로그인 아이디이자 글·댓글·알림·문의·뽑기 이력에 복사된 표시 이름·차단 대상이다. 닉네임을 바꾸는 코드를 만들 땐 `backend/controllers/profileController.js` 의 검증(형식·중복·예약어·제재·7일)과 전파(`propagateNickname`)를 그대로 거치게 하고, 클라이언트가 임의로 `User.nickname` 을 쓰지 않는다. 새로 닉네임을 복사해 저장하는 컬렉션을 만들면 `propagateNickname` 에도 추가한다
+7. 프로필 사진은 서버에 저장하지 않는다(localStorage `profileImage`, 256px JPEG 로 리사이즈). 서버 저장으로 바꾸려면 사용자에게 먼저 확인
 
 ## Do not
 
@@ -48,6 +50,7 @@ description: >
 - 어드민 드롭다운을 일반 유저와 다르게 축소하기 (완전히 같아야 함 — 다르게 하려면 사용자에게 먼저 확인)
 - `mine=true` 를 인증 없이 또는 다른 사람 대상으로 우회 가능하게 만들기
 - 알림 벨과 다른 새 드롭다운 CSS/JS 패턴을 별도로 만들기
+- 닉네임 변경 시 `User.nickname` 만 바꾸고 복사본(글·댓글·알림·문의·뽑기 이력) 갱신·새 토큰 발급을 빼먹기, 제재 중 계정·차단된 값·관리자 이름과의 중복 검사 생략
 
 ## Checklist
 

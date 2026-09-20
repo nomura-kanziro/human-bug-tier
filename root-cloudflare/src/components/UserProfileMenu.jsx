@@ -24,7 +24,8 @@ export default function UserProfileMenu({ open, onToggle, onClose, containerRef 
         navigate(`/board?search=${encodeURIComponent(`@${nickname}`)}`);
         break;
       case 'photo':
-        changeProfileImage();
+        // 저장에 실패하면(형식 오류·용량 등) 조용히 무시하지 말고 알려준다. 취소는 null 이라 안내 없음.
+        changeProfileImage().then((result) => { if (result && !result.ok) window.alert(result.error); });
         break;
       case 'logout':
         logout();

@@ -24,6 +24,12 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  // 닉네임을 마지막으로 바꾼 시각. 7일 쿨다운 판정용(profileController.changeNickname).
+  // 가입 후 한 번도 안 바꿨으면 null 이라 바로 변경할 수 있다.
+  nicknameChangedAt: {
+    type: Date,
+    default: null
+  },
   // 가입 당시 IP(악용/신고 대응, 관리자 차단 기능에서 IP 기준 차단 시 참고용).
   ip: {
     type: String,

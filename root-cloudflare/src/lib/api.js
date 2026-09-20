@@ -41,6 +41,18 @@ export function getAdminAuthHeaders(extraHeaders = {}) {
   return headers;
 }
 
+// 다른 기기에서 닉네임을 바꾸면 이 기기의 옛 토큰은 서버가 401(code: NICKNAME_CHANGED)로 거부한다.
+// 그대로 두면 화면은 로그인 상태인데 요청만 계속 실패하므로, 세션 키를 지우고 AuthContext 가
+// 듣고 있는 'storage' 이벤트로 로그아웃 상태를 반영한 뒤 한 번만 안내한다.
+// (프로필 사진은 이 기기 설정이라 지우지 않는다 — 다시 로그인해도 그대로 남는다)
+function handleNicknameChanged() {
+  // 같은 화면에서 요청이 여러 개 동시에 실패해도 첫 번째만 처리한다(이미 로그아웃됐으면 토큰이 없다)
+  if (!localStorage.getItem('authToken')) return;
+  ['user', 'authToken', 'loginAt', 'lastActiveAt'].forEach((k) => localStorage.removeItem(k));
+  window.dispatchEvent(new Event('storage'));
+  window.alert('닉네임이 변경되어 다시 로그인이 필요해요.\n바뀐 닉네임(아이디)으로 로그인해주세요.');
+}
+
 // 공용 요청 래퍼. 정적 미리보기(GITHUB_STATIC)면 요청 자체를 하지 않고 에러를 던진다.
 // admin: true 면 관리자 토큰(adminAuthToken)을 쓴다(서버 requireAdmin 과 짝).
 // 반환: { ok, status, data } — 호출부가 res.ok/res.status 를 매번 따로 다루지 않게 한다.
@@ -53,6 +65,7 @@ export async function apiRequest(path, { auth = true, admin = false, headers = {
   else finalHeaders = { 'Content-Type': 'application/json', ...headers };
   const res = await fetch(`${base}${path}`, { ...options, headers: finalHeaders });
   const data = await res.json().catch(() => ({}));
+  if (res.status === 401 && data?.code === 'NICKNAME_CHANGED') handleNicknameChanged();
   return { ok: res.ok, status: res.status, data };
 }
 
