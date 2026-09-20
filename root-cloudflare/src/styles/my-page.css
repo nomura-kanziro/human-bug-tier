@@ -175,24 +175,7 @@
   color: #999;
 }
 
-/* ====================== "최근 행운 뽑기 기록" 목록 ======================
-   my-page.js의 renderDrawList()가 여기 안에 뽑기 이력 한 줄씩(<div>)을 채운다.
-   게시글 카드와 달리 이미지가 없는 단순 텍스트 행 목록이라 세로 flex로만 배치. */
-.my-page-draw-list {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.my-page-draw-item {
-  padding: 10px 12px;
-  border-radius: 8px;
-  background: #fafafa;
-  border: 1px solid #eee;
-  font-size: 14px;
-}
-
-/* 게시글/뽑기 기록이 하나도 없을 때, 또는 GitHub Pages 정적 미리보기처럼 서버가 없어
+/* 게시글이 하나도 없을 때, 또는 GitHub Pages 정적 미리보기처럼 서버가 없어
    데이터를 아예 불러오지 못할 때 대신 표시하는 안내 문구 스타일. */
 .my-page-empty {
   color: #999;
@@ -245,8 +228,7 @@
   color: var(--link-color);
 }
 
-[data-theme="dark"] .my-page-post-item,
-[data-theme="dark"] .my-page-draw-item {
+[data-theme="dark"] .my-page-post-item {
   background: var(--bg-elevated);
   border-color: var(--border-color);
 }

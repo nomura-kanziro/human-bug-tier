@@ -22,7 +22,7 @@
 | 최고 등급 당첨 | `GET /api/luck-draw/stats` `.bestTier` (숫자가 작을수록 희귀) |
 | 행운 포인트 | `GET /api/luck-draw/stats` `.points` (9티어 -5 ~ 1티어 +3 누적, 음수 가능) |
 | 내가 쓴 게시글 최근 목록 | 위 tierlists 응답 상위 6개 (비공개는 🔒 표시) |
-| 최근 뽑기 기록 | `GET /api/luck-draw/history?page=1` (최근 5건까지만 존재) |
+| ~~최근 뽑기 기록~~ | 2026-09-20 창시자 지시로 마이페이지에서 제거(`/history` API 는 행운 뽑기 페이지가 계속 사용) |
 
 ## 권한
 

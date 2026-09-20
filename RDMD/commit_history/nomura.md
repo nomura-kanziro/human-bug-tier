@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 307 |
+| **커밋 수** | 308 |
 | **기간** | 2026-03-20 ~ 2026-09-20 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -336,6 +336,7 @@
 | 305 | 2026-09-20 | [`1929a5c`](#1929a5c) | feat(luck-draw): 행운 티어 포커를 공개 후보 3장 직접 선택식으로 변경(4·5번째는 2초 턴 자동) |
 | 306 | 2026-09-20 | [`e6478dd`](#e6478dd) | fix(tier-class): 9티어 카제타니·카모카와 이미지를 jpg로 교체하고 카제티니 오타를 카제타니로 수정 |
 | 307 | 2026-09-20 | [`0ba93ea`](#0ba93ea) | fix(tier-class): 5티어 스가모 캐릭터 제거 |
+| 308 | 2026-09-20 | [`pending`](#pending) | feat(my-page): 마이페이지에서 최근 행운 뽑기 기록 목록 제거 |
 
 ---
 
@@ -5951,6 +5952,25 @@
 - **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)
+
+---
+
+<a id="pending"></a>
+
+### 308. 2026-09-20 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(my-page): 마이페이지에서 최근 행운 뽑기 기록 목록 제거
+- **git**: `git show pending`
+- **범위**: frontend (root-cloudflare) / my-page
+- **요약**: 창시자 지시로 마이페이지의 "최근 행운 뽑기 기록" 섹션을 제거했다. 화면 섹션과 그 데이터 요청(`GET /api/luck-draw/history?page=1`), `draws` 상태, 더 이상 쓰이지 않는 `.my-page-draw-list/.my-page-draw-item` CSS(다크 모드 규칙 포함)를 지웠고 `RDMD/features/my-page.md` 표시 항목 표를 맞췄다. 통계 카드 5개(작성 글·받은 좋아요·뽑기 횟수·최고 등급·포인트)는 `/stats` 기반이라 그대로다. `/api/luck-draw/history` 엔드포인트는 행운 뽑기 페이지가 계속 쓰므로 백엔드는 건드리지 않았다. 확인: 빌드 후 임시 회원으로 `/my-page/` 를 열어 "내가 쓴 게시글" 섹션과 통계 카드 5개만 렌더링되고 뽑기 기록 목록이 없음을 확인(임시 데이터는 삭제).
+- **주요 파일**: `root-cloudflare/src/pages/MyPage.jsx`, `root-cloudflare/src/styles/my-page.css`, `RDMD/features/my-page.md`
+- **관련 RDMD**: `RDMD/features/my-page.md`
+
+[▲ 목차로](#목차)
+
 
 
 

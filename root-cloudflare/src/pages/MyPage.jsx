@@ -1,6 +1,6 @@
 // 마이페이지 (my-page/my-page.html + .js 이식)
 //  - 통계 카드 5개 (작성 글 / 받은 좋아요 / 뽑기 횟수 / 최고 등급 / 포인트)
-//  - 내가 쓴 게시글 최근 6개, 최근 행운 뽑기 기록 5건
+//  - 내가 쓴 게시글 최근 6개 (최근 행운 뽑기 기록 목록은 창시자 지시로 제거 — 뽑기 이력은 행운 뽑기 페이지에서 본다)
 //  - 관리자도 완전히 같은 화면을 쓴다(관리자 전용 UI 없음 — 진입점은 헤더 드롭다운 "관리하기" 하나)
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -38,7 +38,6 @@ export default function MyPage() {
   const { isLoggedIn, nickname, email, profileImage } = useAuth();
 
   const [posts, setPosts] = useState([]);
-  const [draws, setDraws] = useState([]);
   const [luck, setLuck] = useState({ totalDraws: 0, bestTier: null, points: 0 });
   const [loading, setLoading] = useState(true);
 
@@ -54,15 +53,13 @@ export default function MyPage() {
 
     let cancelled = false;
     (async () => {
-      const [postList, stats, history] = await Promise.all([
+      const [postList, stats] = await Promise.all([
         safeGet(`/api/tierlists?author=${encodeURIComponent(nickname)}&mine=true`, []),
         safeGet('/api/luck-draw/stats', { totalDraws: 0, bestTier: null, points: 0 }),
-        safeGet('/api/luck-draw/history?page=1', { items: [] }),
       ]);
       if (cancelled) return;
       setPosts(Array.isArray(postList) ? postList : []);
       setLuck({ totalDraws: stats.totalDraws || 0, bestTier: stats.bestTier, points: stats.points || 0 });
-      setDraws(history.items || []);
       setLoading(false);
     })();
     return () => { cancelled = true; };
@@ -118,22 +115,6 @@ export default function MyPage() {
                 <span className="my-page-post-meta">{formatDate(post.createdAt)} · 추천 {post.likeCount || 0}</span>
               </div>
             </Link>
-          ))}
-        </div>
-      </section>
-
-      <section className="my-page-section">
-        <div className="my-page-section-header">
-          <h2>최근 행운 뽑기 기록</h2>
-          <Link to="/luck-draw#daily">행운 뽑기 하러 가기 →</Link>
-        </div>
-        <div className="my-page-draw-list">
-          {loading && <p className="my-page-empty">불러오는 중...</p>}
-          {!loading && draws.length === 0 && <p className="my-page-empty">아직 뽑기 기록이 없어요.</p>}
-          {!loading && draws.slice(0, 5).map((item, i) => (
-            <div className="my-page-draw-item" key={`${item.drawDate}-${i}`}>
-              {item.drawDate} · {tierLabel(item.tier)} · {item.characterName}
-            </div>
           ))}
         </div>
       </section>
