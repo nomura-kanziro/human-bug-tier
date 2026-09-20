@@ -1,0 +1,125 @@
+/* ======================================================================
+   design-system.css — 전 페이지 공용 마감(디자인 고도화 레이어) / React 전용
+   ======================================================================
+   theme.css 가 "값"(색·서체·그림자 토큰)을 정의한다면, 이 파일은 그 값을 실제로
+   전 페이지에 입히는 얇은 마감 층이다. 페이지별 CSS 를 하나하나 고치지 않고도
+   서체·초점 표시·스크롤바처럼 "모든 화면에 똑같이 적용돼야 하는 것"만 모아 둔다.
+
+   main.jsx 에서 **맨 마지막에** import 한다 — 페이지 CSS(common/Header_Footer/…)
+   보다 뒤에 와야 같은 우선순위에서 이 파일이 이긴다. 대신 특정 페이지 전용 디자인은
+   여기 넣지 않는다(그건 각 페이지 CSS 소관).
+
+   원칙
+   - 색·모서리·그림자는 반드시 theme.css 토큰을 쓴다(라이트/다크 자동 대응).
+   - 기존 클래스의 레이아웃(너비·배치)은 건드리지 않는다 — 보이는 마감만 올린다.
+   ====================================================================== */
+
+/* ====================== 서체 ======================
+   지금까지 body 는 "Noto Sans KR"(실제 로드 없음), 로그인·회원가입·관리자 로그인
+   페이지는 bare sans-serif 로 서로 다른 글꼴이 섞여 있었다. 전부 --font-sans 로 통일한다.
+   (auth-*.css 쪽 `font-family: sans-serif` 선언 자체도 같이 정리했다) */
+body,
+input,
+textarea,
+select,
+button {
+  font-family: var(--font-sans);
+}
+
+body {
+  /* 얇은 획이 뭉개지지 않게 — 특히 한글 본문에서 차이가 크다 */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  letter-spacing: -0.01em;
+}
+
+/* 제목은 자간을 조금 더 좁혀야 또렷하고 단단해 보인다(한글·영문 공통). */
+h1, h2, h3, h4 {
+  letter-spacing: -0.025em;
+  word-break: keep-all; /* 한글 제목이 단어 중간에서 잘리지 않게 */
+}
+
+/* ====================== 초점(키보드) 표시 ======================
+   지금은 브라우저 기본 외곽선이라 테마와 따로 논다. 마우스 클릭 때는 안 뜨고
+   키보드 이동(Tab)에서만 뜨는 :focus-visible 로 강조색 링을 통일한다. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+  outline: 2px solid transparent; /* 고대비 모드에서도 초점이 보이도록 자리만 남김 */
+  outline-offset: 2px;
+  box-shadow: var(--focus-ring);
+  border-radius: var(--radius-sm);
+}
+
+/* 입력창은 마우스로 눌러 들어갔을 때도 "지금 여기 입력 중"이 보여야 한다. */
+input:focus,
+textarea:focus,
+select:focus {
+  border-color: var(--brand);
+}
+
+/* ====================== 선택 영역 · 스크롤바 ====================== */
+::selection {
+  background: var(--brand);
+  color: var(--brand-contrast);
+}
+
+/* 스크롤바는 지금껏 다크에서만 손봤다. 라이트에서도 기본 회색 막대가 튀므로 같이 정리. */
+* {
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--scrollbar-track);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: var(--radius-pill);
+  border: 2px solid var(--scrollbar-track); /* 막대를 가늘게 보이게 하는 여백 */
+}
+
+/* ====================== 이미지 ======================
+   캐릭터 썸네일이 카드 안에서 줄어들 때 계단처럼 거칠어지지 않게 한다. */
+img {
+  image-rendering: -webkit-optimize-contrast;
+}
+
+/* ====================== 버튼 공통 반응 ======================
+   사이트 전역의 <button> 이 눌렸을 때 아무 반응이 없어 "죽은 버튼" 처럼 느껴졌다.
+   색·크기는 각 페이지 CSS 에 맡기고, 누르는 느낌(살짝 가라앉기)만 공통으로 준다. */
+button {
+  transition: background-color 0.18s var(--ease-out), color 0.18s var(--ease-out),
+    border-color 0.18s var(--ease-out), box-shadow 0.18s var(--ease-out),
+    transform 0.12s var(--ease-out), opacity 0.18s var(--ease-out);
+}
+
+button:not(:disabled):active {
+  transform: translateY(1px);
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* ====================== 움직임 최소화 설정 존중 ======================
+   운영체제에서 "동작 줄이기"를 켠 사용자에게는 카드 떠오름·딜링 연출 등
+   모든 전환을 사실상 끈다(접근성 기본 배려). */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

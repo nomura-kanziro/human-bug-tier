@@ -8,6 +8,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#111111">
   <title>휴버대 티어표</title>
+  <!-- 본문 서체(Pretendard). 지금까지 CSS 가 "Noto Sans KR" 을 지정만 하고 실제로 불러오지는
+       않아, 그 폰트가 깔린 PC 가 아니면 브라우저 기본 고딕으로 렌더링되고 있었다.
+       dynamic-subset 은 글자 단위로 쪼개진 파일을 필요한 만큼만 받아서 한글 폰트인데도 가볍다.
+       CDN 이 막힌 환경이면 아래 --font-sans 의 시스템 폰트 폴백이 그대로 쓰인다. -->
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
   <link rel="icon" href="/tier-media/tier-image/logo.webp" type="image/webp">
   <link rel="apple-touch-icon" href="/tier-media/tier-image/pwa/icon-192.png">
   <link rel="manifest" href="/manifest.webmanifest">

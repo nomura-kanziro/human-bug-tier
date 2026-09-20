@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import LoadingScreen from './LoadingScreen';
 import ThemeToggle from './ThemeToggle';
 import { LOGO_URL } from '../lib/paths';
+// 네 페이지가 공유하는 껍데기 스타일 — 예전엔 페이지 CSS 마다 복사돼 있었다
+import '../styles/auth-shell.css';
 
 export default function AuthShell({ title, children }) {
   useEffect(() => { document.title = title; }, [title]);
@@ -23,8 +25,14 @@ export default function AuthShell({ title, children }) {
       </Link>
       <div className="login-wrapper">
         <div className="login-box">{children}</div>
-        {/* 오른쪽 컬러 영역 (기능 없음, 순수 장식) */}
-        <div className="side-panel" />
+        {/* 오른쪽 브랜드 패널 — 원래는 빈 단색 사각형이었다. 아무것도 없으니 화면이
+            "만들다 만" 느낌이라, 로고와 한 줄 소개를 넣어 표지 역할을 하게 했다.
+            좁은 화면(768px 이하)에서는 auth-shell.css 가 통째로 숨긴다. */}
+        <div className="side-panel">
+          <img src={LOGO_URL} alt="" className="side-panel-logo" />
+          <strong className="side-panel-title">휴버대 티어표</strong>
+          <span className="side-panel-desc">휴먼버그대학교 캐릭터 공식 티어표<br />커스텀 티어표 제작 · 행운 뽑기</span>
+        </div>
       </div>
     </div>
   );

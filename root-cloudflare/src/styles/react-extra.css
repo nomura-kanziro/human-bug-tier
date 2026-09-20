@@ -53,9 +53,11 @@
 
 .board-header h1 {
   font-size: 32px;
-  color: #000000;
+  /* 검정 하드코딩이라 다크 모드에서 배경에 묻혔다 → 테마 토큰으로 */
+  color: var(--text-primary);
   margin: 0;
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: -0.03em;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -68,25 +70,26 @@
 }
 
 .view-all-board-btn {
-  margin-top: 10px;
+  margin-top: 14px;
   padding: 8px 16px;
-  background: #444;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
+  background: var(--bg-subtle);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-pill);
   font-weight: 600;
   cursor: pointer;
 }
 
 .view-all-board-btn:hover {
-  background: #555;
+  background: var(--bg-hover);
+  color: var(--text-primary);
 }
 
 .board-toolbar {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   flex-wrap: wrap;
 }
 
@@ -97,40 +100,62 @@
   gap: 10px;
 }
 
+/* 검색 입력창 — 예전엔 배경 #1a1a1a + 테두리 #444 로 고정이라, 흰 배경인 라이트 모드에서
+   검정 막대 하나가 떠 있는 것처럼 보였다. 테마 토큰을 쓰면 두 모드 모두 자연스럽다. */
 .search-box input {
   flex: 1;
-  padding: 10px;
-  border: 2px solid #444;
-  background: #1a1a1a;
-  color: #fff;
-  border-radius: 6px;
+  padding: 11px 14px;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text-primary);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+}
+
+.search-box input::placeholder {
+  color: var(--text-muted);
 }
 
 .search-box button {
-  padding: 10px 20px;
-  background: #ffc400;
-  color: #111;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
+  padding: 11px 20px;
+  background: var(--bg-subtle);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-weight: 700;
   cursor: pointer;
+  white-space: nowrap;
 }
 
+.search-box button:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* 이 화면의 주 동작 — 검색 버튼은 보조 톤으로 내리고 글쓰기만 강조색으로 남긴다.
+   (예전엔 검색·글쓰기가 똑같은 노란 버튼이라 무엇이 주 동작인지 구분되지 않았다) */
 .write-btn {
   display: inline-flex;
   align-items: center;
-  padding: 10px 20px;
-  background: #ffc400;
-  color: #111;
-  border-radius: 6px;
-  font-weight: bold;
+  gap: 6px;
+  padding: 11px 20px;
+  background: var(--brand);
+  color: var(--brand-contrast);
+  border-radius: var(--radius-md);
+  font-weight: 700;
   text-decoration: none;
   white-space: nowrap;
   cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: background-color 0.18s var(--ease-out), transform 0.12s var(--ease-out);
 }
 
 .write-btn:hover {
-  background: #e6b000;
+  background: var(--brand-strong);
+}
+
+.write-btn:active {
+  transform: translateY(1px);
 }
 
 @media (max-width: 768px) {

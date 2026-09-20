@@ -9,41 +9,53 @@
 }
 
 .luck-draw-page h1 {
-  font-size: 28px;
-  font-weight: 700;
-  margin: 0 0 8px;
+  font-size: 30px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin: 0 0 10px;
 }
 
 .luck-desc {
-  color: #666;
+  color: var(--text-secondary);
+  line-height: 1.7;
   margin: 0 0 28px;
 }
 
 /* ====== 탭 (오늘의 행운 티어 / 랜덤 뽑기) ====== */
 /* 실제 탭 전환(active 토글, 해시 동기화)은 luck-draw.js가 담당하고,
    여기서는 활성 탭에만 주황색 밑줄 강조를 준다. */
+/* 얇은 밑줄 탭이라 넓은 화면에서 존재감이 없었다 → 한 덩어리 알약 스위치로 바꿔
+   "세 개 중 하나를 고르는 중"이 분명하게 보이게 했다. */
 .luck-draw-tabs {
-  display: flex;
-  gap: 8px;
+  display: inline-flex;
+  gap: 4px;
   margin-bottom: 32px;
-  border-bottom: 1px solid #eee;
+  padding: 4px;
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-pill);
 }
 
 .luck-tab {
   appearance: none;
   border: none;
   background: none;
-  font-size: 15px;
-  font-weight: 600;
-  color: #999;
-  padding: 10px 14px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  padding: 9px 18px;
   cursor: pointer;
-  border-bottom: 2px solid transparent;
+  border-radius: var(--radius-pill);
+}
+
+.luck-tab:hover:not(:disabled):not(.active) {
+  color: var(--text-primary);
 }
 
 .luck-tab.active {
-  color: #f59e0b;
-  border-bottom-color: #f59e0b;
+  color: var(--brand-contrast);
+  background: var(--brand);
+  box-shadow: var(--shadow-sm);
 }
 
 /* "랜덤 뽑기"처럼 아직 미구현이라 버튼 자체에 disabled 속성이 붙은 탭용 시각적 처리. */
@@ -64,12 +76,14 @@
 
 /* 안내 배지 — GitHub Pages 등 백엔드 없는 정적 배포 환경에서만 JS가 hidden을 풀어 노출. */
 .luck-static-guard {
-  background: #fef3c7;
-  color: #92400e;
-  border-radius: 10px;
+  background: var(--brand-soft);
+  color: var(--brand-strong);
+  border: 1px solid color-mix(in srgb, var(--brand) 30%, transparent);
+  border-radius: var(--radius-md);
   padding: 14px 16px;
   margin-bottom: 20px;
   font-size: 14px;
+  line-height: 1.6;
 }
 
 /* ====== 뽑기 버튼 ====== */
@@ -80,24 +94,35 @@
   padding: 16px;
   font-size: 16px;
   font-weight: 700;
-  color: #fff;
-  background: linear-gradient(135deg, #f59e0b, #f97316);
+  color: var(--brand-contrast);
+  background: linear-gradient(135deg, var(--brand), #f97316);
   border: none;
-  border-radius: 14px;
+  border-radius: var(--radius-lg);
   cursor: pointer;
-  transition: opacity 0.15s ease;
+  box-shadow: 0 8px 20px -8px rgba(245, 158, 11, 0.8);
+  transition: filter 0.18s var(--ease-out), box-shadow 0.18s var(--ease-out),
+    transform 0.12s var(--ease-out);
 }
 
+.luck-draw-btn:hover:not(:disabled) {
+  filter: brightness(1.05);
+  box-shadow: 0 12px 26px -8px rgba(245, 158, 11, 0.9);
+}
+
+/* 못 누르는 상태(쿨다운·횟수 소진·비로그인)는 색을 빼 표면 톤으로 내린다 */
 .luck-draw-btn:disabled {
-  background: #d1d5db;
+  background: var(--bg-subtle);
+  color: var(--text-muted);
+  box-shadow: none;
   cursor: not-allowed;
 }
 
 .luck-draw-status {
-  margin: 10px 0 0;
+  margin: 12px 0 0;
   font-size: 13px;
-  color: #888;
+  color: var(--text-muted);
   text-align: center;
+  line-height: 1.6;
 }
 
 /* ====== 뽑기 로딩(긴장감용) — 버튼 클릭 후 10초간 결과를 숨기고 보여준다 ======
@@ -168,9 +193,10 @@
 .luck-result-card {
   margin-top: 28px;
   padding: 28px;
-  border-radius: 16px;
-  background: #fafafa;
-  border: 1px solid #eee;
+  border-radius: var(--radius-lg);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--shadow-sm);
   text-align: center;
 }
 
@@ -179,7 +205,8 @@
   height: 140px;
   object-fit: cover;
   border-radius: 50%;
-  border: 3px solid #f59e0b;
+  border: 3px solid var(--brand);
+  box-shadow: 0 10px 24px -10px rgba(245, 158, 11, 0.9);
   margin: 0 auto 16px;
   display: block;
 }
@@ -187,9 +214,9 @@
 .luck-result-tier {
   display: inline-block;
   padding: 4px 12px;
-  border-radius: 999px;
-  background: #fef3c7;
-  color: #92400e;
+  border-radius: var(--radius-pill);
+  background: var(--brand-soft);
+  color: var(--brand-strong);
   font-weight: 700;
   font-size: 13px;
   margin-bottom: 8px;
@@ -260,9 +287,32 @@
 
 .luck-probability-table th,
 .luck-probability-table td {
-  padding: 8px 10px;
-  border-bottom: 1px solid #eee;
+  padding: 11px 10px;
+  border-bottom: 1px solid var(--border-color);
   text-align: left;
+}
+
+/* 헤더 줄만 살짝 진하게, 마지막 줄의 밑줄은 지워서 "표"보다 "목록"처럼 읽히게 한다. */
+.luck-probability-table caption {
+  color: var(--text-primary);
+  font-size: 15px;
+}
+
+.luck-probability-table th {
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+}
+
+.luck-probability-table tbody tr:last-child th,
+.luck-probability-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.luck-probability-table tbody tr:hover td,
+.luck-probability-table tbody tr:hover th {
+  background: var(--bg-subtle);
 }
 
 /* ====== 내 뽑기 기록 (회원 전용) ====== */
@@ -277,15 +327,16 @@
 }
 
 .luck-history-item {
-  padding: 10px 12px;
-  border-radius: 8px;
-  background: #fafafa;
-  margin-bottom: 6px;
+  padding: 12px 14px;
+  border-radius: var(--radius-md);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  margin-bottom: 8px;
   font-size: 14px;
 }
 
 .luck-history-empty {
-  color: #999;
+  color: var(--text-muted);
   font-size: 14px;
 }
 

@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import AuthShell from '../components/AuthShell';
 import { useAuth } from '../context/AuthContext';
 import { apiRequest } from '../lib/api';
-import '../styles/admin-login.css';
 
 export default function AdminLogin() {
   const navigate = useNavigate();
@@ -56,7 +55,8 @@ export default function AdminLogin() {
 
   return (
     <AuthShell title="관리자 로그인 | 휴버대 티어표">
-      <h2 style={{ color: '#000' }}>관리자 로그인</h2>
+      {/* 색은 auth-shell.css 가 테마 토큰으로 지정한다(예전엔 인라인 #000 이라 다크에서 안 보였음) */}
+      <h2>관리자 로그인</h2>
       <form onSubmit={submit}>
         <input type="text" placeholder="아이디" value={loginId} onChange={(e) => setLoginId(e.target.value)} autoComplete="username" />
         <input type="password" placeholder="비밀번호" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" />

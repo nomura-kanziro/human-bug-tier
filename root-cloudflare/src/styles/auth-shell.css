@@ -1,0 +1,401 @@
+/* ======================================================================
+   auth-shell.css — 인증 페이지 공용 껍데기 (로그인 / 회원가입 / 계정찾기 / 비번재설정)
+   ======================================================================
+   이 4개 화면은 공용 헤더·푸터 없이 AuthShell.jsx 하나로 같은 골격을 쓴다.
+   원래는 auth-login.css / auth-signup.css / auth-find.css 가 로고·카드·입력창·버튼·
+   다크 보정을 **각자 복사해서** 갖고 있었는데(거의 같은 내용 3벌), 파일마다 값이 조금씩
+   달라 같은 UI 가 페이지마다 다르게 보였고 한쪽만 고치면 다른 쪽이 그대로 남았다.
+   그래서 공용 껍데기는 여기 한 곳에만 두고 AuthShell.jsx 가 직접 불러온다.
+   페이지 전용 UI(계정찾기의 탭 등)만 각자 CSS 에 남긴다.
+   ====================================================================== */
+
+/* ====== 좌상단 고정 로고 (페이지 좌표 기준 절대배치) ====== */
+.auth-page .logo {
+  position: absolute;
+  top: 24px;
+  left: 24px;
+
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.auth-page .logo-img {
+  width: 32px;
+  margin-right: 8px;
+}
+
+.auth-page .logo {
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  padding: 6px 10px;
+  border-radius: var(--radius-pill);
+  transition: background-color 0.18s var(--ease-out);
+}
+
+.auth-page .logo:hover {
+  background: var(--bg-hover);
+}
+
+/* 전역 리셋: 브라우저 기본 여백 제거 + 박스 크기 계산을 border-box로 통일 */
+.auth-page *, .auth-page {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: var(--font-sans);
+}
+
+/* body를 뷰포트 전체 높이로 잡고 login-wrapper를 화면 정중앙에 배치.
+   배경은 순백 대신 아주 옅은 앰버 기운을 한쪽에 깔아 카드가 떠 보이게 한다. */
+.auth-page {
+  background:
+    radial-gradient(900px 500px at 15% -10%, rgba(245, 158, 11, 0.1), transparent 60%),
+    radial-gradient(700px 420px at 100% 110%, rgba(99, 102, 241, 0.08), transparent 60%),
+    var(--bg-page);
+  height: 100vh;
+  color: var(--text-primary);
+
+  /* 중앙 정렬 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* (참고용/미사용) 로그인 폼을 세로로 쌓기 위한 클래스 - 실제 마크업에는 login-box를 사용 */
+.login-form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 전체 컨테이너 크기 제한 */
+/* 로그인 상자 전체를 감싸는 박스. 좌(입력 폼)/우(브랜드 패널) 가로 분할 레이아웃의 뼈대.
+   예전엔 검정 배경 + 사방 30px 짜리 짙은 그림자(0 0 30px/.6)라 카드가 "번져" 보였다.
+   지금은 모서리를 둥글리고 위에서 내려오는 방향성 있는 그림자로 바꿔 띄운다. */
+.login-wrapper {
+  display: flex;
+  width: 860px;
+  max-width: calc(100vw - 48px);
+  min-height: 480px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden; /* 둥근 모서리 밖으로 패널 색이 삐져나오지 않게 */
+}
+
+/* 왼쪽 로그인 영역 */
+/* 실제 입력창/버튼이 들어가는 박스. back-btn(⟳)을 absolute로 배치하기 위해 relative 기준점 역할도 함.
+   입력 폭은 고정 240px 이었는데 카드가 커지면서 가운데가 허전해 보여 280px 기준으로 넓혔다. */
+.login-box {
+  width: 52%;
+  background: var(--bg-elevated);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 48px 40px 64px;
+  box-sizing: border-box;
+}
+
+.login-box h2 {
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+  margin-bottom: 28px;
+}
+
+/* 관리자 로그인만 입력들을 <form> 으로 감싼다. form 이 block 이면 그 자체가 flex 아이템이
+   되어 안의 입력들이 왼쪽으로 쏠리므로, 자식들이 .login-box 의 직속 아이템처럼 취급되게 한다. */
+.login-box form {
+  display: contents;
+}
+
+.login-box input {
+  width: 280px;
+  max-width: 100%;
+  padding: 13px 14px;
+  margin-bottom: 10px;
+  font-size: 15px;
+  color: var(--text-primary);
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-md);
+  transition: border-color 0.18s var(--ease-out), box-shadow 0.18s var(--ease-out);
+}
+
+.login-box input::placeholder {
+  color: var(--text-muted);
+}
+
+/* 로그인 버튼 기본 스타일 (아래 .button-row가 실제 로그인/회원가입 버튼에는 덮어씀) */
+.login-box button {
+  width: 280px;
+  max-width: 100%;
+  padding: 13px;
+  background: var(--brand);
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--brand-contrast);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* 돌아가기 버튼 — 글자만 덩그러니 있던 것을 눌리는 원형 버튼 모양으로 만든다 */
+.back-btn {
+  position: absolute;
+  bottom: 18px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  line-height: 1;
+  color: var(--text-muted);
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.18s var(--ease-out), color 0.18s var(--ease-out);
+}
+
+.back-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* 오른쪽 브랜드 패널 — 단색 파랑 사각형이던 것을 짙은 그래파이트 + 앰버 글로우로 바꾸고
+   로고·사이트 이름·한 줄 소개를 넣어 "표지"로 쓴다(AuthShell.jsx 가 내용을 렌더).
+   라이트/다크 모두 어두운 톤을 유지해 카드 좌우 대비가 살아 있게 했다. */
+.side-panel {
+  width: 48%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 40px 32px;
+  box-sizing: border-box;
+  text-align: center;
+  background:
+    radial-gradient(420px 260px at 50% 18%, rgba(245, 158, 11, 0.28), transparent 70%),
+    linear-gradient(160deg, #23242b 0%, #16171c 55%, #101116 100%);
+  color: #f4f4f6;
+  overflow: hidden;
+}
+
+/* 패널 아래쪽을 살짝 밝혀 평평한 단색으로 보이지 않게 하는 장식 레이어 */
+.side-panel::after {
+  content: '';
+  position: absolute;
+  left: -20%;
+  right: -20%;
+  bottom: -55%;
+  height: 90%;
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.09), transparent);
+  pointer-events: none;
+}
+
+.side-panel-logo {
+  width: 68px;
+  height: 68px;
+  object-fit: contain;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 10px;
+  box-sizing: border-box;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.side-panel-title {
+  font-size: 21px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
+
+.side-panel-desc {
+  font-size: 13px;
+  line-height: 1.7;
+  color: rgba(244, 244, 246, 0.66);
+}
+
+/* ================================================================= */
+
+/* === 로그인/회원가입 두 갈래 버튼 (추가) === */
+.button-row {
+  display: flex;
+  gap: 10px;
+  width: 280px;
+  max-width: 100%;
+  margin-top: 8px;
+  margin-bottom: 10px;
+}
+
+.button-row button {
+  flex: 1;
+  width: auto;           /* 기존 280px 규칙 무시 */
+  padding: 13px 0;
+  font-size: 15px;
+  font-weight: 700;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+}
+
+/* 주 동작(로그인·가입)은 채운 버튼, 보조 동작은 테두리만 있는 버튼으로 나눠
+   "무엇을 먼저 누르면 되는지"가 한눈에 보이게 한다. */
+.button-row .btn-primary {
+  background: var(--brand);
+  color: var(--brand-contrast);
+  box-shadow: var(--shadow-sm);
+}
+
+.button-row .btn-primary:hover:not(:disabled) {
+  background: var(--brand-strong);
+}
+
+.button-row .btn-primary:disabled {
+  opacity: 0.6;
+}
+
+.button-row .btn-secondary {
+  background: transparent;
+  color: var(--text-secondary);
+  border: 1px solid var(--border-strong);
+}
+
+.button-row .btn-secondary:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* 아이디/비밀번호 찾기 */
+.find-btn {
+  width: 280px;
+  max-width: 100%;
+  text-align: center;
+  font-size: 13px;
+  color: var(--text-muted);
+  cursor: pointer;
+  margin-top: 10px;
+  text-decoration: none;
+}
+
+.find-btn:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+}
+
+/* ====================== 모바일 ====================== */
+/* 9:16 세로: body 기본 flex-row 때문에 로고·로그인 상자가 한 단에 붙음 → column 스택 */
+@media (max-width: 768px) {
+.auth-page {
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 28px;
+    padding: 16px;
+    padding-top: max(24px, env(safe-area-inset-top));
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+
+  .auth-page .logo {
+    position: static;
+    margin: 0;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 100%;
+    max-width: 420px;
+  }
+
+  .login-wrapper {
+    width: 100%;
+    max-width: 420px;
+    height: auto;
+    min-height: 0;
+    flex-direction: column;
+    flex-shrink: 0;
+    box-shadow: var(--shadow-md);
+  }
+
+  .login-box {
+    width: 100%;
+    padding: 28px 20px 24px;
+    box-sizing: border-box;
+  }
+
+  .side-panel {
+    display: none;
+  }
+
+  .login-box input,
+  .login-box button,
+  .button-row,
+  .find-btn {
+    width: 100%;
+    max-width: 320px;
+  }
+
+  .login-box {
+    padding: 32px 22px 28px;
+  }
+
+  .login-box input {
+    font-size: 16px; /* iOS 자동 줌 방지 */
+    min-height: 44px;
+    box-sizing: border-box;
+  }
+
+  .login-box button,
+  .button-row button {
+    min-height: 44px;
+    font-size: 16px;
+  }
+
+  .back-btn {
+    position: static;
+    margin-top: 16px;
+  }
+}
+
+/* ======================================================================
+   다크 모드 — 로그인 페이지 전용 세부 보정.
+   이 페이지는 공용 헤더가 없는 단독 페이지라 body 배경/로그인 박스/장식 패널을
+   전부 이 파일이 직접 하드코딩하고 있어 theme.css의 안전망만으로는 덮이지 않는다.
+   ====================================================================== */
+[data-theme="dark"] body {
+  background: var(--bg-page);
+}
+
+[data-theme="dark"] .login-wrapper {
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-lg);
+}
+
+[data-theme="dark"] .login-box {
+  background: var(--bg-elevated);
+}
+
+/* h2에 style="color:#000"가 인라인으로 박혀 있어(HTML은 수정 범위 밖) 일반 선택자로는
+   못 이기므로 !important로 덮어씀 */
+[data-theme="dark"] .login-box h2 {
+  color: var(--text-primary) !important;
+}
+
+/* 찾기 링크·돌아가기 버튼은 라이트와 같은 토큰(--text-muted)을 쓰므로 별도 보정이 필요 없다.
+   브랜드 패널도 라이트/다크 모두 같은 어두운 그라디언트를 쓴다(위 .side-panel 참고). */
+
+@media (max-width: 768px) {
+  [data-theme="dark"] .login-wrapper {
+    box-shadow: var(--shadow-md);
+  }
+}
+

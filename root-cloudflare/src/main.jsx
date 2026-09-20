@@ -13,6 +13,8 @@ import './styles/notice.css';
 import './styles/Header_Footer.css';
 import './styles/index-home.css';
 import './styles/react-extra.css';
+// 전 페이지 공용 마감(서체·초점·스크롤바) — 페이지 CSS 를 덮어야 하므로 반드시 맨 마지막
+import './styles/design-system.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

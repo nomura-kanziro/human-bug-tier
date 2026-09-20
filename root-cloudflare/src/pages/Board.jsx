@@ -106,7 +106,7 @@ export default function Board() {
         <div className="search-box">
           <input
             type="text"
-            id="search-input"
+            id="board-search-input"
             placeholder={mine ? '제목 검색 (또는 @작성자)' : '제목 또는 @작성자 검색'}
             value={input}
             onChange={(e) => setInput(e.target.value)}

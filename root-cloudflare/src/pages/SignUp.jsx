@@ -5,7 +5,6 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AuthShell from '../components/AuthShell';
 import { registerRequest } from '../lib/authApi';
-import '../styles/auth-signup.css';
 
 export default function SignUp() {
   const navigate = useNavigate();

@@ -703,7 +703,9 @@ tr.row-pinned {
     align-items: center;
 }
 
-#search-input {
+/* 관리자 대시보드 안에서만 적용되도록 범위를 좁혔다 — 예전엔 전역 ID 선택자라
+   같은 id 를 쓰던 게시판 검색창까지 흰 2px 테두리가 씌워졌다. */
+.search-group #search-input {
     padding: 10px 14px;
     border: 2px solid #fff;
     border-radius: 6px;
@@ -750,7 +752,7 @@ tr.row-pinned {
         width: 100%;
     }
 
-    #search-input, .block-text-input {
+    .search-group #search-input, .block-text-input {
         width: 100%;
         min-width: 0;
     }
@@ -981,7 +983,7 @@ tr.row-pinned {
 /* 채도 높은 색상 필터 바(파랑/빨강 등) 위에 흰 테두리로 떠 있는 입력창들 —
    theme.css의 공용 input 다크 보정이 배경/글자색만 바꾸고 테두리는 클래스
    특정도 차이로 그대로 남아 흰 테두리와 어긋나 보일 수 있어 반투명 흰 테두리로
-   통일한다 (#search-input은 ID 선택자라 원래 흰 테두리가 유지됨) */
+   통일한다 (검색창은 .search-group #search-input 으로 범위를 좁혀 흰 테두리를 유지) */
 [data-theme="dark"] .block-text-input,
 [data-theme="dark"] .block-custom-days {
     border-color: rgba(255, 255, 255, 0.55);

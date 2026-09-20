@@ -19,7 +19,37 @@
    ====================================================================== */
 
 /* ====================== ① 디자인 토큰 (CSS 변수) ====================== */
+/* 색 말고도 서체·모서리·그림자·강조색을 여기 한 곳에서 정의한다.
+   페이지 CSS 가 각자 다른 반지름(6/10/12/20px)과 그림자를 하드코딩해 두는 바람에
+   화면마다 톤이 달라 보였기 때문에, 새로 쓰거나 다듬는 UI 는 이 토큰을 쓴다. */
 :root {
+  /* 서체 — index.html 이 불러오는 Pretendard. 없으면 각 OS 기본 한글 고딕으로 내려간다. */
+  --font-sans: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont,
+    'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', system-ui, sans-serif;
+
+  /* 모서리 반지름 단계 — 작은 배지부터 큰 카드까지 4단계 + 알약 */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 22px;
+  --radius-pill: 999px;
+
+  /* 그림자(높이) 3단계. 색이 아니라 "떠 있는 높이"를 뜻하므로 라이트/다크 각각 값을 둔다. */
+  --shadow-sm: 0 1px 2px rgba(16, 18, 24, 0.06), 0 1px 3px rgba(16, 18, 24, 0.05);
+  --shadow-md: 0 4px 14px rgba(16, 18, 24, 0.08), 0 2px 4px rgba(16, 18, 24, 0.04);
+  --shadow-lg: 0 18px 40px -12px rgba(16, 18, 24, 0.18), 0 6px 14px rgba(16, 18, 24, 0.06);
+
+  /* 강조색 — 게시판 버튼(#ffc400)·행운 뽑기(#f59e0b)·커스텀 메이커 골드가 제각각이라
+     사이트 대표색을 앰버 한 갈래로 모았다. 링크는 계속 파랑(--link-color)을 쓴다. */
+  --brand: #f59e0b;
+  --brand-strong: #d97706;
+  --brand-soft: #fff7e6;
+  --brand-contrast: #2a1c05;
+  --focus-ring: 0 0 0 3px rgba(245, 158, 11, 0.35);
+
+  /* 전환 곡선 — hover/펼침에 공통으로 쓰는 감속 곡선 */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.3, 1);
+
   --bg-page: #ffffff;
   --bg-elevated: #ffffff;
   --bg-subtle: #f7f7f8;
@@ -36,6 +66,13 @@
   --input-border: #d7d7dc;
   --scrollbar-track: #f1f1f3;
   --scrollbar-thumb: #c7c7cf;
+}
+
+/* 큰 화면에서는 카드가 더 크게 보이므로 최상위 그림자도 한 단계 넓게 퍼뜨린다. */
+@media (min-width: 900px) {
+  :root {
+    --shadow-lg: 0 24px 48px -16px rgba(16, 18, 24, 0.2), 0 8px 18px rgba(16, 18, 24, 0.06);
+  }
 }
 
 :root[data-theme="dark"] {
@@ -55,6 +92,16 @@
   --input-border: #3a3a40;
   --scrollbar-track: #1c1c1f;
   --scrollbar-thumb: #45454c;
+
+  /* 다크에서는 같은 그림자 값이 안 보이므로 더 짙게, 강조색은 조금 밝게 올린다. */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 6px 18px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 24px 48px -16px rgba(0, 0, 0, 0.7), 0 8px 18px rgba(0, 0, 0, 0.4);
+  --brand: #fbbf24;
+  --brand-strong: #f59e0b;
+  --brand-soft: #2a2110;
+  --brand-contrast: #1a1205;
+  --focus-ring: 0 0 0 3px rgba(251, 191, 36, 0.4);
 }
 
 /* 다크 모드 전환에 부드러운 느낌을 주는 공용 트랜지션 — 색이 "뚝" 바뀌지 않게 함.

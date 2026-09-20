@@ -6,7 +6,6 @@ import { Link, useNavigate } from 'react-router-dom';
 import AuthShell from '../components/AuthShell';
 import { useAuth } from '../context/AuthContext';
 import { loginRequest } from '../lib/authApi';
-import '../styles/auth-login.css';
 
 export default function Login() {
   const navigate = useNavigate();
@@ -51,7 +50,8 @@ export default function Login() {
 
   return (
     <AuthShell title="로그인">
-      <h2 style={{ color: '#000' }}>로그인</h2>
+      {/* 색은 auth-shell.css 가 테마 토큰으로 지정한다(예전엔 인라인 #000 이라 다크에서 안 보였음) */}
+      <h2>로그인</h2>
 
       <input type="text" placeholder="아이디" value={userId} onChange={(e) => setUserId(e.target.value)} onKeyDown={onKeyDown} />
       <input type="password" placeholder="비밀번호" value={userPw} onChange={(e) => setUserPw(e.target.value)} onKeyDown={onKeyDown} />

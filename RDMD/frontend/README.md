@@ -42,6 +42,7 @@ RDMD/frontend/
 | [06-admin-profile-dropdown-record.md](./01-common/06-admin-profile-dropdown-record.md) | — | 어드민도 유저 프로필 드롭다운 사용(전체화면 모달 제거) |
 | [07-dropdown-mutual-exclusion-fix-record.md](./01-common/07-dropdown-mutual-exclusion-fix-record.md) | — | 알림 벨↔프로필 드롭다운 동시 열림 버그 수정 (stopPropagation 함정) |
 | [08-home-preview-and-quick-nav-record.md](./01-common/08-home-preview-and-quick-nav-record.md) | — | 메인 퀵 스크롤·메이커 미리보기·가로 폭 |
+| [09-design-system-refresh-record.md](./01-common/09-design-system-refresh-record.md) | — | 디자인 고도화 1차 — 서체(Pretendard)·디자인 토큰·공용 마감 + 인증/게시판/행운 뽑기 정리 |
 
 ## 02-tier-class
 
