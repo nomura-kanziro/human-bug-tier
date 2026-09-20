@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 305 |
+| **커밋 수** | 306 |
 | **기간** | 2026-03-20 ~ 2026-09-20 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -334,6 +334,7 @@
 | 303 | 2026-09-20 | [`00e18fd`](#00e18fd) | style(custom-maker): 티어표 테이블(줄 카드·드롭존·캐릭터 카드·캡처 프레임) 디자인 개선 |
 | 304 | 2026-09-20 | [`7de57bf`](#7de57bf) | feat(luck-draw): 포커·랜덤 뽑기 배팅 상한을 보유 포인트로, 패배 시 배팅액만 손실, 포커 카드 한 장씩 딜링 연출 |
 | 305 | 2026-09-20 | [`1929a5c`](#1929a5c) | feat(luck-draw): 행운 티어 포커를 공개 후보 3장 직접 선택식으로 변경(4·5번째는 2초 턴 자동) |
+| 306 | 2026-09-20 | [`pending`](#pending) | fix(tier-class): 9티어 카제타니·카모카와 이미지를 jpg로 교체하고 카제티니 오타를 카제타니로 수정 |
 
 ---
 
@@ -5913,6 +5914,25 @@
 - **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)
+
+---
+
+<a id="pending"></a>
+
+### 306. 2026-09-20 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: fix(tier-class): 9티어 카제타니·카모카와 이미지를 jpg로 교체하고 카제티니 오타를 카제타니로 수정
+- **git**: `git show pending`
+- **범위**: frontend (root-cloudflare) / tier-class(9티어)
+- **요약**: 9티어의 카제타니·카모카와 캐릭터 이미지를 새 그림으로 교체했다(`kazetani.webp`→`kazetani.jpg`, `kamokawa.webp`→`kamokawa.jpg`, 기존 webp 두 개는 삭제). `tiers.json` 의 `img` 경로를 새 jpg 로 바꾸고, 카제타니 이름이 `카제티니` 로 잘못 적혀 있던 오타도 `카제타니` 로 고쳤다. 확인: `tiers.json` 의 343개 캐릭터 이미지 파일이 전부 디스크에 존재하고(누락 0), 새 이미지는 정사각(747·669px)이라 기존 카드 비율과 맞으며, 빌드 후 `/tier/9` 에서 두 이미지가 모두 로드되고(깨진 이미지 0개) 이름 라벨도 정상 표시된다. 두 캐릭터는 행운 뽑기 풀(`luckPool.js`)에는 없어 백엔드 영향이 없다. `root-render/`(바닐라, 수정 금지)는 자체 webp 를 그대로 쓰므로 건드리지 않았다.
+- **주요 파일**: `root-cloudflare/src/data/tiers.json`, `root-cloudflare/public/tier-media/tier-image/9 tier/kamokawa.jpg`, `root-cloudflare/public/tier-media/tier-image/9 tier/kazetani.jpg`(신규), 같은 폴더의 `kamokawa.webp`·`kazetani.webp`(삭제)
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
 
 
 
