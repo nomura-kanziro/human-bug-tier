@@ -338,7 +338,7 @@
 | 307 | 2026-09-20 | [`0ba93ea`](#0ba93ea) | fix(tier-class): 5티어 스가모 캐릭터 제거 |
 | 308 | 2026-09-20 | [`7acfd1c`](#7acfd1c) | feat(my-page): 마이페이지에서 최근 행운 뽑기 기록 목록 제거 |
 | 309 | 2026-09-20 | [`7f3d58d`](#7f3d58d) | feat(my-page): 마이페이지에서 프로필 사진·닉네임 변경 (닉네임 변경 API·복사본 전파·옛 토큰 거부) |
-| 310 | 2026-09-20 | [`pending`](#pending) | style(design): 디자인 고도화 1차 — Pretendard 서체·디자인 토큰·공용 마감 레이어 + 인증/게시판/행운 뽑기 정리 |
+| 310 | 2026-09-20 | [`22ec329`](#22ec329) | style(design): 디자인 고도화 1차 — Pretendard 서체·디자인 토큰·공용 마감 레이어 + 인증/게시판/행운 뽑기 정리 |
 
 ---
 
@@ -5993,15 +5993,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="22ec329"></a>
 
-### 310. 2026-09-20 — `pending`
+### 310. 2026-09-20 — `22ec329`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `22ec329`
+- **hash (full)**: `22ec329656fabbb4f9dc133bedb6e58a3df38093`
 - **author**: nomura
 - **message**: style(design): 디자인 고도화 1차 — Pretendard 서체·디자인 토큰·공용 마감 레이어 + 인증/게시판/행운 뽑기 정리
-- **git**: `git show pending`
+- **git**: `git show 22ec329`
 - **범위**: frontend (root-cloudflare) / 전역 디자인
 - **요약**: "더 세련되게" 요청에 따른 전역 디자인 1차 정리. (1) **서체**: CSS 가 `"Noto Sans KR"` 을 지정만 하고 실제로 불러오지 않아 그 폰트가 없는 PC 에서는 브라우저 기본 고딕으로 보였고, 인증·관리자 로그인은 `sans-serif` 라 서체가 갈렸다 → `index.html` 에서 Pretendard(dynamic-subset)를 불러와 `--font-sans` 로 통일하고 제목 자간·`word-break: keep-all` 을 적용했다(CDN 차단 시 시스템 폰트로 폴백). (2) **토큰**: `theme.css` 에 모서리 5단계·그림자 3단계·강조색(제각각이던 #ffc400/#f59e0b/골드를 앰버 하나로)·초점 링·전환 곡선을 추가하고 다크 전용 값도 따로 뒀다. (3) **공용 마감**: 새 `design-system.css` 를 `main.jsx` 맨 마지막에 import 해 서체·`:focus-visible` 링·선택 영역·라이트 스크롤바·버튼 눌림 반응·`prefers-reduced-motion` 을 전 페이지에 한 번에 입혔다. (4) **인증 화면**: 4개 화면이 `AuthShell` 하나를 공유하는데 CSS 는 껍데기를 4벌 복사해 갖고 있어(한쪽만 고치면 다른 쪽이 이김 — 실제로 늦게 로드되는 `admin-login.css` 때문에 로그인 제목이 흰 배경에 흰 글자로 사라졌다) `auth-shell.css` 하나로 합치고 `auth-login/auth-signup/admin-login.css` 3벌을 삭제, `auth-find.css` 는 탭만 남겼다. 오른쪽의 **빈 파란 사각형**을 로고·소개가 든 브랜드 패널로 바꾸고 카드·입력창·주/보조 버튼을 다듬었다. (5) **게시판**: 라이트 모드에서 검정 막대로 보이던 검색창과 검정 카드(`#1a1a1a`/`#1f1f1f` 하드코딩)를 테마 표면으로 바꾸고, 흰 글자 제목·들쭉날쭉한 카드 높이·주 동작 구분을 고쳤다. (6) **행운 뽑기**: 탭을 알약 스위치로, 버튼·확률표·결과 카드 마감. 추가로 **전역 CSS 충돌 3건**을 찾아 범위를 좁혔다 — `contact_us.css` 의 전역 `.desc{text-align:center}` 가 홈 공지 본문까지 가운데로 몰았고, `admin-manage.css` 의 ID 선택자 `#search-input` 이 게시판 검색창에 흰 2px 테두리를 씌우고 있었다(게시판 id 는 `board-search-input` 으로 변경). 확인: 6개 페이지를 라이트/다크·모바일(390px)로 캡처해 대조, 커스텀 메이커·문의·마이페이지 회귀 없음.
 - **주요 파일**: `root-cloudflare/index.html`, `src/main.jsx`, `src/styles/theme.css`, `src/styles/design-system.css`(신규), `src/styles/auth-shell.css`(신규), `src/styles/auth-find.css`, `src/styles/react-extra.css`, `src/styles/custom-maker_post.css`, `src/styles/luck-draw.css`, `src/styles/admin-manage.css`, `src/styles/contact_us.css`, `src/components/AuthShell.jsx`, `src/pages/Login.jsx`·`SignUp.jsx`·`AdminLogin.jsx`·`Board.jsx`, 삭제: `auth-login.css`·`auth-signup.css`·`admin-login.css`
