@@ -2,8 +2,18 @@
 <html lang="ko">
 <head>
   <!-- 라이트/다크 테마 FOUC 방지: CSS·React 로드 전에 <html data-theme> 을 먼저 정한다.
-       저장값(hbtTheme)이 없으면 시각 기준 자동값(07~22시 라이트, 그 외 다크). 상세는 src/lib/theme.js -->
-  <script>(function(){try{var t=localStorage.getItem('hbtTheme');if(t!=='light'&&t!=='dark'){var h=new Date().getHours();t=(h>=7&&h<22)?'light':'dark';}document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+       규칙은 src/lib/theme.js 와 **똑같이** 유지해야 한다(여기서 바꾸면 그쪽도 같이):
+       - 자동값: 한국 서울 시각(UTC+9) 기준 07~22시 라이트, 그 외 다크. 브라우저 시간대는 보지 않는다.
+       - 수동 선택(hbtTheme = {"t","u"})은 만료 시각 u(다음 07/22시) 전까지만 유효, 지나면 자동으로 복귀.
+       - 예전 형식('light'|'dark' 문자열, 영구 고정이던 값)은 "다음 전환 시각까지"로 바꿔 이어받는다. -->
+  <script>(function(){var K='hbtTheme',H=36e5,O=9*H,n=Date.now(),t=null;
+function next(x){var k=new Date(x+O),y=k.getUTCFullYear(),m=k.getUTCMonth(),d=k.getUTCDate();
+return Math.min.apply(null,[Date.UTC(y,m,d,7)-O,Date.UTC(y,m,d,22)-O,Date.UTC(y,m,d+1,7)-O,Date.UTC(y,m,d+1,22)-O].filter(function(c){return c>x;}));}
+try{var r=localStorage.getItem(K);
+if(r==='light'||r==='dark'){t=r;localStorage.setItem(K,JSON.stringify({t:r,u:next(n)}));}
+else if(r){try{var v=JSON.parse(r);if((v.t==='light'||v.t==='dark')&&n<v.u)t=v.t;else localStorage.removeItem(K);}catch(e){localStorage.removeItem(K);}}}catch(e){}
+if(!t){var h=new Date(n+O).getUTCHours();t=(h>=7&&h<22)?'light':'dark';}
+document.documentElement.setAttribute('data-theme',t);})();</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#111111">

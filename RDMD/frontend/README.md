@@ -43,6 +43,7 @@ RDMD/frontend/
 | [07-dropdown-mutual-exclusion-fix-record.md](./01-common/07-dropdown-mutual-exclusion-fix-record.md) | — | 알림 벨↔프로필 드롭다운 동시 열림 버그 수정 (stopPropagation 함정) |
 | [08-home-preview-and-quick-nav-record.md](./01-common/08-home-preview-and-quick-nav-record.md) | — | 메인 퀵 스크롤·메이커 미리보기·가로 폭 |
 | [09-design-system-refresh-record.md](./01-common/09-design-system-refresh-record.md) | — | 디자인 고도화 1차 — 서체(Pretendard)·디자인 토큰·공용 마감 + 인증/게시판/행운 뽑기 정리 |
+| [10-theme-auto-switch-seoul-record.md](./01-common/10-theme-auto-switch-seoul-record.md) | — | 테마 자동 전환 — 서울 시각 기준 + 수동 선택은 다음 전환 시각까지만 유지 |
 
 ## 02-tier-class
 
