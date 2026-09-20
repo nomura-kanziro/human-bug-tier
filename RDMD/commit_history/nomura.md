@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 303 |
+| **커밋 수** | 304 |
 | **기간** | 2026-03-20 ~ 2026-09-20 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -332,6 +332,7 @@
 | 301 | 2026-09-20 | [`7ae5de6`](#7ae5de6) | feat(auth): 로그인 후 1시간 경과 로그아웃을 방치(무활동) 1시간 자동 로그아웃으로 변경 |
 | 302 | 2026-09-20 | [`a58b7fe`](#a58b7fe) | style(custom-maker): 티어 이름표(tier-name)를 강조색 명패 디자인으로 개선 |
 | 303 | 2026-09-20 | [`00e18fd`](#00e18fd) | style(custom-maker): 티어표 테이블(줄 카드·드롭존·캐릭터 카드·캡처 프레임) 디자인 개선 |
+| 304 | 2026-09-20 | [`pending`](#pending) | feat(luck-draw): 포커·랜덤 뽑기 배팅 상한을 보유 포인트로, 패배 시 배팅액만 손실, 포커 카드 한 장씩 딜링 연출 |
 
 ---
 
@@ -5875,5 +5876,24 @@
 [▲ 목차로](#목차)
 
 [▲ 목차로](#목차)
+
+---
+
+<a id="pending"></a>
+
+### 304. 2026-09-20 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(luck-draw): 포커·랜덤 뽑기 배팅 상한을 보유 포인트로, 패배 시 배팅액만 손실, 포커 카드 한 장씩 딜링 연출
+- **git**: `git show pending`
+- **범위**: backend (luck-draw) + frontend (root-cloudflare) / luck-draw(포커·랜덤 뽑기)
+- **요약**: 창시자 지시로 두 배팅 게임의 규칙을 바꿨다. (1) **배팅 상한**: 고정 100P 상한(`MAX_BET`)을 두 컨트롤러에서 없애고, 최대 배팅을 **자신이 가진 포인트 전부**로 바꿨다 — 서버는 `MIN_BET` 하한 검사 + "보유 포인트보다 많이 못 건다" 잔액 검사만 하고, 그 잔액 검사가 곧 상한 역할을 한다. 응답의 `maxBet` 은 이제 그 유저의 `points`(비로그인이면 `null`)를 내려주며, 프론트 입력 상자·빠른 칩(`10`/`50`/`최대 N`)도 그 값을 상한으로 쓰고 포인트가 줄면 입력값을 자동으로 내린다. (2) **손실 규칙**: 랜덤 뽑기가 패배 시 `배팅액 × 배수`를 잃던 고위험 규칙을 폐지하고, 포커와 동일하게 **승리 = 배팅액 × 배수 획득, 패배 = 건 배팅액만 상실**로 통일했다(`settleRound` 의 `rawDelta`). 안내 문구도 함께 고쳤다. (3) **포커 딜링 연출**: `승부하기` 클릭 시 곧바로 결과를 보여주던 것을 3단계(`player` → `dealer` → `result`) 연출로 바꿨다. 서버 응답을 받은 뒤 **내 패를 왼쪽부터 한 장씩** 놓고(빈 슬롯이 자리를 잡아 줄 폭이 흔들리지 않음), **5장 정렬이 완성되면** 딜러 패를 한 장씩 뒤집은 다음, 승패·포인트 증감을 팝/흔들림 애니메이션으로 공개한다(보유 포인트 숫자도 이때 갱신). 카드 값은 연출 시작 전 서버 응답으로 이미 확정돼 있어 연출은 공개 순서만 늦춘다. `prefers-reduced-motion` 환경에서는 애니메이션을 끈다.
+- **주요 파일**: `backend/controllers/luckPokerController.js`, `backend/controllers/luckLadderController.js`, `root-cloudflare/src/components/LuckPokerPanel.jsx`, `root-cloudflare/src/components/LuckLadderPanel.jsx`, `root-cloudflare/src/styles/luck-poker.css`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
 
 

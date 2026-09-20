@@ -86,7 +86,8 @@ export default function LuckLadderPanel({ isLoggedIn }) {
   const myBet = data?.myBet;
   const history = data?.history || [];
   const minBet = data?.minBet ?? 1;
-  const maxBet = data?.maxBet ?? 100;
+  // 최대 배팅 = 지금 가진 포인트 전부(서버가 /ladder/round 로 내려주는 points 가 곧 상한).
+  const maxBet = typeof data?.points === 'number' ? data.points : null;
   const groupMult = data?.groupMult ?? 2.5;
   const parityMult = data?.parityMult ?? 1.95;
   const exactMult = data?.exactMult || {};
@@ -101,6 +102,20 @@ export default function LuckLadderPanel({ isLoggedIn }) {
   const disabled = isStatic || busy || !isLoggedIn || notEnough || alreadyBet || secondsLeft <= 0;
 
   const chooseBet = (type, value) => { setBetType(type); setBetValue(value); };
+
+  const clampBet = (value) => {
+    const n = Math.trunc(Number(value));
+    if (!Number.isFinite(n)) return minBet;
+    // 포인트를 아직 모르는 동안(비로그인·로딩 중)은 하한만 적용한다.
+    const hi = typeof maxBet === 'number' ? Math.max(minBet, maxBet) : n;
+    return Math.min(hi, Math.max(minBet, n));
+  };
+
+  // 라운드가 정산돼 포인트가 줄면 입력값도 새 상한(=남은 포인트)까지 자동으로 내린다.
+  useEffect(() => {
+    if (typeof maxBet !== 'number') return;
+    setBet((prev) => Math.min(Math.max(minBet, maxBet), Math.max(minBet, prev)));
+  }, [maxBet, minBet]);
 
   const onPlaceBet = async () => {
     if (disabled) return;
@@ -128,7 +143,8 @@ export default function LuckLadderPanel({ isLoggedIn }) {
         라운드가 열려 있는 동안 배팅해두면 마감 시각에 자동으로 정산됩니다.
       </p>
       <p className="ladder-warning">
-        ⚠️ 승리하면 배팅액 × 배수만큼 얻지만, <strong>패배해도 배팅액 × 배수만큼 그대로 잃습니다.</strong>
+        승리하면 배팅액 × 배수만큼 얻고, <strong>패배하면 건 배팅액만 잃습니다.</strong>
+        한 번에 걸 수 있는 최대 배팅은 <strong>지금 가진 포인트 전부</strong>입니다.
       </p>
 
       {isStatic && (
@@ -235,20 +251,26 @@ export default function LuckLadderPanel({ isLoggedIn }) {
             id="ladder-bet"
             type="number"
             min={minBet}
-            max={maxBet}
+            max={typeof maxBet === 'number' ? maxBet : undefined}
             value={bet}
             disabled={busy || alreadyBet}
-            onChange={(e) => {
-              const v = Math.trunc(Number(e.target.value));
-              setBet(Number.isFinite(v) ? Math.min(maxBet, Math.max(minBet, v)) : minBet);
-            }}
+            onChange={(e) => setBet(clampBet(e.target.value))}
           />
           <span className="ladder-bet-unit">P</span>
-          {[10, 50, maxBet].map((v) => (
-            <button key={v} type="button" className="ladder-bet-chip" disabled={busy || alreadyBet} onClick={() => setBet(Math.min(maxBet, Math.max(minBet, v)))}>
-              {v === maxBet ? `최대 ${maxBet}` : v}
+          {[10, 50].map((v) => (
+            <button key={v} type="button" className="ladder-bet-chip" disabled={busy || alreadyBet} onClick={() => setBet(clampBet(v))}>
+              {v}
             </button>
           ))}
+          {/* 최대 = 보유 포인트 전부(올인) */}
+          <button
+            type="button"
+            className="ladder-bet-chip"
+            disabled={busy || alreadyBet || typeof maxBet !== 'number' || maxBet < minBet}
+            onClick={() => setBet(clampBet(maxBet))}
+          >
+            최대{typeof maxBet === 'number' ? ` ${maxBet}` : ''}
+          </button>
         </div>
 
         <button type="button" className="luck-draw-btn" onClick={onPlaceBet} disabled={disabled}>

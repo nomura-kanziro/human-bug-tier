@@ -8,6 +8,8 @@
  *    (다이아몬드·하트 = 빨강, 클로버·스페이드 = 검정, 휴먼버그대학교 마크 = 초록)
  *  - 유저와 딜러(랜덤 결과값)가 각각 5장을 받고, 족보가 더 높은 쪽이 이긴다.
  *  - 이기면 배팅액 × 족보 배수만큼 포인트를 "추가로" 받고, 지면 배팅액을 그대로 잃는다.
+ *  - 배팅 상한은 고정값이 아니라 "자신이 가진 포인트 전부"다 — 보유 포인트보다
+ *    많이 걸 수 없다는 검사 하나가 곧 최대 배팅 제한이다.
  *  - 같은 족보·같은 끗수면 무승부로 배팅액을 돌려준다(포인트 변동 0).
  *
  * 카드는 "덱에서 빼는" 방식이 아니라 매 장 독립 추첨(복원 추출)이다.
@@ -33,7 +35,7 @@ const MIN_TIER = 1;            // 가장 높은 티어(포커의 A 역할)
 const MAX_TIER = 9;            // 가장 낮은 티어
 const HAND_SIZE = 5;           // 배치 최대 장수 = 5장
 const MIN_BET = 1;
-const MAX_BET = 100;
+// 최대 배팅은 상수가 아니라 "그 유저의 보유 포인트"다(아래 playPoker 의 잔액 검사가 상한 역할).
 
 // 족보 표. rank 가 클수록 강하고, mult 는 승리 시 배팅액에 곱해지는 배수.
 // 순서·배수는 여기 한 곳에만 존재한다(프론트는 /poker/config 로 받아 표시만).
@@ -156,7 +158,8 @@ const getPokerConfig = async (req, res) => {
       minTier: MIN_TIER,
       maxTier: MAX_TIER,
       minBet: MIN_BET,
-      maxBet: MAX_BET,
+      // 최대 배팅 = 지금 가진 포인트 전부. 비로그인이면 points 와 함께 null 이다.
+      maxBet: points,
       points,
     });
   } catch (err) {
@@ -174,16 +177,17 @@ const playPoker = async (req, res) => {
     }
 
     const bet = Math.trunc(Number(req.body?.bet));
-    if (!Number.isFinite(bet) || bet < MIN_BET || bet > MAX_BET) {
-      return res.status(400).json({ error: `배팅은 ${MIN_BET}P 이상 ${MAX_BET}P 이하만 가능합니다.` });
+    if (!Number.isFinite(bet) || bet < MIN_BET) {
+      return res.status(400).json({ error: `배팅은 ${MIN_BET}P 이상만 가능합니다.` });
     }
 
     let profile = await LuckProfile.findOne({ userId: req.auth.sub });
     if (!profile) profile = await LuckProfile.create({ userId: req.auth.sub });
 
+    // 최대 배팅 제한 = 보유 포인트. 가진 것보다 많이 걸 수는 없다.
     if (profile.points < bet) {
       return res.status(400).json({
-        error: '보유 포인트가 부족합니다. 오늘의 행운 티어를 뽑아 포인트를 모아주세요.',
+        error: `보유 포인트(${profile.points}P)보다 많이 걸 수 없습니다. 최대 배팅은 가진 포인트 전부까지이며, 오늘의 행운 티어를 뽑아 포인트를 모을 수 있습니다.`,
         points: profile.points,
       });
     }

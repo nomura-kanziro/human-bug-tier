@@ -10,8 +10,10 @@
  *     결과(캐릭터 이름·티어·홀짝 여부)로 확정한 뒤, 그 라운드에 걸린 배팅을 전부
  *     한 번에 정산하고 곧바로 다음 라운드를 연다 — 유저가 버튼을 눌러야 뽑히는 게
  *     아니라 서버 타이머로 자동 진행되는 "자동게임"이다.
- *   - 배팅 종류 3가지(전부 이기면 배팅액 × 배수 획득, 지면 배팅액 × 배수 만큼 상실 —
- *     luckPokerController/luckDrawController 와 달리 손실도 배수가 붙는 고위험 규칙):
+ *   - 배팅 상한은 고정값이 아니라 "자신이 가진 포인트 전부"다 — 보유 포인트보다
+ *     많이 걸 수 없다는 검사 하나가 곧 최대 배팅 제한이다.
+ *   - 배팅 종류 3가지(전부 이기면 배팅액 × 배수 획득, 지면 배팅액만 상실 —
+ *     손실에는 배수가 붙지 않는다. luckPokerController 와 같은 규칙):
  *       group  (묶음 티어) : 1~3 / 4~6 / 7~9 티어, 배수 2.5
  *       parity (홀짝 티어) : 홀수(1,3,5,7,9) / 짝수(2,4,6,8), 배수 1.95
  *       exact  (같은 티어) : 정확히 한 티어를 지목, 1티어(가장 희귀) 20배 ~ 7~9티어 3.25배
@@ -27,7 +29,7 @@ const ROUND_DURATION_MS = 5 * 60 * 1000; // 5분 턴
 const SCHEDULER_TICK_MS = 5000; // 라운드 마감 여부를 5초마다 확인
 
 const MIN_BET = 1;
-const MAX_BET = 100;
+// 최대 배팅은 상수가 아니라 "그 유저의 보유 포인트"다(아래 placeBet 의 잔액 검사가 상한 역할).
 
 const GROUP_MULT = 2.5;
 const PARITY_MULT = 1.95;
@@ -123,8 +125,8 @@ async function settleRound(round) {
   const bets = await LuckLadderBet.find({ roundNo: round.roundNo, settled: false });
   for (const betDoc of bets) {
     const win = evaluateBet(betDoc.betType, betDoc.betValue, picked.tier);
-    // 승패 모두 같은 배수를 적용한다 — 이기면 배팅액 × 배수를 얻고, 지면 배팅액 × 배수를 잃는다.
-    const rawDelta = win ? Math.round(betDoc.bet * betDoc.mult) : -Math.round(betDoc.bet * betDoc.mult);
+    // 배수는 승리에만 붙는다 — 이기면 배팅액 × 배수를 얻고, 지면 건 배팅액만 잃는다.
+    const rawDelta = win ? Math.round(betDoc.bet * betDoc.mult) : -betDoc.bet;
 
     // eslint-disable-next-line no-await-in-loop
     let profile = await LuckProfile.findOne({ userId: betDoc.userId });
@@ -218,7 +220,8 @@ const getRoundStatus = async (req, res) => {
       history: history.map(roundResultShape),
       roundDurationSec: ROUND_DURATION_MS / 1000,
       minBet: MIN_BET,
-      maxBet: MAX_BET,
+      // 최대 배팅 = 지금 가진 포인트 전부. 비로그인이면 points 와 함께 null 이다.
+      maxBet: points,
       groupMult: GROUP_MULT,
       parityMult: PARITY_MULT,
       exactMult: EXACT_MULT,
@@ -240,8 +243,8 @@ const placeBet = async (req, res) => {
     }
 
     const bet = Math.trunc(Number(req.body?.bet));
-    if (!Number.isFinite(bet) || bet < MIN_BET || bet > MAX_BET) {
-      return res.status(400).json({ error: `배팅은 ${MIN_BET}P 이상 ${MAX_BET}P 이하만 가능합니다.` });
+    if (!Number.isFinite(bet) || bet < MIN_BET) {
+      return res.status(400).json({ error: `배팅은 ${MIN_BET}P 이상만 가능합니다.` });
     }
 
     const { betType, betValue } = req.body || {};
@@ -274,9 +277,10 @@ const placeBet = async (req, res) => {
 
     let profile = await LuckProfile.findOne({ userId: req.auth.sub });
     if (!profile) profile = await LuckProfile.create({ userId: req.auth.sub });
+    // 최대 배팅 제한 = 보유 포인트. 가진 것보다 많이 걸 수는 없다.
     if (profile.points < bet) {
       return res.status(400).json({
-        error: '보유 포인트가 부족합니다. 오늘의 행운 티어를 뽑아 포인트를 모아주세요.',
+        error: `보유 포인트(${profile.points}P)보다 많이 걸 수 없습니다. 최대 배팅은 가진 포인트 전부까지이며, 오늘의 행운 티어를 뽑아 포인트를 모을 수 있습니다.`,
         points: profile.points,
       });
     }
