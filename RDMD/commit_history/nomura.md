@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 304 |
+| **커밋 수** | 305 |
 | **기간** | 2026-03-20 ~ 2026-09-20 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -333,6 +333,7 @@
 | 302 | 2026-09-20 | [`a58b7fe`](#a58b7fe) | style(custom-maker): 티어 이름표(tier-name)를 강조색 명패 디자인으로 개선 |
 | 303 | 2026-09-20 | [`00e18fd`](#00e18fd) | style(custom-maker): 티어표 테이블(줄 카드·드롭존·캐릭터 카드·캡처 프레임) 디자인 개선 |
 | 304 | 2026-09-20 | [`7de57bf`](#7de57bf) | feat(luck-draw): 포커·랜덤 뽑기 배팅 상한을 보유 포인트로, 패배 시 배팅액만 손실, 포커 카드 한 장씩 딜링 연출 |
+| 305 | 2026-09-20 | [`pending`](#pending) | feat(luck-draw): 행운 티어 포커를 공개 후보 3장 직접 선택식으로 변경(4·5번째는 2초 턴 자동) |
 
 ---
 
@@ -5894,6 +5895,25 @@
 - **관련 RDMD**: _(없음)_
 
 [▲ 목차로](#목차)
+
+---
+
+<a id="pending"></a>
+
+### 305. 2026-09-20 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(luck-draw): 행운 티어 포커를 공개 후보 3장 직접 선택식으로 변경(4·5번째는 2초 턴 자동)
+- **git**: `git show pending`
+- **범위**: backend (luck-draw) + frontend (root-cloudflare) / luck-draw(포커)
+- **요약**: 창시자 지시로 포커에서 내 패를 자동으로 돌려주던 방식을 없애고, **공개된 후보 5장 중 3장을 유저가 직접 고르는** 방식으로 바꿨다. 유저의 선택이 결과에 영향을 주므로 서버를 2단계로 나눴다. (1) `POST /poker/deal` — 배팅액을 **미리 차감(에스크로)** 하고 후보 5장·자동 2장·딜러 5장을 전부 뽑아 새 모델 `LuckPokerRound` 에 저장한 뒤, 공개 후보만 내려준다. 유저당 `status:'open'` 문서는 partial unique 인덱스로 1건까지만 허용하고, 딜 요청이 또 오면 새로 뽑지 않고 그 판을 그대로 돌려준다 — 후보가 마음에 들 때까지 딜만 다시 돌려보는 악용을 막고, 새로고침해도 이어서 진행할 수 있다(`/poker/config` 가 `openRound` 를 같이 내려줌). (2) `POST /poker/play` — 프론트는 카드가 아니라 **고른 후보 번호(picks)만** 보내고, 서버가 개수·범위·중복을 검사한 뒤 저장해 둔 카드로 패(고른 3장 + 자동 2장)를 만들어 정산한다. `findOneAndUpdate` 로 status 를 원자적으로 선점해 같은 판이 두 번 정산되지 않게 했다. 정산은 딜 때 이미 뺀 원금 기준으로 **승리 = 원금 + 배팅액 × 배수, 무승부 = 원금, 패배 = 0(배팅액 손실)** 이며, 순증감(`pointsDelta`)은 기존과 동일하다. 프론트는 내 패 밑에 공개 후보 5장을 깔아 클릭으로 고르게 하고(고른 순서대로 내 패 왼쪽부터 채워짐, 고른 카드는 강조·버려진 카드는 흐리게), 3장을 다 고르면 4·5번째 카드를 **2초 간격**으로 한 장씩 자동 공개한 뒤 딜러 패를 뒤집고 결과를 애니메이션으로 발표한다.
+- **주요 파일**: `backend/models/LuckPokerRound.js`(신규), `backend/controllers/luckPokerController.js`, `backend/routes/luckDrawRoutes.js`, `root-cloudflare/src/components/LuckPokerPanel.jsx`, `root-cloudflare/src/styles/luck-poker.css`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
+
 
 
 

@@ -32,6 +32,9 @@ router.get('/stats', requireAuth, luckDrawController.getStats);     // 마이페
 // ====== 행운 티어 포커 (뽑기로 모은 포인트를 거는 배팅 게임) ======
 // 배팅에 쓸 포인트가 계정에 묶여 있으므로 플레이는 로그인 전용이다.
 router.get('/poker/config', optionalAuth, luckPokerController.getPokerConfig);
+// 포커는 유저가 공개 후보 중 3장을 직접 고르므로 2단계로 나뉜다 —
+// deal 에서 배팅액을 미리 차감하고 카드를 확정한 뒤, play 에서 고른 번호만 받아 정산한다.
+router.post('/poker/deal', requireAuth, luckPokerController.dealPoker);
 router.post('/poker/play', requireAuth, luckPokerController.playPoker);
 
 // ====== 랜덤 뽑기 (5분마다 서버가 자동으로 진행하는 사다리 게임 스타일 공용 라운드) ======

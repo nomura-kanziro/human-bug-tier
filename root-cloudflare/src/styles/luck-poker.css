@@ -316,3 +316,111 @@
     animation: none;
   }
 }
+
+/* ====== 공개 후보 카드 선택 (내 패 밑에 깔리는 5장) ======
+   여기서 고른 3장이 곧 내 패가 되므로, 고른 것/버려진 것이 한눈에 보여야 한다. */
+.poker-choice {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px dashed rgba(167, 243, 208, 0.28);
+}
+
+.poker-choice-title {
+  color: #a7f3d0;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.poker-choice-row {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* 후보 한 장 = 카드 + 상태 배지를 감싼 버튼. 버튼 기본 모양은 전부 지운다. */
+.poker-choice-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  transition: transform 140ms ease, opacity 140ms ease;
+}
+
+.poker-choice-card:not(:disabled):hover {
+  transform: translateY(-6px);
+}
+
+.poker-choice-card:not(:disabled):hover .poker-card {
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.4);
+}
+
+.poker-choice-badge {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #e5e7eb;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+/* 고른 카드 — 위쪽 내 패로 올라갔으므로 자리만 남기고 흐리게 둔다. */
+.poker-choice-card.is-picked {
+  cursor: default;
+  opacity: 0.85;
+}
+
+.poker-choice-card.is-picked .poker-card {
+  outline: 2px solid #fbbf24;
+  outline-offset: 2px;
+}
+
+.poker-choice-card.is-picked .poker-choice-badge {
+  background: rgba(251, 191, 36, 0.22);
+  color: #fbbf24;
+}
+
+/* 고르지 않아 버려진 카드. */
+.poker-choice-card.is-dropped {
+  cursor: default;
+  opacity: 0.38;
+  filter: grayscale(0.7);
+}
+
+.poker-choice-card:disabled {
+  cursor: default;
+}
+
+.poker-choice-note {
+  margin: 12px 0 0;
+  color: #9ca3af;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+/* 배팅액이 이미 빠져나가 판에 걸려 있는 상태 표시. */
+.poker-escrow {
+  display: inline-block;
+  margin-left: 8px;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: rgba(245, 158, 11, 0.16);
+  color: #b45309;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+[data-theme="dark"] .poker-escrow {
+  color: #fbbf24;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .poker-choice-card:not(:disabled):hover {
+    transform: none;
+  }
+}
