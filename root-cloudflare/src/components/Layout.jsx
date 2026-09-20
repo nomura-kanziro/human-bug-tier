@@ -18,8 +18,14 @@ export default function Layout() {
   return (
     <>
       <Header />
-      <Outlet />
-      <Footer />
+      {/* 본문이 짧아도 푸터가 화면 바닥에 붙도록 본문+푸터를 한 덩어리로 묶는다(app-shell.css).
+          헤더는 밖에 둔다 — sticky 가 그대로 동작해야 하기 때문. */}
+      <div className="app-body">
+        <div className="app-main">
+          <Outlet />
+        </div>
+        <Footer />
+      </div>
     </>
   );
 }

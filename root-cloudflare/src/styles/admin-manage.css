@@ -7,18 +7,23 @@
    초록=공지, 빨강=차단)을 써서 스크롤하다 지금 어느 섹션인지 한눈에 구분되게 했다.
    ======================================================== */
 
-.admin-main {
-    background-color: #ffffff;
-    padding: 40px 20px;
+/* AdminDashboard.jsx 의 실제 컨테이너 이름은 .admin-container 인데 CSS 는 .admin-main 만 정의돼 있어서
+   폭 제한·여백이 하나도 안 걸려 요소들이 화면 가장자리에 붙어 있었다. 둘 다 같은 규칙을 쓴다. */
+.admin-main,
+.admin-container {
+    background-color: transparent;
+    padding: 40px 24px 64px;
     min-height: 80vh;
     max-width: 1400px;
     margin: 0 auto;
+    box-sizing: border-box;
 }
 
 .page-title {
-    color: #333;
+    color: var(--text-primary);
     font-size: 26px;
     font-weight: 800;
+    letter-spacing: -0.03em;
     margin-bottom: 20px;
 }
 
@@ -34,9 +39,9 @@
 .notice-admin-section {
     margin-top: 60px;
     padding: 28px;
-    background: #f8f9fa;
-    border-radius: 12px;
-    border: 1px solid #e9ecef;
+    background: var(--bg-subtle);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--border-color);
 }
 
 /* 공지 섹션 제목: 위쪽에 초록 강조선 (공지 섹션 전체의 테마 컬러 #10b981과 통일) */
@@ -47,17 +52,16 @@
 }
 
 .filter-nav.notice-filter-nav {
-    background: #10b981;
+    --accent: #10b981;
 }
 
 .filter-nav.notice-list-filter-nav {
-    background: #10b981;
+    --accent: #10b981;
     margin-bottom: 12px;
 }
 
 .notice-filter-left {
     width: 100%;
-    background: #10b981;
 }
 
 /* 공지 분류 select 틀을 공지 등록 버튼(#10b981) 색과 동일하게 */
@@ -412,7 +416,7 @@ tr.row-pinned {
     margin: 32px 0 12px;
     font-size: 17px;
     font-weight: 700;
-    color: #333;
+    color: var(--text-primary);
 }
 
 /* ---- 공용 테이블 스타일 (문의/공지/차단/커스텀메이커 테이블 모두 이 클래스를 사용) ---- */
@@ -420,27 +424,27 @@ tr.row-pinned {
     width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
-    background: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-    border-radius: 8px;
+    background: var(--bg-elevated);
+    box-shadow: var(--shadow-sm);
+    border-radius: var(--radius-lg);
     overflow: hidden;
 }
 
 .admin-table th, .admin-table td {
     padding: 12px;
-    border: 1px solid #e9ecef;
+    border: 1px solid var(--border-color);
     text-align: center;
     font-size: 14px;
 }
 
 .admin-table th {
-    background: #f1f3f5;
+    background: var(--bg-subtle);
     font-weight: 700;
-    color: #333;
+    color: var(--text-primary);
 }
 
 .admin-table tr:hover {
-    background-color: #f8f9fa;
+    background-color: var(--bg-subtle);
 }
 
 .admin-table tr.row-blocked {
@@ -595,21 +599,25 @@ tr.row-pinned {
 /* ---- 필터/탐색 바 공용 스타일. 기본은 파란 배경(문의 섹션 색)이고, 각 섹션이
    자기 테마 색을 덧씌운다(.block-filter-nav=빨강, .notice-filter-nav=초록,
    .tier-filter-nav=보라 - 아래 각 규칙 참고) ---- */
+/* 섹션별 강조색(--accent: 문의=파랑, 커스텀메이커=보라, 공지=초록, 차단=빨강). 예전엔 이 색으로 바 전체를
+   꽉 채워서(원색 배경 + 흰 글자) 화면에서 가장 무거운 요소였다 → 옅은 틴트 바 + 활성 버튼만 강조색. */
 .filter-nav {
+    --accent: #3b82f6;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #007bff;
-    color: white;
-    padding: 12px 20px;
-    border-radius: 8px;
+    background: color-mix(in srgb, var(--accent) 7%, var(--bg-elevated));
+    color: var(--text-primary);
+    padding: 14px 18px;
+    border: 1px solid color-mix(in srgb, var(--accent) 28%, transparent);
+    border-radius: var(--radius-lg);
     margin-bottom: 20px;
     flex-wrap: wrap;
     gap: 12px;
 }
 
 .block-filter-nav {
-    background: linear-gradient(135deg, #dc3545, #c82333);
+    --accent: #dc3545;
 }
 
 .filter-left, .filter-right {
@@ -631,27 +639,34 @@ tr.row-pinned {
 
 .filter-btn {
     padding: 8px 16px;
-    background: rgba(255,255,255,0.2);
-    color: white;
-    border: none;
-    border-radius: 6px;
+    background: var(--bg-elevated);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-pill);
     cursor: pointer;
     font-size: 14px;
+    font-weight: 600;
+}
+
+.filter-btn:hover:not(.active) {
+    background: var(--bg-hover);
+    color: var(--text-primary);
 }
 
 .filter-btn.active {
-    background: white;
-    color: #007bff;
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
     font-weight: 700;
 }
 
 .filter-select {
     padding: 8px 12px;
-    border: 2px solid #fff;
-    border-radius: 6px;
+    border: 1px solid var(--input-border);
+    border-radius: var(--radius-md);
     font-size: 14px;
-    background: white;
-    color: #333;
+    background: var(--input-bg);
+    color: var(--text-primary);
     cursor: pointer;
 }
 
@@ -659,8 +674,8 @@ tr.row-pinned {
     flex: 1;
     min-width: 180px;
     padding: 10px 14px;
-    border: 2px solid #fff;
-    border-radius: 6px;
+    border: 1px solid var(--input-border);
+    border-radius: var(--radius-md);
     font-size: 14px;
 }
 
@@ -671,8 +686,8 @@ tr.row-pinned {
 .block-custom-days {
     width: 140px;
     padding: 10px 12px;
-    border: 2px solid #fff;
-    border-radius: 6px;
+    border: 1px solid var(--input-border);
+    border-radius: var(--radius-md);
     font-size: 14px;
     display: none;
 }
@@ -683,10 +698,10 @@ tr.row-pinned {
 
 .block-add-btn {
     padding: 10px 24px;
-    background: white;
-    color: #dc3545;
-    border: 2px solid #fff;
-    border-radius: 6px;
+    background: var(--accent);
+    color: #fff;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-pill);
     cursor: pointer;
     font-weight: 700;
     font-size: 14px;
@@ -694,7 +709,7 @@ tr.row-pinned {
 }
 
 .block-add-btn:hover {
-    background: #fff5f5;
+    filter: brightness(0.92);
 }
 
 .search-group {
@@ -707,18 +722,20 @@ tr.row-pinned {
    같은 id 를 쓰던 게시판 검색창까지 흰 2px 테두리가 씌워졌다. */
 .search-group #search-input {
     padding: 10px 14px;
-    border: 2px solid #fff;
-    border-radius: 6px;
+    border: 1px solid var(--input-border);
+    border-radius: var(--radius-md);
+    background: var(--input-bg);
+    color: var(--text-primary);
     width: 280px;
     font-size: 14px;
 }
 
 .search-btn {
     padding: 10px 24px;
-    background: #fff;
-    color: #007bff;
-    border: 2px solid #fff;
-    border-radius: 6px;
+    background: var(--accent);
+    color: #fff;
+    border: 1px solid var(--accent);
+    border-radius: var(--radius-pill);
     cursor: pointer;
     font-weight: 700;
     white-space: nowrap;
@@ -778,7 +795,7 @@ tr.row-pinned {
 }
 
 .tier-filter-nav {
-    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    --accent: #6366f1;
     margin-bottom: 12px;
 }
 
@@ -986,5 +1003,5 @@ tr.row-pinned {
    통일한다 (검색창은 .search-group #search-input 으로 범위를 좁혀 흰 테두리를 유지) */
 [data-theme="dark"] .block-text-input,
 [data-theme="dark"] .block-custom-days {
-    border-color: rgba(255, 255, 255, 0.55);
+    border-color: var(--input-border);
 }

@@ -1,6 +1,6 @@
 // 바닐라 시대 URL(예: /tier-class/tier1.html, /notice/notice-detail.html?id=…)로 들어오면
 // legacyToRoute() 로 React 라우트에 리다이렉트한다. 알림 link·외부 공유 링크 호환용.
-import { Navigate, useLocation } from 'react-router-dom';
+import { Link, Navigate, useLocation } from 'react-router-dom';
 import { legacyToRoute } from '../lib/paths';
 
 export default function LegacyRedirect() {
@@ -8,11 +8,17 @@ export default function LegacyRedirect() {
   const target = legacyToRoute(`${pathname}${search}`);
   if (target === `${pathname}${search}`) {
     return (
-      <main style={{ maxWidth: 720, margin: '48px auto', padding: '0 20px', textAlign: 'center' }}>
+      <section className="not-found">
+        <span className="not-found-code" aria-hidden="true">404</span>
         <h2>페이지를 찾을 수 없습니다</h2>
-        <p style={{ opacity: 0.7 }}><code>{pathname}</code></p>
-        <a href="/" style={{ display: 'inline-block', marginTop: 24 }}>← 홈으로</a>
-      </main>
+        <p>주소가 바뀌었거나 없어진 페이지예요.</p>
+        <code>{pathname}</code>
+        <div className="not-found-actions">
+          <Link to="/" className="not-found-btn is-primary">홈으로</Link>
+          <Link to="/tier/1" className="not-found-btn">티어표 보기</Link>
+          <Link to="/board" className="not-found-btn">커스텀 게시판</Link>
+        </div>
+      </section>
     );
   }
   return <Navigate to={target} replace />;

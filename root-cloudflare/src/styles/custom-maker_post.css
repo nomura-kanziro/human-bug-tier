@@ -249,10 +249,11 @@
 .report-modal-card {
   width: 100%;
   max-width: 420px;
-  background: #fff;
-  border-radius: 12px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
   padding: 28px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-lg);
 }
 
 .report-modal-card h3 {
@@ -277,13 +278,13 @@
 }
 
 .report-reason-btn {
-  border: 2px solid #111;
-  background: #fff;
-  color: #111;
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
 }
 
 .report-reason-btn:hover {
-  background: #f5f5f5;
+  background: var(--bg-hover);
 }
 
 .report-modal-cancel {

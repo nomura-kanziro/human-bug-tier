@@ -186,7 +186,7 @@
 .my-page-stat-value {
   font-size: 22px;
   font-weight: 700;
-  color: #007bff;
+  color: var(--brand-strong);
 }
 
 .my-page-stat-label {
@@ -217,7 +217,7 @@
 
 .my-page-section-header a {
   font-size: 13px;
-  color: #007bff;
+  color: var(--brand-strong);
   text-decoration: none;
   font-weight: 600;
 }
@@ -329,7 +329,7 @@
 [data-theme="dark"] .my-page-profile-btn {
   background: var(--bg-elevated);
   border-color: var(--border-color);
-  color: var(--link-color);
+  color: var(--brand);
 }
 
 [data-theme="dark"] .my-page-profile-btn:hover:not(:disabled) {
@@ -366,7 +366,7 @@
 }
 
 [data-theme="dark"] .my-page-stat-value {
-  color: var(--link-color);
+  color: var(--brand);
 }
 
 [data-theme="dark"] .my-page-stat-label,
@@ -376,7 +376,7 @@
 }
 
 [data-theme="dark"] .my-page-section-header a {
-  color: var(--link-color);
+  color: var(--brand);
 }
 
 [data-theme="dark"] .my-page-post-item {

@@ -320,8 +320,10 @@
 #tier-title {
   margin: 0;
   font-size: 1.25rem;
-  font-weight: 700;
-  color: #ffcc00;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  /* #ffcc00 은 흰 배경에서 대비가 낮아 거의 안 읽혔다 → 테마별로 대비가 나오는 강조색 */
+  color: var(--brand-strong);
   text-align: center;
 }
 
@@ -351,9 +353,9 @@
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  border: 1px solid #3a3a3a;
-  background: #1b1b1b;
-  color: #eee;
+  border: 1px solid var(--border-color);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
   font-size: 14px;
   font-weight: 700;
   line-height: 1;
@@ -364,15 +366,15 @@
 
 .tier-switch-btn:hover {
   transform: translateY(-2px);
-  border-color: #ffcc00;
-  box-shadow: 0 6px 16px rgba(255, 204, 0, 0.18);
+  border-color: var(--brand);
+  box-shadow: var(--shadow-md);
 }
 
 .tier-switch-btn.is-active {
-  background: linear-gradient(135deg, #ffcc00, #ff9800);
-  color: #111;
-  border-color: #ffcc00;
-  box-shadow: 0 4px 14px rgba(255, 204, 0, 0.35);
+  background: linear-gradient(135deg, var(--brand), #f97316);
+  color: var(--brand-contrast);
+  border-color: var(--brand);
+  box-shadow: 0 6px 16px -4px rgba(245, 158, 11, 0.55);
 }
 
 .tier-switch-arrow {
@@ -381,7 +383,7 @@
 }
 
 .character-pool { margin-top: 40px; }
-.characters-pool { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; padding: 20px; background: #1a1a1a; border-radius: 8px; }
+.characters-pool { display: flex; flex-wrap: wrap; gap: 12px; justify-content: center; padding: 20px; background: #1a1a1a; border-radius: var(--radius-xl); box-shadow: var(--shadow-md); }
 
 /* ===== 전체 캐릭터 풀 뷰포트 화살표 =====
    풀 목록이 화면에 보이는 동안에만(IntersectionObserver로 감지) body에 pool-arrows-on 클래스가 붙어
@@ -470,19 +472,24 @@ body.pool-arrows-on .pool-viewport-arrows {
   justify-content: center;
   gap: 8px;
   padding: 12px 24px;
-  background: #1f1f1f;
-  color: #ffcc00;
-  border: 2px solid #ffcc00;
-  border-radius: 8px;
+  /* 검정 바탕 + 노란 2px 테두리(라이트 모드에서 화면에서 가장 무거운 요소)였다 →
+     테마 표면의 알약 버튼, hover 에서만 강조색으로 채운다 */
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-sm);
   font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
   overflow: hidden;
   transition: all 0.3s ease;
 }
 
 .btn:hover {
-  background: #ffcc00;
-  color: #111;
+  background: var(--brand);
+  border-color: var(--brand);
+  color: var(--brand-contrast);
 }
 
 /* 아이콘 애니메이션 공통 */
@@ -509,10 +516,10 @@ body.pool-arrows-on .pool-viewport-arrows {
   left: 50%;
   transform: translateX(-50%) scaleY(0);
   transform-origin: top;
-  background: #1a1a1a;
-  border: 2px solid #ffcc00;
-  border-radius: 10px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
   z-index: 100;
   transition: transform 0.25s ease, opacity 0.25s ease;
   opacity: 0;
@@ -532,10 +539,10 @@ body.pool-arrows-on .pool-viewport-arrows {
 
 .dropdown-item {
   padding: 10px 18px;
-  background: #222;
-  color: #ffcc00;
-  border: 1px solid #ffcc00;
-  border-radius: 6px;
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-pill);
   font-size: 14px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -544,8 +551,9 @@ body.pool-arrows-on .pool-viewport-arrows {
 }
 
 .dropdown-item:hover {
-  background: #ffcc00;
-  color: #111;
+  background: var(--brand);
+  border-color: var(--brand);
+  color: var(--brand-contrast);
   transform: translateY(-2px);
 }
 
@@ -860,7 +868,7 @@ body.char-selected-mode .characters {
 /* 다운로드 드롭다운 메뉴 */
 [data-theme="dark"] .dropdown-menu {
   background: var(--bg-elevated);
-  box-shadow: 0 10px 30px var(--shadow-color);
+  box-shadow: var(--shadow-lg);
 }
 [data-theme="dark"] .dropdown-item {
   background: var(--bg-subtle);
@@ -986,8 +994,9 @@ body.char-selected-mode .characters {
    티어표 꾸미기 패널 · 버튼
    ====================================================================== */
 .btn-decorate.is-open {
-  background: #ffcc00;
-  color: #111;
+  background: var(--brand);
+  border-color: var(--brand);
+  color: var(--brand-contrast);
 }
 
 .decorate-panel {

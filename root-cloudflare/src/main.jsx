@@ -14,6 +14,8 @@ import './styles/index-home.css';
 import './styles/react-extra.css';
 // 전 페이지 공용 마감(서체·초점·스크롤바) — 페이지 CSS 를 덮어야 하므로 반드시 맨 마지막
 import './styles/design-system.css';
+// 앱 뼈대(헤더·푸터·404·빈 상태) 마감 — 원본 뼈대 CSS 위에서 덮어쓰므로 design-system 바로 뒤
+import './styles/app-shell.css';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

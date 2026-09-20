@@ -16,8 +16,9 @@
 }
 
 .notif-page-title {
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 28px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
   margin: 0 0 24px;
 }
 
@@ -31,8 +32,8 @@
   gap: 12px;
   flex-wrap: wrap;
   margin-bottom: 20px;
-  border-bottom: 1px solid #eee;
-  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 14px;
 }
 
 /* 전체/공지/멘션/이벤트 4개 탭 버튼을 담는 가로 flex 그룹. */
@@ -50,29 +51,30 @@
   border-radius: 999px;
   font-size: 14px;
   font-weight: 600;
-  color: #666;
+  color: var(--text-secondary);
   cursor: pointer;
 }
 
 .notif-tab:hover {
-  background: #f3f4f6;
+  background: var(--bg-hover);
 }
 
 /* 현재 선택된 탭(notifications.js의 bindNotifTabs()가 클릭 시 .active를 토글해줌)만
    파란 배경 + 흰 글씨로 강조해서 어떤 카테고리를 보고 있는지 한눈에 표시. */
 .notif-tab.active {
-  background: #2563eb;
-  color: #fff;
+  background: var(--brand);
+  color: var(--brand-contrast);
+  box-shadow: var(--shadow-sm);
 }
 
 /* 정렬/읽음 필터용 네이티브 <select>. 탭과 구분되도록 테두리가 있는 사각형 스타일을 쓴다. */
 .notif-sort-select {
   padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid #ddd;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--input-border);
   font-size: 14px;
-  background: #fff;
-  color: #333;
+  background: var(--input-bg);
+  color: var(--text-primary);
 }
 
 /* 알림 카드들을 세로로 쌓는 리스트 컨테이너. */
@@ -87,23 +89,31 @@
    버튼 기본값(가운데 정렬)을 덮어써서 좌측 정렬 텍스트를 유지한다. */
 .notif-item {
   width: 100%;
-  border: 1px solid #eee;
-  background: #fafafa;
-  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-elevated);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
   text-align: left;
-  padding: 14px 16px;
+  padding: 16px 18px;
   cursor: pointer;
+  transition: background-color 0.18s var(--ease-out), border-color 0.18s var(--ease-out),
+    box-shadow 0.18s var(--ease-out), transform 0.18s var(--ease-out);
 }
 
 .notif-item:hover {
-  background: #f1f5f9;
+  background: var(--bg-subtle);
+  border-color: var(--border-strong);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
 }
 
 /* 안 읽은 알림(notifications.js가 item.read가 false일 때 .unread 클래스를 붙임)은
    옅은 파란 배경으로 강조해서 읽은 알림과 시각적으로 구분되게 한다. */
 .notif-item.unread {
-  background: #eff6ff;
-  border-color: #dbeafe;
+  background: var(--brand-soft);
+  border-color: color-mix(in srgb, var(--brand) 35%, transparent);
+  /* 안 읽음은 왼쪽에 강조색 막대를 더해 색만으로 구분하지 않게 한다 */
+  box-shadow: inset 3px 0 0 var(--brand), var(--shadow-sm);
 }
 
 /* 카드 상단 줄: 좌측 라벨(카테고리명)과 우측 시간을 양 끝에 배치. */
@@ -119,21 +129,21 @@
 .notif-item-label {
   font-size: 11px;
   font-weight: 700;
-  color: #2563eb;
+  color: var(--brand-strong);
 }
 
 /* 상대 시간 표시("N분 전" 등, common.js의 formatNotificationTime() 결과).
    줄바꿈되어 라벨과 겹치지 않도록 white-space: nowrap 처리. */
 .notif-item-time {
   font-size: 11px;
-  color: #94a3b8;
+  color: var(--text-muted);
   white-space: nowrap;
 }
 
 .notif-item-title {
   font-size: 14px;
   font-weight: 700;
-  color: #111;
+  color: var(--text-primary);
   margin-bottom: 2px;
 }
 
@@ -141,17 +151,20 @@
    붙는데, 이 스타일은 그 접두어와 본문 메시지를 함께 감싸는 하나의 텍스트 블록이다. */
 .notif-item-message {
   font-size: 13px;
-  color: #64748b;
-  line-height: 1.4;
+  color: var(--text-secondary);
+  line-height: 1.5;
 }
 
 /* 알림이 하나도 없을 때(로딩 중/에러/빈 목록 공통)의 안내 문구 스타일.
    notifications.js가 이 클래스가 붙은 <p>를 목록 자리에 대신 넣는다. */
 .notif-empty {
-  padding: 60px 0;
+  padding: 56px 20px;
   text-align: center;
-  color: #94a3b8;
+  color: var(--text-muted);
   font-size: 14px;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--bg-subtle);
 }
 
 /* 모바일 화면 대응: 페이지 여백을 줄이고, 툴바(탭+셀렉트)를 가로 배치 대신
@@ -187,8 +200,8 @@
   background: var(--bg-hover);
 }
 [data-theme="dark"] .notif-tab.active {
-  background: var(--link-color);
-  color: var(--bg-page);
+  background: var(--brand);
+  color: var(--brand-contrast);
 }
 
 [data-theme="dark"] .notif-item {
@@ -201,12 +214,12 @@
 
 /* 안읽음 강조 — 원래도 옅은 파랑 하이라이트라 정체성은 유지하되 다크 배경에 맞게 톤 조정 */
 [data-theme="dark"] .notif-item.unread {
-  background: rgba(110, 168, 254, 0.12);
-  border-color: rgba(110, 168, 254, 0.35);
+  background: var(--brand-soft);
+  border-color: color-mix(in srgb, var(--brand) 35%, transparent);
 }
 
 [data-theme="dark"] .notif-item-label {
-  color: var(--link-color);
+  color: var(--brand);
 }
 
 [data-theme="dark"] .notif-item-time,

@@ -2,17 +2,27 @@
 /* 커스텀 티어 게시글 "상세" 페이지 전용 스타일. 티어표 자체(.tier-list 등)는 ../custom-maker.css를
    그대로 재사용하고, 이 파일은 헤더/액션버튼/댓글 영역만 추가로 꾸민다. */
 
-/* 게시글 헤더 */
+/* 페이지 컨테이너 — 예전엔 모바일 규칙만 있고 데스크톱에는 없어서, 작성자/조회수 줄이 화면 가장자리에 붙고
+   오른쪽("댓글 0")이 잘려 보였다. 가운데 정렬 + 최대 너비 + 좌우 여백을 준다. */
+.post-detail-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 32px 24px 64px;
+  box-sizing: border-box;
+}
+
+/* 게시글 헤더 — 위아래 가는 줄이던 것을 카드로 */
 .post-header {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-top: 24px;
-  margin-bottom: 20px;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  border-top: 1px solid #333;
-  border-bottom: 1px solid #333;
+  gap: 12px;
+  margin-top: 0;
+  margin-bottom: 24px;
+  padding: 18px 20px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-sm);
 }
 
 /* 1번째 줄: 프로필 */
@@ -27,13 +37,13 @@
   height: 42px;
   border-radius: 50%;
   object-fit: cover;
-  border: 1px solid #444;
+  border: 1px solid var(--border-color);
 }
 
 .author-name {
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1.05rem;
-  color: #000000;
+  color: var(--text-primary);
 }
 
 /* 2번째 줄 전체 */
@@ -51,22 +61,23 @@
 }
 
 .user-posts-btn {
-  padding: 6px 12px;
-  background: #2a2a2a;
-  color: #ccc;
-  border: 1px solid #444;
-  border-radius: 6px;
+  padding: 6px 14px;
+  background: var(--bg-subtle);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-pill);
   font-size: 0.85rem;
+  font-weight: 600;
   cursor: pointer;
 }
 
 .user-posts-btn:hover {
-  background: #3a3a3a;
-  color: #fff;
+  background: var(--bg-hover);
+  color: var(--text-primary);
 }
 
 .post-date {
-  color: #aaa;
+  color: var(--text-muted);
   font-size: 0.9rem;
 }
 
@@ -79,7 +90,7 @@
 
 .stat {
   font-size: 0.9rem;
-  color: #ccc;
+  color: var(--text-secondary);
 }
 
 .comment-link {
@@ -87,15 +98,17 @@
 }
 
 .comment-link:hover {
-  color: #ffc400;
+  color: var(--brand-strong);
   text-decoration: underline;
 }
 
 /* 제목 */
 .post-title {
-  font-size: 1.6rem;
+  font-size: 1.9rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
   margin: 10px auto 24px;
-  color: #000000;
+  color: var(--text-primary);
   text-align: center;
 }
 
@@ -103,12 +116,14 @@
   width: 95%;
   max-width: 2800px;
   margin: 0 auto 24px;
-  padding: 14px 18px;
+  padding: 16px 20px;
   box-sizing: border-box;
-  border: 2px solid #ffcc00;
-  border-radius: 8px;
-  background: #111;
-  color: #fff;
+  /* 예전엔 검정 박스 + 노란 2px 테두리였다 → 밝은/어두운 테마 표면 + 왼쪽 강조 막대 */
+  border: 1px solid var(--border-color);
+  border-left: 4px solid var(--brand);
+  border-radius: var(--radius-lg);
+  background: var(--bg-subtle);
+  color: var(--text-primary);
   font-size: 0.98rem;
   line-height: 1.7;
   text-align: left;
@@ -131,51 +146,50 @@
 
 .action-btn {
   padding: 10px 18px;
-  border: 1px solid #444;
-  background: #1f1f1f;
-  color: #fff;
-  border-radius: 8px;
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  border-radius: var(--radius-pill);
   cursor: pointer;
   font-size: 0.95rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-sm);
 }
 
 .action-btn:hover {
-  background: #333;
+  background: var(--bg-hover);
 }
 
 /* 수정/삭제/신고 버튼: 각각 파랑/빨강/노랑 계열로 색을 다르게 줘서 위험도를 직관적으로 구분
    (수정=안전한 파랑, 삭제=경고 빨강, 신고=주의 노랑). 표시 여부는 JS(updatePostActions)가 제어 */
 .edit-btn {
-  border-color: #2563eb;
-  background: #172554;
-  color: #93c5fd;
+  border-color: color-mix(in srgb, var(--link-color) 45%, transparent);
+  background: color-mix(in srgb, var(--link-color) 10%, var(--bg-elevated));
+  color: var(--link-color);
 }
 
 .edit-btn:hover {
-  background: #1e3a8a;
-  color: #fff;
+  background: color-mix(in srgb, var(--link-color) 20%, var(--bg-elevated));
 }
 
 .delete-btn {
-  border-color: #8b2e2e;
-  background: #3a1a1a;
-  color: #ffb4b4;
+  border-color: color-mix(in srgb, #dc2626 45%, transparent);
+  background: color-mix(in srgb, #dc2626 9%, var(--bg-elevated));
+  color: #dc2626;
 }
 
 .delete-btn:hover {
-  background: #5c2020;
-  color: #fff;
+  background: color-mix(in srgb, #dc2626 18%, var(--bg-elevated));
 }
 
 .report-btn {
-  border-color: #6b4e16;
-  background: #2a2210;
-  color: #ffd76a;
+  border-color: color-mix(in srgb, var(--brand) 50%, transparent);
+  background: var(--brand-soft);
+  color: var(--brand-strong);
 }
 
 .report-btn:hover:not(:disabled) {
-  background: #3d3115;
-  color: #fff;
+  background: color-mix(in srgb, var(--brand) 22%, var(--bg-elevated));
 }
 
 .report-btn:disabled {
@@ -194,12 +208,12 @@
 
 .comment-section h3 {
   margin: 0 0 16px;
-  color: #111;
+  color: var(--text-primary);
 }
 
 .comment-login-hint {
   margin: 0 0 12px;
-  color: #888;
+  color: var(--text-muted);
   font-size: 0.9rem;
 }
 
@@ -221,10 +235,10 @@
   min-height: 60px;
   max-height: 150px;
   padding: 12px 14px;
-  border: 1px solid #444;
-  border-radius: 8px;
-  background: #1a1a1a;
-  color: #fff;
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-md);
+  background: var(--input-bg);
+  color: var(--text-primary);
   font-size: 0.95rem;
   line-height: 1.5;
   overflow-y: auto;
@@ -236,14 +250,14 @@
 /* placeholder 스타일 */
 .comment-input-box:empty:before {
   content: attr(data-placeholder);
-  color: #666;
+  color: var(--text-muted);
   pointer-events: none;
 }
 
 /* focus 스타일 */
 .comment-input-box:focus {
-  border-color: #666;
-  background: #222;
+  border-color: var(--brand);
+  box-shadow: var(--focus-ring);
 }
 
 /* ====================== 모바일 상세 ====================== */
@@ -332,17 +346,21 @@
 .comment-form button {
   padding: 0 20px;
   min-width: 72px;
-  background: #ffc400;
-  color: #111;
+  background: var(--brand);
+  color: var(--brand-contrast);
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   font-weight: bold;
   cursor: pointer;
 }
 
+.comment-form button:hover:not(:disabled) {
+  background: var(--brand-strong);
+}
+
 .comment-form button:disabled {
-  background: #555;
-  color: #999;
+  background: var(--bg-hover);
+  color: var(--text-muted);
   cursor: not-allowed;
 }
 
@@ -354,17 +372,18 @@
 
 /* 댓글 카드 하나. 최상위 댓글과 답글이 같은 클래스를 쓰고, 답글만 .is-reply가 추가로 붙어 들여쓰기됨 */
 .post-comment-item {
-  padding: 14px 16px;
-  border: 1px solid #333;
-  border-radius: 8px;
-  background: #1a1a1a;
+  padding: 16px 18px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-sm);
 }
 
 /* 답글: 왼쪽 여백(margin-left)으로 원댓글에 종속된 느낌을 주고, 배경을 살짝 더 어둡게 해 구분 */
 .post-comment-item.is-reply {
   margin-left: 28px;
-  border-color: #2a2a2a;
-  background: #151515;
+  border-color: var(--border-color);
+  background: var(--bg-subtle);
 }
 
 /* 답글 상단에 "OO님 >> 원댓글 내용 일부"를 인용문처럼 보여주는 블록.
@@ -372,23 +391,24 @@
 .post-comment-quote {
   margin-bottom: 10px;
   padding: 10px 12px;
-  border-left: 3px solid #ffc400;
-  background: rgba(255, 196, 0, 0.08);
-  color: #ccc;
+  border-left: 3px solid var(--brand);
+  background: var(--brand-soft);
+  color: var(--text-secondary);
   font-size: 0.88rem;
   line-height: 1.45;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
 }
 
 .post-comment-quote strong {
-  color: #ffc400;
+  color: var(--brand-strong);
 }
 
 /* 헤더 알림(딥링크)을 타고 특정 댓글로 이동했을 때, scrollToCommentTarget()이 잠깐 이 클래스를
    붙였다가(2.8초 후 자동 제거) 파란 테두리+배경으로 "이 댓글입니다"를 강조 표시한다 */
 .notification-scroll-highlight {
-  outline: 3px solid #2563eb;
+  outline: 3px solid var(--brand);
   outline-offset: 3px;
-  background: rgba(37, 99, 235, 0.08);
+  background: var(--brand-soft);
   transition: outline-color 0.3s ease, background 0.3s ease;
 }
 
@@ -401,19 +421,19 @@
 }
 
 .post-comment-author {
-  font-weight: 600;
-  color: #ffc400;
+  font-weight: 700;
+  color: var(--brand-strong);
   font-size: 0.92rem;
 }
 
 .post-comment-date {
-  color: #888;
+  color: var(--text-muted);
   font-size: 0.8rem;
   white-space: nowrap;
 }
 
 .post-comment-body {
-  color: #eee;
+  color: var(--text-primary);
   font-size: 0.95rem;
   line-height: 1.5;
   white-space: pre-wrap;
@@ -429,18 +449,18 @@
 }
 
 .post-comment-action-btn {
-  padding: 4px 10px;
-  border: 1px solid #666;
-  border-radius: 6px;
+  padding: 4px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-pill);
   background: transparent;
-  color: #ccc;
+  color: var(--text-secondary);
   font-size: 0.82rem;
   cursor: pointer;
 }
 
 .post-comment-action-btn:hover:not(:disabled) {
-  background: #2a2a2a;
-  color: #fff;
+  background: var(--bg-hover);
+  color: var(--text-primary);
 }
 
 .post-comment-action-btn:disabled {
@@ -449,8 +469,8 @@
 }
 
 .post-comment-action-btn.danger:hover:not(:disabled) {
-  border-color: #8b2e2e;
-  color: #ffb4b4;
+  border-color: color-mix(in srgb, #dc2626 55%, transparent);
+  color: #dc2626;
 }
 
 /* 답변/수정 버튼을 누르면 openReplyBox()/openEditBox()가 댓글 카드 안에 동적으로 삽입하는
@@ -458,7 +478,7 @@
 .post-comment-action-box {
   margin-top: 12px;
   padding-top: 12px;
-  border-top: 1px solid #333;
+  border-top: 1px solid var(--border-color);
 }
 
 .post-comment-action-box .comment-input-box {
@@ -480,15 +500,15 @@
 }
 
 .post-comment-action-btns .cancel-btn {
-  border: 1px solid #666;
+  border: 1px solid var(--border-strong);
   background: transparent;
-  color: #ccc;
+  color: var(--text-secondary);
 }
 
 .post-comment-action-btns .submit-btn {
   border: none;
-  background: #ffc400;
-  color: #111;
+  background: var(--brand);
+  color: var(--brand-contrast);
   font-weight: 700;
 }
 
@@ -498,7 +518,7 @@
 .comment-error {
   padding: 24px 12px;
   text-align: center;
-  color: #888;
+  color: var(--text-muted);
   font-size: 0.92rem;
 }
 
@@ -517,16 +537,17 @@
 .report-modal-card {
   width: 100%;
   max-width: 420px;
-  background: #fff;
-  border-radius: 12px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
   padding: 28px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  box-shadow: var(--shadow-lg);
 }
 
 .report-modal-card h3 {
   margin: 0 0 18px;
   font-size: 1.1rem;
-  color: #111;
+  color: var(--text-primary);
 }
 
 .report-modal-reasons {
@@ -545,13 +566,13 @@
 }
 
 .report-reason-btn {
-  border: 2px solid #111;
-  background: #fff;
-  color: #111;
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
 }
 
 .report-reason-btn:hover {
-  background: #f5f5f5;
+  background: var(--bg-hover);
 }
 
 .report-modal-cancel {

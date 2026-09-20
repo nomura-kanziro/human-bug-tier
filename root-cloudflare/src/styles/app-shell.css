@@ -1,0 +1,334 @@
+/* ======================================================================
+   app-shell.css — 앱 뼈대(헤더 · 푸터 · 404 · 빈 상태) 현대화 / React 전용
+   ======================================================================
+   모든 페이지에서 항상 보이는 부분이라 한 곳에서 관리한다. 색·모서리·그림자는 theme.css
+   토큰을 쓰므로 라이트/다크가 자동으로 따라온다. Header_Footer.css(원본 뼈대)를 지우지 않고
+   그 위에서 "보이는 마감"만 덮어쓰며, 그래서 main.jsx 에서 design-system.css 바로 뒤에 import 한다.
+   ====================================================================== */
+
+/* ====================== 헤더 ======================
+   흰색 단색 바 → 반투명 유리 질감(스크롤하면 뒤 콘텐츠가 은은하게 비침).
+   ⚠ 블러는 header 자체가 아니라 ::before 에 건다. backdrop-filter 는 그 요소를 자손 position:fixed 의
+   기준(containing block)으로 만들어 버리는데, 모바일 사이드 메뉴(.side-menu)가 header 안에 들어 있어
+   header 에 직접 걸면 사이드 메뉴 위치가 통째로 깨진다. 가상 요소에는 자손이 없어서 안전하다. */
+header {
+  background: transparent;
+  border-bottom: 1px solid var(--border-color);
+  isolation: isolate;
+}
+
+header::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: color-mix(in srgb, var(--bg-page) 82%, transparent);
+  -webkit-backdrop-filter: saturate(1.5) blur(14px);
+  backdrop-filter: saturate(1.5) blur(14px);
+}
+
+[data-theme="dark"] header {
+  background: transparent;
+}
+
+.logo-text {
+  color: var(--text-primary);
+  letter-spacing: -0.03em;
+}
+
+/* 메뉴: 글자만 있던 링크에 알약 hover 를 줘 "눌리는 것"임이 보이게 한다 */
+.nav-item > a {
+  color: var(--text-secondary);
+  border-radius: var(--radius-pill);
+  transition: color 0.18s var(--ease-out), background-color 0.18s var(--ease-out);
+}
+
+.nav-item > a:hover,
+.nav-item:hover > a {
+  color: var(--text-primary);
+  background: var(--bg-hover);
+}
+
+[data-theme="dark"] .nav-item > a {
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .nav-item > a:hover {
+  color: var(--text-primary);
+}
+
+/* 드롭다운 카드 — 모서리·그림자를 토큰으로 통일하고, 항목도 둥글게 떠오르는 hover */
+.dropdown {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: 6px;
+  transition: opacity 0.18s var(--ease-out), visibility 0.18s var(--ease-out), transform 0.18s var(--ease-out);
+}
+
+.dropdown a {
+  color: var(--text-primary);
+  border-radius: var(--radius-sm);
+  padding: 9px 14px;
+  transition: background-color 0.15s var(--ease-out);
+}
+
+.dropdown a:hover {
+  background: var(--bg-hover);
+}
+
+/* 로그인 버튼 — 화면마다 제각각이던 파랑(#007bff)을 사이트 강조색으로 통일 */
+.header-login-btn {
+  background: var(--brand);
+  color: var(--brand-contrast);
+  border-radius: var(--radius-pill);
+  padding: 9px 18px;
+  box-shadow: var(--shadow-sm);
+  transition: background-color 0.18s var(--ease-out), transform 0.12s var(--ease-out);
+}
+
+.header-login-btn:hover {
+  background: var(--brand-strong);
+  color: var(--brand-contrast);
+}
+
+/* ====================== 본문 영역이 짧아도 푸터가 바닥에 붙게 ======================
+   알림·빈 게시판처럼 내용이 짧은 페이지에서 푸터가 화면 중간에 떠 있던 것을 막는다.
+   Layout.jsx 가 본문+푸터를 .app-body 로 묶고, 본문(.app-main)이 남는 높이를 채운다.
+   (헤더는 밖에 둔다 — sticky 가 그대로 동작해야 하므로) --header-h 는 헤더의 대략적인 높이. */
+.app-body {
+  --header-h: 66px;
+  min-height: calc(100vh - var(--header-h));
+  min-height: calc(100dvh - var(--header-h));
+  display: flex;
+  flex-direction: column;
+}
+
+.app-main {
+  flex: 1 0 auto;
+}
+
+/* ====================== 푸터 ======================
+   글자 한 줄이던 것을 소개 + 바로가기 + 버전 정보가 있는 푸터로 확장. */
+footer.site-footer {
+  display: block;
+  padding: 0;
+  margin-top: 56px;
+  border-top: 1px solid var(--border-color);
+  background: var(--bg-subtle);
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+.site-footer-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px 28px;
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.site-footer-brand {
+  max-width: 380px;
+}
+
+.site-footer-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.1rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+
+.site-footer-name img {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+}
+
+.site-footer-brand p {
+  margin: 12px 0 0;
+  line-height: 1.7;
+  color: var(--text-muted);
+}
+
+.site-footer-links {
+  display: flex;
+  gap: 56px;
+  flex-wrap: wrap;
+}
+
+.site-footer-col {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 110px;
+}
+
+.site-footer-col strong {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+footer.site-footer a {
+  color: var(--text-secondary);
+  transition: color 0.15s var(--ease-out);
+}
+
+footer.site-footer a:hover {
+  color: var(--brand-strong);
+}
+
+/* 원래 문의하기 글자에 걸려 있던 굵기 2000 / 1.05rem 규칙은 이 푸터에서는 쓰지 않는다 */
+footer.site-footer .fot-text {
+  font: inherit;
+  letter-spacing: inherit;
+  color: inherit;
+}
+
+.site-footer-bottom {
+  border-top: 1px solid var(--border-color);
+}
+
+.site-footer-bottom > span {
+  display: block;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 16px 24px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+[data-theme="dark"] footer.site-footer {
+  background: var(--bg-elevated);
+}
+
+@media (max-width: 768px) {
+  .app-body {
+    --header-h: 58px;
+  }
+
+  footer.site-footer {
+    margin-top: 40px;
+  }
+
+  .site-footer-inner {
+    padding: 28px 20px 20px;
+    gap: 28px;
+  }
+
+  .site-footer-links {
+    gap: 40px;
+  }
+
+  .site-footer-bottom > span {
+    padding: 14px 20px;
+  }
+}
+
+/* ====================== 404 ====================== */
+.not-found {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 96px 24px 72px;
+  text-align: center;
+}
+
+.not-found-code {
+  display: block;
+  font-size: clamp(64px, 12vw, 104px);
+  font-weight: 900;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--brand), #f97316);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.not-found h2 {
+  margin: 18px 0 8px;
+  font-size: 22px;
+  color: var(--text-primary);
+}
+
+.not-found p {
+  margin: 0;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.not-found code {
+  display: inline-block;
+  margin-top: 12px;
+  padding: 4px 10px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-subtle);
+  border: 1px solid var(--border-color);
+  color: var(--text-secondary);
+  font-size: 13px;
+  max-width: 100%;
+  overflow-wrap: anywhere;
+}
+
+.not-found-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 28px;
+  flex-wrap: wrap;
+}
+
+.not-found-btn {
+  padding: 11px 20px;
+  border-radius: var(--radius-pill);
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  border: 1px solid var(--border-strong);
+  color: var(--text-secondary);
+  background: transparent;
+  transition: background-color 0.18s var(--ease-out), color 0.18s var(--ease-out);
+}
+
+.not-found-btn:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.not-found-btn.is-primary {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: var(--brand-contrast);
+  box-shadow: var(--shadow-sm);
+}
+
+.not-found-btn.is-primary:hover {
+  background: var(--brand-strong);
+  border-color: var(--brand-strong);
+  color: var(--brand-contrast);
+}
+
+/* ====================== 빈 상태 · 안내 문구 ======================
+   "불러오는 중..." / "게시글이 없습니다" 같은 안내가 색 없는 회색 글자 한 줄이라 화면이 비어 보였다.
+   점선 테두리 안에 가운데 정렬해 "여기에 콘텐츠가 들어올 자리"임이 보이게 한다. */
+.react-state-msg {
+  margin: 24px auto;
+  max-width: 720px;
+  padding: 36px 20px;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+  line-height: 1.7;
+  border: 1px dashed var(--border-strong);
+  border-radius: var(--radius-lg);
+  background: var(--bg-subtle);
+}

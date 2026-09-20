@@ -358,8 +358,9 @@ img {
 }
 
 .notice-header h2 {
-  font-size: 24px;
-  font-weight: 700;
+  font-size: 26px;
+  font-weight: 800;
+  letter-spacing: -0.03em;
 }
 
 .notice-grid {
@@ -375,11 +376,11 @@ img {
 }
 
 .notice-column {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
   padding: 24px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05); /* 살짝만 그림자 */
+  box-shadow: var(--shadow-sm); /* 살짝만 그림자 */
 }
 
 .notice-column-header {
@@ -393,16 +394,16 @@ img {
 
 .notice-item {
   padding: 14px 16px;
-  border-radius: 12px;
-  border: 1px solid #f3f4f6;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
   margin-bottom: 10px;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .notice-item:hover {
-  border-color: #d1d5db;
-  background: #fafafa;
+  border-color: var(--border-strong);
+  background: var(--bg-subtle);
 }
 
 .notice-item:last-child {
@@ -418,13 +419,13 @@ img {
 
 .notice-item .date {
   font-size: 12px;
-  color: #9ca3af;
+  color: var(--text-muted);
   white-space: nowrap;
 }
 
 .notice-item .desc {
   font-size: 14px;
-  color: #6b7280;
+  color: var(--text-secondary);
   margin-top: 6px;
   line-height: 1.5;
 }
@@ -453,9 +454,9 @@ img {
 }
 
 .notice-column {
-  background: #fff;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-xl);
   padding: 24px;
 }
 
@@ -470,13 +471,17 @@ img {
 
 .notice-section .notice-view-all {
   font-size: 14px;
-  color: #6b7280 !important;
+  color: var(--text-secondary) !important;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
+  padding: 6px 12px;
+  border-radius: var(--radius-pill);
+  transition: background-color 0.18s var(--ease-out), color 0.18s var(--ease-out);
 }
 
 .notice-section .notice-view-all:hover {
-  color: #111111 !important;
+  color: var(--text-primary) !important;
+  background: var(--bg-hover);
 }
 
 .notice-section .notice-item-link {
@@ -487,11 +492,11 @@ img {
 
 .notice-section .notice-item-title {
   font-weight: 600;
-  color: #111;
+  color: var(--text-primary);
 }
 
 .notice-section .notice-empty {
-  color: #9ca3af;
+  color: var(--text-muted);
   font-size: 14px;
   padding: 12px 0;
 }
