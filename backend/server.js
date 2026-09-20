@@ -146,6 +146,7 @@ const noticeRoutes = require('./routes/noticeRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
 const luckDrawRoutes = require('./routes/luckDrawRoutes');
 const profileRoutes = require('./routes/profileRoutes');
+const eventRoutes = require('./routes/eventRoutes');
 
 app.use('/api/tierlists', tierRoutes);       // 공식/커스텀 티어 게시글 + 댓글
 app.use('/api/auth', authRoutes);            // 회원가입/로그인/아이디찾기/비번재설정
@@ -155,6 +156,7 @@ app.use('/api/notices', noticeRoutes);       // 공지사항/새소식
 app.use('/api/notifications', notificationRoutes); // 헤더 알림
 app.use('/api/luck-draw', luckDrawRoutes);   // 오늘의 행운 티어 뽑기
 app.use('/api/profile', profileRoutes);      // 마이페이지 프로필(닉네임 변경)
+app.use('/api/events', eventRoutes);         // 이벤트(매일 퀴즈 · 메모리 게임 · 티어표 공개)
 
 // 위에 등록된 /api/* 중 아무 라우트에도 안 걸린 요청
 app.use('/api', (req, res) => {
@@ -218,6 +220,13 @@ connectDB().then(async (connected) => {
     require('./controllers/luckLadderController').startLadderScheduler();
   } catch (err) {
     console.error('랜덤 뽑기 라운드 스케줄러 시작 실패:', err.message);
+  }
+
+  try {
+    // 티어표 공개 이벤트 — 마감 시각이 지나면 접수를 닫고, 공개 예정 시각이 되면 자동 발표한다.
+    require('./controllers/eventController').startShowcaseScheduler();
+  } catch (err) {
+    console.error('티어표 공개 이벤트 스케줄러 시작 실패:', err.message);
   }
 });
 

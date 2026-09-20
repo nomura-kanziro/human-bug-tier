@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 313 |
+| **커밋 수** | 314 |
 | **기간** | 2026-03-20 ~ 2026-09-20 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -342,6 +342,7 @@
 | 311 | 2026-09-20 | [`3cdbc2d`](#3cdbc2d) | fix(theme): 자동 다크/라이트 전환을 서울 시각 기준으로, 수동 선택은 다음 전환 시각까지만 유지 |
 | 312 | 2026-09-21 | [`eee7550`](#eee7550) | fix(loading): React 로딩 오버레이를 정적 마크업으로 옮겨 실제 대기 구간에 보이게(지연 없이 즉시 제거) |
 | 313 | 2026-09-21 | [`890f6b1`](#890f6b1) | style(design): 디자인 현대화 2차 — 전 페이지 순회(공통 헤더·푸터·404, 티어표, 공지, 문의, 게시글 상세, 알림, 마이페이지, 메이커, 관리자) |
+| 314 | 2026-09-21 | [`pending`](#pending314) | feat(event): 이벤트 페이지 신설 — 매일 간단 퀴즈 · 제작 티어표 공개(뼈대·관리자 전용) · 메모리 게임 + 다크 모드 전용 로고 조명 |
 
 ---
 
@@ -6066,14 +6067,20 @@
 
 [▲ 목차로](#목차)
 
+---
 
+<a id="pending314"></a>
 
+### 314. 2026-09-21 — `pending`
 
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(event): 이벤트 페이지 신설 — 매일 간단 퀴즈 · 제작 티어표 공개(뼈대·관리자 전용) · 메모리 게임 + 다크 모드 전용 로고 조명
+- **git**: `git show pending`
+- **범위**: frontend (root-cloudflare) + backend / 이벤트 · 공통 로고
+- **요약**: "어두움 상태일 때만 로고 라이트가 켜지게" + "이벤트 페이지를 만들고 3종(매일 퀴즈 · 제작한 티어표 공개 · 메모리 게임)" 요청. **로고 조명**: 직전 로딩 작업(`eee7550`)에서 넣은 조명 규칙이 `Header_Footer.css` 의 `.logo-img` 한 자리에만 걸려 있어 푸터·홈 인트로·로그인 화면의 같은 로고에는 안 들어왔다. 규칙을 `app-shell.css` 한 곳(`[data-theme="dark"]` 전용)으로 모아 헤더·푸터를 함께 걸고, 밝음 상태에는 규칙 자체를 두지 않았다(로고가 투명 배경+어두운 잉크라 밝은 배경에서는 원본이 가장 또렷하다). CDP 실측 확인 — 밝음: 네 자리 모두 `background: rgba(0,0,0,0)` / `filter: none`, 어두움: 모두 radial-gradient + `drop-shadow(...) brightness(1.08)`. **이벤트 페이지(`/event`)**: 헤더의 "이벤트 (준비 중)"를 실제 링크로 바꾸고 행운 뽑기와 같은 해시 탭(`#quiz`/`#showcase`/`#memory`)으로 3종을 담았다. 포인트·순위가 걸린 기능이라 **판정에 필요한 값은 전부 서버가 정한다** — 프론트는 보기 번호와 "이 단계 다 맞췄다"는 신호만 보낸다. ① **매일 간단 퀴즈**: "{캐릭터}는 어느 티어인가요?" 3지선다(티어 + 갑·을·병·정 급까지). 안 푼 문제의 정답은 응답에서 뺐고, `{userId, quizDate}` 유니크 + 한국 시간 0시 기준(`getKstDateString()`)으로 하루 1회. 맞히면 가중치 추첨으로 1~1000P — **1~5P 60% / 6~20P 22% / 21~50P 10% / 51~120P 5% / 121~300P 2.2% / 301~600P 0.6% / 601~1000P 0.2%**(요청대로 작은 금액이 가장 흔하고 커질수록 희박). 지갑은 기존 `LuckProfile.points` 공용. 출제 데이터는 백엔드에 342명을 복사하지 않고 `backend/data/tierCatalog.js` 가 프론트 `src/data/tiers.json` 을 직접 읽게 했다(티어표를 고칠 때 두 곳이 어긋나지 않게, 읽기 실패 시 `[]` 로 서버 보호). ② **제작한 티어표 공개**: 요청대로 **뼈대만 · 정식 발매 X** — 라우트 4개 전부 `requireAdmin` 이라 일반 회원 토큰은 403(화면만 숨긴 게 아니다). 흐름은 draft → 접수 열기 → 마감 시각에 등록 차단 → 기본 **마감+30분**(관리자 조정 가능)에 스케줄러가 발표하거나 관리자가 "지금 결과 발표" → **참가자 전원에게 알림**(`Notification` 타입 `event_result` 추가). 정식 오픈 시 조회·출품 두 줄만 `requireAuth` 로 바꾸면 되도록 라우터에 주석을 남겼다. ③ **메모리 게임**: 4×4 → 6×6 → 8×8 3단계. 배치도 시간도 서버가 쥔다(다음 단계 카드는 통과해야 내려주고, 기록은 서버 시계로 계산, 한 쌍당 150ms 미만이면 무효). 완주 시 총 기록 + 단계별 기록 저장, 순위표는 비회원도 보되 로그인하면 내 최고 기록이 함께 오고, 관리자가 기간을 정산하면 1위에게 1000P + 알림. 작업 중 **캐릭터 이미지가 전부 깨지는 버그**를 잡았다: 서버가 내려주는 `tier-image/6 tier/....webp`(접두사·공백 포함)를 `<img src>` 에 그대로 넣었기 때문으로, 행운 뽑기·사다리와 같이 `lib/paths.js` 의 `tierImageUrl()` 로 감싸 해결(`/tier-media/tier-image/6%20tier/...`). 확인: API 테스트 51건(3지선다 생성·정답 은닉·하루 1회 409·오답 0P/정답 지급 반영·확률표 합계 100%·카드 16/36/64·너무 빠른 신고 거부·서버 계산 totalMs·관리자 정산 1000P·공개 403/401·revealAt 자동 계산·중복 출품 409·참가자 알림) 통과, 브라우저 테스트 27건(헤더 링크, 퀴즈 전 과정 + **이미지 실제 로드(naturalWidth>0)**, 메모리 3단계 완주 21.95초 + 카드 이미지 로드, 순위표, 일반 회원 "준비 중" vs 관리자 폼) 통과. 테스트용 임시 계정·기록은 모두 삭제했다. 한계: 티어표 공개는 뼈대라 참가 작품 선택 UI·당첨자 선정 기준이 아직 없고, 메모리 기간 마감은 관리자가 정산 API 를 호출하는 수동 방식이며, 퀴즈는 캐릭터 단위 랜덤이라 같은 캐릭터가 다시 나올 수 있다.
+- **주요 파일**: `root-cloudflare/src/pages/EventPage.jsx`(신규), `src/components/Event{Quiz,Memory,Showcase}Panel.jsx`(신규), `src/styles/event.css`(신규), `src/App.jsx`, `src/components/Header.jsx`, `src/styles/{app-shell,Header_Footer}.css`, `backend/routes/eventRoutes.js`·`controllers/eventController.js`·`data/tierCatalog.js`·`models/Event{QuizAttempt,MemorySession,Showcase,ShowcaseEntry}.js`(신규), `backend/models/Notification.js`, `backend/server.js`
+- **관련 RDMD**: `RDMD/frontend/13-event/01-event-page-record.md`, `RDMD/backend/09-event/01-event-api-record.md`
 
-
-
-
-
-
-
-
+[▲ 목차로](#목차)

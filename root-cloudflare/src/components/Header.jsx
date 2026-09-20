@@ -22,7 +22,7 @@ const MENUS = [
     items: [
       { to: '/custom-maker', label: '• 제작하기' },
       { to: '/board', label: '• 게시판' },
-      { soon: true, label: '• 이벤트 (준비 중)' },
+      { to: '/event', label: '• 이벤트' },
     ],
   },
   {

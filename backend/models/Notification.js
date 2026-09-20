@@ -33,6 +33,7 @@ const notificationSchema = new mongoose.Schema({
       'inquiry_mention',      // 문의 답변에서 내가 인용/멘션됨
       'notice',                // 새 공지 게시
       'news',                  // 새 소식/뉴스 게시
+      'event_result',          // 이벤트 결과 발표(티어표 공개 당첨자 / 메모리 게임 기간 1위)
     ],
   },
   // type을 상위 3개 카테고리로 묶은 값. User/Admin의 notificationSettings

@@ -24,6 +24,7 @@ RDMD/frontend/
 ├── 10-luck-draw/        # 행운 뽑기 (오늘의 행운 티어)
 └── 11-my-page/          # 유저 프로필 드롭다운 + 마이페이지
 └── 12-react/            # 정식 버전 React 이식 (root-cloudflare)
+└── 13-event/            # 이벤트 페이지 (퀴즈 · 티어표 공개 · 메모리 게임)
 ```
 
 파일명 규칙: `{순서}-{기능키워드}-record.md`
@@ -152,6 +153,12 @@ RDMD/frontend/
 | [01-react-phase1-3-record.md](./12-react/01-react-phase1-3-record.md) | — | root-cloudflare 를 Vite+React 로 교체 — 1~3단계(스캐폴드·레이아웃·홈/티어/공지) |
 | [02-react-tier-maker-luck-record.md](./12-react/02-react-tier-maker-luck-record.md) | — | 공식 티어표 단일 페이지 navbar + 커스텀 메이커·행운 뽑기 React 이식 |
 | [03-react-parity-complete-record.md](./12-react/03-react-parity-complete-record.md) | — | 바닐라 기능 100% 반영 — sync:render 스크립트 · 꾸미기 · 인증 · 게시판 · 마이페이지 · 알림 · 문의 · 관리자 |
+
+## 13-event
+
+| 파일 | legacy | 요약 |
+|------|--------|------|
+| [01-event-page-record.md](./13-event/01-event-page-record.md) | — | 이벤트 페이지 신설 — 매일 간단 퀴즈 · 티어표 공개(뼈대·관리자 전용) · 메모리 게임 + 로고 조명 다크 모드 한정 |
 
 ---
 

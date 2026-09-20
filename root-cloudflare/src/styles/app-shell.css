@@ -332,3 +332,19 @@ footer.site-footer .fot-text {
   border-radius: var(--radius-lg);
   background: var(--bg-subtle);
 }
+
+/* ====================== 사이트 로고 조명(halo) ======================
+   로고 이미지(logo.webp)는 "투명 배경 + 어두운 잉크 엠블럼"이라(불투명 픽셀 평균 밝기 37/255)
+   어두운 배경 위에서는 형체가 거의 안 보인다. 그래서 **다크 모드에서만** 뒤에 은은한 조명을 깔고
+   살짝 밝힌다 — 밝음 상태에서는 조명을 켜지 않는다(원본 그대로가 가장 또렷하다).
+
+   예전에는 이 규칙이 헤더 로고(.logo-img)에만 걸려 있어서, 같은 로고를 쓰는 푸터에서는 다크 모드에
+   조명이 없어 로고가 배경에 묻혔다. 로고가 나오는 자리를 여기 한 줄에 모아 함께 켠다.
+   (로그인 화면 오른쪽 브랜드 패널의 .side-panel-logo 는 패널 자체가 항상 어두운 톤이라
+    테마와 무관하게 자기 배경을 갖고 있고, 로딩 오버레이 로고는 loading-screen.css 가 따로 처리한다) */
+[data-theme="dark"] .logo-img,
+[data-theme="dark"] .site-footer-name img {
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.15) 65%, transparent 100%);
+  filter: drop-shadow(0 0 6px rgba(255, 220, 130, 0.45)) brightness(1.08);
+}

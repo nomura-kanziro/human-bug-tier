@@ -21,6 +21,7 @@ RDMD/backend/
 ├── 06-admin/        # 관리자 로그인 · 차단 · 신고 · requireAdmin
 ├── 07-deploy/       # Render · 정적 서빙 · 배포
 └── 08-luck-draw/    # 행운 뽑기 (오늘의 행운 티어) 모델·API
+└── 09-event/        # 이벤트 (매일 퀴즈 · 메모리 게임 · 티어표 공개) API
 ```
 
 파일명 규칙: `{순서}-{기능키워드}-record.md`
@@ -99,6 +100,12 @@ RDMD/backend/
 |------|--------|------|
 | [01-luck-draw-record.md](./08-luck-draw/01-luck-draw-record.md) | — | LuckDraw 모델·오늘의 행운 티어 API·kstDate |
 | [02-luck-draw-points-retention-record.md](./08-luck-draw/02-luck-draw-points-retention-record.md) | — | LuckProfile 신설 — 포인트 적립 + 이력 5건 자동 삭제 |
+
+## 09-event — 이벤트
+
+| 파일 | legacy | 요약 |
+|------|--------|------|
+| [01-event-api-record.md](./09-event/01-event-api-record.md) | — | `/api/events` — 매일 퀴즈(하루 1회·가중치 상금) · 메모리 게임(서버 시계 기록) · 티어표 공개(뼈대·requireAdmin) |
 
 ---
 

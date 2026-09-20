@@ -9,6 +9,7 @@ import AdminLogin from './pages/AdminLogin';
 import Board from './pages/Board';
 import CustomMaker from './pages/CustomMaker';
 import FindAccount from './pages/FindAccount';
+import EventPage from './pages/EventPage';
 import Home from './pages/Home';
 import Inquiry from './pages/Inquiry';
 import LegacyRedirect from './pages/LegacyRedirect';
@@ -52,6 +53,7 @@ export default function App() {
 
         <Route path="/custom-maker" element={<CustomMaker />} />
         <Route path="/luck-draw" element={<LuckDraw />} />
+        <Route path="/event" element={<EventPage />} />
         <Route path="/board" element={<Board />} />
         <Route path="/board/post" element={<PostDetail />} />
         <Route path="/board/edit" element={<PostEdit />} />
