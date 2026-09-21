@@ -638,8 +638,9 @@ header {
 }
 
 /* ====================== 드롭다운 네비게이션 (데스크톱, 마우스 오버 방식) ======================
-   PC 화면(768px 초과)에서만 보이는 상단 메뉴. 별도의 JS 토글 없이 순수 CSS :hover로 동작:
-   .nav-item에 마우스를 올리면 자식 .dropdown의 opacity/visibility가 0→1로 바뀌며 펼쳐지고,
+   PC 화면(768px 초과)에서만 보이는 상단 메뉴. 예전에는 순수 CSS :hover 로 동작했지만 지금은 **클릭**으로
+   열고 닫는다(Header.jsx 가 열린 항목에 .open 을 붙인다):
+   .nav-item.open 이면 자식 .dropdown의 opacity/visibility가 0→1로 바뀌며 펼쳐지고,
    화살표(.arrow)도 180도 회전한다. 모바일에서는 .desktop-nav 자체가 display:none 처리되고
    대신 아래 "사이드 메뉴 드롭다운 (클릭 전용)" 섹션이 같은 메뉴 데이터를 클릭 방식으로 보여준다. */
 .desktop-nav {
@@ -674,7 +675,7 @@ header {
   transition: transform 0.3s ease;
 }
 
-.nav-item:hover .arrow {
+.desktop-nav .nav-item.open .arrow {
   transform: rotate(180deg);
 }
 
@@ -695,7 +696,7 @@ header {
   z-index: 1000;
 }
 
-.nav-item:hover .dropdown {
+.desktop-nav .nav-item.open .dropdown {
   opacity: 1;
   visibility: visible;
   transform: translateY(4px);
@@ -716,7 +717,7 @@ header {
 /* ====================== 사이드 메뉴 드롭다운 (클릭 전용) ======================
    모바일 사이드 메뉴 안에서는 마우스 hover가 없으므로, common.js가 .dropdown-toggle 클릭 시
    부모 li에 .active 클래스를 붙였다 뗐다 하는 방식으로 하위 메뉴(.dropdown)를 펼치고 접는다.
-   데스크톱 버전(.nav-item:hover .dropdown)과 달리 position:static으로 문서 흐름에 그대로 쌓인다. */
+   데스크톱 버전(.desktop-nav .nav-item.open .dropdown)과 달리 position:static으로 문서 흐름에 그대로 쌓인다. */
 
 /* 사이드 드롭다운 기본: 숨김 */
 .side-menu .dropdown {

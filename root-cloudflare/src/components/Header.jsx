@@ -1,5 +1,6 @@
 // 공통 헤더 (header.html + common.js 헤더 로직 이식)
-//  - 데스크톱 드롭다운 5개(티어표/커스텀 메이커/이벤트/공지·소식/행운 뽑기)는 CSS :hover, 모바일 사이드 메뉴는 클릭 아코디언
+//  - 데스크톱 드롭다운 5개(티어표/커스텀 메이커/이벤트/공지·소식/행운 뽑기)는 이제 **클릭**으로 열고 닫는다
+//    (예전에는 CSS :hover). 하나를 열면 다른 것은 닫히고, 바깥 클릭·Esc·항목 선택 시 닫힌다. 모바일 사이드 메뉴는 클릭 아코디언
 //  - 우측: 테마 토글 + 후원 + (로그인: 알림벨·프로필 / 비로그인: 로그인 버튼) + 햄버거
 //  - 알림 패널과 프로필 드롭다운은 동시에 열리지 않는다(상호배타). 바깥 클릭 시 둘 다 닫힘.
 import { useEffect, useRef, useState } from 'react';
@@ -64,6 +65,8 @@ export default function Header() {
   const [sideOpen, setSideOpen] = useState(false);
   const [sideActive, setSideActive] = useState(null);
   const [panel, setPanel] = useState(null); // 'profile' | 'bell' | null
+  const [deskOpen, setDeskOpen] = useState(null); // 열려 있는 데스크톱 드롭다운의 MENUS 인덱스 | null
+  const navRef = useRef(null);
   const bellRef = useRef(null);
   const profileRef = useRef(null);
   const headerRef = useRef(null);
@@ -93,7 +96,24 @@ export default function Header() {
     return () => document.removeEventListener('click', onDoc);
   }, [panel]);
 
+  // 데스크톱 드롭다운: 바깥 클릭 / Esc 로 닫기 (열려 있을 때만 리스너를 건다)
+  useEffect(() => {
+    if (deskOpen === null) return undefined;
+    const onDoc = (e) => {
+      if (navRef.current?.contains(e.target)) return;
+      setDeskOpen(null);
+    };
+    const onKey = (e) => { if (e.key === 'Escape') setDeskOpen(null); };
+    document.addEventListener('click', onDoc);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('click', onDoc);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [deskOpen]);
+
   const closeSide = () => setSideOpen(false);
+  const closeDesk = () => setDeskOpen(null);
   const togglePanel = (which) => setPanel((cur) => (cur === which ? null : which));
 
   return (
@@ -104,12 +124,19 @@ export default function Header() {
           <span className="logo-text">휴버대 티어표</span>
         </Link>
 
-        <nav className="desktop-nav">
-          {MENUS.map((menu) => (
-            <div className="nav-item" key={menu.label}>
-              <a href="#" onClick={(e) => e.preventDefault()}>{menu.label} <span className="arrow">▼</span></a>
+        <nav className="desktop-nav" ref={navRef}>
+          {MENUS.map((menu, i) => (
+            <div className={`nav-item${deskOpen === i ? ' open' : ''}`} key={menu.label}>
+              <a
+                href="#"
+                aria-haspopup="true"
+                aria-expanded={deskOpen === i}
+                onClick={(e) => { e.preventDefault(); setDeskOpen((cur) => (cur === i ? null : i)); }}
+              >
+                {menu.label} <span className="arrow">▼</span>
+              </a>
               <div className="dropdown">
-                {menu.items.map((item) => <MenuLink key={item.label} item={item} />)}
+                {menu.items.map((item) => <MenuLink key={item.label} item={item} onClick={closeDesk} />)}
               </div>
             </div>
           ))}
