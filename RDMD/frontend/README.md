@@ -162,6 +162,7 @@ RDMD/frontend/
 | 파일 | legacy | 요약 |
 |------|--------|------|
 | [01-event-page-record.md](./13-event/01-event-page-record.md) | — | 이벤트 페이지 신설 — 매일 간단 퀴즈 · 티어표 공개(뼈대·관리자 전용) · 메모리 게임 + 로고 조명 다크 모드 한정 |
+| [02-admin-event-management-record.md](./13-event/02-admin-event-management-record.md) | — | 관리자 페이지 "이벤트 관리" — 메모리 기록 이벤트를 관리자가 열기/닫기/정산 + 티어표 공개 관리 이전 |
 
 ---
 

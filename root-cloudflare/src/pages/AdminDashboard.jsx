@@ -1,10 +1,12 @@
 // 관리자 대시보드 (admin/comments/comment-management.html + .js 이식)
-// 한 화면에 4개 관리 섹션이 들어있다:
+// 한 화면에 5개 관리 섹션이 들어있다:
 //   ① 문의(댓글) 목록·검색·삭제  ② 커스텀 메이커 게시글/댓글 신고 관리
 //   ③ 공지 작성·수정·고정·유튜브 동기화  ④ 회원 / IP 차단 관리
+//   ⑤ 이벤트 관리(메모리 게임 기록 이벤트 열기/닫기/정산 · 제작한 티어표 공개) — AdminEventManager
 // 모든 쓰기 작업은 adminRequest(adminAuthToken) → 서버 requireAdmin 으로 이중 검증된다.
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AdminEventManager from '../components/AdminEventManager';
 import AdminPagination from '../components/AdminPagination';
 import NoticeEditor from '../components/NoticeEditor';
 import { adminRequest, apiRequest, isStaticPreview } from '../lib/api';
@@ -552,6 +554,9 @@ export default function AdminDashboard() {
         </table>
         <AdminPagination page={Math.min(noticePage, noticePages)} totalPages={noticePages} onChange={setNoticePage} />
       </section>
+
+      {/* ==================== ⑤ 이벤트 관리 ==================== */}
+      <AdminEventManager />
 
       {/* ==================== ④ 차단 관리 ==================== */}
       <section className="block-section">

@@ -22,7 +22,10 @@ router.post('/quiz/answer', requireAuth, eventController.answerQuiz);   // 보�
 router.post('/memory/start', requireAuth, eventController.startMemory);        // 새 판 + 1단계 카드
 router.post('/memory/stage', requireAuth, eventController.clearMemoryStage);   // 단계 통과 신고(시간은 서버가 측정)
 router.get('/memory/leaderboard', optionalAuth, eventController.getMemoryLeaderboard);
-router.post('/memory/settle', requireAdmin, eventController.settleMemoryPeriod); // 기간 마감 + 1위 포인트 지급
+// 기록 이벤트 회차는 관리자 페이지에서 관리자가 직접 열고 닫고 정산한다.
+router.get('/memory/admin', requireAdmin, eventController.listMemoryPeriods);            // 최근 회차 목록
+router.post('/memory/period', requireAdmin, eventController.saveMemoryPeriod);           // 회차 생성/수정
+router.post('/memory/period/status', requireAdmin, eventController.setMemoryPeriodStatus); // 열기/닫기/정산/삭제
 
 // ====== 제작한 티어표 공개 (뼈대 — 지금은 관리자만) ======
 router.get('/showcase', requireAdmin, eventController.getShowcase);

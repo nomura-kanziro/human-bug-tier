@@ -4,6 +4,9 @@ area: backend
 
 # 커밋 요약 — 이벤트 API (`/api/events`) 신설: 매일 퀴즈 · 메모리 게임 · 티어표 공개(뼈대)
 
+> ⚠ **후속 변경**: 메모리 게임의 "기간"은 이후 **관리자가 여닫는 회차(`EventMemoryPeriod`)** 로 바뀌었고 `POST /memory/settle` 은 제거됐다.
+> → [02-memory-period-record.md](./02-memory-period-record.md). 아래 메모리 절은 신설 당시 기록이다.
+
 프론트 쪽 기록: [`../../frontend/13-event/01-event-page-record.md`](../../frontend/13-event/01-event-page-record.md)
 
 ## 설계 원칙 — 포인트가 걸린 기능은 전부 서버가 정한다

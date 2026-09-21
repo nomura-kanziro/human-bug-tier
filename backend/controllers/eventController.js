@@ -6,7 +6,9 @@
  *  1) 매일 간단 퀴즈 (quiz)      — "{캐릭터}는 어느 티어인가요?" 3지선다, 하루 1번.
  *                                  맞히면 1~1000P 를 복권식(낮은 점수일수록 잘 나옴)으로 지급.
  *  2) 제작한 티어표 공개 (showcase) — 관리자가 회차를 열고 마감·발표. **아직 관리자 전용(뼈대)**.
- *  3) 메모리 게임 (memory)        — 4×4 → 6×6 → 8×8 3단계. 기록 상위에게 관리자가 포인트 지급.
+ *                                  관리 화면은 이벤트 페이지가 아니라 관리자 페이지에 있다.
+ *  3) 메모리 게임 (memory)        — 4×4 → 6×6 → 8×8 3단계. **관리자가 관리자 페이지에서 기록 이벤트(회차)를
+ *                                  열어야** 게임을 할 수 있고, 회차를 정산하면 1위에게 상금(1000P 이상)을 지급.
  *
  * 공통 원칙(행운 뽑기와 같다): 정답·확률·시간·포인트는 전부 서버가 정하고,
  * 프론트는 "고른 번호"나 "다 맞췄다"는 신호만 보낸다. 포인트는 LuckProfile.points 에 쌓인다
@@ -15,6 +17,7 @@
 const mongoose = require('mongoose');
 const EventQuizAttempt = require('../models/EventQuizAttempt');
 const EventMemorySession = require('../models/EventMemorySession');
+const EventMemoryPeriod = require('../models/EventMemoryPeriod');
 const EventShowcase = require('../models/EventShowcase');
 const EventShowcaseEntry = require('../models/EventShowcaseEntry');
 const LuckProfile = require('../models/LuckProfile');
@@ -193,7 +196,10 @@ const answerQuiz = async (req, res) => {
 const MEMORY_STAGE_SIZES = [4, 6, 8]; // 한 변의 칸 수 → 8쌍 / 18쌍 / 32쌍
 // 사람이 낼 수 없는 기록(자동 클릭 등)을 걸러내는 하한. 한 쌍당 최소 이 정도는 걸린다고 본다.
 const MEMORY_MIN_MS_PER_PAIR = 150;
-const MEMORY_AWARD_POINTS = 1000; // 기간 1위에게 주는 포인트
+const MEMORY_DEFAULT_AWARD = 1000;   // 1위 상금 기본값
+const MEMORY_MIN_AWARD = 1000;       // 요구사항: "1000 이상" — 이보다 적게는 설정할 수 없다
+const MEMORY_MAX_AWARD = 1000000;    // 오타로 터무니없는 금액이 지급되는 것을 막는 상한
+const MEMORY_PERIOD_LIST_LIMIT = 10; // 관리자 화면에 보여줄 최근 회차 수
 
 // 단계 하나에 쓸 카드 배치를 만든다(캐릭터 이미지 쌍을 섞은 배열).
 function buildMemoryDeck(size) {
@@ -221,10 +227,68 @@ function memorySessionShape(session) {
   };
 }
 
+function memoryPeriodShape(period, extra = {}) {
+  if (!period) return null;
+  return {
+    id: String(period._id),
+    title: period.title,
+    description: period.description,
+    status: period.status,
+    awardPoints: period.awardPoints,
+    endsAt: period.endsAt,
+    openedAt: period.openedAt,
+    closedAt: period.closedAt,
+    settledAt: period.settledAt,
+    winner: period.winner
+      ? { nickname: period.winner.nickname, totalMs: period.winner.totalMs, awardedPoints: period.winner.awardedPoints }
+      : null,
+    ...extra,
+  };
+}
+
+// 마감 시각(endsAt)이 지난 진행 중 회차를 닫는다(스케줄러 + 게임 시작/조회 때마다 호출).
+// 정산(상금 지급)은 자동으로 하지 않는다 — 포인트가 나가는 일이라 관리자가 직접 누른다.
+async function advanceMemoryPeriods() {
+  if (!isDbConnected()) return;
+  const now = new Date();
+  const expired = await EventMemoryPeriod.find({ status: 'open', endsAt: { $ne: null, $lte: now } });
+  for (const period of expired) {
+    period.status = 'closed';
+    period.closedAt = now;
+    // eslint-disable-next-line no-await-in-loop
+    await period.save();
+    // 마감 시각을 넘겨 끝나지 못한 판은 기록으로 인정되지 않으므로 정리한다.
+    // eslint-disable-next-line no-await-in-loop
+    await EventMemorySession.deleteMany({ periodId: period._id, status: 'playing' });
+  }
+}
+
+async function getOpenMemoryPeriod() {
+  await advanceMemoryPeriods();
+  return EventMemoryPeriod.findOne({ status: 'open' });
+}
+
+// 한 회차의 순위 — 한 사람당 최고 기록 하나만 올린다(같은 기록이면 먼저 끝낸 사람이 앞).
+async function rankMemoryPeriod(periodId, limit = 10) {
+  const id = new mongoose.Types.ObjectId(String(periodId));
+  return EventMemorySession.aggregate([
+    { $match: { periodId: id, status: 'done' } },
+    { $sort: { totalMs: 1, finishedAt: 1 } },
+    { $group: { _id: '$userId', doc: { $first: '$$ROOT' } } },
+    { $replaceRoot: { newRoot: '$doc' } },
+    { $sort: { totalMs: 1, finishedAt: 1 } },
+    { $limit: limit },
+  ]);
+}
+
 // POST /api/events/memory/start — 새 판 시작(진행 중인 판이 있으면 버리고 새로 시작)
+// 관리자가 연(open) 기록 이벤트가 있을 때만 시작할 수 있다.
 const startMemory = async (req, res) => {
   try {
     if (!isDbConnected()) return res.status(503).json({ error: '데이터베이스에 연결되지 않았습니다.' });
+
+    const period = await getOpenMemoryPeriod();
+    if (!period) return res.status(409).json({ error: '지금은 진행 중인 메모리 게임 기록 이벤트가 없습니다.', code: 'NO_OPEN_PERIOD' });
 
     const deck = buildMemoryDeck(MEMORY_STAGE_SIZES[0]);
     if (!deck) return res.status(503).json({ error: '티어표 데이터를 불러오지 못해 게임을 시작할 수 없습니다.' });
@@ -234,6 +298,7 @@ const startMemory = async (req, res) => {
 
     const session = await EventMemorySession.create({
       userId: req.auth.sub,
+      periodId: period._id,
       nickname: req.auth.nickname || '익명',
       startedAt: new Date(),
       decks: [deck],
@@ -246,7 +311,7 @@ const startMemory = async (req, res) => {
   }
 };
 
-// POST /api/events/memory/stage { sessionId } — 지금 단계를 다 맞췄다는 신고. 시간은 서버가 잰다.
+// POST /api/events/memory/stage { sessionId } — 지금 단계를 다 맞췄다는 신호. 시간은 서버가 잰다.
 const clearMemoryStage = async (req, res) => {
   try {
     if (!isDbConnected()) return res.status(503).json({ error: '데이터베이스에 연결되지 않았습니다.' });
@@ -261,6 +326,14 @@ const clearMemoryStage = async (req, res) => {
     if (size === undefined) return res.status(409).json({ error: '이미 모든 단계를 끝낸 판입니다.' });
 
     const now = new Date();
+
+    // 판이 진행되는 동안 이벤트가 닫혔거나 마감 시각을 넘겼다면 기록으로 인정하지 않는다.
+    const period = session.periodId ? await EventMemoryPeriod.findById(session.periodId) : null;
+    if (!period || period.status !== 'open' || (period.endsAt && period.endsAt <= now)) {
+      await EventMemorySession.deleteOne({ _id: session._id });
+      return res.status(409).json({ error: '기록 이벤트가 마감되어 이번 판은 기록되지 않았습니다.', code: 'PERIOD_CLOSED' });
+    }
+
     const prevAt = session.stages.length ? session.stages[session.stages.length - 1].clearedAt : session.startedAt;
     const ms = now.getTime() - new Date(prevAt).getTime();
 
@@ -294,70 +367,220 @@ const clearMemoryStage = async (req, res) => {
   }
 };
 
-// GET /api/events/memory/leaderboard — 이번 기간(아직 정산 안 된) 완주 기록 상위 + 내 최고 기록
+// GET /api/events/memory/leaderboard — 지금 진행 중인 기록 이벤트(없으면 가장 최근에 끝난 회차)의 순위 + 내 최고 기록
 const getMemoryLeaderboard = async (req, res) => {
   try {
     if (!isDbConnected()) return res.status(503).json({ error: '데이터베이스에 연결되지 않았습니다.' });
 
-    const top = await EventMemorySession.find({ status: 'done', settledAt: null })
-      .sort({ totalMs: 1 }).limit(10)
-      .select('nickname totalMs stages finishedAt userId').lean();
-
-    let mine = null;
-    if (req.auth?.sub) {
-      mine = await EventMemorySession.findOne({ userId: req.auth.sub, status: 'done', settledAt: null })
-        .sort({ totalMs: 1 }).select('nickname totalMs finishedAt').lean();
+    let period = await getOpenMemoryPeriod();
+    if (!period) {
+      // 열린 회차가 없으면 지난 회차의 최종 순위를 보여줘 결과를 확인할 수 있게 한다.
+      period = await EventMemoryPeriod.findOne({ status: { $in: ['closed', 'settled'] } }).sort({ openedAt: -1, createdAt: -1 });
     }
 
-    res.json({
+    const base = {
       ok: true,
       stageSizes: MEMORY_STAGE_SIZES,
-      awardPoints: MEMORY_AWARD_POINTS,
-      top: top.map((r, i) => ({
-        rank: i + 1,
-        nickname: r.nickname,
-        totalMs: r.totalMs,
-        stages: (r.stages || []).map((s) => ({ size: s.size, ms: s.ms })),
-        finishedAt: r.finishedAt,
-        isMine: Boolean(req.auth?.sub && String(r.userId) === String(req.auth.sub)),
-      })),
-      mine: mine ? { totalMs: mine.totalMs, finishedAt: mine.finishedAt } : null,
-    });
+      period: memoryPeriodShape(period),
+      canPlay: Boolean(period && period.status === 'open'),
+      awardPoints: period ? period.awardPoints : MEMORY_DEFAULT_AWARD,
+      top: [],
+      mine: null,
+    };
+    if (!period) return res.json(base);
+
+    const ranked = await rankMemoryPeriod(period._id, 10);
+    base.top = ranked.map((r, i) => ({
+      rank: i + 1,
+      nickname: r.nickname,
+      totalMs: r.totalMs,
+      stages: (r.stages || []).map((s) => ({ size: s.size, ms: s.ms })),
+      finishedAt: r.finishedAt,
+      isMine: Boolean(req.auth?.sub && String(r.userId) === String(req.auth.sub)),
+    }));
+
+    if (req.auth?.sub) {
+      const mine = await EventMemorySession.findOne({ periodId: period._id, userId: req.auth.sub, status: 'done' })
+        .sort({ totalMs: 1 }).select('totalMs finishedAt').lean();
+      base.mine = mine ? { totalMs: mine.totalMs, finishedAt: mine.finishedAt } : null;
+    }
+    res.json(base);
   } catch (err) {
     console.error('메모리 순위 조회 에러:', err);
     res.status(500).json({ error: '순위를 불러오지 못했습니다.' });
   }
 };
 
-// POST /api/events/memory/settle (관리자) — 이번 기간 1위에게 포인트를 주고 기간을 닫는다.
-const settleMemoryPeriod = async (req, res) => {
+// GET /api/events/memory/admin (관리자) — 최근 기록 이벤트 회차 목록 + 회차별 참가 수·상위 기록
+const listMemoryPeriods = async (req, res) => {
+  try {
+    if (!isDbConnected()) return res.status(503).json({ error: '데이터베이스에 연결되지 않았습니다.' });
+    await advanceMemoryPeriods();
+
+    const periods = await EventMemoryPeriod.find().sort({ createdAt: -1 }).limit(MEMORY_PERIOD_LIST_LIMIT);
+    const shaped = [];
+    for (const period of periods) {
+      // eslint-disable-next-line no-await-in-loop
+      const ranked = await rankMemoryPeriod(period._id, 3);
+      // eslint-disable-next-line no-await-in-loop
+      const players = await EventMemorySession.distinct('userId', { periodId: period._id, status: 'done' });
+      shaped.push(memoryPeriodShape(period, {
+        playerCount: players.length,
+        top: ranked.map((r, i) => ({ rank: i + 1, nickname: r.nickname, totalMs: r.totalMs })),
+      }));
+    }
+    res.json({
+      ok: true,
+      periods: shaped,
+      limits: { minAward: MEMORY_MIN_AWARD, maxAward: MEMORY_MAX_AWARD, defaultAward: MEMORY_DEFAULT_AWARD },
+    });
+  } catch (err) {
+    console.error('메모리 기록 이벤트 목록 에러:', err);
+    res.status(500).json({ error: '기록 이벤트를 불러오지 못했습니다.' });
+  }
+};
+
+// POST /api/events/memory/period (관리자) — 회차 생성/수정(작성 중·진행 중인 회차만 수정 가능)
+const saveMemoryPeriod = async (req, res) => {
   try {
     if (!isDbConnected()) return res.status(503).json({ error: '데이터베이스에 연결되지 않았습니다.' });
 
-    const best = await EventMemorySession.findOne({ status: 'done', settledAt: null }).sort({ totalMs: 1 });
-    if (!best) return res.status(400).json({ error: '이번 기간에 완주한 기록이 없습니다.' });
+    const { id, title, description, endsAt, awardPoints } = req.body || {};
+    const trimmedTitle = String(title || '').trim();
+    if (!trimmedTitle) return res.status(400).json({ error: '이벤트 제목을 입력해주세요.' });
 
-    const now = new Date();
-    const points = await addPoints(best.userId, MEMORY_AWARD_POINTS);
-    best.settledAt = now;
-    best.awardedPoints = MEMORY_AWARD_POINTS;
-    await best.save();
-    // 나머지 기록도 같은 기간이었으므로 함께 닫아 다음 기간이 새로 시작되게 한다.
-    await EventMemorySession.updateMany({ status: 'done', settledAt: null }, { $set: { settledAt: now } });
+    const award = awardPoints === undefined || awardPoints === null || awardPoints === '' ? MEMORY_DEFAULT_AWARD : Number(awardPoints);
+    if (!Number.isInteger(award) || award < MEMORY_MIN_AWARD) {
+      return res.status(400).json({ error: `1위 상금은 ${MEMORY_MIN_AWARD}P 이상의 정수여야 합니다.` });
+    }
+    if (award > MEMORY_MAX_AWARD) return res.status(400).json({ error: `1위 상금은 ${MEMORY_MAX_AWARD}P 이하로 정해주세요.` });
 
-    await createNotification({
-      recipientNickname: best.nickname,
-      type: 'event_result',
-      category: 'noticeNews',
-      title: '메모리 게임 기간 1위 당첨',
-      message: `가장 빠른 기록(${(best.totalMs / 1000).toFixed(2)}초)으로 ${MEMORY_AWARD_POINTS}P 를 받았습니다.`,
-      link: '/event',
-    });
+    const ends = endsAt ? new Date(endsAt) : null;
+    if (endsAt && Number.isNaN(ends.getTime())) return res.status(400).json({ error: '마감 시각이 올바르지 않습니다.' });
 
-    res.json({ ok: true, winner: { nickname: best.nickname, totalMs: best.totalMs, awarded: MEMORY_AWARD_POINTS, points } });
+    const fields = {
+      title: trimmedTitle,
+      description: String(description || '').trim(),
+      awardPoints: award,
+      endsAt: ends,
+    };
+
+    let period;
+    if (id && mongoose.isValidObjectId(id)) {
+      period = await EventMemoryPeriod.findById(id);
+      if (!period) return res.status(404).json({ error: '회차를 찾을 수 없습니다.' });
+      if (period.status === 'closed' || period.status === 'settled') {
+        return res.status(409).json({ error: '이미 마감된 회차는 수정할 수 없습니다.' });
+      }
+      if (period.status === 'open' && ends && ends <= new Date()) {
+        return res.status(400).json({ error: '진행 중인 회차의 마감 시각은 지금보다 뒤여야 합니다.' });
+      }
+      Object.assign(period, fields);
+      await period.save();
+    } else {
+      period = await EventMemoryPeriod.create({ ...fields, status: 'draft' });
+    }
+
+    res.json({ ok: true, period: memoryPeriodShape(period) });
   } catch (err) {
-    console.error('메모리 기간 정산 에러:', err);
-    res.status(500).json({ error: '정산에 실패했습니다.' });
+    console.error('메모리 기록 이벤트 저장 에러:', err);
+    res.status(500).json({ error: '저장에 실패했습니다.' });
+  }
+};
+
+// POST /api/events/memory/period/status { id, action: 'open'|'close'|'settle'|'delete' } (관리자)
+//   open   — 작성 중인 회차를 연다(동시에 하나만 열 수 있다)
+//   close  — 진행 중인 회차를 닫는다(순위 확정)
+//   settle — 마감된(진행 중이면 먼저 닫고) 회차의 1위에게 상금을 지급하고 알림을 보낸다
+//   delete — 작성 중인 회차를 지운다
+const setMemoryPeriodStatus = async (req, res) => {
+  try {
+    if (!isDbConnected()) return res.status(503).json({ error: '데이터베이스에 연결되지 않았습니다.' });
+
+    const { id, action } = req.body || {};
+    if (!mongoose.isValidObjectId(id)) return res.status(400).json({ error: '회차를 찾을 수 없습니다.' });
+    const period = await EventMemoryPeriod.findById(id);
+    if (!period) return res.status(404).json({ error: '회차를 찾을 수 없습니다.' });
+    const now = new Date();
+
+    if (action === 'open') {
+      if (period.status !== 'draft') return res.status(409).json({ error: '작성 중인 회차만 열 수 있습니다. 끝난 이벤트는 새 회차를 만들어주세요.' });
+      if (period.endsAt && period.endsAt <= now) return res.status(400).json({ error: '마감 시각이 이미 지났습니다. 마감 시각을 고쳐주세요.' });
+      await advanceMemoryPeriods();
+      const already = await EventMemoryPeriod.findOne({ status: 'open', _id: { $ne: period._id } });
+      if (already) return res.status(409).json({ error: `이미 진행 중인 기록 이벤트가 있습니다: ${already.title}` });
+      period.status = 'open';
+      period.openedAt = now;
+      await period.save();
+      return res.json({ ok: true, period: memoryPeriodShape(period) });
+    }
+
+    if (action === 'close') {
+      if (period.status !== 'open') return res.status(409).json({ error: '진행 중인 회차만 닫을 수 있습니다.' });
+      period.status = 'closed';
+      period.closedAt = now;
+      await period.save();
+      await EventMemorySession.deleteMany({ periodId: period._id, status: 'playing' });
+      return res.json({ ok: true, period: memoryPeriodShape(period) });
+    }
+
+    if (action === 'delete') {
+      if (period.status !== 'draft') return res.status(409).json({ error: '작성 중인 회차만 삭제할 수 있습니다.' });
+      await EventMemoryPeriod.deleteOne({ _id: period._id });
+      return res.json({ ok: true, deleted: true });
+    }
+
+    if (action === 'settle') {
+      if (period.status === 'settled') return res.status(409).json({ error: '이미 정산한 회차입니다.' });
+      if (period.status === 'draft') return res.status(409).json({ error: '아직 열지 않은 회차입니다.' });
+      if (period.status === 'open') {
+        period.status = 'closed';
+        period.closedAt = now;
+        await EventMemorySession.deleteMany({ periodId: period._id, status: 'playing' });
+      }
+
+      const [best] = await rankMemoryPeriod(period._id, 1);
+      period.status = 'settled';
+      period.settledAt = now;
+
+      if (best) {
+        const points = await addPoints(best.userId, period.awardPoints);
+        await EventMemorySession.updateOne({ _id: best._id }, { $set: { settledAt: now, awardedPoints: period.awardPoints } });
+        period.winner = {
+          userId: best.userId,
+          nickname: best.nickname,
+          totalMs: best.totalMs,
+          awardedPoints: period.awardPoints,
+        };
+        await period.save();
+
+        try {
+          await createNotification({
+            recipientNickname: best.nickname,
+            type: 'event_result',
+            category: 'noticeNews',
+            title: '메모리 게임 기록 이벤트 1위 당첨',
+            message: `[${period.title}] 가장 빠른 기록(${(best.totalMs / 1000).toFixed(2)}초)으로 ${period.awardPoints}P 를 받았습니다.`,
+            link: '/event#memory',
+            resourceId: period._id,
+            resourceType: 'eventMemoryPeriod',
+          });
+        } catch (err) {
+          // 알림이 실패해도 상금 지급은 이미 끝났으므로 정산 자체는 성공으로 돌려준다.
+          console.error('메모리 게임 결과 알림 실패:', err.message);
+        }
+        return res.json({ ok: true, period: memoryPeriodShape(period), winner: { nickname: best.nickname, totalMs: best.totalMs, awarded: period.awardPoints, points } });
+      }
+
+      // 완주 기록이 하나도 없으면 상금 없이 종료한다(회차가 영원히 정산 대기로 남지 않게).
+      await period.save();
+      return res.json({ ok: true, period: memoryPeriodShape(period), winner: null });
+    }
+
+    res.status(400).json({ error: '알 수 없는 동작입니다.' });
+  } catch (err) {
+    console.error('메모리 기록 이벤트 상태 변경 에러:', err);
+    res.status(500).json({ error: '처리에 실패했습니다.' });
   }
 };
 
@@ -448,12 +671,15 @@ async function revealShowcaseDoc(showcase, winners = null, resultNote = '') {
   return showcase;
 }
 
-// 서버 기동 시 1회 호출 — 마감/공개 시각을 주기적으로 확인한다(server.js 에서 기동).
-function startShowcaseScheduler() {
-  advanceShowcases().catch((err) => console.error('티어표 공개 이벤트 초기화 실패:', err));
-  setInterval(() => {
+// 서버 기동 시 1회 호출 — 티어표 공개의 마감/공개 시각과 메모리 기록 이벤트의 마감 시각을
+// 같은 주기로 확인한다(server.js 에서 기동).
+function startEventScheduler() {
+  const tick = () => {
     advanceShowcases().catch((err) => console.error('티어표 공개 이벤트 진행 실패:', err));
-  }, SHOWCASE_TICK_MS);
+    advanceMemoryPeriods().catch((err) => console.error('메모리 기록 이벤트 진행 실패:', err));
+  };
+  tick();
+  setInterval(tick, SHOWCASE_TICK_MS);
 }
 
 // GET /api/events/showcase — 가장 최근 회차 + 참가 목록 (현재 관리자 전용)
@@ -610,10 +836,12 @@ module.exports = {
   startMemory,
   clearMemoryStage,
   getMemoryLeaderboard,
-  settleMemoryPeriod,
+  listMemoryPeriods,
+  saveMemoryPeriod,
+  setMemoryPeriodStatus,
   getShowcase,
   saveShowcase,
   enterShowcase,
   revealShowcase,
-  startShowcaseScheduler,
+  startEventScheduler,
 };

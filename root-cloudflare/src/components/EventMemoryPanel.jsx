@@ -11,16 +11,11 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { apiRequest, isStaticPreview } from '../lib/api';
+import { formatMs, formatWhen } from '../lib/eventFormat';
 import { tierImageUrl } from '../lib/paths';
 
 const FLIP_BACK_MS = 700;   // 짝이 아닐 때 다시 덮기까지
 const STAGE_PAUSE_MS = 900; // 단계 통과 후 다음 판이 뜨기까지 숨 고르는 시간
-
-function formatMs(ms) {
-  if (typeof ms !== 'number') return '-';
-  const s = ms / 1000;
-  return s >= 60 ? `${Math.floor(s / 60)}분 ${(s % 60).toFixed(1)}초` : `${s.toFixed(2)}초`;
-}
 
 export default function EventMemoryPanel({ isLoggedIn }) {
   const isStatic = isStaticPreview();
@@ -61,7 +56,12 @@ export default function EventMemoryPanel({ isLoggedIn }) {
       .catch(() => ({ ok: false, data: { error: '게임을 시작하지 못했습니다.' } }));
     if (!aliveRef.current) return;
     setLock(false);
-    if (!res.ok) { setMessage(res.data?.error || '게임을 시작하지 못했습니다.'); return; }
+    if (!res.ok) {
+      setMessage(res.data?.error || '게임을 시작하지 못했습니다.');
+      // 그 사이 관리자가 이벤트를 닫았다면 화면의 현황도 새로 맞춘다.
+      if (res.data?.code === 'NO_OPEN_PERIOD') loadBoard();
+      return;
+    }
 
     startRef.current = Date.now();
     setSession(res.data.session);
@@ -83,6 +83,8 @@ export default function EventMemoryPanel({ isLoggedIn }) {
 
     if (!res.ok) {
       setMessage(res.data?.error || '기록을 저장하지 못했습니다.');
+      // 판이 진행되는 동안 이벤트가 마감된 경우 — 현황을 새로 불러와 "진행 중 아님"으로 바꾼다.
+      if (res.data?.code === 'PERIOD_CLOSED') loadBoard();
       setPhase('idle');
       setSession(null);
       return;
@@ -132,6 +134,10 @@ export default function EventMemoryPanel({ isLoggedIn }) {
     setFlipped((cur) => (cur.length >= 2 ? cur : [...cur, i]));
   };
 
+  // 관리자가 관리자 페이지에서 연(open) 기록 이벤트가 있을 때만 게임을 시작할 수 있다.
+  const period = board?.period || null;
+  const canPlay = Boolean(board?.canPlay);
+
   const size = session ? (session.stageSizes[session.stageIndex] ?? session.stageSizes[session.stageSizes.length - 1]) : 4;
   const stageNo = session ? Math.min(session.stageIndex + 1, session.stageSizes.length) : 1;
 
@@ -140,10 +146,32 @@ export default function EventMemoryPanel({ isLoggedIn }) {
       <h1>메모리 게임</h1>
       <p className="event-desc">
         같은 캐릭터 카드 두 장을 찾는 짝 맞추기입니다. <strong>4×4 → 6×6 → 8×8</strong> 세 단계를 이어서 하고,
-        완주하면 기록이 순위표에 남습니다. 기간이 끝나면 <strong>가장 빠른 기록</strong>을 낸 분께
-        {board?.awardPoints ? ` ${board.awardPoints}P` : ' 1000P'} 를 드려요.
+        완주하면 기록이 순위표에 남습니다. 관리자가 연 <strong>기록 이벤트</strong> 기간에만 참여할 수 있고,
+        이벤트가 끝나면 <strong>가장 빠른 기록</strong>을 낸 분께 상금(1000P 이상)을 드려요.
         기록은 서버가 직접 재기 때문에 새로고침하거나 창을 닫으면 그 판은 무효입니다.
       </p>
+
+      {!isStatic && board && (
+        <div className={`event-period${canPlay ? ' is-open' : ''}`}>
+          {period ? (
+            <>
+              <span className="event-period-badge">
+                {period.status === 'open' ? '진행 중' : period.status === 'closed' ? '마감 · 정산 대기' : '종료'}
+              </span>
+              <strong className="event-period-title">{period.title}</strong>
+              <span className="event-period-meta">
+                1위 상금 {period.awardPoints}P
+                {period.status === 'open' && period.endsAt && ` · ${formatWhen(period.endsAt)} 마감`}
+                {period.status === 'settled' && period.winner && ` · 우승 ${period.winner.nickname} (${formatMs(period.winner.totalMs)})`}
+              </span>
+              {period.description && <span className="event-period-desc">{period.description}</span>}
+            </>
+          ) : (
+            <span className="event-period-meta">아직 열린 기록 이벤트가 없어요.</span>
+          )}
+          {!canPlay && <span className="event-period-note">지금은 진행 중인 기록 이벤트가 없어 게임을 할 수 없습니다. 열리면 공지로 알려드릴게요.</span>}
+        </div>
+      )}
 
       {isStatic && (
         <div className="event-guard">이 기능은 서버가 필요합니다. 로컬(:5000) 또는 배포된 사이트에서 이용해주세요.</div>
@@ -162,12 +190,12 @@ export default function EventMemoryPanel({ isLoggedIn }) {
             </span>
             <span className="event-memory-timer">{formatMs(phase === 'done' ? session?.totalMs : elapsed)}</span>
             {phase === 'idle' && (
-              <button type="button" className="event-btn is-inline" disabled={lock} onClick={start}>
-                {lock ? '준비 중...' : '게임 시작'}
+              <button type="button" className="event-btn is-inline" disabled={lock || !canPlay} onClick={start}>
+                {lock ? '준비 중...' : (canPlay ? '게임 시작' : '진행 중인 이벤트 없음')}
               </button>
             )}
             {phase === 'done' && (
-              <button type="button" className="event-btn is-inline" onClick={start}>다시 도전</button>
+              <button type="button" className="event-btn is-inline" disabled={!canPlay} onClick={start}>다시 도전</button>
             )}
           </div>
 
@@ -212,8 +240,8 @@ export default function EventMemoryPanel({ isLoggedIn }) {
 
       {board && (
         <div className="event-rank">
-          <h2>이번 기간 순위</h2>
-          {board.top.length === 0 && <p className="event-empty">아직 완주한 기록이 없습니다. 첫 기록의 주인공이 되어보세요.</p>}
+          <h2>{period ? `${period.title} · ${period.status === 'open' ? '순위' : '최종 순위'}` : '순위'}</h2>
+          {board.top.length === 0 && <p className="event-empty">{period ? '아직 완주한 기록이 없습니다.' : '기록 이벤트가 열리면 순위가 이곳에 표시됩니다.'}{canPlay && ' 첫 기록의 주인공이 되어보세요.'}</p>}
           {board.top.length > 0 && (
             <ol className="event-rank-list">
               {board.top.map((r) => (

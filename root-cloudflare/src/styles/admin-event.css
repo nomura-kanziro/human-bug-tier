@@ -1,0 +1,233 @@
+/* ====================== 관리자 대시보드 — 이벤트 관리 ======================
+   AdminEventManager.jsx 전용. 색은 테마 토큰(--bg-elevated 등)을 써서 라이트/다크가 함께 따라온다.
+   폼 카드·입력창은 공지 작성 폼(.notice-form-card / .notice-form-input)을 그대로 재사용하고,
+   여기서는 이벤트 관리에만 필요한 요소(라벨·2열 행·상태 배지·작은 버튼)만 정의한다. */
+.eadm-section {
+  margin-top: 8px;
+}
+
+.eadm-block {
+  margin-bottom: 36px;
+}
+
+.eadm-desc {
+  margin: 0 0 14px;
+  font-size: 13.5px;
+  line-height: 1.7;
+  color: var(--text-secondary);
+}
+
+.eadm-desc strong {
+  color: var(--text-primary);
+}
+
+.eadm-guard {
+  padding: 12px 14px;
+  margin-bottom: 12px;
+  border-radius: var(--radius-md);
+  border: 1px dashed var(--border-strong);
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.eadm-tag {
+  margin-left: 6px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+  font-size: 11.5px;
+  font-weight: 600;
+  vertical-align: middle;
+}
+
+/* 폼 */
+.eadm-form {
+  margin-bottom: 18px;
+}
+
+.eadm-label {
+  display: block;
+  margin: 0 0 6px;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+}
+
+.eadm-textarea {
+  min-height: 64px;
+}
+
+.eadm-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.eadm-help {
+  display: block;
+  margin: -6px 0 10px;
+  font-size: 11.5px;
+  color: var(--text-muted, var(--text-secondary));
+}
+
+/* 버튼 */
+.eadm-btn {
+  padding: 9px 16px;
+  border: 1px solid var(--brand);
+  border-radius: var(--radius-pill);
+  background: var(--brand);
+  color: var(--brand-contrast);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.15s var(--ease-out), opacity 0.15s var(--ease-out);
+}
+
+.eadm-btn:hover:not(:disabled) {
+  background: var(--brand-strong);
+}
+
+.eadm-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.eadm-btn.is-ghost {
+  background: transparent;
+  color: var(--text-primary);
+  border-color: var(--border-strong);
+}
+
+.eadm-btn.is-ghost:hover:not(:disabled) {
+  background: var(--bg-hover);
+}
+
+.eadm-btn.is-ok {
+  background: #059669;
+  border-color: #059669;
+  color: #fff;
+}
+
+.eadm-btn.is-ok:hover:not(:disabled) {
+  background: #047857;
+}
+
+.eadm-btn.is-warn {
+  background: #d97706;
+  border-color: #d97706;
+  color: #fff;
+}
+
+.eadm-btn.is-danger {
+  background: transparent;
+  border-color: #dc2626;
+  color: #dc2626;
+}
+
+.eadm-btn.is-danger:hover:not(:disabled) {
+  background: #dc2626;
+  color: #fff;
+}
+
+.eadm-btn.is-small {
+  padding: 5px 11px;
+  font-size: 12px;
+}
+
+.eadm-actions {
+  white-space: nowrap;
+}
+
+.eadm-actions .eadm-btn + .eadm-btn {
+  margin-left: 4px;
+}
+
+/* 메시지 */
+.eadm-msg {
+  margin: 12px 0 0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.eadm-msg.is-ok {
+  color: #059669;
+}
+
+.eadm-msg.is-error {
+  color: #dc2626;
+}
+
+/* 상태 배지 */
+.eadm-badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: var(--radius-pill);
+  font-size: 11.5px;
+  font-weight: 700;
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.eadm-badge.is-open,
+.eadm-badge.is-sc-open {
+  background: rgba(16, 185, 129, 0.16);
+  color: #059669;
+}
+
+.eadm-badge.is-closed,
+.eadm-badge.is-sc-closed {
+  background: rgba(217, 119, 6, 0.16);
+  color: #b45309;
+}
+
+.eadm-badge.is-settled,
+.eadm-badge.is-sc-revealed {
+  background: rgba(99, 102, 241, 0.16);
+  color: #4f46e5;
+}
+
+[data-theme="dark"] .eadm-badge.is-open,
+[data-theme="dark"] .eadm-badge.is-sc-open { color: #34d399; }
+[data-theme="dark"] .eadm-badge.is-closed,
+[data-theme="dark"] .eadm-badge.is-sc-closed { color: #fbbf24; }
+[data-theme="dark"] .eadm-badge.is-settled,
+[data-theme="dark"] .eadm-badge.is-sc-revealed { color: #a5b4fc; }
+
+.eadm-statusbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 16px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.eadm-caption {
+  padding: 8px 0;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.eadm-table-wrap {
+  overflow-x: auto;
+}
+
+.eadm-table {
+  margin-top: 4px;
+}
+
+@media (max-width: 720px) {
+  .eadm-row {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .eadm-table {
+    min-width: 640px;
+  }
+}

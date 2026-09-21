@@ -223,10 +223,11 @@ connectDB().then(async (connected) => {
   }
 
   try {
-    // 티어표 공개 이벤트 — 마감 시각이 지나면 접수를 닫고, 공개 예정 시각이 되면 자동 발표한다.
-    require('./controllers/eventController').startShowcaseScheduler();
+    // 이벤트 스케줄러 — 티어표 공개는 마감 시각에 접수를 닫고 공개 예정 시각에 자동 발표하며,
+    // 메모리 게임 기록 이벤트는 마감 시각(endsAt)이 지나면 자동으로 닫는다(상금 정산은 관리자가 직접).
+    require('./controllers/eventController').startEventScheduler();
   } catch (err) {
-    console.error('티어표 공개 이벤트 스케줄러 시작 실패:', err.message);
+    console.error('이벤트 스케줄러 시작 실패:', err.message);
   }
 });
 

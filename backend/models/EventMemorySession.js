@@ -23,6 +23,13 @@ const eventMemorySessionSchema = new mongoose.Schema({
     required: true,
     index: true,
   },
+  // 이 판이 속한 기록 이벤트 회차(EventMemoryPeriod). 관리자가 연 회차 동안의 판만 만들어지고, 순위는 회차별로 집계한다.
+  periodId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'EventMemoryPeriod',
+    default: null,
+    index: true,
+  },
   // 순위표에 보여줄 이름. 닉네임이 바뀌면 profileController 가 여기까지 갱신한다.
   nickname: { type: String, required: true, trim: true },
   startedAt: { type: Date, required: true },
@@ -39,14 +46,16 @@ const eventMemorySessionSchema = new mongoose.Schema({
     default: 'playing',
     index: true,
   },
-  // 관리자가 기간을 마감해 포인트를 지급하면 그 시각이 찍힌다. 지급된 기록은 다음 기간 순위에서 빠진다.
+  // 관리자가 회차를 정산(상금 지급)하면 1위 기록에 그 시각이 찍힌다. (회차 도입 전에는 기간을 닫는 표시로도 썼다)
   settledAt: { type: Date, default: null },
   awardedPoints: { type: Number, default: 0 },
 }, {
   timestamps: true,
 });
 
-// 순위표: 아직 정산 안 된 완주 기록을 빠른 순으로.
+// 순위표: 한 회차의 완주 기록을 빠른 순으로.
+eventMemorySessionSchema.index({ periodId: 1, status: 1, totalMs: 1 });
+// (예전 방식 — 회차 도입 전 기록 조회용)
 eventMemorySessionSchema.index({ status: 1, settledAt: 1, totalMs: 1 });
 
 const EventMemorySession = mongoose.model('EventMemorySession', eventMemorySessionSchema);
