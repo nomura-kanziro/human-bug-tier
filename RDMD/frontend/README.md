@@ -61,6 +61,7 @@ RDMD/frontend/
 | [05-satake-hirohumi-9tier-record.md](./02-tier-class/05-satake-hirohumi-9tier-record.md) | — | 사타케 히로후미 9티어 표 추가 |
 | [06-tier1-2-reorder-record.md](./02-tier-class/06-tier1-2-reorder-record.md) | — | 1·2티어 순서 재배치 |
 | [07-sergio-hozaki-reorder-record.md](./02-tier-class/07-sergio-hozaki-reorder-record.md) | — | 세르지오 1정(라이덴 뒤)·호자키 2갑(다비츠 뒤) |
+| [08-hayami-taiki-duplicate-record.md](./02-tier-class/08-hayami-taiki-duplicate-record.md) | — | 5티어 하야미 타이키 중복(이미지 없는 상자) 제거 |
 
 ## 03-custom-maker
 
