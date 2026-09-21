@@ -173,7 +173,7 @@
 .notice-editor-toolbar {
     display: flex;
     align-items: center;
-    gap: 4px;
+    gap: 8px;
     flex-wrap: wrap;
     padding: 8px 10px;
     border: 2px solid #e9ecef;
@@ -1004,4 +1004,24 @@ tr.row-pinned {
 [data-theme="dark"] .block-text-input,
 [data-theme="dark"] .block-custom-days {
     border-color: var(--input-border);
+}
+
+/* ====================== 표 안 조작 버튼 간격 ======================
+   표의 관리 칸에는 수정/고정/삭제·상세·차단 같은 버튼이 한 칸에 나란히 들어가는데, 버튼마다 따로 준 margin 이라
+   서로 4px 로 붙거나(공지 표의 "고정 해제 ↔ 삭제"는 아예 0px) 들쭉날쭉했다.
+   칸 안의 버튼(직접 자식)에 같은 규칙을 준다: 좌우 4px 씩이라 버튼 사이가 8px 이고, 칸이 좁아 줄이 바뀔 때는
+   위아래 3px 씩이라 줄 사이가 6px 이다. 칸의 양 끝에는 여백을 빼서 글자 정렬이 어긋나지 않게 한다. */
+.admin-table td > button,
+.admin-table td > a.pin-btn {
+    margin: 3px 4px;
+}
+
+.admin-table td > button:first-child,
+.admin-table td > a.pin-btn:first-child {
+    margin-left: 0;
+}
+
+.admin-table td > button:last-child,
+.admin-table td > a.pin-btn:last-child {
+    margin-right: 0;
 }

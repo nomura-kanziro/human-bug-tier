@@ -139,9 +139,7 @@
   white-space: nowrap;
 }
 
-.eadm-actions .eadm-btn + .eadm-btn {
-  margin-left: 4px;
-}
+/* 버튼 사이 간격은 admin-manage.css 의 "표 안 조작 버튼 간격" 공통 규칙(8px)이 맡는다. */
 
 /* 메시지 */
 .eadm-msg {

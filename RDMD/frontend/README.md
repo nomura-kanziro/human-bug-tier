@@ -118,6 +118,7 @@ RDMD/frontend/
 | [07-auth-middleware-admin-routes-record.md](./07-admin/07-auth-middleware-admin-routes-record.md) | 28 | requireAdmin 연동 노트 |
 | [08-comment-notice-ui-polish-record.md](./07-admin/08-comment-notice-ui-polish-record.md) | 29 | 댓글/공지 관리 UI 강화 |
 | [09-user-delete-button-record.md](./07-admin/09-user-delete-button-record.md) | — | 등록 회원 삭제 버튼 |
+| [10-admin-button-spacing-record.md](./07-admin/10-admin-button-spacing-record.md) | — | 관리자 페이지 버튼 간격 확대(표 조작 버튼 8px · 툴바 8px, 좁은 쌍 50→0건) |
 
 ## 08-notifications
 
