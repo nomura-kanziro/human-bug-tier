@@ -349,7 +349,7 @@
 | 318 | 2026-09-21 | [`5cc05ee`](#5cc05ee) | refactor(header): 공지·소식 메뉴를 맨 앞으로 이동 |
 | 319 | 2026-09-21 | [`8ef5db4`](#8ef5db4) | fix(tier-class): 5티어 하야미 타이키 중복 항목(이미지 없는 상자) 제거 |
 | 320 | 2026-09-21 | [`8f75701`](#8f75701) | fix(tier-class): 7티어 카타쿠라 중복 항목 제거 |
-| 321 | 2026-09-21 | [`pending`](#pending321) | feat(event): 관리자 페이지 "이벤트 관리" 신설 — 메모리 게임 기록 이벤트를 관리자가 열고 닫고 정산 + 티어표 공개 관리를 관리자 페이지로 이전 |
+| 321 | 2026-09-21 | [`6e2f83d`](#6e2f83d) | feat(event): 관리자 페이지 "이벤트 관리" 신설 — 메모리 게임 기록 이벤트를 관리자가 열고 닫고 정산 + 티어표 공개 관리를 관리자 페이지로 이전 |
 
 ---
 
@@ -6202,15 +6202,15 @@
 
 ---
 
-<a id="pending321"></a>
+<a id="6e2f83d"></a>
 
-### 321. 2026-09-21 — `pending`
+### 321. 2026-09-21 — `6e2f83d`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `6e2f83d`
+- **hash (full)**: `6e2f83de0c9d139c3b3cd5499582523338536905`
 - **author**: nomura
 - **message**: feat(event): 관리자 페이지 "이벤트 관리" 신설 — 메모리 게임 기록 이벤트를 관리자가 열고 닫고 정산 + 티어표 공개 관리를 관리자 페이지로 이전
-- **git**: `git show pending`
+- **git**: `git show 6e2f83d`
 - **범위**: frontend (root-cloudflare) + backend / 이벤트 · 관리자
 - **요약**: "티어표 공개 같은 건 관리자 전용 페이지에서 관리하고, 메모리 게임 기록 이벤트도 관리자 페이지에서 관리자가 직접 열 수 있게" 요청. **백엔드**: 메모리 게임이 언제나 열려 있고 "정산 안 된 기록 전부"가 암묵적 한 기간이던 구조를 **관리자가 여닫는 회차(`EventMemoryPeriod`)** 로 바꿨다. 상태 draft→open→closed→settled, 동시에 열 수 있는 회차는 하나뿐, 열린 회차가 있을 때만 게임 시작(`409 NO_OPEN_PERIOD`), 1위 상금은 **1000P 이상**(상한 1,000,000P), 마감 시각(`endsAt`)이 지나면 자동으로 **닫히기만** 하고 상금은 관리자가 정산을 눌러야 지급된다(포인트가 나가는 일이라 자동 지급하지 않음). 순위는 회차 단위(`EventMemorySession.periodId`)이며 **한 사람당 최고 기록 1개**만 올린다(전에는 같은 사람 기록이 순위를 채울 수 있었다). 판 도중 회차가 닫히면 그 판은 기록되지 않고(`PERIOD_CLOSED`), 정산은 1위 지갑 지급 + 알림, 이미 정산한 회차는 409 라 중복 지급이 없고, 기록이 없으면 상금 없이 종료한다. 관리 API 3개(`GET /memory/admin`, `POST /memory/period`, `POST /memory/period/status`)는 전부 `requireAdmin`, 기존 `POST /memory/settle` 은 제거. 스케줄러는 `startEventScheduler` 로 바꿔 티어표 공개와 회차 자동 마감을 함께 돌린다. **프론트**: 관리자 대시보드에 **"이벤트 관리"** 섹션(`AdminEventManager.jsx`, `#admin-events`)을 신설해 (1) 기록 이벤트 만들기·열기·닫기·정산·삭제(확인창, 정산 결과 안내, 상태별로 맞는 버튼만 노출)와 (2) 이벤트 페이지에 있던 **티어표 공개 관리 폼을 이전**(저장/접수 열기/접수 닫기/지금 발표, 참가 목록)했다. 이벤트 페이지의 티어표 공개 탭은 관리자 포함 모두 "준비 중"(관리자에게는 관리자 페이지 링크만), 메모리 탭은 기록 이벤트 상태 카드를 보여주고 열려 있지 않으면 시작 버튼이 비활성("진행 중인 이벤트 없음")이며 마감/정산된 회차는 최종 순위·우승자를 보여준다. 시각·기록 표시 유틸은 `lib/eventFormat.js` 로 모았다. 작업 중 모바일에서 관리 표가 찌그러지는 것을 스크린샷으로 잡아 표를 가로 스크롤 컨테이너로 감싸 고쳤다. 확인: API 62건(열린 회차 없음·접근 제어·입력 검증·실제 3단계 플레이·최고 기록 1개·진행 중 수정·닫기/자동 마감·정산 상금·알림·중복 정산 불가 등) 통과, 브라우저 테스트(회원/관리자 세션) 통과 — 열기→회원 화면 반영→게임 시작→닫기→정산(지갑 +1500P·알림)·티어표 공개 저장/열기/닫기/발표·다크·모바일, 기존 이벤트 페이지/API 테스트 회귀 통과. 한계: 관리자 목록은 최근 10건, 회차 도입 이전 기록(`periodId` 없음)은 순위에 안 들어가며, 티어표 공개의 당첨자 선정 UI 는 정식 공개 때 붙인다.
 - **주요 파일**: `backend/models/EventMemoryPeriod.js`(신규), `backend/models/EventMemorySession.js`, `backend/controllers/eventController.js`, `backend/routes/eventRoutes.js`, `backend/server.js`, `root-cloudflare/src/components/AdminEventManager.jsx`(신규), `src/styles/admin-event.css`(신규), `src/lib/eventFormat.js`(신규), `src/pages/AdminDashboard.jsx`, `src/components/EventShowcasePanel.jsx`, `src/components/EventMemoryPanel.jsx`, `src/styles/event.css`
