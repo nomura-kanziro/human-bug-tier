@@ -116,7 +116,7 @@ function MemoryPeriodManager() {
   const hasOpen = periods.some((p) => p.status === 'open');
 
   return (
-    <div className="eadm-block">
+    <div className="eadm-block" id="admin-memory-events" data-admin-anchor>
       <h3 className="subsection-title">🃏 메모리 게임 기록 이벤트</h3>
       <p className="eadm-desc">
         회차를 만들고 <strong>열어야</strong> 회원이 메모리 게임(4×4 → 6×6 → 8×8)을 할 수 있고, 그 동안의 완주 기록으로 순위를 겨룹니다.
@@ -278,7 +278,7 @@ function ShowcaseManager() {
   };
 
   return (
-    <div className="eadm-block">
+    <div className="eadm-block" id="admin-showcase" data-admin-anchor>
       <h3 className="subsection-title">🖼️ 제작한 티어표 공개 <span className="eadm-tag">정식 공개 전 · 관리자 전용</span></h3>
       <p className="eadm-desc">
         회차를 만들고 마감 시각을 정하면 그 시각에 접수 버튼이 닫히고, 결과 공개 시각(기본 마감 +{data?.revealDelayMinutes ?? 30}분)이 되면
@@ -359,15 +359,10 @@ function ShowcaseManager() {
 }
 
 export default function AdminEventManager() {
-  // /admin#admin-events 로 들어오면(이벤트 페이지의 안내 링크) 이 섹션으로 스크롤한다.
-  useEffect(() => {
-    if (window.location.hash === '#admin-events') {
-      document.getElementById('admin-events')?.scrollIntoView({ block: 'start' });
-    }
-  }, []);
-
+  // /admin#admin-events 로 들어오는 링크(이벤트 페이지의 안내)의 스크롤은 대시보드가 데이터 로딩 후에 처리한다
+  // (여기서 마운트 즉시 스크롤하면 아래 표들이 그려지기 전이라 위치가 어긋난다).
   return (
-    <section className="notice-admin-section eadm-section" id="admin-events">
+    <section className="notice-admin-section eadm-section" id="admin-events" data-admin-anchor>
       <h2 className="page-title section-title">🎉 이벤트 관리</h2>
       <MemoryPeriodManager />
       <ShowcaseManager />

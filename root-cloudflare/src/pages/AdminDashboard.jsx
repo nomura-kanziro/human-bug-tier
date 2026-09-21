@@ -3,11 +3,13 @@
 //   ① 문의(댓글) 목록·검색·삭제  ② 커스텀 메이커 게시글/댓글 신고 관리
 //   ③ 공지 작성·수정·고정·유튜브 동기화  ④ 회원 / IP 차단 관리
 //   ⑤ 이벤트 관리(메모리 게임 기록 이벤트 열기/닫기/정산 · 제작한 티어표 공개) — AdminEventManager
+// 맨 위의 "빠른 이동" 바(AdminQuickNav)는 각 기능 태그를 누르면 그 섹션으로 스크롤해 내려간다.
 // 모든 쓰기 작업은 adminRequest(adminAuthToken) → 서버 requireAdmin 으로 이중 검증된다.
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminEventManager from '../components/AdminEventManager';
 import AdminPagination from '../components/AdminPagination';
+import AdminQuickNav, { scrollToAnchor } from '../components/AdminQuickNav';
 import NoticeEditor from '../components/NoticeEditor';
 import { adminRequest, apiRequest, isStaticPreview } from '../lib/api';
 import {
@@ -24,6 +26,7 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
 
   const [ready, setReady] = useState(false);
+  const hashHandled = useRef(false); // 주소 해시로의 첫 이동은 한 번만
   const [inquiries, setInquiries] = useState([]);
   const [blocks, setBlocks] = useState([]);
   const [users, setUsers] = useState([]);
@@ -83,7 +86,14 @@ export default function AdminDashboard() {
     if (!ready || isStaticPreview()) return;
     // 서로 의존관계가 없는 독립 API 라 병렬로 한 번에 불러온다
     Promise.all([loadInquiries(), loadBlocks(), loadUsers(), loadNotices(), loadTier()])
-      .catch((err) => console.error('대시보드 로딩 실패:', err));
+      .catch((err) => console.error('대시보드 로딩 실패:', err))
+      .finally(() => {
+        // 표가 그려져 페이지 길이가 정해진 뒤에 이동해야 목적지가 밀리지 않는다(/admin#admin-notices, 이벤트 페이지의 /admin#admin-events 링크 등).
+        if (hashHandled.current) return;
+        hashHandled.current = true;
+        const id = window.location.hash.slice(1);
+        if (id) window.requestAnimationFrame(() => scrollToAnchor(id, { smooth: false, updateHash: false }));
+      });
     adminRequest('/api/notices/youtube-sync/status')
       .then((res) => { if (res.ok) setYoutubeStatus(formatYoutubeSyncStatus(res.data.status)); })
       .catch((err) => console.error(err));
@@ -104,6 +114,16 @@ export default function AdminDashboard() {
   };
 
   const activeBlocks = useMemo(() => getActiveBlocks(blocks), [blocks]);
+
+  // 빠른 이동 바의 태그 목록(페이지 위→아래 순서). count>0 이면 개수 배지가 붙고, alert 는 처리할 것이 있다는 뜻(빨간색).
+  const quickItems = useMemo(() => [
+    { id: 'admin-inquiries', icon: '💬', label: '댓글', hint: '전체 댓글 관리', count: inquiries.length },
+    { id: 'admin-tier', icon: '🎨', label: '커스텀 메이커 신고', hint: '게시글·댓글 신고 관리', count: tierPosts.length + tierComments.length, alert: true },
+    { id: 'admin-notices', icon: '📢', label: '공지', hint: '공지 작성·수정·고정', count: notices.length },
+    { id: 'admin-memory-events', icon: '🃏', label: '메모리 기록 이벤트', hint: '기록 이벤트 열기·닫기·정산' },
+    { id: 'admin-showcase', icon: '🖼️', label: '티어표 공개', hint: '제작한 티어표 공개 이벤트 관리' },
+    { id: 'admin-blocks', icon: '🚫', label: '차단', hint: '회원 / IP 차단 관리', count: activeBlocks.length },
+  ], [inquiries.length, tierPosts.length, tierComments.length, notices.length, activeBlocks.length]);
   const findBlock = (value) => activeBlocks.find((b) => b.value === value);
   const userEmail = (nickname) => users.find((u) => u.nickname === nickname)?.email || '-';
   const isBlockedUser = (userId, ip) => activeBlocks.some((b) => b.value === (userId || '') || b.value === (ip || ''));
@@ -323,9 +343,11 @@ export default function AdminDashboard() {
   );
 
   return (
-    <main className="admin-container">
+    <main className="admin-container" id="top">
+      <AdminQuickNav items={quickItems} />
+
       {/* ==================== ① 문의(댓글) 목록 관리 ==================== */}
-      <h1 className="page-title">📋 전체 댓글 관리</h1>
+      <h1 className="page-title" id="admin-inquiries" data-admin-anchor>📋 전체 댓글 관리</h1>
 
       <div className="filter-nav">
         <div className="filter-left">
@@ -394,7 +416,7 @@ export default function AdminDashboard() {
       <AdminPagination page={Math.min(page, inquiryPages)} totalPages={inquiryPages} onChange={setPage} />
 
       {/* ==================== ② 커스텀 메이커 관리 ==================== */}
-      <section className="notice-admin-section tier-maker-section">
+      <section className="notice-admin-section tier-maker-section" id="admin-tier" data-admin-anchor>
         <h2 className="page-title tier-section-title">📋 커스텀 메이커 관리</h2>
 
         <h3 className="subsection-title">게시글</h3>
@@ -482,7 +504,7 @@ export default function AdminDashboard() {
       </section>
 
       {/* ==================== ③ 공지 올리기 / 수정 ==================== */}
-      <section className="notice-admin-section">
+      <section className="notice-admin-section" id="admin-notices" data-admin-anchor>
         <NoticeEditor
           form={noticeForm}
           onChange={setNoticeForm}
@@ -559,7 +581,7 @@ export default function AdminDashboard() {
       <AdminEventManager />
 
       {/* ==================== ④ 차단 관리 ==================== */}
-      <section className="block-section">
+      <section className="block-section" id="admin-blocks" data-admin-anchor>
         <h2 className="page-title section-title">🚫 사용자 / IP 차단 관리</h2>
 
         <div className="filter-nav block-filter-nav">

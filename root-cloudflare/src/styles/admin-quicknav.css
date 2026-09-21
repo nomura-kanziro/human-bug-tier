@@ -1,0 +1,171 @@
+/* ====================== 관리자 빠른 이동 바 (AdminQuickNav) ======================
+   관리자 대시보드 맨 위에 붙어 있는 태그 버튼 줄. 스크롤해도 헤더 바로 아래에 고정(sticky)되고,
+   누르면 해당 기능 섹션으로 스크롤한다. 색은 테마 토큰을 써서 라이트/다크가 함께 따라온다. */
+.admin-quicknav {
+  position: sticky;
+  top: var(--header-h, 64px);
+  z-index: 60;                       /* 헤더(100) 아래, 본문 위 */
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 24px;
+  padding: 8px 10px 8px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  background: color-mix(in srgb, var(--bg-elevated) 92%, transparent);
+  -webkit-backdrop-filter: saturate(1.4) blur(10px);
+  backdrop-filter: saturate(1.4) blur(10px);
+  box-shadow: var(--shadow-sm);
+}
+
+.aqn-label {
+  flex: none;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted, var(--text-secondary));
+  white-space: nowrap;
+}
+
+/* 태그 줄: 좁은 화면에서는 줄바꿈 대신 가로로 스크롤(스크롤바는 숨김) */
+.aqn-list {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 2px 0;
+  list-style: none;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.aqn-list::-webkit-scrollbar {
+  display: none;
+}
+
+.aqn-list li {
+  flex: none;
+  margin: 0;
+}
+
+/* ⚠ 색을 정하는 선택자는 .admin-quicknav 아래로 좁혔다: theme.css 의 [data-theme="dark"] a { color: 링크 파랑 } 이
+   명시도가 더 높아 다크 모드에서 태그 글자가 파랗게 나오던 것을 막는다. */
+.aqn-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-pill);
+  background: var(--bg-elevated);
+  font-size: 13px;
+  font-weight: 700;
+  line-height: 1.2;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.15s var(--ease-out), color 0.15s var(--ease-out), border-color 0.15s var(--ease-out), transform 0.12s var(--ease-out);
+}
+
+.admin-quicknav .aqn-chip {
+  color: var(--text-secondary);
+}
+
+.admin-quicknav .aqn-chip:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.aqn-chip:active {
+  transform: scale(0.97);
+}
+
+.aqn-chip:focus-visible,
+.aqn-top:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* 지금 보고 있는 섹션의 태그 */
+.admin-quicknav .aqn-chip.is-active {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: var(--brand-contrast);
+}
+
+.aqn-icon {
+  font-size: 14px;
+  line-height: 1;
+}
+
+/* 개수 배지 — 신고처럼 처리해야 할 것은 빨간색(.is-alert) */
+.aqn-count {
+  min-width: 20px;
+  padding: 1px 6px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.aqn-count.is-alert {
+  background: #dc2626;
+  color: #fff;
+}
+
+.aqn-chip.is-active .aqn-count {
+  background: rgba(0, 0, 0, 0.18);
+  color: inherit;
+}
+
+.aqn-chip.is-active .aqn-count.is-alert {
+  background: #dc2626;
+  color: #fff;
+}
+
+.aqn-top {
+  flex: none;
+  padding: 7px 12px;
+  border-radius: var(--radius-pill);
+  font-size: 12.5px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: background-color 0.15s var(--ease-out), color 0.15s var(--ease-out);
+}
+
+.admin-quicknav .aqn-top {
+  color: var(--text-secondary);
+}
+
+.admin-quicknav .aqn-top:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+/* 이동해 도착한 섹션은 포커스만 받고 테두리는 그리지 않는다(키보드 이동을 위한 포커스라 눈에 띌 필요 없음) */
+[data-admin-anchor]:focus {
+  outline: none;
+}
+
+@media (max-width: 720px) {
+  .admin-quicknav {
+    margin-bottom: 18px;
+    padding: 6px 8px 6px 10px;
+    gap: 8px;
+  }
+
+  .aqn-label {
+    display: none;
+  }
+
+  .aqn-chip {
+    padding: 8px 13px;
+  }
+
+  .aqn-top {
+    padding: 8px 10px;
+  }
+}
