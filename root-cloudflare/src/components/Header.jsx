@@ -1,5 +1,5 @@
 // 공통 헤더 (header.html + common.js 헤더 로직 이식)
-//  - 데스크톱 드롭다운 3개(티어표/커스텀 메이커/행운 뽑기)는 CSS :hover, 모바일 사이드 메뉴는 클릭 아코디언
+//  - 데스크톱 드롭다운 5개(티어표/커스텀 메이커/이벤트/공지·소식/행운 뽑기)는 CSS :hover, 모바일 사이드 메뉴는 클릭 아코디언
 //  - 우측: 테마 토글 + 후원 + (로그인: 알림벨·프로필 / 비로그인: 로그인 버튼) + 햄버거
 //  - 알림 패널과 프로필 드롭다운은 동시에 열리지 않는다(상호배타). 바깥 클릭 시 둘 다 닫힘.
 import { useEffect, useRef, useState } from 'react';
@@ -22,7 +22,24 @@ const MENUS = [
     items: [
       { to: '/custom-maker', label: '• 제작하기' },
       { to: '/board', label: '• 게시판' },
-      { to: '/event', label: '• 이벤트' },
+    ],
+  },
+  // 이벤트는 커스텀 메이커와 성격이 달라 따로 뺐다. 항목은 이벤트 페이지의 해시 탭과 1:1.
+  {
+    label: '이벤트',
+    items: [
+      { to: '/event#quiz', label: '• 매일 간단 퀴즈' },
+      { to: '/event#showcase', label: '• 티어표 공개' },
+      { to: '/event#memory', label: '• 메모리 게임' },
+    ],
+  },
+  // 공지·새 소식·문의는 여태 푸터와 홈에만 있어 헤더에서는 갈 수가 없었다.
+  {
+    label: '공지·소식',
+    items: [
+      { to: '/notice/all', label: '• 공지사항' },
+      { to: '/notice/news', label: '• 새 소식' },
+      { to: '/inquiry', label: '• 문의하기' },
     ],
   },
   {

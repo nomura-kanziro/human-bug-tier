@@ -44,10 +44,6 @@ function QuickCard({ target, title, children }) {
   );
 }
 
-function Soon({ children }) {
-  return <a href="#" className="nav-soon" title="준비 중" onClick={(e) => e.preventDefault()}>{children}</a>;
-}
-
 export default function Home() {
   const navigate = useNavigate();
   const [notices, setNotices] = useState(null);
@@ -79,7 +75,7 @@ export default function Home() {
         <QuickCard target="#home-maker-preview" title="커스텀 메이커">
           <Link to="/custom-maker">• 제작하기</Link>
           <Link to="/board">• 게시판</Link>
-          <Soon>• 이벤트 (준비 중)</Soon>
+          <Link to="/event">• 이벤트</Link>
         </QuickCard>
         <QuickCard target="#home-luck-preview" title="행운 뽑기">
           <Link to="/luck-draw#daily">• 오늘의 행운 티어</Link>
