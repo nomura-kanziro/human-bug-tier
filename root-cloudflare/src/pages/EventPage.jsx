@@ -3,7 +3,7 @@
 // ========================================================
 // 탭 3개를 URL 해시로 오간다(행운 뽑기 페이지와 같은 방식 — 링크로 특정 탭을 바로 열 수 있다).
 //   #quiz     매일 간단 퀴즈
-//   #showcase 제작한 티어표 공개 (뼈대 · 관리자 전용)
+//   #showcase 제작한 티어표 공개 (출품 · 투표 · 우승자 발표)
 //   #memory   메모리 게임
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -49,7 +49,7 @@ export default function EventPage() {
         <EventQuizPanel isLoggedIn={isLoggedIn} />
       </section>
       <section className={`event-panel${current === 'showcase' ? ' active' : ''}`} role="tabpanel">
-        <EventShowcasePanel isAdmin={isAdmin} />
+        <EventShowcasePanel isLoggedIn={isLoggedIn} isAdmin={isAdmin} />
       </section>
       <section className={`event-panel${current === 'memory' ? ' active' : ''}`} role="tabpanel">
         <EventMemoryPanel isLoggedIn={isLoggedIn} />

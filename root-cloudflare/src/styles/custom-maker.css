@@ -1176,3 +1176,46 @@ body.char-selected-mode .characters {
     min-height: 40px;
   }
 }
+
+/* ====================== 이벤트 참가용 제작 (?event=<회차id>) ======================
+   이벤트 페이지에서 "새 티어표를 만들어서 참가"로 넘어왔을 때: 상단 안내 배너(.event-mode-banner)와
+   업로드 창의 "이 티어표로 이벤트에 참가하기" 체크박스(.upload-modal-event). 참가할 수 없는 상태(.is-inactive)는 회색으로 낮춘다. */
+.event-mode-banner {
+  border-color: #f59e0b;
+  background: rgba(245, 158, 11, 0.14);
+}
+
+.event-mode-banner strong,
+.event-mode-banner a {
+  color: #fcd34d;
+}
+
+.event-mode-banner.is-inactive {
+  border-color: #64748b;
+  background: rgba(100, 116, 139, 0.14);
+}
+
+.event-mode-banner.is-inactive strong,
+.event-mode-banner.is-inactive a {
+  color: #cbd5e1;
+}
+
+.upload-modal-event {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin: 4px 0 14px;
+  padding: 10px 12px;
+  border: 1px solid #f59e0b;
+  border-radius: 8px;
+  background: rgba(245, 158, 11, 0.1);
+  font-size: 0.86rem;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.upload-modal-event input {
+  flex: none;
+  margin-top: 3px;
+  accent-color: #f59e0b;
+}

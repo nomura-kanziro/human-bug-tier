@@ -5,8 +5,9 @@
  *
  *  1) 매일 간단 퀴즈 (quiz)      — "{캐릭터}는 어느 티어인가요?" 3지선다, 하루 1번.
  *                                  맞히면 1~1000P 를 복권식(낮은 점수일수록 잘 나옴)으로 지급.
- *  2) 제작한 티어표 공개 (showcase) — 관리자가 회차를 열고 마감·발표. **아직 관리자 전용(뼈대)**.
- *                                  관리 화면은 이벤트 페이지가 아니라 관리자 페이지에 있다.
+ *  2) 제작한 티어표 공개 (showcase) — 회원이 티어표를 출품(제작해서 올리거나 올린 글로 참가)하고 서로 투표해
+ *                                  결과 공개일에 우승자(투표 자동 집계 / 관리자 직접 선정)에게 상금을 지급한다.
+ *                                  회차 예약·마감·발표 관리 화면은 이벤트 페이지가 아니라 관리자 페이지에 있다.
  *  3) 메모리 게임 (memory)        — 4×4 → 6×6 → 8×8 3단계. **관리자가 관리자 페이지에서 기록 이벤트(회차)를
  *                                  열어야** 게임을 할 수 있고, 회차를 정산하면 1위에게 상금(1000P 이상)을 지급.
  *
@@ -20,12 +21,15 @@ const EventMemorySession = require('../models/EventMemorySession');
 const EventMemoryPeriod = require('../models/EventMemoryPeriod');
 const EventShowcase = require('../models/EventShowcase');
 const EventShowcaseEntry = require('../models/EventShowcaseEntry');
+const EventShowcaseVote = require('../models/EventShowcaseVote');
+const User = require('../models/User');
 const LuckProfile = require('../models/LuckProfile');
 const TierList = require('../models/TierList');
 const { getAllCharacters, getAllTierSlots } = require('../data/tierCatalog');
 const { getKstDateString } = require('../utils/kstDate');
 const { resolveTierMediaPath } = require('../utils/tierMediaDir');
 const { createNotification } = require('../utils/notificationService');
+const { isTierListOwner } = require('../utils/ownership');
 
 /* ====================== 공통 ====================== */
 
@@ -584,94 +588,204 @@ const setMemoryPeriodStatus = async (req, res) => {
   }
 };
 
-/* ====================== 2) 제작한 티어표 공개 (관리자 전용 뼈대) ====================== */
+/* ====================== 2) 제작한 티어표 공개 ====================== */
+// 회원이 커스텀 티어표를 출품(제작해서 올리거나, 이미 올린 게시글로 참가)하고 서로 투표하며,
+// 결과 공개일에 우승자(투표 자동 집계 또는 관리자 직접 선정)가 정해져 상금이 지급된다.
+// 접수 시작은 관리자가 날짜를 골라 예약할 수 있다. 상태 흐름·규칙은 models/EventShowcase.js 주석 참고.
 
 const SHOWCASE_REVEAL_DELAY_MS = 30 * 60 * 1000; // 마감 후 결과 공개까지 기본 30분
-const SHOWCASE_TICK_MS = 60 * 1000;              // 마감/공개 시각 확인 주기
+const SHOWCASE_TICK_MS = 60 * 1000;              // 예약/마감/공개 시각 확인 주기
+const SHOWCASE_DEFAULT_AWARD = 1000;
+const SHOWCASE_MIN_AWARD = 1;
+const SHOWCASE_MAX_AWARD = 1000000;              // 오타로 터무니없는 금액이 지급되는 것을 막는 상한
+const SHOWCASE_ACTIVE_STATUSES = ['scheduled', 'open', 'closed']; // 동시에 하나만 있을 수 있는 "진행 중" 상태들
+const SHOWCASE_LIST_LIMIT = 10;                  // 관리자 목록에 보여줄 최근 회차 수
+const SHOWCASE_ENTRY_LIMIT = 200;                // 한 화면에 내려보낼 출품작 상한(썸네일이 커서)
 
-function showcaseShape(showcase, entries = null, myEntry = null) {
-  if (!showcase) return null;
+// 회차의 투표 수를 작품별로 집계한다 → Map(entryId 문자열 → 표 수)
+async function tallyShowcaseVotes(showcaseId) {
+  const rows = await EventShowcaseVote.aggregate([
+    { $match: { showcaseId: new mongoose.Types.ObjectId(String(showcaseId)) } },
+    { $group: { _id: '$entryId', votes: { $sum: 1 } } },
+  ]);
+  return new Map(rows.map((r) => [String(r._id), r.votes]));
+}
+
+// 참가·투표는 이메일 인증을 마친 일반 회원만 할 수 있다(관리자 계정과 미인증 계정으로 표를 모으는 것을 막는다).
+async function checkShowcaseParticipant(auth) {
+  if (auth.isAdmin) return '관리자 계정은 이벤트에 참가하거나 투표할 수 없습니다.';
+  const user = await User.findById(auth.sub).select('isVerified');
+  if (!user) return '회원 정보를 찾을 수 없습니다.';
+  if (!user.isVerified) return '이메일 인증을 마친 회원만 참여할 수 있습니다.';
+  return null;
+}
+
+// 진행 중(예약/접수/마감) 회차 하나 — 없으면 null
+function findActiveShowcase() {
+  return EventShowcase.findOne({ status: { $in: SHOWCASE_ACTIVE_STATUSES } }).sort({ createdAt: -1 });
+}
+
+function isVotingOpen(showcase, now = new Date()) {
+  if (!showcase) return false;
+  if (showcase.status === 'open') return true;
+  // 마감 후에도 결과 공개일까지는 투표할 수 있다.
+  return showcase.status === 'closed' && (!showcase.revealAt || now < showcase.revealAt);
+}
+
+function isEntryOpen(showcase, now = new Date()) {
+  return Boolean(showcase) && showcase.status === 'open' && (!showcase.deadlineAt || now < showcase.deadlineAt);
+}
+
+function showcaseBase(showcase) {
   return {
     id: String(showcase._id),
     title: showcase.title,
     description: showcase.description,
     status: showcase.status,
+    opensAt: showcase.opensAt,
+    openedAt: showcase.openedAt,
     deadlineAt: showcase.deadlineAt,
     revealAt: showcase.revealAt,
     revealedAt: showcase.revealedAt,
-    winners: showcase.winners,
+    awardPoints: showcase.awardPoints,
+    winnerMode: showcase.winnerMode,
+    selectedEntryId: showcase.selectedEntryId ? String(showcase.selectedEntryId) : null,
+    winners: (showcase.winners || []).map((w) => ({
+      rank: w.rank,
+      nickname: w.nickname,
+      entryId: w.entryId ? String(w.entryId) : null,
+      tierListId: w.tierListId ? String(w.tierListId) : null,
+      title: w.title,
+      votes: w.votes,
+      awardedPoints: w.awardedPoints,
+    })),
     resultNote: showcase.resultNote,
-    entryCount: entries ? entries.length : undefined,
-    entries: entries
-      ? entries.map((e) => ({
-        id: String(e._id),
-        nickname: e.nickname,
-        tierListId: String(e.tierListId),
-        title: e.title,
-        thumbnail: e.thumbnail,
-      }))
-      : undefined,
-    myEntry: myEntry ? { tierListId: String(myEntry.tierListId), title: myEntry.title } : null,
   };
 }
 
-// 마감 시각이 지난 회차는 닫고, 공개 예정 시각이 지난 회차는 발표한다(스케줄러 + 조회 때마다 호출).
+// 출품작 1건 → 응답 모양. 표 수는 결과 발표 전에는 회원에게 숨긴다(눈치 투표 방지) — 관리자에게는 항상 보인다.
+function entryShape(entry, { votes, showVotes, viewerId, myVoteEntryId }) {
+  return {
+    id: String(entry._id),
+    nickname: entry.nickname,
+    title: entry.title,
+    thumbnail: entry.thumbnail,
+    tierListId: String(entry.tierListId),
+    createdAt: entry.createdAt,
+    isMine: Boolean(viewerId && String(entry.userId) === String(viewerId)),
+    votedByMe: Boolean(myVoteEntryId && String(entry._id) === String(myVoteEntryId)),
+    votes: showVotes ? (votes.get(String(entry._id)) || 0) : undefined,
+  };
+}
+
+// 마감·공개 시각이 지난 회차를 진행시키는 스케줄러 본체(1분마다 + 조회 때마다 호출).
+//   scheduled(opensAt 도래) → open → closed(deadlineAt 도래, 공개 시각 기본값 채움) → 공개일에 자동 발표
 async function advanceShowcases() {
   if (!isDbConnected()) return;
   const now = new Date();
 
+  const toOpen = await EventShowcase.find({ status: 'scheduled', opensAt: { $ne: null, $lte: now } });
+  for (const showcase of toOpen) {
+    showcase.status = 'open';
+    showcase.openedAt = now;
+    // eslint-disable-next-line no-await-in-loop
+    await showcase.save();
+  }
+
   const toClose = await EventShowcase.find({ status: 'open', deadlineAt: { $ne: null, $lte: now } });
   for (const showcase of toClose) {
     showcase.status = 'closed';
-    if (!showcase.revealAt) showcase.revealAt = new Date(showcase.deadlineAt.getTime() + SHOWCASE_REVEAL_DELAY_MS);
+    if (!showcase.revealAt || showcase.revealAt <= showcase.deadlineAt) {
+      showcase.revealAt = new Date(showcase.deadlineAt.getTime() + SHOWCASE_REVEAL_DELAY_MS);
+    }
     // eslint-disable-next-line no-await-in-loop
     await showcase.save();
   }
 
   const toReveal = await EventShowcase.find({ status: 'closed', revealAt: { $ne: null, $lte: now } });
   for (const showcase of toReveal) {
+    // 관리자 직접 선정 방식인데 아직 고르지 않았다면 자동으로 발표하지 않고 관리자를 기다린다(출품작이 하나도 없으면 그냥 종료).
+    // eslint-disable-next-line no-await-in-loop
+    const waiting = showcase.winnerMode === 'manual' && !showcase.selectedEntryId
+      && (await EventShowcaseEntry.countDocuments({ showcaseId: showcase._id })) > 0;
+    if (waiting) continue;
     // eslint-disable-next-line no-await-in-loop
     await revealShowcaseDoc(showcase);
   }
 }
 
-// 실제 발표 처리 — 당첨자를 확정하고 참가자 전원에게 알림을 보낸다.
-async function revealShowcaseDoc(showcase, winners = null, resultNote = '') {
-  const entries = await EventShowcaseEntry.find({ showcaseId: showcase._id }).lean();
+// 실제 발표 처리 — 우승 작품을 정해 상금을 지급하고, 참가자·투표자 전원에게 알림을 보낸다.
+// 스케줄러와 관리자 버튼이 동시에 와도 상금이 두 번 나가지 않도록 상태를 먼저 원자적으로 revealed 로 선점한다.
+async function revealShowcaseDoc(showcase, { entryId = null } = {}) {
+  const claimed = await EventShowcase.findOneAndUpdate(
+    { _id: showcase._id, status: { $in: ['open', 'closed'] } },
+    { $set: { status: 'revealed', revealedAt: new Date() } },
+    { new: true },
+  );
+  if (!claimed) return null;
 
-  if (Array.isArray(winners) && winners.length) {
-    showcase.winners = winners;
-  } else if (!showcase.winners.length && entries.length) {
-    // 관리자가 당첨자를 지정하지 않고 시간이 지나 자동 공개된 경우: 아직 심사 전이므로 비워 둔다.
-    showcase.winners = [];
+  const entries = await EventShowcaseEntry.find({ showcaseId: claimed._id }).sort({ createdAt: 1 });
+  const votes = await tallyShowcaseVotes(claimed._id);
+
+  // 우승 작품: 관리자가 지정한 것(이번 요청 > 미리 선정한 것) → 없으면 투표 자동 집계(votes 방식) → 없으면 우승자 없음
+  const chosenId = entryId || claimed.selectedEntryId;
+  let winnerEntry = chosenId ? entries.find((e) => String(e._id) === String(chosenId)) : null;
+  let note = '';
+  if (!winnerEntry && claimed.winnerMode === 'votes' && entries.length) {
+    // 표 수 내림차순, 동률이면 먼저 출품한 작품(entries 가 출품 순으로 정렬돼 있다)
+    const ranked = entries
+      .map((e) => ({ e, v: votes.get(String(e._id)) || 0 }))
+      .sort((a, b) => b.v - a.v);
+    if (ranked[0].v > 0) winnerEntry = ranked[0].e;
+    else note = '투표가 없어 우승자를 정하지 못했습니다.';
   }
-  if (resultNote) showcase.resultNote = resultNote;
-  showcase.status = 'revealed';
-  showcase.revealedAt = new Date();
-  await showcase.save();
+  if (!winnerEntry && !note) note = entries.length ? '우승자를 정하지 않고 종료했습니다.' : '출품작이 없어 우승자가 없습니다.';
 
-  // 참가자 전원에게 "결과가 공개됐다" 알림. 한 명이 실패해도 나머지는 계속 보낸다.
-  for (const entry of entries) {
+  claimed.winners = [];
+  if (winnerEntry) {
+    await addPoints(winnerEntry.userId, claimed.awardPoints);
+    claimed.winners = [{
+      rank: 1,
+      userId: winnerEntry.userId,
+      nickname: winnerEntry.nickname,
+      entryId: winnerEntry._id,
+      tierListId: winnerEntry.tierListId,
+      title: winnerEntry.title,
+      votes: votes.get(String(winnerEntry._id)) || 0,
+      awardedPoints: claimed.awardPoints,
+    }];
+  }
+  claimed.resultNote = note;
+  await claimed.save();
+
+  // 알림: 우승자에게는 상금 안내, 나머지 참가자·투표자에게는 결과 발표 안내(닉네임 기준 중복 제거).
+  const voters = await EventShowcaseVote.find({ showcaseId: claimed._id }).select('voterNickname').lean();
+  const winnerNick = winnerEntry ? winnerEntry.nickname : null;
+  const recipients = new Set([...entries.map((e) => e.nickname), ...voters.map((v) => v.voterNickname)]);
+  for (const nickname of recipients) {
+    const isWinner = nickname === winnerNick;
     try {
       // eslint-disable-next-line no-await-in-loop
       await createNotification({
-        recipientNickname: entry.nickname,
+        recipientNickname: nickname,
         type: 'event_result',
         category: 'noticeNews',
-        title: '티어표 공개 이벤트 결과가 발표되었습니다',
-        message: showcase.title,
-        link: '/event',
-        resourceId: showcase._id,
+        title: isWinner ? '🏆 티어표 공개 이벤트 우승!' : '티어표 공개 이벤트 결과가 발표되었습니다',
+        message: isWinner
+          ? `[${claimed.title}] 우승하셨어요! 상금 ${claimed.awardPoints}P 를 받았습니다.`
+          : `[${claimed.title}] ${winnerNick ? `우승: ${winnerNick}` : (note || '결과가 발표되었습니다.')}`,
+        link: '/event#showcase',
+        resourceId: claimed._id,
         resourceType: 'eventShowcase',
       });
     } catch (err) {
       console.error('티어표 공개 결과 알림 실패:', err.message);
     }
   }
-  return showcase;
+  return claimed;
 }
 
-// 서버 기동 시 1회 호출 — 티어표 공개의 마감/공개 시각과 메모리 기록 이벤트의 마감 시각을
+// 서버 기동 시 1회 호출 — 티어표 공개의 예약/마감/공개 시각과 메모리 기록 이벤트의 마감 시각을
 // 같은 주기로 확인한다(server.js 에서 기동).
 function startEventScheduler() {
   const tick = () => {
@@ -682,22 +796,53 @@ function startEventScheduler() {
   setInterval(tick, SHOWCASE_TICK_MS);
 }
 
-// GET /api/events/showcase — 가장 최근 회차 + 참가 목록 (현재 관리자 전용)
+/* ---- 회원용 ---- */
+
+// GET /api/events/showcase — 지금 진행 중(예약/접수/마감)인 회차, 없으면 가장 최근에 발표된 회차. 작성 중(draft)은 보이지 않는다.
 const getShowcase = async (req, res) => {
   try {
     if (!isDbConnected()) return res.status(503).json({ error: '데이터베이스에 연결되지 않았습니다.' });
     await advanceShowcases();
 
-    const showcase = await EventShowcase.findOne().sort({ createdAt: -1 });
-    if (!showcase) return res.json({ ok: true, showcase: null, revealDelayMinutes: SHOWCASE_REVEAL_DELAY_MS / 60000 });
+    const viewerId = req.auth?.sub || null;
+    const isAdmin = Boolean(req.auth?.isAdmin);
+    const showcase = (await findActiveShowcase())
+      || (await EventShowcase.findOne({ status: 'revealed' }).sort({ revealedAt: -1 }));
+    if (!showcase) return res.json({ ok: true, showcase: null });
 
-    const entries = await EventShowcaseEntry.find({ showcaseId: showcase._id }).sort({ createdAt: 1 }).lean();
-    const myEntry = entries.find((e) => String(e.userId) === String(req.auth.sub)) || null;
+    const now = new Date();
+    const showEntries = ['open', 'closed', 'revealed'].includes(showcase.status);
+    const entries = showEntries
+      ? await EventShowcaseEntry.find({ showcaseId: showcase._id }).sort({ createdAt: 1 }).limit(SHOWCASE_ENTRY_LIMIT).lean()
+      : [];
+    const showVotes = showcase.status === 'revealed' || isAdmin;
+    const votes = showVotes ? await tallyShowcaseVotes(showcase._id) : new Map();
+    const myVote = viewerId && !isAdmin ? await EventShowcaseVote.findOne({ showcaseId: showcase._id, voterId: viewerId }).lean() : null;
+    const myVoteEntryId = myVote ? String(myVote.entryId) : null;
+    const myEntry = viewerId ? entries.find((e) => String(e.userId) === String(viewerId)) : null;
+
+    const loggedIn = Boolean(viewerId);
+    const canParticipate = loggedIn && !isAdmin;
+    const shaped = entries.map((e) => entryShape(e, { votes, showVotes, viewerId, myVoteEntryId }));
+    // 결과 발표 후에는 표가 많은 순으로 보여준다
+    if (showcase.status === 'revealed') shaped.sort((a, b) => (b.votes || 0) - (a.votes || 0));
 
     res.json({
       ok: true,
-      showcase: showcaseShape(showcase, entries, myEntry),
-      revealDelayMinutes: SHOWCASE_REVEAL_DELAY_MS / 60000,
+      showcase: {
+        ...showcaseBase(showcase),
+        entryCount: entries.length,
+        entries: shaped,
+        // 투표 중에는 표 수를 숨기므로, 합계도 발표 전에는 내려주지 않는다
+        viewer: {
+          loggedIn,
+          isAdmin,
+          myEntryId: myEntry ? String(myEntry._id) : null,
+          myVoteEntryId,
+          canEnter: canParticipate && isEntryOpen(showcase, now) && !myEntry,
+          canVote: canParticipate && isVotingOpen(showcase, now),
+        },
+      },
     });
   } catch (err) {
     console.error('티어표 공개 이벤트 조회 에러:', err);
@@ -705,128 +850,361 @@ const getShowcase = async (req, res) => {
   }
 };
 
-// POST /api/events/showcase (관리자) — 회차 생성/수정
-const saveShowcase = async (req, res) => {
+// GET /api/events/showcase/my-posts — 내가 게시판에 올린 공개 티어표(출품할 글 고르기용, 가벼운 필드만)
+const getMyShowcasePosts = async (req, res) => {
   try {
     if (!isDbConnected()) return res.status(503).json({ error: '데이터베이스에 연결되지 않았습니다.' });
+    const email = String(req.auth.email || '').trim();
+    const owner = [{ author: req.auth.nickname, authorEmail: { $in: ['', null] } }];
+    if (email) owner.push({ authorEmail: { $in: [email, email.toLowerCase()] } });
 
-    const { id, title, description, deadlineAt, revealAt, status } = req.body || {};
-    const trimmedTitle = String(title || '').trim();
-    if (!trimmedTitle) return res.status(400).json({ error: '이벤트 제목을 입력해주세요.' });
-
-    const deadline = deadlineAt ? new Date(deadlineAt) : null;
-    if (deadlineAt && Number.isNaN(deadline.getTime())) return res.status(400).json({ error: '마감 시각이 올바르지 않습니다.' });
-
-    let reveal = revealAt ? new Date(revealAt) : null;
-    if (revealAt && Number.isNaN(reveal.getTime())) return res.status(400).json({ error: '공개 시각이 올바르지 않습니다.' });
-    // 공개 시각을 따로 안 정했으면 마감 + 30분으로 둔다.
-    if (!reveal && deadline) reveal = new Date(deadline.getTime() + SHOWCASE_REVEAL_DELAY_MS);
-    if (reveal && deadline && reveal < deadline) {
-      return res.status(400).json({ error: '결과 공개 시각은 마감 시각보다 뒤여야 합니다.' });
-    }
-
-    const allowedStatus = ['draft', 'open', 'closed'];
-    const nextStatus = allowedStatus.includes(status) ? status : undefined;
-
-    let showcase;
-    if (id && mongoose.isValidObjectId(id)) {
-      showcase = await EventShowcase.findById(id);
-      if (!showcase) return res.status(404).json({ error: '회차를 찾을 수 없습니다.' });
-      if (showcase.status === 'revealed') return res.status(409).json({ error: '이미 발표된 회차는 수정할 수 없습니다.' });
-      showcase.title = trimmedTitle;
-      showcase.description = String(description || '').trim();
-      showcase.deadlineAt = deadline;
-      showcase.revealAt = reveal;
-      if (nextStatus) showcase.status = nextStatus;
-      await showcase.save();
-    } else {
-      showcase = await EventShowcase.create({
-        title: trimmedTitle,
-        description: String(description || '').trim(),
-        deadlineAt: deadline,
-        revealAt: reveal,
-        status: nextStatus || 'draft',
-      });
-    }
-
-    res.json({ ok: true, showcase: showcaseShape(showcase, [], null) });
+    const posts = await TierList.find({ isPublic: true, $or: owner })
+      .sort({ createdAt: -1 }).limit(50).select('title thumbnail createdAt').lean();
+    res.json({ ok: true, posts: posts.map((p) => ({ id: String(p._id), title: p.title, thumbnail: p.thumbnail, createdAt: p.createdAt })) });
   } catch (err) {
-    console.error('티어표 공개 이벤트 저장 에러:', err);
-    res.status(500).json({ error: '저장에 실패했습니다.' });
+    console.error('내 게시글 조회 에러:', err);
+    res.status(500).json({ error: '게시글을 불러오지 못했습니다.' });
   }
 };
 
-// POST /api/events/showcase/entry { tierListId } — 출품(현재 관리자 전용)
+// POST /api/events/showcase/entry { tierListId } — 접수 중인 회차에 내 게시글로 출품
 const enterShowcase = async (req, res) => {
   try {
     if (!isDbConnected()) return res.status(503).json({ error: '데이터베이스에 연결되지 않았습니다.' });
     await advanceShowcases();
 
-    const showcase = await EventShowcase.findOne().sort({ createdAt: -1 });
-    if (!showcase || showcase.status !== 'open') {
-      return res.status(409).json({ error: '지금은 접수 중인 이벤트가 없습니다.' });
-    }
+    const blocked = await checkShowcaseParticipant(req.auth);
+    if (blocked) return res.status(403).json({ error: blocked });
+
+    const showcase = await findActiveShowcase();
+    if (!isEntryOpen(showcase)) return res.status(409).json({ error: '지금은 접수 중인 이벤트가 없습니다.', code: 'NOT_OPEN' });
 
     const { tierListId } = req.body || {};
     if (!mongoose.isValidObjectId(tierListId)) return res.status(400).json({ error: '출품할 티어표를 골라주세요.' });
 
-    const tierList = await TierList.findById(tierListId).select('title thumbnail author authorEmail').lean();
+    const tierList = await TierList.findById(tierListId).select('title thumbnail author authorEmail isPublic').lean();
     if (!tierList) return res.status(404).json({ error: '티어표를 찾을 수 없습니다.' });
+    // 남의 글로 출품하는 것을 막는다(이메일 우선, 없으면 닉네임 — 게시글 수정/삭제 권한과 같은 기준)
+    if (!isTierListOwner(tierList, { nickname: req.auth.nickname, email: req.auth.email })) {
+      return res.status(403).json({ error: '내가 올린 티어표만 출품할 수 있습니다.' });
+    }
+    if (!tierList.isPublic) return res.status(400).json({ error: '비공개 글은 출품할 수 없어요. 게시판에서 공개로 바꿔주세요.' });
 
-    const nickname = req.auth.nickname || '익명';
     try {
       await EventShowcaseEntry.create({
         showcaseId: showcase._id,
         userId: req.auth.sub,
-        nickname,
+        nickname: req.auth.nickname || '익명',
         tierListId,
         title: tierList.title || '',
         thumbnail: tierList.thumbnail || '',
       });
     } catch (err) {
-      if (err.code === 11000) return res.status(409).json({ error: '이미 이번 회차에 출품했습니다.' });
+      if (err.code === 11000) return res.status(409).json({ error: '이미 이번 회차에 출품했습니다.', code: 'ALREADY_ENTERED' });
       throw err;
     }
-
-    const entries = await EventShowcaseEntry.find({ showcaseId: showcase._id }).sort({ createdAt: 1 }).lean();
-    const myEntry = entries.find((e) => String(e.userId) === String(req.auth.sub)) || null;
-    res.json({ ok: true, showcase: showcaseShape(showcase, entries, myEntry) });
+    res.json({ ok: true });
   } catch (err) {
     console.error('티어표 공개 이벤트 출품 에러:', err);
     res.status(500).json({ error: '출품에 실패했습니다.' });
   }
 };
 
-// POST /api/events/showcase/reveal (관리자) — 기다리지 않고 바로 결과 발표
-const revealShowcase = async (req, res) => {
+// POST /api/events/showcase/entry/cancel — 접수 중에 내 출품 취소(그 작품에 모인 표도 함께 사라진다)
+const cancelShowcaseEntry = async (req, res) => {
+  try {
+    if (!isDbConnected()) return res.status(503).json({ error: '데이터베이스에 연결되지 않았습니다.' });
+    await advanceShowcases();
+
+    const showcase = await findActiveShowcase();
+    if (!isEntryOpen(showcase)) return res.status(409).json({ error: '접수가 끝나 출품을 취소할 수 없습니다.' });
+
+    const entry = await EventShowcaseEntry.findOneAndDelete({ showcaseId: showcase._id, userId: req.auth.sub });
+    if (!entry) return res.status(404).json({ error: '취소할 출품이 없습니다.' });
+    await EventShowcaseVote.deleteMany({ entryId: entry._id });
+    if (showcase.selectedEntryId && String(showcase.selectedEntryId) === String(entry._id)) {
+      showcase.selectedEntryId = null;
+      await showcase.save();
+    }
+    res.json({ ok: true });
+  } catch (err) {
+    console.error('티어표 공개 이벤트 출품 취소 에러:', err);
+    res.status(500).json({ error: '출품을 취소하지 못했습니다.' });
+  }
+};
+
+// POST /api/events/showcase/vote { entryId } — 한 회차에 한 표. 다른 작품에 다시 누르면 표가 옮겨 가고, 같은 작품이면 취소된다.
+const voteShowcase = async (req, res) => {
+  try {
+    if (!isDbConnected()) return res.status(503).json({ error: '데이터베이스에 연결되지 않았습니다.' });
+    await advanceShowcases();
+
+    const blocked = await checkShowcaseParticipant(req.auth);
+    if (blocked) return res.status(403).json({ error: blocked });
+
+    const showcase = await findActiveShowcase();
+    if (!isVotingOpen(showcase)) return res.status(409).json({ error: '지금은 투표할 수 있는 이벤트가 없습니다.', code: 'VOTING_CLOSED' });
+
+    const { entryId } = req.body || {};
+    if (!mongoose.isValidObjectId(entryId)) return res.status(400).json({ error: '투표할 작품을 골라주세요.' });
+    const entry = await EventShowcaseEntry.findOne({ _id: entryId, showcaseId: showcase._id });
+    if (!entry) return res.status(404).json({ error: '작품을 찾을 수 없습니다.' });
+    if (String(entry.userId) === String(req.auth.sub)) return res.status(400).json({ error: '내 작품에는 투표할 수 없어요.' });
+
+    const existing = await EventShowcaseVote.findOne({ showcaseId: showcase._id, voterId: req.auth.sub });
+    if (existing && String(existing.entryId) === String(entry._id)) {
+      await EventShowcaseVote.deleteOne({ _id: existing._id });
+      return res.json({ ok: true, myVoteEntryId: null });
+    }
+    await EventShowcaseVote.findOneAndUpdate(
+      { showcaseId: showcase._id, voterId: req.auth.sub },
+      { $set: { entryId: entry._id, voterNickname: req.auth.nickname || '익명' } },
+      { upsert: true, new: true, setDefaultsOnInsert: true },
+    );
+    res.json({ ok: true, myVoteEntryId: String(entry._id) });
+  } catch (err) {
+    console.error('티어표 공개 이벤트 투표 에러:', err);
+    res.status(500).json({ error: '투표하지 못했습니다.' });
+  }
+};
+
+/* ---- 관리자용 ---- */
+
+// 날짜 입력 검증 — 비었으면 { date: null }, 형식이 틀리면 { error }
+function parseShowcaseDate(value, label) {
+  if (value === undefined || value === null || value === '') return { date: null };
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return { error: `${label}이(가) 올바르지 않습니다.` };
+  return { date };
+}
+
+async function adminShowcaseRow(showcase) {
+  const [entryCount, voteCount] = await Promise.all([
+    EventShowcaseEntry.countDocuments({ showcaseId: showcase._id }),
+    EventShowcaseVote.countDocuments({ showcaseId: showcase._id }),
+  ]);
+  // 관리자 직접 선정 방식인데 공개일이 지나도 아직 고르지 않은 회차 — 화면에서 "선정 대기"로 안내한다.
+  const waitingSelection = showcase.status === 'closed' && showcase.winnerMode === 'manual' && !showcase.selectedEntryId
+    && entryCount > 0 && showcase.revealAt && showcase.revealAt <= new Date();
+  return { ...showcaseBase(showcase), entryCount, voteCount, waitingSelection: Boolean(waitingSelection) };
+}
+
+// GET /api/events/showcase/admin?id= — 최근 회차 목록 + 선택한 회차(기본: 진행 중 → 최신)의 출품작·표 수
+const listShowcasesAdmin = async (req, res) => {
+  try {
+    if (!isDbConnected()) return res.status(503).json({ error: '데이터베이스에 연결되지 않았습니다.' });
+    await advanceShowcases();
+
+    const showcases = await EventShowcase.find().sort({ createdAt: -1 }).limit(SHOWCASE_LIST_LIMIT);
+    const rows = [];
+    for (const s of showcases) {
+      // eslint-disable-next-line no-await-in-loop
+      rows.push(await adminShowcaseRow(s));
+    }
+
+    let detailDoc = null;
+    if (req.query.id && mongoose.isValidObjectId(req.query.id)) detailDoc = await EventShowcase.findById(req.query.id);
+    if (!detailDoc) detailDoc = showcases.find((s) => SHOWCASE_ACTIVE_STATUSES.includes(s.status)) || showcases[0] || null;
+
+    let detail = null;
+    if (detailDoc) {
+      const entries = await EventShowcaseEntry.find({ showcaseId: detailDoc._id }).sort({ createdAt: 1 }).limit(SHOWCASE_ENTRY_LIMIT).lean();
+      const votes = await tallyShowcaseVotes(detailDoc._id);
+      const row = rows.find((r) => r.id === String(detailDoc._id)) || await adminShowcaseRow(detailDoc);
+      detail = {
+        ...row,
+        entries: entries
+          .map((e) => entryShape(e, { votes, showVotes: true, viewerId: null, myVoteEntryId: null }))
+          .sort((a, b) => b.votes - a.votes),
+      };
+    }
+
+    res.json({
+      ok: true,
+      showcases: rows,
+      detail,
+      revealDelayMinutes: SHOWCASE_REVEAL_DELAY_MS / 60000,
+      limits: { minAward: SHOWCASE_MIN_AWARD, maxAward: SHOWCASE_MAX_AWARD, defaultAward: SHOWCASE_DEFAULT_AWARD },
+    });
+  } catch (err) {
+    console.error('티어표 공개 이벤트 관리 목록 에러:', err);
+    res.status(500).json({ error: '이벤트를 불러오지 못했습니다.' });
+  }
+};
+
+// POST /api/events/showcase/save (관리자) — 회차 생성/수정 { id?, title, description, opensAt, deadlineAt, revealAt, awardPoints, winnerMode }
+const saveShowcase = async (req, res) => {
   try {
     if (!isDbConnected()) return res.status(503).json({ error: '데이터베이스에 연결되지 않았습니다.' });
 
-    const showcase = await EventShowcase.findOne().sort({ createdAt: -1 });
-    if (!showcase) return res.status(404).json({ error: '발표할 회차가 없습니다.' });
-    if (showcase.status === 'revealed') return res.status(409).json({ error: '이미 발표된 회차입니다.' });
-    if (showcase.status === 'draft') return res.status(409).json({ error: '아직 시작하지 않은 회차입니다.' });
+    const { id, title, description, opensAt, deadlineAt, revealAt, awardPoints, winnerMode } = req.body || {};
+    const trimmedTitle = String(title || '').trim();
+    if (!trimmedTitle) return res.status(400).json({ error: '이벤트 제목을 입력해주세요.' });
 
-    // 당첨자는 [{ rank, nickname, tierListId, title }] 형태로 받는다(관리자가 직접 고른다).
-    const winners = Array.isArray(req.body?.winners)
-      ? req.body.winners
-        .filter((w) => w && String(w.nickname || '').trim())
-        .map((w, i) => ({
-          rank: Number.isInteger(w.rank) ? w.rank : i + 1,
-          nickname: String(w.nickname).trim(),
-          userId: mongoose.isValidObjectId(w.userId) ? w.userId : undefined,
-          tierListId: mongoose.isValidObjectId(w.tierListId) ? w.tierListId : undefined,
-          title: String(w.title || ''),
-        }))
-      : [];
+    const opens = parseShowcaseDate(opensAt, '접수 시작 시각');
+    const deadline = parseShowcaseDate(deadlineAt, '접수 마감 시각');
+    const reveal = parseShowcaseDate(revealAt, '결과 공개 시각');
+    const dateError = opens.error || deadline.error || reveal.error;
+    if (dateError) return res.status(400).json({ error: dateError });
 
-    await revealShowcaseDoc(showcase, winners, String(req.body?.resultNote || '').trim());
+    if (opens.date && deadline.date && deadline.date <= opens.date) return res.status(400).json({ error: '접수 마감은 접수 시작보다 뒤여야 합니다.' });
+    // 공개 시각을 따로 안 정했으면 마감 + 30분으로 둔다.
+    let revealDate = reveal.date;
+    if (!revealDate && deadline.date) revealDate = new Date(deadline.date.getTime() + SHOWCASE_REVEAL_DELAY_MS);
+    if (revealDate && deadline.date && revealDate < deadline.date) return res.status(400).json({ error: '결과 공개 시각은 접수 마감보다 뒤여야 합니다.' });
 
-    const entries = await EventShowcaseEntry.find({ showcaseId: showcase._id }).sort({ createdAt: 1 }).lean();
-    res.json({ ok: true, showcase: showcaseShape(showcase, entries, null) });
+    const award = awardPoints === undefined || awardPoints === null || awardPoints === '' ? SHOWCASE_DEFAULT_AWARD : Number(awardPoints);
+    if (!Number.isInteger(award) || award < SHOWCASE_MIN_AWARD) return res.status(400).json({ error: `우승 상금은 ${SHOWCASE_MIN_AWARD}P 이상의 정수여야 합니다.` });
+    if (award > SHOWCASE_MAX_AWARD) return res.status(400).json({ error: `우승 상금은 ${SHOWCASE_MAX_AWARD}P 이하로 정해주세요.` });
+    const mode = winnerMode === 'manual' ? 'manual' : 'votes';
+
+    const fields = {
+      title: trimmedTitle,
+      description: String(description || '').trim(),
+      opensAt: opens.date,
+      deadlineAt: deadline.date,
+      revealAt: revealDate,
+      awardPoints: award,
+      winnerMode: mode,
+    };
+
+    let showcase;
+    if (id && mongoose.isValidObjectId(id)) {
+      showcase = await EventShowcase.findById(id);
+      if (!showcase) return res.status(404).json({ error: '회차를 찾을 수 없습니다.' });
+      if (showcase.status === 'revealed') return res.status(409).json({ error: '이미 발표된 회차는 수정할 수 없습니다.' });
+      const now = new Date();
+      if (showcase.status === 'scheduled' && (!opens.date || opens.date <= now)) {
+        return res.status(400).json({ error: '예약된 회차의 접수 시작은 지금보다 뒤여야 합니다. 바로 열려면 "지금 접수 열기"를 눌러주세요.' });
+      }
+      if (['open', 'scheduled'].includes(showcase.status) && (!deadline.date || deadline.date <= now)) {
+        return res.status(400).json({ error: '접수 마감은 지금보다 뒤여야 합니다.' });
+      }
+      // 이미 시작된 회차의 접수 시작 시각은 바꿀 수 없다(기록으로만 남는다)
+      if (showcase.status === 'open' || showcase.status === 'closed') fields.opensAt = showcase.opensAt;
+      // 마감된 회차는 접수 마감 시각도 그대로 둔다
+      if (showcase.status === 'closed') fields.deadlineAt = showcase.deadlineAt;
+      Object.assign(showcase, fields);
+      await showcase.save();
+    } else {
+      showcase = await EventShowcase.create({ ...fields, status: 'draft' });
+    }
+
+    res.json({ ok: true, showcase: await adminShowcaseRow(showcase) });
   } catch (err) {
-    console.error('티어표 공개 이벤트 발표 에러:', err);
-    res.status(500).json({ error: '발표에 실패했습니다.' });
+    console.error('티어표 공개 이벤트 저장 에러:', err);
+    res.status(500).json({ error: '저장에 실패했습니다.' });
+  }
+};
+
+// POST /api/events/showcase/status { id, action, entryId? } (관리자)
+//   schedule   — 작성 중인 회차의 접수 시작을 저장된 opensAt 으로 예약한다(그 시각에 자동으로 열림)
+//   unschedule — 예약을 취소하고 작성 중으로 되돌린다
+//   open       — 지금 바로 접수를 연다
+//   close      — 접수를 닫는다(투표는 결과 공개일까지 계속)
+//   select     — 우승 작품을 직접 선정한다(entryId 가 비면 선정 해제)
+//   reveal     — 기다리지 않고 지금 결과를 발표한다(entryId 를 주면 그 작품을 우승으로)
+//   delete     — 작성 중/예약 중인 회차를 지운다
+const setShowcaseStatus = async (req, res) => {
+  try {
+    if (!isDbConnected()) return res.status(503).json({ error: '데이터베이스에 연결되지 않았습니다.' });
+
+    const { id, action, entryId } = req.body || {};
+    if (!mongoose.isValidObjectId(id)) return res.status(400).json({ error: '회차를 찾을 수 없습니다.' });
+    const showcase = await EventShowcase.findById(id);
+    if (!showcase) return res.status(404).json({ error: '회차를 찾을 수 없습니다.' });
+    const now = new Date();
+
+    // 접수를 열거나 예약할 때의 공통 검사 — 진행 중인 회차는 하나뿐이고, 마감 시각이 있어야 자동 진행이 가능하다.
+    const checkStartable = async () => {
+      if (showcase.status !== 'draft' && showcase.status !== 'scheduled') return '작성 중이거나 예약된 회차만 시작할 수 있습니다.';
+      if (!showcase.deadlineAt) return '접수 마감 시각을 먼저 정해주세요.';
+      if (showcase.deadlineAt <= now) return '접수 마감 시각이 이미 지났습니다. 마감 시각을 고쳐주세요.';
+      const other = await EventShowcase.findOne({ status: { $in: SHOWCASE_ACTIVE_STATUSES }, _id: { $ne: showcase._id } });
+      if (other) return `이미 진행 중이거나 예약된 이벤트가 있습니다: ${other.title}`;
+      return null;
+    };
+
+    if (action === 'schedule') {
+      const err = await checkStartable();
+      if (err) return res.status(showcase.deadlineAt && err.startsWith('이미') ? 409 : 400).json({ error: err });
+      if (!showcase.opensAt || showcase.opensAt <= now) return res.status(400).json({ error: '접수 시작 날짜를 지금보다 뒤로 정해주세요. 바로 열려면 "지금 접수 열기"를 눌러주세요.' });
+      if (showcase.opensAt >= showcase.deadlineAt) return res.status(400).json({ error: '접수 마감은 접수 시작보다 뒤여야 합니다.' });
+      showcase.status = 'scheduled';
+      await showcase.save();
+      return res.json({ ok: true, showcase: await adminShowcaseRow(showcase) });
+    }
+
+    if (action === 'unschedule') {
+      if (showcase.status !== 'scheduled') return res.status(409).json({ error: '예약된 회차만 예약을 취소할 수 있습니다.' });
+      showcase.status = 'draft';
+      await showcase.save();
+      return res.json({ ok: true, showcase: await adminShowcaseRow(showcase) });
+    }
+
+    if (action === 'open') {
+      const err = await checkStartable();
+      if (err) return res.status(err.startsWith('이미') ? 409 : 400).json({ error: err });
+      showcase.status = 'open';
+      showcase.openedAt = now;
+      if (!showcase.revealAt || showcase.revealAt < showcase.deadlineAt) {
+        showcase.revealAt = new Date(showcase.deadlineAt.getTime() + SHOWCASE_REVEAL_DELAY_MS);
+      }
+      await showcase.save();
+      return res.json({ ok: true, showcase: await adminShowcaseRow(showcase) });
+    }
+
+    if (action === 'close') {
+      if (showcase.status !== 'open') return res.status(409).json({ error: '접수 중인 회차만 닫을 수 있습니다.' });
+      showcase.status = 'closed';
+      // 결과 공개 시각이 없거나 이미 지났다면 지금부터 30분 뒤로 잡는다(투표할 시간을 남긴다)
+      if (!showcase.revealAt || showcase.revealAt <= now) showcase.revealAt = new Date(now.getTime() + SHOWCASE_REVEAL_DELAY_MS);
+      await showcase.save();
+      return res.json({ ok: true, showcase: await adminShowcaseRow(showcase) });
+    }
+
+    if (action === 'select') {
+      if (!['open', 'closed'].includes(showcase.status)) return res.status(409).json({ error: '접수 중이거나 마감된 회차에서만 우승 작품을 선정할 수 있습니다.' });
+      if (!entryId) {
+        showcase.selectedEntryId = null;
+      } else {
+        if (!mongoose.isValidObjectId(entryId)) return res.status(400).json({ error: '작품을 찾을 수 없습니다.' });
+        const entry = await EventShowcaseEntry.findOne({ _id: entryId, showcaseId: showcase._id });
+        if (!entry) return res.status(404).json({ error: '이 회차의 출품작이 아닙니다.' });
+        showcase.selectedEntryId = entry._id;
+      }
+      await showcase.save();
+      return res.json({ ok: true, showcase: await adminShowcaseRow(showcase) });
+    }
+
+    if (action === 'reveal') {
+      if (!['open', 'closed'].includes(showcase.status)) return res.status(409).json({ error: '접수 중이거나 마감된 회차만 발표할 수 있습니다.' });
+      let pick = null;
+      if (entryId) {
+        if (!mongoose.isValidObjectId(entryId)) return res.status(400).json({ error: '작품을 찾을 수 없습니다.' });
+        pick = entryId;
+        if (!(await EventShowcaseEntry.exists({ _id: entryId, showcaseId: showcase._id }))) return res.status(404).json({ error: '이 회차의 출품작이 아닙니다.' });
+      }
+      // 직접 선정 방식인데 우승 작품이 정해지지 않았다면 발표할 수 없다(출품작이 없으면 우승자 없이 종료 가능)
+      if (!pick && !showcase.selectedEntryId && showcase.winnerMode === 'manual'
+        && (await EventShowcaseEntry.countDocuments({ showcaseId: showcase._id })) > 0) {
+        return res.status(400).json({ error: '우승 작품을 먼저 선정해주세요(직접 선정 방식).' });
+      }
+      const done = await revealShowcaseDoc(showcase, { entryId: pick });
+      if (!done) return res.status(409).json({ error: '이미 발표된 회차입니다.' });
+      return res.json({ ok: true, showcase: await adminShowcaseRow(done) });
+    }
+
+    if (action === 'delete') {
+      if (!['draft', 'scheduled'].includes(showcase.status)) return res.status(409).json({ error: '작성 중이거나 예약된 회차만 삭제할 수 있습니다.' });
+      await EventShowcase.deleteOne({ _id: showcase._id });
+      return res.json({ ok: true, deleted: true });
+    }
+
+    res.status(400).json({ error: '알 수 없는 동작입니다.' });
+  } catch (err) {
+    console.error('티어표 공개 이벤트 상태 변경 에러:', err);
+    res.status(500).json({ error: '처리에 실패했습니다.' });
   }
 };
 
@@ -840,8 +1218,12 @@ module.exports = {
   saveMemoryPeriod,
   setMemoryPeriodStatus,
   getShowcase,
-  saveShowcase,
+  getMyShowcasePosts,
   enterShowcase,
-  revealShowcase,
+  cancelShowcaseEntry,
+  voteShowcase,
+  listShowcasesAdmin,
+  saveShowcase,
+  setShowcaseStatus,
   startEventScheduler,
 };

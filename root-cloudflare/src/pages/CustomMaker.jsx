@@ -9,7 +9,7 @@
 //     화면 밖 export 컨테이너를 따로 렌더해서 찍으므로 편집 중 화면이 흔들리지 않는다.
 //   - 꾸미기: 등급마다 테두리 색·배경 이펙트. 미리보기·캐처·게시글에 모두 반영된다.
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import DecoratePanel from '../components/DecoratePanel';
 import { useAuth } from '../context/AuthContext';
 import { ALL_CHARACTERS, TIERS } from '../data/tiers';
@@ -63,6 +63,12 @@ export default function CustomMaker({ editId = null }) {
   const { isLoggedIn, nickname, email } = useAuth();
   const isEdit = Boolean(editId);
 
+  // 이벤트 페이지("제작한 티어표 공개")에서 "새로 만들어서 참가"로 넘어온 경우 /custom-maker?event=<회차id>.
+  // 업로드하면 게시판에 올라가는 동시에 그 이벤트에 자동으로 출품된다.
+  const [searchParams] = useSearchParams();
+  const eventId = isEdit ? null : searchParams.get('event');
+  const [eventInfo, setEventInfo] = useState(null); // { id, title, canEnter, entered, status } | { missing: true }
+
   const [index, setIndex] = useState(0);            // 지금 편집 중인 등급 (0-based)
   const [state, setState] = useState(isEdit ? {} : loadMakerState);
   const [styleMap, setStyleMap] = useState(isEdit ? {} : loadTierStyle);  // 등급별 꾸미기
@@ -83,6 +89,28 @@ export default function CustomMaker({ editId = null }) {
   useEffect(() => {
     document.title = isEdit ? '게시글 수정 | 휴버대 티어표' : '커스텀 티어 메이커 | 휴버대 티어표';
   }, [isEdit]);
+
+  // 이벤트로 넘어온 경우 회차 정보를 확인한다 — 접수 중이 아니거나 이미 참가했으면 배너만 안내하고 자동 출품은 하지 않는다.
+  useEffect(() => {
+    if (!eventId || isStaticPreview()) { setEventInfo(null); return undefined; }
+    let cancelled = false;
+    apiRequest('/api/events/showcase')
+      .then((res) => {
+        const sc = res.ok ? res.data.showcase : null;
+        if (cancelled) return;
+        if (!sc || sc.id !== eventId) { setEventInfo({ id: eventId, missing: true }); return; }
+        setEventInfo({
+          id: sc.id,
+          title: sc.title,
+          status: sc.status,
+          deadlineAt: sc.deadlineAt,
+          canEnter: Boolean(sc.viewer?.canEnter),
+          entered: Boolean(sc.viewer?.myEntryId),
+        });
+      })
+      .catch(() => { if (!cancelled) setEventInfo({ id: eventId, missing: true }); });
+    return () => { cancelled = true; };
+  }, [eventId, isLoggedIn]);
 
   // 신규 제작만 localStorage 에 저장한다. 수정 모드까지 저장하면 작업 중이던 내 티어표가 덮어써진다.
   useEffect(() => { if (!isEdit) saveMakerState(state); }, [state, isEdit]);
@@ -280,6 +308,18 @@ export default function CustomMaker({ editId = null }) {
         <img src={`${LOGO_URL.replace('logo.webp', 'human_bug_eyes_icon.gif')}`} className="eyes_icon" alt="" />
         {' '}{isEdit ? '게시글 수정' : '커스텀 티어 메이커'}
       </h1>
+      {eventInfo && (
+        <div className={`edit-mode-banner event-mode-banner${eventInfo.canEnter ? '' : ' is-inactive'}`}>
+          {eventInfo.missing && '이벤트 정보를 불러오지 못했어요. 티어표는 그대로 만들어 게시판에 올릴 수 있습니다.'}
+          {!eventInfo.missing && eventInfo.canEnter && (
+            <>🏆 「<strong>{eventInfo.title}</strong>」 이벤트에 낼 티어표를 만드는 중이에요. 완성한 뒤 <strong>업로드</strong>하면 자동으로 참가됩니다.</>
+          )}
+          {!eventInfo.missing && !eventInfo.canEnter && (
+            <>「<strong>{eventInfo.title}</strong>」 이벤트는 {eventInfo.entered ? '이미 참가하셨어요.' : !isLoggedIn ? '로그인 후 참가할 수 있어요.' : '지금 참가할 수 없어요(접수 종료).'} 티어표는 그대로 만들어 게시판에 올릴 수 있습니다.</>
+          )}
+          {' '}<Link to="/event#showcase">이벤트 페이지로</Link>
+        </div>
+      )}
       {isEdit && (
         <div className="edit-mode-banner">
           「<strong>{editPost.title}</strong>」 게시 티어표를 불러왔습니다. 수정 후 <strong>수정완료</strong>를 누르세요.
@@ -474,6 +514,8 @@ export default function CustomMaker({ editId = null }) {
           user={{ nickname, email }}
           editId={editId}
           editPost={editPost}
+          eventInfo={eventInfo?.canEnter ? eventInfo : null}
+          onEventJoined={() => { setModalOpen(false); navigate('/event#showcase'); }}
           onClose={() => setModalOpen(false)}
           onDone={(postId) => {
             setModalOpen(false);
@@ -486,8 +528,10 @@ export default function CustomMaker({ editId = null }) {
 }
 
 // ── 업로드/수정 모달 (제목·내용·썸네일 → POST 또는 PUT /api/tierlists) ────────
-function UploadModal({ state, styleMap, user, editId, editPost, onClose, onDone }) {
+function UploadModal({ state, styleMap, user, editId, editPost, eventInfo, onEventJoined, onClose, onDone }) {
   const isEdit = Boolean(editId);
+  // 이벤트에서 넘어왔고 접수 중이면 기본으로 "이 티어표로 이벤트에 참가"가 켜져 있다.
+  const [joinEvent, setJoinEvent] = useState(true);
   const [title, setTitle] = useState(editPost?.title || '');
   const [description, setDescription] = useState(editPost?.description || '');
   // null = 원래 썸네일(수정) 또는 자동 대표 이미지(신규) 유지
@@ -532,6 +576,21 @@ function UploadModal({ state, styleMap, user, editId, editPost, onClose, onDone 
         onDone(editId);
         return;
       }
+      // 이벤트 참가: 방금 올린 게시글로 출품한다. 실패해도 게시글은 이미 올라가 있으므로 이유를 알려주고 게시판으로 안내한다.
+      if (eventInfo && joinEvent) {
+        const created = res.data?.tierList;
+        const entry = created?._id
+          ? await apiRequest('/api/events/showcase/entry', { method: 'POST', body: JSON.stringify({ tierListId: created._id }) })
+          : { ok: false, data: { error: '올린 게시글을 확인하지 못했습니다.' } };
+        if (entry.ok) {
+          window.alert(`✅ 업로드하고 「${eventInfo.title}」 이벤트에 참가했어요!\n이벤트 페이지로 이동합니다.`);
+          onEventJoined();
+          return;
+        }
+        window.alert(`✅ 게시판에는 업로드되었어요.\n다만 이벤트 참가는 하지 못했습니다: ${entry.data?.error || '알 수 없는 오류'}\n(이벤트 페이지에서 올린 글로 다시 참가할 수 있어요.)`);
+        onClose();
+        return;
+      }
       if (window.confirm('✅ 게시판에 업로드되었습니다!\n게시판으로 이동할까요?')) onDone();
       else onClose();
     } catch (err) {
@@ -568,6 +627,12 @@ function UploadModal({ state, styleMap, user, editId, editPost, onClose, onDone 
               : '선택하지 않으면 배치된 첫 캐릭터 이미지가 대표 이미지로 쓰입니다.'}
           </p>
         </div>
+        {eventInfo && !isEdit && (
+          <label className="upload-modal-event">
+            <input type="checkbox" checked={joinEvent} onChange={(e) => setJoinEvent(e.target.checked)} />
+            <span>🏆 이 티어표로 「<strong>{eventInfo.title}</strong>」 이벤트에 참가하기</span>
+          </label>
+        )}
         <div className="upload-modal-actions">
           <button type="button" className="upload-modal-cancel" onClick={onClose} disabled={busy}>취소</button>
           <button type="button" className="upload-modal-submit" onClick={submit} disabled={busy}>

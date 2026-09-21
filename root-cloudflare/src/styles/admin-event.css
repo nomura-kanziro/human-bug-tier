@@ -229,3 +229,120 @@
     min-width: 640px;
   }
 }
+
+/* ====================== 티어표 공개 관리 (ShowcaseManager) ======================
+   접수 시작 예약 입력까지 3칸이 된 시각 행, 우승 방식 라디오, 회차 표의 상태·행 강조, 참가작·득표 표. */
+.eadm-row-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.eadm-radios {
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.eadm-radios legend {
+  padding: 0;
+}
+
+.eadm-radio {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0 0 8px;
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+
+.eadm-radio input {
+  flex: none;
+  margin-top: 3px;
+  accent-color: var(--brand);
+}
+
+.eadm-radio strong {
+  color: var(--text-primary);
+}
+
+.eadm-sub {
+  display: block;
+  margin-top: 2px;
+  font-size: 11.5px;
+  font-weight: 500;
+  color: var(--text-muted, var(--text-secondary));
+}
+
+/* 지금 보고 있는(참가작 표를 펼친) 회차 / 선정·우승 작품 행 */
+.admin-table tr.eadm-row-active td {
+  background: color-mix(in srgb, var(--brand) 10%, transparent);
+}
+
+.eadm-badge.is-sc-scheduled {
+  background: rgba(59, 130, 246, 0.16);
+  color: #2563eb;
+}
+
+.eadm-badge.is-sc-waiting {
+  background: rgba(220, 38, 38, 0.16);
+  color: #dc2626;
+}
+
+[data-theme="dark"] .eadm-badge.is-sc-scheduled { color: #93c5fd; }
+[data-theme="dark"] .eadm-badge.is-sc-waiting { color: #fca5a5; }
+
+.eadm-detail {
+  margin-top: 22px;
+}
+
+.eadm-detail-title {
+  margin: 0 0 10px;
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.eadm-count {
+  margin-left: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.eadm-warn {
+  margin: 0 0 12px;
+  padding: 10px 14px;
+  border: 1px solid #f59e0b;
+  border-radius: var(--radius-md);
+  background: rgba(245, 158, 11, 0.12);
+  color: var(--text-primary);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.eadm-tag {
+  margin-left: 8px;
+  padding: 2px 8px;
+  border-radius: var(--radius-pill);
+  background: var(--brand);
+  color: var(--brand-contrast);
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.admin-table a.eadm-entry-link {
+  color: var(--text-primary);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+@media (max-width: 720px) {
+  .eadm-row-3 {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+}

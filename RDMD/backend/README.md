@@ -107,6 +107,7 @@ RDMD/backend/
 |------|--------|------|
 | [01-event-api-record.md](./09-event/01-event-api-record.md) | — | `/api/events` — 매일 퀴즈(하루 1회·가중치 상금) · 메모리 게임(서버 시계 기록) · 티어표 공개(뼈대·requireAdmin) |
 | [02-memory-period-record.md](./09-event/02-memory-period-record.md) | — | 메모리 게임 기록 이벤트(회차) — 관리자가 열고 닫고 정산, 한 사람 최고 기록만 순위, 1000P 이상 상금 |
+| [03-showcase-launch-record.md](./09-event/03-showcase-launch-record.md) | — | 티어표 공개 정식 오픈 — 출품·투표·접수 시작 예약·자동 집계/직접 선정 발표·상금(중복 지급 방지) |
 
 ---
 

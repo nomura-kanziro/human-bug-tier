@@ -6,6 +6,9 @@ area: frontend
 
 백엔드 기록: [`../../backend/09-event/02-memory-period-record.md`](../../backend/09-event/02-memory-period-record.md)
 
+> ⚠ **후속 변경**: 아래 "제작한 티어표 공개(뼈대)" 관리 폼과 "준비 중" 탭은 이후 **정식 오픈**으로 바뀌었다(회원 출품·투표, 관리자 접수 시작 예약·우승작 선정).
+> → [03-showcase-launch-record.md](./03-showcase-launch-record.md)
+
 ## 요청
 
 > 티어표 공개 같은 건 관리자 전용 페이지에서 관리하고, 메모리 게임 기록 이벤트도 관리자 페이지에서 관리자가 직접 열 수 있도록.

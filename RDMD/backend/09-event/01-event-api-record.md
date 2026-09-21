@@ -6,6 +6,9 @@ area: backend
 
 > ⚠ **후속 변경**: 메모리 게임의 "기간"은 이후 **관리자가 여닫는 회차(`EventMemoryPeriod`)** 로 바뀌었고 `POST /memory/settle` 은 제거됐다.
 > → [02-memory-period-record.md](./02-memory-period-record.md). 아래 메모리 절은 신설 당시 기록이다.
+>
+> ⚠ **후속 변경**: 티어표 공개는 이후 **회원에게 정식 공개**됐다(출품·투표·접수 시작 예약·자동 집계/직접 선정). 아래 "관리자 전용 뼈대" 절은 신설 당시 기록이다.
+> → [03-showcase-launch-record.md](./03-showcase-launch-record.md)
 
 프론트 쪽 기록: [`../../frontend/13-event/01-event-page-record.md`](../../frontend/13-event/01-event-page-record.md)
 

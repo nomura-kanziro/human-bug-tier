@@ -22,6 +22,9 @@ const TierPostComment = require('../models/TierPostComment');
 const Notification = require('../models/Notification');
 const Inquiry = require('../models/Inquiry');
 const LuckDraw = require('../models/LuckDraw');
+const EventMemorySession = require('../models/EventMemorySession');
+const EventShowcaseEntry = require('../models/EventShowcaseEntry');
+const EventShowcaseVote = require('../models/EventShowcaseVote');
 const getClientIp = require('../utils/getClientIp');
 const { isUserBlocked, findActiveBlock } = require('../utils/checkBlocked');
 const { signUserToken } = require('../utils/jwtAuth');
@@ -74,6 +77,10 @@ async function propagateNickname({ userId, email, oldNickname, newNickname }) {
     TierList.updateMany({ $or: ownedByEmailOrLegacy }, { $set: { author: newNickname } }),
     TierPostComment.updateMany({ $or: ownedByEmailOrLegacy }, { $set: { author: newNickname } }),
     LuckDraw.updateMany({ userId }, { $set: { nickname: newNickname } }),
+    // 이벤트: 메모리 게임 기록, 티어표 공개 출품작·투표에 찍힌 표시용 닉네임(알림 수신자를 닉네임으로 찾기 때문에 꼭 맞춰야 한다)
+    EventMemorySession.updateMany({ userId }, { $set: { nickname: newNickname } }),
+    EventShowcaseEntry.updateMany({ userId }, { $set: { nickname: newNickname } }),
+    EventShowcaseVote.updateMany({ voterId: userId }, { $set: { voterNickname: newNickname } }),
     // 알림: 내가 받은 알림의 수신자 이름 + 내가 유발한 알림에 찍힌 행위자 이름.
     // 행위자 쪽은 이메일 없이 표시용 이름만 저장돼 있어 닉네임 일치로만 찾는다.
     Notification.updateMany(
