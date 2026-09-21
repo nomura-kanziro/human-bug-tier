@@ -47,7 +47,7 @@ RDMD/frontend/
 | [10-theme-auto-switch-seoul-record.md](./01-common/10-theme-auto-switch-seoul-record.md) | — | 테마 자동 전환 — 서울 시각 기준 + 수동 선택은 다음 전환 시각까지만 유지 |
 | [11-loading-screen-record.md](./01-common/11-loading-screen-record.md) | — | 로딩 화면 — 정적 오버레이로 실제 대기 구간에 보이게(지연 없이 즉시 제거) + 로고/폰트 대역폭 경쟁 해소 |
 | [12-design-modernization-2-record.md](./01-common/12-design-modernization-2-record.md) | — | 디자인 현대화 2차 — 전 페이지 순회(공통 헤더·푸터·404, 티어표, 공지, 문의, 게시글 상세, 알림, 마이페이지, 메이커, 관리자) |
-| [13-header-menu-expand-record.md](./01-common/13-header-menu-expand-record.md) | — | 헤더 메뉴 3개 → 5개 — 이벤트 독립 + 공지·소식(공지사항·새 소식) 신설, 좁은 데스크톱 넘침 수정 |
+| [13-header-menu-expand-record.md](./01-common/13-header-menu-expand-record.md) | — | 헤더 메뉴 3개 → 5개 — 이벤트 독립 + 공지·소식(공지사항·새 소식) 신설(맨 앞 배치), 좁은 데스크톱 넘침 수정 |
 | [14-header-dropdown-click-record.md](./01-common/14-header-dropdown-click-record.md) | — | 헤더 드롭다운 hover → 클릭식(바깥 클릭·Esc 닫기) + 사이드 메뉴 하위 항목 간격 83→46px |
 
 ## 02-tier-class

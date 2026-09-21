@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 317 |
+| **커밋 수** | 318 |
 | **기간** | 2026-03-20 ~ 2026-09-20 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -346,6 +346,7 @@
 | 315 | 2026-09-21 | [`68baa9d`](#68baa9d) | feat(header): 상단 메뉴 3개 → 5개 — 이벤트를 자체 드롭다운으로 독립, 공지·소식(공지사항/새 소식/문의하기) 신설 |
 | 316 | 2026-09-21 | [`1457385`](#1457385) | fix(header): 공지·소식 메뉴에서 문의하기 제거 — 문의는 푸터로 충분 |
 | 317 | 2026-09-21 | [`0c27b37`](#0c27b37) | feat(header): 데스크톱 드롭다운을 hover → 클릭식으로 + 사이드 메뉴 하위 항목 간격 축소(83→46px) |
+| 318 | 2026-09-21 | [`pending`](#pending318) | refactor(header): 공지·소식 메뉴를 맨 앞으로 이동 |
 
 ---
 
@@ -6139,5 +6140,23 @@
 - **요약**: "메뉴바 각 드랍다운 토글은 이제 클릭하면 나오는 거고, 안에 active 는 간격이 너무 떨어졌으니 조금 줄여달라" 요청. **클릭식**: 예전에는 `.nav-item:hover .dropdown` 순수 CSS 라 마우스만 올려도 열렸다. `Header.jsx` 가 열린 항목 인덱스(`deskOpen`)를 들고 해당 `.nav-item` 에 `.open` 을 붙이도록 바꾸고 CSS 는 `.desktop-nav .nav-item.open` 기준(펼침·화살표 회전·트리거 강조)으로 옮겼다. 애니메이션은 그대로. 클릭 열림 / 다른 메뉴 클릭 시 교체 / 재클릭 닫힘 / 바깥 클릭·다른 헤더 컨트롤 클릭·`Esc` 닫힘 / 항목 선택 시 이동+닫힘 / 마우스가 벗어나도 유지, `aria-haspopup`·`aria-expanded` 부여. 바깥 클릭·Esc 리스너는 열려 있을 때만 건다. 기존 알림·프로필 패널과는 각자 document click 로 닫혀 상호배타가 유지된다. **간격**: 요청의 "active"는 사이드 메뉴에서 펼쳐진 하위 항목(`.side-dropdown.active`)으로 해석했다(데스크톱 드롭다운은 간격이 적정). 한 줄이 **실측 83px** 이던 원인은 모바일 규칙의 `min-height:44px` 가 `content-box` 라 패딩 24px 이 더해져 링크만 68px 이 된 데다 `li` margin 15px 이 겹친 것. 하위 항목만 min-height 를 풀고 패딩 `11px 8px 11px 12px`, li 간격 6px 로 **한 줄 46px(터치 영역 40px)** 로 줄였고 최상위 토글(83px)은 그대로 둔다. 햄버거가 데스크톱 폭에도 있어 규칙은 미디어쿼리 밖 `app-shell.css` 에 두고 기존 `.side-menu ul li a` 보다 명시도를 높였다. 확인(실제 마우스·키보드 입력): hover 만으로 열리지 않음, 클릭·교체·재클릭·바깥 클릭·Esc·항목 선택, 다크 모드, 사이드 메뉴 간격 83→46px(1280px 폭에서 연 경우 포함), 회귀 — 헤더 구성/폭별 레이아웃 테스트, 이벤트 페이지 테스트 27건 통과. 한계: 메뉴 항목 간 ↑↓ 키보드 이동은 아직 없다.
 - **주요 파일**: `root-cloudflare/src/components/Header.jsx`, `src/styles/Header_Footer.css`, `src/styles/app-shell.css`
 - **관련 RDMD**: `RDMD/frontend/01-common/14-header-dropdown-click-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending318"></a>
+
+### 318. 2026-09-21 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: refactor(header): 공지·소식 메뉴를 맨 앞으로 이동
+- **git**: `git show pending`
+- **범위**: frontend (root-cloudflare) / 공통 헤더 · 네비게이션
+- **요약**: "헤더에 추가된 공지·소식을 맨 앞으로" 요청. `Header.jsx` 의 `MENUS` 맨 앞으로 옮겨 상단 순서가 **공지·소식 → 티어표 → 커스텀 메이커 → 이벤트 → 행운 뽑기** 가 됐다. `MENUS` 를 데스크톱 드롭다운과 모바일 사이드 메뉴가 공유하고 열린 항목도 배열 인덱스로 관리하므로 사이드 메뉴 아코디언에도 같은 순서가 반영되며 다른 코드 수정은 필요 없었다. 확인: 메뉴 구성·순서, 폭 13종(1920~769px) 겹침·가로 스크롤 0, 클릭식 드롭다운 동작(인덱스 재매핑 후 재검증), 사이드 메뉴 순서, 이벤트 페이지 테스트 27건 통과.
+- **주요 파일**: `root-cloudflare/src/components/Header.jsx`
+- **관련 RDMD**: `RDMD/frontend/01-common/13-header-menu-expand-record.md`
 
 [▲ 목차로](#목차)
