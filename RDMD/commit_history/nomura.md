@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 319 |
+| **커밋 수** | 320 |
 | **기간** | 2026-03-20 ~ 2026-09-20 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -348,6 +348,7 @@
 | 317 | 2026-09-21 | [`0c27b37`](#0c27b37) | feat(header): 데스크톱 드롭다운을 hover → 클릭식으로 + 사이드 메뉴 하위 항목 간격 축소(83→46px) |
 | 318 | 2026-09-21 | [`5cc05ee`](#5cc05ee) | refactor(header): 공지·소식 메뉴를 맨 앞으로 이동 |
 | 319 | 2026-09-21 | [`8ef5db4`](#8ef5db4) | fix(tier-class): 5티어 하야미 타이키 중복 항목(이미지 없는 상자) 제거 |
+| 320 | 2026-09-21 | [`pending`](#pending320) | fix(tier-class): 7티어 카타쿠라 중복 항목 제거 |
 
 ---
 
@@ -6175,6 +6176,24 @@
 - **git**: `git show 8ef5db4`
 - **범위**: frontend (root-cloudflare) / 공식 티어표 데이터
 - **요약**: "5티어에 하야미 타이키 이름이 겹치는데 이미지 없는 상자만 없애달라" 요청. `tiers.json` 5티어 병급에 같은 이름이 두 번 있었고, `5 tier/hayami taiki.jpg` 는 실제 파일이 있는 정상 항목, `5 tier/hayami taiki.webp` 는 **파일이 없는 항목**이라 이미지 없는 상자로 보였다. 후자만 삭제했다. 확인: 5티어에서 하야미 타이키 1회, 1~9티어 전 페이지 이미지 로딩 실패 0건, 데이터 전체를 파일 존재 여부로 대조해 이미지 없는 항목 0건. `tiers.json` 은 이벤트 퀴즈 출제에도 쓰여 퀴즈에서 이미지가 없는 캐릭터가 나올 가능성도 함께 사라졌다. 참고(미수정): 7티어에 카타쿠라가 이름·이미지까지 동일하게 두 번 있으나 이미지가 있어 이번 범위에서 제외했다.
+- **주요 파일**: `root-cloudflare/src/data/tiers.json`
+- **관련 RDMD**: `RDMD/frontend/02-tier-class/08-hayami-taiki-duplicate-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending320"></a>
+
+### 320. 2026-09-21 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: fix(tier-class): 7티어 카타쿠라 중복 항목 제거
+- **git**: `git show pending`
+- **범위**: frontend (root-cloudflare) / 공식 티어표 데이터
+- **요약**: "중복 없애" 요청 — 직전 커밋(`8ef5db4`)에서 알려 둔 7티어 카타쿠라 중복. 을급에 이름·이미지(`7 tier/katakura.webp`)가 같은 항목이 2번째·5번째 자리에 두 번 있어 뒤쪽(5번째)만 삭제했다. 확인: 7티어에서 카타쿠라 1회(이미지 37→36개), 1~9티어 깨진 이미지 0건, 데이터 전체 이름 중복 0건·이미지 파일 누락 0건. 참고(미수정): 이름이 다른데 이미지가 같은 3건(7 코모리 켄지/코모리, 9 카케무사 미도 코사쿠/*미도 코사쿠, 9 *야시키 마시나리/*야사키 마사나리)은 표기 차이·별칭일 수 있어 그대로 뒀다.
 - **주요 파일**: `root-cloudflare/src/data/tiers.json`
 - **관련 RDMD**: `RDMD/frontend/02-tier-class/08-hayami-taiki-duplicate-record.md`
 
