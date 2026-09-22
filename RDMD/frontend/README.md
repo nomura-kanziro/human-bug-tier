@@ -79,6 +79,7 @@ RDMD/frontend/
 | [10-pool-viewport-arrows-record.md](./03-custom-maker/10-pool-viewport-arrows-record.md) | — | 캐릭터 풀 뷰포트 화살표(티어표·풀 끝) |
 | [11-tier-decorate-record.md](./03-custom-maker/11-tier-decorate-record.md) | — | 티어표 꾸미기(테두리 색·배경 이펙트·등급별 테마) |
 | [12-maker-select-search-record.md](./03-custom-maker/12-maker-select-search-record.md) | — | 메이커 Ctrl/Shift 다중 선택 · 풀 검색(추천 5명) · 드래그 자동 스크롤·▲▼ React 이식 · 이벤트 참여 버튼 |
+| [13-png-skip-empty-tier-record.md](./03-custom-maker/13-png-skip-empty-tier-record.md) | — | PNG 저장 시 캐릭터가 없는 등급 건너뛰기(PDF는 그대로 9쪽 포함) |
 
 ## 04-notice
 

@@ -381,9 +381,16 @@ export default function CustomMaker({ editId = null }) {
         const root = exportRef.current;
         await waitForImages(root);
         await sleep(150);
-        const boards = [...(root?.querySelectorAll('[data-export-tier]') || [])];
+        const allBoards = [...(root?.querySelectorAll('[data-export-tier]') || [])];
 
         if (exporting === 'png') {
+          // PNG는 등급별로 파일이 따로 나뉘므로, 캐릭터가 하나도 없는 등급은 빈 파일을 만들 이유가 없어 건너뛴다.
+          // (PDF는 한 파일 안에 전 등급이 순서대로 이어지는 문서라 건너뛰지 않고 그대로 둔다 — 빈 등급도 몇 등급인지 알 수 있게)
+          const boards = allBoards.filter((b) => b.dataset.exportEmpty !== 'true');
+          if (!boards.length) {
+            window.alert('배치된 캐릭터가 없어 저장할 등급이 없습니다.');
+            return;
+          }
           for (let i = 0; i < boards.length; i += 1) {
             if (cancelled) return;
             setBusyText(`PNG 저장 중 (${i + 1}/${boards.length})`);
@@ -395,6 +402,7 @@ export default function CustomMaker({ editId = null }) {
             await sleep(500);
           }
         } else {
+          const boards = allBoards;
           const JsPDF = await loadJsPdf();
           const pdf = new JsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
           for (let i = 0; i < boards.length; i += 1) {
@@ -706,10 +714,13 @@ export default function CustomMaker({ editId = null }) {
         <div ref={exportRef} style={{ position: 'fixed', left: -99999, top: 0, width: 900 }} aria-hidden="true">
           {TIERS.map((t, i) => {
             const decorated = tierStyleProps(styleMap, i);
+            // 이 등급에 캐릭터가 하나도 없으면 PNG 저장 때 건너뛴다(등급 자체는 항상 그려서 PDF/화면은 그대로 유지).
+            const isEmptyTier = t.subTiers.every((sub) => !(state[zoneKey(i, sub)] || []).length);
             return (
               <div
                 className="tier-capture-area"
                 data-export-tier={t.tier}
+                data-export-empty={isEmptyTier ? 'true' : undefined}
                 key={t.tier}
                 {...decorated}
                 style={{ ...decorated.style, width: 900 }}
