@@ -65,7 +65,7 @@ function CharCard({ char, selected, found, onDragStart, onDragEnd, onClick, onDr
 // 저장된 게시글의 배치·꾸미기를 불러와 편집하고, 업로드 버튼이 "수정완료"(PUT)로 바뀐다.
 export default function CustomMaker({ editId = null }) {
   const navigate = useNavigate();
-  const { isLoggedIn, nickname, email } = useAuth();
+  const { isLoggedIn, isAdmin, nickname, email } = useAuth();
   const isEdit = Boolean(editId);
 
   // 이벤트 페이지("제작한 티어표 공개")에서 "새로 만들어서 참가"로 넘어온 경우 /custom-maker?event=<회차id>.
@@ -157,6 +157,11 @@ export default function CustomMaker({ editId = null }) {
   }, [isEdit, editId, nickname, email]);
 
   const selectedKeys = useMemo(() => new Set(selectedIds.map(String)), [selectedIds]);
+  // 접수 기간(status:'open')인지는 로그인 여부와 무관하게 서버가 그대로 알려준다 — 로그인 안 한 방문자도
+  // "이벤트 참여" 버튼 자체는 보고, 누르면 업로드 버튼과 같은 규칙(onUploadClick)으로 로그인부터 안내받는다.
+  // 관리자 계정은 애초에 참가할 수 없는 역할이라 버튼을 보이지 않는다(그래도 억지로 시도하면 서버가 막는다).
+  const entryOpen = !isAdmin && Boolean(eventInfo) && !eventInfo.missing && eventInfo.status === 'open' && !eventInfo.entered;
+
   const placed = useMemo(() => getPlacedKeys(state), [state]);
   const pool = useMemo(
     () => ALL_CHARACTERS.filter((c) => !placed.ids.has(String(c.id)) && !placed.names.has(c.name)),
@@ -619,7 +624,14 @@ export default function CustomMaker({ editId = null }) {
           </div>
         </div>
 
-        {!isEdit && eventInfo?.canEnter && (
+        <button type="button" className="btn btn-upload" onClick={onUploadClick}>
+          <span className="btn-text">{isEdit ? '수정완료' : '업로드'}</span>
+          <span className="btn-icon">{isEdit ? '✅' : '🔗'}</span>
+        </button>
+
+        {/* 업로드 버튼 오른쪽 — 접수 기간이면 비로그인 방문자에게도 보이고, 누르면 onUploadClick 이
+            로그인부터 안내한 뒤(필요 시) 업로드 창을 "이벤트 참여" 기본 체크로 연다. */}
+        {!isEdit && entryOpen && (
           <button
             type="button"
             className="btn btn-event"
@@ -630,10 +642,6 @@ export default function CustomMaker({ editId = null }) {
             <span className="btn-icon">🏆</span>
           </button>
         )}
-        <button type="button" className="btn btn-upload" onClick={onUploadClick}>
-          <span className="btn-text">{isEdit ? '수정완료' : '업로드'}</span>
-          <span className="btn-icon">{isEdit ? '✅' : '🔗'}</span>
-        </button>
       </div>
 
       <div className="character-pool" ref={poolWrapRef} onDragOver={allowDrop} onDrop={dropOnPool}>
@@ -756,7 +764,7 @@ export default function CustomMaker({ editId = null }) {
           user={{ nickname, email }}
           editId={editId}
           editPost={editPost}
-          eventInfo={eventInfo?.canEnter ? eventInfo : null}
+          eventInfo={entryOpen ? eventInfo : null}
           eventDefaultOn={joinIntent}
           onEventJoined={() => { setModalOpen(false); navigate('/event#showcase'); }}
           onClose={() => setModalOpen(false)}
