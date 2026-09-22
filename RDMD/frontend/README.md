@@ -49,6 +49,7 @@ RDMD/frontend/
 | [12-design-modernization-2-record.md](./01-common/12-design-modernization-2-record.md) | — | 디자인 현대화 2차 — 전 페이지 순회(공통 헤더·푸터·404, 티어표, 공지, 문의, 게시글 상세, 알림, 마이페이지, 메이커, 관리자) |
 | [13-header-menu-expand-record.md](./01-common/13-header-menu-expand-record.md) | — | 헤더 메뉴 3개 → 5개 — 이벤트 독립 + 공지·소식(공지사항·새 소식) 신설(맨 앞 배치), 좁은 데스크톱 넘침 수정 |
 | [14-header-dropdown-click-record.md](./01-common/14-header-dropdown-click-record.md) | — | 헤더 드롭다운 hover → 클릭식(바깥 클릭·Esc 닫기) + 사이드 메뉴 하위 항목 간격 83→46px |
+| [15-quick-card-submenu-gap-record.md](./01-common/15-quick-card-submenu-gap-record.md) | — | 메인 화면 퀵카드(커스텀 메이커·행운 뽑기) 하위 링크 간격 0→8px |
 
 ## 02-tier-class
 

@@ -316,6 +316,14 @@ img {
   transition: all 0.2s ease;
 }
 
+/* 커스텀 메이커·행운 뽑기 카드의 하위 링크(제작하기/게시판/이벤트 등)는 .sub-grid 와 달리
+   grid gap이 없는 세로 목록이라 링크끼리 위아래 간격이 0이라 다닥다닥 붙어 보였다.
+   .sub-grid 는 이미 grid gap:8px 로 간격이 있으니 건드리지 않고, .sub-menu 의 형제 링크
+   사이에만 같은 8px 를 margin-top으로 준다(첫 줄 위치는 그대로 유지). */
+.sub-menu > a + a {
+  margin-top: 8px;
+}
+
 /* 서브메뉴 링크 hover도 카드별 포인트 컬러(--accent-1 → --accent-2 그라디언트)를 그대로
    물려받아서 위 아이콘 배지·상단 라인과 같은 톤으로 보이게 한다 */
 .sub-grid a:hover,
