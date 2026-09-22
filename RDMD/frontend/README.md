@@ -78,6 +78,7 @@ RDMD/frontend/
 | [09-upload-modal-title-content-thumb-record.md](./03-custom-maker/09-upload-modal-title-content-thumb-record.md) | — | 업로드 모달·상세 내용 |
 | [10-pool-viewport-arrows-record.md](./03-custom-maker/10-pool-viewport-arrows-record.md) | — | 캐릭터 풀 뷰포트 화살표(티어표·풀 끝) |
 | [11-tier-decorate-record.md](./03-custom-maker/11-tier-decorate-record.md) | — | 티어표 꾸미기(테두리 색·배경 이펙트·등급별 테마) |
+| [12-maker-select-search-record.md](./03-custom-maker/12-maker-select-search-record.md) | — | 메이커 Ctrl/Shift 다중 선택 · 풀 검색(추천 5명) · 드래그 자동 스크롤·▲▼ React 이식 · 이벤트 참여 버튼 |
 
 ## 04-notice
 

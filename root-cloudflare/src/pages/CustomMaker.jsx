@@ -8,6 +8,11 @@
 //   - 다운로드: PNG(등급별 9장) · PDF(1파일) · JSON. 캡처는 화면을 바꾸지 않고
 //     화면 밖 export 컨테이너를 따로 렌더해서 찍으므로 편집 중 화면이 흔들리지 않는다.
 //   - 꾸미기: 등급마다 테두리 색·배경 이펙트. 미리보기·캐처·게시글에 모두 반영된다.
+//   - 풀에서 여러 명 고르기: Ctrl(⌘)+클릭으로 하나씩 더하고, Shift+클릭으로 앞서 고른 카드부터
+//     방금 누른 카드까지(왼쪽 위 → 오른쪽 아래 순서) 한 번에 고른다. 고른 뒤 티어 칸을 누르면 전부 배치된다.
+//   - 드래그로 화면 위/아래 끝에 가져가면 페이지가 자동으로 스크롤된다(화면 밖 티어 칸까지 옮기기).
+//   - 풀이 보이는 동안 화면 위/아래에 ▲▼ 버튼 — ▲는 티어표로, ▼는 풀 맨 아래로 이동.
+//   - 풀 안 검색창: 이름을 입력하면 비슷한 캐릭터를 최대 5명 추천하고, 검색하면 이름이 똑같은 카드로 스크롤한다.
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import DecoratePanel from '../components/DecoratePanel';
@@ -38,10 +43,10 @@ function waitForImages(el) {
   )));
 }
 
-function CharCard({ char, selected, onDragStart, onDragEnd, onClick, onDragOver, onDrop }) {
+function CharCard({ char, selected, found, onDragStart, onDragEnd, onClick, onDragOver, onDrop }) {
   return (
     <div
-      className={`char${selected ? ' selected' : ''}`}
+      className={`char${selected ? ' selected' : ''}${found ? ' is-found' : ''}`}
       draggable
       data-id={char.id}
       onDragStart={onDragStart}
@@ -65,6 +70,7 @@ export default function CustomMaker({ editId = null }) {
 
   // 이벤트 페이지("제작한 티어표 공개")에서 "새로 만들어서 참가"로 넘어온 경우 /custom-maker?event=<회차id>.
   // 업로드하면 게시판에 올라가는 동시에 그 이벤트에 자동으로 출품된다.
+  // (링크 없이 그냥 들어와도 진행 중인 회차가 있으면 "이벤트 참여" 버튼으로 바로 낼 수 있다)
   const [searchParams] = useSearchParams();
   const eventId = isEdit ? null : searchParams.get('event');
   const [eventInfo, setEventInfo] = useState(null); // { id, title, canEnter, entered, status } | { missing: true }
@@ -76,13 +82,23 @@ export default function CustomMaker({ editId = null }) {
   const [editError, setEditError] = useState('');
   const [decorateOpen, setDecorateOpen] = useState(false);
   const [decorateScope, setDecorateScope] = useState('current'); // 'current' | 'all'
-  const [selectedId, setSelectedId] = useState(null); // 모바일 탭 선택
+  // 풀에서 고른 캐릭터들. 평소엔 1명(모바일 탭 배치)이고 Ctrl/Shift 로 여러 명이 될 수 있다.
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [poolVisible, setPoolVisible] = useState(false); // 풀이 화면에 보이는 동안만 ▲▼ 표시
+  const [search, setSearch] = useState('');
+  const [searchMsg, setSearchMsg] = useState('');
+  const [suggestOpen, setSuggestOpen] = useState(false);
+  const [foundId, setFoundId] = useState(null);          // 검색으로 찾아간 카드(잠깐 강조)
+  const [joinIntent, setJoinIntent] = useState(false);   // 업로드하면서 이벤트에 참가할지
   const [exporting, setExporting] = useState(null);   // null | 'png' | 'pdf'
   const [busyText, setBusyText] = useState('');
   const [menuOpen, setMenuOpen] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const exportRef = useRef(null);
-  const dragRef = useRef(null); // { id }
+  const dragRef = useRef(null);      // { ids: [...] } — 여러 명을 한 번에 끌 수 있다
+  const anchorRef = useRef(null);    // Shift 범위 선택의 시작점(마지막으로 그냥 누른 카드)
+  const poolWrapRef = useRef(null);
+  const tierAreaRef = useRef(null);
 
   const tier = TIERS[index];
 
@@ -92,13 +108,14 @@ export default function CustomMaker({ editId = null }) {
 
   // 이벤트로 넘어온 경우 회차 정보를 확인한다 — 접수 중이 아니거나 이미 참가했으면 배너만 안내하고 자동 출품은 하지 않는다.
   useEffect(() => {
-    if (!eventId || isStaticPreview()) { setEventInfo(null); return undefined; }
+    if (isEdit || isStaticPreview()) { setEventInfo(null); return undefined; }
     let cancelled = false;
     apiRequest('/api/events/showcase')
       .then((res) => {
         const sc = res.ok ? res.data.showcase : null;
         if (cancelled) return;
-        if (!sc || sc.id !== eventId) { setEventInfo({ id: eventId, missing: true }); return; }
+        // 링크로 들어왔는데 그 회차가 아니면(끝났거나 다른 회차) 안내만 한다.
+        if (!sc || (eventId && sc.id !== eventId)) { setEventInfo(eventId ? { id: eventId, missing: true } : null); return; }
         setEventInfo({
           id: sc.id,
           title: sc.title,
@@ -108,9 +125,12 @@ export default function CustomMaker({ editId = null }) {
           entered: Boolean(sc.viewer?.myEntryId),
         });
       })
-      .catch(() => { if (!cancelled) setEventInfo({ id: eventId, missing: true }); });
+      .catch(() => { if (!cancelled) setEventInfo(eventId ? { id: eventId, missing: true } : null); });
     return () => { cancelled = true; };
-  }, [eventId, isLoggedIn]);
+  }, [eventId, isEdit, isLoggedIn]);
+
+  // 이벤트 링크로 들어왔으면 업로드 창의 "이벤트에 참가하기"를 기본으로 켜 둔다.
+  useEffect(() => { if (eventId) setJoinIntent(true); }, [eventId]);
 
   // 신규 제작만 localStorage 에 저장한다. 수정 모드까지 저장하면 작업 중이던 내 티어표가 덮어써진다.
   useEffect(() => { if (!isEdit) saveMakerState(state); }, [state, isEdit]);
@@ -136,6 +156,7 @@ export default function CustomMaker({ editId = null }) {
       });
   }, [isEdit, editId, nickname, email]);
 
+  const selectedKeys = useMemo(() => new Set(selectedIds.map(String)), [selectedIds]);
   const placed = useMemo(() => getPlacedKeys(state), [state]);
   const pool = useMemo(
     () => ALL_CHARACTERS.filter((c) => !placed.ids.has(String(c.id)) && !placed.names.has(c.name)),
@@ -148,21 +169,36 @@ export default function CustomMaker({ editId = null }) {
   );
 
   // ── 배치 / 제거 ────────────────────────────────────────────
-  const place = useCallback((charOrId, key, insertIndex = null) => {
-    const char = typeof charOrId === 'object' ? charOrId : charById(charOrId);
-    if (!char) return;
-    setState((cur) => placeChar(cur, char, key, insertIndex));
-    setSelectedId(null);
+  // 여러 명을 한 번에 배치한다(고른 순서 그대로). 끼워넣기 위치를 준 경우 그 자리부터 차례로 들어간다.
+  const placeMany = useCallback((idsOrChars, key, insertIndex = null) => {
+    const chars = idsOrChars
+      .map((v) => (typeof v === 'object' ? v : charById(v)))
+      .filter(Boolean);
+    if (!chars.length) return;
+    setState((cur) => chars.reduce(
+      (acc, char, i) => placeChar(acc, char, key, insertIndex == null ? null : insertIndex + i),
+      cur,
+    ));
+    setSelectedIds([]);
+    anchorRef.current = null;
   }, [charById]);
 
-  const backToPool = useCallback((charId) => {
-    setState((cur) => removeChar(cur, charId));
-    setSelectedId(null);
+  const place = useCallback((charOrId, key, insertIndex = null) => {
+    placeMany([charOrId], key, insertIndex);
+  }, [placeMany]);
+
+  const backToPool = useCallback((charIds) => {
+    const ids = Array.isArray(charIds) ? charIds : [charIds];
+    setState((cur) => ids.reduce((acc, id) => removeChar(acc, id), cur));
+    setSelectedIds([]);
+    anchorRef.current = null;
   }, []);
 
   // ── 드래그(PC) ─────────────────────────────────────────────
+  // 여러 명을 골라 둔 상태에서 그중 하나를 끌면 고른 전부를 함께 옮긴다.
   const onDragStart = (id) => (e) => {
-    dragRef.current = { id };
+    const ids = selectedKeys.has(String(id)) && selectedIds.length > 1 ? [...selectedIds] : [id];
+    dragRef.current = { ids };
     e.dataTransfer.effectAllowed = 'move';
     e.dataTransfer.setData('text/plain', String(id));
     e.currentTarget.classList.add('dragging');
@@ -172,38 +208,163 @@ export default function CustomMaker({ editId = null }) {
     dragRef.current = null;
   };
   const allowDrop = (e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; };
-  const draggedId = (e) => dragRef.current?.id ?? e.dataTransfer.getData('text/plain');
+  const draggedIds = (e) => {
+    if (dragRef.current?.ids?.length) return dragRef.current.ids;
+    const raw = e.dataTransfer.getData('text/plain');
+    return raw ? [raw] : [];
+  };
 
   const dropOnZone = (key) => (e) => {
     e.preventDefault();
-    const id = draggedId(e);
-    if (id) place(id, key);
+    placeMany(draggedIds(e), key);
   };
   const dropOnCard = (key, cardIndex) => (e) => {
     e.preventDefault();
     e.stopPropagation();
-    const id = draggedId(e);
-    if (id) place(id, key, cardIndex);
+    placeMany(draggedIds(e), key, cardIndex);
   };
   const dropOnPool = (e) => {
     e.preventDefault();
-    const id = draggedId(e);
-    if (id) backToPool(id);
+    const ids = draggedIds(e);
+    if (ids.length) backToPool(ids);
   };
 
-  // ── 탭 배치(모바일) ────────────────────────────────────────
-  const selectedChar = selectedId ? charById(selectedId) : null;
-  const onCardClick = (char, fromKey) => () => {
-    if (fromKey) { backToPool(char.id); return; }   // 배치된 카드를 탭하면 풀로 되돌림
-    setSelectedId((cur) => (String(cur) === String(char.id) ? null : char.id));
+  // ── 드래그 중 화면 끝 자동 스크롤 ──────────────────────────
+  // 포인터가 화면 위/아래 80px 안으로 들어오면 페이지를 자동으로 굴려, 화면 밖에 있는
+  // 티어 칸이나 풀까지 드래그 한 번으로 옮길 수 있게 한다(바닐라 initAutoScroll 이식).
+  useEffect(() => {
+    let timer = null;
+    let dir = 0;
+    const stop = () => { if (timer) { clearInterval(timer); timer = null; } dir = 0; };
+    const onDragOver = (e) => {
+      const edge = 80;
+      const next = e.clientY < edge ? -15 : (e.clientY > window.innerHeight - edge ? 15 : 0);
+      if (next === dir) return;
+      stop();
+      dir = next;
+      if (dir) timer = setInterval(() => window.scrollBy(0, dir), 16);
+    };
+    document.addEventListener('dragover', onDragOver);
+    document.addEventListener('dragend', stop);
+    document.addEventListener('drop', stop);
+    return () => {
+      stop();
+      document.removeEventListener('dragover', onDragOver);
+      document.removeEventListener('dragend', stop);
+      document.removeEventListener('drop', stop);
+    };
+  }, []);
+
+  // 고른 캐릭터가 있는 동안에는 드롭존 테두리를 강조한다(custom-maker.css 의 body.char-selected-mode).
+  useEffect(() => {
+    document.body.classList.toggle('char-selected-mode', selectedIds.length > 0);
+    return () => document.body.classList.remove('char-selected-mode');
+  }, [selectedIds.length]);
+
+  // ── 풀이 화면에 보이는 동안만 ▲▼ 버튼 표시 ────────────────
+  useEffect(() => {
+    const el = poolWrapRef.current;
+    if (!el || typeof IntersectionObserver !== 'function') { setPoolVisible(true); return undefined; }
+    const io = new IntersectionObserver(
+      (entries) => setPoolVisible(entries.some((en) => en.isIntersecting)),
+      { threshold: 0, rootMargin: '120px 0px 80px 0px' },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  const scrollToTierBoard = () => tierAreaRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const scrollToPoolBottom = () => {
+    poolWrapRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
+    // 모바일처럼 풀 자체가 스크롤되는 경우에는 그 안쪽도 맨 아래로 내린다.
+    const grid = poolWrapRef.current?.querySelector('.characters-pool');
+    if (grid) grid.scrollTop = grid.scrollHeight;
   };
-  const onZoneClick = (key) => () => { if (selectedId) place(selectedId, key); };
+
+  // ── 선택(탭 배치 / Ctrl·Shift 다중 선택) ───────────────────
+  const selectedChars = useMemo(
+    () => selectedIds.map((id) => charById(id)).filter(Boolean),
+    [selectedIds, charById],
+  );
+  const selectedChar = selectedChars[0] || null;
+
+  // 풀 카드 클릭 — 그냥 누르면 한 명(다시 누르면 해제), Ctrl(⌘)은 하나씩 더하기/빼기,
+  // Shift 는 기준점부터 지금 누른 카드까지(풀에 놓인 순서 = 왼쪽 위 → 오른쪽 아래) 한 번에.
+  const onPoolCardClick = (char, poolIndex) => (e) => {
+    const id = char.id;
+    if (e.shiftKey && anchorRef.current != null) {
+      const from = pool.findIndex((c) => String(c.id) === String(anchorRef.current));
+      if (from !== -1) {
+        const [a, b] = from <= poolIndex ? [from, poolIndex] : [poolIndex, from];
+        setSelectedIds(pool.slice(a, b + 1).map((c) => c.id));
+        return;
+      }
+    }
+    if (e.ctrlKey || e.metaKey) {
+      setSelectedIds((cur) => (cur.some((v) => String(v) === String(id))
+        ? cur.filter((v) => String(v) !== String(id))
+        : [...cur, id]));
+      anchorRef.current = id;
+      return;
+    }
+    setSelectedIds((cur) => (cur.length === 1 && String(cur[0]) === String(id) ? [] : [id]));
+    anchorRef.current = id;
+  };
+
+  // 배치된 카드를 누르면 풀로 되돌린다(예전과 동일).
+  const onPlacedCardClick = (char) => () => backToPool(char.id);
+  const onZoneClick = (key) => () => { if (selectedIds.length) placeMany(selectedIds, key); };
+
+  // ── 풀 검색 ────────────────────────────────────────────────
+  // 입력 중에는 비슷한 이름을 최대 5명까지 추천하고(이름이 검색어로 시작하는 쪽을 먼저),
+  // [검색하기]를 누르면 이름이 **똑같은** 캐릭터 카드로 스크롤해 잠깐 강조한다.
+  const suggestions = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return [];
+    const starts = [];
+    const contains = [];
+    ALL_CHARACTERS.forEach((c) => {
+      const name = c.name.toLowerCase();
+      if (name.startsWith(q)) starts.push(c);
+      else if (name.includes(q)) contains.push(c);
+    });
+    return [...starts, ...contains].slice(0, 5);
+  }, [search]);
+
+  const runSearch = (raw) => {
+    const q = String(raw ?? search).trim();
+    if (!q) { setSearchMsg('찾을 캐릭터 이름을 입력해주세요.'); return; }
+    const exact = ALL_CHARACTERS.find((c) => c.name.trim().toLowerCase() === q.toLowerCase());
+    if (!exact) {
+      setSearchMsg(`"${q}" 와(과) 이름이 똑같은 캐릭터가 없어요. 아래 추천에서 골라보세요.`);
+      setSuggestOpen(true);
+      return;
+    }
+    setSearchMsg('');
+    setSuggestOpen(false);
+    setFoundId(exact.id);
+    // 이미 티어에 배치된 캐릭터면 티어표 쪽 카드로, 아니면 풀 카드로 간다.
+    window.requestAnimationFrame(() => {
+      const sel = `[data-id="${typeof CSS !== 'undefined' && CSS.escape ? CSS.escape(String(exact.id)) : String(exact.id)}"]`;
+      const el = document.querySelector(sel);
+      if (el) el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      else setSearchMsg(`${exact.name} 은(는) 지금 화면에 없어요(다른 등급에 배치돼 있을 수 있어요).`);
+    });
+  };
+
+  // 강조는 잠깐만 — 2.6초 뒤에 스스로 풀린다.
+  useEffect(() => {
+    if (!foundId) return undefined;
+    const timer = setTimeout(() => setFoundId(null), 2600);
+    return () => clearTimeout(timer);
+  }, [foundId]);
 
   // ── 초기화 ─────────────────────────────────────────────────
   const resetAll = () => {
     if (!window.confirm('모든 배치를 초기화할까요?')) return;
     setState({});
-    setSelectedId(null);
+    setSelectedIds([]);
+    anchorRef.current = null;
   };
 
   // ── 다운로드 ───────────────────────────────────────────────
@@ -308,7 +469,8 @@ export default function CustomMaker({ editId = null }) {
         <img src={`${LOGO_URL.replace('logo.webp', 'human_bug_eyes_icon.gif')}`} className="eyes_icon" alt="" />
         {' '}{isEdit ? '게시글 수정' : '커스텀 티어 메이커'}
       </h1>
-      {eventInfo && (
+      {/* 안내 배너는 이벤트 링크로 들어왔을 때만 — 그냥 제작하러 온 사람에게는 [이벤트 참여] 버튼만 보인다 */}
+      {eventId && eventInfo && (
         <div className={`edit-mode-banner event-mode-banner${eventInfo.canEnter ? '' : ' is-inactive'}`}>
           {eventInfo.missing && '이벤트 정보를 불러오지 못했어요. 티어표는 그대로 만들어 게시판에 올릴 수 있습니다.'}
           {!eventInfo.missing && eventInfo.canEnter && (
@@ -331,9 +493,14 @@ export default function CustomMaker({ editId = null }) {
       </p>
       {selectedChar && (
         <div className="mobile-place-hint">
-          <strong>{selectedChar.name}</strong> 선택됨 → 배치할 티어 칸을 탭하세요
+          {selectedChars.length > 1
+            ? <><strong>{selectedChars.length}명</strong> 선택됨 → 배치할 티어 칸을 누르면 한 번에 들어갑니다</>
+            : <><strong>{selectedChar.name}</strong> 선택됨 → 배치할 티어 칸을 탭하세요</>}
         </div>
       )}
+      <p className="pool-multi-help">
+        PC: <strong>Ctrl</strong>(⌘)+클릭으로 여러 명, <strong>Shift</strong>+클릭으로 사이 전부 선택 — 티어 칸을 누르면 한 번에 배치됩니다.
+      </p>
 
       {/* 등급 이동 — 화살표 + 번호 버튼(페이지네이션)을 한 줄에 두어 원하는 등급으로 바로 이동할 수 있다.
           TIERS 길이만 보고 동작하므로 등급이 늘어도 그대로 작동한다. */}
@@ -373,7 +540,7 @@ export default function CustomMaker({ editId = null }) {
         </nav>
       </div>
 
-      <div id="tier-capture-area" {...tierStyleProps(styleMap, index)}>
+      <div id="tier-capture-area" ref={tierAreaRef} {...tierStyleProps(styleMap, index)}>
         <div id="tier-list" className="tier-list">
           {tier.subTiers.map((sub) => {
             const key = zoneKey(index, sub);
@@ -396,7 +563,8 @@ export default function CustomMaker({ editId = null }) {
                       onDragEnd={onDragEnd}
                       onDragOver={allowDrop}
                       onDrop={dropOnCard(key, ci)}
-                      onClick={onCardClick(char, key)}
+                      onClick={onPlacedCardClick(char)}
+                      found={String(foundId) === String(char.id)}
                     />
                   ))}
                 </div>
@@ -443,31 +611,94 @@ export default function CustomMaker({ editId = null }) {
           </div>
         </div>
 
+        {!isEdit && eventInfo?.canEnter && (
+          <button
+            type="button"
+            className="btn btn-event"
+            title={`「${eventInfo.title}」 이벤트에 이 티어표를 냅니다`}
+            onClick={() => { setJoinIntent(true); onUploadClick(); }}
+          >
+            <span className="btn-text">이벤트 참여</span>
+            <span className="btn-icon">🏆</span>
+          </button>
+        )}
         <button type="button" className="btn btn-upload" onClick={onUploadClick}>
           <span className="btn-text">{isEdit ? '수정완료' : '업로드'}</span>
           <span className="btn-icon">{isEdit ? '✅' : '🔗'}</span>
         </button>
       </div>
 
-      <div className="character-pool" onDragOver={allowDrop} onDrop={dropOnPool}>
+      <div className="character-pool" ref={poolWrapRef} onDragOver={allowDrop} onDrop={dropOnPool}>
         <h3>
           📦 전체 캐릭터 풀 <span className="pool-hint-pc">(드래그해서 위로)</span>
           <span className="pool-hint-mobile">(탭으로 선택)</span>
           {' '}<small>{pool.length}명</small>
         </h3>
+
+        {/* 이름으로 찾기 — 입력 중에는 비슷한 이름 최대 5명, [검색하기]는 이름이 똑같은 카드로 이동 */}
+        <div className="pool-search">
+          <div className="pool-search-row">
+            <input
+              id="pool-search-input"
+              type="text"
+              className="pool-search-input"
+              value={search}
+              placeholder="캐릭터 이름으로 찾기"
+              autoComplete="off"
+              aria-label="캐릭터 이름 검색"
+              onChange={(e) => { setSearch(e.target.value); setSearchMsg(''); setSuggestOpen(true); }}
+              onFocus={() => setSuggestOpen(true)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') { e.preventDefault(); runSearch(); }
+                if (e.key === 'Escape') setSuggestOpen(false);
+              }}
+            />
+            {search && (
+              <button type="button" className="pool-search-clear" aria-label="검색어 지우기"
+                onClick={() => { setSearch(''); setSearchMsg(''); setSuggestOpen(false); }}
+              >✕</button>
+            )}
+            <button type="button" className="pool-search-btn" onClick={() => runSearch()}>검색하기</button>
+          </div>
+          {suggestOpen && suggestions.length > 0 && (
+            <ul className="pool-suggest">
+              {suggestions.map((c) => (
+                <li key={c.id}>
+                  <button type="button" onClick={() => { setSearch(c.name); runSearch(c.name); }}>
+                    <img src={tierImageUrl(c.img)} alt="" loading="lazy" />
+                    <span className="pool-suggest-name">{c.name}</span>
+                    <em className="pool-suggest-tier">{c.tier}티어</em>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+          {searchMsg && <p className="pool-search-msg">{searchMsg}</p>}
+        </div>
+
         <div id="character-pool" className="characters-pool">
-          {pool.map((char) => (
+          {pool.map((char, pi) => (
             <CharCard
               key={char.id}
               char={char}
-              selected={String(selectedId) === String(char.id)}
+              selected={selectedKeys.has(String(char.id))}
+              found={String(foundId) === String(char.id)}
               onDragStart={onDragStart(char.id)}
               onDragEnd={onDragEnd}
-              onClick={onCardClick(char, null)}
+              onClick={onPoolCardClick(char, pi)}
             />
           ))}
         </div>
       </div>
+
+      {/* 풀이 화면에 보이는 동안만 뜨는 이동 버튼 — ▲ 티어표로, ▼ 풀 맨 아래로.
+          PNG 캡처 영역(#tier-capture-area) 밖이라 캡처에는 찍히지 않는다. */}
+      {poolVisible && (
+        <div className="pool-viewport-arrows is-on">
+          <button type="button" className="pool-arrow pool-arrow--up" aria-label="티어표로 이동" onClick={scrollToTierBoard}>▲</button>
+          <button type="button" className="pool-arrow pool-arrow--down" aria-label="캐릭터 풀 맨 아래로 이동" onClick={scrollToPoolBottom}>▼</button>
+        </div>
+      )}
 
       {/* 캡처 전용 — 화면 밖에 전 등급을 한 번에 렌더해 두고 순서대로 찍는다.
           꾸미기 변수는 캡처 대상(#tier-capture-area 와 같은 역할)에 그대로 얹어 PNG/PDF 에도 반영한다 */}
@@ -515,6 +746,7 @@ export default function CustomMaker({ editId = null }) {
           editId={editId}
           editPost={editPost}
           eventInfo={eventInfo?.canEnter ? eventInfo : null}
+          eventDefaultOn={joinIntent}
           onEventJoined={() => { setModalOpen(false); navigate('/event#showcase'); }}
           onClose={() => setModalOpen(false)}
           onDone={(postId) => {
@@ -528,10 +760,11 @@ export default function CustomMaker({ editId = null }) {
 }
 
 // ── 업로드/수정 모달 (제목·내용·썸네일 → POST 또는 PUT /api/tierlists) ────────
-function UploadModal({ state, styleMap, user, editId, editPost, eventInfo, onEventJoined, onClose, onDone }) {
+function UploadModal({ state, styleMap, user, editId, editPost, eventInfo, eventDefaultOn, onEventJoined, onClose, onDone }) {
   const isEdit = Boolean(editId);
-  // 이벤트에서 넘어왔고 접수 중이면 기본으로 "이 티어표로 이벤트에 참가"가 켜져 있다.
-  const [joinEvent, setJoinEvent] = useState(true);
+  // 이벤트 링크로 왔거나 [이벤트 참여]로 열었으면 기본으로 켜 두고, 그냥 업로드면 꺼 둔다
+  // (진행 중인 이벤트가 있다고 해서 올리는 글이 자동으로 출품되면 안 되므로).
+  const [joinEvent, setJoinEvent] = useState(Boolean(eventDefaultOn));
   const [title, setTitle] = useState(editPost?.title || '');
   const [description, setDescription] = useState(editPost?.description || '');
   // null = 원래 썸네일(수정) 또는 자동 대표 이미지(신규) 유지

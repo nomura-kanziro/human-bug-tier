@@ -424,7 +424,7 @@ body.pool-arrows-on .pool-viewport-arrows {
   color: #ffcc00;
   outline: none;
 }
-.pool-arrow--up { top: 12px; }    /* ▲ 화면 상단 고정: 클릭 시 티어표(#tier-capture-area)로 스크롤 */
+.pool-arrow--up { top: calc(var(--header-h, 60px) + 10px); } /* ▲ 고정 헤더 바로 아래(헤더 메뉴를 가리지 않게): 클릭 시 티어표로 스크롤 */
 .pool-arrow--down { bottom: 12px; } /* ▼ 화면 하단 고정: 클릭 시 풀 목록 맨 아래로 스크롤 */
 .action-bar { margin-top: 30px; }
 
@@ -662,7 +662,7 @@ body.char-selected-mode .characters {
 
 .mobile-place-hint {
   position: sticky;
-  top: 56px;
+  top: calc(var(--header-h, 56px) + 8px);
   z-index: 50;
   margin: 0 auto 12px;
   max-width: 560px;
@@ -1218,4 +1218,236 @@ body.char-selected-mode .characters {
   flex: none;
   margin-top: 3px;
   accent-color: #f59e0b;
+}
+
+/* ======================================================================
+   커스텀 메이커 — 풀 검색 / 다중 선택 / 풀 이동 화살표 / 이벤트 참여
+   ====================================================================== */
+
+/* ── 풀 위쪽 여백 ──
+   예전에는 카드가 풀 상자 천장에 거의 붙어 있어서 첫 줄이 잘린 것처럼 보였다.
+   위쪽 여백을 더 줘서 카드가 상자 안에 여유 있게 자리잡도록 한다(아래는 원래대로). */
+.characters-pool {
+  padding: 28px 20px 22px;
+}
+
+/* ── 풀 안 검색창 ──
+   풀 상자의 "맨 위와 가운데 사이"에 가로 중앙으로 놓인다. 추천 목록이 카드 위로 겹쳐 떠야 해서
+   .pool-search 를 기준(relative)으로 잡고 목록만 absolute 로 띄운다. */
+.pool-search {
+  position: relative;
+  z-index: 5;
+  width: min(420px, 92%);
+  margin: 0 auto 14px;
+  text-align: left;
+}
+
+.pool-search-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.pool-search-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 204, 0, 0.45);
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
+  font-size: 0.92rem;
+}
+
+.pool-search-input::placeholder {
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.pool-search-input:focus {
+  outline: none;
+  border-color: #ffcc00;
+  box-shadow: 0 0 0 3px rgba(255, 204, 0, 0.2);
+}
+
+.pool-search-clear {
+  position: absolute;
+  right: 96px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+  font-size: 0.7rem;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.pool-search-clear:hover {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.pool-search-btn {
+  flex: none;
+  padding: 10px 16px;
+  border: 1px solid #ffcc00;
+  border-radius: 999px;
+  background: #ffcc00;
+  color: #111;
+  font-size: 0.86rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.12s ease;
+}
+
+.pool-search-btn:hover {
+  background: #ffd633;
+}
+
+.pool-search-btn:active {
+  transform: scale(0.97);
+}
+
+/* 추천 목록 — 최대 5명. 이름이 검색어로 시작하는 캐릭터가 위에 온다. */
+.pool-suggest {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: calc(100% + 6px);
+  z-index: 30;
+  max-height: 300px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  border: 1px solid rgba(255, 204, 0, 0.4);
+  border-radius: 12px;
+  background: #1f1f1f;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.55);
+  overflow-y: auto;
+}
+
+.pool-suggest li + li {
+  margin-top: 2px;
+}
+
+.pool-suggest button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 7px 9px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #fff;
+  font-size: 0.88rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.pool-suggest button:hover,
+.pool-suggest button:focus-visible {
+  background: rgba(255, 204, 0, 0.16);
+  outline: none;
+}
+
+.pool-suggest img {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.pool-suggest-name {
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.pool-suggest-tier {
+  flex: none;
+  color: rgba(255, 204, 0, 0.85);
+  font-size: 0.74rem;
+  font-style: normal;
+  font-weight: 700;
+}
+
+.pool-search-msg {
+  margin: 8px 0 0;
+  color: rgba(255, 204, 0, 0.85);
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+/* ── 검색으로 찾아간 카드 강조(2.6초) ── */
+.char.is-found {
+  border-color: #ffcc00;
+  box-shadow: 0 0 0 3px rgba(255, 204, 0, 0.55), 0 0 22px rgba(255, 204, 0, 0.7);
+  animation: char-found-pulse 0.9s ease-in-out 2;
+}
+
+@keyframes char-found-pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.06); }
+}
+
+/* ── 다중 선택 안내 문구(PC 전용) ── */
+.pool-multi-help {
+  margin: 6px 0 0;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.82rem;
+}
+
+.pool-multi-help strong {
+  color: #ffcc00;
+}
+
+/* ── 풀 이동 화살표 ──
+   React 가 보일 때만 그리므로(IntersectionObserver) body 클래스 대신 .is-on 으로 표시한다. */
+.pool-viewport-arrows.is-on {
+  display: block;
+  pointer-events: none;
+}
+
+/* ── 이벤트 참여 버튼 ── */
+.btn-event {
+  background: linear-gradient(135deg, #f59e0b, #d97706);
+  color: #fff;
+}
+
+.btn-event:hover {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+}
+
+@media (max-width: 768px) {
+  /* 모바일에서는 Ctrl/Shift 안내가 의미 없어 숨긴다(탭으로 한 명씩 고른다) */
+  .pool-multi-help {
+    display: none;
+  }
+
+  .characters-pool {
+    padding: 18px 12px 14px;
+  }
+
+  .pool-search {
+    width: 100%;
+  }
+
+  .pool-search-clear {
+    right: 88px;
+  }
+
+  .pool-search-btn {
+    padding: 10px 13px;
+  }
+}
+
+/* ── 라이트 모드 보정 ──
+   메이커는 원래 검정+골드 화면이지만 사이트가 밝음일 때 페이지 배경과 대비가 약해지는 요소만 손본다. */
+:root:not([data-theme="dark"]) .pool-suggest {
+  background: #241f0e;
 }
