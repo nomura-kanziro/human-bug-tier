@@ -34,6 +34,7 @@ const notificationSchema = new mongoose.Schema({
       'notice',                // 새 공지 게시
       'news',                  // 새 소식/뉴스 게시
       'event_result',          // 이벤트 결과 발표(티어표 공개 당첨자 / 메모리 게임 기간 1위)
+      'event_open',            // 이벤트 접수 시작(티어표 공개 — 예약 자동 오픈 또는 관리자가 지금 열기) 전체 회원 공지
     ],
   },
   // type을 상위 3개 카테고리로 묶은 값. User/Admin의 notificationSettings

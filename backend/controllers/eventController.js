@@ -594,7 +594,8 @@ const setMemoryPeriodStatus = async (req, res) => {
 // 접수 시작은 관리자가 날짜를 골라 예약할 수 있다. 상태 흐름·규칙은 models/EventShowcase.js 주석 참고.
 
 const SHOWCASE_REVEAL_DELAY_MS = 30 * 60 * 1000; // 마감 후 결과 공개까지 기본 30분
-const SHOWCASE_TICK_MS = 60 * 1000;              // 예약/마감/공개 시각 확인 주기
+const SHOWCASE_RESULT_EXPIRE_MS = 36 * 60 * 60 * 1000; // 결과 발표 36시간 뒤 — 회차를 통째로 지워 "이벤트 없음" 원래 상태로 되돌린다
+const SHOWCASE_TICK_MS = 60 * 1000;              // 예약/마감/공개 시각·결과 만료 확인 주기
 const SHOWCASE_DEFAULT_AWARD = 1000;
 const SHOWCASE_MIN_AWARD = 1;
 const SHOWCASE_MAX_AWARD = 1000000;              // 오타로 터무니없는 금액이 지급되는 것을 막는 상한
@@ -678,18 +679,50 @@ function entryShape(entry, { votes, showVotes, viewerId, myVoteEntryId }) {
   };
 }
 
+// 접수가 시작되면(예약이 자동으로 열리거나 관리자가 지금 연 경우 모두) 회원 전체에게 알림을 보낸다.
+// "무조건 모든 유저" 요구사항이라 참가 여부와 무관하게 User 컬렉션 전체를 돈다 — 다만 각자 알림 설정에서
+// 공지·소식(noticeNews) 카테고리를 꺼둔 사람에게는 createNotification 이 알아서 보내지 않는다(사이트 공통 규칙).
+async function notifyShowcaseOpened(showcase) {
+  const users = await User.find().select('nickname email').lean();
+  for (const u of users) {
+    if (!u.nickname) continue;
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      await createNotification({
+        recipientNickname: u.nickname,
+        recipientEmail: u.email || '',
+        type: 'event_open',
+        category: 'noticeNews',
+        title: '🎨 티어표 공개 이벤트 접수가 시작됐어요!',
+        message: `[${showcase.title}] 지금부터 접수 중입니다. 티어표를 출품하거나 다른 참가작에 투표해보세요!`,
+        link: '/event#showcase',
+        resourceId: showcase._id,
+        resourceType: 'eventShowcase',
+      });
+    } catch (err) {
+      console.error('티어표 공개 접수 시작 알림 실패:', u.nickname, err.message);
+    }
+  }
+}
+
 // 마감·공개 시각이 지난 회차를 진행시키는 스케줄러 본체(1분마다 + 조회 때마다 호출).
-//   scheduled(opensAt 도래) → open → closed(deadlineAt 도래, 공개 시각 기본값 채움) → 공개일에 자동 발표
+//   scheduled(opensAt 도래) → open(전체 알림) → closed(deadlineAt 도래, 공개 시각 기본값 채움) → 공개일에 자동 발표
+//   → revealed 로 36시간이 지나면 통째로 삭제해 "이벤트 없음" 상태로 되돌린다.
 async function advanceShowcases() {
   if (!isDbConnected()) return;
   const now = new Date();
 
   const toOpen = await EventShowcase.find({ status: 'scheduled', opensAt: { $ne: null, $lte: now } });
   for (const showcase of toOpen) {
-    showcase.status = 'open';
-    showcase.openedAt = now;
+    // 스케줄러와 관리자의 "지금 열기"가 같은 순간 겹쳐도 알림이 두 번 나가지 않도록 상태를 원자적으로 선점한다.
     // eslint-disable-next-line no-await-in-loop
-    await showcase.save();
+    const claimed = await EventShowcase.findOneAndUpdate(
+      { _id: showcase._id, status: 'scheduled' },
+      { $set: { status: 'open', openedAt: now } },
+      { new: true },
+    );
+    // eslint-disable-next-line no-await-in-loop
+    if (claimed) await notifyShowcaseOpened(claimed);
   }
 
   const toClose = await EventShowcase.find({ status: 'open', deadlineAt: { $ne: null, $lte: now } });
@@ -711,6 +744,19 @@ async function advanceShowcases() {
     if (waiting) continue;
     // eslint-disable-next-line no-await-in-loop
     await revealShowcaseDoc(showcase);
+  }
+
+  // 발표 후 36시간이 지난 회차는 출품·투표 기록까지 통째로 지워 "이벤트가 아예 없던" 원래 상태로 되돌린다.
+  // (참가자 알림·상금 지급은 발표 시점에 이미 끝났으므로 여기서는 그냥 정리만 한다)
+  const expireBefore = new Date(now.getTime() - SHOWCASE_RESULT_EXPIRE_MS);
+  const toExpire = await EventShowcase.find({ status: 'revealed', revealedAt: { $ne: null, $lte: expireBefore } });
+  for (const showcase of toExpire) {
+    // eslint-disable-next-line no-await-in-loop
+    await EventShowcaseVote.deleteMany({ showcaseId: showcase._id });
+    // eslint-disable-next-line no-await-in-loop
+    await EventShowcaseEntry.deleteMany({ showcaseId: showcase._id });
+    // eslint-disable-next-line no-await-in-loop
+    await EventShowcase.deleteOne({ _id: showcase._id });
   }
 }
 
@@ -1145,13 +1191,19 @@ const setShowcaseStatus = async (req, res) => {
     if (action === 'open') {
       const err = await checkStartable();
       if (err) return res.status(err.startsWith('이미') ? 409 : 400).json({ error: err });
-      showcase.status = 'open';
-      showcase.openedAt = now;
-      if (!showcase.revealAt || showcase.revealAt < showcase.deadlineAt) {
-        showcase.revealAt = new Date(showcase.deadlineAt.getTime() + SHOWCASE_REVEAL_DELAY_MS);
-      }
-      await showcase.save();
-      return res.json({ ok: true, showcase: await adminShowcaseRow(showcase) });
+      const revealAt = (!showcase.revealAt || showcase.revealAt < showcase.deadlineAt)
+        ? new Date(showcase.deadlineAt.getTime() + SHOWCASE_REVEAL_DELAY_MS)
+        : showcase.revealAt;
+      // 스케줄러가 같은 순간 이 회차를 자동으로 열 수도 있으니(예약 시각 도래) 원자적으로 선점해
+      // "모든 회원에게 알림"이 중복으로 나가지 않게 한다.
+      const claimed = await EventShowcase.findOneAndUpdate(
+        { _id: showcase._id, status: { $in: ['draft', 'scheduled'] } },
+        { $set: { status: 'open', openedAt: now, revealAt } },
+        { new: true },
+      );
+      if (!claimed) return res.status(409).json({ error: '이미 다른 곳에서 처리되었습니다. 새로고침 후 다시 시도해주세요.' });
+      await notifyShowcaseOpened(claimed);
+      return res.json({ ok: true, showcase: await adminShowcaseRow(claimed) });
     }
 
     if (action === 'close') {
