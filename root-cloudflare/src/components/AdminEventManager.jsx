@@ -31,6 +31,11 @@ const EMPTY_SHOWCASE_FORM = { id: null, title: '', description: '', opensAt: '',
 
 const EMPTY_MEMORY_FORM = { id: null, title: '', description: '', endsAt: '', awardPoints: '1000' };
 
+// 여는 순간 서버가 회원 전체에게 "접수 시작" 알림을 보내므로(되돌릴 수 없음) 확인 문구에 그 사실을 밝힌다.
+// 목록의 "열기" 버튼과 "저장하고 바로 열기" 가 같은 문구를 쓴다.
+const OPEN_MEMORY_CONFIRM = '이 기록 이벤트를 지금 여시겠어요?\n열리는 순간부터 회원이 메모리 게임을 할 수 있고, 회원 전체에게 이벤트 시작 알림이 발송됩니다.';
+const OPEN_SHOWCASE_CONFIRM = '지금 바로 접수를 여시겠어요?\n열리는 순간부터 회원이 티어표를 출품하고 투표할 수 있고, 회원 전체에게 접수 시작 알림이 발송됩니다.';
+
 function Msg({ msg }) {
   if (!msg) return null;
   return <p className={`eadm-msg${msg.error ? ' is-error' : ' is-ok'}`} role="status">{msg.text}</p>;
@@ -74,6 +79,8 @@ function MemoryPeriodManager() {
   };
 
   const save = async (thenOpen = false) => {
+    // "저장하고 바로 열기"는 여는 순간 회원 전체에게 알림이 나가므로 저장 전에 한 번 확인한다
+    if (thenOpen && !window.confirm(OPEN_MEMORY_CONFIRM)) return;
     const data = await run('/api/events/memory/period', {
       id: form.id || undefined,
       title: form.title,
@@ -88,7 +95,7 @@ function MemoryPeriodManager() {
 
   const act = async (id, action, skipConfirm = false) => {
     const confirms = {
-      open: '이 기록 이벤트를 지금 여시겠어요?\n열리는 순간부터 회원이 메모리 게임을 할 수 있습니다.',
+      open: OPEN_MEMORY_CONFIRM,
       close: '이 기록 이벤트를 지금 닫을까요?\n순위가 확정되고 진행 중인 판은 기록되지 않습니다.',
       settle: '이 회차를 정산할까요?\n1위에게 상금이 지급되고 알림이 발송됩니다. 되돌릴 수 없습니다.',
       delete: '이 회차를 삭제할까요?',
@@ -260,6 +267,8 @@ function ShowcaseManager() {
 
   // 저장 → (선택) 예약/열기까지 한 번에
   const save = async (then = null) => {
+    // "저장하고 바로 열기"는 여는 순간 회원 전체에게 알림이 나가므로 저장 전에 한 번 확인한다
+    if (then === 'open' && !window.confirm(OPEN_SHOWCASE_CONFIRM)) return;
     const data = await run('/api/events/showcase/save', formBody(),
       then ? null : (form.id ? '수정했습니다.' : '이벤트를 만들었습니다. 아직 "작성 중"이라 회원에게는 보이지 않습니다.'));
     if (!data) return;
@@ -273,9 +282,9 @@ function ShowcaseManager() {
 
   const act = async (id, action, skipConfirm = false, extra = {}) => {
     const confirms = {
-      schedule: '이 이벤트의 접수 시작을 예약할까요?\n정한 날짜·시각에 자동으로 열리고, 그 전까지 회원에게는 "접수 예정"으로 안내됩니다.',
+      schedule: '이 이벤트의 접수 시작을 예약할까요?\n정한 날짜·시각에 자동으로 열리고(그때 회원 전체에게 접수 시작 알림 발송), 그 전까지 회원에게는 "접수 예정"으로 안내됩니다.',
       unschedule: '예약을 취소하고 작성 중으로 되돌릴까요?',
-      open: '지금 바로 접수를 여시겠어요?\n열리는 순간부터 회원이 티어표를 출품하고 투표할 수 있습니다.',
+      open: OPEN_SHOWCASE_CONFIRM,
       close: '지금 접수를 닫을까요?\n새 출품은 막히고, 투표는 결과 공개일까지 계속됩니다.',
       reveal: '지금 결과를 발표할까요?\n우승자에게 상금이 지급되고 참가자·투표자 전원에게 알림이 나갑니다. 되돌릴 수 없습니다.',
       delete: '이 회차를 삭제할까요?',

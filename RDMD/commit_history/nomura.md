@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 330 |
+| **커밋 수** | 331 |
 | **기간** | 2026-03-20 ~ 2026-09-20 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -359,6 +359,7 @@
 | 328 | 2026-09-23 | [`f314d5e`](#f314d5e) | fix(common): 메인 화면 퀵카드(커스텀 메이커·행운 뽑기) 하위 링크 간격 0→8px |
 | 329 | 2026-09-23 | [`c62af0f`](#c62af0f) | feat(event): 티어표 공개 — 접수 시작 시 전체 회원 알림 + 결과 발표 36시간 뒤 자동 삭제(원 상태로 초기화) |
 | 330 | 2026-09-23 | [`e298623`](#e298623) | fix(theme): 전 페이지 라이트/다크 색 겹침 전수 점검 — 다크 티어표 6~9등급 이름·노란 버튼 파란 글자·찾기 탭 등 대비 수정 |
+| 331 | 2026-09-23 | [`pending`](#pending331) | feat(event): 메모리 게임 기록 이벤트도 열리면 회원 전체 알림 — 공용 notifyAllMembers + 열기 원자화 + 관리자 확인 문구 |
 
 ---
 
@@ -6386,5 +6387,23 @@
 - **요약**: "테마 설정에 색 겹치는 거 — 모든 페이지 둘러봐서 어둡거나 밝을 때 안 보이는 문자나 도형 수정". 헤드리스 Chrome 으로 38개 화면 × 라이트/다크 + 열리는 화면 8종(드롭다운·사이드 메뉴·프로필·알림·메이커 메뉴·꾸미기·검색 추천·업로드 모달)을 비회원/회원/관리자로 열어 모든 글자(투명도·반투명 레이어·그라디언트 합성한 실제 배경 대비)·도형(바탕/테두리 구분)·placeholder·아이콘의 WCAG 대비를 전수 측정 — 712건(2:1 미만 279건) → 의도된 것(이모지·비활성·장식)만 남김. 원인은 대부분 다크 안전망 규칙의 구체성 과다: `[data-theme="dark"] .char` 가 공식 티어표 카드까지 어둡게 칠해 6~9등급 이름이 검정 위 검정(→ tier-board 에서 등급 변수 재적용), `[data-theme="dark"] a` 가 노란 링크 버튼(로그인·티어표 만들기·제작하기) 글자를 파랑으로 덮음(→ `:where()` 로 구체성 0, 드러난 2곳 직접 지정), `.login-box button` 이 찾기 탭을 노란 버튼으로 칠해 선택 탭 글자가 묻힘, 다크 규칙이 행운 탭·꾸미기·배팅 옵션의 선택 표시를 지움, 포커 ♣ 칩 검정. 라이트: 메이커 검색창·✕·다중 선택 안내가 흰 바탕 흰 글씨(→ 테마 토큰), 관리자 페이지 번호 버튼 기본 스타일, 비활성 버튼 윤곽 소실(→ 테두리). 전반 가독성: 라이트 `--text-muted` #8a8b91→#6e6f76(3.4→4.9:1), 고정 회색 토큰화, 앰버 바탕 흰 글자→짙은 대비색, 연한 앰버 위 앰버 글자·공지 뱃지는 color-mix 로 보정. 수정 후 재점검에서 새로 생긴 문제 없음 확인(임시 zzcc_ 계정·이벤트 회차는 DB 직접 삽입 후 정리, 알림 발송 없음).
 - **주요 파일**: `root-cloudflare/src/styles/` (theme·tier-board·auth-find·luck-draw·luck-poker·luck-ladder·custom-maker·event·react-extra·admin-manage·index-home·Header_Footer·my-page·post_detail), `components/NoticeListItem.jsx`, `pages/SignUp.jsx`, `pages/AdminDashboard.jsx`
 - **관련 RDMD**: `RDMD/frontend/01-common/16-theme-contrast-audit-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending331"></a>
+
+### 331. 2026-09-23 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(event): 메모리 게임 기록 이벤트도 열리면 회원 전체 알림 — 공용 notifyAllMembers + 열기 원자화 + 관리자 확인 문구
+- **git**: `git show pending`
+- **범위**: backend + frontend / 이벤트(메모리 게임·티어표 공개 알림)
+- **요약**: "안내 문구 관련해서 메모리 이벤트에도 전체 알림을 붙여줘" — 실전 테스트에서 메모리 페이지는 "열리면 공지로 알려드릴게요"라는데 실제로는 알림이 없던 불일치를 해소. `notifyAllMembers()` 로 회원 전체 event_open(noticeNews) 발송 루프를 공용화(티어표 공개 발송 내용은 동일), `notifyMemoryPeriodOpened()` 신설(회차 제목·상금·마감, 링크 /event#memory). 메모리 open 은 findOneAndUpdate({status:draft}) 로 원자 선점 후에만 알림 — 중복 클릭·동시 클릭에도 1회. 개인 알림 설정은 존중. 관리자 열기 확인창·"저장하고 바로 열기"(원래 확인 없이 열림)에 "회원 전체에게 알림 발송" 안내 + 사전 확인, 회원 안내 문구는 "알림(🔔)으로"로 정정. 확인: 실제 컨트롤러를 별도 프로세스에서 호출하되 User.find 만 임시 계정으로 좁혀 10건 통과(동시 열기 200/409·알림 1건·설정 존중·재열기 거절·티어표 공개 회귀), 실제 회원 알림 0건.
+- **주요 파일**: `backend/controllers/eventController.js`, `backend/models/Notification.js`, `root-cloudflare/src/components/AdminEventManager.jsx`, `EventMemoryPanel.jsx`, `EventShowcasePanel.jsx`
+- **관련 RDMD**: `RDMD/backend/09-event/05-memory-open-notify-record.md`
 
 [▲ 목차로](#목차)

@@ -131,7 +131,7 @@ export default function EventShowcasePanel({ isLoggedIn, isAdmin }) {
         {intro}
         <div className="event-soon">
           <strong>지금 열려 있는 이벤트가 없어요</strong>
-          <span>다음 회차가 열리면 이곳에서 바로 참가할 수 있어요. 공지로도 알려드릴게요.</span>
+          <span>다음 회차가 열리면 이곳에서 바로 참가할 수 있어요. 접수가 시작되면 알림(🔔)으로도 알려드릴게요.</span>
         </div>
         {isAdmin && (
           <p className="event-admin-hint">

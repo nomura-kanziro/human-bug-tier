@@ -109,6 +109,7 @@ RDMD/backend/
 | [02-memory-period-record.md](./09-event/02-memory-period-record.md) | — | 메모리 게임 기록 이벤트(회차) — 관리자가 열고 닫고 정산, 한 사람 최고 기록만 순위, 1000P 이상 상금 |
 | [03-showcase-launch-record.md](./09-event/03-showcase-launch-record.md) | — | 티어표 공개 정식 오픈 — 출품·투표·접수 시작 예약·자동 집계/직접 선정 발표·상금(중복 지급 방지) |
 | [04-showcase-open-notify-expire-record.md](./09-event/04-showcase-open-notify-expire-record.md) | — | 접수 시작 시 전체 회원 알림 + 결과 발표 36시간 뒤 자동 삭제(원 상태로 초기화) |
+| [05-memory-open-notify-record.md](./09-event/05-memory-open-notify-record.md) | — | 메모리 기록 이벤트도 열리면 회원 전체 알림(공용 notifyAllMembers) + 열기 원자화 |
 
 ---
 

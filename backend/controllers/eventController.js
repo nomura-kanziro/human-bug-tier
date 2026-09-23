@@ -55,6 +55,32 @@ async function addPoints(userId, delta) {
   return profile.points;
 }
 
+// 이벤트 접수 시작 공지 — 조건 없이 회원 전체(User 컬렉션 전부)에게 event_open 알림을 보낸다.
+// 티어표 공개·메모리 기록 이벤트가 같이 쓴다. 각자 알림 설정에서 공지·소식(noticeNews)을 꺼둔 사람에게는
+// createNotification 이 알아서 보내지 않는다(사이트 공통 규칙). 한 명이 실패해도 나머지는 계속 보낸다.
+async function notifyAllMembers({ title, message, link, resourceId, resourceType }) {
+  const users = await User.find().select('nickname email').lean();
+  for (const u of users) {
+    if (!u.nickname) continue;
+    try {
+      // eslint-disable-next-line no-await-in-loop
+      await createNotification({
+        recipientNickname: u.nickname,
+        recipientEmail: u.email || '',
+        type: 'event_open',
+        category: 'noticeNews',
+        title,
+        message,
+        link,
+        resourceId,
+        resourceType,
+      });
+    } catch (err) {
+      console.error('이벤트 접수 시작 알림 실패:', u.nickname, err.message);
+    }
+  }
+}
+
 /* ====================== 1) 매일 간단 퀴즈 ====================== */
 
 const QUIZ_CHOICES = 3; // 보기 개수(3지선다)
@@ -265,6 +291,21 @@ async function advanceMemoryPeriods() {
     // eslint-disable-next-line no-await-in-loop
     await EventMemorySession.deleteMany({ periodId: period._id, status: 'playing' });
   }
+}
+
+// 기록 이벤트가 열리면 회원 전체에게 알린다(이벤트 페이지 안내 "열리면 공지로 알려드릴게요"가 실제로 지켜지도록).
+async function notifyMemoryPeriodOpened(period) {
+  const award = period.awardPoints ? ` 가장 빠른 기록을 낸 분께 ${period.awardPoints}P!` : '';
+  const until = period.endsAt
+    ? ` (마감: ${new Date(period.endsAt).toLocaleString('ko-KR', { timeZone: 'Asia/Seoul', month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })})`
+    : '';
+  await notifyAllMembers({
+    title: '🧠 메모리 게임 기록 이벤트가 열렸어요!',
+    message: `[${period.title}] 지금부터 도전할 수 있어요.${award}${until}`,
+    link: '/event#memory',
+    resourceId: period._id,
+    resourceType: 'eventMemoryPeriod',
+  });
 }
 
 async function getOpenMemoryPeriod() {
@@ -513,10 +554,16 @@ const setMemoryPeriodStatus = async (req, res) => {
       await advanceMemoryPeriods();
       const already = await EventMemoryPeriod.findOne({ status: 'open', _id: { $ne: period._id } });
       if (already) return res.status(409).json({ error: `이미 진행 중인 기록 이벤트가 있습니다: ${already.title}` });
-      period.status = 'open';
-      period.openedAt = now;
-      await period.save();
-      return res.json({ ok: true, period: memoryPeriodShape(period) });
+      // 여는 순간 회원 전체에게 알림이 나가므로, 버튼을 두 번 누르거나 두 관리자가 동시에 눌러도
+      // 한 번만 열리고 알림도 한 번만 가도록 draft → open 전환을 원자적으로 선점한다(티어표 공개와 같은 패턴).
+      const opened = await EventMemoryPeriod.findOneAndUpdate(
+        { _id: period._id, status: 'draft' },
+        { $set: { status: 'open', openedAt: now } },
+        { new: true },
+      );
+      if (!opened) return res.status(409).json({ error: '이미 다른 곳에서 처리되었습니다. 새로고침 후 다시 시도해주세요.' });
+      await notifyMemoryPeriodOpened(opened);
+      return res.json({ ok: true, period: memoryPeriodShape(opened) });
     }
 
     if (action === 'close') {
@@ -680,29 +727,16 @@ function entryShape(entry, { votes, showVotes, viewerId, myVoteEntryId }) {
 }
 
 // 접수가 시작되면(예약이 자동으로 열리거나 관리자가 지금 연 경우 모두) 회원 전체에게 알림을 보낸다.
-// "무조건 모든 유저" 요구사항이라 참가 여부와 무관하게 User 컬렉션 전체를 돈다 — 다만 각자 알림 설정에서
+// "무조건 모든 유저" 요구사항이라 참가 여부와 무관하게 User 컬렉션 전체를 돈다(notifyAllMembers) — 다만 각자 알림 설정에서
 // 공지·소식(noticeNews) 카테고리를 꺼둔 사람에게는 createNotification 이 알아서 보내지 않는다(사이트 공통 규칙).
 async function notifyShowcaseOpened(showcase) {
-  const users = await User.find().select('nickname email').lean();
-  for (const u of users) {
-    if (!u.nickname) continue;
-    try {
-      // eslint-disable-next-line no-await-in-loop
-      await createNotification({
-        recipientNickname: u.nickname,
-        recipientEmail: u.email || '',
-        type: 'event_open',
-        category: 'noticeNews',
-        title: '🎨 티어표 공개 이벤트 접수가 시작됐어요!',
-        message: `[${showcase.title}] 지금부터 접수 중입니다. 티어표를 출품하거나 다른 참가작에 투표해보세요!`,
-        link: '/event#showcase',
-        resourceId: showcase._id,
-        resourceType: 'eventShowcase',
-      });
-    } catch (err) {
-      console.error('티어표 공개 접수 시작 알림 실패:', u.nickname, err.message);
-    }
-  }
+  await notifyAllMembers({
+    title: '🎨 티어표 공개 이벤트 접수가 시작됐어요!',
+    message: `[${showcase.title}] 지금부터 접수 중입니다. 티어표를 출품하거나 다른 참가작에 투표해보세요!`,
+    link: '/event#showcase',
+    resourceId: showcase._id,
+    resourceType: 'eventShowcase',
+  });
 }
 
 // 마감·공개 시각이 지난 회차를 진행시키는 스케줄러 본체(1분마다 + 조회 때마다 호출).

@@ -169,7 +169,7 @@ export default function EventMemoryPanel({ isLoggedIn }) {
           ) : (
             <span className="event-period-meta">아직 열린 기록 이벤트가 없어요.</span>
           )}
-          {!canPlay && <span className="event-period-note">지금은 진행 중인 기록 이벤트가 없어 게임을 할 수 없습니다. 열리면 공지로 알려드릴게요.</span>}
+          {!canPlay && <span className="event-period-note">지금은 진행 중인 기록 이벤트가 없어 게임을 할 수 없습니다. 열리면 알림(🔔)으로 알려드릴게요.</span>}
         </div>
       )}
 
