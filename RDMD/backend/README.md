@@ -93,6 +93,7 @@ RDMD/backend/
 |------|--------|------|
 | [01-render-static-serve-deploy-record.md](./07-deploy/01-render-static-serve-deploy-record.md) | 27 | Render · 정적 서빙 · DEPLOY |
 | [02-root-render-static-record.md](./07-deploy/02-root-render-static-record.md) | — | Render 전용 프론트 `root-render/` |
+| [03-oracle-cloud-deploy-record.md](./07-deploy/03-oracle-cloud-deploy-record.md) | — | Oracle Cloud 배포 준비 — `backend/deploy/oracle/`(로컬 코드 묶어 scp·pm2·nginx·롤백) |
 
 ## 08-luck-draw — 행운 뽑기
 

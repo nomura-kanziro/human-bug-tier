@@ -69,6 +69,8 @@ dist/
 build/
 out/
 .cache/
+# Oracle Cloud 배포 패키지(backend/deploy/oracle/deploy.sh 가 만드는 tar.gz)
+.deploy-out/
 
 # ============================================
 # 프로젝트 전용 무시 항목
