@@ -1156,6 +1156,15 @@ body.char-selected-mode .characters {
   border-color: var(--border-color);
   color: var(--text-primary);
 }
+/* 위 다크 규칙이 .is-on(선택됨)과 구체성이 같고 뒤에 있어 선택 표시(노란 바탕)까지 지워 버렸다
+   → 어느 버튼이 켜졌는지 구분이 안 됐다. 다크에서도 선택 상태를 다시 칠한다. */
+[data-theme="dark"] .decorate-seg-btn.is-on,
+[data-theme="dark"] .decorate-preset.is-on,
+[data-theme="dark"] .decorate-effect.is-on {
+  background: #ffcc00;
+  color: #111;
+  border-color: #eab308;
+}
 [data-theme="dark"] .decorate-restore {
   border-color: #ffcc00;
   color: #ffcc00;
@@ -1252,15 +1261,17 @@ body.char-selected-mode .characters {
   flex: 1 1 auto;
   min-width: 0;
   padding: 10px 14px;
-  border: 1px solid rgba(255, 204, 0, 0.45);
+  /* 검색창은 검은 풀 상자(.characters-pool) 바깥, 페이지 바탕 위(.character-pool)에 놓인다.
+     예전엔 검은 바탕 기준의 흰 글자·반투명 검정 바탕이라 라이트 모드에서 흰 바탕 위 흰 글씨가 되어 안 보였다 → 테마 토큰으로 */
+  border: 1px solid rgba(245, 158, 11, 0.55);
   border-radius: 999px;
-  background: rgba(0, 0, 0, 0.35);
-  color: #fff;
+  background: var(--input-bg);
+  color: var(--text-primary);
   font-size: 0.92rem;
 }
 
 .pool-search-input::placeholder {
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--text-muted);
 }
 
 .pool-search-input:focus {
@@ -1277,15 +1288,16 @@ body.char-selected-mode .characters {
   padding: 0;
   border: 0;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
+  /* 입력칸(테마 바탕) 안에 놓이므로 테마 토큰 — 흰 바탕에 흰 ✕ 로 안 보이던 것 수정 */
+  background: var(--bg-hover);
+  color: var(--text-secondary);
   font-size: 0.7rem;
   line-height: 1;
   cursor: pointer;
 }
 
 .pool-search-clear:hover {
-  background: rgba(255, 255, 255, 0.22);
+  background: var(--border-strong);
 }
 
 .pool-search-btn {
@@ -1378,7 +1390,8 @@ body.char-selected-mode .characters {
 
 .pool-search-msg {
   margin: 8px 0 0;
-  color: rgba(255, 204, 0, 0.85);
+  /* 페이지 바탕 위 문구 — 연노랑은 흰 바탕에서 안 보여 테마 강조색(짙은 앰버)으로 */
+  color: var(--brand-strong);
   font-size: 0.8rem;
   text-align: center;
 }
@@ -1396,14 +1409,15 @@ body.char-selected-mode .characters {
 }
 
 /* ── 다중 선택 안내 문구(PC 전용) ── */
+/* 이 문구는 페이지 바탕 위에 있다 — 흰 반투명 글자는 라이트 모드 흰 바탕에서 안 보여 테마 토큰으로 바꿨다 */
 .pool-multi-help {
   margin: 6px 0 0;
-  color: rgba(255, 255, 255, 0.55);
+  color: var(--text-secondary);
   font-size: 0.82rem;
 }
 
 .pool-multi-help strong {
-  color: #ffcc00;
+  color: var(--brand-strong);
 }
 
 /* ── 풀 이동 화살표 ──
@@ -1416,7 +1430,8 @@ body.char-selected-mode .characters {
 /* ── 이벤트 참여 버튼 ── */
 .btn-event {
   background: linear-gradient(135deg, #f59e0b, #d97706);
-  color: #fff;
+  /* 흰 글자는 앰버 바탕에서 대비가 약해(2.1:1) 짙은 대비색으로 */
+  color: var(--brand-contrast);
 }
 
 .btn-event:hover {

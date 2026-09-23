@@ -14,7 +14,8 @@
 }
 
 .poker-points strong {
-  color: #f59e0b;
+  /* #f59e0b 는 흰 바탕에서 2.1:1 — 테마 강조색(라이트는 짙은 앰버, 다크는 밝은 앰버)으로 */
+  color: var(--brand-strong);
   font-size: 16px;
 }
 
@@ -194,6 +195,12 @@
 [data-theme="dark"] .poker-hand-desc,
 [data-theme="dark"] .poker-suit-note {
   color: #9ca3af;
+}
+
+/* 문양 안내의 "♣ 클로버" 칩은 카드(흰 바탕) 밖, 페이지 바탕 위에 놓인다 — 카드용 검정(#111827)을 그대로 쓰면
+   다크 모드에서 검정 바탕에 묻혀 안 보이므로 밝은 글자색으로 바꾼다(카드 안의 검정 문양은 그대로). */
+[data-theme="dark"] .poker-suit-chip.poker-card-black {
+  color: var(--text-primary);
 }
 
 [data-theme="dark"] .poker-bet-row input {

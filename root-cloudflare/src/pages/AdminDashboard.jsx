@@ -552,7 +552,7 @@ export default function AdminDashboard() {
               return (
                 <tr className={notice.isPinned ? 'row-pinned' : ''} key={id}>
                   <td>{noticeStart + idx + 1}</td>
-                  <td>{notice.isPinned ? <span className="badge badge-pinned">📌 고정</span> : <span style={{ color: '#ccc' }}>-</span>}</td>
+                  <td>{notice.isPinned ? <span className="badge badge-pinned">📌 고정</span> : <span style={{ color: 'var(--text-muted)' }}>-</span>}</td>
                   <td><span className={`badge ${notice.category === 'news' ? 'badge-news' : 'badge-notice'}`}>{NOTICE_CATEGORY_LABELS[notice.category] || notice.category}</span></td>
                   <td><strong>{notice.title}</strong>{notice.source === 'youtube' && <span className="badge badge-youtube"> YouTube</span>}</td>
                   <td>{notice.summary || '-'}</td>

@@ -280,13 +280,13 @@
 
 .my-page-post-meta {
   font-size: 12px;
-  color: #999;
+  color: var(--text-muted); /* #999 고정값 → 테마 토큰(흰 바탕 대비 보정) */
 }
 
 /* 게시글이 하나도 없을 때, 또는 GitHub Pages 정적 미리보기처럼 서버가 없어
    데이터를 아예 불러오지 못할 때 대신 표시하는 안내 문구 스타일. */
 .my-page-empty {
-  color: #999;
+  color: var(--text-muted); /* #999 고정값 → 테마 토큰(흰 바탕 대비 보정) */
   font-size: 14px;
   padding: 20px 0;
 }

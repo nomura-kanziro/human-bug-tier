@@ -64,7 +64,7 @@ export default function SignUp() {
         {busy ? '처리 중...' : '회원가입'}
       </button>
 
-      <div className="find-btn" style={{ marginTop: 15, textDecoration: 'none', color: '#555' }} onClick={() => navigate('/login')}>
+      <div className="find-btn" style={{ marginTop: 15, textDecoration: 'none' }} onClick={() => navigate('/login')}>
         이미 계정이 있으신가요? 로그인하기
       </div>
 

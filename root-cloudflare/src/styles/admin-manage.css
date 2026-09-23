@@ -243,7 +243,8 @@
 
 .notice-post-btn {
     padding: 12px 28px;
-    background: #10b981;
+    /* #10b981 위 흰 글자는 2.5:1 로 흐려 한 단계 짙은 초록으로 (hover 는 더 짙게) */
+    background: #059669;
     color: white;
     border: none;
     border-radius: 8px;
@@ -253,7 +254,7 @@
 }
 
 .notice-post-btn:hover {
-    background: #059669;
+    background: #047857;
 }
 
 .notice-cancel-btn {
@@ -375,7 +376,8 @@
    눌렀을 때 어떤 상태로 바뀔지 색만 보고도 짐작할 수 있게 했다 */
 .pin-btn {
     background: #f59e0b;
-    color: white;
+    /* 흰 글자는 앰버 바탕에서 2.1:1 로 흐려 짙은 글자로 (고정 해제 .unpin 은 회색 바탕이라 아래에서 흰 글자 유지) */
+    color: #2a1c05;
     border: none;
     padding: 6px 12px;
     border-radius: 6px;
@@ -390,6 +392,7 @@
 
 .pin-btn.unpin {
     background: #6c757d;
+    color: #fff;
 }
 
 .pin-btn.unpin:hover {

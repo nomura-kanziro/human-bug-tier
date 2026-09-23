@@ -10,8 +10,10 @@ import {
 export function CategoryBadge({ category }) {
   const label = CATEGORY_LABELS[category] || category;
   const color = CATEGORY_COLORS[category] || '#6c757d';
+  // 글자색은 카테고리색을 테마 본문색 쪽으로 섞는다 — 원색 그대로면 같은 색 옅은 바탕 위에서
+  // 라이트는 흐리고(초록 2.3:1) 다크는 어두워(보라 3.3:1) 잘 안 읽혔다. 섞으면 라이트는 짙게, 다크는 밝게 보정된다.
   return (
-    <span className="notice-category-badge" style={{ background: `${color}20`, color, border: `1px solid ${color}40` }}>
+    <span className="notice-category-badge" style={{ background: `${color}20`, color: `color-mix(in srgb, ${color} 70%, var(--text-primary))`, border: `1px solid ${color}40` }}>
       {label}
     </span>
   );

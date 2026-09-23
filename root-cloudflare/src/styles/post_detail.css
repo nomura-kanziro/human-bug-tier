@@ -185,7 +185,8 @@
 .report-btn {
   border-color: color-mix(in srgb, var(--brand) 50%, transparent);
   background: var(--brand-soft);
-  color: var(--brand-strong);
+  /* 앰버 그대로는 연한 앰버 바탕에서 3:1 로 흐려 본문색을 섞어 보정(라이트는 짙게·다크는 밝게) */
+  color: color-mix(in srgb, var(--brand-strong) 75%, var(--text-primary));
 }
 
 .report-btn:hover:not(:disabled) {

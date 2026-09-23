@@ -16,11 +16,17 @@
   border-bottom: 1px solid var(--border-color);
 }
 
-.tab-btn {
+/* 탭도 .login-box 안의 <button> 이라 auth-shell.css 의 `.login-box button`(노란 채움 버튼)이
+   더 구체적이어서 이겼다 → 두 탭이 다 노랗게 칠해지고, 선택 탭 글자(앰버)가 노란 바탕에 묻혀 안 보였다.
+   같은 구체성 이상(.login-box .tab-btn)으로 올려 원래 설계대로 밑줄 탭으로 그린다. */
+.tab-btn,
+.login-box .tab-btn {
   flex: 1;
+  width: auto;
   padding: 10px 8px;
   background: none;
   border: none;
+  border-radius: 0;
   font-size: 14px;
   font-weight: 600;
   color: var(--text-muted);
@@ -29,11 +35,13 @@
   margin-bottom: -1px; /* 컨테이너의 1px 밑줄 위에 탭 밑줄이 정확히 겹치도록 */
 }
 
-.tab-btn:hover {
+.tab-btn:hover,
+.login-box .tab-btn:hover {
   color: var(--text-primary);
 }
 
-.tab-btn.active {
+.tab-btn.active,
+.login-box .tab-btn.active {
   border-bottom-color: var(--brand);
   color: var(--brand-strong);
 }

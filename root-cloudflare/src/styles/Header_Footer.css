@@ -288,6 +288,12 @@ header {
   text-decoration: underline;
 }
 
+/* 예전엔 theme.css 의 다크 링크 규칙이 대신 밝은 파랑으로 바꿔줬는데, 그 규칙이 클래스 색을 이기지 않게
+   바뀌면서(:where) 짙은 파랑(#2563eb)이 다크 패널에 그대로 남아 흐려졌다 → 다크 링크색을 직접 지정 */
+[data-theme="dark"] .notification-viewall-link {
+  color: var(--link-color);
+}
+
 .notification-settings-btn {
   width: 32px;
   height: 32px;
@@ -342,7 +348,7 @@ header {
 
 .notification-item-time {
   font-size: 11px;
-  color: #94a3b8;
+  color: var(--text-muted); /* #94a3b8 고정값은 흰 바탕에서 2.6:1 로 흐려 테마 토큰으로 */
   white-space: nowrap;
 }
 
@@ -362,7 +368,7 @@ header {
 .notification-empty {
   padding: 28px 16px;
   text-align: center;
-  color: #94a3b8;
+  color: var(--text-muted); /* #94a3b8 고정값은 흰 바탕에서 2.6:1 로 흐려 테마 토큰으로 */
   font-size: 13px;
 }
 
@@ -427,7 +433,7 @@ header {
 
 .user-profile-panel-info span {
   font-size: 12px;
-  color: #94a3b8;
+  color: var(--text-muted); /* #94a3b8 고정값은 흰 바탕에서 2.6:1 로 흐려 테마 토큰으로 */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -544,7 +550,7 @@ header {
 
 .notification-specific-toggle .arrow {
   font-size: 12px;
-  color: #94a3b8;
+  color: var(--text-muted); /* #94a3b8 고정값은 흰 바탕에서 2.6:1 로 흐려 테마 토큰으로 */
   transition: transform 0.2s ease;
 }
 

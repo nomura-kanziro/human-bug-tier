@@ -290,6 +290,16 @@
   color: var(--card-text);
 }
 
+/* 공식 티어표 보드는 등급마다 고유 배색(위 변수)이 있어 사이트 테마와 무관하게 같은 색이어야 한다.
+   그런데 theme.css·custom-maker.css 의 `[data-theme="dark"] .char`(메이커 카드용 안전망)가 여기까지 새어 들어와
+   카드 바탕을 어두운 회색으로 칠했다 → 글자가 검정인 6~9등급에서 캐릭터 이름이 검정 위 검정으로 안 보였다.
+   다크 모드에서도 보드 변수를 다시 입혀 배색을 지킨다. */
+[data-theme="dark"] .tier-board .char {
+  background: var(--card-bg);
+  color: var(--card-text);
+  border-color: var(--card-border);
+}
+
 /* ====================== 등급 전환 navbar ======================
    한 페이지 안에서 1~9 등급을 오가는 탭. 활성 탭은 그 등급의 보드 테마색을 그대로
    입어(위 변수 재사용) 어떤 표를 보고 있는지 색으로도 구분된다. */

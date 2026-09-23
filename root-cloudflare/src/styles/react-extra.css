@@ -206,12 +206,31 @@
 /* 관리자 페이지네이션 */
 .pagination .pagination-total {
   margin-right: 15px;
-  color: #555;
+  /* #555 고정값은 다크 바탕에서 묻혀 테마 토큰으로 */
+  color: var(--text-secondary);
   font-size: 14px;
+}
+
+/* 관리자 페이지 번호 버튼 — 스타일이 없어 브라우저 기본 버튼(검은 글자)이 그대로 나와
+   다크 모드에서 회색 바탕 위 검은 글자가 되어 거의 안 보였다 → 테마 토큰으로 명시 */
+.pagination button {
+  min-width: 36px;
+  padding: 6px 12px;
+  border: 1px solid var(--border-strong);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.pagination button:hover:not([disabled]):not(.is-current) {
+  background: var(--bg-hover);
 }
 
 .pagination button.is-current {
   background: #007bff;
+  border-color: #007bff;
   color: #fff;
   font-weight: 700;
 }

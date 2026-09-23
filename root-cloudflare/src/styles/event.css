@@ -77,7 +77,8 @@
 /* 로그인 필요·정적 미리보기 안내 */
 .event-guard {
   background: var(--brand-soft);
-  color: var(--brand-strong);
+  /* 앰버 그대로는 연한 앰버 바탕 위에서 3:1 이라 흐려, 본문색을 섞어 라이트는 짙게·다크는 밝게 */
+  color: color-mix(in srgb, var(--brand-strong) 75%, var(--text-primary));
   border: 1px solid color-mix(in srgb, var(--brand) 30%, transparent);
   border-radius: var(--radius-md);
   padding: 14px 16px;
@@ -125,6 +126,8 @@
 
 .event-btn:disabled {
   background: var(--bg-subtle);
+  /* 비활성 바탕이 카드 바탕과 거의 같은 밝기라 버튼 윤곽이 사라졌다 → 테두리로 모양을 살린다 */
+  border: 1px solid var(--border-strong);
   color: var(--text-muted);
   box-shadow: none;
   cursor: not-allowed;

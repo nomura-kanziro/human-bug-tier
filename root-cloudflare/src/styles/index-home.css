@@ -236,6 +236,11 @@
   text-decoration: none;
 }
 
+/* 짙은 앰버(#b45309)는 다크 위젯 바탕에서 흐려 밝은 앰버로 (예전엔 다크 링크 규칙이 대신 덮어써 주던 부분) */
+[data-theme="dark"] .home-luck-more {
+  color: var(--brand);
+}
+
 .home-luck-widget {
   flex: 1 1 260px;
   display: flex;
@@ -253,7 +258,8 @@
   border: none;
   border-radius: 12px;
   background: linear-gradient(135deg, #f59e0b, #f97316);
-  color: #fff;
+  /* 흰 글자는 앰버 바탕에서 2.1:1 로 흐려 사이트 공통 앰버 버튼과 같은 짙은 대비색으로 */
+  color: var(--brand-contrast);
   font-weight: 700;
   cursor: pointer;
 }

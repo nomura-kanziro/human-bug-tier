@@ -56,7 +56,9 @@
   --bg-hover: #f1f1f3;
   --text-primary: #171717;
   --text-secondary: #55565c;
-  --text-muted: #8a8b91;
+  /* 흐린 글자(날짜·안내문·빈 목록 문구) — #8a8b91 은 흰 바탕에서 3.4:1 이라 흐릿해 잘 안 읽혀,
+     본문 크기 글자 기준(4.5:1) 이상이 되도록 한 단계 짙게. 다크 값은 이미 충분해서 그대로 둔다. */
+  --text-muted: #6e6f76;
   --border-color: #e2e2e6;
   --border-strong: #cfd0d5;
   --link-color: #2563eb;
@@ -121,7 +123,10 @@
   color: var(--text-primary);
 }
 
-[data-theme="dark"] a {
+/* :where() 로 구체성을 0 으로 낮춘 "기본값" — 예전엔 [data-theme="dark"] a (0,1,1) 가
+   .header-login-btn·.write-btn 처럼 클래스로 글자색을 정한 링크 버튼(0,1,0)까지 이겨서,
+   노란 버튼 위 글자가 파란 링크색으로 바뀌어 거의 안 보였다. 이제 색을 따로 정하지 않은 링크에만 적용된다. */
+:where([data-theme="dark"]) a {
   color: var(--link-color);
 }
 
