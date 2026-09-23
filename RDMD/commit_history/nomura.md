@@ -362,7 +362,7 @@
 | 331 | 2026-09-23 | [`15ec50b`](#15ec50b) | feat(event): 메모리 게임 기록 이벤트도 열리면 회원 전체 알림 — 공용 notifyAllMembers + 열기 원자화 + 관리자 확인 문구 |
 | 332 | 2026-09-24 | [`c404b92`](#c404b92) | chore(footer): 사이트 버전 표시 0.5.0 → 1.0.0 |
 | 333 | 2026-09-24 | [`6d5b7d5`](#6d5b7d5) | chore(deploy): Oracle Cloud 배포 준비 — 로컬 코드 묶어 scp 배포 스크립트·VM 준비·pm2·nginx·가이드 |
-| 334 | 2026-09-24 | [`pending`](#pending334) | chore(deploy): 배포 셸 스크립트·nginx 설정 LF 고정(.gitattributes) |
+| 334 | 2026-09-24 | [`3ba0db3`](#3ba0db3) | chore(deploy): 배포 셸 스크립트·nginx 설정 LF 고정(.gitattributes) |
 
 ---
 
@@ -6449,15 +6449,15 @@
 
 ---
 
-<a id="pending334"></a>
+<a id="3ba0db3"></a>
 
-### 334. 2026-09-24 — `pending`
+### 334. 2026-09-24 — `3ba0db3`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `3ba0db3`
+- **hash (full)**: `3ba0db3bf25578d277383119bf84026bc191375d`
 - **author**: nomura
 - **message**: chore(deploy): 배포 셸 스크립트·nginx 설정 LF 고정(.gitattributes)
-- **git**: `git show pending`
+- **git**: `git show 3ba0db3`
 - **범위**: backend / 배포(Oracle Cloud)
 - **요약**: 333번 직후 보완 — 저장소가 core.autocrlf=true 라 윈도우 체크아웃 때 `.sh` 가 CRLF 로 바뀌면 Oracle VM(리눅스) bash 에서 "$'': command not found" 로 setup/deploy 가 실패한다. `.gitattributes` 신설: `*.sh text eol=lf`, `backend/deploy/oracle/*.conf text eol=lf`. 현재 작업본은 이미 LF 임을 확인.
 - **주요 파일**: `.gitattributes`
