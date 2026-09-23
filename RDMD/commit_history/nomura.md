@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 333 |
+| **커밋 수** | 334 |
 | **기간** | 2026-03-20 ~ 2026-09-20 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -362,6 +362,7 @@
 | 331 | 2026-09-23 | [`15ec50b`](#15ec50b) | feat(event): 메모리 게임 기록 이벤트도 열리면 회원 전체 알림 — 공용 notifyAllMembers + 열기 원자화 + 관리자 확인 문구 |
 | 332 | 2026-09-24 | [`c404b92`](#c404b92) | chore(footer): 사이트 버전 표시 0.5.0 → 1.0.0 |
 | 333 | 2026-09-24 | [`6d5b7d5`](#6d5b7d5) | chore(deploy): Oracle Cloud 배포 준비 — 로컬 코드 묶어 scp 배포 스크립트·VM 준비·pm2·nginx·가이드 |
+| 334 | 2026-09-24 | [`pending`](#pending334) | chore(deploy): 배포 셸 스크립트·nginx 설정 LF 고정(.gitattributes) |
 
 ---
 
@@ -6442,6 +6443,24 @@
 - **범위**: backend / 배포(Oracle Cloud)
 - **요약**: "oracle cloud MCP 연결됐으니 백엔드 배포 준비를 전부 마치고 배포해봐". 준비는 완료(`backend/deploy/oracle/`), 실제 배포는 못 함 — 이 세션에 Oracle Cloud MCP 도구가 로드되지 않았고 OCI CLI·인증·VM SSH 키도 없어 계정에 접근 불가. 구성: Node 하나가 API+React dist 를 같이 서빙(로컬 :5000 과 동일, 코드 수정 없음), nginx:80 → pm2:5000, 앞단 Cloudflare 무료 DNS/HTTPS 선택. `deploy.sh`(setup/env/deploy/status/logs/rollback/package) — 원격이 94커밋 뒤처지고 푸시 금지라 GitHub clone 대신 로컬 코드를 tar.gz(backend+dist+tiers.json, .env·node_modules 제외·검사)로 묶어 scp, releases/<시각> + current 링크 교체 + 최근 3개 유지 + 롤백, 시크릿은 서버 shared/.env 에만. `setup-vm.sh`(Node22·pm2·nginx·Oracle Ubuntu iptables 80/443), `ecosystem.config.js`(프로세스 1개 — 스케줄러 중복 방지), nginx 설정, README(콘솔 작업·Atlas 허용 IP·APP_URL·도메인/HTTPS·같은 DB 로 로컬 서버 동시 실행 금지). 확인: package 49MB 내용 검사 → 임시 폴더에 풀어 npm ci → 로컬 서버 멈춘 상태로 5055 실행해 health(db connected)·SPA 경로·번들·이미지·API 200, 임시본(.env 사본) 삭제 후 로컬 서버 복구. VM 쪽 스크립트는 bash -n 까지만.
 - **주요 파일**: `backend/deploy/oracle/` (deploy.sh, setup-vm.sh, ecosystem.config.js, nginx-human-bug-tier.conf, README.md), `.gitignore`
+- **관련 RDMD**: `RDMD/backend/07-deploy/03-oracle-cloud-deploy-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending334"></a>
+
+### 334. 2026-09-24 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: chore(deploy): 배포 셸 스크립트·nginx 설정 LF 고정(.gitattributes)
+- **git**: `git show pending`
+- **범위**: backend / 배포(Oracle Cloud)
+- **요약**: 333번 직후 보완 — 저장소가 core.autocrlf=true 라 윈도우 체크아웃 때 `.sh` 가 CRLF 로 바뀌면 Oracle VM(리눅스) bash 에서 "$'': command not found" 로 setup/deploy 가 실패한다. `.gitattributes` 신설: `*.sh text eol=lf`, `backend/deploy/oracle/*.conf text eol=lf`. 현재 작업본은 이미 LF 임을 확인.
+- **주요 파일**: `.gitattributes`
 - **관련 RDMD**: `RDMD/backend/07-deploy/03-oracle-cloud-deploy-record.md`
 
 [▲ 목차로](#목차)

@@ -1,0 +1,4 @@
+# Oracle Cloud(리눅스) VM 에서 bash 로 실행되는 배포 파일은 윈도우에서 체크아웃해도 LF 로 유지한다.
+# (core.autocrlf=true 환경에서 CRLF 로 바뀌면 VM 에서 "$'\r': command not found" 로 실패한다)
+*.sh text eol=lf
+backend/deploy/oracle/*.conf text eol=lf
