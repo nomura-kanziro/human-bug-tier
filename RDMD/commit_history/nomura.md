@@ -360,7 +360,7 @@
 | 329 | 2026-09-23 | [`c62af0f`](#c62af0f) | feat(event): 티어표 공개 — 접수 시작 시 전체 회원 알림 + 결과 발표 36시간 뒤 자동 삭제(원 상태로 초기화) |
 | 330 | 2026-09-23 | [`e298623`](#e298623) | fix(theme): 전 페이지 라이트/다크 색 겹침 전수 점검 — 다크 티어표 6~9등급 이름·노란 버튼 파란 글자·찾기 탭 등 대비 수정 |
 | 331 | 2026-09-23 | [`15ec50b`](#15ec50b) | feat(event): 메모리 게임 기록 이벤트도 열리면 회원 전체 알림 — 공용 notifyAllMembers + 열기 원자화 + 관리자 확인 문구 |
-| 332 | 2026-09-24 | [`pending`](#pending332) | chore(footer): 사이트 버전 표시 0.5.0 → 1.0.0 |
+| 332 | 2026-09-24 | [`c404b92`](#c404b92) | chore(footer): 사이트 버전 표시 0.5.0 → 1.0.0 |
 
 ---
 
@@ -6411,15 +6411,15 @@
 
 ---
 
-<a id="pending332"></a>
+<a id="c404b92"></a>
 
-### 332. 2026-09-24 — `pending`
+### 332. 2026-09-24 — `c404b92`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `c404b92`
+- **hash (full)**: `c404b9210301296a1b6c6f1e97161b4616cb1c5e`
 - **author**: nomura
 - **message**: chore(footer): 사이트 버전 표시 0.5.0 → 1.0.0
-- **git**: `git show pending`
+- **git**: `git show c404b92`
 - **범위**: frontend / 공통(푸터)
 - **요약**: "cloudflare 작업 부분에 사이트 버전을 1.0.0이라고 수정해줘" — 푸터에 수동 관리 중인 `SITE_VERSION` 상수를 변경. `root-cloudflare/src/components/Footer.jsx` 상단 주석대로 "사이트 버전 문자열은 수동 관리 — 배포 시 직접 갱신" 하는 값이라 `package.json`(npm 패키지 버전, 별개)은 그대로 두고 화면에 보이는 이 값만 바꿨다. 빌드 후 dist 재생성 확인.
 - **주요 파일**: `root-cloudflare/src/components/Footer.jsx`
