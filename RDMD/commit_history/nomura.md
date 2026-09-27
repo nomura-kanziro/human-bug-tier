@@ -363,7 +363,8 @@
 | 332 | 2026-09-24 | [`c404b92`](#c404b92) | chore(footer): 사이트 버전 표시 0.5.0 → 1.0.0 |
 | 333 | 2026-09-24 | [`6d5b7d5`](#6d5b7d5) | chore(deploy): Oracle Cloud 배포 준비 — 로컬 코드 묶어 scp 배포 스크립트·VM 준비·pm2·nginx·가이드 |
 | 334 | 2026-09-24 | [`3ba0db3`](#3ba0db3) | chore(deploy): 배포 셸 스크립트·nginx 설정 LF 고정(.gitattributes) |
-| 335 | 2026-09-28 | [`pending`](#pending335) | fix(deploy): Oracle VM 준비 스크립트 — iptables 허용 규칙을 REJECT 앞에 넣고 스왑 2GB 추가 |
+| 335 | 2026-09-28 | [`56b6eba`](#56b6eba) | fix(deploy): Oracle VM 준비 스크립트 — iptables 허용 규칙을 REJECT 앞에 넣고 스왑 2GB 추가 |
+| 336 | 2026-09-28 | [`pending`](#pending336) | feat(deploy): Cloudflare Pages 에서 /api 를 Oracle 백엔드로 프록시하고 React 빌드본(dist)을 배포 |
 
 ---
 
@@ -6469,18 +6470,36 @@
 
 ---
 
-<a id="pending335"></a>
+<a id="56b6eba"></a>
 
-### 335. 2026-09-28 — `pending`
+### 335. 2026-09-28 — `56b6eba`
+
+- **hash (short)**: `56b6eba`
+- **hash (full)**: `56b6ebabff17083e0a0f9371f5e412f1ff218730`
+- **author**: nomura
+- **message**: fix(deploy): Oracle VM 준비 스크립트 — iptables 허용 규칙을 REJECT 앞에 넣고 스왑 2GB 추가
+- **git**: `git show 56b6eba`
+- **범위**: backend / 배포(Oracle Cloud)
+- **요약**: 실제 VM(161.33.190.199, Ubuntu 24.04, VM.Standard.E2.1.Micro 1GB)에 처음 배포하면서 드러난 문제 수정. 이 이미지는 INPUT 체인의 REJECT 가 5번 줄이라 `iptables -I INPUT 6` 으로 넣은 80/443 허용 규칙이 REJECT 뒤에 붙어 효과가 없었다 → REJECT 줄 번호를 찾아 그 앞에 넣도록 변경. 메모리 1GB 에서 `npm ci` 가 메모리 부족으로 죽지 않게 `/swapfile` 2GB 생성(fstab 등록, 이미 있으면 건너뜀) 단계 추가. VM 에는 같은 조치를 수동으로 적용 완료.
+- **주요 파일**: `backend/deploy/oracle/setup-vm.sh`
+- **관련 RDMD**: `RDMD/backend/07-deploy/03-oracle-cloud-deploy-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending336"></a>
+
+### 336. 2026-09-28 — `pending`
 
 - **hash (short)**: `pending`
 - **hash (full)**: `pending`
 - **author**: nomura
-- **message**: fix(deploy): Oracle VM 준비 스크립트 — iptables 허용 규칙을 REJECT 앞에 넣고 스왑 2GB 추가
+- **message**: feat(deploy): Cloudflare Pages 에서 /api 를 Oracle 백엔드로 프록시하고 React 빌드본(dist)을 배포
 - **git**: `git show pending`
-- **범위**: backend / 배포(Oracle Cloud)
-- **요약**: 실제 VM(161.33.190.199, Ubuntu 24.04, VM.Standard.E2.1.Micro 1GB)에 처음 배포하면서 드러난 문제 수정. 이 이미지는 INPUT 체인의 REJECT 가 5번 줄이라 `iptables -I INPUT 6` 으로 넣은 80/443 허용 규칙이 REJECT 뒤에 붙어 효과가 없었다 → REJECT 줄 번호를 찾아 그 앞에 넣도록 변경. 메모리 1GB 에서 `npm ci` 가 메모리 부족으로 죽지 않게 `/swapfile` 2GB 생성(fstab 등록, 이미 있으면 건너뜀) 단계 추가. VM 에는 같은 조치를 수동으로 적용 완료.
-- **주요 파일**: `backend/deploy/oracle/setup-vm.sh`
+- **범위**: frontend(root-cloudflare) / 배포(Cloudflare Pages)
+- **요약**: Cloudflare Pages 에 올린 프론트가 Oracle 백엔드(`https://hbt-tier.duckdns.org`)를 쓰도록 연결. 기존 워크플로는 빌드 없이 `root-cloudflare` 소스 폴더를 그대로 올려 `index.html` 이 `/src/main.jsx` 를 불러 React 가 뜨지 않았고, `/api/*` 도 백엔드가 없어 HTML 이 돌아왔다. Pages Function `functions/api/[[path]].js` 를 추가해 `/api/*` 를 백엔드로 그대로 전달(방문자 IP 는 `cf-connecting-ip` 로 X-Forwarded-For 덮어씀, 백엔드 주소는 Pages 환경변수 `API_ORIGIN` 으로 변경 가능). 워크플로는 Node 22 로 `npm ci && npm run build` 후 `root-cloudflare` 에서 `pages deploy dist` 를 실행해 dist 와 functions 를 함께 올림. 프론트 `getApiBase()`(동일 오리진 → `''`)는 그대로. 확인: 함수 로직을 Node 에서 흉내 내 GET /api/notices 200 JSON, POST /api/auth/login 400 JSON(본문 전달 확인), 빌드 성공.
+- **주요 파일**: `root-cloudflare/functions/api/[[path]].js`, `.github/workflows/deploy-cloudflare-pages.yml`
 - **관련 RDMD**: `RDMD/backend/07-deploy/03-oracle-cloud-deploy-record.md`
 
 [▲ 목차로](#목차)

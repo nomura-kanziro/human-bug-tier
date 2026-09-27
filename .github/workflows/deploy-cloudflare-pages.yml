@@ -15,9 +15,25 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Deploy root-cloudflare to Cloudflare Pages
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: root-cloudflare/package-lock.json
+
+      # React(Vite) 소스는 브라우저에서 바로 못 돌므로 빌드한 dist/ 를 올린다
+      - name: Build React frontend
+        working-directory: root-cloudflare
+        run: |
+          npm ci
+          npm run build
+
+      # root-cloudflare 에서 실행해야 functions/(/api 프록시 → Oracle 백엔드)가 함께 배포된다
+      - name: Deploy dist + functions to Cloudflare Pages
         uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          command: pages deploy root-cloudflare --project-name=human-bug-tier --branch=${{ github.ref_name }} --commit-dirty=true
+          workingDirectory: root-cloudflare
+          command: pages deploy dist --project-name=human-bug-tier --branch=${{ github.ref_name }} --commit-dirty=true
