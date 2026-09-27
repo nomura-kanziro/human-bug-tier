@@ -366,7 +366,7 @@
 | 335 | 2026-09-28 | [`56b6eba`](#56b6eba) | fix(deploy): Oracle VM 준비 스크립트 — iptables 허용 규칙을 REJECT 앞에 넣고 스왑 2GB 추가 |
 | 336 | 2026-09-28 | [`e901894`](#e901894) | feat(deploy): Cloudflare Pages 에서 /api 를 Oracle 백엔드로 프록시하고 React 빌드본(dist)을 배포 |
 | 337 | 2026-09-28 | [`9702e06`](#9702e06) | docs(deploy): Oracle 운영 서버·HTTPS·Cloudflare Pages /api 프록시 반영 — 배포 정본·스킬·가이드·RDMD 기록 갱신 |
-| 338 | 2026-09-28 | [`pending`](#pending338) | docs(deploy): Cloudflare Pages 연동 빌드 Root directory(root-cloudflare) 수정 내용 인수인계 — 에이전트 배포 스킬·체크리스트·기록 갱신 |
+| 338 | 2026-09-28 | [`9d1426b`](#9d1426b) | docs(deploy): Cloudflare Pages 연동 빌드 Root directory(root-cloudflare) 수정 내용 인수인계 — 에이전트 배포 스킬·체크리스트·기록 갱신 |
 
 ---
 
@@ -6526,15 +6526,15 @@
 
 ---
 
-<a id="pending338"></a>
+<a id="9d1426b"></a>
 
-### 338. 2026-09-28 — `pending`
+### 338. 2026-09-28 — `9d1426b`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `9d1426b`
+- **hash (full)**: `9d1426b5d2805e1d02b34275e7efce1842f1b388`
 - **author**: nomura
 - **message**: docs(deploy): Cloudflare Pages 연동 빌드 Root directory(root-cloudflare) 수정 내용 인수인계 — 에이전트 배포 스킬·체크리스트·기록 갱신
-- **git**: `git show pending`
+- **git**: `git show 9d1426b`
 - **범위**: docs / 배포(Cloudflare Pages)
 - **요약**: `pages.dev` 의 `/api/*` 가 여전히 HTML 을 돌려주던 원인을 찾아 고친 내용을 모든 에이전트 문서에 인수인계. 실제 운영 배포는 GitHub Actions 가 아니라 Pages 프로젝트의 GitHub 연동 빌드인데, 빌드 설정 Root directory 가 비어 레포 루트에서 `npm run build` → `package.json` ENOENT 로 `5cb8d58`·`e901894` 빌드가 실패해 프록시 없는 옛 배포본이 서비스되고 있었다. Cloudflare API 로 Root directory `root-cloudflare` / Build `npm run build` / Output `dist` 로 바꾸고 재빌드 → `/api/notices` 200 JSON, POST `/api/auth/login` 백엔드 응답 확인. 배포 스킬 4종(.agents/.claude/.codex/.groks)에 연동 빌드 설정·장애 진단 절, `CLOUDFLARE.md` 운영 구조, 배포 체크리스트, Pages 프록시 기록(05)에 해결 절 추가. (코드 변경 없음, Pages 프로젝트 설정만 변경)
 - **주요 파일**: `CLOUDFLARE.md`, `.agents/deploy/skill.md`, `.claude/skills/deploy/SKILL.md`, `.codex/deploy/skill.md`, `.groks/deploy/grok_skill.md`, `RDMD/guides/deploy-checklist.md`, `RDMD/frontend/09-deploy-path/05-cloudflare-pages-api-proxy-record.md`
