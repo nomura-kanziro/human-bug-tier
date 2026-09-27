@@ -13,6 +13,15 @@ APP_DIR=/opt/human-bug-tier
 RUN_USER="${SUDO_USER:-$(whoami)}"
 HERE="$(cd "$(dirname "$0")" && pwd)"
 
+echo "== 스왑 2GB (메모리 1GB 인 E2.1.Micro 에서 npm ci 가 메모리 부족으로 죽지 않게) =="
+if ! swapon --show | grep -q /swapfile; then
+  sudo fallocate -l 2G /swapfile
+  sudo chmod 600 /swapfile
+  sudo mkswap /swapfile >/dev/null
+  sudo swapon /swapfile
+  grep -q /swapfile /etc/fstab || echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab >/dev/null
+fi
+
 echo "== 패키지 설치 =="
 sudo apt-get update -y
 # iptables-persistent 는 설치 중 "현재 규칙 저장할까요?" 창을 띄우므로 비대화형으로 설치한다
@@ -33,9 +42,11 @@ fi
 
 echo "== 방화벽(iptables) 80/443 허용 =="
 # Oracle 이 제공하는 Ubuntu 이미지는 INPUT 체인 끝에 REJECT 규칙이 있어 22 번 외에는 막혀 있다.
+# REJECT 의 줄 번호는 이미지마다 달라서(예: 5번) 고정 번호 대신 REJECT 줄을 찾아 그 바로 앞에 넣는다.
 for port in 80 443; do
   if ! sudo iptables -C INPUT -p tcp --dport "$port" -m state --state NEW -j ACCEPT 2>/dev/null; then
-    sudo iptables -I INPUT 6 -p tcp --dport "$port" -m state --state NEW -j ACCEPT
+    REJECT_LINE="$(sudo iptables -L INPUT -n --line-numbers | awk '$2=="REJECT"{print $1; exit}')"
+    sudo iptables -I INPUT "${REJECT_LINE:-1}" -p tcp --dport "$port" -m state --state NEW -j ACCEPT
   fi
 done
 sudo netfilter-persistent save

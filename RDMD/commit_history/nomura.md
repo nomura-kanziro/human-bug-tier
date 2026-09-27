@@ -363,6 +363,7 @@
 | 332 | 2026-09-24 | [`c404b92`](#c404b92) | chore(footer): 사이트 버전 표시 0.5.0 → 1.0.0 |
 | 333 | 2026-09-24 | [`6d5b7d5`](#6d5b7d5) | chore(deploy): Oracle Cloud 배포 준비 — 로컬 코드 묶어 scp 배포 스크립트·VM 준비·pm2·nginx·가이드 |
 | 334 | 2026-09-24 | [`3ba0db3`](#3ba0db3) | chore(deploy): 배포 셸 스크립트·nginx 설정 LF 고정(.gitattributes) |
+| 335 | 2026-09-28 | [`pending`](#pending335) | fix(deploy): Oracle VM 준비 스크립트 — iptables 허용 규칙을 REJECT 앞에 넣고 스왑 2GB 추가 |
 
 ---
 
@@ -6459,8 +6460,27 @@
 - **message**: chore(deploy): 배포 셸 스크립트·nginx 설정 LF 고정(.gitattributes)
 - **git**: `git show 3ba0db3`
 - **범위**: backend / 배포(Oracle Cloud)
-- **요약**: 333번 직후 보완 — 저장소가 core.autocrlf=true 라 윈도우 체크아웃 때 `.sh` 가 CRLF 로 바뀌면 Oracle VM(리눅스) bash 에서 "$'': command not found" 로 setup/deploy 가 실패한다. `.gitattributes` 신설: `*.sh text eol=lf`, `backend/deploy/oracle/*.conf text eol=lf`. 현재 작업본은 이미 LF 임을 확인.
+- **요약**: 333번 직후 보완 — 저장소가 core.autocrlf=true 라 윈도우 체크아웃 때 `.sh` 가 CRLF 로 바뀌면 Oracle VM(리눅스) bash 에서 "$'
+': command not found" 로 setup/deploy 가 실패한다. `.gitattributes` 신설: `*.sh text eol=lf`, `backend/deploy/oracle/*.conf text eol=lf`. 현재 작업본은 이미 LF 임을 확인.
 - **주요 파일**: `.gitattributes`
+- **관련 RDMD**: `RDMD/backend/07-deploy/03-oracle-cloud-deploy-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending335"></a>
+
+### 335. 2026-09-28 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: fix(deploy): Oracle VM 준비 스크립트 — iptables 허용 규칙을 REJECT 앞에 넣고 스왑 2GB 추가
+- **git**: `git show pending`
+- **범위**: backend / 배포(Oracle Cloud)
+- **요약**: 실제 VM(161.33.190.199, Ubuntu 24.04, VM.Standard.E2.1.Micro 1GB)에 처음 배포하면서 드러난 문제 수정. 이 이미지는 INPUT 체인의 REJECT 가 5번 줄이라 `iptables -I INPUT 6` 으로 넣은 80/443 허용 규칙이 REJECT 뒤에 붙어 효과가 없었다 → REJECT 줄 번호를 찾아 그 앞에 넣도록 변경. 메모리 1GB 에서 `npm ci` 가 메모리 부족으로 죽지 않게 `/swapfile` 2GB 생성(fstab 등록, 이미 있으면 건너뜀) 단계 추가. VM 에는 같은 조치를 수동으로 적용 완료.
+- **주요 파일**: `backend/deploy/oracle/setup-vm.sh`
 - **관련 RDMD**: `RDMD/backend/07-deploy/03-oracle-cloud-deploy-record.md`
 
 [▲ 목차로](#목차)
