@@ -60,6 +60,17 @@ GitHub 저장소 시크릿 `CLOUDFLARE_API_TOKEN`(·`CLOUDFLARE_ACCOUNT_ID`)이 
 (토큰 권한: Account → Cloudflare Pages → Edit). 또는 로컬에서 `npx wrangler login` 후 `root-cloudflare` 에서
 `npm run build && npx wrangler pages deploy dist --project-name=human-bug-tier --branch=master --commit-dirty=true`.
 
+## 해결 — Pages GitHub 연동 빌드 Root directory (2026-09-28)
+
+위 GitHub Actions 와 별개로 Pages 프로젝트 `human-bug-tier` 는 **GitHub 연동 빌드**(master push 시 Cloudflare 가 직접 빌드)도 켜져 있었고, 실제 운영 배포는 이쪽이다.
+그런데 빌드 설정 Root directory 가 비어 있어 레포 루트에서 `npm run build` 를 실행 → `/opt/buildhome/repo/package.json` ENOENT 로 `5cb8d58`·`e901894` 빌드가 모두 Failure.
+그래서 4일 전(프록시 없는) 배포본이 계속 서비스되며 `/api/*` 가 SPA `index.html` 을 돌려줬다.
+
+조치: Cloudflare API 로 빌드 설정을 **Root directory `root-cloudflare` / Build `npm run build` / Output `dist`** 로 바꾸고 `e901894` 빌드 재시도.
+확인: `GET https://human-bug-tier.pages.dev/api/notices` → 200 JSON(Oracle 공지), `POST /api/auth/login`(없는 아이디) → 백엔드 400 JSON, 메인 200.
+
+남은 일: GitHub Actions 워크플로(`deploy-cloudflare-pages.yml`)는 여전히 시크릿 미등록으로 실패 — 연동 빌드와 중복이므로 시크릿 등록 또는 워크플로 비활성화 중 결정.
+
 ## 관련
 
 - 백엔드 서버: [`../../backend/07-deploy/03-oracle-cloud-deploy-record.md`](../../backend/07-deploy/03-oracle-cloud-deploy-record.md)

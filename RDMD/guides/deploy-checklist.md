@@ -41,6 +41,8 @@
 
 ## P. Cloudflare Pages (`human-bug-tier.pages.dev` — `/api` 는 Oracle 로 프록시)
 
+- [ ] Pages 프로젝트 빌드 설정: Root directory `root-cloudflare` / Build `npm run build` / Output `dist` (GitHub 연동 빌드가 실제 운영 배포)
+- [ ] 대시보드 최신 배포가 Success (Failure 면 옛 배포본이 계속 서비스됨)
 - [ ] GitHub 시크릿 `CLOUDFLARE_API_TOKEN`·`CLOUDFLARE_ACCOUNT_ID` 등록 (없으면 워크플로가 업로드 단계에서 실패)
 - [ ] master 푸시 → `Deploy to Cloudflare Pages` 워크플로 성공
 - [ ] `https://human-bug-tier.pages.dev/` 에서 React 화면이 뜸 (빌드 안 된 `/src/main.jsx` 를 부르지 않음)
@@ -116,7 +118,7 @@
 | 502 / 앱 다운 | Oracle: `deploy.sh status`·`logs`, Mongo IP / Render(레거시): Render 로그, start command |
 | 외부 접속 타임아웃 (서버 안 `curl 127.0.0.1` 은 200) | Oracle 콘솔 Security List 80/443, VM iptables 규칙이 REJECT 보다 위인지 |
 | `http://<IP>/` 404 | 정상 — certbot 이후 도메인으로만 받음 |
-| Pages 에서 `/api` 가 HTML | Pages Function 미배포 (CI 시크릿·워크플로 확인) |
+| Pages 에서 `/api` 가 HTML | Pages Function 미배포 — 대시보드 최신 빌드 Failure·로그 확인(Root directory `root-cloudflare`), CI 쪽은 시크릿 확인 |
 | 로그인 500 | MONGO_URI, JWT_SECRET |
 | 메일 안 감 | EMAIL_*, APP_URL, Gmail 앱 비번 |
 | 정적 404 | rootDir backend + static projectRoot |

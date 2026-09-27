@@ -10,6 +10,9 @@
 > 창시자 지시로 백엔드를 **Oracle Cloud VM** 에 올리고(`https://hbt-tier.duckdns.org`, 가이드 [`backend/deploy/oracle/README.md`](./backend/deploy/oracle/README.md)),
 > Cloudflare Pages 프론트가 그 백엔드를 쓰도록 연결했다 — **Pages Function 이 `/api/*` 를 Oracle 로 프록시**(C절).
 > Pages 워크플로는 이제 React 를 빌드해 `dist/` 를 올린다. ⚠️ GitHub 시크릿 `CLOUDFLARE_API_TOKEN`·`CLOUDFLARE_ACCOUNT_ID` 가 없어 **CI 업로드는 아직 실패**한다(A-2).
+> 실제 운영 배포는 **Pages 프로젝트의 GitHub 연동 빌드**(master push 시 Cloudflare 가 직접 빌드)가 한다.
+> 2026-09-28 이 빌드가 Root directory 가 비어 있어(레포 루트에 `package.json` 없음 → ENOENT) 계속 실패해 `/api` 프록시가 반영되지 않았다 →
+> 프로젝트 빌드 설정 **Root directory = `root-cloudflare`**, Build command `npm run build`, Output `dist` 로 고치고 재빌드해 `https://human-bug-tier.pages.dev/api/notices` JSON 응답을 확인했다.
 
 ```
 방문자 ─▶ https://human-bug-tier.pages.dev  ─ 정적(dist) ─ /api/* ─▶ Pages Function ─▶ https://hbt-tier.duckdns.org

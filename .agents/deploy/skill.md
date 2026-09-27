@@ -43,7 +43,10 @@ description: >
   배포: 레포 루트 Git Bash `bash backend/deploy/oracle/deploy.sh deploy` — 가이드 `backend/deploy/oracle/README.md`
 - Cloudflare Pages `human-bug-tier` = React 빌드본 `dist/` + Pages Function `root-cloudflare/functions/api/[[path]].js` 가 `/api/*` 를 Oracle 로 프록시
   (백엔드 주소 Pages 환경변수 `API_ORIGIN`, 기본 `https://hbt-tier.duckdns.org`). 이 연결은 2026-09-28 창시자 지시로 구성했다.
-- ⚠️ GitHub 시크릿 `CLOUDFLARE_API_TOKEN`·`CLOUDFLARE_ACCOUNT_ID` 미등록 → Pages 워크플로 업로드 단계 실패 중. 등록 전엔 `root-cloudflare` 에서 로컬 Wrangler 로 `pages deploy dist`
+- **실제 운영 배포 = Pages 프로젝트의 GitHub 연동 빌드**(repo `nomura-kanziro/human-bug-tier`, master push → Cloudflare 가 직접 빌드). 빌드 설정은
+  **Root directory `root-cloudflare`** / Build `npm run build` / Output `dist` — 루트가 `root-cloudflare` 여야 `functions/`(`/api` 프록시)도 같이 올라간다.
+  2026-09-28 Root directory 가 비어 있어 빌드가 `package.json` ENOENT 로 계속 실패 → 프록시 없는 옛 배포본이 서비스되며 `/api/*` 가 HTML 을 돌려줬다. 설정 수정·재빌드로 해결(`/api/notices` JSON · POST `/api/auth/login` 백엔드 응답 확인).
+- ⚠️ GitHub 시크릿 `CLOUDFLARE_API_TOKEN`·`CLOUDFLARE_ACCOUNT_ID` 미등록 → Pages 워크플로 업로드 단계 실패 중. 등록 전엔 `root-cloudflare` 에서 로컬 Wrangler 로 `pages deploy dist` (GitHub Actions 워크플로는 연동 빌드와 별개 — 시크릿 등록 또는 비활성화로 정리 필요)
 
 ## Do
 
@@ -68,6 +71,10 @@ description: >
 - 같은 Atlas DB 로 로컬 서버를 Oracle 과 동시에 오래 켜 두기 (스케줄러 중복)
 - `deploy.sh setup` 재실행 후 certbot 재실행 누락 (nginx HTTPS 설정 덮어씀)
 - `server.js`를 Workers `fetch`로 교체, mongoose → D1/KV
+
+## 장애 진단 (Pages)
+
+- `/api/*` 가 HTML 이면 먼저 대시보드(Pages → human-bug-tier → 배포) 최신 빌드 **Failure 여부와 로그**를 본다 — Failure 면 옛 배포본이 서비스 중. Root directory·Build command 부터 확인
 
 ## Checklist
 

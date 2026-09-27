@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 337 |
+| **커밋 수** | 338 |
 | **기간** | 2026-03-20 ~ 2026-09-28 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -366,6 +366,7 @@
 | 335 | 2026-09-28 | [`56b6eba`](#56b6eba) | fix(deploy): Oracle VM 준비 스크립트 — iptables 허용 규칙을 REJECT 앞에 넣고 스왑 2GB 추가 |
 | 336 | 2026-09-28 | [`e901894`](#e901894) | feat(deploy): Cloudflare Pages 에서 /api 를 Oracle 백엔드로 프록시하고 React 빌드본(dist)을 배포 |
 | 337 | 2026-09-28 | [`9702e06`](#9702e06) | docs(deploy): Oracle 운영 서버·HTTPS·Cloudflare Pages /api 프록시 반영 — 배포 정본·스킬·가이드·RDMD 기록 갱신 |
+| 338 | 2026-09-28 | [`pending`](#pending338) | docs(deploy): Cloudflare Pages 연동 빌드 Root directory(root-cloudflare) 수정 내용 인수인계 — 에이전트 배포 스킬·체크리스트·기록 갱신 |
 
 ---
 
@@ -6520,5 +6521,23 @@
 - **요약**: 335·336 과 실제 배포 결과를 문서에 반영. Oracle 가이드에 운영 서버 정보(도메인·SSH 키·버전)·콘솔 발급 키·스왑·iptables REJECT 순서·Let's Encrypt 절차·`setup` 재실행 시 HTTPS 설정 덮어씀·IP 접속 404 를 추가하고, `CLOUDFLARE.md` 는 Pages = dist + `/api` 프록시(C절 Oracle 추가, A-3 을 `src/lib/api.js` 기준으로)로 고침. 배포 스킬 4종(.agents/.claude/.codex/.groks)의 "Pages 정적만·APP_URL=터널·common.js" 문구를 현재 구조로, README·root-cloudflare/backend README·overview·체크리스트·work-history(Phase 9)·RDMD 인덱스 갱신. Oracle 기록에 실제 배포 절을 덧붙이고 Pages 연결 기록(05) 신설 — CI 가 GitHub 시크릿 미등록으로 23회 전부 실패해 왔다는 사실 포함. 336 해시 기입.
 - **주요 파일**: `CLOUDFLARE.md`, `backend/deploy/oracle/README.md`, `.agents/deploy/skill.md`, `.claude/skills/deploy/SKILL.md`, `.codex/deploy/skill.md`, `.groks/deploy/grok_skill.md`, `RDMD/frontend/09-deploy-path/05-cloudflare-pages-api-proxy-record.md`, `RDMD/backend/07-deploy/03-oracle-cloud-deploy-record.md`, `RDMD/guides/deploy-checklist.md`, `RDMD/summary/work-history.md`
 - **관련 RDMD**: `RDMD/frontend/09-deploy-path/05-cloudflare-pages-api-proxy-record.md`, `RDMD/backend/07-deploy/03-oracle-cloud-deploy-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending338"></a>
+
+### 338. 2026-09-28 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(deploy): Cloudflare Pages 연동 빌드 Root directory(root-cloudflare) 수정 내용 인수인계 — 에이전트 배포 스킬·체크리스트·기록 갱신
+- **git**: `git show pending`
+- **범위**: docs / 배포(Cloudflare Pages)
+- **요약**: `pages.dev` 의 `/api/*` 가 여전히 HTML 을 돌려주던 원인을 찾아 고친 내용을 모든 에이전트 문서에 인수인계. 실제 운영 배포는 GitHub Actions 가 아니라 Pages 프로젝트의 GitHub 연동 빌드인데, 빌드 설정 Root directory 가 비어 레포 루트에서 `npm run build` → `package.json` ENOENT 로 `5cb8d58`·`e901894` 빌드가 실패해 프록시 없는 옛 배포본이 서비스되고 있었다. Cloudflare API 로 Root directory `root-cloudflare` / Build `npm run build` / Output `dist` 로 바꾸고 재빌드 → `/api/notices` 200 JSON, POST `/api/auth/login` 백엔드 응답 확인. 배포 스킬 4종(.agents/.claude/.codex/.groks)에 연동 빌드 설정·장애 진단 절, `CLOUDFLARE.md` 운영 구조, 배포 체크리스트, Pages 프록시 기록(05)에 해결 절 추가. (코드 변경 없음, Pages 프로젝트 설정만 변경)
+- **주요 파일**: `CLOUDFLARE.md`, `.agents/deploy/skill.md`, `.claude/skills/deploy/SKILL.md`, `.codex/deploy/skill.md`, `.groks/deploy/grok_skill.md`, `RDMD/guides/deploy-checklist.md`, `RDMD/frontend/09-deploy-path/05-cloudflare-pages-api-proxy-record.md`
+- **관련 RDMD**: `RDMD/frontend/09-deploy-path/05-cloudflare-pages-api-proxy-record.md`
 
 [▲ 목차로](#목차)
