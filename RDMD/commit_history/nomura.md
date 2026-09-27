@@ -365,7 +365,7 @@
 | 334 | 2026-09-24 | [`3ba0db3`](#3ba0db3) | chore(deploy): 배포 셸 스크립트·nginx 설정 LF 고정(.gitattributes) |
 | 335 | 2026-09-28 | [`56b6eba`](#56b6eba) | fix(deploy): Oracle VM 준비 스크립트 — iptables 허용 규칙을 REJECT 앞에 넣고 스왑 2GB 추가 |
 | 336 | 2026-09-28 | [`e901894`](#e901894) | feat(deploy): Cloudflare Pages 에서 /api 를 Oracle 백엔드로 프록시하고 React 빌드본(dist)을 배포 |
-| 337 | 2026-09-28 | [`pending`](#pending337) | docs(deploy): Oracle 운영 서버·HTTPS·Cloudflare Pages /api 프록시 반영 — 배포 정본·스킬·가이드·RDMD 기록 갱신 |
+| 337 | 2026-09-28 | [`9702e06`](#9702e06) | docs(deploy): Oracle 운영 서버·HTTPS·Cloudflare Pages /api 프록시 반영 — 배포 정본·스킬·가이드·RDMD 기록 갱신 |
 
 ---
 
@@ -6507,15 +6507,15 @@
 
 ---
 
-<a id="pending337"></a>
+<a id="9702e06"></a>
 
-### 337. 2026-09-28 — `pending`
+### 337. 2026-09-28 — `9702e06`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `9702e06`
+- **hash (full)**: `9702e064fab484cccc18bb299894326d40fe2585`
 - **author**: nomura
 - **message**: docs(deploy): Oracle 운영 서버·HTTPS·Cloudflare Pages /api 프록시 반영 — 배포 정본·스킬·가이드·RDMD 기록 갱신
-- **git**: `git show pending`
+- **git**: `git show 9702e06`
 - **범위**: docs / 배포(Oracle Cloud · Cloudflare Pages)
 - **요약**: 335·336 과 실제 배포 결과를 문서에 반영. Oracle 가이드에 운영 서버 정보(도메인·SSH 키·버전)·콘솔 발급 키·스왑·iptables REJECT 순서·Let's Encrypt 절차·`setup` 재실행 시 HTTPS 설정 덮어씀·IP 접속 404 를 추가하고, `CLOUDFLARE.md` 는 Pages = dist + `/api` 프록시(C절 Oracle 추가, A-3 을 `src/lib/api.js` 기준으로)로 고침. 배포 스킬 4종(.agents/.claude/.codex/.groks)의 "Pages 정적만·APP_URL=터널·common.js" 문구를 현재 구조로, README·root-cloudflare/backend README·overview·체크리스트·work-history(Phase 9)·RDMD 인덱스 갱신. Oracle 기록에 실제 배포 절을 덧붙이고 Pages 연결 기록(05) 신설 — CI 가 GitHub 시크릿 미등록으로 23회 전부 실패해 왔다는 사실 포함. 336 해시 기입.
 - **주요 파일**: `CLOUDFLARE.md`, `backend/deploy/oracle/README.md`, `.agents/deploy/skill.md`, `.claude/skills/deploy/SKILL.md`, `.codex/deploy/skill.md`, `.groks/deploy/grok_skill.md`, `RDMD/frontend/09-deploy-path/05-cloudflare-pages-api-proxy-record.md`, `RDMD/backend/07-deploy/03-oracle-cloud-deploy-record.md`, `RDMD/guides/deploy-checklist.md`, `RDMD/summary/work-history.md`
