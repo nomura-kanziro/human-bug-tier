@@ -77,7 +77,7 @@ npm start
 
 | 폴더 | 쓰는 곳 | 로그인·게시판 |
 |------|---------|----------------|
-| [`root-cloudflare/`](./root-cloudflare/README.md) | ✅ **작업·정식 버전 (React)** | 로컬/Tunnel만 |
+| [`root-cloudflare/`](./root-cloudflare/README.md) | ✅ **작업·정식 버전 (React)** | 로컬 · Oracle 서버 · Cloudflare Pages(`/api` 프록시) |
 | [`root-render/`](./root-render/README.md) | ⛔ **베타 종료 · 수정 금지** (보관용) | Render에서 됨 |
 
 > ⛔ **2026-09-19 창시자 지시 — 모든 프론트 작업은 `root-cloudflare/`(React)에만 한다.**  
@@ -118,16 +118,33 @@ npm start
 
 → 역시 http://localhost:5000/  종료 후 다시 기본(`root-cloudflare`)으로 돌아가면 `STATIC_ROOT`를 비운다.
 
-### Cloudflare Pages (정적 미리보기)
+### Oracle Cloud (운영 서버)
 
-로그인·게시판은 안 된다. HTML만 올린다.
+백엔드 + React 빌드를 한 서버에서 서빙한다. → **https://hbt-tier.duckdns.org/**
 
-확인: https://human-bug-tier.pages.dev/
-
-다시 올리기 (레포 루트에서):
+다시 올리기 (레포 루트, Git Bash — 로컬 코드를 묶어 올리므로 푸시 불필요):
 
 ```bash
-npx wrangler pages deploy root-cloudflare --project-name=human-bug-tier --branch=master --commit-dirty=true
+export OCI_HOST=ubuntu@161.33.190.199
+export OCI_KEY=~/.ssh/oracle_hbt_rsa
+bash backend/deploy/oracle/deploy.sh deploy
+```
+
+가이드: [`backend/deploy/oracle/README.md`](./backend/deploy/oracle/README.md)
+
+### Cloudflare Pages (React + `/api` 프록시)
+
+React 빌드본(`dist/`)을 올리고, Pages Function(`root-cloudflare/functions/api/`)이 `/api/*` 를 Oracle 서버로 넘긴다.
+master 푸시 시 GitHub Actions 가 빌드·배포한다(GitHub 시크릿 `CLOUDFLARE_API_TOKEN`·`CLOUDFLARE_ACCOUNT_ID` 필요 — 2026-09-28 기준 미등록이라 CI 업로드 실패).
+
+확인: https://human-bug-tier.pages.dev/ (`/api/notices` 가 JSON 이면 연결됨)
+
+직접 올리기 (`functions/` 가 같이 올라가도록 `root-cloudflare` 안에서):
+
+```bash
+cd root-cloudflare
+npm ci && npm run build
+npx wrangler pages deploy dist --project-name=human-bug-tier --branch=master --commit-dirty=true
 ```
 
 대시보드: Cloudflare → Workers & Pages → `human-bug-tier`  
@@ -197,7 +214,7 @@ copy .env.example .env
 ### 4. 코드 구조
 ```
 /
-├── root-cloudflare/                         # Cloudflare Pages · 로컬/Tunnel 프론트
+├── root-cloudflare/                         # React 프론트 (로컬·Oracle·Cloudflare Pages), functions/ = Pages /api 프록시
 ├── root-render/                             # Render.com 전용 프론트
 ├── backend/                                 # Express 서버 + API
 │   ├── server.js                            # 정적 파일 서빙 + API 라우팅

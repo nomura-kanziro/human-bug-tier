@@ -92,7 +92,9 @@
 |------|:-------:|:---------------------:|
 | `backend` :5000 (권장) | O | O |
 | 로컬 정적 포트(5500 등) + backend 5000 | O | O (API Base 자동) |
-| Render.com | O | O |
+| Oracle Cloud `https://hbt-tier.duckdns.org` (현재 운영) | O | O |
+| Cloudflare Pages `human-bug-tier.pages.dev` | O | O (Pages Function 이 `/api` 를 Oracle 로 프록시 — 함수 배포 후) |
+| Render.com (레거시, 베타 종료) | O | O |
 | GitHub Pages | O (미리보기) | X (`GITHUB_STATIC`) |
 
 ## 다음 문서

@@ -19,7 +19,7 @@ RDMD/backend/
 ├── 04-notice/       # 공지 CRUD · 정적 서빙 연동
 ├── 05-inquiry/      # 문의 · 답변 · 신고 API
 ├── 06-admin/        # 관리자 로그인 · 차단 · 신고 · requireAdmin
-├── 07-deploy/       # Render · 정적 서빙 · 배포
+├── 07-deploy/       # Render · 정적 서빙 · Oracle Cloud 배포
 └── 08-luck-draw/    # 행운 뽑기 (오늘의 행운 티어) 모델·API
 └── 09-event/        # 이벤트 (매일 퀴즈 · 메모리 게임 · 티어표 공개) API
 ```
@@ -93,7 +93,7 @@ RDMD/backend/
 |------|--------|------|
 | [01-render-static-serve-deploy-record.md](./07-deploy/01-render-static-serve-deploy-record.md) | 27 | Render · 정적 서빙 · DEPLOY |
 | [02-root-render-static-record.md](./07-deploy/02-root-render-static-record.md) | — | Render 전용 프론트 `root-render/` |
-| [03-oracle-cloud-deploy-record.md](./07-deploy/03-oracle-cloud-deploy-record.md) | — | Oracle Cloud 배포 준비 — `backend/deploy/oracle/`(로컬 코드 묶어 scp·pm2·nginx·롤백) |
+| [03-oracle-cloud-deploy-record.md](./07-deploy/03-oracle-cloud-deploy-record.md) | — | Oracle Cloud 배포 준비 — `backend/deploy/oracle/`(로컬 코드 묶어 scp·pm2·nginx·롤백) + 2026-09-28 실제 배포(`https://hbt-tier.duckdns.org`, Let's Encrypt) |
 
 ## 08-luck-draw — 행운 뽑기
 

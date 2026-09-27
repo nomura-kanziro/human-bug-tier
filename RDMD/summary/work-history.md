@@ -4,7 +4,7 @@
 > 상세 로그: [frontend/README](../frontend/README.md) · [backend/README](../backend/README.md)
 
 **기준일**: 2026-09-02  
-**문서 작성일**: 2026-08-20 (이후 Phase 7 반영 2026-09-01, Phase 8 반영 2026-09-02)
+**문서 작성일**: 2026-08-20 (이후 Phase 7 반영 2026-09-01, Phase 8 반영 2026-09-02, Phase 9 반영 2026-09-28 — 2026-09-03 ~ 09-27 작업은 아직 이 요약에 없음, 커밋 단위는 `commit_history/`)
 
 ---
 
@@ -20,6 +20,7 @@
 | 모바일·티어 | 2026-07 ~ 08 | PWA, 게시글 수정, 6~9티어 이미지, 1·2티어 재배치 |
 | 배포 분리 · React 기획 | 2026-09 | 프론트 `root-cloudflare`/`root-render`, Cloudflare 작업 중지, React 정식 버전은 기획만 |
 | 메인·티어 다듬기 | 2026-09-02 | Render 홈 미리보기·행운 위젯, 풀 화살표, 세르지오/호자키 재배치 |
+| 운영 배포 | 2026-09-28 | Oracle Cloud VM 운영 서버(`https://hbt-tier.duckdns.org`, Let's Encrypt), Cloudflare Pages `/api` → Oracle 프록시 |
 
 ---
 
@@ -146,6 +147,20 @@
 
 **결과물**: Render 홈이 티어·제작·뽑기 진입을 한 화면에서 보여 줌
 
+### Phase 9 — Oracle Cloud 운영 배포 · Cloudflare Pages 연결
+
+**기간**: 2026-09-24 (준비) ~ 2026-09-28 (배포)
+**기록**: `backend/07-deploy/03-oracle-cloud-deploy-record.md`, `frontend/09-deploy-path/05-cloudflare-pages-api-proxy-record.md`
+
+| 영역 | 한 일 |
+|------|--------|
+| 서버 | Oracle VM(E2.1.Micro, Ubuntu 24.04)에 `backend/deploy/oracle/deploy.sh` 로 배포 — nginx → pm2 Node :5000, API + React `dist` 같이 서빙 |
+| 도메인·HTTPS | DuckDNS `hbt-tier.duckdns.org`, Let's Encrypt(certbot) 자동 갱신, `APP_URL` https |
+| 스크립트 수정 | `setup-vm.sh` iptables 허용 규칙을 REJECT 앞에 넣도록, 스왑 2 GB |
+| Cloudflare Pages | Pages Function `/api/*` → Oracle 프록시, 워크플로가 빌드 후 `dist` 배포 |
+
+**결과물**: `https://hbt-tier.duckdns.org` 에서 전체 기능 동작. Pages 는 GitHub 시크릿 등록 후 CI 배포되면 같은 백엔드를 씀
+
 ---
 
 ## 3. 번호별 최근 작업 매핑 (25~29)
@@ -176,6 +191,8 @@
 - [x] 신고 게시글·댓글 관리
 - [x] Render 배포 설정 + 로컬 통합 서버
 - [x] GitHub Pages 정적 미리보기
+- [x] Oracle Cloud 운영 서버 (`https://hbt-tier.duckdns.org`)
+- [ ] Cloudflare Pages `/api` 프록시 배포 (코드 완료, GitHub 시크릿 미등록으로 CI 업로드 실패)
 - [x] PWA 홈 화면 설치
 - [x] 관리자 공지 수정 (PUT/PATCH)
 
@@ -186,6 +203,8 @@
 | 항목 | 설명 |
 |------|------|
 | GH Pages | 정적만 제공 — 로그인·게시판 등 API 기능 미동작 |
+| Cloudflare Pages CI | GitHub 시크릿 `CLOUDFLARE_API_TOKEN`·`CLOUDFLARE_ACCOUNT_ID` 미등록 → 업로드 실패 |
+| Oracle nginx | 서버 HTTPS 설정은 certbot 이 덧붙인 것 — `deploy.sh setup` 재실행 시 덮어써짐 |
 | 이메일 | `EMAIL_*` 미설정 시 인증/재설정 메일 제한 |
 | 핀 제한 | 프론트 `MAX_PINNED_NOTICES = 5` — 백엔드 검증 강화 여지 |
 | 성능 | 캐릭터 다수 시 DOM 기반 티어 렌더 최적화 여지 |

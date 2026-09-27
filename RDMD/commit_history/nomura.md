@@ -7,8 +7,8 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 334 |
-| **기간** | 2026-03-20 ~ 2026-09-20 |
+| **커밋 수** | 337 |
+| **기간** | 2026-03-20 ~ 2026-09-28 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
 > 폴더 안내: [README.md](./README.md)  ·  상세 기능 일지: [../frontend/](../frontend/README.md) · [../backend/](../backend/README.md)
@@ -364,7 +364,8 @@
 | 333 | 2026-09-24 | [`6d5b7d5`](#6d5b7d5) | chore(deploy): Oracle Cloud 배포 준비 — 로컬 코드 묶어 scp 배포 스크립트·VM 준비·pm2·nginx·가이드 |
 | 334 | 2026-09-24 | [`3ba0db3`](#3ba0db3) | chore(deploy): 배포 셸 스크립트·nginx 설정 LF 고정(.gitattributes) |
 | 335 | 2026-09-28 | [`56b6eba`](#56b6eba) | fix(deploy): Oracle VM 준비 스크립트 — iptables 허용 규칙을 REJECT 앞에 넣고 스왑 2GB 추가 |
-| 336 | 2026-09-28 | [`pending`](#pending336) | feat(deploy): Cloudflare Pages 에서 /api 를 Oracle 백엔드로 프록시하고 React 빌드본(dist)을 배포 |
+| 336 | 2026-09-28 | [`e901894`](#e901894) | feat(deploy): Cloudflare Pages 에서 /api 를 Oracle 백엔드로 프록시하고 React 빌드본(dist)을 배포 |
+| 337 | 2026-09-28 | [`pending`](#pending337) | docs(deploy): Oracle 운영 서버·HTTPS·Cloudflare Pages /api 프록시 반영 — 배포 정본·스킬·가이드·RDMD 기록 갱신 |
 
 ---
 
@@ -6488,18 +6489,36 @@
 
 ---
 
-<a id="pending336"></a>
+<a id="e901894"></a>
 
-### 336. 2026-09-28 — `pending`
+### 336. 2026-09-28 — `e901894`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `e901894`
+- **hash (full)**: `e901894a1f33f2de2f585b3c8f7c1878d9a4250e`
 - **author**: nomura
 - **message**: feat(deploy): Cloudflare Pages 에서 /api 를 Oracle 백엔드로 프록시하고 React 빌드본(dist)을 배포
-- **git**: `git show pending`
+- **git**: `git show e901894`
 - **범위**: frontend(root-cloudflare) / 배포(Cloudflare Pages)
 - **요약**: Cloudflare Pages 에 올린 프론트가 Oracle 백엔드(`https://hbt-tier.duckdns.org`)를 쓰도록 연결. 기존 워크플로는 빌드 없이 `root-cloudflare` 소스 폴더를 그대로 올려 `index.html` 이 `/src/main.jsx` 를 불러 React 가 뜨지 않았고, `/api/*` 도 백엔드가 없어 HTML 이 돌아왔다. Pages Function `functions/api/[[path]].js` 를 추가해 `/api/*` 를 백엔드로 그대로 전달(방문자 IP 는 `cf-connecting-ip` 로 X-Forwarded-For 덮어씀, 백엔드 주소는 Pages 환경변수 `API_ORIGIN` 으로 변경 가능). 워크플로는 Node 22 로 `npm ci && npm run build` 후 `root-cloudflare` 에서 `pages deploy dist` 를 실행해 dist 와 functions 를 함께 올림. 프론트 `getApiBase()`(동일 오리진 → `''`)는 그대로. 확인: 함수 로직을 Node 에서 흉내 내 GET /api/notices 200 JSON, POST /api/auth/login 400 JSON(본문 전달 확인), 빌드 성공.
 - **주요 파일**: `root-cloudflare/functions/api/[[path]].js`, `.github/workflows/deploy-cloudflare-pages.yml`
 - **관련 RDMD**: `RDMD/backend/07-deploy/03-oracle-cloud-deploy-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending337"></a>
+
+### 337. 2026-09-28 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(deploy): Oracle 운영 서버·HTTPS·Cloudflare Pages /api 프록시 반영 — 배포 정본·스킬·가이드·RDMD 기록 갱신
+- **git**: `git show pending`
+- **범위**: docs / 배포(Oracle Cloud · Cloudflare Pages)
+- **요약**: 335·336 과 실제 배포 결과를 문서에 반영. Oracle 가이드에 운영 서버 정보(도메인·SSH 키·버전)·콘솔 발급 키·스왑·iptables REJECT 순서·Let's Encrypt 절차·`setup` 재실행 시 HTTPS 설정 덮어씀·IP 접속 404 를 추가하고, `CLOUDFLARE.md` 는 Pages = dist + `/api` 프록시(C절 Oracle 추가, A-3 을 `src/lib/api.js` 기준으로)로 고침. 배포 스킬 4종(.agents/.claude/.codex/.groks)의 "Pages 정적만·APP_URL=터널·common.js" 문구를 현재 구조로, README·root-cloudflare/backend README·overview·체크리스트·work-history(Phase 9)·RDMD 인덱스 갱신. Oracle 기록에 실제 배포 절을 덧붙이고 Pages 연결 기록(05) 신설 — CI 가 GitHub 시크릿 미등록으로 23회 전부 실패해 왔다는 사실 포함. 336 해시 기입.
+- **주요 파일**: `CLOUDFLARE.md`, `backend/deploy/oracle/README.md`, `.agents/deploy/skill.md`, `.claude/skills/deploy/SKILL.md`, `.codex/deploy/skill.md`, `.groks/deploy/grok_skill.md`, `RDMD/frontend/09-deploy-path/05-cloudflare-pages-api-proxy-record.md`, `RDMD/backend/07-deploy/03-oracle-cloud-deploy-record.md`, `RDMD/guides/deploy-checklist.md`, `RDMD/summary/work-history.md`
+- **관련 RDMD**: `RDMD/frontend/09-deploy-path/05-cloudflare-pages-api-proxy-record.md`, `RDMD/backend/07-deploy/03-oracle-cloud-deploy-record.md`
 
 [▲ 목차로](#목차)

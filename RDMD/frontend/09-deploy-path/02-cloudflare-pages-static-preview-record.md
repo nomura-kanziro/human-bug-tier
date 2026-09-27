@@ -36,3 +36,8 @@ Render.com 배포는 방치하고, Cloudflare Pages 프로젝트 `human-bug-tier
 ## 날짜
 
 2026-09-01
+
+## 이후 변경 (2026-09-28)
+
+정적 미리보기만 하던 구조는 바뀌었다 — Pages Function 이 `/api/*` 를 Oracle 백엔드(`https://hbt-tier.duckdns.org`)로 넘기고, 워크플로는 React 를 빌드해 `dist/` 를 올린다.
+→ [05-cloudflare-pages-api-proxy-record.md](./05-cloudflare-pages-api-proxy-record.md)

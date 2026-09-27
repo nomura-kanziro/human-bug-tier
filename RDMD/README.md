@@ -90,7 +90,7 @@
 | [coding-conventions.md](./guides/coding-conventions.md) | 프론트·백 코딩 규칙 |
 | [path-and-api.md](./guides/path-and-api.md) | getBasePath / getApiBase / 인증 헤더 |
 | [security.md](./guides/security.md) | JWT, Admin, 토큰, env |
-| [deploy-checklist.md](./guides/deploy-checklist.md) | Render · GH Pages 체크리스트 |
+| [deploy-checklist.md](./guides/deploy-checklist.md) | Oracle Cloud · Cloudflare Pages · Render(레거시) · GH Pages 체크리스트 |
 | [rdmd-writing.md](./guides/rdmd-writing.md) | RDMD에 기록 남기는 방법 |
 | [new-feature-checklist.md](./guides/new-feature-checklist.md) | 새 기능 추가 체크리스트 |
 
@@ -140,7 +140,7 @@ backend/
 ├── 04-notice/             공지 API
 ├── 05-inquiry/            문의 · 답변
 ├── 06-admin/              관리자 · Block · requireAdmin
-└── 07-deploy/             Render · 정적 서빙
+└── 07-deploy/             Render · 정적 서빙 · Oracle Cloud
 ```
 
 - 예: `03-auth/04-password-reset-token-hash-record.md`

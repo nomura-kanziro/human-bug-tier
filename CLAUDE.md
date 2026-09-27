@@ -61,7 +61,7 @@ env 로드: 루트 `.env` 후 `backend/.env` (동일 키는 backend 우선)
 | 행운 뽑기 | `.claude/skills/luck-draw/SKILL.md` | `luck-draw/`, `backend/*luckDraw*` |
 | 마이페이지 | `.claude/skills/my-page/SKILL.md` | `my-page/`, `common.js`(프로필 드롭다운) |
 | 백엔드 | `.claude/skills/backend/SKILL.md` | `backend/` |
-| 배포 | `.claude/skills/deploy/SKILL.md` | `CLOUDFLARE.md` (작업 중지), `root-cloudflare/` |
+| 배포 | `.claude/skills/deploy/SKILL.md` | `CLOUDFLARE.md`, `backend/deploy/oracle/` (Oracle 운영 서버), `root-cloudflare/functions/` (Pages `/api` 프록시) |
 | 문서/RDMD | `.claude/skills/rdmd/SKILL.md` | `RDMD/` |
 | 인수인계 | `.claude/skills/handoff/SKILL.md` | 팀 온보딩 |
 | React 정식 기획 | `.claude/skills/react-rewrite/SKILL.md` | 구현 금지·CF 작업 중지 |

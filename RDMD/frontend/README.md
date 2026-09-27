@@ -140,6 +140,7 @@ RDMD/frontend/
 | [02-cloudflare-pages-static-preview-record.md](./09-deploy-path/02-cloudflare-pages-static-preview-record.md) | — | Cloudflare Pages 정적 미리보기 (`human-bug-tier`) |
 | [03-root-cloudflare-split-record.md](./09-deploy-path/03-root-cloudflare-split-record.md) | — | 루트 프론트 → `root-cloudflare/` · `root-render/` |
 | [04-react-rewrite-plan-record.md](./09-deploy-path/04-react-rewrite-plan-record.md) | — | React 정식 기획 · Cloudflare 작업 중지 |
+| [05-cloudflare-pages-api-proxy-record.md](./09-deploy-path/05-cloudflare-pages-api-proxy-record.md) | — | Pages `/api` → Oracle 백엔드 프록시(Pages Function) · 워크플로 빌드 후 `dist` 배포 · CI 시크릿 누락 |
 
 ## 10-luck-draw
 
