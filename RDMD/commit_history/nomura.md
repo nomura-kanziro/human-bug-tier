@@ -368,7 +368,7 @@
 | 337 | 2026-09-28 | [`9702e06`](#9702e06) | docs(deploy): Oracle 운영 서버·HTTPS·Cloudflare Pages /api 프록시 반영 — 배포 정본·스킬·가이드·RDMD 기록 갱신 |
 | 338 | 2026-09-28 | [`9d1426b`](#9d1426b) | docs(deploy): Cloudflare Pages 연동 빌드 Root directory(root-cloudflare) 수정 내용 인수인계 — 에이전트 배포 스킬·체크리스트·기록 갱신 |
 | 339 | 2026-09-29 | [`d549b2c`](#d549b2c) | feat(auth): 회원가입·아이디 찾기·비밀번호 재설정 메일을 예시문 템플릿으로 통일 — 로고·안내·문의 링크·발신전용 문구 |
-| 340 | 2026-09-29 | [`pending`](#pending340) | style(auth): 인증 메일 로고를 움직이는 GIF(human_bug_eyes_icon)로 바꾸고 회색 배경·테두리 제거 |
+| 340 | 2026-09-29 | [`917e9de`](#917e9de) | style(auth): 인증 메일 로고를 움직이는 GIF(human_bug_eyes_icon)로 바꾸고 회색 배경·테두리 제거 |
 
 ---
 
@@ -6564,15 +6564,15 @@
 
 ---
 
-<a id="pending340"></a>
+<a id="917e9de"></a>
 
-### 340. 2026-09-29 — `pending`
+### 340. 2026-09-29 — `917e9de`
 
-- **hash (short)**: `pending`
+- **hash (short)**: `917e9de`
 - **hash (full)**: `pending`
 - **author**: nomura
 - **message**: style(auth): 인증 메일 로고를 움직이는 GIF(human_bug_eyes_icon)로 바꾸고 회색 배경·테두리 제거
-- **git**: `git show pending`
+- **git**: `git show 917e9de`
 - **범위**: backend / 인증 메일
 - **요약**: 339 템플릿 후속 — 창시자 요청으로 메일 로고를 `logo2.png` 에서 움직이는 `human_bug_eyes_icon.gif`(400×400, 약 1.2 MB)로 바꾸고, 본문을 감싸던 회색 배경(#f2f2f2)·남색 테두리와 아이디 찾기 메일의 아이디 상자 테두리를 없앰(흰 배경). 구분선·발신전용 안내는 유지. 확인: 헤드리스 Chrome 렌더링, 운영 서버에서 GIF 200.
 - **주요 파일**: `backend/utils/mailTemplate.js`, `backend/controllers/authController.js`
