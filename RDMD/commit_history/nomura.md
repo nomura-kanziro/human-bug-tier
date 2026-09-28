@@ -367,7 +367,7 @@
 | 336 | 2026-09-28 | [`e901894`](#e901894) | feat(deploy): Cloudflare Pages 에서 /api 를 Oracle 백엔드로 프록시하고 React 빌드본(dist)을 배포 |
 | 337 | 2026-09-28 | [`9702e06`](#9702e06) | docs(deploy): Oracle 운영 서버·HTTPS·Cloudflare Pages /api 프록시 반영 — 배포 정본·스킬·가이드·RDMD 기록 갱신 |
 | 338 | 2026-09-28 | [`9d1426b`](#9d1426b) | docs(deploy): Cloudflare Pages 연동 빌드 Root directory(root-cloudflare) 수정 내용 인수인계 — 에이전트 배포 스킬·체크리스트·기록 갱신 |
-| 339 | 2026-09-29 | [`pending`](#pending339) | feat(auth): 회원가입·아이디 찾기·비밀번호 재설정 메일을 예시문 템플릿으로 통일 — 로고·안내·문의 링크·발신전용 문구 |
+| 339 | 2026-09-29 | [`d549b2c`](#d549b2c) | feat(auth): 회원가입·아이디 찾기·비밀번호 재설정 메일을 예시문 템플릿으로 통일 — 로고·안내·문의 링크·발신전용 문구 |
 
 ---
 
@@ -6545,15 +6545,15 @@
 
 ---
 
-<a id="pending339"></a>
+<a id="d549b2c"></a>
 
-### 339. 2026-09-29 — `pending`
+### 339. 2026-09-29 — `d549b2c`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `d549b2c`
+- **hash (full)**: `d549b2c6918850b4db53a0ec19185438e499dbaa`
 - **author**: nomura
 - **message**: feat(auth): 회원가입·아이디 찾기·비밀번호 재설정 메일을 예시문 템플릿으로 통일 — 로고·안내·문의 링크·발신전용 문구
-- **git**: `git show pending`
+- **git**: `git show d549b2c`
 - **범위**: backend / 인증 메일
 - **요약**: 창시자가 준 예시 이미지대로 회원가입 인증·아이디 찾기·비밀번호 재설정 메일을 한 틀로 바꿈. 공용 템플릿 `utils/mailTemplate.js` 신설 — 로고(PNG `logo2.png`, 절대 주소) → 제목 → 감사 인사 → 안내 → 파란 버튼(계정 인증하기 / 로그인하러 가기 / 비밀번호 재설정하기) → 유효시간 안내 → 문의 링크(`<APP_URL>/inquiry`, 카카오톡 오픈채팅) → 감사합니다 → 구분선 → 한 줄 띄우고 발신전용 안내. 메일 앱 호환을 위해 표 레이아웃·인라인 스타일만 사용. 아이디 찾기 메일의 닉네임을 HTML 이스케이프(이전엔 그대로 삽입). 확인: 헤드리스 Chrome 으로 렌더링 캡처, Oracle 서버에 배포 후 서버에서 생성한 HTML 에 새 요소 포함 확인, 메일 속 링크·로고 200.
 - **주요 파일**: `backend/utils/mailTemplate.js`, `backend/controllers/authController.js`
