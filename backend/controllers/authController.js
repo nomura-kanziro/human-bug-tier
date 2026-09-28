@@ -319,7 +319,7 @@ const findId = async (req, res) => {
             appUrl: getAppBaseUrl(req),
             title: '아이디 찾기',
             message: '요청하신 계정의 아이디를 알려드립니다.',
-            bodyHtml: `<p style="margin:0 0 32px;padding:16px;background-color:#ffffff;border:1px solid #d9d9d9;border-radius:8px;text-align:center;font-size:17px;">회원님의 아이디는 <strong>${escapeHtml(user.nickname)}</strong> 입니다.</p>`,
+            bodyHtml: `<p style="margin:0 0 32px;font-size:17px;">회원님의 아이디는 <strong>${escapeHtml(user.nickname)}</strong> 입니다.</p>`,
             button: { label: '로그인하러 가기', url: `${getAppBaseUrl(req)}/login` },
             note: '본인이 요청하지 않았다면 이 메일을 무시하셔도 됩니다.',
           }),

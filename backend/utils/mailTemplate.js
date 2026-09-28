@@ -6,14 +6,15 @@
  *   로고 → 제목 → 감사 인사 → 안내 문구 → [버튼] → 버튼 아래 안내
  *   → 문의 안내(문의하기 페이지·카카오톡 오픈채팅) → "감사합니다."
  *   → 구분선 → 한 줄 띄우고 발신전용 안내
+ * 본문 영역은 흰 배경 그대로 두고 회색 배경·테두리는 쓰지 않는다(2026-09-29 창시자 요청).
  *
  * 메일 앱은 <style>·flex·외부 CSS 를 제대로 지원하지 않으므로 표(table) 레이아웃 +
- * 인라인 스타일만 쓴다. 로고는 webp 를 못 여는 메일 앱(Outlook 등)이 있어 PNG 를 쓰고,
+ * 인라인 스타일만 쓴다. 로고는 webp 를 못 여는 메일 앱(Outlook 등)이 있어 GIF 를 쓰고,
  * 메일 안에서는 상대경로가 안 되므로 getAppBaseUrl() 로 만든 절대 주소를 넘겨받는다.
  * ==================================================================== */
 
-// 메일 로고(PNG) — root-cloudflare/public/tier-media/tier-image/logo2.png (빌드 시 dist 로 복사됨)
-const LOGO_PATH = '/tier-media/tier-image/logo2.png';
+// 메일 로고(움직이는 GIF, 400×400) — root-cloudflare/public/tier-media/tier-image/human_bug_eyes_icon.gif (빌드 시 dist 로 복사됨)
+const LOGO_PATH = '/tier-media/tier-image/human_bug_eyes_icon.gif';
 // 문의 안내에 함께 넣는 카카오톡 오픈채팅 주소(창시자 예시문에 있던 값)
 const SUPPORT_KAKAO_URL = 'https://open.kakao.com/o/sX6H0F7h';
 const SEND_ONLY_NOTICE = '본 메일은 발신전용 메일입니다. 이메일 수신 설정은 카카오디벨로퍼스 알림설정을 이용해주시길 바랍니다.';
@@ -67,7 +68,7 @@ function buildAppMailHtml({ appUrl, title, message, bodyHtml = '', button, note 
     <tr>
       <td align="center" style="padding:24px 12px;">
         <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0"
-               style="max-width:560px;background-color:#f2f2f2;border:1px solid #1f2d4d;">
+               style="max-width:560px;background-color:#ffffff;">
           <tr>
             <td align="center" style="padding:32px 24px 8px;">
               <img src="${escapeHtml(base + LOGO_PATH)}" width="120" height="120" alt="human-bug-tier"
