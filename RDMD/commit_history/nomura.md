@@ -7,8 +7,8 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 338 |
-| **기간** | 2026-03-20 ~ 2026-09-28 |
+| **커밋 수** | 339 |
+| **기간** | 2026-03-20 ~ 2026-09-29 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
 > 폴더 안내: [README.md](./README.md)  ·  상세 기능 일지: [../frontend/](../frontend/README.md) · [../backend/](../backend/README.md)
@@ -367,6 +367,7 @@
 | 336 | 2026-09-28 | [`e901894`](#e901894) | feat(deploy): Cloudflare Pages 에서 /api 를 Oracle 백엔드로 프록시하고 React 빌드본(dist)을 배포 |
 | 337 | 2026-09-28 | [`9702e06`](#9702e06) | docs(deploy): Oracle 운영 서버·HTTPS·Cloudflare Pages /api 프록시 반영 — 배포 정본·스킬·가이드·RDMD 기록 갱신 |
 | 338 | 2026-09-28 | [`9d1426b`](#9d1426b) | docs(deploy): Cloudflare Pages 연동 빌드 Root directory(root-cloudflare) 수정 내용 인수인계 — 에이전트 배포 스킬·체크리스트·기록 갱신 |
+| 339 | 2026-09-29 | [`pending`](#pending339) | feat(auth): 회원가입·아이디 찾기·비밀번호 재설정 메일을 예시문 템플릿으로 통일 — 로고·안내·문의 링크·발신전용 문구 |
 
 ---
 
@@ -6539,5 +6540,23 @@
 - **요약**: `pages.dev` 의 `/api/*` 가 여전히 HTML 을 돌려주던 원인을 찾아 고친 내용을 모든 에이전트 문서에 인수인계. 실제 운영 배포는 GitHub Actions 가 아니라 Pages 프로젝트의 GitHub 연동 빌드인데, 빌드 설정 Root directory 가 비어 레포 루트에서 `npm run build` → `package.json` ENOENT 로 `5cb8d58`·`e901894` 빌드가 실패해 프록시 없는 옛 배포본이 서비스되고 있었다. Cloudflare API 로 Root directory `root-cloudflare` / Build `npm run build` / Output `dist` 로 바꾸고 재빌드 → `/api/notices` 200 JSON, POST `/api/auth/login` 백엔드 응답 확인. 배포 스킬 4종(.agents/.claude/.codex/.groks)에 연동 빌드 설정·장애 진단 절, `CLOUDFLARE.md` 운영 구조, 배포 체크리스트, Pages 프록시 기록(05)에 해결 절 추가. (코드 변경 없음, Pages 프로젝트 설정만 변경)
 - **주요 파일**: `CLOUDFLARE.md`, `.agents/deploy/skill.md`, `.claude/skills/deploy/SKILL.md`, `.codex/deploy/skill.md`, `.groks/deploy/grok_skill.md`, `RDMD/guides/deploy-checklist.md`, `RDMD/frontend/09-deploy-path/05-cloudflare-pages-api-proxy-record.md`
 - **관련 RDMD**: `RDMD/frontend/09-deploy-path/05-cloudflare-pages-api-proxy-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending339"></a>
+
+### 339. 2026-09-29 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(auth): 회원가입·아이디 찾기·비밀번호 재설정 메일을 예시문 템플릿으로 통일 — 로고·안내·문의 링크·발신전용 문구
+- **git**: `git show pending`
+- **범위**: backend / 인증 메일
+- **요약**: 창시자가 준 예시 이미지대로 회원가입 인증·아이디 찾기·비밀번호 재설정 메일을 한 틀로 바꿈. 공용 템플릿 `utils/mailTemplate.js` 신설 — 로고(PNG `logo2.png`, 절대 주소) → 제목 → 감사 인사 → 안내 → 파란 버튼(계정 인증하기 / 로그인하러 가기 / 비밀번호 재설정하기) → 유효시간 안내 → 문의 링크(`<APP_URL>/inquiry`, 카카오톡 오픈채팅) → 감사합니다 → 구분선 → 한 줄 띄우고 발신전용 안내. 메일 앱 호환을 위해 표 레이아웃·인라인 스타일만 사용. 아이디 찾기 메일의 닉네임을 HTML 이스케이프(이전엔 그대로 삽입). 확인: 헤드리스 Chrome 으로 렌더링 캡처, Oracle 서버에 배포 후 서버에서 생성한 HTML 에 새 요소 포함 확인, 메일 속 링크·로고 200.
+- **주요 파일**: `backend/utils/mailTemplate.js`, `backend/controllers/authController.js`
+- **관련 RDMD**: —
 
 [▲ 목차로](#목차)

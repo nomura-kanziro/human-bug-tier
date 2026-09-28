@@ -24,6 +24,8 @@ const getClientIp = require('../utils/getClientIp');
 const { isUserBlocked } = require('../utils/checkBlocked');
 const { signUserToken, getJwtSecret } = require('../utils/jwtAuth');
 const { getAppBaseUrl } = require('../utils/appUrl');
+// 세 메일(가입 인증·아이디 찾기·비번 재설정)이 공용으로 쓰는 HTML 틀
+const { buildAppMailHtml, escapeHtml } = require('../utils/mailTemplate');
 const {
   hasEmailConfig,
   sendAppMail,
@@ -156,28 +158,13 @@ const register = async (req, res) => {
         await sendSignupMail({
           to: email,
           subject: 'human-bug-tier 회원가입 인증 메일',
-          html: `
-            <h2>회원가입 인증</h2>
-            <p style="margin-bottom: 20px; font-size: 15px; line-height: 1.6;">
-              아래 버튼을 클릭하여 회원가입을 완료해주세요.
-            </p>
-            <div style="margin: 30px 0;">
-              <a href="${verificationUrl}"
-                 style="display: inline-block;
-                        padding: 14px 32px;
-                        background-color: #007bff;
-                        color: white;
-                        text-decoration: none;
-                        border-radius: 6px;
-                        font-size: 16px;
-                        font-weight: bold;">
-                가입 완료
-              </a>
-            </div>
-            <p style="color: #666; font-size: 14px;">
-              링크는 1시간 후에 만료됩니다.
-            </p>
-          `,
+          html: buildAppMailHtml({
+            appUrl: getAppBaseUrl(req),
+            title: '회원가입 인증',
+            message: '아래 버튼을 클릭하여 회원가입을 완료해주세요.',
+            button: { label: '계정 인증하기', url: verificationUrl },
+            note: '이 인증 링크는 1시간 동안만 유효합니다.',
+          }),
         });
         res.status(201).json({ message: '인증 메일이 발송되었습니다. 메일을 확인해주세요.' });
       } catch (emailErr) {
@@ -328,7 +315,14 @@ const findId = async (req, res) => {
         await sendAppMail({
           to: email,
           subject: '아이디 찾기 안내',
-          html: `<h2>아이디 찾기 결과</h2><p>회원님의 아이디는 <strong>${user.nickname}</strong> 입니다.</p>`,
+          html: buildAppMailHtml({
+            appUrl: getAppBaseUrl(req),
+            title: '아이디 찾기',
+            message: '요청하신 계정의 아이디를 알려드립니다.',
+            bodyHtml: `<p style="margin:0 0 32px;padding:16px;background-color:#ffffff;border:1px solid #d9d9d9;border-radius:8px;text-align:center;font-size:17px;">회원님의 아이디는 <strong>${escapeHtml(user.nickname)}</strong> 입니다.</p>`,
+            button: { label: '로그인하러 가기', url: `${getAppBaseUrl(req)}/login` },
+            note: '본인이 요청하지 않았다면 이 메일을 무시하셔도 됩니다.',
+          }),
         });
       } catch (emailErr) {
         console.error('아이디 찾기 메일 실패:', emailErr.message || emailErr);
@@ -383,11 +377,13 @@ const forgotPassword = async (req, res) => {
         await sendAppMail({
           to: email,
           subject: '비밀번호 재설정 안내',
-          html: `
-            <h2>비밀번호 재설정</h2>
-            <p>아래 버튼을 클릭해 새 비밀번호를 설정해주세요.</p>
-            <a href="${resetUrl}" style="display:inline-block;padding:12px 24px;background:#007bff;color:#fff;text-decoration:none;border-radius:6px;">비밀번호 재설정</a>
-            <p style="color:#666;font-size:14px;">링크는 1시간 후 만료됩니다. 본인이 요청하지 않았다면 이 메일을 무시하세요.</p>`,
+          html: buildAppMailHtml({
+            appUrl: getAppBaseUrl(req),
+            title: '비밀번호 재설정',
+            message: '아래 버튼을 클릭하여 새 비밀번호를 설정해주세요.',
+            button: { label: '비밀번호 재설정하기', url: resetUrl },
+            note: '이 재설정 링크는 1시간 동안만 유효합니다. 본인이 요청하지 않았다면 이 메일을 무시하세요.',
+          }),
         });
       } catch (emailErr) {
         console.error('비밀번호 찾기 메일 실패:', emailErr.message || emailErr);
