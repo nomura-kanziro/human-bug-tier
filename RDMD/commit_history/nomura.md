@@ -6569,7 +6569,7 @@
 ### 340. 2026-09-29 — `917e9de`
 
 - **hash (short)**: `917e9de`
-- **hash (full)**: `pending`
+- **hash (full)**: `917e9dec4199bebaa4917a763d35a6b89dcddbf6`
 - **author**: nomura
 - **message**: style(auth): 인증 메일 로고를 움직이는 GIF(human_bug_eyes_icon)로 바꾸고 회색 배경·테두리 제거
 - **git**: `git show 917e9de`
