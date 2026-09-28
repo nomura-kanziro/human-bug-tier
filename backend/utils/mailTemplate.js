@@ -17,7 +17,7 @@
 const LOGO_PATH = '/tier-media/tier-image/human_bug_eyes_icon.gif';
 // 문의 안내에 함께 넣는 카카오톡 오픈채팅 주소(창시자 예시문에 있던 값)
 const SUPPORT_KAKAO_URL = 'https://open.kakao.com/o/sX6H0F7h';
-const SEND_ONLY_NOTICE = '본 메일은 발신전용 메일입니다. 이메일 수신 설정은 카카오디벨로퍼스 알림설정을 이용해주시길 바랍니다.';
+const SEND_ONLY_NOTICE = '본 메일은 발신전용 메일입니다. 이메일 수신 설정은 휴먼버그대학교 알림설정을 이용해주시길 바랍니다.';
 
 // 닉네임처럼 사용자가 입력한 값이 메일 HTML 로 해석되지 않도록 이스케이프한다
 function escapeHtml(value) {

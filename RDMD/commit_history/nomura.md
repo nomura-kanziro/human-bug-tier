@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 340 |
+| **커밋 수** | 341 |
 | **기간** | 2026-03-20 ~ 2026-09-29 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -369,6 +369,7 @@
 | 338 | 2026-09-28 | [`9d1426b`](#9d1426b) | docs(deploy): Cloudflare Pages 연동 빌드 Root directory(root-cloudflare) 수정 내용 인수인계 — 에이전트 배포 스킬·체크리스트·기록 갱신 |
 | 339 | 2026-09-29 | [`d549b2c`](#d549b2c) | feat(auth): 회원가입·아이디 찾기·비밀번호 재설정 메일을 예시문 템플릿으로 통일 — 로고·안내·문의 링크·발신전용 문구 |
 | 340 | 2026-09-29 | [`917e9de`](#917e9de) | style(auth): 인증 메일 로고를 움직이는 GIF(human_bug_eyes_icon)로 바꾸고 회색 배경·테두리 제거 |
+| 341 | 2026-09-29 | [`pending`](#pending341) | fix(auth): 인증 메일 발신전용 안내 문구의 카카오디벨로퍼스를 휴먼버그대학교로 정정 |
 
 ---
 
@@ -6576,6 +6577,24 @@
 - **범위**: backend / 인증 메일
 - **요약**: 339 템플릿 후속 — 창시자 요청으로 메일 로고를 `logo2.png` 에서 움직이는 `human_bug_eyes_icon.gif`(400×400, 약 1.2 MB)로 바꾸고, 본문을 감싸던 회색 배경(#f2f2f2)·남색 테두리와 아이디 찾기 메일의 아이디 상자 테두리를 없앰(흰 배경). 구분선·발신전용 안내는 유지. 확인: 헤드리스 Chrome 렌더링, 운영 서버에서 GIF 200.
 - **주요 파일**: `backend/utils/mailTemplate.js`, `backend/controllers/authController.js`
+- **관련 RDMD**: —
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending341"></a>
+
+### 341. 2026-09-29 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: fix(auth): 인증 메일 발신전용 안내 문구의 카카오디벨로퍼스를 휴먼버그대학교로 정정
+- **git**: `git show pending`
+- **범위**: backend / 인증 메일
+- **요약**: 인증 메일(회원가입·아이디 찾기·비밀번호 재설정) 맨 아래 발신전용 안내를 창시자 요청대로 정정 — "이메일 수신 설정은 카카오디벨로퍼스 알림설정을" → "휴먼버그대학교 알림설정을". 문구 한 곳(`SEND_ONLY_NOTICE`)만 변경.
+- **주요 파일**: `backend/utils/mailTemplate.js`
 - **관련 RDMD**: —
 
 [▲ 목차로](#목차)
