@@ -369,7 +369,7 @@
 | 338 | 2026-09-28 | [`9d1426b`](#9d1426b) | docs(deploy): Cloudflare Pages 연동 빌드 Root directory(root-cloudflare) 수정 내용 인수인계 — 에이전트 배포 스킬·체크리스트·기록 갱신 |
 | 339 | 2026-09-29 | [`d549b2c`](#d549b2c) | feat(auth): 회원가입·아이디 찾기·비밀번호 재설정 메일을 예시문 템플릿으로 통일 — 로고·안내·문의 링크·발신전용 문구 |
 | 340 | 2026-09-29 | [`917e9de`](#917e9de) | style(auth): 인증 메일 로고를 움직이는 GIF(human_bug_eyes_icon)로 바꾸고 회색 배경·테두리 제거 |
-| 341 | 2026-09-29 | [`pending`](#pending341) | fix(auth): 인증 메일 발신전용 안내 문구의 카카오디벨로퍼스를 휴먼버그대학교로 정정 |
+| 341 | 2026-09-29 | [`3ab8238`](#3ab8238) | fix(auth): 인증 메일 발신전용 안내 문구의 카카오디벨로퍼스를 휴먼버그대학교로 정정 |
 
 ---
 
@@ -6583,15 +6583,15 @@
 
 ---
 
-<a id="pending341"></a>
+<a id="3ab8238"></a>
 
-### 341. 2026-09-29 — `pending`
+### 341. 2026-09-29 — `3ab8238`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `3ab8238`
+- **hash (full)**: `3ab8238b2e58def9801453a24edf76cbf7c409e9`
 - **author**: nomura
 - **message**: fix(auth): 인증 메일 발신전용 안내 문구의 카카오디벨로퍼스를 휴먼버그대학교로 정정
-- **git**: `git show pending`
+- **git**: `git show 3ab8238`
 - **범위**: backend / 인증 메일
 - **요약**: 인증 메일(회원가입·아이디 찾기·비밀번호 재설정) 맨 아래 발신전용 안내를 창시자 요청대로 정정 — "이메일 수신 설정은 카카오디벨로퍼스 알림설정을" → "휴먼버그대학교 알림설정을". 문구 한 곳(`SEND_ONLY_NOTICE`)만 변경.
 - **주요 파일**: `backend/utils/mailTemplate.js`
