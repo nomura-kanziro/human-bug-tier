@@ -33,6 +33,8 @@
 const mongoose = require('mongoose');
 const LuckProfile = require('../models/LuckProfile');
 const LuckPokerRound = require('../models/LuckPokerRound');
+// 포인트 증감 원장(관리자 "행운 뽑기 관리"의 포인트 내역)
+const { recordPointChange } = require('../utils/luckPointLog');
 
 // 무늬 5종. color 는 프론트가 카드 색을 칠할 때만 쓰는 표시용 값이다.
 const SUITS = [
@@ -261,8 +263,17 @@ const dealPoker = async (req, res) => {
     }
 
     // 판이 실제로 만들어진 뒤에 차감한다(생성에 실패했는데 포인트만 사라지는 일이 없도록).
+    const beforeBet = profile.points;
     profile.points = Math.max(0, profile.points - bet);
     await profile.save();
+    await recordPointChange({
+      userId: req.auth.sub,
+      source: 'poker_bet',
+      delta: profile.points - beforeBet,
+      balanceAfter: profile.points,
+      detail: `행운 티어 포커 배팅 ${bet}P`,
+      refId: round._id,
+    });
 
     res.json({ ok: true, resumed: false, round: openRoundShape(round), points: profile.points });
   } catch (err) {
@@ -332,6 +343,22 @@ const playPoker = async (req, res) => {
     if (!profile) profile = await LuckProfile.create({ userId: req.auth.sub });
     profile.points = Math.max(0, profile.points + payout);
     await profile.save();
+
+    // 판 기록에 정산 결과를 남긴다(관리자 행운 뽑기 관리용). 실패해도 정산 응답은 그대로 보낸다.
+    const outcome = verdict > 0 ? 'win' : (verdict < 0 ? 'lose' : 'push');
+    await LuckPokerRound.updateOne(
+      { _id: claimed._id },
+      { $set: { outcome, payout, pointsDelta: payout - bet, playerHand: player.label, dealerHand: dealer.label } },
+    ).catch((err) => console.error('포커 판 결과 저장 실패:', err.message));
+    const OUTCOME_LABEL = { win: '승리', lose: '패배', push: '무승부' };
+    await recordPointChange({
+      userId: req.auth.sub,
+      source: 'poker_payout',
+      delta: payout,
+      balanceAfter: profile.points,
+      detail: `행운 티어 포커 ${OUTCOME_LABEL[outcome]} (${player.label} vs 딜러 ${dealer.label}) · 배팅 ${bet}P`,
+      refId: claimed._id,
+    });
 
     res.json({
       ok: true,

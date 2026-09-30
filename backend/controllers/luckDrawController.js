@@ -21,6 +21,8 @@ const LuckProfile = require('../models/LuckProfile');
 const luckPool = require('../data/luckPool');
 const { getKstDateString } = require('../utils/kstDate');
 const { resolveTierMediaPath } = require('../utils/tierMediaDir');
+// 포인트 증감 원장(관리자 "행운 뽑기 관리"의 포인트 내역)
+const { recordPointChange } = require('../utils/luckPointLog');
 
 // 합계 100 — 가중치가 그대로 퍼센트가 되도록 구성.
 // 확률 등급(높음→낮음): {5,6} > {4,7} > {8} > {9,3} > {2} > {1} (4티어 -2%, 7티어 +2% 조정)
@@ -252,6 +254,13 @@ const drawDailyTier = async (req, res) => {
     profile.markModified('tierCounts');
     profile.lastDrawAt = new Date();
     await profile.save();
+    await recordPointChange({
+      userId: req.auth.sub,
+      source: 'daily_tier',
+      delta: pointsDelta,
+      balanceAfter: profile.points,
+      detail: `오늘의 행운 티어 ${result.tier}티어 · ${result.characterName}`,
+    });
 
     // 이력 로그 1건 추가 — 통계/제한 판정에는 쓰이지 않고, "최근 기록" 화면 표시용.
     await LuckDraw.create({

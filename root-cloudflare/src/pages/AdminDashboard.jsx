@@ -8,6 +8,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminEventManager from '../components/AdminEventManager';
+import AdminLuckManager from '../components/AdminLuckManager';
 import AdminPagination from '../components/AdminPagination';
 import AdminQuickNav, { scrollToAnchor } from '../components/AdminQuickNav';
 import NoticeEditor from '../components/NoticeEditor';
@@ -122,6 +123,7 @@ export default function AdminDashboard() {
     { id: 'admin-notices', icon: '📢', label: '공지', hint: '공지 작성·수정·고정', count: notices.length },
     { id: 'admin-memory-events', icon: '🃏', label: '메모리 기록 이벤트', hint: '기록 이벤트 열기·닫기·정산' },
     { id: 'admin-showcase', icon: '🖼️', label: '티어표 공개', hint: '제작한 티어표 공개 이벤트 관리' },
+    { id: 'admin-luck', icon: '🍀', label: '행운 뽑기 관리', hint: '회원별 뽑기 기록·포인트 내역' },
     { id: 'admin-blocks', icon: '🚫', label: '차단', hint: '회원 / IP 차단 관리', count: activeBlocks.length },
   ], [inquiries.length, tierPosts.length, tierComments.length, notices.length, activeBlocks.length]);
   const findBlock = (value) => activeBlocks.find((b) => b.value === value);
@@ -579,6 +581,8 @@ export default function AdminDashboard() {
 
       {/* ==================== ⑤ 이벤트 관리 ==================== */}
       <AdminEventManager />
+
+      <AdminLuckManager />
 
       {/* ==================== ④ 차단 관리 ==================== */}
       <section className="block-section" id="admin-blocks" data-admin-anchor>

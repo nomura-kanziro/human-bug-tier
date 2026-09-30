@@ -28,6 +28,8 @@ const TierList = require('../models/TierList');
 const { getAllCharacters, getAllTierSlots } = require('../data/tierCatalog');
 const { getKstDateString } = require('../utils/kstDate');
 const { resolveTierMediaPath } = require('../utils/tierMediaDir');
+// 포인트 증감 원장(관리자 "행운 뽑기 관리"의 포인트 내역)
+const { recordPointChange } = require('../utils/luckPointLog');
 const { createNotification } = require('../utils/notificationService');
 const { isTierListOwner } = require('../utils/ownership');
 
@@ -47,11 +49,16 @@ function shuffle(arr) {
 }
 
 // 유저의 포인트 지갑(LuckProfile)에 증감을 반영하고 최종 잔액을 돌려준다.
-async function addPoints(userId, delta) {
+// log({ source, detail, refId }) 를 주면 포인트 증감 원장(LuckPointLog)에도 남긴다.
+async function addPoints(userId, delta, log = null) {
   let profile = await LuckProfile.findOne({ userId });
   if (!profile) profile = await LuckProfile.create({ userId });
+  const before = profile.points;
   profile.points = Math.max(0, profile.points + delta);
   await profile.save();
+  if (log) {
+    await recordPointChange({ userId, delta: profile.points - before, balanceAfter: profile.points, ...log });
+  }
   return profile.points;
 }
 
@@ -231,7 +238,9 @@ const answerQuiz = async (req, res) => {
     claimed.points = prize;
     await claimed.save();
 
-    const points = prize > 0 ? await addPoints(req.auth.sub, prize) : (await LuckProfile.findOne({ userId: req.auth.sub }))?.points ?? 0;
+    const points = prize > 0
+      ? await addPoints(req.auth.sub, prize, { source: 'quiz', detail: `매일 퀴즈 정답 상금 (${claimed.quizDate} · ${claimed.characterName})`, refId: claimed._id })
+      : (await LuckProfile.findOne({ userId: req.auth.sub }))?.points ?? 0;
 
     res.json({ ok: true, quiz: quizShape(claimed), points });
   } catch (err) {
@@ -614,7 +623,7 @@ const setMemoryPeriodStatus = async (req, res) => {
       period.settledAt = now;
 
       if (best) {
-        const points = await addPoints(best.userId, period.awardPoints);
+        const points = await addPoints(best.userId, period.awardPoints, { source: 'memory_award', detail: `메모리 기록 이벤트 1위 상금 [${period.title}]`, refId: period._id });
         await EventMemorySession.updateOne({ _id: best._id }, { $set: { settledAt: now, awardedPoints: period.awardPoints } });
         period.winner = {
           userId: best.userId,
@@ -842,7 +851,7 @@ async function revealShowcaseDoc(showcase, { entryId = null } = {}) {
 
   claimed.winners = [];
   if (winnerEntry) {
-    await addPoints(winnerEntry.userId, claimed.awardPoints);
+    await addPoints(winnerEntry.userId, claimed.awardPoints, { source: 'showcase_award', detail: `티어표 공개 우승 상금 [${claimed.title}]`, refId: claimed._id });
     claimed.winners = [{
       rank: 1,
       userId: winnerEntry.userId,

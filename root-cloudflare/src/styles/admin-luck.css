@@ -1,0 +1,164 @@
+/* ====================== 관리자 대시보드 — 행운 뽑기 관리 ======================
+   AdminLuckManager.jsx 전용. 표·버튼·설명 문구는 이벤트 관리(admin-event.css 의 .eadm-*)와
+   관리자 공용 표(.admin-table)를 그대로 쓰고, 여기서는 검색줄·요약 카드·탭·증감 색·결과 배지만 정의한다.
+   색은 테마 토큰을 써서 라이트/다크가 함께 따라온다. */
+.luckadm-search {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.luckadm-search .notice-form-input {
+  flex: 1 1 220px;
+  max-width: 320px;
+  margin: 0;
+}
+
+.luckadm-detail {
+  margin-top: 22px;
+  padding: 18px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+}
+
+.luckadm-detail-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.luckadm-detail-head .eadm-detail-title {
+  margin: 0;
+}
+
+/* 요약 숫자 카드 */
+.luckadm-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.luckadm-stats > div {
+  padding: 10px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-hover);
+}
+
+.luckadm-stats span {
+  display: block;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.luckadm-stats strong {
+  display: block;
+  margin-top: 2px;
+  font-size: 16px;
+  color: var(--text-primary);
+}
+
+.luckadm-stats.is-compact {
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+}
+
+/* 기록 탭 — 필터 버튼(.filter-btn) 모양을 그대로 쓰고 간격만 준다 */
+.luckadm-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+/* 포인트 증감 색 */
+.luckadm-delta,
+.luckadm-stats strong.is-plus,
+.luckadm-stats strong.is-minus {
+  font-weight: 700;
+}
+
+.luckadm-delta.is-plus,
+.luckadm-stats strong.is-plus {
+  color: #059669;
+}
+
+.luckadm-delta.is-minus,
+.luckadm-stats strong.is-minus {
+  color: #dc2626;
+}
+
+[data-theme="dark"] .luckadm-delta.is-plus,
+[data-theme="dark"] .luckadm-stats strong.is-plus {
+  color: #34d399;
+}
+
+[data-theme="dark"] .luckadm-delta.is-minus,
+[data-theme="dark"] .luckadm-stats strong.is-minus {
+  color: #f87171;
+}
+
+.luckadm-muted {
+  color: var(--text-muted, var(--text-secondary));
+  font-size: 12.5px;
+}
+
+/* 승패 배지 */
+.luckadm-badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: var(--radius-pill);
+  background: var(--bg-hover);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.luckadm-badge.is-win {
+  background: rgba(5, 150, 105, 0.16);
+  color: #059669;
+}
+
+.luckadm-badge.is-lose {
+  background: rgba(220, 38, 38, 0.14);
+  color: #dc2626;
+}
+
+.luckadm-badge.is-push {
+  background: rgba(100, 116, 139, 0.18);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .luckadm-badge.is-win { color: #34d399; }
+[data-theme="dark"] .luckadm-badge.is-lose { color: #f87171; }
+
+/* 포인트 내역의 긴 설명은 줄바꿈 허용 */
+.luckadm-detail-text {
+  min-width: 220px;
+  white-space: normal;
+  word-break: keep-all;
+}
+
+/* 지갑 주인 구분 배지(관리자 / 탈퇴) — 닉네임 옆 */
+.luckadm-account {
+  margin-left: 6px;
+  vertical-align: middle;
+  font-size: 11px;
+}
+
+.luckadm-account.is-admin {
+  background: rgba(59, 130, 246, 0.16);
+  color: #2563eb;
+}
+
+.luckadm-account.is-deleted {
+  background: rgba(100, 116, 139, 0.18);
+  color: var(--text-secondary);
+}
+
+[data-theme="dark"] .luckadm-account.is-admin { color: #93c5fd; }

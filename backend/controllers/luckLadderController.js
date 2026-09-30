@@ -24,6 +24,8 @@ const LuckLadderBet = require('../models/LuckLadderBet');
 const LuckProfile = require('../models/LuckProfile');
 const luckPool = require('../data/luckPool');
 const { resolveTierMediaPath } = require('../utils/tierMediaDir');
+// 포인트 증감 원장(관리자 "행운 뽑기 관리"의 포인트 내역)
+const { recordPointChange } = require('../utils/luckPointLog');
 
 const ROUND_DURATION_MS = 5 * 60 * 1000; // 5분 턴
 const SCHEDULER_TICK_MS = 5000; // 라운드 마감 여부를 5초마다 확인
@@ -36,6 +38,17 @@ const PARITY_MULT = 1.95;
 const GROUPS = { 123: [1, 2, 3], 456: [4, 5, 6], 789: [7, 8, 9] };
 // 티어가 낮은 숫자(=희귀)일수록 배수가 높다. 이 표 하나만 정본이며 프론트는 /ladder/round 로 받아 표시만 한다.
 const EXACT_MULT = { 1: 20, 2: 12, 3: 12, 4: 6, 5: 6, 6: 6, 7: 3.25, 8: 3.25, 9: 3.25 };
+
+// 배팅 종류를 사람이 읽는 글로 — 포인트 원장 설명·관리자 화면용(예: "묶음 1~3티어", "홀수 티어", "5티어 지목")
+function betLabel(betType, betValue) {
+  if (betType === 'group') {
+    const tiers = GROUPS[betValue] || [];
+    return tiers.length ? `묶음 ${tiers[0]}~${tiers[tiers.length - 1]}티어` : `묶음 ${betValue}`;
+  }
+  if (betType === 'parity') return betValue === 'odd' ? '홀수 티어' : '짝수 티어';
+  if (betType === 'exact') return `${betValue}티어 지목`;
+  return `${betType}:${betValue}`;
+}
 
 function isDbConnected() {
   return mongoose.connection.readyState === 1;
@@ -143,6 +156,15 @@ async function settleRound(round) {
     betDoc.pointsDelta = pointsDelta;
     // eslint-disable-next-line no-await-in-loop
     await betDoc.save();
+    // eslint-disable-next-line no-await-in-loop
+    await recordPointChange({
+      userId: betDoc.userId,
+      source: 'ladder',
+      delta: pointsDelta,
+      balanceAfter: profile.points,
+      detail: `랜덤 뽑기 ${round.roundNo}회차 ${betLabel(betDoc.betType, betDoc.betValue)} ${win ? '승리' : '패배'} (결과 ${picked.tier}티어 · ${picked.name})`,
+      refId: betDoc._id,
+    });
   }
 }
 
@@ -322,4 +344,4 @@ const placeBet = async (req, res) => {
   }
 };
 
-module.exports = { getRoundStatus, placeBet, startLadderScheduler };
+module.exports = { getRoundStatus, placeBet, startLadderScheduler, betLabel };

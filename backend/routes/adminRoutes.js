@@ -21,6 +21,7 @@ const {
   deleteReportedPost,
   deleteReportedComment,
 } = require('../controllers/adminTierReportController');
+const { getLuckUsers, getLuckUserDetail, getLuckUserPoints } = require('../controllers/adminLuckController');
 const { requireAdmin } = require('../middleware/auth');
 
 // ====== 공개 ======
@@ -47,5 +48,10 @@ router.patch('/tier-reports/posts/:id/dismiss', requireAdmin, dismissPostReport)
 router.patch('/tier-reports/comments/:id/dismiss', requireAdmin, dismissCommentReport);
 router.delete('/tier-reports/posts/:id', requireAdmin, deleteReportedPost);
 router.delete('/tier-reports/comments/:id', requireAdmin, deleteReportedComment);
+
+// 행운 뽑기 관리 — 회원별 행운 뽑기 3종 기록·포인트 증감 내역 조회(읽기 전용, adminLuckController)
+router.get('/luck/users', requireAdmin, getLuckUsers);
+router.get('/luck/users/:userId', requireAdmin, getLuckUserDetail);
+router.get('/luck/users/:userId/points', requireAdmin, getLuckUserPoints);
 
 module.exports = router;

@@ -69,6 +69,17 @@ const luckPokerRoundSchema = new mongoose.Schema({
     default: 'open',
     index: true,
   },
+  // 정산 결과 — 관리자 "행운 뽑기 관리"에서 판별 승패·지급액을 보여주기 위해 저장한다(2026-10 추가).
+  // 이 필드들이 생기기 전에 정산된 판은 값이 비어 있다(null).
+  outcome: {
+    type: String,
+    enum: ['win', 'lose', 'push', null],
+    default: null,
+  },
+  payout: { type: Number, default: null },       // 돌려준 금액(승리 = 원금 + 배당, 무승부 = 원금, 패배 = 0)
+  pointsDelta: { type: Number, default: null },  // 이 판의 순증감(payout - bet)
+  playerHand: { type: String, default: '' },     // 유저 족보 이름
+  dealerHand: { type: String, default: '' },     // 딜러 족보 이름
 }, {
   timestamps: true,
 });
