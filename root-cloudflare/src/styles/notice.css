@@ -81,6 +81,15 @@
   flex-shrink: 0;
 }
 
+/* 전체 목록 페이지(/notice/all, /notice/news) 큰 제목 앞의 점 — 제목이 flex 가 아니라 글자에 붙어 보이므로
+   점 오른쪽에 간격을 주고 34px 글자 높이 가운데에 맞춘다. (공지 메인 "공지사항" 제목에는 점이 없어 영향 없음) */
+.notice-title .notice-dot {
+  margin-right: 14px;
+  vertical-align: middle;
+  position: relative;
+  top: -2px;
+}
+
 /* '전체 공지' 컬럼 상단 강조선 - 초록(#10b981)으로 새 소식 컬럼과 시각적으로 구분 */
 .notice-col-general {
   /* 예전엔 위에 굵은 초록 띠를 둘렀지만, 제목 옆 색 점과 겹치고 화면이 무거워 카드로 바꿨다 */

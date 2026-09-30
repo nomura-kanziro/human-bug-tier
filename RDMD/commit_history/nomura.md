@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 342 |
+| **커밋 수** | 343 |
 | **기간** | 2026-03-20 ~ 2026-10-01 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -371,6 +371,7 @@
 | 340 | 2026-09-29 | [`917e9de`](#917e9de) | style(auth): 인증 메일 로고를 움직이는 GIF(human_bug_eyes_icon)로 바꾸고 회색 배경·테두리 제거 |
 | 341 | 2026-09-29 | [`3ab8238`](#3ab8238) | fix(auth): 인증 메일 발신전용 안내 문구의 카카오디벨로퍼스를 휴먼버그대학교로 정정 |
 | 342 | 2026-10-01 | [`pending`](#pending342) | fix(tier-class): 1·2티어 수정 — 토마·코사카·호자키 이미지 교체, 우류 1장만 표시, 츠루기 갑급·세르지오 정급 맨 앞, 9티어 야시키 마시나리 중복 제거 |
+| 343 | 2026-10-01 | [`pending`](#pending343) | style(notice): 전체 공지·새 소식 목록 제목 앞 점과 글자 사이 간격 확대 |
 
 ---
 
@@ -6614,6 +6615,24 @@
 - **범위**: frontend / 공식 티어표 + 행운 뽑기 풀
 - **요약**: 1티어 우류 타츠오미를 uryu3paze.webp 한 장만 남기고(1·2페이즈 이미지는 표에서 제외, 파일은 행운 뽑기 풀이 써서 유지), 츠루기 시노부를 을급에서 갑급(우류 바로 뒤)으로, 세르지오를 정급 맨 앞(라이덴 앞)으로 이동. 토마 타츠노신(1티어)·호자키 킷페이(2티어) 이미지는 같은 파일명으로 교체되어 그대로 반영되고, 코사카 신타로(2티어)는 jpg → png 로 바뀌어 tiers.json 과 행운 뽑기 풀(luckPool.js)의 경로를 고침(안 고치면 행운 뽑기에서 깨진 이미지). 9티어에 같은 이미지가 두 이름으로 들어 있던 "야사키 마사나리"(오타) 항목 제거.
 - **주요 파일**: `root-cloudflare/src/data/tiers.json`, `backend/data/luckPool.js`, `1 tier/toma tatsunosin.jpg`, `2 tier/hozaki kikpei.jpg`, `2 tier/kosaka shintaro.png`(신규, jpg 삭제)
+- **관련 RDMD**: —
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending343"></a>
+
+### 343. 2026-10-01 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: style(notice): 전체 공지·새 소식 목록 제목 앞 점과 글자 사이 간격 확대
+- **git**: `git show pending`
+- **범위**: frontend / 공지
+- **요약**: /notice/all, /notice/news 큰 제목(h1.notice-title) 앞 색 점(.notice-dot)이 글자에 붙어 보이던 것을 점 오른쪽 14px 간격 + 글자 높이 가운데 정렬로 수정. 제목 안의 점에만 적용되는 선택자(.notice-title .notice-dot)라 점이 없는 공지 메인 "공지사항" 제목에는 영향 없음.
+- **주요 파일**: `root-cloudflare/src/styles/notice.css`
 - **관련 RDMD**: —
 
 [▲ 목차로](#목차)
