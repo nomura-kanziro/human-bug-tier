@@ -9,28 +9,18 @@
           {
             "img": "1 tier/uryu3paze.webp",
             "alt": "우류 타츠오미",
-            "name": ""
-          },
-          {
-            "img": "1 tier/uryu2paze.jpg",
-            "alt": "우류 타츠오미",
             "name": "우류 타츠오미"
           },
           {
-            "img": "1 tier/uryu1paze.jpg",
-            "alt": "우류 타츠오미",
-            "name": ""
+            "img": "1 tier/tsurugi.jpg",
+            "alt": "츠루기 시노부",
+            "name": "츠루기 시노부"
           }
         ]
       },
       {
         "label": "을급",
         "items": [
-          {
-            "img": "1 tier/tsurugi.jpg",
-            "alt": "츠루기 시노부",
-            "name": "츠루기 시노부"
-          },
           {
             "img": "1 tier/nomura.jpg",
             "alt": "노무라 칸지로",
@@ -127,14 +117,14 @@
         "label": "정급",
         "items": [
           {
-            "img": "1 tier/raiden.jpg",
-            "alt": "라이덴",
-            "name": "라이덴"
-          },
-          {
             "img": "1 tier/seruzio.jpg",
             "alt": "세르지오",
             "name": "*세르지오"
+          },
+          {
+            "img": "1 tier/raiden.jpg",
+            "alt": "라이덴",
+            "name": "라이덴"
           },
           {
             "img": "1 tier/jake.jpg",
@@ -213,7 +203,7 @@
             "name": "이치죠 코메이"
           },
           {
-            "img": "2 tier/kosaka shintaro.jpg",
+            "img": "2 tier/kosaka shintaro.png",
             "alt": "코사카 신타로",
             "name": "코사카_신타로"
           },
@@ -1861,11 +1851,6 @@
             "img": "9 tier/win.webp",
             "alt": "",
             "name": "*윈"
-          },
-          {
-            "img": "9 tier/yashiki mashinari.webp",
-            "alt": "",
-            "name": "*야사키 마사나리"
           },
           {
             "img": "9 tier/higashiyama.webp",

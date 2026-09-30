@@ -25,7 +25,7 @@ module.exports = {
     { name: '하카마다 히데코', imagePath: 'tier-media/tier-image/2 tier/hakamada hidero.jpg' },
     { name: '모리와카 토시로', imagePath: 'tier-media/tier-image/2 tier/moriwaka.jpg' },
     { name: '이치죠 코메이', imagePath: 'tier-media/tier-image/2 tier/ichijyo komei.jpg' },
-    { name: '코사카 신타로', imagePath: 'tier-media/tier-image/2 tier/kosaka shintaro.jpg' },
+    { name: '코사카 신타로', imagePath: 'tier-media/tier-image/2 tier/kosaka shintaro.png' },
     { name: '다비츠', imagePath: 'tier-media/tier-image/2 tier/davits.jpg' },
     { name: '호자키 킷페이', imagePath: 'tier-media/tier-image/2 tier/hozaki kikpei.jpg' },
   ],
