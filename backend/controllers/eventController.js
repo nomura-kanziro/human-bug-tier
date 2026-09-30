@@ -84,6 +84,23 @@ async function notifyAllMembers({ title, message, link, resourceId, resourceType
 /* ====================== 1) 매일 간단 퀴즈 ====================== */
 
 const QUIZ_CHOICES = 3; // 보기 개수(3지선다)
+// 회원 1명당 남겨 두는 퀴즈 기록 수. 넘치면 오래된 날짜부터 지운다(pruneQuizHistory).
+// 지난 기록은 어디서도 집계하지 않으므로(오늘 문제 조회·채점만 씀) 지워도 포인트·통계에 영향이 없다.
+const QUIZ_HISTORY_RETENTION = 15;
+
+// 퀴즈 기록은 최근 QUIZ_HISTORY_RETENTION건만 유지 — 초과분(오래된 날짜부터)을 삭제.
+// quizDate 가 KST 'YYYY-MM-DD' 문자열이라 문자열 정렬이 곧 날짜 순이다. 오늘 문제가 항상 가장 최신이라
+// 하루 1회 제한(오늘 문서)을 지우는 일은 없다.
+async function pruneQuizHistory(userId) {
+  const excess = await EventQuizAttempt.find({ userId })
+    .sort({ quizDate: -1 })
+    .skip(QUIZ_HISTORY_RETENTION)
+    .select('_id');
+
+  if (excess.length) {
+    await EventQuizAttempt.deleteMany({ _id: { $in: excess.map((doc) => doc._id) } });
+  }
+}
 
 /* 복권식 상금표 — "1~5P 가 가장 잘 나오고, 금액이 커질수록 확률이 낮아진다".
    weight 합이 1000 이라 weight 그대로가 ‰(천분율) 확률이다. 이 표가 확률의 유일한 정본이며,
@@ -167,6 +184,8 @@ const getQuizToday = async (req, res) => {
         if (err.code === 11000) attempt = await EventQuizAttempt.findOne({ userId: req.auth.sub, quizDate });
         if (!attempt) throw err;
       }
+      // 새 기록이 생긴 때만 정리한다. 정리가 실패해도 오늘 문제는 그대로 보여준다.
+      await pruneQuizHistory(req.auth.sub).catch((err) => console.error('퀴즈 기록 정리 실패:', err.message));
     }
 
     const profile = await LuckProfile.findOne({ userId: req.auth.sub });
