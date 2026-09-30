@@ -370,10 +370,10 @@
 | 339 | 2026-09-29 | [`d549b2c`](#d549b2c) | feat(auth): 회원가입·아이디 찾기·비밀번호 재설정 메일을 예시문 템플릿으로 통일 — 로고·안내·문의 링크·발신전용 문구 |
 | 340 | 2026-09-29 | [`917e9de`](#917e9de) | style(auth): 인증 메일 로고를 움직이는 GIF(human_bug_eyes_icon)로 바꾸고 회색 배경·테두리 제거 |
 | 341 | 2026-09-29 | [`3ab8238`](#3ab8238) | fix(auth): 인증 메일 발신전용 안내 문구의 카카오디벨로퍼스를 휴먼버그대학교로 정정 |
-| 342 | 2026-10-01 | [`pending`](#pending342) | fix(tier-class): 1·2티어 수정 — 토마·코사카·호자키 이미지 교체, 우류 1장만 표시, 츠루기 갑급·세르지오 정급 맨 앞, 9티어 야시키 마시나리 중복 제거 |
-| 343 | 2026-10-01 | [`pending`](#pending343) | style(notice): 전체 공지·새 소식 목록 제목 앞 점과 글자 사이 간격 확대 |
-| 344 | 2026-10-01 | [`pending`](#pending344) | feat(event): 매일 퀴즈 기록을 회원당 최근 15개만 남기고 오래된 것부터 자동 삭제 |
-| 345 | 2026-10-01 | [`pending`](#pending345) | feat(admin): 행운 뽑기 관리 신설 — 회원별 뽑기 기록과 포인트 증감 원장 조회 |
+| 342 | 2026-10-01 | [`ca7736c`](#ca7736c) | fix(tier-class): 1·2티어 수정 — 토마·코사카·호자키 이미지 교체, 우류 1장만 표시, 츠루기 갑급·세르지오 정급 맨 앞, 9티어 야시키 마시나리 중복 제거 |
+| 343 | 2026-10-01 | [`4dd0282`](#4dd0282) | style(notice): 전체 공지·새 소식 목록 제목 앞 점과 글자 사이 간격 확대 |
+| 344 | 2026-10-01 | [`ab1728b`](#ab1728b) | feat(event): 매일 퀴즈 기록을 회원당 최근 15개만 남기고 오래된 것부터 자동 삭제 |
+| 345 | 2026-10-01 | [`a9df3ba`](#a9df3ba) | feat(admin): 행운 뽑기 관리 신설 — 회원별 뽑기 기록과 포인트 증감 원장 조회 |
 
 ---
 
@@ -6605,15 +6605,15 @@
 
 ---
 
-<a id="pending342"></a>
+<a id="ca7736c"></a>
 
-### 342. 2026-10-01 — `pending`
+### 342. 2026-10-01 — `ca7736c`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `ca7736c`
+- **hash (full)**: `ca7736c0b052668d021fc3b673c41a17c474481e`
 - **author**: nomura
 - **message**: fix(tier-class): 1·2티어 수정 — 토마·코사카·호자키 이미지 교체, 우류 1장만 표시, 츠루기 갑급·세르지오 정급 맨 앞, 9티어 야시키 마시나리 중복 제거
-- **git**: `git show pending`
+- **git**: `git show ca7736c`
 - **범위**: frontend / 공식 티어표 + 행운 뽑기 풀
 - **요약**: 1티어 우류 타츠오미를 uryu3paze.webp 한 장만 남기고(1·2페이즈 이미지는 표에서 제외, 파일은 행운 뽑기 풀이 써서 유지), 츠루기 시노부를 을급에서 갑급(우류 바로 뒤)으로, 세르지오를 정급 맨 앞(라이덴 앞)으로 이동. 토마 타츠노신(1티어)·호자키 킷페이(2티어) 이미지는 같은 파일명으로 교체되어 그대로 반영되고, 코사카 신타로(2티어)는 jpg → png 로 바뀌어 tiers.json 과 행운 뽑기 풀(luckPool.js)의 경로를 고침(안 고치면 행운 뽑기에서 깨진 이미지). 9티어에 같은 이미지가 두 이름으로 들어 있던 "야사키 마사나리"(오타) 항목 제거.
 - **주요 파일**: `root-cloudflare/src/data/tiers.json`, `backend/data/luckPool.js`, `1 tier/toma tatsunosin.jpg`, `2 tier/hozaki kikpei.jpg`, `2 tier/kosaka shintaro.png`(신규, jpg 삭제)
@@ -6623,15 +6623,15 @@
 
 ---
 
-<a id="pending343"></a>
+<a id="4dd0282"></a>
 
-### 343. 2026-10-01 — `pending`
+### 343. 2026-10-01 — `4dd0282`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `4dd0282`
+- **hash (full)**: `4dd0282580baed4f688e611389e45058da72680a`
 - **author**: nomura
 - **message**: style(notice): 전체 공지·새 소식 목록 제목 앞 점과 글자 사이 간격 확대
-- **git**: `git show pending`
+- **git**: `git show 4dd0282`
 - **범위**: frontend / 공지
 - **요약**: /notice/all, /notice/news 큰 제목(h1.notice-title) 앞 색 점(.notice-dot)이 글자에 붙어 보이던 것을 점 오른쪽 14px 간격 + 글자 높이 가운데 정렬로 수정. 제목 안의 점에만 적용되는 선택자(.notice-title .notice-dot)라 점이 없는 공지 메인 "공지사항" 제목에는 영향 없음.
 - **주요 파일**: `root-cloudflare/src/styles/notice.css`
@@ -6641,15 +6641,15 @@
 
 ---
 
-<a id="pending344"></a>
+<a id="ab1728b"></a>
 
-### 344. 2026-10-01 — `pending`
+### 344. 2026-10-01 — `ab1728b`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `ab1728b`
+- **hash (full)**: `ab1728b30f5170271f4c8a1e62117353ab89978e`
 - **author**: nomura
 - **message**: feat(event): 매일 퀴즈 기록을 회원당 최근 15개만 남기고 오래된 것부터 자동 삭제
-- **git**: `git show pending`
+- **git**: `git show ab1728b`
 - **범위**: backend / 이벤트
 - **요약**: 이벤트 매일 퀴즈 기록(EventQuizAttempt)이 회원마다 하루 1건씩 계속 쌓이던 것을 최근 15건(QUIZ_HISTORY_RETENTION)만 남기도록 정리. 그날 퀴즈 문제가 새로 만들어질 때 pruneQuizHistory()가 quizDate(KST 문자열) 내림차순 16번째부터 삭제 — 행운 뽑기 이력 정리(pruneLuckHistory)와 같은 방식. 회원별 기준이라 다른 회원 기록은 그대로이고, 오늘 문제는 항상 가장 최신이라 하루 1회 제한은 유지되며, 지난 기록은 어디서도 집계하지 않아 포인트·통계에 영향 없음. 정리 실패는 로그만 남기고 오늘 문제 조회는 계속. 확인: 가짜 모델로 20일치 → 오래된 5개 삭제·최근 15개(09-06~09-20) 유지·다른 회원 유지.
 - **주요 파일**: `backend/controllers/eventController.js`
@@ -6659,15 +6659,15 @@
 
 ---
 
-<a id="pending345"></a>
+<a id="a9df3ba"></a>
 
-### 345. 2026-10-01 — `pending`
+### 345. 2026-10-01 — `a9df3ba`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `a9df3ba`
+- **hash (full)**: `a9df3ba349c67a5416d33655e19347cb6b9a4749`
 - **author**: nomura
 - **message**: feat(admin): 행운 뽑기 관리 신설 — 회원별 뽑기 기록과 포인트 증감 원장 조회
-- **git**: `git show pending`
+- **git**: `git show a9df3ba`
 - **범위**: backend + frontend / 관리자
 - **요약**: 관리자 페이지에 "행운 뽑기 관리" 섹션 신설(조회 전용). 회원 목록(닉네임 검색·페이지, 보유 포인트·3종 이용 횟수)에서 "기록 보기"를 누르면 오늘의 행운 티어 / 행운 티어 포커 / 랜덤 뽑기 / 포인트 내역 탭으로 그 회원의 기록을 보여줌. API 3개(/api/admin/luck/users, /users/:userId, /users/:userId/points — adminLuckController, requireAdmin). 포인트가 바뀔 때마다 1건씩 남기는 원장 LuckPointLog + utils/luckPointLog.recordPointChange 신설(오늘의 행운 티어·포커 배팅/정산·랜덤 뽑기 정산·이벤트 퀴즈/메모리/티어표 공개 상금 7곳 연결, 기록 실패해도 뽑기·정산은 계속, 이 기능 배포 뒤의 증감부터 쌓임). 포커 판에 승패·지급액·족보(outcome/payout/pointsDelta/playerHand/dealerHand) 저장 추가(이전 판은 "기록 없음"). 지갑 주인 판별 — 관리자 토큰으로 뽑은 기록은 Admin 문서를 가리키므로 회원에 없으면 관리자에서도 찾고, 둘 다 없을 때만 탈퇴로 표시([관리자]·[탈퇴] 배지). 확인: 운영 DB 읽기 전용 호출(회원 4·포커 133판·랜덤 뽑기 7건 조회), 가짜 데이터 화면 캡처(목록·탭 4개), 원장 함수 단위 시험.
 - **주요 파일**: `backend/controllers/adminLuckController.js`(신규), `backend/models/LuckPointLog.js`(신규), `backend/utils/luckPointLog.js`(신규), `backend/routes/adminRoutes.js`, `backend/controllers/luck{Draw,Poker,Ladder}Controller.js`, `backend/controllers/eventController.js`, `backend/models/LuckPokerRound.js`, `root-cloudflare/src/components/AdminLuckManager.jsx`(신규), `root-cloudflare/src/styles/admin-luck.css`(신규), `root-cloudflare/src/pages/AdminDashboard.jsx`
