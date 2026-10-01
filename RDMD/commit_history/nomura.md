@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 352 |
+| **커밋 수** | 353 |
 | **기간** | 2026-03-20 ~ 2026-10-02 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -381,6 +381,7 @@
 | 350 | 2026-10-02 | [`pending`](#pending350) | docs(backend): 백엔드 API·모델 맵 현행화 — 행운 뽑기·이벤트·프로필 API와 모델·유틸 추가, 백엔드 스킬 4종 공통 규칙 반영 |
 | 351 | 2026-10-02 | [`pending`](#pending351) | docs(auth): 인증 메일 공용 템플릿 기록 추가, 가입 메일 발송 순서 정정 — 인증 기능 문서 React 기준·인증 스킬 4종·.env.example 주석 |
 | 352 | 2026-10-02 | [`pending`](#pending352) | docs(tier-class): 티어 데이터 정본을 tiers.json 으로 정정(extract·sync 실행 금지) — 티어표 문서·스킬 React 기준 재작성, 1·2·9티어 수정 기록 |
+| 353 | 2026-10-02 | [`pending`](#pending353) | docs(event): 매일 퀴즈 기록 15건 보관 기록 추가 |
 
 ---
 
@@ -6805,5 +6806,23 @@
 - **요약**: 티어표 기능 문서·스킬 4종·react-rewrite 스킬 3종·root-cloudflare/README 가 "root-render/tier-class/tierN.html 이 정본 → npm run extract:tiers" 로 안내하고 있었는데, 2026-09-19 이후 root-render 는 수정 금지라 09-20 이후 수정(e6478dd·0ba93ea·8ef5db4·8f75701·ca7736c)은 tiers.json 에만 있다. root-render 쪽에 우류 3장·야사키 중복·코사카 jpg(삭제된 파일)·스가모가 남아 있는 것을 확인 — extract·sync:render 를 돌리면 최근 수정이 되돌아가고 코사카 이미지가 깨진다. 정본 = tiers.json, 두 명령 실행 금지로 고치고, features/tier-class.md·티어표 스킬 4종을 React 구조(tiers.json → tiers.js, TierPage /tier/:n, public/tier-media/tier-image, 같은 데이터를 쓰는 곳·luckPool 은 별도, 이미지 교체 규칙)로 다시 씀. 코드 주석은 지우지 않고 tiers.js·extract-tiers.mjs 에 경고 줄만 덧붙임(동작 변경 없음, tiers.json 미변경, 빌드 확인). 10-01 1·2·9티어 수정 기록(02-tier-class/09) 추가 — 7·9티어의 이름이 다른 같은 이미지 2건은 확인 대기로 명시.
 - **주요 파일**: `RDMD/features/tier-class.md`, 티어표 스킬 4종(`.agents`·`.claude`·`.codex`·`.groks`), react-rewrite 스킬 3종(`.agents`·`.codex`·`.groks`), `root-cloudflare/README.md`, `root-cloudflare/src/data/tiers.js`(주석), `root-cloudflare/scripts/extract-tiers.mjs`(주석), `RDMD/frontend/02-tier-class/09-tier1-2-update-record.md`(신규), `RDMD/frontend/README.md`
 - **관련 RDMD**: `RDMD/frontend/02-tier-class/09-tier1-2-update-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending353"></a>
+
+### 353. 2026-10-02 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(event): 매일 퀴즈 기록 15건 보관 기록 추가
+- **git**: `git show pending`
+- **범위**: docs / 이벤트
+- **요약**: 10-01 ab1728b(퀴즈 기록 회원당 최근 15건 보관)를 backend/09-event/06 기록으로 남김 — 배경(지난 기록을 읽는 곳 없음), pruneQuizHistory 동작·호출 시점, "15개 이상"을 최대 15건 보관으로 해석한 점, 안전성(회원별·오늘 문서 보존·포인트 영향 없음), 가짜 모델 확인 결과. 이벤트 기능 설명 문서(features/event.md)는 아직 없어 새로 만들지 않고 기록만 추가.
+- **주요 파일**: `RDMD/backend/09-event/06-quiz-history-retention-record.md`(신규), `RDMD/backend/README.md`
+- **관련 RDMD**: `RDMD/backend/09-event/06-quiz-history-retention-record.md`
 
 [▲ 목차로](#목차)
