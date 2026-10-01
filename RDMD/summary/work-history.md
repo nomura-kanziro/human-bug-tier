@@ -3,8 +3,8 @@
 > `RDMD/frontend/` · `RDMD/backend/` (기능 폴더 + `*-record.md`) 기록을 바탕으로 정리한 **프로젝트 개발 이력 요약**입니다.  
 > 상세 로그: [frontend/README](../frontend/README.md) · [backend/README](../backend/README.md)
 
-**기준일**: 2026-09-02  
-**문서 작성일**: 2026-08-20 (이후 Phase 7 반영 2026-09-01, Phase 8 반영 2026-09-02, Phase 9 반영 2026-09-28 — 2026-09-03 ~ 09-27 작업은 아직 이 요약에 없음, 커밋 단위는 `commit_history/`)
+**기준일**: 2026-10-02  
+**문서 작성일**: 2026-08-20 (이후 Phase 7 반영 2026-09-01, Phase 8 반영 2026-09-02, Phase 9 반영 2026-09-28, Phase 8b(09-03~09-24 사후 요약)·Phase 10 반영 2026-10-02 — 커밋 단위는 `commit_history/`)
 
 ---
 
@@ -20,7 +20,9 @@
 | 모바일·티어 | 2026-07 ~ 08 | PWA, 게시글 수정, 6~9티어 이미지, 1·2티어 재배치 |
 | 배포 분리 · React 기획 | 2026-09 | 프론트 `root-cloudflare`/`root-render`, Cloudflare 작업 중지, React 정식 버전은 기획만 |
 | 메인·티어 다듬기 | 2026-09-02 | Render 홈 미리보기·행운 위젯, 풀 화살표, 세르지오/호자키 재배치 |
-| 운영 배포 | 2026-09-28 | Oracle Cloud VM 운영 서버(`https://hbt-tier.duckdns.org`, Let's Encrypt), Cloudflare Pages `/api` → Oracle 프록시 |
+| React 정식 버전 | 2026-09-03 ~ 09-24 | React 전환·바닐라 베타 종료, 테마·이벤트·행운 뽑기 3모드·디자인 개편, 1.0.0 |
+| 운영 배포 | 2026-09-28 | Oracle Cloud VM 운영 서버(Let's Encrypt), Cloudflare Pages `/api` → Oracle 프록시. 정식 주소 `https://human-bug-tier.com` |
+| 메일·관리·1.0.1 | 2026-09-29 ~ 10-01 | 인증 메일 템플릿, 티어표 수정, 행운 뽑기 관리·포인트 원장, 1.0.1 |
 
 ---
 
@@ -147,6 +149,29 @@
 
 **결과물**: Render 홈이 티어·제작·뽑기 진입을 한 화면에서 보여 줌
 
+### Phase 8b — React 정식 버전 전환 · 기능 확장 (요약)
+
+**기간**: 2026-09-03 ~ 09-24
+**근거**: `commit_history/nomura.md` 의 해당 기간 커밋, 기록 `frontend/12-react/`, `frontend/13-event/`, `backend/09-event/`, `backend/08-luck-draw/03-poker-ladder-record.md`
+(이 구간은 2026-10-02 문서 갱신 때 커밋 이력으로 사후 요약했다 — 세부는 각 기록 참고)
+
+| 영역 | 한 일 |
+|------|--------|
+| 테마·로딩 | 라이트/다크 테마 엔진·헤더 토글(09-04), 자동 전환을 서울 시각 기준으로(09-20), 사이트 초기 로딩 화면(09-05) |
+| React 전환 | `root-cloudflare/` 를 Vite + React 로 새로 구성(09-05) → 공개 페이지·티어표(한 페이지 navbar)·커스텀 메이커·행운 뽑기 → 인증·게시판·마이페이지·알림·문의·관리자 이식(09-18). backend 가 React `dist` 를 서빙 + SPA 폴백 |
+| 운영 정책 | 2026-09-19 `root-render/`(바닐라, Render) 베타 종료 — 이후 프론트 작업은 React 에만 |
+| 행운 뽑기 | 행운 티어 포커(09-19) · 랜덤 뽑기 5분 자동 공용 라운드(09-20), 포인트 0 하한, 배팅 상한 = 보유 포인트 |
+| 인증·마이페이지 | 가입 메일 발송 순서 조정(09-04 Gmail 우선 → 09-10 표준 순서 복귀), 관리자 직접 인증, 무활동 1시간 자동 로그아웃, 프로필 사진·닉네임 변경(09-20) |
+| 커스텀 메이커 | 티어표 꾸미기·원래대로(09-17), 등급 이동 화살표+번호, Ctrl/Shift 다중 선택·풀 검색, PNG 저장 시 빈 등급 건너뛰기(09-23) |
+| 디자인 | 디자인 고도화 1차(Pretendard·디자인 토큰, 09-20) · 2차 전 페이지 순회(09-21), 다크 색 겹침 전수 점검(09-23) |
+| 헤더 | 상단 메뉴 5개(공지·소식 / 티어표 / 커스텀 메이커 / 이벤트 / 행운 뽑기), 드롭다운 클릭식(09-21) |
+| 이벤트 | 이벤트 페이지(매일 퀴즈 · 메모리 게임 · 티어표 공개, 09-21), 관리자 이벤트 관리, 티어표 공개 정식 오픈(09-22), 열리면 회원 전체 알림(09-23) |
+| 관리자 | 빠른 이동 태그 바(09-22) |
+| 티어표 | 5티어 하야미 타이키 추가(09-11), 캐릭터 정리·중복 제거(09-20~21) |
+| 버전 | 0.4.3 → … → 0.5.0(09-17) → **1.0.0**(09-24, 정식 버전) |
+
+**결과물**: React 정식 버전 1.0.0 — 바닐라 기능 전부 + 테마·이벤트·행운 뽑기 3모드
+
 ### Phase 9 — Oracle Cloud 운영 배포 · Cloudflare Pages 연결
 
 **기간**: 2026-09-24 (준비) ~ 2026-09-28 (배포)
@@ -160,6 +185,27 @@
 | Cloudflare Pages | Pages Function `/api/*` → Oracle 프록시, 워크플로가 빌드 후 `dist` 배포 |
 
 **결과물**: `https://hbt-tier.duckdns.org` 에서 전체 기능 동작. Pages 는 GitHub 시크릿 등록 후 CI 배포되면 같은 백엔드를 씀
+
+> 이후(09-28~29): 실제 Pages 배포는 GitHub Actions 가 아니라 **Pages 프로젝트의 GitHub 연동 빌드**(Root directory `root-cloudflare` 로 수정 후 정상)가 맡고, 회원용 정식 주소는 `https://human-bug-tier.com`, 서버 `APP_URL` 도 이 주소다(09-29).
+### Phase 10 — 인증 메일 개편 · 티어표 수정 · 행운 뽑기 관리 · 1.0.1
+
+**기간**: 2026-09-29 ~ 10-01 (문서 갱신 10-02)
+**기록**: `backend/03-auth/10-mail-template-record.md`, `frontend/02-tier-class/09-tier1-2-update-record.md`, `frontend/04-notice/05-notice-title-dot-gap-record.md`, `backend/09-event/06-quiz-history-retention-record.md`, `backend/08-luck-draw/04-point-ledger-admin-api-record.md`, `frontend/07-admin/12-admin-luck-manager-record.md`
+
+| 영역 | 한 일 |
+|------|--------|
+| 인증 메일 | 회원가입·아이디 찾기·비밀번호 재설정 메일을 예시문 공용 템플릿으로(GIF 로고·파란 버튼·문의 링크·발신전용 문구, 흰 배경) |
+| 주소 | 서버 `APP_URL` → 정식 주소 `https://human-bug-tier.com` (duckdns 는 서버 직접 주소로만) |
+| 티어표 | 1티어 우류 1장·츠루기 갑급·세르지오 정급 맨 앞·토마 이미지, 2티어 코사카(png)·호자키 이미지, 9티어 야시키 중복 제거 |
+| 공지 | 전체 공지·새 소식 목록 제목 점 간격 |
+| 이벤트 | 매일 퀴즈 기록 회원당 최근 15건 보관 |
+| 행운 뽑기 | 포인트 증감 원장(`LuckPointLog`), 포커 판 정산 결과 저장, 관리자 "행운 뽑기 관리"(회원별 기록·포인트 내역, 조회 전용) |
+| 공지 등록 | 정식 버전 오픈 안내(고정), 9/29~10/1 업데이트 안내(고정 안 함) |
+| 버전 | **1.0.1**(10-01) |
+| 문서 | 10-02 전체 문서 갱신 — 정식 주소, 행운 뽑기·관리자·API 맵·인증·티어표 문서를 코드와 대조해 현행화. 티어 데이터 정본을 `tiers.json` 으로 정정(extract 실행 금지) |
+
+**결과물**: 운영 1.0.1 — 정식 주소로 나가는 새 인증 메일, 관리자 행운 뽑기 조회
+
 
 ---
 
@@ -177,7 +223,7 @@
 
 ## 4. 현재 완성된 기능 체크리스트
 
-- [x] 공식 9단계 티어표 (`tier-class/`) + `tier-image/1`~`9 tier` 이미지
+- [x] 공식 9단계 티어표 (React `/tier/:n`, 데이터 `root-cloudflare/src/data/tiers.json`) + `tier-media/tier-image/1`~`9 tier` 이미지
 - [x] Header/Footer 공통 + 경로 자동 보정
 - [x] 커스텀 티어 제작·다운로드 (PNG/PDF, 모바일 탭 배치)
 - [x] 커스텀 게시판·상세·댓글·좋아요·신고·**본인 글 수정**
@@ -191,8 +237,13 @@
 - [x] 신고 게시글·댓글 관리
 - [x] Render 배포 설정 + 로컬 통합 서버
 - [x] GitHub Pages 정적 미리보기
-- [x] Oracle Cloud 운영 서버 (`https://hbt-tier.duckdns.org`)
-- [ ] Cloudflare Pages `/api` 프록시 배포 (코드 완료, GitHub 시크릿 미등록으로 CI 업로드 실패)
+- [x] Oracle Cloud 운영 서버 (서버 직접 `https://hbt-tier.duckdns.org`)
+- [x] Cloudflare Pages `/api` 프록시 배포 — 정식 주소 `https://human-bug-tier.com` (Pages GitHub 연동 빌드)
+- [x] React 정식 버전 1.0.1 + 라이트/다크 테마
+- [x] 행운 뽑기 3모드(오늘의 행운 티어 · 행운 티어 포커 · 랜덤 뽑기) + 포인트 원장
+- [x] 이벤트(매일 퀴즈 · 메모리 게임 기록 · 티어표 공개) + 관리자 이벤트 관리
+- [x] 관리자 행운 뽑기 관리(조회 전용)
+- [x] 인증 메일 공용 템플릿
 - [x] PWA 홈 화면 설치
 - [x] 관리자 공지 수정 (PUT/PATCH)
 
@@ -203,7 +254,11 @@
 | 항목 | 설명 |
 |------|------|
 | GH Pages | 정적만 제공 — 로그인·게시판 등 API 기능 미동작 |
-| Cloudflare Pages CI | GitHub 시크릿 `CLOUDFLARE_API_TOKEN`·`CLOUDFLARE_ACCOUNT_ID` 미등록 → 업로드 실패 |
+| Cloudflare GitHub Actions 워크플로 | 시크릿 `CLOUDFLARE_API_TOKEN`·`CLOUDFLARE_ACCOUNT_ID` 미등록이라 매번 실패 — 실제 배포는 Pages 연동 빌드가 하므로 서비스 영향 없음(정리 여부 미정) |
+| 티어 데이터 | 정본은 `tiers.json` — `npm run extract:tiers`·`sync:render` 는 바닐라 HTML 로 덮어써 최근 수정이 사라지므로 실행 금지 |
+| 행운 뽑기 포인트 | 배팅 상한이 보유 포인트 전부라 급증(10-01 지갑 4개 합 약 55억 9천만 P). 원장은 10-01 이후 증감부터 |
+| 회원 탈퇴 | 행운 뽑기 지갑·기록·원장은 지우지 않음(관리 화면 [탈퇴] 표시) |
+| 로컬 서버 | 운영과 같은 Atlas DB 를 쓰므로 오래 켜 두면 스케줄러(랜덤 뽑기·이벤트·유튜브 동기화)가 두 군데서 돈다 |
 | Oracle nginx | 서버 HTTPS 설정은 certbot 이 덧붙인 것 — `deploy.sh setup` 재실행 시 덮어써짐 |
 | 이메일 | `EMAIL_*` 미설정 시 인증/재설정 메일 제한 |
 | 핀 제한 | 프론트 `MAX_PINNED_NOTICES = 5` — 백엔드 검증 강화 여지 |

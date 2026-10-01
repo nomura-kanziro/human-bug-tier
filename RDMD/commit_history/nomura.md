@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 354 |
+| **커밋 수** | 355 |
 | **기간** | 2026-03-20 ~ 2026-10-02 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -383,6 +383,7 @@
 | 352 | 2026-10-02 | [`pending`](#pending352) | docs(tier-class): 티어 데이터 정본을 tiers.json 으로 정정(extract·sync 실행 금지) — 티어표 문서·스킬 React 기준 재작성, 1·2·9티어 수정 기록 |
 | 353 | 2026-10-02 | [`pending`](#pending353) | docs(event): 매일 퀴즈 기록 15건 보관 기록 추가 |
 | 354 | 2026-10-02 | [`pending`](#pending354) | docs(notice): 공지 목록 제목 점 간격 기록 추가 |
+| 355 | 2026-10-02 | [`pending`](#pending355) | docs(summary): 작업 이력 요약 갱신 — 9/3~9/24 사후 요약(Phase 8b)·Phase 10 추가, 운영 주소·배포 상태·체크리스트·제약 현행화 |
 
 ---
 
@@ -6843,5 +6844,23 @@
 - **요약**: 10-01 4dd0282(전체 공지·새 소식 목록 제목 앞 점 간격)를 frontend/04-notice/05 기록으로 남김 — 원인(.notice-title 은 flex·간격 없음, 메인 소제목 .notice-col-title 은 gap 10px), 수정 선택자(.notice-title .notice-dot, 14px·가운데 정렬), 점 없는 공지 메인 제목에 영향 없는 이유.
 - **주요 파일**: `RDMD/frontend/04-notice/05-notice-title-dot-gap-record.md`(신규), `RDMD/frontend/README.md`
 - **관련 RDMD**: `RDMD/frontend/04-notice/05-notice-title-dot-gap-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending355"></a>
+
+### 355. 2026-10-02 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(summary): 작업 이력 요약 갱신 — 9/3~9/24 사후 요약(Phase 8b)·Phase 10 추가, 운영 주소·배포 상태·체크리스트·제약 현행화
+- **git**: `git show pending`
+- **범위**: docs / 작업 이력 요약
+- **요약**: RDMD/summary/work-history.md 가 기준일 09-02 에 머물러 09-03~09-27 작업이 "아직 없음"으로 비어 있고 Phase 9 체크리스트에 "Cloudflare Pages 미배포"·duckdns 주소가 남아 있던 것을 고침. Phase 8b(09-03~09-24: 테마·React 전환·root-render 베타 종료·행운 뽑기 포커/랜덤 뽑기·인증/마이페이지·커스텀 메이커·디자인·헤더·이벤트·빠른 이동·티어 정리·버전 1.0.0)를 커밋 이력으로 사후 요약, Phase 10(09-29~10-01: 인증 메일·APP_URL 정식 주소·티어표·공지 간격·퀴즈 보관·포인트 원장·행운 뽑기 관리·공지 등록·1.0.1·10-02 문서 갱신) 추가. Phase 9 아래에 이후 변경(Pages 연동 빌드, 정식 주소) 메모. 체크리스트에 React 1.0.1·행운 뽑기 3모드·이벤트·행운 뽑기 관리·메일 템플릿 추가, 제약 표에 Actions 워크플로 실패(서비스 영향 없음)·tiers.json 정본(extract 금지)·포인트 급증·탈퇴 데이터 잔존·로컬 서버 같은 DB 추가.
+- **주요 파일**: `RDMD/summary/work-history.md`
+- **관련 RDMD**: —
 
 [▲ 목차로](#목차)
