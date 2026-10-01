@@ -26,6 +26,10 @@ middleware/auth.js, utils/
 
 ## 현재 (작업 전 이해)
 
+- API 그룹 9개(`/api/tierlists`·`auth`·`inquiries`·`admin`·`notices`·`notifications`·`luck-draw`·`profile`·`events`) — 표는 `RDMD/features/backend-api.md`. 못 찾는 `/api/*` 는 JSON 404
+- **행운 뽑기 포인트(`LuckProfile.points`)를 바꾸면 저장 직후 `utils/luckPointLog.recordPointChange()`** — 0 하한, 실제 증감만 기록, 실패해도 예외 없음. 이벤트 상금은 `eventController.addPoints(userId, delta, log)`
+- 서버 프로세스 안에서 도는 일(랜덤 뽑기 5분 라운드 `startLadderScheduler`, 유튜브 동기화, 이벤트 자동 처리)이 있으므로 **같은 DB 로 서버를 두 군데서 오래 띄우지 않는다**(운영 Oracle pm2 는 instances 1)
+- Node 서버는 켜질 때 코드를 읽는다 — 백엔드 코드를 바꾸면 서버를 다시 켜야 새 API 가 생긴다(빌드된 화면은 요청마다 디스크에서 읽어 먼저 바뀜)
 - `PUT`/`PATCH` `/api/tierlists/:id` — 작성자만
 - `PUT`/`PATCH` `/api/notices/:id` — requireAdmin
 - 재설정 메일 실패: 503/502 (가짜 성공 금지)

@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 349 |
+| **커밋 수** | 350 |
 | **기간** | 2026-03-20 ~ 2026-10-02 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -378,6 +378,7 @@
 | 347 | 2026-10-02 | [`pending`](#pending347) | docs(deploy): 정식 주소 human-bug-tier.com·APP_URL 변경 반영 — duckdns 는 서버 직접 주소(프록시 대상·헬스 확인)로 정리 |
 | 348 | 2026-10-02 | [`pending`](#pending348) | docs(luck-draw): 행운 뽑기 문서 현행화 — 포인트표·0 하한·포커·랜덤 뽑기 반영, 포커·랜덤 뽑기와 포인트 원장 기록 추가 |
 | 349 | 2026-10-02 | [`pending`](#pending349) | docs(admin): 관리자 문서 React 기준 현행화 — 화면 구성·이벤트 관리·행운 뽑기 관리 반영, 관리자 스킬 4종 동기화 |
+| 350 | 2026-10-02 | [`pending`](#pending350) | docs(backend): 백엔드 API·모델 맵 현행화 — 행운 뽑기·이벤트·프로필 API와 모델·유틸 추가, 백엔드 스킬 4종 공통 규칙 반영 |
 
 ---
 
@@ -6748,5 +6749,23 @@
 - **요약**: 관리자 기능 문서·스킬이 바닐라 경로(admin/comments/comment-management.*, admin/README.md — 현재 레포 루트에 없음)와 5개 기능 기준으로 남아 있던 것을 React 기준으로 고침. features/admin.md: 접속 경로(/admin/login·/admin·/admin/comment, 옛 /admin/admin-login.html 은 paths.js 가 /admin/login 으로 보냄), React 파일 구조, 빠른 이동 순서와 같은 화면 구성 표, 6. 이벤트 관리, 7. 행운 뽑기 관리(조회 전용·탭 4개·[관리자]/[탈퇴] 배지·한계), getAdminAuthHeaders 실제 코드, 새 관리 기능 추가 절차(Admin*Manager 컴포넌트 + quickItems). 관리자 스킬 4종(.agents·.claude·.codex·.groks)에 React 코드 맵·이벤트/행운 뽑기 관리·"관리자 로그인은 토큰을 authToken 에도 저장해 관리자가 일반 기능을 쓰면 sub 가 Admin id"(AdminLogin.jsx 41행 확인) 반영. 행운 뽑기 관리 화면 기록(12) 신규 — 확인 범위를 사실대로(관리자 토큰 응답 확인은 로컬 서버, 운영은 비로그인 401까지) 적음.
 - **주요 파일**: `RDMD/features/admin.md`, `.agents/admin/skill.md`, `.claude/skills/admin/SKILL.md`, `.codex/admin/skill.md`, `.groks/admin/grok_skill.md`, `RDMD/frontend/07-admin/12-admin-luck-manager-record.md`(신규), `RDMD/frontend/README.md`
 - **관련 RDMD**: `RDMD/frontend/07-admin/12-admin-luck-manager-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending350"></a>
+
+### 350. 2026-10-02 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(backend): 백엔드 API·모델 맵 현행화 — 행운 뽑기·이벤트·프로필 API와 모델·유틸 추가, 백엔드 스킬 4종 공통 규칙 반영
+- **git**: `git show pending`
+- **범위**: docs / 백엔드
+- **요약**: RDMD/features/backend-api.md 가 초기 6개 API 그룹·모델 9개 기준이라 server.js 실제 등록(9개 그룹 + /api/ext 204 + 못 찾는 /api 는 JSON 404)·models 21개·utils 13개·data 2개와 대조해 채움 — /api/luck-draw(포커·랜덤 뽑기 포함), /api/profile, /api/events, /api/admin/luck/*, Luck*·Event* 모델, mail·mailTemplate·luckPointLog·kstDate 등 유틸, data/luckPool·tierCatalog(tiers.json 을 읽음). 백엔드 스킬 4종(.agents·.claude·.codex·.groks)에 공통 규칙 추가: API 그룹 목록, 포인트를 바꾸면 recordPointChange, 서버 안 스케줄러(startLadderScheduler·startEventScheduler·유튜브 동기화) 때문에 같은 DB 로 서버를 두 군데서 오래 띄우지 않기(pm2 instances 1 확인), 백엔드 코드를 바꾸면 서버 재시작이 필요(10-01 로컬 404 사례).
+- **주요 파일**: `RDMD/features/backend-api.md`, `.agents/backend/skill.md`, `.claude/skills/backend/SKILL.md`, `.codex/backend/skill.md`, `.groks/backend/grok_skill.md`
+- **관련 RDMD**: —
 
 [▲ 목차로](#목차)
