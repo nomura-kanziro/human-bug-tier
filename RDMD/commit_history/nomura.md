@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 357 |
+| **커밋 수** | 358 |
 | **기간** | 2026-03-20 ~ 2026-10-02 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -386,6 +386,7 @@
 | 355 | 2026-10-02 | [`50cce47`](#50cce47) | docs(summary): 작업 이력 요약 갱신 — 9/3~9/24 사후 요약(Phase 8b)·Phase 10 추가, 운영 주소·배포 상태·체크리스트·제약 현행화 |
 | 356 | 2026-10-02 | [`04c5007`](#04c5007) | docs: 깨진 링크 정정 — README 의 .groks·.codex 폴더 링크, 행운 뽑기 관리 기록의 배지 표기 |
 | 357 | 2026-10-02 | [`pending`](#pending357) | feat(header): 사이드 메뉴 하단 계정 영역(비로그인 로그인 버튼 / 로그인 프로필·로그아웃) + 모바일 헤더 버튼 크기 축소 |
+| 358 | 2026-10-02 | [`pending`](#pending358) | chore(footer): 사이트 버전 표시 1.0.1 → 1.0.2 |
 
 ---
 
@@ -6900,6 +6901,24 @@
 - **범위**: frontend / 공통 헤더
 - **요약**: 사이드 메뉴 맨 아래에 계정 영역(SideMenuAccount)을 추가 — 비로그인이면 안내 한 줄 + 로그인 버튼, 로그인이면 프로필 사진·닉네임·이메일과 프로필 보기(마이페이지)·내 게시글·(관리자면 관리하기)·로그아웃 버튼. 동작은 헤더 프로필 드롭다운과 같고 사진 변경만 제외. 사이드 메뉴를 세로 flex 로 바꿔 메뉴 목록은 위에서 스크롤, 계정 영역은 바닥 고정, content-box 높이가 padding 만큼 화면 아래로 넘치던 것을 보정. 모바일(768px 이하)에서만 헤더 우측을 줄임 — 후원·알림 44→32px, 프로필 40→32px(+테두리), 테마 스위치 40×22→32×18, 메뉴 버튼 44→34px(X 애니메이션 이동 거리 6px 로 맞춤), 로그인 버튼 6px 10px·12px. 기존 모바일 로그인 버튼 규칙은 나중에 불러오는 app-shell.css 의 기본 padding 에 덮여 적용되지 않고 있었으므로 app-shell.css 모바일 구간에 넣음. 확인: 가짜 서버 + CDP 로 390px 비로그인·회원·관리자, 1300px 회원 캡처 — 헤더 높이 61→53px, 잘리던 로고 글자 온전히 보임, 계정 영역 화면 안, 데스크톱 크기 변화 없음.
 - **주요 파일**: `root-cloudflare/src/components/Header.jsx`, `root-cloudflare/src/styles/Header_Footer.css`, `root-cloudflare/src/styles/app-shell.css`, `root-cloudflare/src/styles/theme.css`
+- **관련 RDMD**: —
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending358"></a>
+
+### 358. 2026-10-02 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: chore(footer): 사이트 버전 표시 1.0.1 → 1.0.2
+- **git**: `git show pending`
+- **범위**: frontend / 푸터
+- **요약**: 사이드 메뉴 계정 영역·모바일 헤더 축소(357)를 반영해 푸터 사이트 버전을 1.0.1 에서 1.0.2 로 올림. Footer.jsx 의 SITE_VERSION 한 곳만 수정(이전 버전 변경과 같은 방식).
+- **주요 파일**: `root-cloudflare/src/components/Footer.jsx`
 - **관련 RDMD**: —
 
 [▲ 목차로](#목차)
