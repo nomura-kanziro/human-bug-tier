@@ -272,6 +272,25 @@
   .theme-toggle-icon {
     display: none; /* 좁은 화면에서는 스위치만 보이고 해/달 텍스트 아이콘은 숨김 */
   }
+
+  /* 모바일 헤더 축소(2026-10-02) — 스위치도 40×22 → 32×18 로 줄인다. 손잡이 이동 거리 = 트랙 32 - 손잡이 14 - 여백 2×2 */
+  .theme-toggle-btn {
+    padding: 2px;
+  }
+
+  .theme-toggle-track {
+    width: 32px;
+    height: 18px;
+  }
+
+  .theme-toggle-thumb {
+    width: 14px;
+    height: 14px;
+  }
+
+  .theme-toggle-btn.is-dark .theme-toggle-thumb {
+    transform: translateX(14px);
+  }
 }
 
 /* 로그인·회원가입 등 공용 헤더(header.html)가 없는 단독 페이지용 — 우상단에 고정 배치.

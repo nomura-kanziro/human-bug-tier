@@ -3,8 +3,9 @@
 //    (예전에는 CSS :hover). 하나를 열면 다른 것은 닫히고, 바깥 클릭·Esc·항목 선택 시 닫힌다. 모바일 사이드 메뉴는 클릭 아코디언
 //  - 우측: 테마 토글 + 후원 + (로그인: 알림벨·프로필 / 비로그인: 로그인 버튼) + 햄버거
 //  - 알림 패널과 프로필 드롭다운은 동시에 열리지 않는다(상호배타). 바깥 클릭 시 둘 다 닫힘.
+//  - 사이드 메뉴 맨 아래에는 계정 영역(SideMenuAccount)이 붙는다 — 비로그인: 로그인 버튼 / 로그인: 프로필 요약 + 프로필 보기·내 게시글·(관리자면 관리하기)·로그아웃
 import { useEffect, useRef, useState } from 'react';
-import { Link, NavLink } from 'react-router-dom';
+import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { isStaticPreview } from '../lib/api';
 import { LOGO_URL } from '../lib/paths';
@@ -58,6 +59,45 @@ function MenuLink({ item, onClick }) {
     return <a href="#" className="nav-soon" title="준비 중" onClick={(e) => e.preventDefault()}>{item.label}</a>;
   }
   return <NavLink to={item.to} onClick={onClick}>{item.label}</NavLink>;
+}
+
+// 사이드 메뉴 맨 아래 계정 영역. 항목·동작은 헤더 프로필 드롭다운(UserProfileMenu)과 같게 맞춘다
+// (프로필 사진 변경은 파일 선택 창이 열리는 동작이라 드롭다운·마이페이지에만 둔다).
+function SideMenuAccount({ onNavigate }) {
+  const navigate = useNavigate();
+  const { isLoggedIn, nickname, email, isAdmin, profileImage, logout } = useAuth();
+
+  if (!isLoggedIn) {
+    return (
+      <div className="side-menu-account">
+        <p className="side-menu-account-hint">로그인하면 게시판·행운 뽑기·이벤트 기록이 저장돼요.</p>
+        <Link to="/login" className="side-menu-account-login" onClick={onNavigate}>로그인</Link>
+      </div>
+    );
+  }
+
+  const go = (to) => { onNavigate(); navigate(to); };
+  const onImgError = (e) => {
+    if (e.currentTarget.src !== window.location.origin + LOGO_URL) e.currentTarget.src = LOGO_URL;
+  };
+
+  return (
+    <div className="side-menu-account">
+      <div className="side-menu-account-profile">
+        <img src={profileImage} alt="" className="side-menu-account-avatar" onError={onImgError} />
+        <div className="side-menu-account-name">
+          <strong>{nickname || '회원'}</strong>
+          {email && <span>{email}</span>}
+        </div>
+      </div>
+      <div className="side-menu-account-actions">
+        <button type="button" onClick={() => go('/my-page')}>👤 프로필 보기</button>
+        <button type="button" onClick={() => go(`/board?search=${encodeURIComponent(`@${nickname}`)}`)}>📋 내 게시글</button>
+        {isAdmin && <button type="button" onClick={() => go('/admin')}>🛠 관리하기</button>}
+        <button type="button" className="is-danger" onClick={() => { onNavigate(); logout(); }}>로그아웃</button>
+      </div>
+    </div>
+  );
 }
 
 export default function Header() {
@@ -189,7 +229,7 @@ export default function Header() {
         className={`side-menu${sideOpen ? ' is-open' : ''}`}
         style={{ right: sideOpen ? '0px' : '-100%' }}
       >
-        <ul>
+        <ul className="side-menu-list">
           {MENUS.map((menu, i) => (
             <li className={`nav-item side-dropdown${sideActive === i ? ' active' : ''}`} key={menu.label}>
               <a
@@ -207,6 +247,7 @@ export default function Header() {
             </li>
           ))}
         </ul>
+        <SideMenuAccount onNavigate={closeSide} />
       </nav>
     </header>
   );

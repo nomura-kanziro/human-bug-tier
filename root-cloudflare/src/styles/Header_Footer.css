@@ -643,6 +643,117 @@ header {
   font-weight: bold;
 }
 
+/* ====================== 사이드 메뉴 하단 계정 영역 ======================
+   메뉴 목록(.side-menu-list)은 남는 높이를 차지하며 길면 그 안에서만 스크롤되고,
+   계정 영역(.side-menu-account)은 항상 맨 아래에 붙는다. 사이드 메뉴는 content-box 라
+   높이에 위아래 padding(20px×2)이 더해져 화면 아래로 넘쳤으므로 그만큼 빼서 바닥 버튼이 가려지지 않게 한다. */
+.side-menu {
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - var(--header-h, 60px) - 40px);
+}
+
+.side-menu .side-menu-list {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+}
+
+.side-menu-account {
+  flex: 0 0 auto;
+  margin-top: 12px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-color, #e5e7eb);
+}
+
+.side-menu-account-hint {
+  margin: 0 0 10px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-secondary, #6b7280);
+}
+
+.side-menu-account-login {
+  display: block;
+  padding: 11px 0;
+  border-radius: var(--radius-pill, 999px);
+  background: var(--brand, #facc15);
+  color: var(--brand-contrast, #111827);
+  font-weight: 800;
+  font-size: 15px;
+  text-align: center;
+  text-decoration: none;
+}
+
+.side-menu-account-login:hover {
+  background: var(--brand-strong, #eab308);
+}
+
+.side-menu-account-profile {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.side-menu-account-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex: 0 0 auto;
+  background: var(--bg-hover, #f3f4f6);
+}
+
+.side-menu-account-name {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.side-menu-account-name strong {
+  font-size: 14.5px;
+  color: var(--text-primary, #111827);
+}
+
+.side-menu-account-name span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 12px;
+  color: var(--text-secondary, #6b7280);
+}
+
+.side-menu-account-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+
+.side-menu-account-actions button {
+  padding: 9px 6px;
+  border: 1px solid var(--border-color, #e5e7eb);
+  border-radius: 10px;
+  background: var(--bg-elevated, #ffffff);
+  color: var(--text-primary, #111827);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.side-menu-account-actions button:hover {
+  background: var(--bg-hover, #f3f4f6);
+}
+
+.side-menu-account-actions button.is-danger {
+  grid-column: 1 / -1;
+  color: #dc2626;
+}
+
+[data-theme="dark"] .side-menu-account-actions button.is-danger {
+  color: #f87171;
+}
+
 /* ====================== 드롭다운 네비게이션 (데스크톱, 마우스 오버 방식) ======================
    PC 화면(768px 초과)에서만 보이는 상단 메뉴. 예전에는 순수 CSS :hover 로 동작했지만 지금은 **클릭**으로
    열고 닫는다(Header.jsx 가 열린 항목에 .open 을 붙인다):
@@ -814,39 +925,64 @@ footer a:hover,
     margin-right: 6px;
   }
 
+  /* 모바일 헤더 우측(테마·후원·알림·프로필/로그인·메뉴)이 로고보다 큰 비중을 차지하던 것을 줄였다(2026-10-02).
+     로그인·프로필 메뉴는 사이드 메뉴 맨 아래에도 있으므로 헤더 쪽은 작게 둔다. */
   .header-right {
-    gap: 6px;
+    gap: 4px;
   }
 
   .header-user-actions {
-    margin-right: 4px;
-    gap: 6px;
+    margin-right: 2px;
+    gap: 4px;
   }
 
   .header-login-btn {
-    padding: 8px 10px;
-    font-size: 13px;
+    padding: 6px 10px;
+    font-size: 12px;
     white-space: nowrap;
   }
 
   .user-profile-avatar {
-    width: 40px;
-    height: 40px;
+    width: 32px;
+    height: 32px;
   }
 
   .header-sponsor-btn {
-    width: 44px;
-    height: 44px;
+    width: 32px;
+    height: 32px;
   }
 
   .header-sponsor-icon {
-    width: 22px;
-    height: 22px;
+    width: 17px;
+    height: 17px;
   }
 
   .notification-bell-btn {
-    width: 44px;
-    height: 44px;
+    width: 32px;
+    height: 32px;
+  }
+
+  .menu-btn {
+    min-width: 34px;
+    min-height: 34px;
+    gap: 4px;
+  }
+
+  .menu-btn .hamburger-line {
+    width: 18px;
+  }
+
+  /* 줄 간격(4px) + 줄 두께(2px) = 6px 만큼 움직여야 가운데에서 X 로 겹친다(데스크톱은 6+2=8px) */
+  .menu-btn.is-open .hamburger-line:nth-child(1) {
+    transform: translateY(6px) rotate(45deg);
+  }
+
+  .menu-btn.is-open .hamburger-line:nth-child(3) {
+    transform: translateY(-6px) rotate(-45deg);
+  }
+
+  .notification-bell-icon {
+    font-size: 15px;
   }
 
   .side-menu {
@@ -854,6 +990,7 @@ footer a:hover,
     right: -100%;
     padding: 16px;
     padding-top: 24px;
+    height: calc(100% - var(--header-h, 60px) - 40px);
   }
 
   .side-menu.open,
@@ -890,7 +1027,7 @@ footer a:hover,
   }
 
   .header-login-btn {
-    padding: 8px;
+    padding: 6px 8px;
     font-size: 12px;
   }
 }
