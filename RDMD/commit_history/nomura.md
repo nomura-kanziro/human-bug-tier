@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 345 |
+| **커밋 수** | 346 |
 | **기간** | 2026-03-20 ~ 2026-10-01 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -374,6 +374,7 @@
 | 343 | 2026-10-01 | [`4dd0282`](#4dd0282) | style(notice): 전체 공지·새 소식 목록 제목 앞 점과 글자 사이 간격 확대 |
 | 344 | 2026-10-01 | [`ab1728b`](#ab1728b) | feat(event): 매일 퀴즈 기록을 회원당 최근 15개만 남기고 오래된 것부터 자동 삭제 |
 | 345 | 2026-10-01 | [`a9df3ba`](#a9df3ba) | feat(admin): 행운 뽑기 관리 신설 — 회원별 뽑기 기록과 포인트 증감 원장 조회 |
+| 346 | 2026-10-01 | [`pending`](#pending346) | chore(footer): 사이트 버전 표시 1.0.0 → 1.0.1 |
 
 ---
 
@@ -6671,6 +6672,24 @@
 - **범위**: backend + frontend / 관리자
 - **요약**: 관리자 페이지에 "행운 뽑기 관리" 섹션 신설(조회 전용). 회원 목록(닉네임 검색·페이지, 보유 포인트·3종 이용 횟수)에서 "기록 보기"를 누르면 오늘의 행운 티어 / 행운 티어 포커 / 랜덤 뽑기 / 포인트 내역 탭으로 그 회원의 기록을 보여줌. API 3개(/api/admin/luck/users, /users/:userId, /users/:userId/points — adminLuckController, requireAdmin). 포인트가 바뀔 때마다 1건씩 남기는 원장 LuckPointLog + utils/luckPointLog.recordPointChange 신설(오늘의 행운 티어·포커 배팅/정산·랜덤 뽑기 정산·이벤트 퀴즈/메모리/티어표 공개 상금 7곳 연결, 기록 실패해도 뽑기·정산은 계속, 이 기능 배포 뒤의 증감부터 쌓임). 포커 판에 승패·지급액·족보(outcome/payout/pointsDelta/playerHand/dealerHand) 저장 추가(이전 판은 "기록 없음"). 지갑 주인 판별 — 관리자 토큰으로 뽑은 기록은 Admin 문서를 가리키므로 회원에 없으면 관리자에서도 찾고, 둘 다 없을 때만 탈퇴로 표시([관리자]·[탈퇴] 배지). 확인: 운영 DB 읽기 전용 호출(회원 4·포커 133판·랜덤 뽑기 7건 조회), 가짜 데이터 화면 캡처(목록·탭 4개), 원장 함수 단위 시험.
 - **주요 파일**: `backend/controllers/adminLuckController.js`(신규), `backend/models/LuckPointLog.js`(신규), `backend/utils/luckPointLog.js`(신규), `backend/routes/adminRoutes.js`, `backend/controllers/luck{Draw,Poker,Ladder}Controller.js`, `backend/controllers/eventController.js`, `backend/models/LuckPokerRound.js`, `root-cloudflare/src/components/AdminLuckManager.jsx`(신규), `root-cloudflare/src/styles/admin-luck.css`(신규), `root-cloudflare/src/pages/AdminDashboard.jsx`
+- **관련 RDMD**: —
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending346"></a>
+
+### 346. 2026-10-01 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: chore(footer): 사이트 버전 표시 1.0.0 → 1.0.1
+- **git**: `git show pending`
+- **범위**: frontend / 푸터
+- **요약**: 9월 29일~10월 1일 업데이트(인증 메일 개편·티어표 수정·퀴즈 기록 정리·행운 뽑기 관리)를 반영해 푸터에 표시되는 사이트 버전을 1.0.0 에서 1.0.1 로 올림. 버전 문자열은 `Footer.jsx` 의 `SITE_VERSION` 한 곳에서 수동 관리(이전 0.5.0 → 1.0.0 변경과 같은 방식). `backend/package.json` 의 version 은 사이트 표시 버전과 별개라 그대로 둠.
+- **주요 파일**: `root-cloudflare/src/components/Footer.jsx`
 - **관련 RDMD**: —
 
 [▲ 목차로](#목차)
