@@ -374,7 +374,7 @@
 | 343 | 2026-10-01 | [`4dd0282`](#4dd0282) | style(notice): 전체 공지·새 소식 목록 제목 앞 점과 글자 사이 간격 확대 |
 | 344 | 2026-10-01 | [`ab1728b`](#ab1728b) | feat(event): 매일 퀴즈 기록을 회원당 최근 15개만 남기고 오래된 것부터 자동 삭제 |
 | 345 | 2026-10-01 | [`a9df3ba`](#a9df3ba) | feat(admin): 행운 뽑기 관리 신설 — 회원별 뽑기 기록과 포인트 증감 원장 조회 |
-| 346 | 2026-10-01 | [`pending`](#pending346) | chore(footer): 사이트 버전 표시 1.0.0 → 1.0.1 |
+| 346 | 2026-10-01 | [`c3bcd9a`](#c3bcd9a) | chore(footer): 사이트 버전 표시 1.0.0 → 1.0.1 |
 
 ---
 
@@ -6678,15 +6678,15 @@
 
 ---
 
-<a id="pending346"></a>
+<a id="c3bcd9a"></a>
 
-### 346. 2026-10-01 — `pending`
+### 346. 2026-10-01 — `c3bcd9a`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `c3bcd9a`
+- **hash (full)**: `c3bcd9a3823c17ba02d003c664399baf3b3f1879`
 - **author**: nomura
 - **message**: chore(footer): 사이트 버전 표시 1.0.0 → 1.0.1
-- **git**: `git show pending`
+- **git**: `git show c3bcd9a`
 - **범위**: frontend / 푸터
 - **요약**: 9월 29일~10월 1일 업데이트(인증 메일 개편·티어표 수정·퀴즈 기록 정리·행운 뽑기 관리)를 반영해 푸터에 표시되는 사이트 버전을 1.0.0 에서 1.0.1 로 올림. 버전 문자열은 `Footer.jsx` 의 `SITE_VERSION` 한 곳에서 수동 관리(이전 0.5.0 → 1.0.0 변경과 같은 방식). `backend/package.json` 의 version 은 사이트 표시 버전과 별개라 그대로 둠.
 - **주요 파일**: `root-cloudflare/src/components/Footer.jsx`
