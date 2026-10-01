@@ -44,6 +44,7 @@ description: >
 5. 이메일 미설정 시 기존 폴백(`isVerified` 즉시 등) 동작 문서와 맞출 것
 6. 차단 검사 연동 유지
 7. 메일 링크는 `APP_URL` / `appUrl.js` 사용
+   - 메일 HTML 은 `backend/utils/mailTemplate.js` `buildAppMailHtml()` 공용 틀(가입 인증·아이디 찾기·재설정). 사용자 입력은 `escapeHtml`. 링크·로고는 `APP_URL`(운영 `https://human-bug-tier.com`) 기준
 
 ## Do not
 

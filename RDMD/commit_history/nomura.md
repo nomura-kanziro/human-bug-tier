@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 350 |
+| **커밋 수** | 351 |
 | **기간** | 2026-03-20 ~ 2026-10-02 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -379,6 +379,7 @@
 | 348 | 2026-10-02 | [`pending`](#pending348) | docs(luck-draw): 행운 뽑기 문서 현행화 — 포인트표·0 하한·포커·랜덤 뽑기 반영, 포커·랜덤 뽑기와 포인트 원장 기록 추가 |
 | 349 | 2026-10-02 | [`pending`](#pending349) | docs(admin): 관리자 문서 React 기준 현행화 — 화면 구성·이벤트 관리·행운 뽑기 관리 반영, 관리자 스킬 4종 동기화 |
 | 350 | 2026-10-02 | [`pending`](#pending350) | docs(backend): 백엔드 API·모델 맵 현행화 — 행운 뽑기·이벤트·프로필 API와 모델·유틸 추가, 백엔드 스킬 4종 공통 규칙 반영 |
+| 351 | 2026-10-02 | [`pending`](#pending351) | docs(auth): 인증 메일 공용 템플릿 기록 추가, 가입 메일 발송 순서 정정 — 인증 기능 문서 React 기준·인증 스킬 4종·.env.example 주석 |
 
 ---
 
@@ -6767,5 +6768,23 @@
 - **요약**: RDMD/features/backend-api.md 가 초기 6개 API 그룹·모델 9개 기준이라 server.js 실제 등록(9개 그룹 + /api/ext 204 + 못 찾는 /api 는 JSON 404)·models 21개·utils 13개·data 2개와 대조해 채움 — /api/luck-draw(포커·랜덤 뽑기 포함), /api/profile, /api/events, /api/admin/luck/*, Luck*·Event* 모델, mail·mailTemplate·luckPointLog·kstDate 등 유틸, data/luckPool·tierCatalog(tiers.json 을 읽음). 백엔드 스킬 4종(.agents·.claude·.codex·.groks)에 공통 규칙 추가: API 그룹 목록, 포인트를 바꾸면 recordPointChange, 서버 안 스케줄러(startLadderScheduler·startEventScheduler·유튜브 동기화) 때문에 같은 DB 로 서버를 두 군데서 오래 띄우지 않기(pm2 instances 1 확인), 백엔드 코드를 바꾸면 서버 재시작이 필요(10-01 로컬 404 사례).
 - **주요 파일**: `RDMD/features/backend-api.md`, `.agents/backend/skill.md`, `.claude/skills/backend/SKILL.md`, `.codex/backend/skill.md`, `.groks/backend/grok_skill.md`
 - **관련 RDMD**: —
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending351"></a>
+
+### 351. 2026-10-02 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(auth): 인증 메일 공용 템플릿 기록 추가, 가입 메일 발송 순서 정정 — 인증 기능 문서 React 기준·인증 스킬 4종·.env.example 주석
+- **git**: `git show pending`
+- **범위**: docs / 인증
+- **요약**: 09-29 인증 메일 3종 공용 템플릿(d549b2c·917e9de·3ab8238, 서버 APP_URL 정식 주소 변경)을 기록(03-auth/10)으로 남기고 features/auth.md 에 "메일 모양" 절 추가. 대조 중 발견한 사실 불일치 정정 — 가입 메일 발송 순서가 문서·인증 스킬·backend/.env.example 주석에 "Gmail 먼저(기본 on)"로 남아 있었으나 2026-09-10 1c7f473 부터 기본은 Brevo→Resend→Gmail, SIGNUP_MAIL_SKIP_API=true 일 때만 Gmail 우선(mail.js shouldSkipApiForSignupMail 확인). auth.md 는 위치를 React(Login·SignUp·FindAccount·ResetPassword·AuthShell·authApi)로, 아이디 찾기·재설정 메일 설명·APP_URL(Render 서술 → 운영 human-bug-tier.com)도 고침. 08 기록(가입 메일 Gmail 우선)에 "이후 변경" 추가. 917e9de 의 git 메시지 누락 사실과 올바른 메시지를 10 기록에 명시.
+- **주요 파일**: `RDMD/features/auth.md`, `RDMD/backend/03-auth/10-mail-template-record.md`(신규), `RDMD/backend/03-auth/08-signup-gmail-and-admin-verify-record.md`, `RDMD/backend/README.md`, 인증 스킬 4종(`.agents`·`.claude`·`.codex`·`.groks`), `backend/.env.example`(주석만)
+- **관련 RDMD**: `RDMD/backend/03-auth/10-mail-template-record.md`
 
 [▲ 목차로](#목차)

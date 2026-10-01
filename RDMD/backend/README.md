@@ -59,6 +59,7 @@ RDMD/backend/
 | [07-mail-aggregated-error-record.md](./03-auth/07-mail-aggregated-error-record.md) | — | 발송 실패 시 시도한 provider 전부의 원인을 합쳐서 표시(Resend 도메인 미인증 함정 포함) |
 | [08-signup-gmail-and-admin-verify-record.md](./03-auth/08-signup-gmail-and-admin-verify-record.md) | — | 가입 메일 Gmail 우선 + 관리자 직접 인증 |
 | [09-nickname-change-record.md](./03-auth/09-nickname-change-record.md) | — | 닉네임 변경 API — 검증·7일 쿨다운·복사본 전파·옛 토큰 거부 |
+| [10-mail-template-record.md](./03-auth/10-mail-template-record.md) | — | 인증·아이디 찾기·재설정 메일 공용 템플릿(예시문 기준, GIF 로고, 발신전용 문구) + 가입 메일 발송 순서 정정 |
 
 ## 04-notice — 공지
 

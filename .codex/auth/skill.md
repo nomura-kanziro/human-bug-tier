@@ -32,6 +32,7 @@ description: >
 4. `adminAuthToken` 과 분리
 5. EMAIL 미설정 폴백 기존 일치
 6. 차단 검사 · APP_URL/appUrl 메일 링크
+   - 메일 HTML 은 `backend/utils/mailTemplate.js` `buildAppMailHtml()` 공용 틀(가입 인증·아이디 찾기·재설정). 사용자 입력은 `escapeHtml`. 링크·로고는 `APP_URL`(운영 `https://human-bug-tier.com`) 기준
 
 ## Do not
 

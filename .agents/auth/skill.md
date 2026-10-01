@@ -16,7 +16,8 @@ description: >
 - `user_login/*`, `auth_api.js`
 - backend authController, User, authRoutes, jwtAuth, appUrl
 - `common.js` → getAuthHeaders
-- `backend/utils/mail.js` — 아이디 찾기·비번 재설정은 Brevo→Resend→Gmail. **가입 인증 메일만** Gmail이 있으면 Brevo/Resend를 건너뜀 (`sendSignupMail`). `SIGNUP_MAIL_SKIP_API=false`면 공용 체인.
+- `backend/utils/mail.js` — 아이디 찾기·비번 재설정·가입 인증 모두 기본은 Brevo→Resend→Gmail. `SIGNUP_MAIL_SKIP_API=true` 일 때만 가입 인증 메일이 Gmail 을 먼저 시도(`sendSignupMail`, 실패 시 공용 체인). 2026-09-10 부터 이 기본값
+- `backend/utils/mailTemplate.js` — 가입 인증·아이디 찾기·재설정 메일 공용 HTML(`buildAppMailHtml`, `escapeHtml`). 메일 문구·모양은 여기 한 곳에서 고친다
 
 ## Read first
 
