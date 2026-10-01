@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 353 |
+| **커밋 수** | 354 |
 | **기간** | 2026-03-20 ~ 2026-10-02 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -382,6 +382,7 @@
 | 351 | 2026-10-02 | [`pending`](#pending351) | docs(auth): 인증 메일 공용 템플릿 기록 추가, 가입 메일 발송 순서 정정 — 인증 기능 문서 React 기준·인증 스킬 4종·.env.example 주석 |
 | 352 | 2026-10-02 | [`pending`](#pending352) | docs(tier-class): 티어 데이터 정본을 tiers.json 으로 정정(extract·sync 실행 금지) — 티어표 문서·스킬 React 기준 재작성, 1·2·9티어 수정 기록 |
 | 353 | 2026-10-02 | [`pending`](#pending353) | docs(event): 매일 퀴즈 기록 15건 보관 기록 추가 |
+| 354 | 2026-10-02 | [`pending`](#pending354) | docs(notice): 공지 목록 제목 점 간격 기록 추가 |
 
 ---
 
@@ -6824,5 +6825,23 @@
 - **요약**: 10-01 ab1728b(퀴즈 기록 회원당 최근 15건 보관)를 backend/09-event/06 기록으로 남김 — 배경(지난 기록을 읽는 곳 없음), pruneQuizHistory 동작·호출 시점, "15개 이상"을 최대 15건 보관으로 해석한 점, 안전성(회원별·오늘 문서 보존·포인트 영향 없음), 가짜 모델 확인 결과. 이벤트 기능 설명 문서(features/event.md)는 아직 없어 새로 만들지 않고 기록만 추가.
 - **주요 파일**: `RDMD/backend/09-event/06-quiz-history-retention-record.md`(신규), `RDMD/backend/README.md`
 - **관련 RDMD**: `RDMD/backend/09-event/06-quiz-history-retention-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending354"></a>
+
+### 354. 2026-10-02 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(notice): 공지 목록 제목 점 간격 기록 추가
+- **git**: `git show pending`
+- **범위**: docs / 공지
+- **요약**: 10-01 4dd0282(전체 공지·새 소식 목록 제목 앞 점 간격)를 frontend/04-notice/05 기록으로 남김 — 원인(.notice-title 은 flex·간격 없음, 메인 소제목 .notice-col-title 은 gap 10px), 수정 선택자(.notice-title .notice-dot, 14px·가운데 정렬), 점 없는 공지 메인 제목에 영향 없는 이유.
+- **주요 파일**: `RDMD/frontend/04-notice/05-notice-title-dot-gap-record.md`(신규), `RDMD/frontend/README.md`
+- **관련 RDMD**: `RDMD/frontend/04-notice/05-notice-title-dot-gap-record.md`
 
 [▲ 목차로](#목차)
