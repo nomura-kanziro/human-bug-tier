@@ -375,15 +375,15 @@
 | 344 | 2026-10-01 | [`ab1728b`](#ab1728b) | feat(event): 매일 퀴즈 기록을 회원당 최근 15개만 남기고 오래된 것부터 자동 삭제 |
 | 345 | 2026-10-01 | [`a9df3ba`](#a9df3ba) | feat(admin): 행운 뽑기 관리 신설 — 회원별 뽑기 기록과 포인트 증감 원장 조회 |
 | 346 | 2026-10-01 | [`c3bcd9a`](#c3bcd9a) | chore(footer): 사이트 버전 표시 1.0.0 → 1.0.1 |
-| 347 | 2026-10-02 | [`pending`](#pending347) | docs(deploy): 정식 주소 human-bug-tier.com·APP_URL 변경 반영 — duckdns 는 서버 직접 주소(프록시 대상·헬스 확인)로 정리 |
-| 348 | 2026-10-02 | [`pending`](#pending348) | docs(luck-draw): 행운 뽑기 문서 현행화 — 포인트표·0 하한·포커·랜덤 뽑기 반영, 포커·랜덤 뽑기와 포인트 원장 기록 추가 |
-| 349 | 2026-10-02 | [`pending`](#pending349) | docs(admin): 관리자 문서 React 기준 현행화 — 화면 구성·이벤트 관리·행운 뽑기 관리 반영, 관리자 스킬 4종 동기화 |
-| 350 | 2026-10-02 | [`pending`](#pending350) | docs(backend): 백엔드 API·모델 맵 현행화 — 행운 뽑기·이벤트·프로필 API와 모델·유틸 추가, 백엔드 스킬 4종 공통 규칙 반영 |
-| 351 | 2026-10-02 | [`pending`](#pending351) | docs(auth): 인증 메일 공용 템플릿 기록 추가, 가입 메일 발송 순서 정정 — 인증 기능 문서 React 기준·인증 스킬 4종·.env.example 주석 |
-| 352 | 2026-10-02 | [`pending`](#pending352) | docs(tier-class): 티어 데이터 정본을 tiers.json 으로 정정(extract·sync 실행 금지) — 티어표 문서·스킬 React 기준 재작성, 1·2·9티어 수정 기록 |
-| 353 | 2026-10-02 | [`pending`](#pending353) | docs(event): 매일 퀴즈 기록 15건 보관 기록 추가 |
-| 354 | 2026-10-02 | [`pending`](#pending354) | docs(notice): 공지 목록 제목 점 간격 기록 추가 |
-| 355 | 2026-10-02 | [`pending`](#pending355) | docs(summary): 작업 이력 요약 갱신 — 9/3~9/24 사후 요약(Phase 8b)·Phase 10 추가, 운영 주소·배포 상태·체크리스트·제약 현행화 |
+| 347 | 2026-10-02 | [`463aa47`](#463aa47) | docs(deploy): 정식 주소 human-bug-tier.com·APP_URL 변경 반영 — duckdns 는 서버 직접 주소(프록시 대상·헬스 확인)로 정리 |
+| 348 | 2026-10-02 | [`d823a2d`](#d823a2d) | docs(luck-draw): 행운 뽑기 문서 현행화 — 포인트표·0 하한·포커·랜덤 뽑기 반영, 포커·랜덤 뽑기와 포인트 원장 기록 추가 |
+| 349 | 2026-10-02 | [`13c9e8e`](#13c9e8e) | docs(admin): 관리자 문서 React 기준 현행화 — 화면 구성·이벤트 관리·행운 뽑기 관리 반영, 관리자 스킬 4종 동기화 |
+| 350 | 2026-10-02 | [`050cf56`](#050cf56) | docs(backend): 백엔드 API·모델 맵 현행화 — 행운 뽑기·이벤트·프로필 API와 모델·유틸 추가, 백엔드 스킬 4종 공통 규칙 반영 |
+| 351 | 2026-10-02 | [`5ed4e09`](#5ed4e09) | docs(auth): 인증 메일 공용 템플릿 기록 추가, 가입 메일 발송 순서 정정 — 인증 기능 문서 React 기준·인증 스킬 4종·.env.example 주석 |
+| 352 | 2026-10-02 | [`64c22c0`](#64c22c0) | docs(tier-class): 티어 데이터 정본을 tiers.json 으로 정정(extract·sync 실행 금지) — 티어표 문서·스킬 React 기준 재작성, 1·2·9티어 수정 기록 |
+| 353 | 2026-10-02 | [`2e41a4f`](#2e41a4f) | docs(event): 매일 퀴즈 기록 15건 보관 기록 추가 |
+| 354 | 2026-10-02 | [`8ab08e9`](#8ab08e9) | docs(notice): 공지 목록 제목 점 간격 기록 추가 |
+| 355 | 2026-10-02 | [`50cce47`](#50cce47) | docs(summary): 작업 이력 요약 갱신 — 9/3~9/24 사후 요약(Phase 8b)·Phase 10 추가, 운영 주소·배포 상태·체크리스트·제약 현행화 |
 
 ---
 
@@ -6587,6 +6587,7 @@
 - **hash (full)**: `917e9dec4199bebaa4917a763d35a6b89dcddbf6`
 - **author**: nomura
 - **message**: style(auth): 인증 메일 로고를 움직이는 GIF(human_bug_eyes_icon)로 바꾸고 회색 배경·테두리 제거
+- **비고**: 실제 git 커밋(`917e9de`)의 메시지는 제목이 비어 `Co-Authored-By: …` 줄만 남았다(커밋 스크립트가 메시지 변수를 잘못 넘긴 실수). 이미 푸시돼 강제 푸시 없이 그대로 두고, 올바른 메시지는 위 **message** 이다. (2026-10-02 확인·기록)
 - **git**: `git show 917e9de`
 - **범위**: backend / 인증 메일
 - **요약**: 339 템플릿 후속 — 창시자 요청으로 메일 로고를 `logo2.png` 에서 움직이는 `human_bug_eyes_icon.gif`(400×400, 약 1.2 MB)로 바꾸고, 본문을 감싸던 회색 배경(#f2f2f2)·남색 테두리와 아이디 찾기 메일의 아이디 상자 테두리를 없앰(흰 배경). 구분선·발신전용 안내는 유지. 확인: 헤드리스 Chrome 렌더링, 운영 서버에서 GIF 200.
@@ -6705,15 +6706,15 @@
 
 ---
 
-<a id="pending347"></a>
+<a id="463aa47"></a>
 
-### 347. 2026-10-02 — `pending`
+### 347. 2026-10-02 — `463aa47`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `463aa47`
+- **hash (full)**: `463aa47cee3cb065cb01b523efd05ad93cb26f21`
 - **author**: nomura
 - **message**: docs(deploy): 정식 주소 human-bug-tier.com·APP_URL 변경 반영 — duckdns 는 서버 직접 주소(프록시 대상·헬스 확인)로 정리
-- **git**: `git show pending`
+- **git**: `git show 463aa47`
 - **범위**: docs / 배포
 - **요약**: 2026-09-29 서버 `APP_URL` 을 `https://human-bug-tier.com` 으로 바꾼 것을 배포 문서 전체에 반영. 회원용 정식 주소 = `human-bug-tier.com`(Cloudflare Pages 도메인), `hbt-tier.duckdns.org` = Oracle 서버 직접 주소(Pages 프록시 대상·`/health` 확인용, 회원에게 안내하지 않음 — `*.duckdns.org` 차단 사례)로 정리. Pages 는 `/api/*` 만 넘겨 `human-bug-tier.com/health` 는 화면 HTML 이므로 헬스 확인은 duckdns 로 하도록 명시. 실제 확인: 두 Pages 주소는 `server: cloudflare`·`/health` HTML, duckdns 는 nginx·`/health` JSON, 서버 `APP_URL=https://human-bug-tier.com`. Oracle 배포 기록에 "이후 변경" 절 추가(본문은 당시 사실이라 유지).
 - **주요 파일**: `CLOUDFLARE.md`, `backend/deploy/oracle/README.md`, `backend/README.md`, `README.md`, `root-cloudflare/README.md`, `RDMD/features/overview.md`, `RDMD/guides/deploy-checklist.md`, 배포 스킬 4종(`.agents`·`.claude`·`.codex`·`.groks`), `RDMD/backend/07-deploy/03-oracle-cloud-deploy-record.md`
@@ -6723,15 +6724,15 @@
 
 ---
 
-<a id="pending348"></a>
+<a id="d823a2d"></a>
 
-### 348. 2026-10-02 — `pending`
+### 348. 2026-10-02 — `d823a2d`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `d823a2d`
+- **hash (full)**: `d823a2d83ae1375a5641d3497034fb9c8a800cc8`
 - **author**: nomura
 - **message**: docs(luck-draw): 행운 뽑기 문서 현행화 — 포인트표·0 하한·포커·랜덤 뽑기 반영, 포커·랜덤 뽑기와 포인트 원장 기록 추가
-- **git**: `git show pending`
+- **git**: `git show d823a2d`
 - **범위**: docs / 행운 뽑기
 - **요약**: 행운 뽑기 기능 문서·스킬이 바닐라 1차 기준("랜덤 뽑기 준비 중", 포인트 (9 - tier) - 5 = +3~-5, 포인트 음수 가능)으로 남아 있던 것을 현재 코드와 대조해 다시 씀. 실제로는 포인트표가 2026-08-31 c3f6163 부터 {1:+10 … 9:-4}, 09-19 부터 0 하한, 09-19~20 에 포커·랜덤 뽑기가 추가됐다. features/luck-draw.md 에 3모드 규칙(가중치·포인트표·한도·포커 2단계와 족보 15종·랜덤 뽑기 5분 라운드와 배수, 포커는 배팅 시 차감·랜덤 뽑기는 정산 시 반영 차이)·API 10개·알려진 점(포인트 급증, 탈퇴·관리자 지갑) 정리. 기록이 없던 포커·랜덤 뽑기를 커밋 이력과 코드로 사후 정리(03)하고, 10-01 포인트 원장·관리자 조회 API 기록(04) 추가. 행운 뽑기 스킬 2종(.agents·.claude, codex·groks 에는 원래 없음) 동기화. 저장소에 없는 luck-draw-기획서.md 링크(원래 깨져 있었음)는 "저장소에 없음"으로 정정.
 - **주요 파일**: `RDMD/features/luck-draw.md`, `.agents/luck-draw/skill.md`, `.claude/skills/luck-draw/SKILL.md`, `RDMD/backend/08-luck-draw/03-poker-ladder-record.md`(신규), `RDMD/backend/08-luck-draw/04-point-ledger-admin-api-record.md`(신규), `RDMD/backend/README.md`
@@ -6741,15 +6742,15 @@
 
 ---
 
-<a id="pending349"></a>
+<a id="13c9e8e"></a>
 
-### 349. 2026-10-02 — `pending`
+### 349. 2026-10-02 — `13c9e8e`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `13c9e8e`
+- **hash (full)**: `13c9e8ede82bbb1caa84bb10d48de445bf4663ac`
 - **author**: nomura
 - **message**: docs(admin): 관리자 문서 React 기준 현행화 — 화면 구성·이벤트 관리·행운 뽑기 관리 반영, 관리자 스킬 4종 동기화
-- **git**: `git show pending`
+- **git**: `git show 13c9e8e`
 - **범위**: docs / 관리자
 - **요약**: 관리자 기능 문서·스킬이 바닐라 경로(admin/comments/comment-management.*, admin/README.md — 현재 레포 루트에 없음)와 5개 기능 기준으로 남아 있던 것을 React 기준으로 고침. features/admin.md: 접속 경로(/admin/login·/admin·/admin/comment, 옛 /admin/admin-login.html 은 paths.js 가 /admin/login 으로 보냄), React 파일 구조, 빠른 이동 순서와 같은 화면 구성 표, 6. 이벤트 관리, 7. 행운 뽑기 관리(조회 전용·탭 4개·[관리자]/[탈퇴] 배지·한계), getAdminAuthHeaders 실제 코드, 새 관리 기능 추가 절차(Admin*Manager 컴포넌트 + quickItems). 관리자 스킬 4종(.agents·.claude·.codex·.groks)에 React 코드 맵·이벤트/행운 뽑기 관리·"관리자 로그인은 토큰을 authToken 에도 저장해 관리자가 일반 기능을 쓰면 sub 가 Admin id"(AdminLogin.jsx 41행 확인) 반영. 행운 뽑기 관리 화면 기록(12) 신규 — 확인 범위를 사실대로(관리자 토큰 응답 확인은 로컬 서버, 운영은 비로그인 401까지) 적음.
 - **주요 파일**: `RDMD/features/admin.md`, `.agents/admin/skill.md`, `.claude/skills/admin/SKILL.md`, `.codex/admin/skill.md`, `.groks/admin/grok_skill.md`, `RDMD/frontend/07-admin/12-admin-luck-manager-record.md`(신규), `RDMD/frontend/README.md`
@@ -6759,15 +6760,15 @@
 
 ---
 
-<a id="pending350"></a>
+<a id="050cf56"></a>
 
-### 350. 2026-10-02 — `pending`
+### 350. 2026-10-02 — `050cf56`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `050cf56`
+- **hash (full)**: `050cf56fcd0be7d5e278f5c3628b2d804266e714`
 - **author**: nomura
 - **message**: docs(backend): 백엔드 API·모델 맵 현행화 — 행운 뽑기·이벤트·프로필 API와 모델·유틸 추가, 백엔드 스킬 4종 공통 규칙 반영
-- **git**: `git show pending`
+- **git**: `git show 050cf56`
 - **범위**: docs / 백엔드
 - **요약**: RDMD/features/backend-api.md 가 초기 6개 API 그룹·모델 9개 기준이라 server.js 실제 등록(9개 그룹 + /api/ext 204 + 못 찾는 /api 는 JSON 404)·models 21개·utils 13개·data 2개와 대조해 채움 — /api/luck-draw(포커·랜덤 뽑기 포함), /api/profile, /api/events, /api/admin/luck/*, Luck*·Event* 모델, mail·mailTemplate·luckPointLog·kstDate 등 유틸, data/luckPool·tierCatalog(tiers.json 을 읽음). 백엔드 스킬 4종(.agents·.claude·.codex·.groks)에 공통 규칙 추가: API 그룹 목록, 포인트를 바꾸면 recordPointChange, 서버 안 스케줄러(startLadderScheduler·startEventScheduler·유튜브 동기화) 때문에 같은 DB 로 서버를 두 군데서 오래 띄우지 않기(pm2 instances 1 확인), 백엔드 코드를 바꾸면 서버 재시작이 필요(10-01 로컬 404 사례).
 - **주요 파일**: `RDMD/features/backend-api.md`, `.agents/backend/skill.md`, `.claude/skills/backend/SKILL.md`, `.codex/backend/skill.md`, `.groks/backend/grok_skill.md`
@@ -6777,15 +6778,15 @@
 
 ---
 
-<a id="pending351"></a>
+<a id="5ed4e09"></a>
 
-### 351. 2026-10-02 — `pending`
+### 351. 2026-10-02 — `5ed4e09`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `5ed4e09`
+- **hash (full)**: `5ed4e096677a6208cdeb9a66dd7e3389ee152877`
 - **author**: nomura
 - **message**: docs(auth): 인증 메일 공용 템플릿 기록 추가, 가입 메일 발송 순서 정정 — 인증 기능 문서 React 기준·인증 스킬 4종·.env.example 주석
-- **git**: `git show pending`
+- **git**: `git show 5ed4e09`
 - **범위**: docs / 인증
 - **요약**: 09-29 인증 메일 3종 공용 템플릿(d549b2c·917e9de·3ab8238, 서버 APP_URL 정식 주소 변경)을 기록(03-auth/10)으로 남기고 features/auth.md 에 "메일 모양" 절 추가. 대조 중 발견한 사실 불일치 정정 — 가입 메일 발송 순서가 문서·인증 스킬·backend/.env.example 주석에 "Gmail 먼저(기본 on)"로 남아 있었으나 2026-09-10 1c7f473 부터 기본은 Brevo→Resend→Gmail, SIGNUP_MAIL_SKIP_API=true 일 때만 Gmail 우선(mail.js shouldSkipApiForSignupMail 확인). auth.md 는 위치를 React(Login·SignUp·FindAccount·ResetPassword·AuthShell·authApi)로, 아이디 찾기·재설정 메일 설명·APP_URL(Render 서술 → 운영 human-bug-tier.com)도 고침. 08 기록(가입 메일 Gmail 우선)에 "이후 변경" 추가. 917e9de 의 git 메시지 누락 사실과 올바른 메시지를 10 기록에 명시.
 - **주요 파일**: `RDMD/features/auth.md`, `RDMD/backend/03-auth/10-mail-template-record.md`(신규), `RDMD/backend/03-auth/08-signup-gmail-and-admin-verify-record.md`, `RDMD/backend/README.md`, 인증 스킬 4종(`.agents`·`.claude`·`.codex`·`.groks`), `backend/.env.example`(주석만)
@@ -6795,15 +6796,15 @@
 
 ---
 
-<a id="pending352"></a>
+<a id="64c22c0"></a>
 
-### 352. 2026-10-02 — `pending`
+### 352. 2026-10-02 — `64c22c0`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `64c22c0`
+- **hash (full)**: `64c22c0b820d1698fe3a89aa75d7f614a248da22`
 - **author**: nomura
 - **message**: docs(tier-class): 티어 데이터 정본을 tiers.json 으로 정정(extract·sync 실행 금지) — 티어표 문서·스킬 React 기준 재작성, 1·2·9티어 수정 기록
-- **git**: `git show pending`
+- **git**: `git show 64c22c0`
 - **범위**: docs / 공식 티어표 (+ 코드 주석 2곳 경고 추가)
 - **요약**: 티어표 기능 문서·스킬 4종·react-rewrite 스킬 3종·root-cloudflare/README 가 "root-render/tier-class/tierN.html 이 정본 → npm run extract:tiers" 로 안내하고 있었는데, 2026-09-19 이후 root-render 는 수정 금지라 09-20 이후 수정(e6478dd·0ba93ea·8ef5db4·8f75701·ca7736c)은 tiers.json 에만 있다. root-render 쪽에 우류 3장·야사키 중복·코사카 jpg(삭제된 파일)·스가모가 남아 있는 것을 확인 — extract·sync:render 를 돌리면 최근 수정이 되돌아가고 코사카 이미지가 깨진다. 정본 = tiers.json, 두 명령 실행 금지로 고치고, features/tier-class.md·티어표 스킬 4종을 React 구조(tiers.json → tiers.js, TierPage /tier/:n, public/tier-media/tier-image, 같은 데이터를 쓰는 곳·luckPool 은 별도, 이미지 교체 규칙)로 다시 씀. 코드 주석은 지우지 않고 tiers.js·extract-tiers.mjs 에 경고 줄만 덧붙임(동작 변경 없음, tiers.json 미변경, 빌드 확인). 10-01 1·2·9티어 수정 기록(02-tier-class/09) 추가 — 7·9티어의 이름이 다른 같은 이미지 2건은 확인 대기로 명시.
 - **주요 파일**: `RDMD/features/tier-class.md`, 티어표 스킬 4종(`.agents`·`.claude`·`.codex`·`.groks`), react-rewrite 스킬 3종(`.agents`·`.codex`·`.groks`), `root-cloudflare/README.md`, `root-cloudflare/src/data/tiers.js`(주석), `root-cloudflare/scripts/extract-tiers.mjs`(주석), `RDMD/frontend/02-tier-class/09-tier1-2-update-record.md`(신규), `RDMD/frontend/README.md`
@@ -6813,15 +6814,15 @@
 
 ---
 
-<a id="pending353"></a>
+<a id="2e41a4f"></a>
 
-### 353. 2026-10-02 — `pending`
+### 353. 2026-10-02 — `2e41a4f`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `2e41a4f`
+- **hash (full)**: `2e41a4f62d57c229aad79d97aa6190c3762566eb`
 - **author**: nomura
 - **message**: docs(event): 매일 퀴즈 기록 15건 보관 기록 추가
-- **git**: `git show pending`
+- **git**: `git show 2e41a4f`
 - **범위**: docs / 이벤트
 - **요약**: 10-01 ab1728b(퀴즈 기록 회원당 최근 15건 보관)를 backend/09-event/06 기록으로 남김 — 배경(지난 기록을 읽는 곳 없음), pruneQuizHistory 동작·호출 시점, "15개 이상"을 최대 15건 보관으로 해석한 점, 안전성(회원별·오늘 문서 보존·포인트 영향 없음), 가짜 모델 확인 결과. 이벤트 기능 설명 문서(features/event.md)는 아직 없어 새로 만들지 않고 기록만 추가.
 - **주요 파일**: `RDMD/backend/09-event/06-quiz-history-retention-record.md`(신규), `RDMD/backend/README.md`
@@ -6831,15 +6832,15 @@
 
 ---
 
-<a id="pending354"></a>
+<a id="8ab08e9"></a>
 
-### 354. 2026-10-02 — `pending`
+### 354. 2026-10-02 — `8ab08e9`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `8ab08e9`
+- **hash (full)**: `8ab08e9fba6814bce3043eff6cf04d9f3eb434c0`
 - **author**: nomura
 - **message**: docs(notice): 공지 목록 제목 점 간격 기록 추가
-- **git**: `git show pending`
+- **git**: `git show 8ab08e9`
 - **범위**: docs / 공지
 - **요약**: 10-01 4dd0282(전체 공지·새 소식 목록 제목 앞 점 간격)를 frontend/04-notice/05 기록으로 남김 — 원인(.notice-title 은 flex·간격 없음, 메인 소제목 .notice-col-title 은 gap 10px), 수정 선택자(.notice-title .notice-dot, 14px·가운데 정렬), 점 없는 공지 메인 제목에 영향 없는 이유.
 - **주요 파일**: `RDMD/frontend/04-notice/05-notice-title-dot-gap-record.md`(신규), `RDMD/frontend/README.md`
@@ -6849,15 +6850,15 @@
 
 ---
 
-<a id="pending355"></a>
+<a id="50cce47"></a>
 
-### 355. 2026-10-02 — `pending`
+### 355. 2026-10-02 — `50cce47`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `50cce47`
+- **hash (full)**: `50cce470513bf8efa48c22fa187d37caf5277a4b`
 - **author**: nomura
 - **message**: docs(summary): 작업 이력 요약 갱신 — 9/3~9/24 사후 요약(Phase 8b)·Phase 10 추가, 운영 주소·배포 상태·체크리스트·제약 현행화
-- **git**: `git show pending`
+- **git**: `git show 50cce47`
 - **범위**: docs / 작업 이력 요약
 - **요약**: RDMD/summary/work-history.md 가 기준일 09-02 에 머물러 09-03~09-27 작업이 "아직 없음"으로 비어 있고 Phase 9 체크리스트에 "Cloudflare Pages 미배포"·duckdns 주소가 남아 있던 것을 고침. Phase 8b(09-03~09-24: 테마·React 전환·root-render 베타 종료·행운 뽑기 포커/랜덤 뽑기·인증/마이페이지·커스텀 메이커·디자인·헤더·이벤트·빠른 이동·티어 정리·버전 1.0.0)를 커밋 이력으로 사후 요약, Phase 10(09-29~10-01: 인증 메일·APP_URL 정식 주소·티어표·공지 간격·퀴즈 보관·포인트 원장·행운 뽑기 관리·공지 등록·1.0.1·10-02 문서 갱신) 추가. Phase 9 아래에 이후 변경(Pages 연동 빌드, 정식 주소) 메모. 체크리스트에 React 1.0.1·행운 뽑기 3모드·이벤트·행운 뽑기 관리·메일 템플릿 추가, 제약 표에 Actions 워크플로 실패(서비스 영향 없음)·tiers.json 정본(extract 금지)·포인트 급증·탈퇴 데이터 잔존·로컬 서버 같은 DB 추가.
 - **주요 파일**: `RDMD/summary/work-history.md`
