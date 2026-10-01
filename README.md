@@ -255,9 +255,9 @@ copy .env.example .env
 |------|------|
 | **사람** (창시자·팀원) | [`team/`](./team/README.md) |
 | **AI 공통 정본** (룰 + 기능 skill, 번외 AI 포함) | [`.agents/`](./.agents/README.md) |
-| **Grok** (Admin · 주 골격) | [`groks/`](./groks/README.md) |
+| **Grok** (Admin · 주 골격) | [`.groks/`](./.groks/README.md) |
 | **Claude** (주 골격) | [`CLAUDE.md`](./CLAUDE.md) + [`.claude/skills/`](./.claude/README.md) |
-| **Codex** (주 골격) | [`AGENTS.md`](./AGENTS.md) + [`codex/`](./codex/README.md) |
+| **Codex** (주 골격) | [`AGENTS.md`](./AGENTS.md) + [`.codex/`](./.codex/README.md) |
 | 개발 이력·기능 설명 | [`RDMD/`](./RDMD/README.md) |
 
 > 주 골격 3종만 전용 skill 팩이 있는 이유: 가장 많이 쓰는 AI이고 도구별 로드 형식이 다름.  
