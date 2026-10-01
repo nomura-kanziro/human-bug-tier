@@ -1,72 +1,77 @@
 ---
 name: luck-draw
 description: >
-  오늘의 행운 티어 뽑기, 회원 20회/3분 쿨다운, 티어별 포인트, 이력 5건 자동삭제, 게스트 체크(24시간 안내). Canonical for ANY AI.
+  행운 뽑기 3모드(오늘의 행운 티어 · 행운 티어 포커 · 랜덤 뽑기), 회원 20회/3분 쿨다운, 티어별 포인트(0 하한),
+  이력 5건 자동삭제, 포인트 원장(LuckPointLog), 게스트 체크(24시간 안내). Canonical for ANY AI.
 ---
 
 # 공통 스킬 — 행운 뽑기 (luck-draw)
 
+> 2026-10-02 현재 코드 기준으로 갱신. 바닐라 1차 서술("랜덤 뽑기 준비 중", 포인트 `(9 - tier) - 5`, 포인트 음수 가능)은 폐기.
+> 프론트 작업은 `root-cloudflare/`(React)만 — `root-render/luck-draw/` 는 베타 종료·수정 금지.
+
 ## When
 
-- `luck-draw/`, `backend/*/luckDraw*`, `backend/data/luckPool.js`, `backend/utils/kstDate.js` 변경
-- 헤더 "행운 뽑기" 메뉴, `index.html` 퀵카드 관련 변경
+- `/luck-draw` 페이지, 홈 행운 위젯, 헤더 "행운 뽑기" 메뉴 변경
+- `backend/controllers/luck{Draw,Poker,Ladder}Controller.js`, `backend/data/luckPool.js`, `backend/utils/kstDate.js`, 포인트 원장 변경
+- 포인트를 주거나 빼는 새 기능(이벤트 상금 등)을 만들 때
 
 ## Code map
 
-- `luck-draw/` (html·css·js·api·README)
-- `backend/models/LuckDraw.js`(이력, 최근 5건만 유지), `backend/models/LuckProfile.js`(누적 포인트·횟수·최고티어, 삭제 안 됨)
-- `backend/data/luckPool.js`, `backend/utils/kstDate.js`
-- `backend/controllers/luckDrawController.js`, `backend/routes/luckDrawRoutes.js`
-- `header.html`(데스크톱+사이드 드롭다운), `index.html`(퀵카드 + **메인 위젯** `#home-luck-preview`, `index-home.js`)
+- 프론트: `root-cloudflare/src/pages/LuckDraw.jsx`(`/luck-draw`), `src/components/LuckPokerPanel.jsx`, `LuckLadderPanel.jsx`, `HomeLuckWidget.jsx`
+- 서버: `backend/controllers/luckDrawController.js`(오늘의 행운 티어·`/config`·`/stats`), `luckPokerController.js`, `luckLadderController.js`(+ `startLadderScheduler`), `backend/routes/luckDrawRoutes.js`
+- 모델: `LuckProfile`(회원당 지갑·누적 카운터, 삭제 안 됨), `LuckDraw`(이력, 최근 5건), `LuckPokerRound`, `LuckLadderRound`, `LuckLadderBet`, `LuckPointLog`(포인트 증감 원장)
+- `backend/utils/luckPointLog.js`(`recordPointChange`), `backend/data/luckPool.js`(캐릭터 풀), `backend/utils/kstDate.js`
+- 관리자 조회: `backend/controllers/adminLuckController.js`(`/api/admin/luck/*`), `root-cloudflare/src/components/AdminLuckManager.jsx`
 
 ## Read first
 
-- `luck-draw-기획서.md` (원 설계 문서)
-- `RDMD/features/luck-draw.md`
-- `luck-draw/README.md`
+- `RDMD/features/luck-draw.md` (규칙 요약 — 포인트표·족보·배수·API)
+- `RDMD/backend/08-luck-draw/02-luck-draw-points-retention-record.md` (왜 LuckProfile 을 따로 뒀는지)
+- `RDMD/backend/08-luck-draw/03-poker-ladder-record.md`, `04-point-ledger-admin-api-record.md`
+- (`luck-draw-기획서.md` 는 저장소에 없다 — 규칙 정본은 서버 컨트롤러 상수)
 
 ## 현재 (작업 전 이해)
 
-- **1차 범위는 "오늘의 행운 티어"뿐.** 랜덤 뽑기는 UI만 있고 `(준비 중)` 유지
-- 확률·캐릭터 결정은 **서버 전담**. 프론트 `Math.random()` 으로 결과를 만들지 않는다
-- 스키마는 `User` 를 건드리지 않고 **별도 `LuckDraw` 컬렉션**
-- **회원 제한**: 하루 최대 **20회**, 뽑기 사이 **3분 쿨다운** — 둘 다 서버(`luckDrawController.js`)가 `LuckProfile` 로 강제. 초과 시 `429 { limitReached:true }` / `429 { cooldown:true, cooldownRemainingSec }`
-- **이력(`LuckDraw`)은 유저당 최근 5건만 유지** — 뽑을 때마다 초과분을 오래된 순으로 삭제(`pruneLuckHistory`)
-- **누적치는 `LuckProfile`(유저당 1건)에만 저장** — `points`(포인트), `totalDraws`(누적 횟수), `tierCounts`, `bestTier`, `todayCount`/`todayDate`(일일 한도용), `lastDrawAt`(쿨다운용). **이력 삭제와 완전히 분리** — 오늘 횟수를 `LuckDraw` 문서 개수로 세면 이력이 5건으로 잘리는 순간 20회 제한이 무력화되므로 반드시 `LuckProfile` 기준으로 계산할 것
-- **포인트 공식**: `getTierPoints(tier) = (9 - tier) - 5` — 9티어 -5점, 1티어 +3점, 한 단계당 1점. 공식은 `luckDrawController.js` 한 곳에만 존재, 프론트는 `/config` 의 `pointsTable` 을 표시만 함
-- `LuckDraw` 인덱스는 `{userId,mode,drawDate}`, `{userId,mode,createdAt:-1}` 모두 **non-unique**. 과거엔 unique 1건짜리였다가 정책 변경됨 — 새로 배포된 환경에서 예전 unique 인덱스가 남아있으면 `dropIndex` 필요
-- **게스트 24시간 제한은 서버가 강제하지 않는다.** 게스트는 계정이 없어 서버가 신원을 구분 못 함 — 프론트가 `localStorage` 로 마지막 체크 시각을 기억했다가 버튼 클릭 시 alert만 띄우고 API 호출을 막는 **UX 안내**일 뿐. 우회 가능하지만 의도된 동작(게스트 결과는 애초에 신뢰·저장 대상 아님)
-- 날짜는 `getKstDateString()` (KST 자정 기준) 사용 — `toISOString()` 그대로 쓰면 한국 09시 이전에 날짜가 밀림
-- 게스트 뽑기(`POST /daily`)는 계산만 하고 **DB 저장 없음** (`saved:false`)
-- 권한: `optionalAuth`(뽑기·설정) / `requireAuth`(오늘 상태·기록 조회)
+- 확률·카드·결과·정산은 **서버 전담**. 프론트 `Math.random()` 으로 결과를 만들지 않고, 포커도 "몇 번째 후보를 골랐는지"만 보낸다.
+- **포인트는 회원 지갑 `LuckProfile.points` 하나** — 3모드 + 이벤트 상금(퀴즈·메모리·티어표 공개)이 같이 쓴다. `User` 스키마에 포인트를 두지 않는다.
+- **포인트 0 하한**: 모든 반영이 `Math.max(0, …)`. 응답·기록에는 **실제 반영된 증감**만 쓴다.
+- **포인트표** `POINTS_TABLE = {1:+10, 2:+7, 3:+4, 4:+2, 5:+1, 6:-1, 7:-2, 8:-3, 9:-4}` — `luckDrawController.js` 한 곳이 정본, 프론트는 `/config` 의 `pointsTable` 표시만.
+- **확률** `DAILY_TIER_WEIGHTS = {1:1, 2:3, 3:6, 4:19, 5:21, 6:17, 7:14, 8:12, 9:7}`(합 100) — 서버에만.
+- **회원 제한**: 하루 **20회**(`MEMBER_DAILY_LIMIT`), 뽑기 사이 **3분**(`MEMBER_COOLDOWN_MS`) — `LuckProfile` 의 `todayCount`/`todayDate`/`lastDrawAt` 로 강제. 초과 시 `429 { limitReached:true }` / `429 { cooldown:true, cooldownRemainingSec }`.
+- **이력 `LuckDraw` 는 회원당 최근 5건** — 뽑을 때마다 `pruneLuckHistory`. 일일 횟수를 `LuckDraw` 개수로 세면 5건으로 잘려 20회 제한이 무력화되므로 **반드시 `LuckProfile` 기준**.
+- **포커**: `/poker/deal` 에서 배팅액을 **즉시 차감**하고 카드(후보 5·자동 2·딜러 5)를 미리 저장 → `/poker/play` 에서 후보 3장 선택·정산. 열린 판 회원당 1개, 정산은 `status` 원자적 선점. 승리 = 원금 + `floor(bet×배수)`, 무승부 = 원금, 패배 = 0.
+- **랜덤 뽑기**: 서버 스케줄러가 5분마다 자동 정산·다음 라운드. 결과는 `luckPool` 전체 캐릭터 중 균등 1명. 라운드당 회원 1번 배팅. **배팅 시 차감하지 않고** 정산 때 승 +`round(bet×배수)` / 패 -bet (0 하한).
+- **배팅 상한 = 보유 포인트 전부**(포커·랜덤 뽑기), 최소 1P.
+- **포인트를 바꾸는 코드는 `LuckProfile` 저장 직후 `recordPointChange({ userId, source, delta, balanceAfter, detail, refId })` 를 부른다.** 증감 0 은 안 남기고, 실패해도 예외 없음. `source` enum 은 `models/LuckPointLog.js`.
+- 관리자 토큰으로 뽑으면 지갑이 **Admin 문서 id** 로 생긴다(관리 화면 [관리자]). 회원 탈퇴는 행운 뽑기 데이터를 지우지 않는다(관리 화면 [탈퇴]).
+- **게스트**: 오늘의 행운 티어만 계산해서 보여주고 저장 안 함(`saved:false`). 24시간 제한은 프론트 `localStorage` 안내일 뿐 서버 미강제(의도). 포커·랜덤 뽑기 배팅은 로그인 필수.
+- 날짜는 `getKstDateString()`(KST 자정). `LuckDraw` 인덱스 `{userId,mode,drawDate}`·`{userId,mode,createdAt:-1}` 은 non-unique(예전 unique 인덱스가 남은 환경이면 `dropIndex`).
 
 ## Do
 
-1. 새 로직은 `luck-draw/` 와 `backend/*luckDraw*`, `backend/data/luckPool.js` 안에만 추가
-2. 기존 파일은 `header.html`(드롭다운 2곳), `index.html`(퀵카드), `backend/server.js`(마운트 1줄)만 최소 수정
-3. 확률 가중치(`DAILY_TIER_WEIGHTS`)는 서버에만 존재. `/config` 응답에는 표시용 값만
-4. 캐릭터 이미지 경로는 `tier-class/tierN.html` 의 실제 `<img src>` 값만 사용, 프론트에서 `getBasePath() + encodeURI(imagePath)` 로 조립
-5. 경로·API: `getBasePath()` / `getApiBase()` / `getAuthHeaders()` **재사용만**
-6. 회원 한도(20/일)·쿨다운(3분) 상수는 `luckDrawController.js` 한 곳에서만 관리 (`MEMBER_DAILY_LIMIT`, `MEMBER_COOLDOWN_MS`) — 프론트는 `/config` 응답의 `dailyLimit`/`cooldownSec` 를 표시용으로만 참고
+1. 확률·포인트표·족보·배수는 서버 상수 한 곳에서만 고치고, 프론트는 `/config`·`/poker/config`·`/ladder/round` 응답을 표시만
+2. 포인트 증감 코드를 새로 만들면 0 하한 + 실제 증감 계산 + `recordPointChange` 까지 한 세트로
+3. 이벤트 상금은 `eventController.addPoints(userId, delta, { source, detail, refId })` 를 쓴다(새 source 면 `LuckPointLog` enum 과 `adminLuckController` 의 출처 이름표에도 추가)
+4. 캐릭터 이미지 경로는 `luckPool.js` 의 `imagePath` → 서버 `resolveTierMediaPath` 기준. 이미지 파일명을 바꾸면 `tiers.json` 과 `luckPool.js` 를 **둘 다** 고친다
+5. 경로·API: `src/lib/api.js` 의 `getApiBase()` / `apiRequest()` 재사용
 
 ## Do not
 
-- 프론트에서 티어/캐릭터를 직접 뽑아 서버에 "이 결과 저장해줘" 요청 (신뢰 불가)
-- `User` 스키마에 `tickets`/`points`/`lastDrawAt` 등 뽑기 필드 추가 (전부 `LuckProfile` 로)
-- 게스트 결과를 `LuckDraw`/`LuckProfile` 에 저장 (통계 오염)
-- 일일 횟수·쿨다운 판정을 `LuckDraw` 문서 개수/최신 문서로 계산 (이력이 5건으로 잘리면 무력화됨 — 반드시 `LuckProfile`)
-- `profile.tierCounts[tier] = ...` 대입 후 `markModified('tierCounts')` 누락 (Mongoose가 변경 감지 못 해 저장 누락됨)
-- `common.js`/`common.css` 전체 재작성
-- 이벤트 바인딩에 `onclick` 신규 도입 (`luck-draw.js` 내부는 `addEventListener` 만)
+- 프론트에서 티어/캐릭터/카드를 만들어 서버에 "이 결과 저장해줘" 요청
+- `User` 스키마에 포인트·뽑기 필드 추가 (전부 `LuckProfile`)
+- 게스트 결과를 `LuckDraw`/`LuckProfile` 에 저장
+- 일일 횟수·쿨다운을 `LuckDraw` 문서 개수/최신 문서로 판정
+- `profile.tierCounts[tier] = …` 후 `markModified('tierCounts')` 누락
+- 포인트를 원장 기록 없이 바꾸기, 원장 실패로 뽑기·정산을 실패시키기
+- `root-render/luck-draw/` 수정 (베타 종료)
 
 ## Checklist
 
-- [ ] 비로그인 뽑기 → 결과 표시 + 미저장 배지, DB 0건
-- [ ] 비로그인 24시간 내 재클릭 → alert만, API 호출 없음
-- [ ] 로그인 뽑기 → 결과 + `+N P`/`-N P` 배지 + DB 1건, 버튼이 "다음 뽑기까지 mm:ss" 로 3분 비활성화
-- [ ] 3분 내 재요청 → 429(cooldown), 3분 후 자동 해제
-- [ ] 20회째 성공 후 재요청 → 429(limitReached)
-- [ ] 6번째 뽑기 이후 `/history` 는 항상 5건, `/stats.totalDraws` 는 5로 고정 안 되고 실제 누적치
-- [ ] `/today`, `/history`, `/stats` 토큰 없이 401
-- [ ] KST 자정 경계에서 `drawDate`·`todayCount` 안 밀림
-- [ ] GitHub Pages(`GITHUB_STATIC`) → 뽑기 버튼 비활성화 + 안내
+- [ ] 비로그인 오늘의 행운 티어 → 결과 + 미저장, DB 0건 / 24시간 내 재클릭은 안내만
+- [ ] 로그인 뽑기 → 결과 + 포인트 배지 + `LuckDraw` 1건 + 원장 1건(증감 0 이면 없음), 3분 비활성화
+- [ ] 3분 내 재요청 429(cooldown), 20회 후 429(limitReached), 6번째 이후 `/history` 5건·`/stats.totalDraws` 는 실제 누적
+- [ ] 포커 deal → 잔액 차감 + 원장 `poker_bet` / play → 판에 `outcome`·`payout` 저장 + 원장 `poker_payout`(패배면 없음)
+- [ ] 랜덤 뽑기 배팅 → 잔액 그대로, 5분 뒤 정산 시 잔액 반영 + `LuckLadderBet.pointsDelta` + 원장 `ladder`
+- [ ] 어떤 경우에도 잔액이 0 미만이 되지 않음
+- [ ] `/today`, `/history`, `/stats`, `/poker/deal|play`, `/ladder/bet` 토큰 없이 401

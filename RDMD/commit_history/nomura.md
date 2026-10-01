@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 347 |
+| **커밋 수** | 348 |
 | **기간** | 2026-03-20 ~ 2026-10-02 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -376,6 +376,7 @@
 | 345 | 2026-10-01 | [`a9df3ba`](#a9df3ba) | feat(admin): 행운 뽑기 관리 신설 — 회원별 뽑기 기록과 포인트 증감 원장 조회 |
 | 346 | 2026-10-01 | [`c3bcd9a`](#c3bcd9a) | chore(footer): 사이트 버전 표시 1.0.0 → 1.0.1 |
 | 347 | 2026-10-02 | [`pending`](#pending347) | docs(deploy): 정식 주소 human-bug-tier.com·APP_URL 변경 반영 — duckdns 는 서버 직접 주소(프록시 대상·헬스 확인)로 정리 |
+| 348 | 2026-10-02 | [`pending`](#pending348) | docs(luck-draw): 행운 뽑기 문서 현행화 — 포인트표·0 하한·포커·랜덤 뽑기 반영, 포커·랜덤 뽑기와 포인트 원장 기록 추가 |
 
 ---
 
@@ -6710,5 +6711,23 @@
 - **요약**: 2026-09-29 서버 `APP_URL` 을 `https://human-bug-tier.com` 으로 바꾼 것을 배포 문서 전체에 반영. 회원용 정식 주소 = `human-bug-tier.com`(Cloudflare Pages 도메인), `hbt-tier.duckdns.org` = Oracle 서버 직접 주소(Pages 프록시 대상·`/health` 확인용, 회원에게 안내하지 않음 — `*.duckdns.org` 차단 사례)로 정리. Pages 는 `/api/*` 만 넘겨 `human-bug-tier.com/health` 는 화면 HTML 이므로 헬스 확인은 duckdns 로 하도록 명시. 실제 확인: 두 Pages 주소는 `server: cloudflare`·`/health` HTML, duckdns 는 nginx·`/health` JSON, 서버 `APP_URL=https://human-bug-tier.com`. Oracle 배포 기록에 "이후 변경" 절 추가(본문은 당시 사실이라 유지).
 - **주요 파일**: `CLOUDFLARE.md`, `backend/deploy/oracle/README.md`, `backend/README.md`, `README.md`, `root-cloudflare/README.md`, `RDMD/features/overview.md`, `RDMD/guides/deploy-checklist.md`, 배포 스킬 4종(`.agents`·`.claude`·`.codex`·`.groks`), `RDMD/backend/07-deploy/03-oracle-cloud-deploy-record.md`
 - **관련 RDMD**: `RDMD/backend/07-deploy/03-oracle-cloud-deploy-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending348"></a>
+
+### 348. 2026-10-02 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(luck-draw): 행운 뽑기 문서 현행화 — 포인트표·0 하한·포커·랜덤 뽑기 반영, 포커·랜덤 뽑기와 포인트 원장 기록 추가
+- **git**: `git show pending`
+- **범위**: docs / 행운 뽑기
+- **요약**: 행운 뽑기 기능 문서·스킬이 바닐라 1차 기준("랜덤 뽑기 준비 중", 포인트 (9 - tier) - 5 = +3~-5, 포인트 음수 가능)으로 남아 있던 것을 현재 코드와 대조해 다시 씀. 실제로는 포인트표가 2026-08-31 c3f6163 부터 {1:+10 … 9:-4}, 09-19 부터 0 하한, 09-19~20 에 포커·랜덤 뽑기가 추가됐다. features/luck-draw.md 에 3모드 규칙(가중치·포인트표·한도·포커 2단계와 족보 15종·랜덤 뽑기 5분 라운드와 배수, 포커는 배팅 시 차감·랜덤 뽑기는 정산 시 반영 차이)·API 10개·알려진 점(포인트 급증, 탈퇴·관리자 지갑) 정리. 기록이 없던 포커·랜덤 뽑기를 커밋 이력과 코드로 사후 정리(03)하고, 10-01 포인트 원장·관리자 조회 API 기록(04) 추가. 행운 뽑기 스킬 2종(.agents·.claude, codex·groks 에는 원래 없음) 동기화. 저장소에 없는 luck-draw-기획서.md 링크(원래 깨져 있었음)는 "저장소에 없음"으로 정정.
+- **주요 파일**: `RDMD/features/luck-draw.md`, `.agents/luck-draw/skill.md`, `.claude/skills/luck-draw/SKILL.md`, `RDMD/backend/08-luck-draw/03-poker-ladder-record.md`(신규), `RDMD/backend/08-luck-draw/04-point-ledger-admin-api-record.md`(신규), `RDMD/backend/README.md`
+- **관련 RDMD**: `RDMD/backend/08-luck-draw/03-poker-ladder-record.md`, `RDMD/backend/08-luck-draw/04-point-ledger-admin-api-record.md`
 
 [▲ 목차로](#목차)
