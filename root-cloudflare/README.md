@@ -71,7 +71,7 @@ root-cloudflare/
 ├─ public/
 │  ├─ manifest.webmanifest
 │  └─ tier-media/tier-image/   # 캐릭터·로고·PWA 아이콘 (root-render 와 동일 경로 규칙)
-├─ scripts/extract-tiers.mjs   # root-render/tier-class/tierN.html → src/data/tiers.json
+├─ scripts/extract-tiers.mjs   # (사용 금지) root-render/tier-class/tierN.html → src/data/tiers.json 덮어쓰기
 └─ src/
    ├─ main.jsx / App.jsx       # 전역 CSS import, 라우트
    ├─ context/AuthContext.jsx  # localStorage(user/authToken/isAdmin/adminName/profileImage) 신원
@@ -88,8 +88,9 @@ root-cloudflare/
 - 이미지 경로는 `tierImageUrl()` 로만 만든다 — 서버가 `tier-image/…`·`tier-media/tier-image/…` 어느 접두사로 보내도 `/tier-media/tier-image/…` 로 정규화.
 - 유저 토큰 `authToken` + `getAuthHeaders()`, 관리자 `adminAuthToken` + 서버 `requireAdmin`. 프론트만으로 관리 API 를 열지 않는다.
 - 확률·포인트·제한은 서버가 계산. 프론트는 표시만.
-- **티어 캐릭터 추가/재배치는 여전히 `root-render/tier-class/tierN.html` 에서** 하고 `npm run extract:tiers` → 빌드.
+- **티어 캐릭터 추가/재배치는 `src/data/tiers.json` 을 직접** 고치고 빌드한다(2026-09-19 이후 정본).
   공식 티어표와 커스텀 메이커 둘 다 이 데이터를 보므로 한 번에 따라온다(정의가 어긋나 꼬이지 않음).
+  ⚠️ `npm run extract:tiers`·`npm run sync:render` 는 바닐라 HTML 로 `tiers.json` 을 덮어써 09-20 이후 수정이 사라지므로 실행하지 않는다. 상세: `RDMD/features/tier-class.md`
 - 등급별 색은 `tier-board.css` 의 `.tier-scope[data-tier="N"]` 블록에서만 수정한다.
 - 커스텀 메이커 저장 형식(`{ "<0-based 등급>_<세부등급>": […] }`)과 localStorage 키(`customMakerTierState`)는
   바닐라·게시판 DB 와 호환되어야 하므로 바꾸지 않는다.

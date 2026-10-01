@@ -3,6 +3,8 @@
 // ========================================================
 // tiers.json 은 scripts/extract-tiers.mjs 가 root-render/tier-class/tierN.html(정본)에서
 // 뽑아낸 생성물이다. 화면(공식 티어표 · 커스텀 메이커)은 전부 이 모듈만 바라본다.
+// ※ 2026-09-19 이후 root-render 는 수정 금지라 tiers.json 자체가 정본이 됐다 — 수정은 tiers.json 에 직접 하고,
+//   extract-tiers.mjs / npm run sync:render 는 바닐라 HTML 로 덮어써 최근 수정이 사라지므로 돌리지 않는다.
 //
 // 세부등급(갑급/을급/…)·캐릭터 풀도 여기서 JSON 으로부터 "파생"시킨다. 하드코딩하지
 // 않는 이유: 이벤트로 등급 구성이나 캐릭터가 바뀌어도 extract 만 다시 돌리면 티어표와

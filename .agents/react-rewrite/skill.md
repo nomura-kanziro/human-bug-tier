@@ -37,8 +37,8 @@ description: >
 1. **이제 React 가 정본이다.** 바닐라를 참고는 하되 고치거나 동기화하지 않는다
 2. 스타일은 `src/styles/` 에서 직접 수정한다. React 전용 규칙은 여전히
    **`src/styles/react-extra.css`** 에 모으면 추적이 쉽다
-3. 티어·캐릭터 데이터는 `src/data/tiers.js` 단일 소스만 본다. 변경은
-   `root-render/tier-class/tierN.html` 수정 → `npm run extract:tiers` → 빌드 (하드코딩 금지)
+3. 티어·캐릭터 데이터는 `src/data/tiers.js` 단일 소스만 본다(하드코딩 금지). 변경은
+   `src/data/tiers.json` 을 직접 고친다(2026-09-19 이후 정본). `npm run extract:tiers`·`sync:render` 는 바닐라 HTML 로 덮어써 최근 수정이 사라지므로 실행 금지
 4. API 호출은 `lib/api.js` 만 쓴다 — 유저는 `apiRequest`, 관리자는 `adminRequest`(= `admin: true`).
    권한·토큰·SHA-256 재설정·서버 `requireAdmin` 을 약화하지 않는다(프론트 가드는 UX 용).
    이미지 경로는 `tierImageUrl()` 만 쓴다

@@ -64,6 +64,7 @@ RDMD/frontend/
 | [06-tier1-2-reorder-record.md](./02-tier-class/06-tier1-2-reorder-record.md) | — | 1·2티어 순서 재배치 |
 | [07-sergio-hozaki-reorder-record.md](./02-tier-class/07-sergio-hozaki-reorder-record.md) | — | 세르지오 1정(라이덴 뒤)·호자키 2갑(다비츠 뒤) |
 | [08-hayami-taiki-duplicate-record.md](./02-tier-class/08-hayami-taiki-duplicate-record.md) | — | 5티어 하야미 타이키(이미지 없는 상자) · 7티어 카타쿠라 중복 제거 |
+| [09-tier1-2-update-record.md](./02-tier-class/09-tier1-2-update-record.md) | — | 1·2티어 수정(우류 1장·츠루기 갑급·세르지오 정급 맨 앞·이미지 교체)·9티어 야시키 중복 + 티어 데이터 정본은 `tiers.json`(extract 금지) |
 
 ## 03-custom-maker
 

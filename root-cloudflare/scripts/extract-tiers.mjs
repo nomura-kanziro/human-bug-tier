@@ -1,6 +1,8 @@
 // root-render/tier-class/tier1~9.html(바닐라 정본)을 파싱해 src/data/tiers.json 을 만든다.
 // 캐릭터 추가/재배치는 여전히 바닐라 HTML에서 하고, 이 스크립트로 React 데이터를 다시 뽑는다.
 //   node scripts/extract-tiers.mjs
+// ⚠️ 2026-09-19 이후 root-render 는 수정 금지이고 티어 수정은 src/data/tiers.json 에 직접 하므로 이 스크립트를 실행하지 않는다.
+//    실행하면 tiers.json 이 바닐라 HTML 기준으로 덮어써져 09-20 이후 수정(캐릭터 정리·이미지 교체 등)이 사라진다.
 import { readFileSync, writeFileSync } from 'node:fs';
 import { dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';

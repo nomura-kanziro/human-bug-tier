@@ -1,64 +1,73 @@
 # 공식 티어표 (tier-class)
 
-휴먼버그대학교 캐릭터를 **1티어 ~ 9티어**로 나눈 정적 정보 페이지입니다.
+휴먼버그대학교 캐릭터를 **1티어 ~ 9티어**(각 등급 안에 갑·을·병·정급 등 세부등급)로 나눈 정보 페이지입니다.
 
-## 위치
+> 2026-10-02 갱신 — 현행 React 기준으로 다시 썼다. **티어 데이터의 정본은 `root-cloudflare/src/data/tiers.json`** 이다.
+> 바닐라 시절 절차("`root-render/tier-class/tierN.html` 을 고치고 `npm run extract:tiers`")는 **쓰지 않는다** — 아래 "주의" 참고.
+
+## 위치 (React)
 
 ```
-tier-class/
-├── tier1.html … tier9.html
-├── tier1.css  … tier9.css
-└── README.md (있는 경우)
+root-cloudflare/
+├── src/data/tiers.json          # ★ 정본 — 등급 제목·세부등급(rows)·캐릭터({ img, alt, name })
+├── src/data/tiers.js            # tiers.json 을 읽어 TIERS·ALL_CHARACTERS 등으로 파생(화면은 이것만 본다)
+├── src/pages/TierPage.jsx       # /tier/:n — 1~9등급을 한 페이지에서 navbar 로 전환(/tier → /tier/1)
+├── src/styles/tier-board.css    # 등급별 색(.tier-scope[data-tier="N"])·카드
+├── src/styles/tier-nav.css
+└── public/tier-media/tier-image/1 tier/ … 9 tier/   # 캐릭터 이미지(빌드 시 dist 로 복사)
 ```
 
-이미지 자산: `tier-image/1 tier/` ~ `9 tier/` 및 공용 로고 등.  
-공식 1~9티어 페이지 카드는 **해당 티어 폴더의 이미지**와 연결한다.
+이미지 주소는 `src/lib/paths.js` `tierImageUrl()` 로만 만든다(`/tier-media/tier-image/` + 인코딩).
 
-## 기능
+## 이 데이터를 함께 쓰는 곳
 
-- 티어별 캐릭터 카드(이미지 + 이름)
-- 메인 페이지 **공식 티어표** 섹션 카드에서 각 페이지로 이동 (`#home-tiers`)
-- 각 티어 페이지 상단 **이전 티어표 / 다음 티어표** 네비 (`tier-nav.js`). 1티어의 이전·9티어의 다음은 반투명 비활성
-- 헤더 사이드 메뉴「티어표」진입
-- 커스텀 메이커 캐릭터 풀은 이 HTML을 파싱해 구성 (`loadCharactersFromTierClass`)
-
-## 데이터 성격
-
-- **DB 없음** — HTML/CSS 정적 페이지  
-- 캐릭터 추가·수정은 파일 직접 편집  
-- 커스텀 메이커는 이 페이지들을 파싱해 캐릭터 풀을 구성할 수 있음 (`loadCharactersFromTierClass` 등)
+| 사용처 | 방식 |
+|---|---|
+| 공식 티어표 `/tier/:n` | `tiers.js` 의 `TIERS` |
+| 커스텀 메이커 캐릭터 풀 | `tiers.js` 의 `ALL_CHARACTERS`(+ 저장된 배치를 `makerState.js` 가 현재 카탈로그로 다시 맞춤) |
+| 게시글 상세 | `TIERS` |
+| 이벤트 매일 퀴즈(서버) | `backend/data/tierCatalog.js` 가 같은 `tiers.json` 파일을 읽는다 |
+| 행운 뽑기(서버) | **별도** `backend/data/luckPool.js`(티어별 이름·이미지 경로) — `tiers.json` 을 읽지 않는다 |
 
 ## 유지보수
 
 ### 캐릭터 추가
 
-1. `tier-image/N tier/` 에 이미지 추가  
-2. 해당 `tierN.html`에 같은 카드 마크업(이미지 경로 + 이름) 추가  
-3. 커스텀 메이커를 새로고침해 풀에 보이는지 확인  
+1. 이미지를 `root-cloudflare/public/tier-media/tier-image/N tier/` 에 넣는다
+2. `tiers.json` 의 해당 등급 `rows[세부등급].items` 지정 위치에 `{ "img": "N tier/파일명", "alt": "이름", "name": "이름" }` 추가
+3. 빌드(`npm run build`) 후 `/tier/N` 과 커스텀 메이커 풀에서 확인
 
 ### 티어 이동 (승격·추락)
 
-1. 이미지를 **출발 티어 폴더 → 도착 티어 폴더**로 옮긴다 (`git mv`)  
-2. 출발 `tierN.html`에서 카드를 빼고, 도착 페이지의 갑/을/병(정) **지정 위치**에 넣는다  
-3. `img src`가 새 폴더를 가리키는지 확인  
+1. 이미지를 출발 티어 폴더 → 도착 티어 폴더로 옮긴다(`git mv`)
+2. `tiers.json` 에서 항목을 빼서 도착 등급의 지정 세부등급·위치에 넣고 `img` 경로를 새 폴더로 고친다
+3. 그 캐릭터가 `luckPool.js` 에 있으면 그쪽 티어 키·`imagePath` 도 고친다
 
-같은 티어 안 재배치는 HTML 카드 순서만 바꾼다. 폴더는 그대로 둔다.
+같은 티어 안 재배치는 `tiers.json` 의 항목 순서만 바꾼다. 폴더는 그대로 둔다.
 
-최근 예 (Render `root-render/`만):
+### 이미지 교체
 
-- 세르지오: 1병 → 1정, 라이덴 바로 뒤 (`tier1.html`)
-- 호자키 킷페이: 2을 → 2갑, 다비츠 바로 뒤 (`tier2.html`)
+- **같은 파일명으로 덮어쓰면** 데이터 수정이 필요 없다(예: 2026-10-01 토마 타츠노신·호자키 킷페이).
+- **확장자·파일명이 바뀌면** `tiers.json` 과 `luckPool.js` 의 경로를 **둘 다** 고친다(예: 코사카 신타로 jpg → png — `luckPool.js` 를 안 고치면 행운 뽑기에서 깨진 이미지).
 
-### 스타일
+## ⚠️ 주의 — `extract:tiers` · `sync:render` 실행 금지
 
-- 공통 레이아웃은 `common.css` / `Header_Footer.css`  
-- 티어 전용은 `tierN.css`  
-- 과거 이슈: `body { text-align: center }` 로 인한 레이아웃 쏠림 → 제거됨 (information1 계열)
+`root-cloudflare/scripts/extract-tiers.mjs`(`npm run extract:tiers`, `npm run sync:render` 에도 포함)는
+`root-render/tier-class/tierN.html` 을 파싱해 **`tiers.json` 을 통째로 덮어쓴다**. 그런데 2026-09-19 이후 `root-render/` 는 수정 금지라
+그 뒤의 티어표 수정은 전부 `tiers.json` 에 직접 했고, 바닐라 HTML 에는 반영돼 있지 않다.
+2026-10-02 확인 기준 `root-render` 쪽에는 우류 타츠오미 3장·9티어 야시키 중복·코사카 `.jpg`(삭제된 파일)·5티어 스가모가 그대로 남아 있어,
+실행하면 09-20 이후 수정(`0ba93ea`·`e6478dd`·`8ef5db4`·`8f75701`·`ca7736c`)이 되돌아가고 코사카 이미지가 깨진다.
 
-### 경로
+## 최근 변경
 
-- 하위 폴더이므로 header/footer 로드 시 `getBasePath()` 필수  
-- 이미지 경로는 상대 또는 base 보정 규칙 준수  
+| 날짜 | 커밋 | 내용 |
+|---|---|---|
+| 09-20 | `e6478dd` | 9티어 카제타니·카모카와 이미지 jpg 교체, 카제티니 오타 → 카제타니 |
+| 09-20 | `0ba93ea` | 5티어 스가모 제거 |
+| 09-21 | `8ef5db4` · `8f75701` | 5티어 하야미 타이키 · 7티어 카타쿠라 중복 제거 |
+| 10-01 | `ca7736c` | 1티어: 우류 타츠오미 `uryu3paze.webp` 1장만, 츠루기 시노부 을급 → **갑급**(우류 뒤), 세르지오 정급 **맨 앞**, 토마 타츠노신 이미지 교체 / 2티어: 코사카 신타로(png)·호자키 킷페이 이미지 교체 / 9티어: 야시키 마시나리 중복("야사키 마사나리") 제거 |
+
+상세 기록: [`../frontend/02-tier-class/`](../frontend/02-tier-class/)
 
 ## 권한
 

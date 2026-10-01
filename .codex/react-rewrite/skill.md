@@ -27,7 +27,7 @@ description: >
 
 1. 바닐라 CSS·티어 데이터·`tier-media` 변경 시 **`npm run sync:render`** 먼저 (손 복사 금지)
 2. React 전용 스타일은 **`src/styles/react-extra.css`** 에만 (나머지는 동기화 산출물)
-3. 티어 데이터는 `src/data/tiers.js` 하나 — 변경은 `root-render/tier-class` → `npm run extract:tiers`
+3. 티어 데이터는 `src/data/tiers.js` 하나 — 변경은 `src/data/tiers.json` 을 직접 고친다(2026-09-19 이후 정본). `npm run extract:tiers`·`sync:render` 는 바닐라 HTML 로 덮어써 최근 수정이 사라지므로 실행 금지
 4. API 는 `lib/api.js` — 유저 `apiRequest`, 관리자 `adminRequest`. 이미지는 `tierImageUrl()`
 5. `requireAdmin`·SHA-256 재설정·토큰 규칙 유지 (프론트 가드는 UX 용)
 6. 검증: `npm run build`(root-cloudflare) → `npm start`(backend) → `:5000`

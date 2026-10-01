@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 351 |
+| **커밋 수** | 352 |
 | **기간** | 2026-03-20 ~ 2026-10-02 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -380,6 +380,7 @@
 | 349 | 2026-10-02 | [`pending`](#pending349) | docs(admin): 관리자 문서 React 기준 현행화 — 화면 구성·이벤트 관리·행운 뽑기 관리 반영, 관리자 스킬 4종 동기화 |
 | 350 | 2026-10-02 | [`pending`](#pending350) | docs(backend): 백엔드 API·모델 맵 현행화 — 행운 뽑기·이벤트·프로필 API와 모델·유틸 추가, 백엔드 스킬 4종 공통 규칙 반영 |
 | 351 | 2026-10-02 | [`pending`](#pending351) | docs(auth): 인증 메일 공용 템플릿 기록 추가, 가입 메일 발송 순서 정정 — 인증 기능 문서 React 기준·인증 스킬 4종·.env.example 주석 |
+| 352 | 2026-10-02 | [`pending`](#pending352) | docs(tier-class): 티어 데이터 정본을 tiers.json 으로 정정(extract·sync 실행 금지) — 티어표 문서·스킬 React 기준 재작성, 1·2·9티어 수정 기록 |
 
 ---
 
@@ -6786,5 +6787,23 @@
 - **요약**: 09-29 인증 메일 3종 공용 템플릿(d549b2c·917e9de·3ab8238, 서버 APP_URL 정식 주소 변경)을 기록(03-auth/10)으로 남기고 features/auth.md 에 "메일 모양" 절 추가. 대조 중 발견한 사실 불일치 정정 — 가입 메일 발송 순서가 문서·인증 스킬·backend/.env.example 주석에 "Gmail 먼저(기본 on)"로 남아 있었으나 2026-09-10 1c7f473 부터 기본은 Brevo→Resend→Gmail, SIGNUP_MAIL_SKIP_API=true 일 때만 Gmail 우선(mail.js shouldSkipApiForSignupMail 확인). auth.md 는 위치를 React(Login·SignUp·FindAccount·ResetPassword·AuthShell·authApi)로, 아이디 찾기·재설정 메일 설명·APP_URL(Render 서술 → 운영 human-bug-tier.com)도 고침. 08 기록(가입 메일 Gmail 우선)에 "이후 변경" 추가. 917e9de 의 git 메시지 누락 사실과 올바른 메시지를 10 기록에 명시.
 - **주요 파일**: `RDMD/features/auth.md`, `RDMD/backend/03-auth/10-mail-template-record.md`(신규), `RDMD/backend/03-auth/08-signup-gmail-and-admin-verify-record.md`, `RDMD/backend/README.md`, 인증 스킬 4종(`.agents`·`.claude`·`.codex`·`.groks`), `backend/.env.example`(주석만)
 - **관련 RDMD**: `RDMD/backend/03-auth/10-mail-template-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending352"></a>
+
+### 352. 2026-10-02 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(tier-class): 티어 데이터 정본을 tiers.json 으로 정정(extract·sync 실행 금지) — 티어표 문서·스킬 React 기준 재작성, 1·2·9티어 수정 기록
+- **git**: `git show pending`
+- **범위**: docs / 공식 티어표 (+ 코드 주석 2곳 경고 추가)
+- **요약**: 티어표 기능 문서·스킬 4종·react-rewrite 스킬 3종·root-cloudflare/README 가 "root-render/tier-class/tierN.html 이 정본 → npm run extract:tiers" 로 안내하고 있었는데, 2026-09-19 이후 root-render 는 수정 금지라 09-20 이후 수정(e6478dd·0ba93ea·8ef5db4·8f75701·ca7736c)은 tiers.json 에만 있다. root-render 쪽에 우류 3장·야사키 중복·코사카 jpg(삭제된 파일)·스가모가 남아 있는 것을 확인 — extract·sync:render 를 돌리면 최근 수정이 되돌아가고 코사카 이미지가 깨진다. 정본 = tiers.json, 두 명령 실행 금지로 고치고, features/tier-class.md·티어표 스킬 4종을 React 구조(tiers.json → tiers.js, TierPage /tier/:n, public/tier-media/tier-image, 같은 데이터를 쓰는 곳·luckPool 은 별도, 이미지 교체 규칙)로 다시 씀. 코드 주석은 지우지 않고 tiers.js·extract-tiers.mjs 에 경고 줄만 덧붙임(동작 변경 없음, tiers.json 미변경, 빌드 확인). 10-01 1·2·9티어 수정 기록(02-tier-class/09) 추가 — 7·9티어의 이름이 다른 같은 이미지 2건은 확인 대기로 명시.
+- **주요 파일**: `RDMD/features/tier-class.md`, 티어표 스킬 4종(`.agents`·`.claude`·`.codex`·`.groks`), react-rewrite 스킬 3종(`.agents`·`.codex`·`.groks`), `root-cloudflare/README.md`, `root-cloudflare/src/data/tiers.js`(주석), `root-cloudflare/scripts/extract-tiers.mjs`(주석), `RDMD/frontend/02-tier-class/09-tier1-2-update-record.md`(신규), `RDMD/frontend/README.md`
+- **관련 RDMD**: `RDMD/frontend/02-tier-class/09-tier1-2-update-record.md`
 
 [▲ 목차로](#목차)
