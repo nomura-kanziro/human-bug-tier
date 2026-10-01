@@ -384,7 +384,7 @@
 | 353 | 2026-10-02 | [`2e41a4f`](#2e41a4f) | docs(event): 매일 퀴즈 기록 15건 보관 기록 추가 |
 | 354 | 2026-10-02 | [`8ab08e9`](#8ab08e9) | docs(notice): 공지 목록 제목 점 간격 기록 추가 |
 | 355 | 2026-10-02 | [`50cce47`](#50cce47) | docs(summary): 작업 이력 요약 갱신 — 9/3~9/24 사후 요약(Phase 8b)·Phase 10 추가, 운영 주소·배포 상태·체크리스트·제약 현행화 |
-| 356 | 2026-10-02 | [`pending`](#pending356) | docs: 깨진 링크 정정 — README 의 .groks·.codex 폴더 링크, 행운 뽑기 관리 기록의 배지 표기 |
+| 356 | 2026-10-02 | [`04c5007`](#04c5007) | docs: 깨진 링크 정정 — README 의 .groks·.codex 폴더 링크, 행운 뽑기 관리 기록의 배지 표기 |
 
 ---
 
@@ -6869,15 +6869,15 @@
 
 ---
 
-<a id="pending356"></a>
+<a id="04c5007"></a>
 
-### 356. 2026-10-02 — `pending`
+### 356. 2026-10-02 — `04c5007`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `04c5007`
+- **hash (full)**: `04c500789058edfccd32d678ee4805cc8750055a`
 - **author**: nomura
 - **message**: docs: 깨진 링크 정정 — README 의 .groks·.codex 폴더 링크, 행운 뽑기 관리 기록의 배지 표기
-- **git**: `git show pending`
+- **git**: `git show 04c5007`
 - **범위**: docs
 - **요약**: 10-02 문서 갱신 마무리로 바뀐 문서 49개의 상대 링크 202개를 검사해 깨진 4개를 고침. README.md 의 에이전트 스킬 링크 2개는 원래부터 `./groks/README.md`·`./codex/README.md` 를 가리켰으나 실제 폴더는 `.groks/`·`.codex/`(점으로 시작) → 경로 정정. 행운 뽑기 관리 화면 기록(07-admin/12)에 쓴 "[관리자](파랑) / [탈퇴](회색)" 가 마크다운 링크로 해석돼 「관리자」(파랑) 표기로 바꿈. 재검사 결과 깨진 링크 0.
 - **주요 파일**: `README.md`, `RDMD/frontend/07-admin/12-admin-luck-manager-record.md`
