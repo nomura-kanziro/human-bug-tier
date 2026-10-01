@@ -92,7 +92,8 @@
 |------|:-------:|:---------------------:|
 | `backend` :5000 (권장) | O | O |
 | 로컬 정적 포트(5500 등) + backend 5000 | O | O (API Base 자동) |
-| Oracle Cloud `https://hbt-tier.duckdns.org` (현재 운영) | O | O |
+| 정식 주소 `https://human-bug-tier.com` (Cloudflare Pages, 현재 운영) | O | O (`/api` 를 Oracle 서버로 프록시) |
+| Oracle Cloud 서버 직접 `https://hbt-tier.duckdns.org` | O | O (운영자 확인용 — 회원에게 안내하지 않음) |
 | Cloudflare Pages `human-bug-tier.pages.dev` | O | O (Pages Function 이 `/api` 를 Oracle 로 프록시 — 함수 배포 후) |
 | Render.com (레거시, 베타 종료) | O | O |
 | GitHub Pages | O (미리보기) | X (`GITHUB_STATIC`) |

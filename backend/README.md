@@ -4,7 +4,7 @@
 
 프론트엔드 정적 파일도 함께 서빙하며, 모든 API 요청을 처리합니다.
 
-- 로컬 / Tunnel / Oracle Cloud: `../root-cloudflare/dist` (운영 서버 `https://hbt-tier.duckdns.org`, 배포 [`deploy/oracle/`](./deploy/oracle/README.md))
+- 로컬 / Tunnel / Oracle Cloud: `../root-cloudflare/dist` (운영: 정식 주소 `https://human-bug-tier.com` → Oracle 서버 `https://hbt-tier.duckdns.org`, 배포 [`deploy/oracle/`](./deploy/oracle/README.md))
 - Render.com: `../root-render` (`RENDER=true`)
 
 ## 주요 역할
@@ -98,7 +98,7 @@ backend/
 
 이메일 기능 사용 시:
 - `EMAIL_USER`, `EMAIL_APP_PASSWORD`
-- `APP_URL` (메일 링크 주소 — 운영 서버는 `https://hbt-tier.duckdns.org`)
+- `APP_URL` (메일 링크 주소 — 운영 서버는 정식 주소 `https://human-bug-tier.com`)
 
 유튜브 커뮤니티 → 새 소식 (선택, 기본 켜짐):
 - `YOUTUBE_POSTS_URL` (기본 휴먼버그대학교 `/posts`)

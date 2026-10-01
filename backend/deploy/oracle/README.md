@@ -4,20 +4,22 @@
 Node 서버 하나가 API 와 React 빌드(`root-cloudflare/dist`)를 같이 서빙하므로(로컬 `:5000` 과 똑같은 구조) 코드 수정은 없다.
 
 ```
-방문자 ──HTTPS──▶ Oracle VM: nginx :443(Let's Encrypt) ──▶ Node(pm2) :5000 ──▶ MongoDB Atlas
-방문자 ──HTTPS──▶ Cloudflare Pages(human-bug-tier.pages.dev) ── /api/* 프록시 ──▶ 위 Oracle 주소
+방문자 ──HTTPS──▶ Cloudflare Pages(human-bug-tier.com · human-bug-tier.pages.dev) ── /api/* 프록시 ──▶ 아래 Oracle 주소
+Pages Function / 운영자 확인 ──HTTPS──▶ Oracle VM(hbt-tier.duckdns.org): nginx :443(Let's Encrypt) ──▶ Node(pm2) :5000 ──▶ MongoDB Atlas
 ```
+
+> **주소 정리 (2026-09-29~)**: 회원이 쓰는 정식 주소는 **`https://human-bug-tier.com`**(Cloudflare Pages 에 연결된 도메인)이고, 서버 `.env` 의 `APP_URL`(인증·재설정 메일 링크)도 이 주소다. `https://hbt-tier.duckdns.org` 는 Oracle 서버 직접 주소로, Pages Function 이 `/api/*` 를 넘기는 대상이자 서버 `/health` 확인용이다(Pages 는 `/api/*` 만 넘기므로 `human-bug-tier.com/health` 는 화면 HTML 이 나온다). 회원에게 duckdns 주소를 안내하지 않는다 — 일부 보안 프로그램·확장이 `*.duckdns.org` 를 차단한다.
 
 ## 지금 운영 중인 서버 (2026-09-28 배포)
 
 | 항목 | 값 |
 |---|---|
-| 주소 | **https://hbt-tier.duckdns.org/** (헬스: `/health`) |
+| 주소 | 서버 직접 **https://hbt-tier.duckdns.org/** (헬스: `/health`) — 회원용 정식 주소는 `https://human-bug-tier.com` |
 | VM | 공인 IP `161.33.190.199`, Ubuntu 24.04, VM.Standard.E2.1.Micro(1 GB, x86_64) + 스왑 2 GB |
 | SSH | `ssh -i ~/.ssh/oracle_hbt_rsa ubuntu@161.33.190.199` (Oracle 콘솔에서 받은 RSA 키 `ssh-key-2026-09-27.key` 를 복사해 둔 것) |
 | 도메인 | DuckDNS 무료 서브도메인 `hbt-tier.duckdns.org` → A `161.33.190.199` |
 | HTTPS | Let's Encrypt(certbot, nginx 플러그인). 자동 갱신 `certbot.timer`. http → https 301 |
-| 서버 `APP_URL` | `https://hbt-tier.duckdns.org` |
+| 서버 `APP_URL` | `https://human-bug-tier.com` (2026-09-29 변경, 그 전 `https://hbt-tier.duckdns.org`) |
 | 버전 | Node 22, pm2 7, nginx 1.24, certbot 2.9 |
 
 certbot 이 nginx 설정의 `server_name` 을 도메인으로 바꾸고 443 블록을 추가했기 때문에,

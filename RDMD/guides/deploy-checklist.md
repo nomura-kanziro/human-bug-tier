@@ -25,13 +25,13 @@
 
 ---
 
-## O. Oracle Cloud (현재 운영 — `https://hbt-tier.duckdns.org`)
+## O. Oracle Cloud (현재 운영 — 정식 `https://human-bug-tier.com`, 서버 직접 `https://hbt-tier.duckdns.org`)
 
 명령은 레포 루트 Git Bash, `OCI_HOST`·`OCI_KEY` 설정 후 ([가이드](../../backend/deploy/oracle/README.md)).
 
 - [ ] 로컬 `.env` 가 커밋에 없음 (서버 시크릿은 `/opt/human-bug-tier/shared/.env` 에만)
 - [ ] `bash backend/deploy/oracle/deploy.sh deploy` → 마지막 줄 `배포 완료: hbt-...`
-- [ ] `https://hbt-tier.duckdns.org/health` → `status: ok`, `db: connected`, `resolvedAppUrl` 이 https 주소
+- [ ] `https://hbt-tier.duckdns.org/health` → `status: ok`, `db: connected`, `resolvedAppUrl` 이 `https://human-bug-tier.com` (`/health` 는 Pages 가 넘기지 않으므로 서버 직접 주소로 확인)
 - [ ] 메인·티어·로그인·게시판 확인
 - [ ] 실패 시 `deploy.sh logs` → `deploy.sh rollback`
 - [ ] `deploy.sh setup` 을 다시 돌렸다면 서버에서 certbot 재실행 (setup 이 nginx HTTPS 설정을 덮어씀)
@@ -90,7 +90,7 @@
 - [ ] getBasePath / 상대 링크로 네비만 확인  
 - [ ] common.js 가 `GITHUB_STATIC` 처리하는지  
 
-풀 기능은 **Oracle 서버(`https://hbt-tier.duckdns.org`)** 를 사용하세요.
+풀 기능은 정식 주소 **`https://human-bug-tier.com`** 을 사용하세요.
 
 ---
 

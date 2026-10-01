@@ -11,8 +11,8 @@
 |------|-----------|
 | 로컬 `cd backend && npm start` (기본) | **`root-cloudflare/dist/`** (빌드 결과. 없으면 이 폴더 자체 → 아무것도 안 보임, 먼저 빌드) |
 | Render.com (`RENDER=true`) | `root-render/` (바닐라, ⛔ 베타 종료) |
-| Oracle Cloud (`https://hbt-tier.duckdns.org`) | `dist/` — 로컬과 같은 구조로 backend 가 서빙 (`backend/deploy/oracle/`) |
-| Cloudflare Pages (`human-bug-tier.pages.dev`) | `dist/` + `functions/api/[[path]].js`(`/api/*` → Oracle 프록시, 백엔드 주소 환경변수 `API_ORIGIN`). 이 폴더에서 `npx wrangler pages deploy dist` |
+| Oracle Cloud (서버 직접 `https://hbt-tier.duckdns.org`) | `dist/` — 로컬과 같은 구조로 backend 가 서빙 (`backend/deploy/oracle/`) |
+| Cloudflare Pages (정식 `human-bug-tier.com` · `human-bug-tier.pages.dev`) | `dist/` + `functions/api/[[path]].js`(`/api/*` → Oracle 프록시, 백엔드 주소 환경변수 `API_ORIGIN`). 이 폴더에서 `npx wrangler pages deploy dist` |
 
 ## 실행
 

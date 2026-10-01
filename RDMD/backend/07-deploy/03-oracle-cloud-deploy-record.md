@@ -91,3 +91,10 @@ JS 번들·manifest·캐릭터 이미지(webp) 200, `/api/tierlists`·`/api/even
 ## Cloudflare Pages 연결
 
 프론트(Pages) → 이 서버 연결은 [`../../frontend/09-deploy-path/05-cloudflare-pages-api-proxy-record.md`](../../frontend/09-deploy-path/05-cloudflare-pages-api-proxy-record.md).
+
+## 이후 변경 (2026-09-29)
+
+- 서버 `shared/.env` 의 `APP_URL` 을 `https://hbt-tier.duckdns.org` → **`https://human-bug-tier.com`** 으로 바꾸고 `pm2 reload --update-env`.
+  인증·재설정 메일 링크(로고·인증 버튼·문의 링크)가 Cloudflare Pages 에 연결된 정식 주소로 나간다. 인증 링크 `/api/auth/verify/...` 는 Pages Function 이 서버로 넘긴다.
+- 이유: 일부 브라우저 확장·보안 프로그램이 `*.duckdns.org` 를 차단해 메일 링크를 누른 회원에게 "차단됨"이 뜰 수 있다. duckdns 는 이제 Pages 프록시 대상·`/health` 확인용 서버 직접 주소로만 쓴다.
+- 확인: `/health` 의 `resolvedAppUrl` = `https://human-bug-tier.com`, 서버에서 만든 메일 HTML 에 duckdns 없음, `human-bug-tier.com` 에서 인증 링크(서버 응답)·로고·`/login`·`/inquiry`·재설정 링크 정상.

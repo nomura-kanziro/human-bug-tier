@@ -15,9 +15,11 @@
 > 프로젝트 빌드 설정 **Root directory = `root-cloudflare`**, Build command `npm run build`, Output `dist` 로 고치고 재빌드해 `https://human-bug-tier.pages.dev/api/notices` JSON 응답을 확인했다.
 
 ```
-방문자 ─▶ https://human-bug-tier.pages.dev  ─ 정적(dist) ─ /api/* ─▶ Pages Function ─▶ https://hbt-tier.duckdns.org
-방문자 ─▶ https://hbt-tier.duckdns.org ─▶ nginx(443) ─▶ Node :5000 (API + dist 같이 서빙) ─▶ MongoDB Atlas
+방문자 ─▶ https://human-bug-tier.com (정식) · https://human-bug-tier.pages.dev  ─ 정적(dist) ─ /api/* ─▶ Pages Function ─▶ https://hbt-tier.duckdns.org
+Pages Function / 운영자 확인 ─▶ https://hbt-tier.duckdns.org ─▶ nginx(443) ─▶ Node :5000 (API + dist 같이 서빙) ─▶ MongoDB Atlas
 ```
+
+> **주소 정리 (2026-09-29~)**: 회원이 쓰는 정식 주소는 **`https://human-bug-tier.com`**(Cloudflare Pages 에 연결된 도메인)이고, 서버 `.env` 의 `APP_URL`(인증·재설정 메일 링크)도 이 주소다. `https://hbt-tier.duckdns.org` 는 Oracle 서버 직접 주소로, Pages Function 이 `/api/*` 를 넘기는 대상이자 서버 `/health` 확인용이다(Pages 는 `/api/*` 만 넘기므로 `human-bug-tier.com/health` 는 화면 HTML 이 나온다). 회원에게 duckdns 주소를 안내하지 않는다 — 일부 보안 프로그램·확장이 `*.duckdns.org` 를 차단한다.
 
 <details>
 <summary>이전 선언 (2026-09-01, 참고용)</summary>
@@ -236,10 +238,10 @@ cloudflared service install
 
 | 항목 | 값 |
 |---|---|
-| 주소 | `https://hbt-tier.duckdns.org/` (DuckDNS 무료 도메인, Let's Encrypt) |
+| 주소 | 정식 `https://human-bug-tier.com`(Cloudflare Pages) · 서버 직접 `https://hbt-tier.duckdns.org/`(DuckDNS 무료 도메인, Let's Encrypt — 프록시 대상·`/health` 확인용) |
 | 구조 | nginx 443 → pm2 Node `:5000` (API + `root-cloudflare/dist` 같이 서빙, 로컬 `:5000` 과 동일) |
 | 배포 | 레포 루트 Git Bash: `bash backend/deploy/oracle/deploy.sh deploy` (로컬 코드를 묶어 scp — 푸시 불필요) |
-| 시크릿 | 서버 `/opt/human-bug-tier/shared/.env` 에만. `APP_URL=https://hbt-tier.duckdns.org` |
+| 시크릿 | 서버 `/opt/human-bug-tier/shared/.env` 에만. `APP_URL=https://human-bug-tier.com` (2026-09-29 duckdns 에서 변경 — 메일 링크가 정식 주소로 나감) |
 
 - 서버는 한 곳에서만 돌린다(스케줄러). 같은 Atlas DB 로 로컬 `npm start` 를 오래 켜 두지 않는다.
 - `http://<VM IP>/` 는 404 (certbot 이후 도메인으로만 받음).

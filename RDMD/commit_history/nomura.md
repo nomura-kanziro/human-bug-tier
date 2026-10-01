@@ -7,8 +7,8 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 346 |
-| **기간** | 2026-03-20 ~ 2026-10-01 |
+| **커밋 수** | 347 |
+| **기간** | 2026-03-20 ~ 2026-10-02 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
 > 폴더 안내: [README.md](./README.md)  ·  상세 기능 일지: [../frontend/](../frontend/README.md) · [../backend/](../backend/README.md)
@@ -375,6 +375,7 @@
 | 344 | 2026-10-01 | [`ab1728b`](#ab1728b) | feat(event): 매일 퀴즈 기록을 회원당 최근 15개만 남기고 오래된 것부터 자동 삭제 |
 | 345 | 2026-10-01 | [`a9df3ba`](#a9df3ba) | feat(admin): 행운 뽑기 관리 신설 — 회원별 뽑기 기록과 포인트 증감 원장 조회 |
 | 346 | 2026-10-01 | [`c3bcd9a`](#c3bcd9a) | chore(footer): 사이트 버전 표시 1.0.0 → 1.0.1 |
+| 347 | 2026-10-02 | [`pending`](#pending347) | docs(deploy): 정식 주소 human-bug-tier.com·APP_URL 변경 반영 — duckdns 는 서버 직접 주소(프록시 대상·헬스 확인)로 정리 |
 
 ---
 
@@ -6691,5 +6692,23 @@
 - **요약**: 9월 29일~10월 1일 업데이트(인증 메일 개편·티어표 수정·퀴즈 기록 정리·행운 뽑기 관리)를 반영해 푸터에 표시되는 사이트 버전을 1.0.0 에서 1.0.1 로 올림. 버전 문자열은 `Footer.jsx` 의 `SITE_VERSION` 한 곳에서 수동 관리(이전 0.5.0 → 1.0.0 변경과 같은 방식). `backend/package.json` 의 version 은 사이트 표시 버전과 별개라 그대로 둠.
 - **주요 파일**: `root-cloudflare/src/components/Footer.jsx`
 - **관련 RDMD**: —
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending347"></a>
+
+### 347. 2026-10-02 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(deploy): 정식 주소 human-bug-tier.com·APP_URL 변경 반영 — duckdns 는 서버 직접 주소(프록시 대상·헬스 확인)로 정리
+- **git**: `git show pending`
+- **범위**: docs / 배포
+- **요약**: 2026-09-29 서버 `APP_URL` 을 `https://human-bug-tier.com` 으로 바꾼 것을 배포 문서 전체에 반영. 회원용 정식 주소 = `human-bug-tier.com`(Cloudflare Pages 도메인), `hbt-tier.duckdns.org` = Oracle 서버 직접 주소(Pages 프록시 대상·`/health` 확인용, 회원에게 안내하지 않음 — `*.duckdns.org` 차단 사례)로 정리. Pages 는 `/api/*` 만 넘겨 `human-bug-tier.com/health` 는 화면 HTML 이므로 헬스 확인은 duckdns 로 하도록 명시. 실제 확인: 두 Pages 주소는 `server: cloudflare`·`/health` HTML, duckdns 는 nginx·`/health` JSON, 서버 `APP_URL=https://human-bug-tier.com`. Oracle 배포 기록에 "이후 변경" 절 추가(본문은 당시 사실이라 유지).
+- **주요 파일**: `CLOUDFLARE.md`, `backend/deploy/oracle/README.md`, `backend/README.md`, `README.md`, `root-cloudflare/README.md`, `RDMD/features/overview.md`, `RDMD/guides/deploy-checklist.md`, 배포 스킬 4종(`.agents`·`.claude`·`.codex`·`.groks`), `RDMD/backend/07-deploy/03-oracle-cloud-deploy-record.md`
+- **관련 RDMD**: `RDMD/backend/07-deploy/03-oracle-cloud-deploy-record.md`
 
 [▲ 목차로](#목차)

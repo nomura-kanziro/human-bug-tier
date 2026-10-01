@@ -43,7 +43,8 @@ description: >
 
 ## 2026-09-28 — 현재 운영 구조
 
-- 백엔드 = **Oracle Cloud VM** `https://hbt-tier.duckdns.org` (nginx 443 Let's Encrypt → pm2 Node :5000, API + dist 같이 서빙).
+- 정식 주소 = **`https://human-bug-tier.com`** (Cloudflare Pages 에 연결된 도메인). 메일 링크 `APP_URL` 도 이 주소(2026-09-29~).
+- 백엔드 = **Oracle Cloud VM** `https://hbt-tier.duckdns.org` (nginx 443 Let's Encrypt → pm2 Node :5000, API + dist 같이 서빙). 이 주소는 Pages 프록시 대상·`/health` 확인용이며 회원에게 안내하지 않는다(`*.duckdns.org` 를 막는 보안 프로그램이 있음).
   배포: 레포 루트 Git Bash `bash backend/deploy/oracle/deploy.sh deploy` — 가이드 `backend/deploy/oracle/README.md`
 - Cloudflare Pages `human-bug-tier` = React 빌드본 `dist/` + Pages Function `root-cloudflare/functions/api/[[path]].js` 가 `/api/*` 를 Oracle 로 프록시
   (백엔드 주소 Pages 환경변수 `API_ORIGIN`, 기본 `https://hbt-tier.duckdns.org`). 이 연결은 2026-09-28 창시자 지시로 구성했다.
@@ -58,7 +59,7 @@ description: >
 2. **Pages `human-bug-tier` = `root-cloudflare/dist/` + `functions/`(`/api` 프록시)**. `backend/`·`.env` 제외
 3. Express를 Workers/Pages Functions로 갈아엎지 않음 (Pages Function 은 프록시만)
 4. env 안내 시 **이름만**. 값은 `backend/.env`
-5. `APP_URL` = 백엔드 공개 URL (현재 `https://hbt-tier.duckdns.org`, Pages URL 아님)
+5. `APP_URL` = 회원이 쓰는 정식 주소 (현재 `https://human-bug-tier.com`). 인증 링크 `/api/auth/verify/...` 도 Pages 가 서버로 넘긴다
 6. path/API 수정은 `root-cloudflare/src/lib/api.js` 단일 소스에서
 7. 기존 Render는 방치. 정적 프론트는 `root-render/` 만. `render.yaml`로 다시 올리지 않음
 8. `*.pages.dev` 는 `getApiBase()` 분기 없이 `''` — `/api` 는 Pages Function 이 Oracle 로 넘김 (프론트 코드에 `pages.dev` 분기 넣지 않음)

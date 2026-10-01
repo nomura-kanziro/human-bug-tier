@@ -120,7 +120,7 @@ npm start
 
 ### Oracle Cloud (운영 서버)
 
-백엔드 + React 빌드를 한 서버에서 서빙한다. → **https://hbt-tier.duckdns.org/**
+백엔드 + React 빌드를 한 서버에서 서빙한다. 회원용 정식 주소는 **https://human-bug-tier.com/** (Cloudflare Pages → `/api` 는 이 서버로 프록시), 서버 직접 주소는 `https://hbt-tier.duckdns.org/` (`/health` 확인용).
 
 다시 올리기 (레포 루트, Git Bash — 로컬 코드를 묶어 올리므로 푸시 불필요):
 
