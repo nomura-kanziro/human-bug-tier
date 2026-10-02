@@ -7,8 +7,8 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 358 |
-| **기간** | 2026-03-20 ~ 2026-10-02 |
+| **커밋 수** | 359 |
+| **기간** | 2026-03-20 ~ 2026-10-03 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
 > 폴더 안내: [README.md](./README.md)  ·  상세 기능 일지: [../frontend/](../frontend/README.md) · [../backend/](../backend/README.md)
@@ -387,6 +387,7 @@
 | 356 | 2026-10-02 | [`04c5007`](#04c5007) | docs: 깨진 링크 정정 — README 의 .groks·.codex 폴더 링크, 행운 뽑기 관리 기록의 배지 표기 |
 | 357 | 2026-10-02 | [`f84b446`](#f84b446) | feat(header): 사이드 메뉴 하단 계정 영역(비로그인 로그인 버튼 / 로그인 프로필·로그아웃) + 모바일 헤더 버튼 크기 축소 |
 | 358 | 2026-10-02 | [`269db5b`](#269db5b) | chore(footer): 사이트 버전 표시 1.0.1 → 1.0.2 |
+| 359 | 2026-10-03 | [`pending`](#pending359) | feat(mail): 사이트 전용 SMTP(Oracle Email Delivery) 발송 추가 — 사이트 도메인 주소로 발송, 개인 Gmail 주소 숨김 |
 
 ---
 
@@ -6919,6 +6920,24 @@
 - **범위**: frontend / 푸터
 - **요약**: 사이드 메뉴 계정 영역·모바일 헤더 축소(357)를 반영해 푸터 사이트 버전을 1.0.1 에서 1.0.2 로 올림. Footer.jsx 의 SITE_VERSION 한 곳만 수정(이전 버전 변경과 같은 방식).
 - **주요 파일**: `root-cloudflare/src/components/Footer.jsx`
+- **관련 RDMD**: —
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending359"></a>
+
+### 359. 2026-10-03 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(mail): 사이트 전용 SMTP(Oracle Email Delivery) 발송 추가 — 사이트 도메인 주소로 발송, 개인 Gmail 주소 숨김
+- **git**: `git show pending`
+- **범위**: backend / 메일 발송
+- **요약**: 인증·아이디 찾기·비밀번호 재설정 메일의 보낸 사람이 개인 Gmail 주소로 나가던 것을 사이트 도메인(admins@human-bug-tier.com)으로 바꾸기 위해 utils/mail.js 에 사이트 전용 SMTP 발송 경로(sendViaSiteSmtp)를 추가하고 메일 발송 우선순위 맨 앞에 둠(사이트 SMTP → Brevo → Resend → Gmail). SMTP_HOST·SMTP_PORT(기본 587 STARTTLS)·SMTP_USER·SMTP_PASS·MAIL_FROM_ADDRESS 가 전부 있어야 켜지고, 하나라도 없거나 MAIL_FROM_ADDRESS 형식이 잘못이면 꺼져 기존 방식 그대로 동작. 실패한 연결 풀은 버리고 다음 발송 때 새로 만듦. /health 의 emailProvider 에 site-smtp 표시. backend/.env.example 에 설정 예시 추가. 실제 구성은 Oracle Cloud Email Delivery(도쿄) — 이메일 도메인 human-bug-tier.com, 승인된 발신자 admins@human-bug-tier.com, DKIM hbt-tokyo-20261003 활성, Cloudflare DNS 에 SPF(include:ap.rp.oracleemaildelivery.com)·DKIM CNAME 추가, SMTP 자격 증명은 서버 shared/.env 와 로컬 .env 에만(커밋 안 함). Brevo·Resend·새 Gmail 계정은 쓰지 않음(사용자 지시). 확인: 로컬에서 실제 시험 메일 발송이 Oracle 에 접수됨, 사용자가 수신함에서 정상 도착 확인. 코드의 Brevo·Resend·Gmail 경로는 그대로 두었다(Gmail 은 사이트 SMTP 실패 시 예비로만 쓰임).
+- **주요 파일**: `backend/utils/mail.js`, `backend/.env.example`
 - **관련 RDMD**: —
 
 [▲ 목차로](#목차)

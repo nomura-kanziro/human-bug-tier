@@ -150,7 +150,7 @@ function hasGmailConfig() {
 }
 
 function hasEmailConfig() {
-  return Boolean(getBrevoApiKey()) || Boolean(getResendApiKey()) || hasGmailConfig();
+  return hasSiteSmtpConfig() || Boolean(getBrevoApiKey()) || Boolean(getResendApiKey()) || hasGmailConfig();
 }
 
 /** 가입 인증 메일만 Brevo/Resend를 건너뛰고 Gmail부터 쓸지. 기본은 건너뛰지 않음(2026-09 수정).
@@ -172,6 +172,7 @@ function shouldSkipApiForSignupMail() {
  */
 function getEmailProvider() {
   const providers = [];
+  if (hasSiteSmtpConfig()) providers.push('site-smtp');
   if (getBrevoApiKey()) providers.push('brevo');
   if (getResendApiKey()) providers.push('resend');
   if (hasGmailConfig()) providers.push('gmail-smtp');
@@ -297,6 +298,64 @@ async function getTransporter() {
   return transporter;
 }
 
+/* ====== 사이트 전용 SMTP (Oracle Cloud Email Delivery 등) ======
+ * 받는 사람에게 사이트 도메인 주소(예: admins@human-bug-tier.com)가 보낸 사람으로 보이게 하는 발송 경로.
+ * 개인 Gmail 을 쓰지 않는다. 설정(전부 있어야 켜짐):
+ *   SMTP_HOST (예: smtp.email.ap-tokyo-1.oci.oraclecloud.com), SMTP_PORT (기본 587, STARTTLS),
+ *   SMTP_USER / SMTP_PASS (Oracle 사용자 > SMTP 자격 증명), MAIL_FROM_ADDRESS (Oracle 에 승인된 보낸 사람)
+ * 보낸 사람 주소는 Oracle Email Delivery 의 "승인된 발신자"에 등록돼 있어야 하고, 도메인 DNS 에 SPF·DKIM 이 있어야
+ * 받는 쪽(Gmail·네이버 등)이 스팸으로 분류하지 않는다(2026-10-03 human-bug-tier.com 으로 구성). */
+const EMAIL_RE = /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/;
+
+function getMailFromAddress() {
+  const custom = (process.env.MAIL_FROM_ADDRESS || '').trim();
+  // 형식이 이메일이 아니면 사이트 SMTP 를 끈 것으로 본다(오타로 엉뚱한 주소가 찍히는 것 방지)
+  return EMAIL_RE.test(custom) ? custom : '';
+}
+
+function getSiteSmtpConfig() {
+  const host = (process.env.SMTP_HOST || '').trim();
+  const user = (process.env.SMTP_USER || '').trim();
+  const pass = sanitizeSecret(process.env.SMTP_PASS);
+  const from = getMailFromAddress();
+  if (!host || !user || !pass || !from) return null;
+  const port = Number(process.env.SMTP_PORT) || 587;
+  return { host, port, user, pass, from };
+}
+
+function hasSiteSmtpConfig() {
+  return Boolean(getSiteSmtpConfig());
+}
+
+let siteTransporter = null;
+
+async function sendViaSiteSmtp({ to, subject, html }) {
+  const conf = getSiteSmtpConfig();
+  if (!siteTransporter) {
+    siteTransporter = nodemailer.createTransport({
+      host: conf.host,
+      port: conf.port,
+      secure: conf.port === 465,
+      requireTLS: conf.port !== 465,
+      auth: { user: conf.user, pass: conf.pass },
+      pool: true,
+      maxConnections: 3,
+      maxMessages: 100,
+      connectionTimeout: 10000,
+      greetingTimeout: 10000,
+      socketTimeout: 15000,
+    });
+  }
+  try {
+    await siteTransporter.sendMail({ from: `"휴먼버그티어" <${conf.from}>`, to, subject, html });
+  } catch (err) {
+    // 연결이 끊긴 풀은 다음 발송 때 새로 만든다
+    siteTransporter = null;
+    console.error(`✉️  사이트 SMTP 발송 실패 [${conf.host}:${conf.port}] [responseCode=${err.responseCode || '-'}] [code=${err.code || '-'}]:`, err.response || err.message);
+    throw err;
+  }
+}
+
 async function sendViaGmail({ to, subject, html }) {
   const mailOptions = {
     from: `"휴먼버그티어" <${getEmailUser()}>`,
@@ -341,7 +400,7 @@ async function sendViaGmail({ to, subject, html }) {
 }
 
 /**
- * 우선순위대로(Brevo → Resend → Gmail) **설정된 모든 방식**을 순서대로 시도한다.
+ * 우선순위대로(사이트 SMTP → Brevo → Resend → Gmail) **설정된 모든 방식**을 순서대로 시도한다.
  * 앞선 방식이 계정 미활성·발신자 미인증 등 그 서비스만의 문제로 막혀 있어도,
  * 다른 방식이 설정돼 있으면 그걸로 계속 발송을 시도한다(단일 장애점 방지).
  * @param {{ to: string, subject: string, html: string }} opts
@@ -355,6 +414,8 @@ async function sendAppMail({ to, subject, html }) {
   }
 
   const providers = [];
+  // 사이트 전용 SMTP(사이트 도메인 주소로 발송)가 설정돼 있으면 가장 먼저 쓴다
+  if (hasSiteSmtpConfig()) providers.push({ name: 'Site SMTP', send: sendViaSiteSmtp });
   if (getBrevoApiKey()) providers.push({ name: 'Brevo', send: sendViaBrevo });
   if (getResendApiKey()) providers.push({ name: 'Resend', send: sendViaResend });
   if (hasGmailConfig()) providers.push({ name: 'Gmail', send: sendViaGmail });
@@ -414,7 +475,7 @@ async function sendSignupMail({ to, subject, html }) {
   await sendAppMail({ to, subject, html });
 }
 
-const PROVIDER_DISPLAY_NAMES = { brevo: 'Brevo API', resend: 'Resend API', 'gmail-smtp': 'Gmail SMTP' };
+const PROVIDER_DISPLAY_NAMES = { 'site-smtp': '사이트 SMTP', brevo: 'Brevo API', resend: 'Resend API', 'gmail-smtp': 'Gmail SMTP' };
 
 /** 서버 기동 시 한 줄 안내 (시크릿 값 출력 금지) */
 function logEmailConfigStatus() {
