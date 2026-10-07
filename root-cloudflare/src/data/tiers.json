@@ -1403,6 +1403,11 @@
             "name": "칸다 나오미치"
           },
           {
+            "img": "7 tier/yonekura toshifumi.webp",
+            "alt": "",
+            "name": "요네쿠라 토시후미"
+          },
+          {
             "img": "7 tier/katakura.webp",
             "alt": "",
             "name": "카타쿠라"
@@ -1508,12 +1513,12 @@
             "name": "시바하라"
           },
           {
-            "img": "7 tier/mineda.webp",
+            "img": "7 tier/maneda.webp",
             "alt": "",
-            "name": "미네다"
+            "name": "마네다"
           },
           {
-            "img": "7 tier/komori kenji.webp",
+            "img": "7 tier/komori.webp",
             "alt": "",
             "name": "코모리"
           },
@@ -1712,7 +1717,7 @@
           {
             "img": "9 tier/mido kosaku.webp",
             "alt": "",
-            "name": "카케무사 미도 코사쿠"
+            "name": "가짜 미도 코사쿠"
           },
           {
             "img": "9 tier/namioka tsunekichi.webp",
@@ -1778,7 +1783,7 @@
             "break": true
           },
           {
-            "img": "9 tier/mido kosaku.webp",
+            "img": "9 tier/mido kosaku real.webp",
             "alt": "",
             "name": "*미도 코사쿠"
           },
@@ -1820,7 +1825,7 @@
           {
             "img": "9 tier/yashiki mashinari.webp",
             "alt": "",
-            "name": "*야시키 마시나리"
+            "name": "*야시키 마사나리"
           },
           {
             "img": "9 tier/suzuran.webp",
