@@ -388,7 +388,7 @@
 | 357 | 2026-10-02 | [`f84b446`](#f84b446) | feat(header): 사이드 메뉴 하단 계정 영역(비로그인 로그인 버튼 / 로그인 프로필·로그아웃) + 모바일 헤더 버튼 크기 축소 |
 | 358 | 2026-10-02 | [`269db5b`](#269db5b) | chore(footer): 사이트 버전 표시 1.0.1 → 1.0.2 |
 | 359 | 2026-10-03 | [`0d35b80`](#0d35b80) | feat(mail): 사이트 전용 SMTP(Oracle Email Delivery) 발송 추가 — 사이트 도메인 주소로 발송, 개인 Gmail 주소 숨김 |
-| 360 | 2026-10-08 | [`pending`](#pending) | fix(tier-class): 7~9티어 이름·이미지 정정 — 가짜 미도·야시키 마사나리·마네다, 요네쿠라 추가, 니시키도·미츠이케·코모리·미도·야마미소 사진 교체 |
+| 360 | 2026-10-08 | [`acda3d3`](#acda3d3) | fix(tier-class): 7~9티어 이름·이미지 정정 — 가짜 미도·야시키 마사나리·마네다, 요네쿠라 추가, 니시키도·미츠이케·코모리·미도·야마미소 사진 교체 |
 
 ---
 
@@ -6945,15 +6945,15 @@
 
 ---
 
-<a id="pending"></a>
+<a id="acda3d3"></a>
 
-### 360. 2026-10-08 — `pending`
+### 360. 2026-10-08 — `acda3d3`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `acda3d3`
+- **hash (full)**: `acda3d34b96cfcf9b92804efa9f4ad2ffa539ec1`
 - **author**: nomura
 - **message**: fix(tier-class): 7~9티어 이름·이미지 정정 — 가짜 미도·야시키 마사나리·마네다, 요네쿠라 추가, 니시키도·미츠이케·코모리·미도·야마미소 사진 교체
-- **git**: `git show pending`
+- **git**: `git show acda3d3`
 - **범위**: frontend / 공식 티어표
 - **요약**: 2025-09-06 갤 전투력 티어표(7~9등급)와 `tiers.json` 을 칸 단위로 맞춰, 이름이나 사진이 다른 곳만 고쳤다. 9티어 "카케무사 미도 코사쿠"를 "가짜 미도 코사쿠"로, "*야시키 마시나리"를 "*야시키 마사나리"로 고치고, *미도 코사쿠는 가짜와 같은 파일 대신 보라색 도복 사진(`mido kosaku real.webp`)을 쓴다. 7티어 "미네다"(초록 후드)는 "마네다"와 권총 사진으로, "코모리"는 코모리 켄지와 겹치던 사진을 카메라 든 얼굴로 분리했다. 8티어 야마미소·이소미림 사진이 서로 바뀌어 있어 파일 내용을 맞바꿨다. 니시키도는 정장 권총 얼굴을 흑백 머리·송곳니 사진으로, 미츠이케는 주황 재킷 얼굴을 파란 머리 후드 사진으로 같은 파일명에 덮어썼다(니시키도는 행운 뽑기 경로가 그대로라 `luckPool.js` 는 수정하지 않음). 7을에 요네쿠라 토시후미를 칸다 나오미치 바로 뒤에 추가했다. 새 사진은 갤 첨부에서 칸을 자른 것이라 옆 카드보다 해상도가 낮다. 사코·우사미의 등급 이동, 하야세구미 조장과 토키와 테츠의 이름, 시바하라의 다른 장면은 그대로 두었다. 바닐라 `tier-class` HTML 은 수정하지 않았다.
 - **주요 파일**: `root-cloudflare/src/data/tiers.json`, `root-cloudflare/public/tier-media/tier-image/7 tier/nikishido.webp`, `root-cloudflare/public/tier-media/tier-image/7 tier/mitsuike.webp`, `root-cloudflare/public/tier-media/tier-image/7 tier/yonekura toshifumi.webp`, `root-cloudflare/public/tier-media/tier-image/7 tier/komori.webp`, `root-cloudflare/public/tier-media/tier-image/7 tier/maneda.webp`, `root-cloudflare/public/tier-media/tier-image/8 tier/yamamiso.jpg`, `root-cloudflare/public/tier-media/tier-image/8 tier/isomirim.jpg`, `root-cloudflare/public/tier-media/tier-image/9 tier/mido kosaku real.webp`
