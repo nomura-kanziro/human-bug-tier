@@ -45,6 +45,7 @@ root-cloudflare/src/
 | `admin-tier` | 🎨 커스텀 메이커 신고 | 신고된 게시글·댓글 |
 | `admin-notices` | 📢 공지 | 공지 작성·수정·고정·유튜브 동기화 상태 |
 | `admin-events` (`admin-memory-events`, `admin-showcase`) | 🃏 메모리 기록 이벤트 · 🖼️ 티어표 공개 | 이벤트 관리 |
+| `admin-season` | 🎨 이벤트 디자인 | 할로윈·크리스마스 사이트 배경 ON/OFF(한 번에 하나) |
 | `admin-luck` | 🍀 행운 뽑기 관리 | 회원별 뽑기 기록·포인트 내역(조회 전용) |
 | `admin-blocks` | 🚫 차단 | 회원 목록(인증·삭제)·닉네임/IP 차단 |
 
@@ -99,6 +100,14 @@ root-cloudflare/src/
 - 한계: 포인트 내역은 2026-10-01 배포 이후 증감부터, 포커 승패는 그 이후 정산된 판부터 보인다.
 - API: `GET /api/admin/luck/users?q=&page=`, `/api/admin/luck/users/:userId`, `/api/admin/luck/users/:userId/points?page=` (`requireAdmin`)
 - 상세: [`../backend/08-luck-draw/04-point-ledger-admin-api-record.md`](../backend/08-luck-draw/04-point-ledger-admin-api-record.md), [`../frontend/07-admin/12-admin-luck-manager-record.md`](../frontend/07-admin/12-admin-luck-manager-record.md)
+
+### 8. 이벤트 디자인 적용 (2026-10-17)
+
+- 사이트 전체 배경을 휴버대 컨셉 계절 디자인으로 바꾸는 ON/OFF 스위치 — **할로윈 · 크리스마스**.
+- 값 하나만 저장하므로 **한 번에 하나만** 켜진다(다른 것을 켜면 켜져 있던 것은 자동 OFF, 켜진 것을 다시 누르면 기본 배경). 바꾸기 전 확인창.
+- 방문자에게는 페이지를 열 때(30분마다·탭 복귀 때 재확인) 적용. 라이트/다크 테마별로 다른 계절 색, 모바일은 장식 축소, 움직임 줄이기 설정이면 애니메이션 끔.
+- API: `GET /api/site/settings`(공개), `POST /api/admin/site/seasonal-theme`(`requireAdmin`)
+- 상세: [`../frontend/07-admin/13-event-design-record.md`](../frontend/07-admin/13-event-design-record.md)
 
 ---
 

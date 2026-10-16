@@ -127,6 +127,7 @@ RDMD/frontend/
 | [10-admin-button-spacing-record.md](./07-admin/10-admin-button-spacing-record.md) | — | 관리자 페이지 버튼 간격 확대(표 조작 버튼 8px · 툴바 8px, 좁은 쌍 50→0건) |
 | [11-admin-quicknav-record.md](./07-admin/11-admin-quicknav-record.md) | — | 관리자 "빠른 이동" 태그 바 — 누르면 해당 기능으로 스크롤(sticky·스크롤 스파이·해시 연동) |
 | [12-admin-luck-manager-record.md](./07-admin/12-admin-luck-manager-record.md) | — | 관리자 "행운 뽑기 관리" — 회원 목록·기록 탭 4개·포인트 내역, [관리자]·[탈퇴] 배지 |
+| [13-event-design-record.md](./07-admin/13-event-design-record.md) | — | 관리자 "이벤트 디자인 적용" — 할로윈·크리스마스 사이트 배경 ON/OFF(한 번에 하나), 휴버대 모티프 |
 
 ## 08-notifications
 

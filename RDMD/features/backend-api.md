@@ -62,6 +62,7 @@ backend/
 | `/api/luck-draw` | 오늘의 행운 티어 · 포커(`/poker/*`) · 랜덤 뽑기(`/ladder/*`) | optionalAuth / requireAuth — [luck-draw.md](./luck-draw.md) |
 | `/api/profile` | 닉네임 변경(`POST /nickname`) | requireAuth |
 | `/api/events` | 매일 퀴즈(`/quiz/*`) · 메모리 게임(`/memory/*`) · 티어표 공개(`/showcase/*`) | requireAuth / optionalAuth, 관리 기능 requireAdmin |
+| `/api/site` | 사이트 운영 설정 조회 — 이벤트 디자인(`/settings`). 변경은 `/api/admin/site/seasonal-theme` | 공개 |
 | `/api/ext` | 브라우저 확장이 치는 주소 — 204 만 돌려줌(우리 API 아님) | — |
 | `/health` | 헬스체크(DB·메일·APP_URL·유튜브 동기화 상태) | 공개 |
 
@@ -92,6 +93,7 @@ backend/
 | **EventQuizAttempt** | 매일 퀴즈(회원당 하루 1판, 최근 15건 보관) |
 | **EventMemoryPeriod** / **EventMemorySession** | 메모리 기록 이벤트 회차 / 판 |
 | **EventShowcase** / **EventShowcaseEntry** / **EventShowcaseVote** | 티어표 공개 회차 / 출품 / 투표 |
+| **SiteSetting** | 사이트 운영 설정 키-값(`seasonalTheme` = 이벤트 디자인) |
 
 ---
 

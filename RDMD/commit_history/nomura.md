@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 361 |
+| **커밋 수** | 362 |
 | **기간** | 2026-03-20 ~ 2026-10-17 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -390,6 +390,7 @@
 | 359 | 2026-10-03 | [`0d35b80`](#0d35b80) | feat(mail): 사이트 전용 SMTP(Oracle Email Delivery) 발송 추가 — 사이트 도메인 주소로 발송, 개인 Gmail 주소 숨김 |
 | 360 | 2026-10-08 | [`acda3d3`](#acda3d3) | fix(tier-class): 7~9티어 이름·이미지 정정 — 가짜 미도·야시키 마사나리·마네다, 요네쿠라 추가, 니시키도·미츠이케·코모리·미도·야마미소 사진 교체 |
 | 361 | 2026-10-17 | [`93170c6`](#93170c6) | feat(event-design): 관리자 "이벤트 디자인 적용" — 할로윈·크리스마스 사이트 배경 on/off(한 번에 하나만) |
+| 362 | 2026-10-17 | [`pending`](#pending362) | docs(event-design): 이벤트 디자인 적용 기록 추가 — 관리자 기능 문서·API 맵 반영 |
 
 ---
 
@@ -6976,6 +6977,24 @@
 - **범위**: backend + frontend / 관리자 · 공통 배경
 - **요약**: 사이트 전체 배경을 휴먼버그대학교 다운 이벤트 컨셉으로 바꾸는 기능. 바로 켜지지 않고 관리자 페이지 "🎨 이벤트 디자인 적용" 섹션의 ON/OFF 스위치로 켠다. 서버는 값 하나(SiteSetting.seasonalTheme = none|halloween|christmas)만 저장해 한 번에 하나만 켜진다 — 할로윈이 켜진 상태에서 크리스마스를 켜면 할로윈이 자동으로 꺼지고, 켜진 것을 다시 누르면 기본 배경. API: GET /api/site/settings(공개, 메모리 캐시), POST /api/admin/site/seasonal-theme(requireAdmin). 프론트: lib/season.js 가 <html data-season> 을 붙이고(마지막 값을 localStorage 에 기억해 index.html 이 먼저 적용, 30분마다·탭 복귀 때 재확인), SeasonalBackdrop 이 모든 페이지 뒤(position:fixed, z-index:-1, pointer-events:none)에 SVG 장식을 깐다. 휴버대 모티프 — 할로윈: 붉은 눈이 박힌 보름달, 박쥐, 눈 모양으로 파낸 호박, H 묘비·세 자루 창, 어둠 속 붉은 눈, 거미줄 / 크리스마스: 눈, 전구 가랜드, 눈알 오너먼트 트리, 선물, 눈 덮인 H 문장, 별. 라이트·다크 테마별로 다른 계절 색을 써 본문 글자가 읽히게 했고, 좁은 화면에서는 장식을 줄이며(달·거미줄 모서리로, 가랜드는 제목과 안 겹치게) 움직임 줄이기 설정이면 애니메이션을 끈다. 확인: 컨트롤러 가짜 저장소 시험(켜기·교체·끄기·잘못된 값 400), 가짜 서버 + CDP 로 PC·모바일 × 라이트·다크 × 두 계절 캡처, 관리자 스위치(할로윈 ON → 크리스마스 ON 시 할로윈 OFF → 크리스마스 OFF 시 기본) 확인창·상태·화면 적용 확인.
 - **주요 파일**: `backend/models/SiteSetting.js`(신규), `backend/controllers/siteSettingController.js`(신규), `backend/routes/siteRoutes.js`(신규), `backend/routes/adminRoutes.js`, `backend/server.js`, `root-cloudflare/src/lib/season.js`(신규), `root-cloudflare/src/components/SeasonalBackdrop.jsx`(신규), `root-cloudflare/src/components/AdminSeasonManager.jsx`(신규), `root-cloudflare/src/styles/season.css`(신규), `root-cloudflare/src/styles/admin-season.css`(신규), `root-cloudflare/src/pages/AdminDashboard.jsx`, `root-cloudflare/src/main.jsx`, `root-cloudflare/index.html`
+- **관련 RDMD**: `RDMD/frontend/07-admin/13-event-design-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending362"></a>
+
+### 362. 2026-10-17 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(event-design): 이벤트 디자인 적용 기록 추가 — 관리자 기능 문서·API 맵 반영
+- **git**: `git show pending`
+- **범위**: docs / 관리자
+- **요약**: 361 이벤트 디자인 적용(할로윈·크리스마스 사이트 배경 ON/OFF)을 frontend/07-admin/13 기록으로 남김 — 동작(값 하나라 한 번에 하나만, 확인창, 방문자 적용 시점·localStorage 선적용), 파일, 휴버대 모티프 디자인(붉은 눈·H 문장·세 자루 창), 라이트/다크·모바일·움직임 줄이기 처리, 확인 범위(가짜 저장소·가짜 서버+CDP 캡처, 첫 캡처에서 찾아 고친 겹침 문제), 운영 미배포. features/admin.md 화면 구성 표·8절 추가, features/backend-api.md 에 /api/site·SiteSetting 추가, frontend/README 목차 행.
+- **주요 파일**: `RDMD/frontend/07-admin/13-event-design-record.md`(신규), `RDMD/features/admin.md`, `RDMD/features/backend-api.md`, `RDMD/frontend/README.md`
 - **관련 RDMD**: `RDMD/frontend/07-admin/13-event-design-record.md`
 
 [▲ 목차로](#목차)
