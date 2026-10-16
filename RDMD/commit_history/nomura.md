@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 365 |
+| **커밋 수** | 366 |
 | **기간** | 2026-03-20 ~ 2026-10-18 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -394,6 +394,7 @@
 | 363 | 2026-10-18 | [`6d8c4ac`](#6d8c4ac) | style(event-design): 계절 배경 고도화 — 달 속 눈을 한 묶음으로 움직이게 하고, 고딕 학교 건물·울타리·나무 등 층층의 휴버대 풍경으로 재작성 |
 | 364 | 2026-10-18 | [`4685f36`](#4685f36) | docs(event-design): 계절 배경 고도화 내용 기록 — 눈 한 묶음 움직임·층 구조·학교 건물·확인 방법 |
 | 365 | 2026-10-18 | [`b12b7ce`](#b12b7ce) | feat(event-design): 밝은 테마에서는 달 대신 태양 — 할로윈 보름달은 눈이 든 태양, 크리스마스 초승달은 작은 태양 |
+| 366 | 2026-10-18 | [`pending`](#pending366) | docs(event-design): 밝은 테마 태양 전환 내용 기록 |
 
 ---
 
@@ -7052,6 +7053,24 @@
 - **범위**: frontend / 이벤트 디자인(계절 배경)
 - **요약**: 이벤트 디자인 배경에서 밝은 테마일 때 달 모양을 태양 모양으로 바꿈. 할로윈: 보름달(가운데 휴버대 눈) 자리에 16방향 광선(긴·짧은 광선 교대, 120초에 한 바퀴 천천히 회전)과 노란 그라데이션 원반, 따뜻한 후광, 가운데 휴버대 눈(홍채·동공·하이라이트가 한 묶음으로 둘러보고 깜빡임 — 달과 같은 부품). 크리스마스: 초승달 자리에 작은 태양(12방향 광선+원반). 달과 태양을 같은 자리에 둘 다 그려 두고 CSS 로만 전환(html:not([data-theme="dark"]) 이면 태양, 다크면 달)해서 헤더 테마 스위치를 누르면 바로 바뀌고 React 상태가 필요 없음. 광선 생성은 makeRays() 한 함수로 두 크기를 만듦. 확인: 브라우저에서 테마를 밝음→어두움→밝음으로 바꿔 달/태양의 display 가 두 계절 모두 반대로 바뀌는지 읽음, 태양 눈 묶음의 자식 4개·묶음 transform 이 (0,0)→(-8,-1)→(7,1.4)→(2,-2) 로 움직이고 자식 개별 transform 없음, 광선 회전 transform 변화, PC·모바일 캡처(모바일 할로윈 태양, PC·모바일 크리스마스 작은 태양).
 - **주요 파일**: `root-cloudflare/src/components/SeasonalBackdrop.jsx`, `root-cloudflare/src/styles/season.css`
+- **관련 RDMD**: `RDMD/frontend/07-admin/13-event-design-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending366"></a>
+
+### 366. 2026-10-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(event-design): 밝은 테마 태양 전환 내용 기록
+- **git**: `git show pending`
+- **범위**: docs / 이벤트 디자인
+- **요약**: 13-event-design-record.md 에 365(밝은 테마에서 달 대신 태양)를 추가 — 할로윈 태양(16방향 회전 광선·원반·후광·가운데 휴버대 눈), 크리스마스 작은 태양, 달·태양을 같은 자리에 두고 CSS 로만 전환해 테마 스위치에 바로 따라오는 방식, 확인 방법.
+- **주요 파일**: `RDMD/frontend/07-admin/13-event-design-record.md`
 - **관련 RDMD**: `RDMD/frontend/07-admin/13-event-design-record.md`
 
 [▲ 목차로](#목차)
