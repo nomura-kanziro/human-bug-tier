@@ -22,6 +22,7 @@ const {
   deleteReportedComment,
 } = require('../controllers/adminTierReportController');
 const { getLuckUsers, getLuckUserDetail, getLuckUserPoints } = require('../controllers/adminLuckController');
+const { setSeasonalTheme } = require('../controllers/siteSettingController');
 const { requireAdmin } = require('../middleware/auth');
 
 // ====== 공개 ======
@@ -53,5 +54,8 @@ router.delete('/tier-reports/comments/:id', requireAdmin, deleteReportedComment)
 router.get('/luck/users', requireAdmin, getLuckUsers);
 router.get('/luck/users/:userId', requireAdmin, getLuckUserDetail);
 router.get('/luck/users/:userId/points', requireAdmin, getLuckUserPoints);
+
+// 이벤트 디자인 적용 — 계절 배경(할로윈/크리스마스) 켜기·끄기. 값이 하나라 하나를 켜면 다른 것은 꺼진다(siteSettingController)
+router.post('/site/seasonal-theme', requireAdmin, setSeasonalTheme);
 
 module.exports = router;

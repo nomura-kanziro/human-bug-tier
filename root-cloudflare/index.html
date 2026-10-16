@@ -14,6 +14,8 @@ if(r==='light'||r==='dark'){t=r;localStorage.setItem(K,JSON.stringify({t:r,u:nex
 else if(r){try{var v=JSON.parse(r);if((v.t==='light'||v.t==='dark')&&n<v.u)t=v.t;else localStorage.removeItem(K);}catch(e){localStorage.removeItem(K);}}}catch(e){}
 if(!t){var h=new Date(n+O).getUTCHours();t=(h>=7&&h<22)?'light':'dark';}
 document.documentElement.setAttribute('data-theme',t);})();</script>
+  <!-- 이벤트 디자인(계절 배경): 관리자가 켠 배경을 지난번 값으로 먼저 붙여 깜빡임을 줄인다. 실제 값은 React 가 서버에서 다시 받는다(lib/season.js). -->
+  <script>try{var s=localStorage.getItem('hbtSeason');if(s==='halloween'||s==='christmas')document.documentElement.setAttribute('data-season',s);}catch(e){}</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#111111">

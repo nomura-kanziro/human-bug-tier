@@ -1,0 +1,153 @@
+/* ====================== 관리자 — 이벤트 디자인 적용 ======================
+   AdminSeasonManager.jsx 전용. 디자인마다 카드 1줄(미리보기 · 설명 · ON/OFF 스위치).
+   설명 문구·메시지는 이벤트 관리(admin-event.css 의 .eadm-*)를 그대로 쓴다. 색은 테마 토큰. */
+.season-admin-status {
+  margin-bottom: 12px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.season-admin-status strong {
+  color: var(--text-primary);
+}
+
+.season-admin-list {
+  display: grid;
+  gap: 10px;
+}
+
+.season-admin-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 16px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  background: var(--bg-elevated);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.season-admin-card.is-on {
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 22%, transparent);
+}
+
+.season-admin-preview {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  font-size: 26px;
+}
+
+.season-admin-preview.is-halloween {
+  background: radial-gradient(circle at 70% 25%, #f6c66f 0 18%, transparent 19%), linear-gradient(160deg, #2a1440, #5b2a86);
+}
+
+.season-admin-preview.is-christmas {
+  background: radial-gradient(circle at 25% 30%, #fff 0 4%, transparent 5%), radial-gradient(circle at 70% 60%, #fff 0 4%, transparent 5%), linear-gradient(160deg, #0d2232, #1f7a4d);
+}
+
+.season-admin-text {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.season-admin-text strong {
+  font-size: 15px;
+  color: var(--text-primary);
+}
+
+.season-admin-text span {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+/* ON/OFF 스위치 — 글자도 함께 보여 상태를 색만으로 구분하지 않게 한다 */
+.season-switch {
+  position: relative;
+  flex: 0 0 auto;
+  width: 76px;
+  height: 34px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: #cfd2d8;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.season-switch.is-on {
+  background: #16a34a;
+}
+
+.season-switch:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.season-switch:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--brand) 55%, transparent);
+  outline-offset: 2px;
+}
+
+.season-switch-label {
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: #4b5563;
+}
+
+.season-switch.is-on .season-switch-label {
+  right: auto;
+  left: 12px;
+  color: #ffffff;
+}
+
+.season-switch-thumb {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  transition: transform 0.2s ease;
+}
+
+.season-switch.is-on .season-switch-thumb {
+  transform: translateX(42px);
+}
+
+[data-theme="dark"] .season-switch:not(.is-on) {
+  background: #3f4048;
+}
+
+[data-theme="dark"] .season-switch:not(.is-on) .season-switch-label {
+  color: #c9cbd1;
+}
+
+@media (max-width: 560px) {
+  .season-admin-card {
+    flex-wrap: wrap;
+  }
+
+  .season-admin-text {
+    flex-basis: calc(100% - 66px);
+  }
+
+  .season-switch {
+    margin-left: auto;
+  }
+}
