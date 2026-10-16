@@ -390,7 +390,7 @@
 | 359 | 2026-10-03 | [`0d35b80`](#0d35b80) | feat(mail): 사이트 전용 SMTP(Oracle Email Delivery) 발송 추가 — 사이트 도메인 주소로 발송, 개인 Gmail 주소 숨김 |
 | 360 | 2026-10-08 | [`acda3d3`](#acda3d3) | fix(tier-class): 7~9티어 이름·이미지 정정 — 가짜 미도·야시키 마사나리·마네다, 요네쿠라 추가, 니시키도·미츠이케·코모리·미도·야마미소 사진 교체 |
 | 361 | 2026-10-17 | [`93170c6`](#93170c6) | feat(event-design): 관리자 "이벤트 디자인 적용" — 할로윈·크리스마스 사이트 배경 on/off(한 번에 하나만) |
-| 362 | 2026-10-17 | [`pending`](#pending362) | docs(event-design): 이벤트 디자인 적용 기록 추가 — 관리자 기능 문서·API 맵 반영 |
+| 362 | 2026-10-17 | [`4597abb`](#4597abb) | docs(event-design): 이벤트 디자인 적용 기록 추가 — 관리자 기능 문서·API 맵 반영 |
 
 ---
 
@@ -6983,15 +6983,15 @@
 
 ---
 
-<a id="pending362"></a>
+<a id="4597abb"></a>
 
-### 362. 2026-10-17 — `pending`
+### 362. 2026-10-17 — `4597abb`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `4597abb`
+- **hash (full)**: `4597abbc2114f55480fcf67449ce0dbe20ecd285`
 - **author**: nomura
 - **message**: docs(event-design): 이벤트 디자인 적용 기록 추가 — 관리자 기능 문서·API 맵 반영
-- **git**: `git show pending`
+- **git**: `git show 4597abb`
 - **범위**: docs / 관리자
 - **요약**: 361 이벤트 디자인 적용(할로윈·크리스마스 사이트 배경 ON/OFF)을 frontend/07-admin/13 기록으로 남김 — 동작(값 하나라 한 번에 하나만, 확인창, 방문자 적용 시점·localStorage 선적용), 파일, 휴버대 모티프 디자인(붉은 눈·H 문장·세 자루 창), 라이트/다크·모바일·움직임 줄이기 처리, 확인 범위(가짜 저장소·가짜 서버+CDP 캡처, 첫 캡처에서 찾아 고친 겹침 문제), 운영 미배포. features/admin.md 화면 구성 표·8절 추가, features/backend-api.md 에 /api/site·SiteSetting 추가, frontend/README 목차 행.
 - **주요 파일**: `RDMD/frontend/07-admin/13-event-design-record.md`(신규), `RDMD/features/admin.md`, `RDMD/features/backend-api.md`, `RDMD/frontend/README.md`
