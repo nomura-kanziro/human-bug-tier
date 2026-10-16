@@ -79,6 +79,19 @@ const NEAR_PINES = [
   makePine(1158, 292, 224, 102), makePine(1010, 298, 112, 52),
 ];
 
+// 태양 광선 — (cx,cy) 중심에서 count 방향으로, 긴 광선과 짧은 광선을 번갈아 뻗는다(밝은 테마의 달 → 태양)
+function makeRays(cx, cy, count, base, tipLong, tipShort, halfLong, halfShort) {
+  const at = (r, ang) => `${(cx + Math.cos(ang) * r).toFixed(1)} ${(cy + Math.sin(ang) * r).toFixed(1)}`;
+  return Array.from({ length: count }, (_, i) => {
+    const a = ((i * 360) / count - 90) * (Math.PI / 180);
+    const long = i % 2 === 0;
+    const w = long ? halfLong : halfShort;
+    return `M${at(base, a - w)} L${at(long ? tipLong : tipShort, a)} L${at(base, a + w)} Z`;
+  }).join(' ');
+}
+const SUN_RAYS = makeRays(100, 100, 16, 82, 110, 99, 0.13, 0.1);
+const SMALL_SUN_RAYS = makeRays(60, 60, 12, 30, 47, 40, 0.2, 0.16);
+
 // 울타리 — 막대 + 창끝, 일정 간격마다 휴버대 세 자루 창 기둥
 const FENCE_X = Array.from({ length: 51 }, (_, i) => 6 + i * 24);
 const FENCE_BARS = FENCE_X.map((x) => `M${x} 300 V270`).join(' ');
@@ -256,6 +269,19 @@ function Halloween() {
           </g>
           <HbuEye x={42} y={65} scale={1.16} className="sb-moon-eye" look blink />
         </svg>
+        {/* 밝은 테마에서는 달 대신 태양 — 같은 자리에서 CSS 로만 바꿔 테마 스위치에 바로 따라온다. 태양 가운데에도 휴버대 눈 */}
+        <svg className="sb-sun" viewBox="-12 -12 224 224">
+          <defs>
+            <radialGradient id="sbSunFill" cx="42%" cy="38%" r="70%">
+              <stop offset="0%" className="sb-sun-a" />
+              <stop offset="100%" className="sb-sun-b" />
+            </radialGradient>
+          </defs>
+          <g className="sb-sun-rays"><path d={SUN_RAYS} /></g>
+          <circle cx="100" cy="100" r="82" className="sb-sun-ring" />
+          <circle cx="100" cy="100" r="75" fill="url(#sbSunFill)" />
+          <HbuEye x={50} y={70} scale={1} className="sb-sun-eye" look blink />
+        </svg>
       </div>
 
       <div className="sb-cloud sb-cloud-1" />
@@ -338,6 +364,10 @@ function Christmas() {
             </mask>
           </defs>
           <circle cx="56" cy="64" r="44" className="sb-crescent-body" mask="url(#sbCrescentMask)" />
+        </svg>
+        <svg className="sb-sun-small" viewBox="0 0 120 120">
+          <g className="sb-sun-rays"><path d={SMALL_SUN_RAYS} /></g>
+          <circle cx="60" cy="60" r="25" className="sb-sun-small-disc" />
         </svg>
       </div>
 

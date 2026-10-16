@@ -69,7 +69,7 @@ html[data-theme="dark"][data-season="halloween"] { --bg-page: #120820; backgroun
   --sb-window-glow: rgba(255, 150, 40, 0.8);
   --sb-moon-a: #fffcee;
   --sb-moon-b: #f6cf88;
-  --sb-moon-halo: rgba(255, 196, 110, 0.55);
+  --sb-moon-halo: rgba(255, 200, 80, 0.62);
   --sb-moon-ring: rgba(235, 160, 70, 0.5);
   --sb-crater: rgba(175, 115, 40, 0.20);
   --sb-maria: rgba(190, 130, 60, 0.15);
@@ -157,6 +157,23 @@ html[data-theme="dark"] .is-christmas .sb-stars { display: block; }
 .is-halloween .sb-crater { fill: var(--sb-crater); }
 .is-halloween .sb-maria { fill: var(--sb-maria); }
 .is-halloween .sb-moon-eye { filter: drop-shadow(0 1px 3px rgba(80, 20, 0, 0.35)); }
+
+/* 밝은 테마: 달 → 태양 (html[data-theme="dark"] 가 아니면 밝은 테마). 같은 자리에 둘 다 그려 두고 CSS 로만 바꾼다 */
+.is-halloween .sb-sun,
+.is-christmas .sb-sun-small { display: none; inset: 0; width: 100%; height: 100%; }
+html:not([data-theme="dark"]) .is-halloween .sb-sun { display: block; filter: drop-shadow(0 0 30px rgba(255, 180, 40, 0.7)); }
+html:not([data-theme="dark"]) .is-halloween .sb-moon { display: none; }
+html:not([data-theme="dark"]) .is-christmas .sb-sun-small { display: block; filter: drop-shadow(0 0 18px rgba(255, 190, 60, 0.7)); }
+html:not([data-theme="dark"]) .is-christmas .sb-crescent { display: none; }
+
+.is-halloween .sb-sun-a { stop-color: #fff8c4; }
+.is-halloween .sb-sun-b { stop-color: #ffb92e; }
+.is-halloween .sb-sun-ring { fill: none; stroke: rgba(255, 150, 30, 0.55); stroke-width: 1.4; }
+.is-halloween .sb-sun-eye { filter: drop-shadow(0 1px 3px rgba(120, 50, 0, 0.35)); }
+.seasonal-backdrop .sb-sun-rays { transform-box: fill-box; transform-origin: center; animation: sb-spin 120s linear infinite; }
+.is-halloween .sb-sun-rays path { fill: #ffc13d; opacity: 0.92; }
+.is-christmas .sb-sun-rays path { fill: #ffc84a; opacity: 0.95; }
+.is-christmas .sb-sun-small-disc { fill: #ffdf7a; }
 
 /* 구름 — 달 앞을 천천히 지나간다 */
 .is-halloween .sb-cloud {
@@ -454,6 +471,7 @@ html[data-theme="dark"] .is-christmas .sb-tree-leaf { fill: #176b43; }
 /* ======================================================================
    애니메이션
    ====================================================================== */
+@keyframes sb-spin { to { transform: rotate(360deg); } }
 @keyframes sb-flap { from { transform: scaleY(1); } to { transform: scaleY(0.62); } }
 @keyframes sb-drift {
   0%, 100% { transform: translate(0, 0); }
