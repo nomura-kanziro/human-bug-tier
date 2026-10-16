@@ -394,7 +394,7 @@
 | 363 | 2026-10-18 | [`6d8c4ac`](#6d8c4ac) | style(event-design): 계절 배경 고도화 — 달 속 눈을 한 묶음으로 움직이게 하고, 고딕 학교 건물·울타리·나무 등 층층의 휴버대 풍경으로 재작성 |
 | 364 | 2026-10-18 | [`4685f36`](#4685f36) | docs(event-design): 계절 배경 고도화 내용 기록 — 눈 한 묶음 움직임·층 구조·학교 건물·확인 방법 |
 | 365 | 2026-10-18 | [`b12b7ce`](#b12b7ce) | feat(event-design): 밝은 테마에서는 달 대신 태양 — 할로윈 보름달은 눈이 든 태양, 크리스마스 초승달은 작은 태양 |
-| 366 | 2026-10-18 | [`pending`](#pending366) | docs(event-design): 밝은 테마 태양 전환 내용 기록 |
+| 366 | 2026-10-18 | [`fe99e6f`](#fe99e6f) | docs(event-design): 밝은 테마 태양 전환 내용 기록 |
 
 ---
 
@@ -7059,15 +7059,15 @@
 
 ---
 
-<a id="pending366"></a>
+<a id="fe99e6f"></a>
 
-### 366. 2026-10-18 — `pending`
+### 366. 2026-10-18 — `fe99e6f`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `fe99e6f`
+- **hash (full)**: `fe99e6f54bac661dc8dea19df9d3cf1563767369`
 - **author**: nomura
 - **message**: docs(event-design): 밝은 테마 태양 전환 내용 기록
-- **git**: `git show pending`
+- **git**: `git show fe99e6f`
 - **범위**: docs / 이벤트 디자인
 - **요약**: 13-event-design-record.md 에 365(밝은 테마에서 달 대신 태양)를 추가 — 할로윈 태양(16방향 회전 광선·원반·후광·가운데 휴버대 눈), 크리스마스 작은 태양, 달·태양을 같은 자리에 두고 CSS 로만 전환해 테마 스위치에 바로 따라오는 방식, 확인 방법.
 - **주요 파일**: `RDMD/frontend/07-admin/13-event-design-record.md`
