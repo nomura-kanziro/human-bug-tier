@@ -7,8 +7,8 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 362 |
-| **기간** | 2026-03-20 ~ 2026-10-17 |
+| **커밋 수** | 363 |
+| **기간** | 2026-03-20 ~ 2026-10-18 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
 > 폴더 안내: [README.md](./README.md)  ·  상세 기능 일지: [../frontend/](../frontend/README.md) · [../backend/](../backend/README.md)
@@ -391,6 +391,7 @@
 | 360 | 2026-10-08 | [`acda3d3`](#acda3d3) | fix(tier-class): 7~9티어 이름·이미지 정정 — 가짜 미도·야시키 마사나리·마네다, 요네쿠라 추가, 니시키도·미츠이케·코모리·미도·야마미소 사진 교체 |
 | 361 | 2026-10-17 | [`93170c6`](#93170c6) | feat(event-design): 관리자 "이벤트 디자인 적용" — 할로윈·크리스마스 사이트 배경 on/off(한 번에 하나만) |
 | 362 | 2026-10-17 | [`4597abb`](#4597abb) | docs(event-design): 이벤트 디자인 적용 기록 추가 — 관리자 기능 문서·API 맵 반영 |
+| 363 | 2026-10-18 | [`pending`](#pending363) | style(event-design): 계절 배경 고도화 — 달 속 눈을 한 묶음으로 움직이게 하고, 고딕 학교 건물·울타리·나무 등 층층의 휴버대 풍경으로 재작성 |
 
 ---
 
@@ -6995,6 +6996,24 @@
 - **범위**: docs / 관리자
 - **요약**: 361 이벤트 디자인 적용(할로윈·크리스마스 사이트 배경 ON/OFF)을 frontend/07-admin/13 기록으로 남김 — 동작(값 하나라 한 번에 하나만, 확인창, 방문자 적용 시점·localStorage 선적용), 파일, 휴버대 모티프 디자인(붉은 눈·H 문장·세 자루 창), 라이트/다크·모바일·움직임 줄이기 처리, 확인 범위(가짜 저장소·가짜 서버+CDP 캡처, 첫 캡처에서 찾아 고친 겹침 문제), 운영 미배포. features/admin.md 화면 구성 표·8절 추가, features/backend-api.md 에 /api/site·SiteSetting 추가, frontend/README 목차 행.
 - **주요 파일**: `RDMD/frontend/07-admin/13-event-design-record.md`(신규), `RDMD/features/admin.md`, `RDMD/features/backend-api.md`, `RDMD/frontend/README.md`
+- **관련 RDMD**: `RDMD/frontend/07-admin/13-event-design-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending363"></a>
+
+### 363. 2026-10-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: style(event-design): 계절 배경 고도화 — 달 속 눈을 한 묶음으로 움직이게 하고, 고딕 학교 건물·울타리·나무 등 층층의 휴버대 풍경으로 재작성
+- **git**: `git show pending`
+- **범위**: frontend / 이벤트 디자인(계절 배경)
+- **요약**: (1) 버그: 할로윈 보름달 속 눈에서 붉은 홍채에만 이동 애니메이션이 걸려 있어 검은 동공·하이라이트는 멈춰 있었다 → HbuEye 를 흰자 위에 홍채·홍채 고리·동공·하이라이트를 한 묶음(.sb-eye-look)으로 넣고 그 묶음 하나를 움직이게 해 전부 같이 움직이며, 흰자 모양으로 clipPath 해 눈 밖으로 삐져나오지 않고 가끔 깜빡임(.sb-eye-blink). 안쪽 transform 충돌을 피하려고 위치 이동용 g 와 애니메이션용 g 를 분리. (2) 고도화: 배경을 대기 원근 층(먼 언덕 < 건물 < 가까운 언덕 < 나무·울타리, CSS 변수 --sb-far/campus/mid/near)으로 다시 그림. 휴버대 모티프를 학교 건물로 확장 — 고딕 건물(탑·뾰족지붕·불 켜진 창문이 박자를 달리해 깜빡임, 가운데 탑 장미창이 휴버대 눈), 울타리 사이 세 자루 창 기둥, H 묘비, 눈 모양으로 파낸 호박(그라데이션·불빛). 할로윈: 후광·고리·분화구·명암의 달, 천천히 지나가는 구름, 박쥐, 시드 기반 재귀 생성 잎 없는 나무, 어둠 속 붉은 눈(둘러보기), 흐르는 안개, 떠오르는 불씨(타일 정수배 이동으로 이음매 없음), 별, 지평선 노을, 비네트. 크리스마스: 오로라, 초승달, 눈 덮인 건물(지붕 눈·처마 전구), 시드 생성 소나무 두 겹, 눈알 오너먼트 트리·선물·가로등, 눈 세 겹(비스듬히 이음매 없이), 별. 라이트·다크 팔레트 분리, 모바일은 건물이 화면 가운데에 오게 하고 달·구름·눈 일부 생략, 움직임 줄이기 설정이면 애니메이션 끔. 확인: 눈 묶음 구조(자식 4개 한 묶음, 개별 transform 없음)와 시간에 따른 transform 변화를 브라우저에서 측정, PC·모바일 × 라이트·다크 × 두 계절을 본문을 숨기고 배경만 캡처해 검토하며 묘비 색·허공에 뜬 붉은 눈·눈에 묻힌 선물·다크 박쥐 색을 고침.
+- **주요 파일**: `root-cloudflare/src/components/SeasonalBackdrop.jsx`, `root-cloudflare/src/styles/season.css`
 - **관련 RDMD**: `RDMD/frontend/07-admin/13-event-design-record.md`
 
 [▲ 목차로](#목차)

@@ -1,10 +1,12 @@
 /* ====================== 이벤트 디자인 (계절 배경) ======================
    관리자 페이지 "이벤트 디자인 적용"에서 켠 배경. lib/season.js 가 <html data-season="halloween|christmas"> 를 붙이고,
-   components/SeasonalBackdrop.jsx 가 장식(SVG)을 모든 페이지 뒤(position:fixed, z-index:-1)에 깐다.
+   components/SeasonalBackdrop.jsx 가 장식(SVG·div)을 모든 페이지 뒤(position:fixed, z-index:-1)에 깐다.
    본문 글자가 읽히도록 라이트 테마는 밝은 계절 배경, 다크 테마는 어두운 계절 배경으로 따로 칠한다.
-   이 파일은 main.jsx 에서 가장 마지막에 불러온다(페이지 기본 배경 규칙을 덮어야 하므로). */
+   이 파일은 main.jsx 에서 가장 마지막에 불러온다(페이지 기본 배경 규칙을 덮어야 하므로).
 
-/* ---------- 공통: 페이지 바탕은 장식 층이 칠하므로 body 는 비운다 ---------- */
+   깊이감(대기 원근): 먼 층일수록 하늘색에 가깝게 흐리고, 가까운 층일수록 짙다.
+     --sb-far(먼 언덕) < --sb-campus(건물) < --sb-mid(가까운 언덕) < --sb-near(나무·울타리·앞 소품) */
+
 html[data-season] body {
   background: transparent;
 }
@@ -18,271 +20,436 @@ html[data-season] body {
   background: var(--sb-bg);
 }
 
-.seasonal-backdrop svg {
-  position: absolute;
-  overflow: visible;
-}
+.seasonal-backdrop svg { position: absolute; overflow: visible; }
 
-.seasonal-backdrop .sb-eye-white { fill: #ffffff; }
+/* ---------- 공용: 휴버대 눈 ---------- */
+.seasonal-backdrop .sb-eye-white { fill: #fdf6ee; }
 .seasonal-backdrop .sb-eye-iris { fill: #c81e1e; }
-.seasonal-backdrop .sb-eye-pupil { fill: #111111; }
-.seasonal-backdrop .sb-eye-shine { fill: rgba(255, 255, 255, 0.85); }
+.seasonal-backdrop .sb-eye-iris-ring { fill: none; stroke: #7d0f0f; stroke-width: 1.6; opacity: 0.55; }
+.seasonal-backdrop .sb-eye-pupil { fill: #140808; }
+.seasonal-backdrop .sb-eye-shine { fill: rgba(255, 255, 255, 0.9); }
+.seasonal-backdrop .sb-eye-lid { fill: none; stroke: var(--sb-lid, #2a1340); stroke-width: 2.6; stroke-linejoin: round; }
 
+/* 눈알 움직임 — 홍채·동공·하이라이트가 한 묶음(.sb-eye-look)이라 같이 움직인다. 멈춰 보다가 휙 돌아보는 박자 */
+.seasonal-backdrop .sb-eye-look { animation: sb-look 11s cubic-bezier(.5, 0, .3, 1) infinite; }
+.seasonal-backdrop .sb-eye-blink { transform-box: fill-box; transform-origin: center; animation: sb-blink 8s infinite; }
+
+/* 앞 풍경 틀 */
 .seasonal-backdrop .sb-ground {
   left: 0;
   right: 0;
   bottom: 0;
   width: 100%;
-  height: clamp(120px, 24vh, 230px);
+  height: clamp(190px, 25vw, 440px);
+}
+
+.seasonal-backdrop .sb-vignette {
+  position: absolute;
+  inset: 0;
+  background: var(--sb-vignette);
 }
 
 /* ======================================================================
    할로윈
    ====================================================================== */
-html[data-season="halloween"] {
-  --bg-page: #fff4e6;
-  background: #fff4e6;
-}
+html[data-season="halloween"] { --bg-page: #fff3e6; background: #fff3e6; }
+html[data-theme="dark"][data-season="halloween"] { --bg-page: #120820; background: #120820; }
 
 .seasonal-backdrop.is-halloween {
-  --sb-bg: linear-gradient(180deg, #fff8ef 0%, #ffead3 55%, #fdd7b0 100%);
-  --sb-ink: #3b1d5a;            /* 실루엣(언덕·창·묘비·박쥐) */
-  --sb-ink-alpha: 0.28;
-  --sb-web: rgba(59, 29, 90, 0.28);
-  --sb-moon-a: #fff6d8;
-  --sb-moon-b: #f6c66f;
-  --sb-crater: rgba(170, 110, 30, 0.22);
-  --sb-pumpkin: #f0882a;
-  --sb-pumpkin-rib: rgba(150, 70, 10, 0.35);
-  --sb-pumpkin-face: #4a2311;
-  --sb-fog: rgba(120, 70, 160, 0.10);
+  --sb-bg:
+    radial-gradient(ellipse 70% 38% at 50% 100%, rgba(255, 150, 70, 0.30), transparent 70%),
+    linear-gradient(180deg, #fff8f0 0%, #ffe9d4 40%, #f8d8cf 72%, #e9cbe0 100%);
+  --sb-far: #e6cde0;
+  --sb-campus: #8f6dac;
+  --sb-mid: #6b4888;
+  --sb-near: #3a2056;
+  --sb-near-2: #2d1744;
+  --sb-lid: #3a2056;
+  --sb-window: #ffb04a;
+  --sb-window-glow: rgba(255, 150, 40, 0.8);
+  --sb-moon-a: #fffcee;
+  --sb-moon-b: #f6cf88;
+  --sb-moon-halo: rgba(255, 196, 110, 0.55);
+  --sb-moon-ring: rgba(235, 160, 70, 0.5);
+  --sb-crater: rgba(175, 115, 40, 0.20);
+  --sb-maria: rgba(190, 130, 60, 0.15);
+  --sb-pk-a: #ffa347;
+  --sb-pk-b: #d9651b;
+  --sb-pk-rib: rgba(120, 50, 5, 0.32);
+  --sb-pk-face: #3d1d0c;
+  --sb-fog: rgba(255, 238, 250, 0.55);
+  --sb-bat: #4a2c68;
+  --sb-cloud: rgba(255, 255, 255, 0.78);
+  --sb-ember: rgba(255, 140, 40, 0.75);
+  --sb-vignette: radial-gradient(ellipse at 50% 38%, transparent 62%, rgba(140, 70, 30, 0.14) 100%);
 }
 
 html[data-theme="dark"] .seasonal-backdrop.is-halloween {
   --sb-bg:
-    radial-gradient(circle at 86% 16%, rgba(255, 150, 50, 0.20), transparent 38%),
-    linear-gradient(180deg, #0e0817 0%, #190c28 58%, #26102c 100%);
-  --sb-ink: #050308;
-  --sb-ink-alpha: 0.85;
-  --sb-web: rgba(220, 205, 255, 0.22);
-  --sb-moon-a: #fff3c4;
-  --sb-moon-b: #f0a93f;
-  --sb-crater: rgba(140, 80, 20, 0.30);
-  --sb-pumpkin: #e8741d;
-  --sb-pumpkin-rib: rgba(90, 35, 5, 0.45);
-  --sb-pumpkin-face: #ffd36b;    /* 다크에서는 파낸 얼굴이 불빛처럼 빛난다 */
-  --sb-fog: rgba(150, 90, 220, 0.16);
+    radial-gradient(ellipse 70% 36% at 50% 100%, rgba(255, 110, 30, 0.26), transparent 72%),
+    linear-gradient(180deg, #06030c 0%, #11071d 36%, #200b2a 70%, #331029 100%);
+  --sb-far: #2b1342;
+  --sb-campus: #170a29;
+  --sb-mid: #100720;
+  --sb-near: #05020b;
+  --sb-near-2: #030108;
+  --sb-lid: #05020b;
+  --sb-window: #ffbd57;
+  --sb-window-glow: rgba(255, 160, 50, 0.95);
+  --sb-moon-a: #fff6d2;
+  --sb-moon-b: #efa94a;
+  --sb-moon-halo: rgba(255, 170, 70, 0.34);
+  --sb-moon-ring: rgba(255, 190, 110, 0.45);
+  --sb-crater: rgba(140, 80, 20, 0.28);
+  --sb-maria: rgba(150, 90, 30, 0.20);
+  --sb-pk-a: #f08a2a;
+  --sb-pk-b: #b3480f;
+  --sb-pk-rib: rgba(70, 25, 0, 0.5);
+  --sb-pk-face: #ffd470;
+  --sb-fog: rgba(150, 95, 225, 0.17);
+  --sb-bat: #2c1648;
+  --sb-cloud: rgba(80, 45, 125, 0.62);
+  --sb-ember: rgba(255, 160, 60, 0.95);
+  --sb-vignette: radial-gradient(ellipse at 50% 40%, transparent 52%, rgba(0, 0, 0, 0.5) 100%);
 }
 
-html[data-theme="dark"][data-season="halloween"] {
-  --bg-page: #140a20;
-  background: #140a20;
+/* 별 — 다크에서만 */
+.is-halloween .sb-stars,
+.is-christmas .sb-stars {
+  position: absolute;
+  inset: 0 0 38% 0;
+  display: none;
+  background-image:
+    radial-gradient(1.4px 1.4px at 8% 18%, #fff, transparent), radial-gradient(1px 1px at 17% 40%, #fff, transparent),
+    radial-gradient(1.8px 1.8px at 26% 12%, #fff, transparent), radial-gradient(1.1px 1.1px at 35% 33%, #fff, transparent),
+    radial-gradient(1.5px 1.5px at 44% 22%, #fff, transparent), radial-gradient(1px 1px at 52% 46%, #fff, transparent),
+    radial-gradient(1.7px 1.7px at 61% 10%, #fff, transparent), radial-gradient(1.2px 1.2px at 69% 36%, #fff, transparent),
+    radial-gradient(1.4px 1.4px at 78% 20%, #fff, transparent), radial-gradient(1px 1px at 86% 44%, #fff, transparent),
+    radial-gradient(1.6px 1.6px at 93% 14%, #fff, transparent), radial-gradient(1.1px 1.1px at 4% 52%, #fff, transparent),
+    radial-gradient(1.3px 1.3px at 57% 56%, #fff, transparent), radial-gradient(1.2px 1.2px at 30% 58%, #fff, transparent);
+  animation: sb-twinkle 5s ease-in-out infinite alternate;
 }
 
-.is-halloween .sb-moon {
-  top: calc(var(--header-h, 64px) + 20px);
+html[data-theme="dark"] .is-halloween .sb-stars,
+html[data-theme="dark"] .is-christmas .sb-stars { display: block; }
+
+/* 달 */
+.is-halloween .sb-moon-wrap {
+  position: absolute;
+  top: calc(var(--header-h, 64px) + 14px);
   right: 4vw;
-  width: clamp(104px, 15vw, 200px);
-  height: auto;
-  filter: drop-shadow(0 0 28px rgba(255, 190, 90, 0.45));
+  width: clamp(120px, 17vw, 230px);
+  aspect-ratio: 1;
 }
 
-.is-halloween .sb-moon-light { stop-color: var(--sb-moon-a); }
-.is-halloween .sb-moon-dark { stop-color: var(--sb-moon-b); }
+.sb-moon-halo {
+  position: absolute;
+  inset: -55%;
+  background: radial-gradient(circle, var(--sb-moon-halo) 0%, transparent 62%);
+  animation: sb-breathe 8s ease-in-out infinite;
+}
+
+.is-halloween .sb-moon { inset: 0; width: 100%; height: 100%; filter: drop-shadow(0 0 26px var(--sb-moon-halo)); }
+.is-halloween .sb-moon-a { stop-color: var(--sb-moon-a); }
+.is-halloween .sb-moon-b { stop-color: var(--sb-moon-b); }
+.is-halloween .sb-moon-ring { fill: none; stroke: var(--sb-moon-ring); stroke-width: 1.2; }
+.is-halloween .sb-moon-ring-2 { opacity: 0.5; }
 .is-halloween .sb-crater { fill: var(--sb-crater); }
-.is-halloween .sb-moon-eye { opacity: 0.72; }
-.is-halloween .sb-moon-eye .sb-eye-iris { animation: sb-look 9s ease-in-out infinite; transform-origin: 50px 30px; }
+.is-halloween .sb-maria { fill: var(--sb-maria); }
+.is-halloween .sb-moon-eye { filter: drop-shadow(0 1px 3px rgba(80, 20, 0, 0.35)); }
 
-.is-halloween .sb-web {
-  top: var(--header-h, 64px);
+/* 구름 — 달 앞을 천천히 지나간다 */
+.is-halloween .sb-cloud {
+  position: absolute;
   left: 0;
-  width: clamp(84px, 11vw, 150px);
-  height: auto;
+  width: 42vw;
+  height: 10vh;
+  background: radial-gradient(ellipse at 50% 50%, var(--sb-cloud) 0%, transparent 68%);
+  opacity: 0.8;
+  animation: sb-cloud-pass 80s linear infinite;
 }
 
-.is-halloween .sb-web-lines,
-.is-halloween .sb-web-thread {
-  fill: none;
-  stroke: var(--sb-web);
-  stroke-width: 1.4;
-}
+.is-halloween .sb-cloud-1 { top: calc(var(--header-h, 64px) + 2vh); }
+.is-halloween .sb-cloud-2 { top: calc(var(--header-h, 64px) + 14vh); width: 56vw; height: 12vh; opacity: 0.6; animation-duration: 120s; animation-delay: -50s; }
 
-.is-halloween .sb-spider {
-  fill: var(--sb-ink);
-  stroke: var(--sb-ink);
-  stroke-width: 1.6;
-  opacity: var(--sb-ink-alpha);
-  animation: sb-dangle 6s ease-in-out infinite;
-}
-
-/* 박쥐 — --sb-size 는 JSX 에서 정한 기준 크기, 화면에서는 1.6배로 그린다 */
+/* 박쥐 */
 .is-halloween .sb-bat {
   left: var(--sb-x);
   top: var(--sb-y);
   width: calc(var(--sb-size) * 1.6);
   height: auto;
-  fill: var(--sb-ink);
-  opacity: calc(var(--sb-ink-alpha) + 0.1);
+  fill: var(--sb-bat);
+  opacity: 0.92;
   animation: sb-drift 16s ease-in-out infinite;
   animation-delay: var(--sb-delay);
 }
 
-.is-halloween .sb-bat-body {
-  transform-origin: 32px 14px;
-  animation: sb-flap 0.45s ease-in-out infinite alternate;
+.is-halloween .sb-bat-body { transform-origin: 32px 14px; animation: sb-flap 0.45s ease-in-out infinite alternate; }
+
+/* 앞 풍경 */
+.is-halloween .sb-hill-far { fill: var(--sb-far); }
+.is-halloween .sb-hill-mid { fill: var(--sb-mid); }
+.is-halloween .sb-ground-near { fill: var(--sb-near-2); }
+.is-halloween .sb-horizon-a { stop-color: #ff9a3c; stop-opacity: 0.55; }
+html:not([data-theme="dark"]) .is-halloween .sb-horizon-a { stop-opacity: 0.35; }
+
+.is-halloween .sb-campus-body { fill: var(--sb-campus); }
+.is-halloween .sb-campus-line { fill: none; stroke: var(--sb-campus); stroke-width: 3; stroke-linecap: round; }
+.is-halloween .sb-rose { fill: var(--sb-near); stroke: var(--sb-window); stroke-width: 2; }
+
+.seasonal-backdrop .sb-window {
+  fill: var(--sb-window);
+  opacity: var(--o, 1);
+  filter: drop-shadow(0 0 4px var(--sb-window-glow));
+  animation: sb-window 6s ease-in-out infinite;
+  animation-delay: var(--d, 0s);
 }
 
+.is-halloween .sb-tree-bare { fill: none; stroke: var(--sb-near); stroke-linecap: round; }
+.is-halloween .sb-tomb { fill: var(--sb-far); stroke: var(--sb-mid); stroke-width: 2; }
+.is-halloween .sb-tomb-mark { fill: none; stroke: var(--sb-window); stroke-width: 5; stroke-linecap: round; opacity: 0.8; }
+
+.seasonal-backdrop .sb-fence { fill: var(--sb-near); }
+.seasonal-backdrop .sb-fence-bars { fill: none; stroke: var(--sb-near); stroke-width: 3.2; }
+.seasonal-backdrop .sb-fence-tips { fill: var(--sb-near); }
+.seasonal-backdrop .sb-spears .sb-fence-bars { stroke-width: 3.6; }
+
+.is-halloween .sb-pk-a { stop-color: var(--sb-pk-a); }
+.is-halloween .sb-pk-b { stop-color: var(--sb-pk-b); }
+.is-halloween .sb-pumpkin-stem { fill: #55801a; }
+.is-halloween .sb-pumpkin-rib { fill: none; stroke: var(--sb-pk-rib); stroke-width: 3; stroke-linecap: round; }
+.is-halloween .sb-pumpkin-face { fill: var(--sb-pk-face); }
+html[data-theme="dark"] .is-halloween .sb-pumpkin-face { filter: drop-shadow(0 0 7px #ffa133); animation: sb-flicker 2.8s ease-in-out infinite; }
+
+/* 붉은 눈들 — 어둠 속에서 둘러보고 깜빡인다 */
 .is-halloween .sb-dark-eyes {
-  right: 3vw;
-  bottom: calc(clamp(120px, 24vh, 230px) - 10px);
+  right: 3.4vw;
+  bottom: calc(clamp(190px, 25vw, 440px) * 0.27);
   width: clamp(110px, 13vw, 210px);
   height: auto;
+  filter: drop-shadow(0 0 8px rgba(255, 40, 40, 0.65));
 }
 
-.is-halloween .sb-blink { transform-box: fill-box; transform-origin: center; animation: sb-blink 5.5s infinite; }
-.is-halloween .sb-blink-2 { animation-delay: -2.7s; animation-duration: 7s; }
 html:not([data-theme="dark"]) .is-halloween .sb-dark-eyes { opacity: 0.55; }
+.is-halloween .sb-lurk { animation: sb-lurk 9s ease-in-out infinite; }
+.is-halloween .sb-lurk-2 { animation-delay: -4.5s; animation-duration: 12s; }
 
-.is-halloween .sb-hill,
-.is-halloween .sb-spears,
-.is-halloween .sb-tomb {
-  fill: var(--sb-ink);
-  opacity: var(--sb-ink-alpha);
-}
-
-.is-halloween .sb-spears path { stroke: var(--sb-ink); stroke-width: 4; }
-
-.is-halloween .sb-tomb-mark {
-  fill: none;
-  stroke: var(--sb-pumpkin-face);
-  stroke-width: 6;
-  stroke-linecap: round;
-  opacity: 0.85;
-}
-
-.is-halloween .sb-pumpkin-body { fill: var(--sb-pumpkin); }
-.is-halloween .sb-pumpkin-stem { fill: #4d7c0f; }
-.is-halloween .sb-pumpkin-rib { fill: none; stroke: var(--sb-pumpkin-rib); stroke-width: 3; }
-.is-halloween .sb-pumpkin-face { fill: var(--sb-pumpkin-face); }
-html[data-theme="dark"] .is-halloween .sb-pumpkin-face { animation: sb-flicker 2.6s ease-in-out infinite; filter: drop-shadow(0 0 6px #ffb347); }
-
+/* 안개 — 가로로 천천히 흐른다 */
 .is-halloween .sb-fog {
   position: absolute;
   left: 0;
-  right: 0;
   bottom: 0;
-  height: 38vh;
-  background: linear-gradient(0deg, var(--sb-fog), transparent);
+  width: 200%;
+  height: 34vh;
+  background-image:
+    radial-gradient(ellipse 22% 55% at 12% 70%, var(--sb-fog), transparent 70%),
+    radial-gradient(ellipse 26% 45% at 38% 82%, var(--sb-fog), transparent 70%),
+    radial-gradient(ellipse 20% 50% at 62% 66%, var(--sb-fog), transparent 70%),
+    radial-gradient(ellipse 24% 46% at 88% 80%, var(--sb-fog), transparent 70%);
+  animation: sb-fog 70s linear infinite;
+}
+
+.is-halloween .sb-fog-b { height: 26vh; opacity: 0.7; animation-duration: 110s; animation-direction: reverse; }
+
+/* 불씨 — 아래에서 위로 천천히 떠오른다. 타일 크기의 정수배만큼 움직여 이음매 없이 반복 */
+.is-halloween .sb-embers {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: calc(100% + 600px);
+  background-repeat: repeat;
+}
+
+.is-halloween .sb-embers-far {
+  background-image:
+    radial-gradient(circle at 20% 30%, var(--sb-ember) 1.2px, transparent 2px),
+    radial-gradient(circle at 70% 70%, var(--sb-ember) 1px, transparent 1.8px),
+    radial-gradient(circle at 45% 90%, var(--sb-ember) 1.3px, transparent 2px);
+  background-size: 300px 300px;
+  opacity: 0.7;
+  animation: sb-rise 60s linear infinite;
+}
+
+.is-halloween .sb-embers-near {
+  background-image:
+    radial-gradient(circle at 30% 25%, var(--sb-ember) 2.2px, transparent 3.4px),
+    radial-gradient(circle at 80% 75%, var(--sb-ember) 1.8px, transparent 3px);
+  background-size: 420px 420px;
+  animation: sb-rise 38s linear infinite;
 }
 
 /* ======================================================================
    크리스마스
    ====================================================================== */
-html[data-season="christmas"] {
-  --bg-page: #f2f8ff;
-  background: #f2f8ff;
-}
+html[data-season="christmas"] { --bg-page: #f1f7ff; background: #f1f7ff; }
+html[data-theme="dark"][data-season="christmas"] { --bg-page: #07131f; background: #07131f; }
 
 .seasonal-backdrop.is-christmas {
-  --sb-bg: linear-gradient(180deg, #f3f9ff 0%, #e8f3ff 50%, #eaf6ef 100%);
-  --sb-snow: rgba(120, 160, 205, 0.55);   /* 밝은 바탕에서도 보이도록 옅은 하늘색 눈 */
-  --sb-hill: #ffffff;
-  --sb-hill-edge: rgba(150, 180, 210, 0.45);
-  --sb-tree: #1f7a4d;
-  --sb-wire: #2f5d3a;
-  --sb-star-sky: transparent;
+  --sb-bg: linear-gradient(180deg, #e8f2ff 0%, #f2f8ff 42%, #fbf6f0 100%);
+  --sb-pine-far: #8fb3a8;
+  --sb-pine-near: #3b7a64;
+  --sb-pine-snow: #ffffff;
+  --sb-campus: #8497b8;
+  --sb-snow-fill: #ffffff;
+  --sb-snow-edge: rgba(140, 170, 205, 0.55);
+  --sb-near: #3b2a4d;
+  --sb-window: #ffcf6e;
+  --sb-window-glow: rgba(255, 190, 80, 0.9);
+  --sb-flake: rgba(120, 160, 205, 0.7);
+  --sb-lid: #3b2a4d;
+  --sb-wire: #3f6a4a;
+  --sb-moon-halo: rgba(190, 215, 255, 0.55);
+  --sb-crescent: #fff6dd;
+  --sb-lamp-a: rgba(255, 205, 110, 0.7);
+  --sb-vignette: radial-gradient(ellipse at 50% 40%, transparent 64%, rgba(90, 120, 170, 0.12) 100%);
 }
 
 html[data-theme="dark"] .seasonal-backdrop.is-christmas {
   --sb-bg:
-    radial-gradient(circle at 20% 10%, rgba(120, 170, 255, 0.10), transparent 40%),
-    linear-gradient(180deg, #08131f 0%, #0d2232 55%, #102b23 100%);
-  --sb-snow: rgba(255, 255, 255, 0.85);
-  --sb-hill: #e9f1f8;
-  --sb-hill-edge: rgba(255, 255, 255, 0.35);
-  --sb-tree: #1b6b44;
+    radial-gradient(ellipse 60% 30% at 50% 100%, rgba(120, 190, 255, 0.14), transparent 70%),
+    linear-gradient(180deg, #040a14 0%, #0a1b30 48%, #0f2d38 100%);
+  --sb-pine-far: #15384a;
+  --sb-pine-near: #0b2a30;
+  --sb-pine-snow: #cfe0ee;
+  --sb-campus: #0a1626;
+  --sb-snow-fill: #dfeaf5;
+  --sb-snow-edge: rgba(255, 255, 255, 0.4);
+  --sb-near: #050c15;
+  --sb-window: #ffc766;
+  --sb-window-glow: rgba(255, 180, 70, 0.95);
+  --sb-flake: rgba(255, 255, 255, 0.9);
+  --sb-lid: #050c15;
   --sb-wire: #9cc7a8;
-  --sb-star-sky: rgba(255, 255, 255, 0.9);
+  --sb-moon-halo: rgba(170, 205, 255, 0.28);
+  --sb-crescent: #fff8e0;
+  --sb-lamp-a: rgba(255, 205, 110, 0.85);
+  --sb-vignette: radial-gradient(ellipse at 50% 40%, transparent 52%, rgba(0, 0, 0, 0.45) 100%);
 }
 
-html[data-theme="dark"][data-season="christmas"] {
-  --bg-page: #0b1a27;
-  background: #0b1a27;
-}
-
-.is-christmas .sb-stars {
+/* 오로라 */
+.is-christmas .sb-aurora {
   position: absolute;
-  inset: 0 0 40% 0;
-  background-image:
-    radial-gradient(1.6px 1.6px at 12% 22%, var(--sb-star-sky), transparent),
-    radial-gradient(1.2px 1.2px at 28% 12%, var(--sb-star-sky), transparent),
-    radial-gradient(1.8px 1.8px at 46% 30%, var(--sb-star-sky), transparent),
-    radial-gradient(1.2px 1.2px at 64% 16%, var(--sb-star-sky), transparent),
-    radial-gradient(1.6px 1.6px at 78% 34%, var(--sb-star-sky), transparent),
-    radial-gradient(1.2px 1.2px at 90% 20%, var(--sb-star-sky), transparent),
-    radial-gradient(1.4px 1.4px at 36% 46%, var(--sb-star-sky), transparent),
-    radial-gradient(1.4px 1.4px at 56% 52%, var(--sb-star-sky), transparent);
-  animation: sb-twinkle 4s ease-in-out infinite alternate;
+  left: -10%;
+  width: 120%;
+  height: 34vh;
+  filter: blur(36px);
+  opacity: 0.32;
+  will-change: transform;
 }
 
+html[data-theme="dark"] .is-christmas .sb-aurora { opacity: 0.55; }
+
+.is-christmas .sb-aurora-a {
+  top: 6vh;
+  background: linear-gradient(100deg, transparent 4%, rgba(70, 255, 185, 0.55) 30%, rgba(80, 170, 255, 0.4) 58%, transparent 86%);
+  transform: skewY(-7deg);
+  animation: sb-aurora 26s ease-in-out infinite alternate;
+}
+
+.is-christmas .sb-aurora-b {
+  top: 14vh;
+  background: linear-gradient(80deg, transparent 10%, rgba(150, 110, 255, 0.45) 36%, rgba(70, 255, 200, 0.35) 66%, transparent 92%);
+  transform: skewY(5deg);
+  animation: sb-aurora 34s ease-in-out infinite alternate-reverse;
+}
+
+/* 초승달 */
+.is-christmas .sb-crescent-wrap {
+  position: absolute;
+  top: calc(var(--header-h, 64px) + 40px);
+  right: 6vw;
+  width: clamp(54px, 7vw, 100px);
+  aspect-ratio: 1;
+}
+
+.is-christmas .sb-crescent { inset: 0; width: 100%; height: 100%; filter: drop-shadow(0 0 16px var(--sb-moon-halo)); }
+.is-christmas .sb-crescent-body { fill: var(--sb-crescent); }
+
+/* 가랜드 */
 .is-christmas .sb-garland {
   top: var(--header-h, 64px);
   left: 0;
   width: 100%;
-  height: auto; /* viewBox 2400×80 비율 그대로 — 1300px 폭에서 약 43px */
+  height: auto;
 }
 
 .is-christmas .sb-garland-wire { fill: none; stroke: var(--sb-wire); stroke-width: 3; }
 .is-christmas .sb-bulb-cap { fill: #7a7f86; }
 .is-christmas .sb-bulb ellipse { animation: sb-bulb 2.4s ease-in-out infinite; }
-.is-christmas .sb-bulb-0 ellipse { fill: #e23b3b; }
-.is-christmas .sb-bulb-1 ellipse { fill: #26a65b; animation-delay: -0.6s; }
-.is-christmas .sb-bulb-2 ellipse { fill: #f5b301; animation-delay: -1.2s; }
-.is-christmas .sb-bulb-3 ellipse { fill: #2f80ed; animation-delay: -1.8s; }
+html[data-theme="dark"] .is-christmas .sb-bulb ellipse { filter: drop-shadow(0 0 5px currentColor); }
+.is-christmas .sb-bulb-0 ellipse { fill: #e23b3b; color: #e23b3b; }
+.is-christmas .sb-bulb-1 ellipse { fill: #26a65b; color: #26a65b; animation-delay: -0.6s; }
+.is-christmas .sb-bulb-2 ellipse { fill: #f5b301; color: #f5b301; animation-delay: -1.2s; }
+.is-christmas .sb-bulb-3 ellipse { fill: #2f80ed; color: #2f80ed; animation-delay: -1.8s; }
 
+/* 앞 풍경 */
+.is-christmas .sb-pines-far { fill: var(--sb-pine-far); }
+.is-christmas .sb-pines-near { fill: var(--sb-pine-near); }
+.is-christmas .sb-pine-snow { fill: var(--sb-pine-snow); opacity: 0.9; }
+.is-christmas .sb-pine-trunk { fill: #5a3a22; }
+.is-christmas .sb-campus-body { fill: var(--sb-campus); }
+.is-christmas .sb-campus-line { fill: none; stroke: var(--sb-campus); stroke-width: 3; stroke-linecap: round; }
+.is-christmas .sb-campus-snow { fill: var(--sb-snow-fill); }
+.is-christmas .sb-rose { fill: var(--sb-near); stroke: var(--sb-window); stroke-width: 2; }
+.is-christmas .sb-roof-light { animation: sb-bulb 2.2s ease-in-out infinite; animation-delay: var(--d, 0s); }
+.is-christmas .sb-roof-light-0 { fill: #ff5a5a; } .is-christmas .sb-roof-light-1 { fill: #4be08a; }
+.is-christmas .sb-roof-light-2 { fill: #ffd54a; } .is-christmas .sb-roof-light-3 { fill: #6aa8ff; }
+.is-christmas .sb-hill { fill: var(--sb-snow-fill); stroke: var(--sb-snow-edge); stroke-width: 2; }
+.is-christmas .sb-fence-snow { fill: var(--sb-snow-fill); }
+.is-christmas .sb-lamp-pole,
+.is-christmas .sb-lamp-head { fill: var(--sb-near); }
+.is-christmas .sb-lamp-light { fill: #ffe9b0; filter: drop-shadow(0 0 8px #ffcf6e); }
+.is-christmas .sb-lamp-a { stop-color: var(--sb-lamp-a); }
+.is-christmas .sb-lamp-halo { animation: sb-breathe 4s ease-in-out infinite; }
+.is-christmas .sb-tree-leaf { fill: #1f7a4d; }
+html[data-theme="dark"] .is-christmas .sb-tree-leaf { fill: #176b43; }
+.is-christmas .sb-trunk { fill: #7c4a21; }
+.is-christmas .sb-tree-tinsel { fill: none; stroke: #f5d36b; stroke-width: 3; stroke-dasharray: 2 6; stroke-linecap: round; }
+.is-christmas .sb-orn-a { fill: #e23b3b; } .is-christmas .sb-orn-b { fill: #f5b301; } .is-christmas .sb-orn-c { fill: #2f80ed; }
+.is-christmas .sb-orn-eye-ball { fill: #e23b3b; stroke: #f5d36b; stroke-width: 2; }
+.is-christmas .sb-tree-star { fill: #f5b301; filter: drop-shadow(0 0 7px rgba(245, 179, 1, 0.8)); animation: sb-twinkle 2.2s ease-in-out infinite alternate; }
+.is-christmas .sb-gift-a { fill: #d62839; }
+.is-christmas .sb-gift-b { fill: #1f7a4d; }
+.is-christmas .sb-ribbon { fill: none; stroke: #f5d36b; stroke-width: 5; }
+
+/* 눈 — 세 겹, 타일 크기의 정수배만큼 비스듬히 움직여 이음매 없이 반복 */
 .is-christmas .sb-snow {
   position: absolute;
-  left: 0;
+  left: -420px;
   right: 0;
-  top: -100%;
-  height: 200%;
+  top: -840px;
+  height: calc(100% + 840px);
   background-repeat: repeat;
+  will-change: transform;
 }
 
 .is-christmas .sb-snow-far {
   background-image:
-    radial-gradient(circle at 20% 30%, var(--sb-snow) 1.2px, transparent 1.8px),
-    radial-gradient(circle at 70% 60%, var(--sb-snow) 1px, transparent 1.6px),
-    radial-gradient(circle at 45% 85%, var(--sb-snow) 1.3px, transparent 1.9px);
+    radial-gradient(circle at 20% 30%, var(--sb-flake) 1px, transparent 1.7px),
+    radial-gradient(circle at 70% 60%, var(--sb-flake) 0.9px, transparent 1.5px),
+    radial-gradient(circle at 45% 85%, var(--sb-flake) 1.1px, transparent 1.8px);
   background-size: 140px 140px;
-  opacity: 0.7;
-  animation: sb-snowfall 30s linear infinite;
+  opacity: 0.65;
+  animation: sb-snow-far 44s linear infinite;
+}
+
+.is-christmas .sb-snow-mid {
+  background-image:
+    radial-gradient(circle at 30% 20%, var(--sb-flake) 1.8px, transparent 2.8px),
+    radial-gradient(circle at 78% 66%, var(--sb-flake) 1.5px, transparent 2.4px);
+  background-size: 210px 210px;
+  animation: sb-snow-mid 28s linear infinite;
 }
 
 .is-christmas .sb-snow-near {
   background-image:
-    radial-gradient(circle at 30% 20%, var(--sb-snow) 2.2px, transparent 3px),
-    radial-gradient(circle at 80% 70%, var(--sb-snow) 1.8px, transparent 2.6px);
-  background-size: 230px 230px;
-  animation: sb-snowfall 18s linear infinite;
+    radial-gradient(circle at 40% 30%, var(--sb-flake) 3px, transparent 4.4px),
+    radial-gradient(circle at 85% 80%, var(--sb-flake) 2.4px, transparent 3.8px);
+  background-size: 420px 420px;
+  filter: blur(0.6px);
+  animation: sb-snow-near 18s linear infinite;
 }
-
-.is-christmas .sb-hill { fill: var(--sb-hill); stroke: var(--sb-hill-edge); stroke-width: 2; }
-.is-christmas .sb-hill-back { opacity: 0.75; }
-.is-christmas .sb-tree-leaf { fill: var(--sb-tree); }
-.is-christmas .sb-trunk { fill: #7c4a21; }
-.is-christmas .sb-tree-tinsel { fill: none; stroke: #f5d36b; stroke-width: 3; stroke-dasharray: 2 6; stroke-linecap: round; }
-.is-christmas .sb-orn-a { fill: #e23b3b; }
-.is-christmas .sb-orn-b { fill: #f5b301; }
-.is-christmas .sb-orn-c { fill: #2f80ed; }
-.is-christmas .sb-orn-eye-ball { fill: #e23b3b; stroke: #f5d36b; stroke-width: 2; }
-.is-christmas .sb-tree-star { fill: #f5b301; filter: drop-shadow(0 0 6px rgba(245, 179, 1, 0.7)); animation: sb-twinkle 2.2s ease-in-out infinite alternate; }
-.is-christmas .sb-gift-a { fill: #d62839; }
-.is-christmas .sb-gift-b { fill: #1f7a4d; }
-.is-christmas .sb-ribbon { fill: none; stroke: #f5d36b; stroke-width: 5; }
-.is-christmas .sb-crest { fill: #3b1d5a; opacity: 0.85; }
-.is-christmas .sb-crest-mark { fill: none; stroke: #f5d36b; stroke-width: 6; stroke-linecap: round; }
-.is-christmas .sb-crest-snow { fill: var(--sb-hill); }
 
 /* ======================================================================
    애니메이션
@@ -294,13 +461,28 @@ html[data-theme="dark"][data-season="christmas"] {
   50% { transform: translate(-6px, -14px); }
   75% { transform: translate(18px, 6px); }
 }
-@keyframes sb-blink { 0%, 90%, 100% { transform: scaleY(1); } 94% { transform: scaleY(0.08); } }
-@keyframes sb-look { 0%, 100% { transform: translateX(0); } 30% { transform: translateX(-6px); } 65% { transform: translateX(6px); } }
-@keyframes sb-dangle { 0%, 100% { transform: translate(70px, 100px); } 50% { transform: translate(70px, 112px); } }
+/* 눈알 — 홍채·동공·하이라이트가 한 묶음으로 같이 이동 */
+@keyframes sb-look {
+  0%, 12% { transform: translate(0, 0); }
+  20%, 38% { transform: translate(-8px, -1px); }
+  46%, 60% { transform: translate(7px, 1.4px); }
+  68%, 82% { transform: translate(2px, -2px); }
+  90%, 100% { transform: translate(0, 0); }
+}
+@keyframes sb-blink { 0%, 91%, 100% { transform: scaleY(1); } 94% { transform: scaleY(0.06); } 97% { transform: scaleY(1); } }
+@keyframes sb-window { 0%, 100% { opacity: var(--o, 1); } 38% { opacity: calc(var(--o, 1) * 0.55); } 52% { opacity: var(--o, 1); } 71% { opacity: calc(var(--o, 1) * 0.8); } }
 @keyframes sb-flicker { 0%, 100% { opacity: 1; } 45% { opacity: 0.78; } 55% { opacity: 0.95; } 70% { opacity: 0.82; } }
-@keyframes sb-snowfall { from { transform: translateY(0); } to { transform: translateY(50%); } }
-@keyframes sb-twinkle { from { opacity: 0.55; } to { opacity: 1; } }
+@keyframes sb-breathe { 0%, 100% { opacity: 0.85; transform: scale(1); } 50% { opacity: 1; transform: scale(1.06); } }
+@keyframes sb-twinkle { from { opacity: 0.5; } to { opacity: 1; } }
 @keyframes sb-bulb { 0%, 100% { opacity: 1; } 50% { opacity: 0.45; } }
+@keyframes sb-lurk { 0%, 100% { opacity: 0; } 18%, 70% { opacity: 1; } 85% { opacity: 0; } }
+@keyframes sb-cloud-pass { from { transform: translateX(-60vw); } to { transform: translateX(120vw); } }
+@keyframes sb-fog { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+@keyframes sb-rise { from { transform: translateY(0); } to { transform: translateY(-600px); } }
+@keyframes sb-aurora { from { transform: translateX(-4%) skewY(-7deg); } to { transform: translateX(4%) skewY(-3deg); } }
+@keyframes sb-snow-far { from { transform: translate(0, 0); } to { transform: translate(280px, 840px); } }
+@keyframes sb-snow-mid { from { transform: translate(0, 0); } to { transform: translate(420px, 840px); } }
+@keyframes sb-snow-near { from { transform: translate(0, 0); } to { transform: translate(420px, 840px); } }
 
 /* ======================================================================
    좁은 화면 · 움직임 줄이기
@@ -308,32 +490,26 @@ html[data-theme="dark"][data-season="christmas"] {
 @media (max-width: 768px) {
   .is-halloween .sb-dark-eyes { display: none; }
   .is-halloween .sb-bat:nth-child(n + 3) { display: none; }
-  .seasonal-backdrop .sb-ground { height: clamp(90px, 16vh, 150px); }
+  .is-halloween .sb-embers-near { display: none; }
 
-  /* 좁은 화면에서는 제목·소개 글이 화면 폭을 거의 다 쓰므로, 글자 뒤에 밝은 달이 오지 않게 오른쪽 위 모서리로 작게 */
-  .is-halloween .sb-moon {
+  /* 제목·소개 글이 화면 폭을 거의 다 쓰므로, 글자 뒤에 밝은 달이 오지 않게 오른쪽 위 모서리로 작게 */
+  .is-halloween .sb-moon-wrap {
     top: calc(var(--header-h, 58px) + 4px);
     right: 6px;
-    width: 46px;
+    width: 64px;
   }
 
-  .is-halloween .sb-web {
-    width: 54px;
-    opacity: 0.7;
-  }
-
+  .is-halloween .sb-cloud { display: none; }
   .is-halloween .sb-bat { top: calc(var(--sb-y) + 18vh); }
 
+  .is-christmas .sb-crescent-wrap { top: calc(var(--header-h, 58px) + 18px); right: 12px; width: 40px; }
+  .is-christmas .sb-snow-near { display: none; }
+
   /* 가랜드는 화면보다 넓게 그려 전구 크기를 유지하고 넘치는 부분은 잘라낸다 */
-  .is-christmas .sb-garland {
-    width: 200%;
-    left: -50%;
-  }
+  .is-christmas .sb-garland { width: 200%; left: -50%; }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .seasonal-backdrop,
-  .seasonal-backdrop * {
-    animation: none !important;
-  }
+  .seasonal-backdrop * { animation: none !important; }
 }
