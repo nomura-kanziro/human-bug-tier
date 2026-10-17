@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 366 |
+| **커밋 수** | 367 |
 | **기간** | 2026-03-20 ~ 2026-10-18 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -395,6 +395,7 @@
 | 364 | 2026-10-18 | [`4685f36`](#4685f36) | docs(event-design): 계절 배경 고도화 내용 기록 — 눈 한 묶음 움직임·층 구조·학교 건물·확인 방법 |
 | 365 | 2026-10-18 | [`b12b7ce`](#b12b7ce) | feat(event-design): 밝은 테마에서는 달 대신 태양 — 할로윈 보름달은 눈이 든 태양, 크리스마스 초승달은 작은 태양 |
 | 366 | 2026-10-18 | [`fe99e6f`](#fe99e6f) | docs(event-design): 밝은 테마 태양 전환 내용 기록 |
+| 367 | 2026-10-18 | [`pending`](#pending367) | feat(custom-maker): 꾸미기 배경 이펙트에 할로윈 추가 + 이펙트 색 고르기 |
 
 ---
 
@@ -7072,5 +7073,23 @@
 - **요약**: 13-event-design-record.md 에 365(밝은 테마에서 달 대신 태양)를 추가 — 할로윈 태양(16방향 회전 광선·원반·후광·가운데 휴버대 눈), 크리스마스 작은 태양, 달·태양을 같은 자리에 두고 CSS 로만 전환해 테마 스위치에 바로 따라오는 방식, 확인 방법.
 - **주요 파일**: `RDMD/frontend/07-admin/13-event-design-record.md`
 - **관련 RDMD**: `RDMD/frontend/07-admin/13-event-design-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending367"></a>
+
+### 367. 2026-10-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(custom-maker): 꾸미기 배경 이펙트에 할로윈 추가 + 이펙트 색 고르기
+- **git**: `git show pending`
+- **범위**: frontend / 커스텀 메이커 꾸미기
+- **요약**: 배경 이펙트에 할로윈(보랏빛 밤·주황 달 후광·호박빛·도깨비불·점선 테두리) 추가, 이펙트 색(기본색/스와치/직접 선택) 저장·적용. 이펙트별 기본색을 --fx-* 변수로 바꿔 고른 색이 있을 때만 인라인으로 덮어쓰며 짝색은 색상 회전으로 생성. 옛 글은 모양 그대로.
+- **주요 파일**: `root-cloudflare/src/lib/tierStyle.js`, `root-cloudflare/src/styles/custom-maker.css`, `root-cloudflare/src/components/DecoratePanel.jsx`
+- **관련 RDMD**: `RDMD/frontend/03-custom-maker/14-decorate-halloween-fx-color-record.md`
 
 [▲ 목차로](#목차)

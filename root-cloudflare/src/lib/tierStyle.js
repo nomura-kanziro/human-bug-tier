@@ -2,12 +2,13 @@
 // tierStyle.js — 커스텀 티어표 "꾸미기" (테두리 색 · 배경 이펙트)
 // ========================================================
 // 바닐라 custom-maker.js 의 꾸미기 로직을 그대로 이식한다. 저장 형식도 동일:
-//   localStorage customMakerTierStyle = { byGrade: { "0": { borderColor, effect }, ... } }
+//   localStorage customMakerTierStyle = { byGrade: { "0": { borderColor, effect, effectColor }, ... } }
+//   effectColor 는 배경 이펙트의 색. 빈 문자열이면 이펙트마다 정해진 기본색을 쓴다(옛 글도 빈 값으로 읽힌다).
 //   게시글        tierData.style       = 같은 형태
 // 색·이펙트 이름은 화이트리스트만 통과시켜서, 옛 글이나 조작된 값이 와도 기본 골드로 떨어진다.
 
 export const STYLE_STORAGE_KEY = 'customMakerTierStyle';
-export const DEFAULT_TIER_STYLE = { borderColor: '#ffcc00', effect: 'none' };
+export const DEFAULT_TIER_STYLE = { borderColor: '#ffcc00', effect: 'none', effectColor: '' };
 
 export const TIER_STYLE_EFFECTS = {
   none: { label: '없음', bg: '#111111' },
@@ -20,6 +21,7 @@ export const TIER_STYLE_EFFECTS = {
   crimson: { label: '핏빛', bg: '#14060a' },
   void: { label: '심연', bg: '#07040e' },
   royal: { label: '로얄', bg: '#120e1c' },
+  halloween: { label: '할로윈', bg: '#130a1c' },
 };
 
 export const TIER_STYLE_PRESETS = {
@@ -33,11 +35,18 @@ export const TIER_STYLE_PRESETS = {
   crimson: { label: '핏빛', borderColor: '#ff3b5c', effect: 'crimson' },
   void: { label: '심연', borderColor: '#a78bfa', effect: 'void' },
   stars: { label: '별빛', borderColor: '#c4b5fd', effect: 'stars' },
+  halloween: { label: '할로윈', borderColor: '#ff7a1a', effect: 'halloween' },
 };
 
 export const TIER_BORDER_SWATCHES = [
   '#ffcc00', '#ffe566', '#ffffff', '#ff3b5c', '#ff7a3d',
   '#39ff14', '#7cf0ff', '#9ad8ff', '#a78bfa', '#ff4dcd',
+];
+
+// 배경 이펙트 색 스와치 (맨 앞 "기본색" 버튼은 패널에서 따로 둔다)
+export const TIER_EFFECT_SWATCHES = [
+  '#ff7a1a', '#ff3b5c', '#ffcc00', '#39ff14', '#7cf0ff',
+  '#4d8dff', '#a78bfa', '#ff4dcd', '#ffffff', '#8b5cf6',
 ];
 
 // "등급마다 다른 테마" 버튼이 1~9등급에 순서대로 입히는 프리셋 (신계 → 심연)
@@ -53,6 +62,12 @@ export function sanitizeHexColor(color) {
   return full ? `#${full[1].toLowerCase()}` : DEFAULT_TIER_STYLE.borderColor;
 }
 
+// 이펙트 색은 고르지 않은 상태('')가 정상값이라 잘못된 값은 금색이 아니라 빈 값으로 떨어뜨린다.
+export function sanitizeEffectColor(color) {
+  const raw = String(color || '').trim();
+  return /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(raw) ? sanitizeHexColor(raw) : '';
+}
+
 export function sanitizeEffectName(effect) {
   const key = String(effect || '').trim();
   return Object.prototype.hasOwnProperty.call(TIER_STYLE_EFFECTS, key) ? key : DEFAULT_TIER_STYLE.effect;
@@ -61,6 +76,33 @@ export function sanitizeEffectName(effect) {
 export function hexToRgba(hex, alpha) {
   const h = sanitizeHexColor(hex).slice(1);
   return `rgba(${parseInt(h.slice(0, 2), 16)}, ${parseInt(h.slice(2, 4), 16)}, ${parseInt(h.slice(4, 6), 16)}, ${alpha})`;
+}
+
+// 색상(hue)만 돌린 짝색 — 오로라처럼 두세 색을 겹치는 이펙트가 고른 색 하나로도 어울리게 한다.
+function hueShiftedRgb(hex, degrees) {
+  const h = sanitizeHexColor(hex).slice(1);
+  const r = parseInt(h.slice(0, 2), 16) / 255;
+  const g = parseInt(h.slice(2, 4), 16) / 255;
+  const b = parseInt(h.slice(4, 6), 16) / 255;
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  const d = max - min;
+  let hue = 0;
+  let sat = 0;
+  if (d > 0) {
+    sat = d / (1 - Math.abs(2 * l - 1));
+    if (max === r) hue = ((g - b) / d) % 6;
+    else if (max === g) hue = (b - r) / d + 2;
+    else hue = (r - g) / d + 4;
+    hue *= 60;
+  }
+  hue = (hue + degrees + 360) % 360;
+  const c = (1 - Math.abs(2 * l - 1)) * sat;
+  const x = c * (1 - Math.abs(((hue / 60) % 2) - 1));
+  const m = l - c / 2;
+  const [r1, g1, b1] = [[c, x, 0], [x, c, 0], [0, c, x], [0, x, c], [x, 0, c], [c, 0, x]][Math.floor(hue / 60) % 6];
+  return [r1, g1, b1].map((v) => Math.round((v + m) * 255)).join(', ');
 }
 
 export function normalizeStyleMap(raw) {
@@ -72,7 +114,11 @@ export function normalizeStyleMap(raw) {
     if (!Number.isInteger(n) || n < 0 || n > 8) return;
     const item = source[key];
     if (!item || typeof item !== 'object') return;
-    out[n] = { borderColor: sanitizeHexColor(item.borderColor), effect: sanitizeEffectName(item.effect) };
+    out[n] = {
+      borderColor: sanitizeHexColor(item.borderColor),
+      effect: sanitizeEffectName(item.effect),
+      effectColor: sanitizeEffectColor(item.effectColor),
+    };
   });
   return out;
 }
@@ -82,11 +128,14 @@ export function getStyleForGrade(styleMap, index) {
   return {
     borderColor: sanitizeHexColor(saved?.borderColor || DEFAULT_TIER_STYLE.borderColor),
     effect: sanitizeEffectName(saved?.effect || DEFAULT_TIER_STYLE.effect),
+    effectColor: sanitizeEffectColor(saved?.effectColor),
   };
 }
 
 export function isDefaultStyle(style) {
-  return style.borderColor === DEFAULT_TIER_STYLE.borderColor && style.effect === DEFAULT_TIER_STYLE.effect;
+  return style.borderColor === DEFAULT_TIER_STYLE.borderColor
+    && style.effect === DEFAULT_TIER_STYLE.effect
+    && !style.effectColor;
 }
 
 export function loadTierStyle() {
@@ -121,8 +170,18 @@ export function buildStylePayload(styleMap) {
 export function tierStyleProps(styleMap, index) {
   const style = getStyleForGrade(styleMap, index);
   const accent = style.borderColor;
+  // 이펙트 색을 골랐을 때만 CSS 의 이펙트별 기본색을 덮어쓴다(custom-maker.css 의 --fx-* 참고)
+  const fx = style.effectColor ? {
+    '--fx-rgb': hueShiftedRgb(style.effectColor, 0),
+    '--fx2-rgb': hueShiftedRgb(style.effectColor, 70),
+    '--fx3-rgb': hueShiftedRgb(style.effectColor, -35),
+    '--fx-line': style.effectColor,
+    '--fx-glow': hexToRgba(style.effectColor, 0.45),
+    '--fx-soft': hexToRgba(style.effectColor, 0.3),
+  } : null;
   return {
     style: {
+      ...fx,
       '--tier-accent': accent,
       '--tier-accent-soft': hexToRgba(accent, 0.3),
       '--tier-accent-strong': hexToRgba(accent, 0.7),
@@ -137,7 +196,7 @@ export function tierStyleProps(styleMap, index) {
 export function matchingPresetKey(style) {
   return Object.keys(TIER_STYLE_PRESETS).find((key) => {
     const preset = TIER_STYLE_PRESETS[key];
-    return preset.borderColor === style.borderColor && preset.effect === style.effect;
+    return preset.borderColor === style.borderColor && preset.effect === style.effect && !style.effectColor;
   });
 }
 
@@ -146,6 +205,7 @@ export function applyStyleChange(styleMap, index, scope, partial) {
   const next = { ...getStyleForGrade(styleMap, index), ...partial };
   next.borderColor = sanitizeHexColor(next.borderColor);
   next.effect = sanitizeEffectName(next.effect);
+  next.effectColor = sanitizeEffectColor(next.effectColor);
 
   const out = { ...styleMap };
   if (scope === 'all') {
@@ -166,7 +226,7 @@ export function autoDistinctThemes() {
   TIER_AUTO_PRESET_ORDER.forEach((presetKey, i) => {
     const preset = TIER_STYLE_PRESETS[presetKey];
     if (!preset) return;
-    out[i] = { borderColor: sanitizeHexColor(preset.borderColor), effect: sanitizeEffectName(preset.effect) };
+    out[i] = { borderColor: sanitizeHexColor(preset.borderColor), effect: sanitizeEffectName(preset.effect), effectColor: '' };
   });
   return out;
 }

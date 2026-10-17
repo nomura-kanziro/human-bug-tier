@@ -2,12 +2,13 @@
 // 캡처 영역(#tier-capture-area) 밖에 있어 PNG/PDF 에는 안 찍히고, 고르는 즉시 위 테이블에 미리보기된다.
 import {
   applyStyleChange, autoDistinctThemes, getStyleForGrade, matchingPresetKey, sanitizeHexColor,
-  TIER_BORDER_SWATCHES, TIER_STYLE_EFFECTS, TIER_STYLE_PRESETS,
+  TIER_BORDER_SWATCHES, TIER_EFFECT_SWATCHES, TIER_STYLE_EFFECTS, TIER_STYLE_PRESETS,
 } from '../lib/tierStyle';
 
 export default function DecoratePanel({ hidden, styleMap, index, scope, onScopeChange, onChange }) {
   const style = getStyleForGrade(styleMap, index);
   const activePreset = matchingPresetKey(style);
+  const noEffect = style.effect === 'none';
 
   const set = (partial) => onChange(applyStyleChange(styleMap, index, scope, partial));
 
@@ -15,7 +16,7 @@ export default function DecoratePanel({ hidden, styleMap, index, scope, onScopeC
     <div id="decorate-panel" className="decorate-panel" hidden={hidden}>
       <div className="decorate-panel-head">
         <strong>티어표 꾸미기</strong>
-        <span className="decorate-panel-sub">테두리 색·배경 이펙트를 고르면 위 테이블에 바로 반영됩니다.</span>
+        <span className="decorate-panel-sub">테두리 색·배경 이펙트·이펙트 색을 고르면 위 테이블에 바로 반영됩니다.</span>
       </div>
 
       <div className="decorate-row">
@@ -35,7 +36,7 @@ export default function DecoratePanel({ hidden, styleMap, index, scope, onScopeC
               type="button"
               key={key}
               className={`decorate-preset${activePreset === key ? ' is-on' : ''}`}
-              onClick={() => set({ borderColor: preset.borderColor, effect: preset.effect })}
+              onClick={() => set({ borderColor: preset.borderColor, effect: preset.effect, effectColor: '' })}
             >
               {preset.label}
             </button>
@@ -83,6 +84,43 @@ export default function DecoratePanel({ hidden, styleMap, index, scope, onScopeC
             </button>
           ))}
         </div>
+      </div>
+
+      <div className="decorate-row">
+        <span className="decorate-label">이펙트 색</span>
+        <div className="decorate-swatches">
+          <button
+            type="button"
+            className={`decorate-mini${style.effectColor ? '' : ' is-on'}`}
+            disabled={noEffect}
+            onClick={() => set({ effectColor: '' })}
+          >
+            기본색
+          </button>
+          {TIER_EFFECT_SWATCHES.map((color) => (
+            <button
+              type="button"
+              key={color}
+              className={`decorate-swatch${style.effectColor === sanitizeHexColor(color) ? ' is-on' : ''}`}
+              style={{ background: color }}
+              title={color}
+              disabled={noEffect}
+              aria-label={`이펙트 색 ${color}`}
+              onClick={() => set({ effectColor: color })}
+            />
+          ))}
+        </div>
+        <label className="decorate-custom-color">
+          직접 선택
+          <input
+            type="color"
+            value={style.effectColor || '#ffffff'}
+            disabled={noEffect}
+            aria-label="이펙트 색 직접 선택"
+            onChange={(e) => set({ effectColor: e.target.value })}
+          />
+        </label>
+        {noEffect && <span className="decorate-hint">배경 이펙트를 먼저 고르면 색을 바꿀 수 있어요.</span>}
       </div>
 
       <div className="decorate-row decorate-row-end">
