@@ -399,7 +399,7 @@
 | 368 | 2026-10-18 | [`175403b`](#175403b) | docs(custom-maker): 할로윈 배경 이펙트·이펙트 색 기록 |
 | 369 | 2026-10-18 | [`f0837f1`](#f0837f1) | chore(footer): 사이트 버전 표시 1.0.2 → 1.0.5 |
 | 370 | 2026-10-18 | [`f69d96c`](#f69d96c) | feat(guide): 가이드 전용 페이지(/guide) + 게임식 가이드 모드 — 어둡게·강조·말풍선, 왼쪽 아래 ✕ 로 종료 |
-| 371 | 2026-10-18 | [`pending`](#pending371) | docs(guide): 가이드 모드 기록 추가 |
+| 371 | 2026-10-18 | [`d54a2bf`](#d54a2bf) | docs(guide): 가이드 모드 기록 추가 |
 
 ---
 
@@ -7154,15 +7154,15 @@
 
 ---
 
-<a id="pending371"></a>
+<a id="d54a2bf"></a>
 
-### 371. 2026-10-18 — `pending`
+### 371. 2026-10-18 — `d54a2bf`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `d54a2bf`
+- **hash (full)**: `d54a2bf3108593090160876b827419f6335f064b`
 - **author**: nomura
 - **message**: docs(guide): 가이드 모드 기록 추가
-- **git**: `git show pending`
+- **git**: `git show d54a2bf`
 - **범위**: docs / 가이드
 - **요약**: RDMD/frontend/14-guide/01-guide-mode-record.md 신규(동작·스테이지 표·구조·확인·수동 테스트)와 frontend README 색인 추가.
 - **주요 파일**: `RDMD/frontend/14-guide/01-guide-mode-record.md`, `RDMD/frontend/README.md`
