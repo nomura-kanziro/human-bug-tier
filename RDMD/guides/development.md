@@ -18,17 +18,20 @@ npm start          # 또는 npm run dev (nodemon)
 `/ai`(휴버봇)를 쓰려면 Python 서비스를 따로 띄운다. 안 띄우면 `/api/ai/*` 만 503 이고 나머지는 정상.
 
 ```bash
+ollama pull gemma4:12b ; ollama pull bge-m3                    # 처음 한 번(Ollama 는 켜져 있어야 함)
 cd ai-service
 python -m venv .venv
 .venv/Scripts/python -m pip install -r requirements.txt     # Linux/macOS: .venv/bin/python
-copy .env.example .env                                         # ANTHROPIC_API_KEY 비우면 문서 검색 답(fallback)
+copy .env.example .env                                         # 기본값 = Ollama gemma4:12b + bge-m3. Ollama 가 꺼져 있으면 문서 검색 답(fallback)
 .venv/Scripts/python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
-.venv/Scripts/python -m pytest -q                              # 테스트(실제 LLM 호출 없음)
+.venv/Scripts/python -m pytest -q                              # 테스트(Ollama·Claude·Oracle 호출 없음)
+.venv/Scripts/python scripts/eval_guide_chat.py                # 실제 모델로 질문 묶음 점검(--no-llm 은 검색·분기만)
 ```
 
 - backend 는 기본으로 `http://127.0.0.1:8000` 을 부른다(`backend/.env` `AI_SERVICE_URL`). `AI_SERVICE_KEY` 는 양쪽 같은 값.
 - **backend 코드(`routes/aiRoutes.js` 등)를 바꾸면 :5000 서버를 재시작**해야 새 라우트가 잡힌다(안 하면 "없는 API" 404). ai-service 도 코드·지식 변경 후 재시작(또는 `POST /reload`).
 - Windows Git Bash `curl` 로 한글 JSON 을 보내면 깨진다 — Node `fetch`·브라우저로 시험.
+- 처음 뜰 때 지식 조각(약 380개)을 임베딩해 `ai-service/data/chroma/` 에 저장한다(약 15초, 이후엔 바뀐 조각만). 파일을 지우면 다시 만든다.
 - 상세: [`../../ai-service/README.md`](../../ai-service/README.md), [`../features/ai-service.md`](../features/ai-service.md)
 
 ### 대안 (프론트만 다른 포트)

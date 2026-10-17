@@ -33,7 +33,7 @@ npm start
 
 → **http://localhost:5000/** (프론트 정적 + API 통합)
 
-AI 도우미(`/ai`)까지 보려면 AI 서비스를 따로 띄운다(키 없으면 문서 검색 답으로 동작):
+AI 도우미(`/ai`)까지 보려면 AI 서비스를 따로 띄운다(Ollama `gemma4:12b`·`bge-m3` 필요 — `ollama pull` 후. Ollama 가 꺼져 있으면 문서 검색 답으로 동작):
 
 ```bash
 cd ai-service

@@ -20,11 +20,11 @@ description: >
 
 - 서비스 공용: `ai-service/app/main.py`(FastAPI 진입점), `app/config.py`
 - **챗봇은 종류별 폴더로 나누고, 폴더마다 같은 6개 층을 둔다**: `schema/`(요청·응답 pydantic) · `router/`(HTTP) · `service/`(업무 로직) · `models/`(Oracle 테이블 행 모양) · `repository/`(Oracle SQL) · `database/`(Oracle 연결). 호출은 router → service → repository → database 한 방향.
-  - 가이드 전용 챗봇 = `ai-service/app/guidans_Chat/` — `service/` 에 `chat_service.py`(진입)·`knowledge.py`(RAG·BM25·CharacterIndex)·`graph.py`(LangGraph)·`prompts.py`·`llm.py`·`questions.py`, `router/chat_router.py`, `schema/chat.py`
+  - 가이드 전용 챗봇 = `ai-service/app/guidans_Chat/` — `service/` 에 `chat_service.py`(진입)·`knowledge.py`(문서·BM25·CharacterIndex)·`embeddings.py`(bge-m3)·`retrieval.py`(BM25+벡터 RRF)·`graph.py`(LangGraph)·`prompts.py`·`llm.py`(Ollama/Claude)·`questions.py`, `database/chroma.py`·`repository/knowledge_vector_repository.py`·`models/knowledge_chunk.py`(ChromaDB 벡터 저장), `router/chat_router.py`, `schema/chat.py`
   - 에이전트 봇 = `ai-service/app/Agent-Bot/`(계획 단계 — 6개 층 폴더에 README 만, 구현·수정 금지). 새 챗봇 코드를 다른 챗봇 폴더에 섞지 않는다
   - 공용: `app/main.py`(진입·라우터 연결), `config.py`, `deps.py`(X-AI-Key 검사)
 - 지식: `ai-service/knowledge/01~08-*.md`(사용자용 이용 안내) + `root-cloudflare/src/data/tiers.json`(직접 읽음)
-- 테스트: `ai-service/tests/test_service.py` (`.venv/Scripts/python -m pytest -q`)
+- 테스트: `ai-service/tests/` (`.venv/Scripts/python -m pytest -q` — 가짜 모델·가짜 임베딩·메모리 ChromaDB 라 Ollama 없이 돈다). 실제 모델 점검: `scripts/eval_guide_chat.py`
 - 프록시: `backend/routes/aiRoutes.js` → `server.js` `app.use('/api/ai', aiRoutes)`
 - 화면: `root-cloudflare/src/pages/AiHelper.jsx`, `src/lib/aiApi.js`, `src/styles/ai-helper.css`, 라우트 `/ai`, 푸터 링크, 가이드 페이지 링크
 
@@ -48,6 +48,10 @@ description: >
 
 ## Do not
 
+- **생성 모델(Ollama `gemma4:12b`)의 생각 모드를 켜지 않는다**(`reasoning=False`) — 켜면 토큰을 생각에 다 써서 답이 빈 문자열이 된다. 모델을 바꾸면 빈 답·속도를 먼저 확인한다.
+- 벡터 색인이 실패해도 서비스는 BM25 로 계속 돌아야 한다(예외로 죽지 않게). 임베딩 모델을 바꾸면 컬렉션이 새로 만들어져 다시 색인된다.
+- `MIN_VECTOR_SIM`(범위 밖 판단 기준, 0.50)은 실측값이다 — 지식·임베딩 모델을 바꾸면 `scripts/eval_guide_chat.py` 로 다시 확인하고 바꾼다.
+- Ollama(11434)와 ai-service(8000)를 외부에 열지 않는다.
 - **ai-service 에서 MongoDB 를 쓰지 않는다.** DB 가 필요하면 **Oracle SQL**(python-oracledb)만 — 값은 항상 바인드 변수(`:name`), 문자열을 SQL 에 이어 붙이지 않는다. 사이트 본체 `backend/` 의 MongoDB 와 섞지 않는다.
 - 라우터에서 SQL 을 직접 쓰거나 서비스에서 HTTP 를 다루지 않는다(층 분리).
 - LLM 키(`ANTHROPIC_API_KEY`)·`AI_SERVICE_KEY` 를 커밋·로그·응답에 넣지 않는다(`ai-service/.env` 는 gitignore — `.env` 패턴).

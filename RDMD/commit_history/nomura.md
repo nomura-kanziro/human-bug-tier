@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 390 |
+| **커밋 수** | 391 |
 | **기간** | 2026-03-20 ~ 2026-10-18 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -419,6 +419,7 @@
 | 388 | 2026-10-18 | [`eee4854`](#eee4854) | refactor(ai-service): 챗봇 폴더마다 schema·router·service·models·repository·database 6개 층으로 재구성 + Oracle 연결 층(MongoDB 미사용) |
 | 389 | 2026-10-18 | [`a864cae`](#a864cae) | docs(ai-service): 6개 층 구조와 Oracle SQL 전용(MongoDB 미사용) 원칙 반영 — README·기능 문서·기록·보안 가이드·AI 스킬 4종 |
 | 390 | 2026-10-18 | [`e0edfc1`](#e0edfc1) | feat(ai-service): 생성 모델을 Ollama gemma4:12b 로 바꾸고 ChromaDB + bge-m3 벡터 검색(BM25 와 RRF 하이브리드)을 가이드 챗봇에 추가 |
+| 391 | 2026-10-18 | [`pending`](#pending391) | docs(ai-service): Ollama gemma4:12b·ChromaDB·bge-m3 반영 — README·기능 문서·기록 02·배포/보안/개발 가이드·AI 스킬 4종 |
 
 ---
 
@@ -7527,6 +7528,24 @@
 - **범위**: ai-service / guidans_Chat 모델·검색
 - **요약**: llm.py 를 provider 선택형(ollama 기본·anthropic·none)으로 바꾸고 ChatOllama 의 생각 모드를 꺼 빈 답 문제를 막음, 모델 워밍업. ChromaDB(database/chroma.py·repository/knowledge_vector_repository.py·models/knowledge_chunk.py)에 지식 조각을 bge-m3 임베딩으로 저장하고 새 조각만 동기화, retrieval.py 에서 BM25 와 RRF 로 합침(벡터 실패 시 BM25 로 계속). graph.py 는 관련성을 벡터 유사도(0.50, 실측)로 판단하고 프롬프트 인젝션을 refuse 노드로 차단. CharacterIndex 짧은 이름 오탐 수정, 프롬프트 7번 규칙, eval_guide_chat.py, 의존성(chromadb·langchain-ollama)·.env.example·.gitignore. pytest 22개 통과, 실제 Ollama 로 18개 질문 점검.
 - **주요 파일**: `ai-service/app/config.py`, `ai-service/app/guidans_Chat/service/{llm,embeddings,retrieval,graph,chat_service,knowledge,prompts}.py`, `ai-service/app/guidans_Chat/{database/chroma,repository/knowledge_vector_repository,models/knowledge_chunk}.py`, `ai-service/scripts/eval_guide_chat.py`, `ai-service/tests/*`, `ai-service/requirements.txt`, `ai-service/.env.example`, `.gitignore`
+- **관련 RDMD**: `RDMD/ai/02-ollama-chromadb-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending391"></a>
+
+### 391. 2026-10-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(ai-service): Ollama gemma4:12b·ChromaDB·bge-m3 반영 — README·기능 문서·기록 02·배포/보안/개발 가이드·AI 스킬 4종
+- **git**: `git show pending`
+- **범위**: docs / AI 서비스 모델·검색
+- **요약**: ai-service README(구성도·폴더·모델 준비·환경 변수·동작 규칙·운영 배포 선택지), features/ai-service.md(하이브리드 검색·생성 모델·설정·확인·운영 배포), RDMD/ai/02 기록 신설(실측으로 알게 된 것 7가지), 배포 체크리스트(모델 위치 결정·Ollama 포트), 보안(Ollama 내부 전용·인젝션 차단), 개발 가이드(ollama pull·eval 스크립트), AI 스킬 4종(생각 모드·MIN_VECTOR_SIM·내부 전용), CLAUDE.md, work-history.
+- **주요 파일**: `ai-service/README.md`, `RDMD/features/ai-service.md`, `RDMD/ai/*`, `RDMD/guides/*`, `RDMD/summary/work-history.md`, AI 스킬 4종, `CLAUDE.md`
 - **관련 RDMD**: `RDMD/ai/02-ollama-chromadb-record.md`
 
 [▲ 목차로](#목차)

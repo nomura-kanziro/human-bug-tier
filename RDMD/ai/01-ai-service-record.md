@@ -5,6 +5,8 @@ feature: ai-service
 
 # AI 전용 서비스 신설 — 휴버봇 챗봇 + 랜덤 추천 질문
 
+> ⚠ 이 문서는 **첫 버전(Claude API + BM25)** 기록이다. 생성 모델이 Ollama gemma4:12b 로, 검색이 ChromaDB + bge-m3 하이브리드로 바뀐 내용은 [02-ollama-chromadb-record.md](./02-ollama-chromadb-record.md).
+>
 > 이 문서는 **AI 서비스(`ai-service/`) 자체**의 기록이다. 같은 작업의 다른 조각:
 > 화면 [`../frontend/15-ai/01-ai-helper-page-record.md`](../frontend/15-ai/01-ai-helper-page-record.md) · Express 프록시 [`../backend/10-ai/01-ai-proxy-record.md`](../backend/10-ai/01-ai-proxy-record.md) · 기능 설명 [`../features/ai-service.md`](../features/ai-service.md)
 
