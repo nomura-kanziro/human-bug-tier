@@ -26,6 +26,7 @@ export default function Footer() {
           </div>
           <div className="site-footer-col">
             <strong>이용 안내</strong>
+            <Link to="/guide">가이드</Link>
             <Link to="/luck-draw">행운 뽑기</Link>
             <Link to="/notice">공지사항</Link>
             {/* id="contact-link" / .fot-text 는 예전 푸터부터 쓰던 이름이라 그대로 둔다 */}

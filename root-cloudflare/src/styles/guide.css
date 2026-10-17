@@ -1,0 +1,325 @@
+/* ======================================================================
+   가이드 모드 — /guide 시작 화면 + 켜진 동안의 오버레이(어둡게 + 뚫린 강조 + 말풍선 + 왼쪽 아래 ✕)
+   z-index 는 헤더 패널(최대 10000) 위로.
+   ====================================================================== */
+
+/* ---------- /guide 시작 화면 ---------- */
+.guide-page {
+  width: min(960px, 100% - 32px);
+  margin: 0 auto;
+  padding: 36px 0 56px;
+}
+
+.guide-hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+  padding: 34px 20px 30px;
+  border: 1px solid var(--border-color);
+  border-radius: 18px;
+  background:
+    radial-gradient(ellipse at 50% 0%, color-mix(in srgb, var(--brand) 22%, transparent), transparent 62%),
+    var(--bg-elevated);
+  box-shadow: var(--shadow-lg);
+}
+.guide-hero-kicker {
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  color: var(--brand-strong);
+}
+.guide-hero h1 {
+  margin: 0;
+  font-size: clamp(1.5rem, 4vw, 2.1rem);
+  color: var(--text-primary);
+}
+.guide-hero p {
+  margin: 0;
+  max-width: 460px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+.guide-hero-x {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 1.5px solid currentColor;
+  font-size: 0.7rem;
+  vertical-align: middle;
+}
+.guide-start-btn {
+  margin-top: 8px;
+  padding: 13px 30px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--brand);
+  color: var(--brand-contrast);
+  font-size: 1.05rem;
+  font-weight: 800;
+  cursor: pointer;
+  box-shadow: 0 6px 18px color-mix(in srgb, var(--brand) 45%, transparent);
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+.guide-start-btn:hover { transform: translateY(-2px); filter: brightness(1.05); }
+.guide-progress {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.guide-stages {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 14px;
+  margin-top: 22px;
+}
+.guide-stage-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 18px 14px 16px;
+  text-align: center;
+  border: 1px solid var(--border-color);
+  border-radius: 14px;
+  background: var(--bg-elevated);
+  transition: transform 0.15s ease, border-color 0.15s ease;
+}
+.guide-stage-card:hover { transform: translateY(-3px); border-color: var(--brand); }
+.guide-stage-card.is-cleared { border-color: color-mix(in srgb, var(--brand) 60%, var(--border-color)); }
+.guide-stage-no {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: var(--brand-strong);
+}
+.guide-stage-icon { font-size: 2rem; line-height: 1.2; }
+.guide-stage-card strong { color: var(--text-primary); }
+.guide-stage-card p {
+  word-break: keep-all;
+  margin: 0;
+  font-size: 0.84rem;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+.guide-stage-meta {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+.guide-stage-card.is-cleared .guide-stage-meta { color: var(--brand-strong); }
+.guide-stage-btn {
+  margin-top: 6px;
+  padding: 7px 20px;
+  border-radius: 999px;
+  border: 1px solid var(--brand);
+  background: transparent;
+  color: var(--text-primary);
+  font-weight: 700;
+  cursor: pointer;
+}
+.guide-stage-btn:hover { background: var(--brand); color: var(--brand-contrast); }
+.guide-reset {
+  display: block;
+  margin: 22px auto 0;
+  border: 0;
+  background: none;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ---------- 가이드 모드 오버레이 ---------- */
+.guide-root {
+  position: fixed;
+  inset: 0;
+  z-index: 11000;
+  pointer-events: none;   /* 아래 개별 요소만 클릭을 받는다 */
+}
+.guide-block {
+  position: fixed;
+  inset: 0;
+  pointer-events: auto;   /* 뒤 화면 클릭 막이 */
+  background: transparent;
+}
+.guide-dim {
+  position: fixed;
+  inset: 0;
+  background: rgba(8, 6, 14, 0.66);
+}
+
+/* 강조 틀 — 거대한 box-shadow 로 바깥을 어둡게 하고 안쪽은 뚫려 보인다. 이동은 부드럽게 미끄러진다 */
+.guide-spot {
+  position: fixed;
+  border-radius: 12px;
+  box-shadow: 0 0 0 9999px rgba(8, 6, 14, 0.66), 0 0 0 3px var(--brand);
+  transition: top 0.35s ease, left 0.35s ease, width 0.35s ease, height 0.35s ease;
+  animation: guide-pulse 1.6s ease-in-out infinite;
+}
+@keyframes guide-pulse {
+  0%, 100% { box-shadow: 0 0 0 9999px rgba(8, 6, 14, 0.66), 0 0 0 3px var(--brand), 0 0 0 3px transparent; }
+  50% { box-shadow: 0 0 0 9999px rgba(8, 6, 14, 0.66), 0 0 0 3px var(--brand), 0 0 0 10px color-mix(in srgb, var(--brand) 35%, transparent); }
+}
+
+.guide-bubble {
+  position: fixed;
+  box-sizing: border-box;
+  padding: 14px 16px 14px;
+  border-radius: 16px;
+  border: 2px solid var(--brand);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  box-shadow: 0 14px 36px rgba(0, 0, 0, 0.4);
+  pointer-events: auto;
+  transition: top 0.35s ease, left 0.35s ease;
+  animation: guide-pop 0.28s ease;
+}
+@keyframes guide-pop {
+  from { opacity: 0; transform: translateY(8px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+.guide-bubble-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.guide-mascot {
+  border-radius: 50%;
+  animation: guide-bob 2.2s ease-in-out infinite;
+}
+@keyframes guide-bob {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-3px); }
+}
+.guide-stage {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--brand-strong);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.guide-count {
+  font-size: 0.76rem;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+.guide-text {
+  margin: 10px 0 10px;
+  font-size: 1.02rem;
+  font-weight: 700;
+  line-height: 1.5;
+  word-break: keep-all;
+}
+.guide-dots {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+.guide-dots span {
+  width: 18px;
+  height: 5px;
+  border-radius: 3px;
+  background: var(--border-color);
+}
+.guide-dots span.is-done { background: color-mix(in srgb, var(--brand) 55%, var(--border-color)); }
+.guide-dots span.is-now { background: var(--brand); }
+.guide-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.guide-btn {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-subtle);
+  color: var(--text-primary);
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.guide-btn:disabled { opacity: 0.4; cursor: default; }
+.guide-btn-primary {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: var(--brand-contrast);
+}
+
+/* 왼쪽 아래 동그란 ✕ — 가이드 모드 종료 */
+.guide-exit {
+  position: fixed;
+  left: 18px;
+  bottom: 18px;
+  width: 46px;
+  height: 46px;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  border-radius: 50%;
+  border: 2px solid var(--brand);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  font-size: 1.1rem;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  pointer-events: auto;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  transition: transform 0.15s ease, background 0.15s ease;
+}
+.guide-exit:hover { transform: scale(1.08); background: var(--brand); color: var(--brand-contrast); }
+
+/* 스테이지 클리어 알림 */
+.guide-clear {
+  position: fixed;
+  inset: 0;
+  z-index: 11000;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+.guide-clear-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 22px 34px;
+  border-radius: 18px;
+  border: 2px solid var(--brand);
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+  text-align: center;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.45);
+  animation: guide-clear-in 2.6s ease both;
+}
+.guide-clear-kicker {
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.22em;
+  color: var(--brand-strong);
+}
+.guide-clear-card strong { font-size: 1.3rem; }
+.guide-clear-card span:last-child { font-size: 0.86rem; color: var(--text-secondary); }
+@keyframes guide-clear-in {
+  0% { opacity: 0; transform: scale(0.8); }
+  12%, 82% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.04); }
+}
+
+@media (max-width: 768px) {
+  .guide-page { padding-top: 22px; }
+  .guide-exit { left: 12px; bottom: 12px; width: 44px; height: 44px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .guide-spot, .guide-bubble, .guide-mascot, .guide-clear-card { animation: none; transition: none; }
+}

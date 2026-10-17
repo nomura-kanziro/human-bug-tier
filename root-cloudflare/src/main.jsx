@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
+import GuideMode from './components/GuideMode';
 import LoadingScreen from './components/LoadingScreen';
 import SeasonalBackdrop from './components/SeasonalBackdrop';
 import { AuthProvider } from './context/AuthContext';
@@ -17,6 +18,8 @@ import './styles/react-extra.css';
 import './styles/design-system.css';
 // 앱 뼈대(헤더·푸터·404·빈 상태) 마감 — 원본 뼈대 CSS 위에서 덮어쓰므로 design-system 바로 뒤
 import './styles/app-shell.css';
+// 가이드 모드(/guide 화면 + 켜진 동안의 오버레이)
+import './styles/guide.css';
 // 이벤트 디자인(계절 배경) — 페이지 기본 배경을 덮어야 하므로 맨 마지막
 import './styles/season.css';
 
@@ -27,6 +30,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
         <LoadingScreen />
         <SeasonalBackdrop />
         <App />
+        <GuideMode />
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>,

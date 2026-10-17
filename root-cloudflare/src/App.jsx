@@ -9,6 +9,7 @@ import AdminLogin from './pages/AdminLogin';
 import Board from './pages/Board';
 import CustomMaker from './pages/CustomMaker';
 import FindAccount from './pages/FindAccount';
+import Guide from './pages/Guide';
 import EventPage from './pages/EventPage';
 import Home from './pages/Home';
 import Inquiry from './pages/Inquiry';
@@ -53,6 +54,7 @@ export default function App() {
 
         <Route path="/custom-maker" element={<CustomMaker />} />
         <Route path="/luck-draw" element={<LuckDraw />} />
+        <Route path="/guide" element={<Guide />} />
         <Route path="/event" element={<EventPage />} />
         <Route path="/board" element={<Board />} />
         <Route path="/board/post" element={<PostDetail />} />
