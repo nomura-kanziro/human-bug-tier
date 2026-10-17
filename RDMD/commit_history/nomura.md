@@ -416,7 +416,7 @@
 | 385 | 2026-10-18 | [`fe29c16`](#fe29c16) | docs(mail): utils/mail.js 머리 주석에 사이트 전용 SMTP(0순위) 반영 |
 | 386 | 2026-10-18 | [`44354b5`](#44354b5) | refactor(ai-service): 가이드 전용 챗봇 코드를 app/guidans_Chat/ 으로 분리하고 에이전트 봇 자리 app/Agent-Bot/ 추가 |
 | 387 | 2026-10-18 | [`44c140e`](#44c140e) | docs(ai-service): 챗봇 폴더 구분(guidans_Chat·Agent-Bot) 반영 — README·기능 문서·기록·AI 스킬 4종·작업 이력 |
-| 388 | 2026-10-18 | [`pending`](#pending388) | refactor(ai-service): 챗봇 폴더마다 schema·router·service·models·repository·database 6개 층으로 재구성 + Oracle 연결 층(MongoDB 미사용) |
+| 388 | 2026-10-18 | [`eee4854`](#eee4854) | refactor(ai-service): 챗봇 폴더마다 schema·router·service·models·repository·database 6개 층으로 재구성 + Oracle 연결 층(MongoDB 미사용) |
 
 ---
 
@@ -7477,15 +7477,15 @@
 
 ---
 
-<a id="pending388"></a>
+<a id="eee4854"></a>
 
-### 388. 2026-10-18 — `pending`
+### 388. 2026-10-18 — `eee4854`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `eee4854`
+- **hash (full)**: `eee485479d13f6862dc5b8ee39de3f47eb94a6b4`
 - **author**: nomura
 - **message**: refactor(ai-service): 챗봇 폴더마다 schema·router·service·models·repository·database 6개 층으로 재구성 + Oracle 연결 층(MongoDB 미사용)
-- **git**: `git show pending`
+- **git**: `git show eee4854`
 - **범위**: ai-service / 층 구조 · Oracle
 - **요약**: guidans_Chat 을 schema(요청·응답)·router(GET /questions·POST /chat·POST /reload)·service(GuideChatService + 기존 knowledge·graph·prompts·llm·questions 이동)·models·repository(OracleRepository: 바인드 변수·commit)·database(python-oracledb 풀, 설정이 있을 때만 지연 생성)로 재구성하고 main.py 는 공용(라우터 연결·/health), 키 검사는 deps.py 로 분리. Agent-Bot 에도 같은 6개 층 폴더(README 만). ai-service 는 MongoDB 를 쓰지 않고 Oracle SQL 전용. oracledb 26.0.1·.env.example ORACLE_* 추가. API 경로·응답 동작 불변, pytest 11개(Oracle 층은 가짜 연결) 통과.
 - **주요 파일**: `ai-service/app/guidans_Chat/{schema,router,service,models,repository,database}/*`, `ai-service/app/Agent-Bot/*/README.md`, `ai-service/app/main.py`, `ai-service/app/deps.py`, `ai-service/requirements.txt`, `ai-service/.env.example`, `ai-service/tests/*`
