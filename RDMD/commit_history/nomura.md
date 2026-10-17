@@ -395,7 +395,7 @@
 | 364 | 2026-10-18 | [`4685f36`](#4685f36) | docs(event-design): 계절 배경 고도화 내용 기록 — 눈 한 묶음 움직임·층 구조·학교 건물·확인 방법 |
 | 365 | 2026-10-18 | [`b12b7ce`](#b12b7ce) | feat(event-design): 밝은 테마에서는 달 대신 태양 — 할로윈 보름달은 눈이 든 태양, 크리스마스 초승달은 작은 태양 |
 | 366 | 2026-10-18 | [`fe99e6f`](#fe99e6f) | docs(event-design): 밝은 테마 태양 전환 내용 기록 |
-| 367 | 2026-10-18 | [`pending`](#pending367) | feat(custom-maker): 꾸미기 배경 이펙트에 할로윈 추가 + 이펙트 색 고르기 |
+| 367 | 2026-10-18 | [`c4e97b0`](#c4e97b0) | feat(custom-maker): 꾸미기 배경 이펙트에 할로윈 추가 + 이펙트 색 고르기 |
 
 ---
 
@@ -7078,15 +7078,15 @@
 
 ---
 
-<a id="pending367"></a>
+<a id="c4e97b0"></a>
 
-### 367. 2026-10-18 — `pending`
+### 367. 2026-10-18 — `c4e97b0`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `c4e97b0`
+- **hash (full)**: `c4e97b0e381dc1914458a7802967d2c79ce7ae0f`
 - **author**: nomura
 - **message**: feat(custom-maker): 꾸미기 배경 이펙트에 할로윈 추가 + 이펙트 색 고르기
-- **git**: `git show pending`
+- **git**: `git show c4e97b0`
 - **범위**: frontend / 커스텀 메이커 꾸미기
 - **요약**: 배경 이펙트에 할로윈(보랏빛 밤·주황 달 후광·호박빛·도깨비불·점선 테두리) 추가, 이펙트 색(기본색/스와치/직접 선택) 저장·적용. 이펙트별 기본색을 --fx-* 변수로 바꿔 고른 색이 있을 때만 인라인으로 덮어쓰며 짝색은 색상 회전으로 생성. 옛 글은 모양 그대로.
 - **주요 파일**: `root-cloudflare/src/lib/tierStyle.js`, `root-cloudflare/src/styles/custom-maker.css`, `root-cloudflare/src/components/DecoratePanel.jsx`
