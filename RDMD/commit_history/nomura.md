@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 387 |
+| **커밋 수** | 388 |
 | **기간** | 2026-03-20 ~ 2026-10-18 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -416,6 +416,7 @@
 | 385 | 2026-10-18 | [`fe29c16`](#fe29c16) | docs(mail): utils/mail.js 머리 주석에 사이트 전용 SMTP(0순위) 반영 |
 | 386 | 2026-10-18 | [`44354b5`](#44354b5) | refactor(ai-service): 가이드 전용 챗봇 코드를 app/guidans_Chat/ 으로 분리하고 에이전트 봇 자리 app/Agent-Bot/ 추가 |
 | 387 | 2026-10-18 | [`44c140e`](#44c140e) | docs(ai-service): 챗봇 폴더 구분(guidans_Chat·Agent-Bot) 반영 — README·기능 문서·기록·AI 스킬 4종·작업 이력 |
+| 388 | 2026-10-18 | [`pending`](#pending388) | refactor(ai-service): 챗봇 폴더마다 schema·router·service·models·repository·database 6개 층으로 재구성 + Oracle 연결 층(MongoDB 미사용) |
 
 ---
 
@@ -7470,6 +7471,24 @@
 - **범위**: docs / AI 서비스 구조
 - **요약**: ai-service/README 폴더 트리와 파일 경로, features/ai-service.md 에 챗봇 폴더 구분 표, RDMD/ai 기록, .agents·.claude·.groks·.codex ai-service 스킬 Code map(+Agent-Bot 구현 금지 규칙), work-history AI 행을 새 구조로 갱신.
 - **주요 파일**: `ai-service/README.md`, `RDMD/features/ai-service.md`, `RDMD/ai/01-ai-service-record.md`, `RDMD/summary/work-history.md`, `.agents/ai-service/skill.md` 외 3팩
+- **관련 RDMD**: `RDMD/features/ai-service.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending388"></a>
+
+### 388. 2026-10-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: refactor(ai-service): 챗봇 폴더마다 schema·router·service·models·repository·database 6개 층으로 재구성 + Oracle 연결 층(MongoDB 미사용)
+- **git**: `git show pending`
+- **범위**: ai-service / 층 구조 · Oracle
+- **요약**: guidans_Chat 을 schema(요청·응답)·router(GET /questions·POST /chat·POST /reload)·service(GuideChatService + 기존 knowledge·graph·prompts·llm·questions 이동)·models·repository(OracleRepository: 바인드 변수·commit)·database(python-oracledb 풀, 설정이 있을 때만 지연 생성)로 재구성하고 main.py 는 공용(라우터 연결·/health), 키 검사는 deps.py 로 분리. Agent-Bot 에도 같은 6개 층 폴더(README 만). ai-service 는 MongoDB 를 쓰지 않고 Oracle SQL 전용. oracledb 26.0.1·.env.example ORACLE_* 추가. API 경로·응답 동작 불변, pytest 11개(Oracle 층은 가짜 연결) 통과.
+- **주요 파일**: `ai-service/app/guidans_Chat/{schema,router,service,models,repository,database}/*`, `ai-service/app/Agent-Bot/*/README.md`, `ai-service/app/main.py`, `ai-service/app/deps.py`, `ai-service/requirements.txt`, `ai-service/.env.example`, `ai-service/tests/*`
 - **관련 RDMD**: `RDMD/features/ai-service.md`
 
 [▲ 목차로](#목차)

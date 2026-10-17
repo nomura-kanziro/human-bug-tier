@@ -7,6 +7,9 @@ langchain-anthropic==1.7.6
 langgraph==1.2.16
 rank-bm25==0.2.2
 
+# DB 가 필요해질 때만 쓰는 Oracle 드라이버(thin 모드). ai-service 는 MongoDB 를 쓰지 않는다
+oracledb==26.0.1
+
 # 테스트
 pytest==9.1.1
 httpx==0.28.1

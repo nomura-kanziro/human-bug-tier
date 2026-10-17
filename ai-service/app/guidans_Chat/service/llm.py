@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from langchain_core.language_models.chat_models import BaseChatModel
 
-from ..config import Settings
+from ...config import Settings
 
 
 def make_llm(settings: Settings) -> BaseChatModel | None:

@@ -9,9 +9,9 @@ from fastapi.testclient import TestClient
 from langchain_core.language_models.fake_chat_models import FakeListChatModel
 
 from app.config import load_settings
-from app.guidans_Chat.graph import build_graph
-from app.guidans_Chat.knowledge import build_knowledge_base
-from app.guidans_Chat.questions import random_questions
+from app.guidans_Chat.service.graph import build_graph
+from app.guidans_Chat.service.knowledge import build_knowledge_base
+from app.guidans_Chat.service.questions import random_questions
 
 
 @pytest.fixture(scope="module")
@@ -87,3 +87,15 @@ def test_api(monkeypatch):
         assert res["characters"][0]["tier"] == 1
         assert client.post("/chat", json={"message": "x" * 501}, headers=h).status_code == 422
     os.environ.pop("AI_SERVICE_KEY", None)
+
+
+def test_layer_folders_exist():
+    """챗봇 폴더마다 schema·router·service·models·repository·database 층이 있다(Agent-Bot 은 README 자리만)."""
+    from pathlib import Path
+
+    app_dir = Path(__file__).resolve().parent.parent / "app"
+    layers = ["schema", "router", "service", "models", "repository", "database"]
+    for bot in ("guidans_Chat", "Agent-Bot"):
+        for layer in layers:
+            assert (app_dir / bot / layer).is_dir(), f"{bot}/{layer}"
+    assert not list((app_dir / "Agent-Bot").rglob("*.py")), "Agent-Bot 은 계획 단계 — 파이썬 코드가 없어야 한다"
