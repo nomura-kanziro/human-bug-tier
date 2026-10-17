@@ -15,13 +15,14 @@ RDMD/backend/
 ├── README.md
 ├── 01-setup/        # Node · Express · Mongoose · DB 연결
 ├── 02-tierlists/    # 커스텀 게시글 · 댓글 · 좋아요 · 신고
-├── 03-auth/         # User · JWT · 아이디/비번 재설정
+├── 03-auth/         # User · JWT · 아이디/비번 재설정 · 메일 발송
 ├── 04-notice/       # 공지 CRUD · 정적 서빙 연동
 ├── 05-inquiry/      # 문의 · 답변 · 신고 API
-├── 06-admin/        # 관리자 로그인 · 차단 · 신고 · requireAdmin
+├── 06-admin/        # 관리자 로그인 · 차단 · 신고 · requireAdmin · 사이트 설정
 ├── 07-deploy/       # Render · 정적 서빙 · Oracle Cloud 배포
-└── 08-luck-draw/    # 행운 뽑기 (오늘의 행운 티어) 모델·API
-└── 09-event/        # 이벤트 (매일 퀴즈 · 메모리 게임 · 티어표 공개) API
+├── 08-luck-draw/    # 행운 뽑기 모델·API · 포인트 원장 · 출석체크
+├── 09-event/        # 이벤트 (매일 퀴즈 · 메모리 게임 · 티어표 공개) API
+└── 10-ai/           # AI 프록시 /api/ai (AI 전용 서비스 ai-service 의 백엔드 조각)
 ```
 
 파일명 규칙: `{순서}-{기능키워드}-record.md`
@@ -60,6 +61,7 @@ RDMD/backend/
 | [08-signup-gmail-and-admin-verify-record.md](./03-auth/08-signup-gmail-and-admin-verify-record.md) | — | 가입 메일 Gmail 우선 + 관리자 직접 인증 |
 | [09-nickname-change-record.md](./03-auth/09-nickname-change-record.md) | — | 닉네임 변경 API — 검증·7일 쿨다운·복사본 전파·옛 토큰 거부 |
 | [10-mail-template-record.md](./03-auth/10-mail-template-record.md) | — | 인증·아이디 찾기·재설정 메일 공용 템플릿(예시문 기준, GIF 로고, 발신전용 문구) + 가입 메일 발송 순서 정정 |
+| [11-site-smtp-mail-record.md](./03-auth/11-site-smtp-mail-record.md) | — | 사이트 전용 SMTP(Oracle Email Delivery) 발송 — 사이트 도메인 주소로 보내고 개인 Gmail 주소 숨김(발송 체인 맨 앞) |
 
 ## 04-notice — 공지
 
@@ -87,6 +89,7 @@ RDMD/backend/
 | [05-requireadmin-middleware-record.md](./06-admin/05-requireadmin-middleware-record.md) | 28 | requireAdmin 전면 적용 |
 | [06-admin-board-ui-backend-note-record.md](./06-admin/06-admin-board-ui-backend-note-record.md) | 29 | 관리 UI 작업 시 백엔드 메모 |
 | [07-user-delete-api-record.md](./06-admin/07-user-delete-api-record.md) | — | 회원 삭제 DELETE /api/admin/users/:id |
+| [08-site-setting-seasonal-theme-record.md](./06-admin/08-site-setting-seasonal-theme-record.md) | — | 사이트 운영 설정 `SiteSetting` + 이벤트 디자인(계절 배경) API — `GET /api/site/settings`, `POST /api/admin/site/seasonal-theme` |
 
 ## 07-deploy — 배포
 
@@ -119,6 +122,14 @@ RDMD/backend/
 
 ---
 
+## 10-ai — AI 프록시
+
+AI 기능은 프론트·백엔드·AI 서비스에 걸쳐 있어 **세 곳에 나눠 기록**한다(서로 링크): 프록시(여기) · [`../frontend/15-ai/`](../frontend/README.md) · 서비스 [`../ai/`](../ai/README.md).
+
+| 파일 | legacy | 요약 |
+|------|--------|------|
+| [01-ai-proxy-record.md](./10-ai/01-ai-proxy-record.md) | — | `/api/ai` 프록시 — 질문 500자·IP당 10분 20회(429)·공유 키·45초 타임아웃·장애 시 503, 대화 저장 안 함 |
+
 ## legacy backend_N → 새 경로
 
 | N | 경로 |
@@ -148,7 +159,7 @@ RDMD/backend/
 
 ## 새 백엔드 기록 추가
 
-1. 기능 폴더 선택 (없으면 `08-…` 추가 후 이 README 갱신)
+1. 기능 폴더 선택 (없으면 다음 번호 폴더를 만들고 이 README 갱신)
 2. 폴더 안 다음 번호: `NN-키워드-record.md`
 3. 상단 YAML 예:
 
@@ -163,7 +174,3 @@ area: backend
 5. 큰 변경이면 `../summary/work-history.md` · 이 README 표 갱신  
 
 코드 위치 참고: 저장소 [`../../backend/README.md`](../../backend/README.md)
-
-## AI 프록시 (→ RDMD/ai)
-
-`backend/routes/aiRoutes.js`(`/api/ai`, ai-service 로 넘기는 프록시)는 AI 전용 서비스와 한 묶음이라 [`../ai/`](../ai/README.md) 에 기록한다 — [01-ai-service-record.md](../ai/01-ai-service-record.md).

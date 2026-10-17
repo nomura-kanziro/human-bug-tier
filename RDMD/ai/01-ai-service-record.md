@@ -5,6 +5,16 @@ feature: ai-service
 
 # AI 전용 서비스 신설 — 휴버봇 챗봇 + 랜덤 추천 질문
 
+> 이 문서는 **AI 서비스(`ai-service/`) 자체**의 기록이다. 같은 작업의 다른 조각:
+> 화면 [`../frontend/15-ai/01-ai-helper-page-record.md`](../frontend/15-ai/01-ai-helper-page-record.md) · Express 프록시 [`../backend/10-ai/01-ai-proxy-record.md`](../backend/10-ai/01-ai-proxy-record.md) · 기능 설명 [`../features/ai-service.md`](../features/ai-service.md)
+
+## 관련 커밋
+
+- `b869898` feat(ai-service): AI 전용 서비스 신설 — FastAPI · LangChain · LangGraph · RAG
+- `4e50a22` feat(ai): Express /api/ai 프록시
+- `77cafa9` feat(ai): AI 도우미 화면(/ai)
+- `33d9991` docs(ai): AI 전용 서비스 문서 대규모 업데이트
+
 ## 요청
 
 > 가이드 외에도 기초적인 티어 내용이나 관련 내용을 알 수 있게 챗봇 기능이나 랜덤 질문 3개를 출력하는 기능을 만든다.

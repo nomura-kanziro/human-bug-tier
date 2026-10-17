@@ -16,7 +16,7 @@
 | 가이드 | [`guides/`](./guides/) | 로컬 실행, 경로/API, 보안, 배포, 기록 방법 |
 | 프론트 일지 | [`frontend/`](./frontend/) | 프론트엔드 커밋·작업 상세 기록 (기능별) |
 | 백엔드 일지 | [`backend/`](./backend/) | 백엔드 커밋·작업 상세 기록 (기능 폴더 + `*-record.md`) |
-| **AI 일지** | [`ai/`](./ai/) | AI 전용 서비스(`ai-service/`, FastAPI · LangChain · LangGraph · RAG) 작업 기록 (2026-10-18~) |
+| **AI 일지** | [`ai/`](./ai/) | AI 전용 서비스(`ai-service/`, FastAPI · LangChain · LangGraph · RAG) 작업 기록 (2026-10-18~). 화면은 `frontend/15-ai`, 프록시는 `backend/10-ai` 에 나눠 기록하고 서로 링크 |
 | **작성자 커밋 로그** | [`commit_history/`](./commit_history/) | **사람별** 커밋 타임라인 (과거→현재, 목차 포함 · 예: `nomura.md`) |
 
 > 예전에 루트에 있던 `information1.md` ~ `information29.md` 는  
@@ -73,7 +73,11 @@
 | [inquiry.md](./features/inquiry.md) | 문의하기 · 답변 |
 | [admin.md](./features/admin.md) | 관리자 대시보드 |
 | [notifications.md](./features/notifications.md) | 헤더 알림 |
+| [luck-draw.md](./features/luck-draw.md) | 행운 뽑기 3모드 · 포인트 · 출석체크 |
+| [my-page.md](./features/my-page.md) | 마이페이지 · 프로필 · 출석판 |
+| [ai-service.md](./features/ai-service.md) | **AI 도우미 · AI 전용 서비스**(`ai-service/`) |
 | [backend-api.md](./features/backend-api.md) | API 그룹 · 모델 · 미들웨어 |
+| [react-rewrite.md](./features/react-rewrite.md) | 정식 버전 React 이식 현황 |
 
 인덱스: [features/README.md](./features/README.md)
 
@@ -108,15 +112,21 @@
 ```
 frontend/
 ├── README.md              ← 파일 목록 · 요약 표
-├── 01-common/             공통 UI · JWT 유틸
+├── 01-common/             공통 UI · JWT 유틸 · 헤더/사이드 메뉴
 ├── 02-tier-class/         공식 티어 관련
-├── 03-custom-maker/       제작 · 게시판 · 상세
+├── 03-custom-maker/       제작 · 게시판 · 상세 · 꾸미기
 ├── 04-notice/             공지
 ├── 05-auth/               로그인 · 가입 · 재설정
 ├── 06-inquiry/            문의
-├── 07-admin/              관리자 UI
+├── 07-admin/              관리자 UI · 행운 뽑기 관리 · 이벤트 디자인
 ├── 08-notifications/      알림
-└── 09-deploy-path/        경로 · API Base · 배포 프론트
+├── 09-deploy-path/        경로 · API Base · 배포 프론트
+├── 10-luck-draw/          행운 뽑기
+├── 11-my-page/            프로필 드롭다운 · 마이페이지
+├── 12-react/              정식 버전 React 이식
+├── 13-event/              이벤트 페이지
+├── 14-guide/              가이드 페이지 · 가이드 모드
+└── 15-ai/                 AI 도우미 화면
 ```
 
 - 파일명: `{순서}-{키워드}-record.md`  
@@ -137,11 +147,14 @@ backend/
 ├── README.md              ← 파일 목록 · legacy 대응표
 ├── 01-setup/              Node · DB 연결
 ├── 02-tierlists/          게시글 · 댓글 · 좋아요 · 신고
-├── 03-auth/               User · JWT · 비번 재설정
+├── 03-auth/               User · JWT · 비번 재설정 · 메일 발송
 ├── 04-notice/             공지 API
 ├── 05-inquiry/            문의 · 답변
-├── 06-admin/              관리자 · Block · requireAdmin
-└── 07-deploy/             Render · 정적 서빙 · Oracle Cloud
+├── 06-admin/              관리자 · Block · requireAdmin · 사이트 설정
+├── 07-deploy/             Render · 정적 서빙 · Oracle Cloud
+├── 08-luck-draw/          행운 뽑기 · 포인트 원장 · 출석체크
+├── 09-event/              이벤트 API
+└── 10-ai/                 AI 프록시(/api/ai)
 ```
 
 - 예: `03-auth/04-password-reset-token-hash-record.md`
@@ -160,10 +173,13 @@ RDMD/
 ├── features/                 기능 설명 (what)
 ├── guides/                   개발 규칙 (how)
 ├── frontend/                 프론트 상세 일지
-│   ├── 01-common/ … 09-deploy-path/
+│   ├── 01-common/ … 15-ai/
 │   └── *-record.md
 ├── backend/                  백엔드 상세 일지
-│   ├── 01-setup/ … 07-deploy/
+│   ├── 01-setup/ … 10-ai/
+│   └── *-record.md
+├── ai/                       AI 전용 서비스(ai-service/) 일지
+│   ├── README.md
 │   └── *-record.md
 └── commit_history/           작성자별 커밋 로그
     ├── README.md
@@ -179,8 +195,8 @@ RDMD/
 | **사람 규칙** | [`../team/`](../team/README.md) |
 | **AI 공통 룰** (Grok Admin) | [`../.agents/`](../.agents/README.md) |
 | Claude | [`CLAUDE.md`](../CLAUDE.md), [`.claude/skills/`](../.claude/README.md) |
-| Grok | [`groks/`](../groks/README.md) |
-| Codex | [`AGENTS.md`](../AGENTS.md), [`codex/`](../codex/README.md) |
+| Grok | [`.groks/`](../.groks/README.md) |
+| Codex | [`AGENTS.md`](../AGENTS.md), [`.codex/`](../.codex/README.md) |
 | 배포 | [`../DEPLOY.md`](../DEPLOY.md) |
 
 충돌 시: 사람 지시 → `.agents` → 에이전트 스킬 → RDMD 이력.
@@ -203,6 +219,7 @@ RDMD/
 
 1. **프론트** → `frontend/<기능-폴더>/NN-키워드-record.md`  
 2. **백엔드** → `backend/<기능-폴더>/NN-키워드-record.md`  
+   (AI 서비스는 `ai/` — 화면·프록시 조각은 프론트·백엔드에 쓰고 서로 링크)  
 3. 큰 변화면 `summary/work-history.md` · 해당 `features/*.md` · 각 폴더 README 표 갱신  
 4. 작성법: [guides/rdmd-writing.md](./guides/rdmd-writing.md)
 
@@ -227,10 +244,11 @@ RDMD/
 | 경로·API 가이드 | [guides/path-and-api.md](./guides/path-and-api.md) |
 | 프론트 일지 인덱스 | [frontend/README.md](./frontend/README.md) |
 | 백엔드 일지 인덱스 | [backend/README.md](./backend/README.md) |
+| AI 일지 인덱스 | [ai/README.md](./ai/README.md) |
 | 작성자 커밋 (nomura) | [commit_history/nomura.md](./commit_history/nomura.md) |
 | 배포 | [../DEPLOY.md](../DEPLOY.md) |
 
 ---
 
-**마지막 업데이트**: 2026-07-18  
-`backend/` 기능 폴더 재배치 · frontend 와 동일 규칙 적용
+**마지막 업데이트**: 2026-10-18  
+프론트 14-guide·15-ai, 백엔드 10-ai, `ai/` 신설 · 10-02~10-18 누락 기록 보강(사이드 메뉴·사이트 SMTP·7~9티어·사이트 설정)

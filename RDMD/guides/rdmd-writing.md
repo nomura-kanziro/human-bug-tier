@@ -10,11 +10,13 @@ RDMD는 **커밋 단위 작업 일지**입니다. 미래의 나와 팀원이 “
 |------|------|------|
 | 프론트 | `frontend/{NN-기능}/{순서}-{키워드}-record.md` | 기능별 폴더 + 순서 번호 + record |
 | 백엔드 | `backend/{NN-기능}/{순서}-{키워드}-record.md` | 동일 규칙 |
+| **AI 서비스** | `ai/{순서}-{키워드}-record.md` | `ai-service/`(Python) 자체의 기록. 같은 작업의 화면·프록시 조각은 `frontend/15-ai`·`backend/10-ai` 에 쓰고 서로 링크 |
 | **작성자 커밋** | `commit_history/{이름}.md` | 사람별 타임라인 · **과거(위)→현재(아래)** · 목차 · **매 커밋 전 필수** |
 | 요약 문서 | `summary/`, `features/`, `guides/` | 온보딩용 정리 |
 
 - 프론트 인덱스: [../frontend/README.md](../frontend/README.md)  
 - 백엔드 인덱스: [../backend/README.md](../backend/README.md)  
+- AI 서비스 인덱스: [../ai/README.md](../ai/README.md)  
 - 작성자 커밋: [../commit_history/README.md](../commit_history/README.md)  
 - RDMD 소개: [../README.md](../README.md)
 
@@ -41,23 +43,33 @@ RDMD는 **커밋 단위 작업 일지**입니다. 미래의 나와 팀원이 “
 RDMD/frontend/
   01-common/ | 02-tier-class/ | 03-custom-maker/ | 04-notice/
   05-auth/   | 06-inquiry/    | 07-admin/        | 08-notifications/
-  09-deploy-path/
+  09-deploy-path/ | 10-luck-draw/ | 11-my-page/ | 12-react/
+  13-event/  | 14-guide/      | 15-ai/
 ```
 
 ### 백엔드 폴더
 
 ```
 RDMD/backend/
-  01-setup/ | 02-tierlists/ | 03-auth/ | 04-notice/
-  05-inquiry/ | 06-admin/ | 07-deploy/
+  01-setup/ | 02-tierlists/ | 03-auth/ | 04-notice/ | 05-inquiry/
+  06-admin/ | 07-deploy/    | 08-luck-draw/ | 09-event/ | 10-ai/
 ```
+
+### AI 폴더
+
+```
+RDMD/ai/
+  README.md | 01-ai-service-record.md | …
+```
+
+**새 폴더가 필요하면** 다음 번호로 만들고, 해당 폴더 README(`frontend/README.md` · `backend/README.md`)의 **폴더 트리와 표**, 그리고 [`../README.md`](../README.md) 의 트리까지 같이 고친다(표 끝이 아니라 해당 섹션 안에 넣는다).
 
 상단 YAML 권장:
 
 ```yaml
 ---
 source: (optional commit note)
-area: frontend   # 또는 backend
+area: frontend   # 또는 backend / ai
 ---
 ```
 

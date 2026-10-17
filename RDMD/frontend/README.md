@@ -12,19 +12,21 @@
 ```
 RDMD/frontend/
 ├── README.md
-├── 01-common/           # 공통 UI · JWT 유틸 · 전역 변경
+├── 01-common/           # 공통 UI · JWT 유틸 · 전역 변경 · 헤더/사이드 메뉴
 ├── 02-tier-class/       # 공식 티어 페이지 (인덱스 기록)
-├── 03-custom-maker/     # 제작 · 게시판 · 상세 · 업로드
+├── 03-custom-maker/     # 제작 · 게시판 · 상세 · 업로드 · 꾸미기
 ├── 04-notice/           # 공지 · 새 소식
 ├── 05-auth/             # 로그인 · 가입 · 비번 재설정
 ├── 06-inquiry/          # 문의하기 (Contact_us)
-├── 07-admin/            # 관리자 UI · 신고 · 차단
+├── 07-admin/            # 관리자 UI · 신고 · 차단 · 행운 뽑기 관리 · 이벤트 디자인
 ├── 08-notifications/    # 헤더 알림 (교차 참조)
 ├── 09-deploy-path/      # getBasePath · API Base · 배포 경로
 ├── 10-luck-draw/        # 행운 뽑기 (오늘의 행운 티어)
-└── 11-my-page/          # 유저 프로필 드롭다운 + 마이페이지
-└── 12-react/            # 정식 버전 React 이식 (root-cloudflare)
-└── 13-event/            # 이벤트 페이지 (퀴즈 · 티어표 공개 · 메모리 게임)
+├── 11-my-page/          # 유저 프로필 드롭다운 + 마이페이지
+├── 12-react/            # 정식 버전 React 이식 (root-cloudflare)
+├── 13-event/            # 이벤트 페이지 (퀴즈 · 티어표 공개 · 메모리 게임)
+├── 14-guide/            # 가이드 페이지(/guide) + 게임식 가이드 모드
+└── 15-ai/               # AI 도우미 화면(/ai) — AI 전용 서비스의 프론트 조각
 ```
 
 파일명 규칙: `{순서}-{기능키워드}-record.md`
@@ -51,6 +53,7 @@ RDMD/frontend/
 | [14-header-dropdown-click-record.md](./01-common/14-header-dropdown-click-record.md) | — | 헤더 드롭다운 hover → 클릭식(바깥 클릭·Esc 닫기) + 사이드 메뉴 하위 항목 간격 83→46px |
 | [15-quick-card-submenu-gap-record.md](./01-common/15-quick-card-submenu-gap-record.md) | — | 메인 화면 퀵카드(커스텀 메이커·행운 뽑기) 하위 링크 간격 0→8px |
 | [16-theme-contrast-audit-record.md](./01-common/16-theme-contrast-audit-record.md) | — | 전 페이지 라이트/다크 색 겹침 전수 점검 — 다크 티어표 6~9등급 이름·노란 버튼 파란 글자·찾기 탭 등 수정 |
+| [14-side-menu-account-mobile-header-record.md](./01-common/14-side-menu-account-mobile-header-record.md) | — | 사이드 메뉴 맨 아래 계정 영역(비로그인 로그인 / 로그인 프로필·내 게시글·로그아웃) + 모바일 헤더 버튼·테마 스위치 축소 (1.0.2) |
 
 ## 02-tier-class
 
@@ -65,6 +68,7 @@ RDMD/frontend/
 | [07-sergio-hozaki-reorder-record.md](./02-tier-class/07-sergio-hozaki-reorder-record.md) | — | 세르지오 1정(라이덴 뒤)·호자키 2갑(다비츠 뒤) |
 | [08-hayami-taiki-duplicate-record.md](./02-tier-class/08-hayami-taiki-duplicate-record.md) | — | 5티어 하야미 타이키(이미지 없는 상자) · 7티어 카타쿠라 중복 제거 |
 | [09-tier1-2-update-record.md](./02-tier-class/09-tier1-2-update-record.md) | — | 1·2티어 수정(우류 1장·츠루기 갑급·세르지오 정급 맨 앞·이미지 교체)·9티어 야시키 중복 + 티어 데이터 정본은 `tiers.json`(extract 금지) |
+| [10-tier7-9-fix-record.md](./02-tier-class/10-tier7-9-fix-record.md) | — | 7~9티어 이름·이미지 정정(가짜 미도·마네다·요네쿠라 추가, 야시키 마사나리 오타, 사진 교체) |
 
 ## 03-custom-maker
 
@@ -83,6 +87,7 @@ RDMD/frontend/
 | [11-tier-decorate-record.md](./03-custom-maker/11-tier-decorate-record.md) | — | 티어표 꾸미기(테두리 색·배경 이펙트·등급별 테마) |
 | [12-maker-select-search-record.md](./03-custom-maker/12-maker-select-search-record.md) | — | 메이커 Ctrl/Shift 다중 선택 · 풀 검색(추천 5명) · 드래그 자동 스크롤·▲▼ React 이식 · 이벤트 참여 버튼 |
 | [13-png-skip-empty-tier-record.md](./03-custom-maker/13-png-skip-empty-tier-record.md) | — | PNG 저장 시 캐릭터가 없는 등급 건너뛰기(PDF는 그대로 9쪽 포함) |
+| [14-decorate-halloween-fx-color-record.md](./03-custom-maker/14-decorate-halloween-fx-color-record.md) | — | 꾸미기 — 배경 이펙트 "할로윈" 추가 + 이펙트 색 고르기(기본색·스와치·직접 선택, 짝색 자동) |
 
 ## 04-notice
 
@@ -176,6 +181,20 @@ RDMD/frontend/
 | [02-admin-event-management-record.md](./13-event/02-admin-event-management-record.md) | — | 관리자 페이지 "이벤트 관리" — 메모리 기록 이벤트를 관리자가 열기/닫기/정산 + 티어표 공개 관리 이전 |
 | [03-showcase-launch-record.md](./13-event/03-showcase-launch-record.md) | — | 티어표 공개 정식 오픈 — 회원 출품(새로 제작/올린 글)·투표 + 관리자 접수 시작 예약·우승작 직접 선정 |
 
+## 14-guide
+
+| 파일 | legacy | 요약 |
+|------|--------|------|
+| [01-guide-mode-record.md](./14-guide/01-guide-mode-record.md) | — | 가이드 전용 페이지(`/guide`) + 게임식 "가이드 모드"(어둡게·강조·말풍선·왼쪽 아래 ✕ 종료), 스테이지 5개 |
+
+## 15-ai
+
+AI 기능은 프론트·백엔드·AI 서비스에 걸쳐 있어 **세 곳에 나눠 기록**한다(서로 링크): 화면(여기) · [`../backend/10-ai/`](../backend/README.md) · 서비스 [`../ai/`](../ai/README.md).
+
+| 파일 | legacy | 요약 |
+|------|--------|------|
+| [01-ai-helper-page-record.md](./15-ai/01-ai-helper-page-record.md) | — | AI 도우미 화면(`/ai`) — 휴버봇 대화창·추천 질문 3개·출처/fallback 배지, 대화는 브라우저 탭에만 |
+
 ---
 
 ## informationN → 새 경로
@@ -229,13 +248,3 @@ area: frontend
 
 4. 본문 템플릿: [`../guides/rdmd-writing.md`](../guides/rdmd-writing.md)  
 5. 큰 변경이면 [`../summary/work-history.md`](../summary/work-history.md) · 이 README 표 한 줄 갱신
-
-## 14-guide
-
-| 파일 | legacy | 요약 |
-|------|--------|------|
-| [01-guide-mode-record.md](./14-guide/01-guide-mode-record.md) | — | 가이드 전용 페이지(`/guide`) + 게임식 "가이드 모드"(어둡게·강조·말풍선·왼쪽 아래 ✕ 종료), 스테이지 5개 |
-
-## 15-ai (→ RDMD/ai)
-
-AI 도우미 화면(`/ai`, `AiHelper.jsx`)은 AI 전용 서비스와 한 묶음이라 [`../ai/`](../ai/README.md) 에 기록한다 — [01-ai-service-record.md](../ai/01-ai-service-record.md).
