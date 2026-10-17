@@ -30,6 +30,7 @@ ChatGPT Codex / Codex VS Code 확장과 함께 쓰도록 맞춰 두었습니다.
 | [admin](./admin/skill.md) | 관리자 | 차단, 신고 관리 |
 | [notifications](./notifications/skill.md) | 알림 | notification |
 | [backend](./backend/skill.md) | Express API | 라우트, mongoose |
+| [ai-service](./ai-service/skill.md) | AI 전용 서비스(FastAPI · LangGraph · RAG), `/api/ai`, `/ai` | AI, 챗봇, 휴버봇, RAG |
 | [deploy](./deploy/skill.md) | 배포 | Render, env |
 | [rdmd](./rdmd/skill.md) | 문서 일지 | RDMD, 기록 |
 | [handoff](./handoff/skill.md) | 온보딩·인수인계 | 팀, 처음 |

@@ -7,7 +7,7 @@
 
 1. **`.agents/common-rules.md`** + **`.agents/<기능>/skill.md`** (정본)  
 2. Grok Admin: [`AGENTS.md`](./AGENTS.md) · hierarchy  
-3. 기능 → `groks/<기능>/grok_skill.md` (주 골격 보강)  
+3. 기능 → `.groks/<기능>/grok_skill.md` (주 골격 보강)  
 4. 작업 후 RDMD · 정본/팩 동기화 (`sync-skills`)
 
 사람 규칙: [`../team/`](../team/README.md)
@@ -41,7 +41,7 @@
 - 가이드라인: [`RDMD/guides/`](../RDMD/guides/README.md)
 - 작업 이력: [`RDMD/summary/work-history.md`](../RDMD/summary/work-history.md)
 - **Claude**: [`../.claude/`](../.claude/README.md), [`../CLAUDE.md`](../CLAUDE.md)
-- **Codex**: [`../codex/`](../codex/README.md), [`../AGENTS.md`](../AGENTS.md)
+- **Codex**: [`../.codex/`](../.codex/README.md), [`../AGENTS.md`](../AGENTS.md)
 
 규칙 변경 시 **`.agents` 정본** 후 `groks` · `.claude` · `codex` · `team` 을 맞춥니다.  
 ([sync-skills.md](../.agents/sync-skills.md))

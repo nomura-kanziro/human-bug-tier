@@ -26,9 +26,9 @@
 ```
 
 - **주 골격 AI** 전용 폴더  
-  - Grok → `groks/<기능>/grok_skill.md` + `groks/AGENTS.md`  
+  - Grok → `.groks/<기능>/grok_skill.md` + `.groks/AGENTS.md`  
   - Claude → `.claude/skills/<기능>/SKILL.md` + `CLAUDE.md`  
-  - Codex → `codex/<기능>/skill.md` + 루트 `AGENTS.md`  
+  - Codex → `.codex/<기능>/skill.md` + 루트 `AGENTS.md`  
 - 전용 팩 내용이 `.agents` 와 **모순되면 `.agents` 가 이김** (Grok이 정렬).  
 - **번외 AI** 사용 인원:  
   1. `.agents/common-rules.md`  

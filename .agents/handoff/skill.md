@@ -22,7 +22,7 @@ description: >
 
 ## Do
 
-1. 사람 → [`team/README.md`](../team/README.md)  
+1. 사람 → [`team/README.md`](../../team/README.md)  
 2. AI(아무 제품) → [`.agents/common-rules.md`](../common-rules.md) + 이 폴더 기능 `skill.md`  
 3. 주 골격 AI면 추가로:  
    - Grok → `groks/`  

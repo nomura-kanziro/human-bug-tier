@@ -105,9 +105,9 @@ env 로드: 루트 `.env` 후 `backend/.env` (동일 키는 backend 우선)
 | 기능 설명 | `RDMD/features/` |
 | 개발 가이드 | `RDMD/guides/` |
 | 커밋 단위 일지 | `RDMD/frontend/`, `RDMD/backend/` (기능 폴더 + record) |
-| Grok 전용 스킬 | `groks/` (Claude는 `.claude/skills` 우선) |
+| Grok 전용 스킬 | `.groks/` (Claude는 `.claude/skills` 우선) |
 | Claude 스킬 | `.claude/skills/*/SKILL.md` |
-| Codex 스킬 | `AGENTS.md` + `codex/*/skill.md` |
+| Codex 스킬 | `AGENTS.md` + `.codex/*/skill.md` |
 | **AI 공통 룰** | **`.agents/`** |
 | **사람 규칙** | **`team/`** |
 
@@ -136,6 +136,6 @@ CLOUDFLARE.md                          # 배포 정본
 
 - 첫날: `README.md` 시연 → `team/` → `RDMD/summary/work-history.md` → `RDMD/features/overview.md` → `RDMD/guides/path-and-api.md` → **커밋 전 `commit_history` 규칙**
 - Claude 사용: 이 `CLAUDE.md` + 해당 기능 `SKILL.md`
-- Grok 사용: `groks/AGENTS.md` + `groks/<기능>/grok_skill.md`
-- Codex 사용: `AGENTS.md` + `codex/<기능>/skill.md`
+- Grok 사용: `.groks/AGENTS.md` + `.groks/<기능>/grok_skill.md`
+- Codex 사용: `AGENTS.md` + `.codex/<기능>/skill.md`
 - 스킬 세트는 **같은 규칙**을 다른 에이전트 포맷으로 둔 것입니다. 규칙 변경 시 `codex` · `groks` · `.claude` 를 맞추세요.

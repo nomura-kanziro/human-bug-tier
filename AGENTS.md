@@ -7,7 +7,7 @@
 1. **[`.agents/common-rules.md`](./.agents/common-rules.md)**  
 2. **[`.agents/hierarchy.md`](./.agents/hierarchy.md)** — Grok = Admin AI  
 3. **[`.agents/<기능>/skill.md`](./.agents/README.md)** — 기능 표준 스킬 (번외 AI도 동일)  
-4. Codex면 이어서 **`codex/<기능>/skill.md`** (주 골격 보강)
+4. Codex면 이어서 **`.codex/<기능>/skill.md`** (주 골격 보강)
 
 정본: [`.agents/README.md`](./.agents/README.md)  
 (주 골격 Grok/Claude/Codex 전용 팩 = 도구 최적화 복제본. 충돌 시 `.agents` 우선)
@@ -27,12 +27,12 @@
 ## Codex가 할 일 (순서)
 
 1. `.agents` 공통 룰 준수  
-2. 요청 기능 판별 → **`codex/<기능>/skill.md`**  
-3. 범위가 넓으면 `codex/project-wide/skill.md`  
+2. 요청 기능 판별 → **`.codex/<기능>/skill.md`**  
+3. 범위가 넓으면 `.codex/project-wide/skill.md`  
 4. 상세 배경은 `RDMD/` (필요 구간만)  
 5. 공통 룰 충돌 시 **Grok/사람** 기준으로 맞춤 (룰 약화 금지)
 
-인덱스: [`codex/README.md`](./codex/README.md)
+인덱스: [`.codex/README.md`](./.codex/README.md)
 
 ## 로컬 실행
 
@@ -69,9 +69,9 @@ AI 서비스(선택): `cd ai-service` → venv + `pip install -r requirements.tx
 |------|------|
 | **공통 AI 룰** | **`.agents/`** (Grok이 Admin으로 수호) |
 | **사람 룰** | **`team/`** |
-| Codex 기능 스킬 | `codex/<기능>/skill.md` |
+| Codex 기능 스킬 | `.codex/<기능>/skill.md` |
 | Claude | `CLAUDE.md` + `.claude/skills/*/SKILL.md` |
-| Grok | `groks/AGENTS.md` + `groks/<기능>/grok_skill.md` |
+| Grok | `.groks/AGENTS.md` + `.groks/<기능>/grok_skill.md` |
 
 규칙 변경: [`.agents/sync-skills.md`](./.agents/sync-skills.md)
 
