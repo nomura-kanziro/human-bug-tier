@@ -104,6 +104,7 @@ RDMD/backend/
 | [02-luck-draw-points-retention-record.md](./08-luck-draw/02-luck-draw-points-retention-record.md) | — | LuckProfile 신설 — 포인트 적립 + 이력 5건 자동 삭제 |
 | [03-poker-ladder-record.md](./08-luck-draw/03-poker-ladder-record.md) | — | 행운 티어 포커 · 랜덤 뽑기(5분 자동 라운드) — 09-19~20 기능 사후 정리, 포인트 0 하한 |
 | [04-point-ledger-admin-api-record.md](./08-luck-draw/04-point-ledger-admin-api-record.md) | — | 포인트 증감 원장 LuckPointLog + 관리자 조회 API `/api/admin/luck/*` + 포커 판 결과 저장 |
+| [05-attendance-record.md](./08-luck-draw/05-attendance-record.md) | — | 출석체크 — 로그인 시 하루(KST) 1회 +10P 자동 지급 |
 
 ## 09-event — 이벤트
 
