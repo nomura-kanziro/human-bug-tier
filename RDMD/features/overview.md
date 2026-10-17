@@ -55,6 +55,8 @@
 | `root-cloudflare/my-page/` | 내 게시글·뽑기 활동 요약 | 회원 |
 | `root-cloudflare/admin/` | 관리자 로그인·대시보드 | Admin |
 | `backend/` | API + 정적 서빙 | 서버 |
+| `ai-service/` | **AI 전용 서비스**(Python FastAPI · LangChain · LangGraph · RAG) — `/ai` 휴버봇 답변·추천 질문. Express `/api/ai` 뒤에서만 호출 — [ai-service.md](./ai-service.md) | 방문자(AI 도우미) |
+| `root-cloudflare/src/pages/Guide.jsx` + `GuideMode.jsx` | 가이드 페이지(`/guide`) + 게임식 가이드 모드 | 방문자 |
 | `RDMD/` | 개발 기록·가이드·기능 문서 | 개발자 |
 
 ## 사용자 여정 (시연 흐름)
@@ -98,8 +100,20 @@
 | Render.com (레거시, 베타 종료) | O | O |
 | GitHub Pages | O (미리보기) | X (`GITHUB_STATIC`) |
 
+## AI 전용 서비스 (2026-10-18~)
+
+```
+브라우저 /ai ─▶ backend /api/ai (검사·요청 제한) ─▶ ai-service (FastAPI :8000, 내부 전용)
+                                                     ├ LangGraph 흐름(analyze → retrieve → generate)
+                                                     ├ RAG: ai-service/knowledge/*.md + tiers.json (BM25)
+                                                     └ Claude(LangChain) — 키 없으면 문서 답
+```
+
+사이트 기능·규칙을 바꾸면 **`ai-service/knowledge/*.md` 도 같이 고친다**(AI 가 옛 규칙을 답하지 않게). 상세 [ai-service.md](./ai-service.md).
+
 ## 다음 문서
 
 - [common-infra.md](./common-infra.md) — 경로·공통 스크립트  
 - [backend-api.md](./backend-api.md) — API 전체 맵  
+- [ai-service.md](./ai-service.md) — AI 도우미 · AI 전용 서비스  
 - [../summary/work-history.md](../summary/work-history.md) — 작업 이력  

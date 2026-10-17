@@ -16,6 +16,7 @@
 | 가이드 | [`guides/`](./guides/) | 로컬 실행, 경로/API, 보안, 배포, 기록 방법 |
 | 프론트 일지 | [`frontend/`](./frontend/) | 프론트엔드 커밋·작업 상세 기록 (기능별) |
 | 백엔드 일지 | [`backend/`](./backend/) | 백엔드 커밋·작업 상세 기록 (기능 폴더 + `*-record.md`) |
+| **AI 일지** | [`ai/`](./ai/) | AI 전용 서비스(`ai-service/`, FastAPI · LangChain · LangGraph · RAG) 작업 기록 (2026-10-18~) |
 | **작성자 커밋 로그** | [`commit_history/`](./commit_history/) | **사람별** 커밋 타임라인 (과거→현재, 목차 포함 · 예: `nomura.md`) |
 
 > 예전에 루트에 있던 `information1.md` ~ `information29.md` 는  

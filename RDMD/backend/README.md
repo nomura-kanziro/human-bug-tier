@@ -163,3 +163,7 @@ area: backend
 5. 큰 변경이면 `../summary/work-history.md` · 이 README 표 갱신  
 
 코드 위치 참고: 저장소 [`../../backend/README.md`](../../backend/README.md)
+
+## AI 프록시 (→ RDMD/ai)
+
+`backend/routes/aiRoutes.js`(`/api/ai`, ai-service 로 넘기는 프록시)는 AI 전용 서비스와 한 묶음이라 [`../ai/`](../ai/README.md) 에 기록한다 — [01-ai-service-record.md](../ai/01-ai-service-record.md).

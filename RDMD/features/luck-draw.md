@@ -17,6 +17,7 @@
 - **배팅 상한 = 지금 가진 포인트 전부**(포커·랜덤 뽑기 공통). 별도 고정 상한은 없다. 최소 배팅 1P.
 - **증감 원장**: 포인트가 바뀔 때마다 `LuckPointLog` 에 1건(출처·증감·직후 잔액·설명). 2026-10-01 추가 — 그 전 증감은 원장에 없다. 관리자 페이지 "행운 뽑기 관리"에서 본다([admin.md](./admin.md)).
 - 이벤트 상금(매일 퀴즈·메모리 기록 1위·티어표 공개 우승)도 같은 지갑에 더해지고 원장에 남는다.
+- **출석체크**(2026-10-18): 로그인 시 하루(KST) 1회 연속 일차별 10·10·10·25·10·10·50P 자동 지급, 원장 `attendance`. `GET /attendance` 는 마이페이지 출석판용 — [my-page.md](./my-page.md), [`../backend/08-luck-draw/05-attendance-record.md`](../backend/08-luck-draw/05-attendance-record.md)
 
 ## 1. 오늘의 행운 티어
 
@@ -69,6 +70,7 @@
 | GET | `/today` | requireAuth | 오늘 남은 횟수·쿨다운·마지막 결과 |
 | GET | `/history` | requireAuth | 최근 기록(5건) |
 | GET | `/stats` | requireAuth | 마이페이지 누적 통계 |
+| GET | `/attendance` | requireAuth | 마이페이지 출석판(연속 일차·오늘 출석 여부) |
 | GET | `/poker/config` | optionalAuth | 족보·배수 표시값 |
 | POST | `/poker/deal` | requireAuth | 포커 배팅·카드 받기 |
 | POST | `/poker/play` | requireAuth | 후보 3장 선택·정산 |

@@ -77,7 +77,8 @@
 | [inquiry/skill.md](./inquiry/skill.md) | 문의 |
 | [admin/skill.md](./admin/skill.md) | 관리자 |
 | [notifications/skill.md](./notifications/skill.md) | 알림 |
-| [luck-draw/skill.md](./luck-draw/skill.md) | 행운 뽑기 |
+| [luck-draw/skill.md](./luck-draw/skill.md) | 행운 뽑기 (+ 출석체크) |
+| [ai-service/skill.md](./ai-service/skill.md) | **AI 전용 서비스** — `/ai` 휴버봇, `ai-service/`(FastAPI · LangChain · LangGraph · RAG), `/api/ai` 프록시, 지식 문서 |
 | [my-page/skill.md](./my-page/skill.md) | 마이페이지 · 프로필 드롭다운 |
 | [backend/skill.md](./backend/skill.md) | Express API |
 | [deploy/skill.md](./deploy/skill.md) | 배포 |

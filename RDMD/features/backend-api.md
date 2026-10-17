@@ -59,10 +59,11 @@ backend/
 | `/api/inquiries` | 문의·답변·신고 | 쓰기 혼합 / 답변 Admin |
 | `/api/admin` | 로그인(공개) · 유저·차단·티어 신고 · 행운 뽑기 조회(`/luck/*`) | **requireAdmin** |
 | `/api/notifications` | 알림 | requireAuth |
-| `/api/luck-draw` | 오늘의 행운 티어 · 포커(`/poker/*`) · 랜덤 뽑기(`/ladder/*`) | optionalAuth / requireAuth — [luck-draw.md](./luck-draw.md) |
+| `/api/luck-draw` | 오늘의 행운 티어 · 포커(`/poker/*`) · 랜덤 뽑기(`/ladder/*`) · 출석판(`/attendance`) | optionalAuth / requireAuth — [luck-draw.md](./luck-draw.md) |
 | `/api/profile` | 닉네임 변경(`POST /nickname`) | requireAuth |
 | `/api/events` | 매일 퀴즈(`/quiz/*`) · 메모리 게임(`/memory/*`) · 티어표 공개(`/showcase/*`) | requireAuth / optionalAuth, 관리 기능 requireAdmin |
 | `/api/site` | 사이트 운영 설정 조회 — 이벤트 디자인(`/settings`). 변경은 `/api/admin/site/seasonal-theme` | 공개 |
+| `/api/ai` | AI 도우미 — `GET /questions`(추천 질문 3개) · `POST /chat`. **프록시**: `ai-service`(FastAPI, `AI_SERVICE_URL`)로 넘김, 입력 검사·IP당 10분 20회 제한, 대화 저장 안 함, AI 서비스 꺼짐 → 503 — [ai-service.md](./ai-service.md) | 공개 |
 | `/api/ext` | 브라우저 확장이 치는 주소 — 204 만 돌려줌(우리 API 아님) | — |
 | `/health` | 헬스체크(DB·메일·APP_URL·유튜브 동기화 상태) | 공개 |
 

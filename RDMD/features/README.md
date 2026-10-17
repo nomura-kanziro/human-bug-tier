@@ -17,7 +17,8 @@
 | [admin.md](./admin.md) | 관리자 로그인 · 통합 관리 |
 | [notifications.md](./notifications.md) | 알림 시스템 |
 | [luck-draw.md](./luck-draw.md) | 행운 뽑기 (오늘의 행운 티어) |
-| [my-page.md](./my-page.md) | 마이페이지 (프로필 드롭다운 + 내 활동 집계) |
+| [my-page.md](./my-page.md) | 마이페이지 (프로필 드롭다운 + 내 활동 집계 + 출석판) |
+| [ai-service.md](./ai-service.md) | **AI 도우미 · AI 전용 서비스** — `/ai` 챗봇 휴버봇 + 랜덤 추천 질문, `ai-service/`(FastAPI · LangChain · LangGraph · RAG) |
 | [backend-api.md](./backend-api.md) | API 그룹 · 모델 · 미들웨어 |
 | [react-rewrite.md](./react-rewrite.md) | **기획만** — 정식 버전 React 이식. Cloudflare 작업 중지. 구현 지시 전 스캐폴드 금지 |
 
@@ -27,6 +28,7 @@
 |------|------|
 | 관리자 | [`root-cloudflare/admin/README.md`](../../root-cloudflare/admin/README.md) |
 | 백엔드 | [`backend/README.md`](../../backend/README.md) |
+| AI 전용 서비스 | [`ai-service/README.md`](../../ai-service/README.md) |
 | 커스텀 메이커 | [`root-cloudflare/custom-maker/README.md`](../../root-cloudflare/custom-maker/README.md) |
 | 인증 | [`root-cloudflare/user_login/README.md`](../../root-cloudflare/user_login/README.md) |
 | 공지 | [`root-cloudflare/notice/README.md`](../../root-cloudflare/notice/README.md) |

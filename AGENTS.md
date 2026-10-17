@@ -17,7 +17,8 @@
 ## 프로젝트
 
 **휴버대 티어표** — 바닐라 HTML/CSS/JS + Express/MongoDB.  
-공식 1~9티어(이미지 폴더 일치) · 커스텀 제작/게시판/**본인 글 수정** · 회원 · 공지(관리자 수정) · 문의 · 관리자 · PWA.
+공식 1~9티어(이미지 폴더 일치) · 커스텀 제작/게시판/**본인 글 수정** · 회원 · 공지(관리자 수정) · 문의 · 관리자 · PWA.  
+**AI 전용 서비스** `ai-service/`(Python FastAPI · LangChain · LangGraph · RAG) — `/ai` 휴버봇. Express `/api/ai` 뒤에서만 호출. 정본 스킬 `.agents/ai-service/skill.md`.
 
 > ⛔ **2026-09-19 창시자 지시 — 작업은 `root-cloudflare/`(React)에만 한다.**  
 > `root-render/`(바닐라, Render.com)는 **베타 버전에서 업데이트 종료 → 수정 금지**.  
@@ -44,6 +45,8 @@ npm start
 
 → http://localhost:5000/ (프론트 정적 + API 통합)
 
+AI 서비스(선택): `cd ai-service` → venv + `pip install -r requirements.txt` → `python -m uvicorn app.main:app --host 127.0.0.1 --port 8000` ([`ai-service/README.md`](./ai-service/README.md))
+
 ## 불변 규칙
 
 | 항목 | 규칙 |
@@ -57,7 +60,8 @@ npm start
 | 비번 재설정 | 랜덤 토큰 + **SHA-256 해시만 DB** |
 | 비밀 | `.env` 커밋·출력 금지 |
 | 주석 | **기존 주석 삭제 금지.** 코드가 바뀌면 주석 **문구만** 수정. 사람이 “지워”라고 하기 전엔 유지 |
-| 문서 | 큰 변경 → `RDMD/frontend|backend/<기능>/*-record.md` |
+| 문서 | 큰 변경 → `RDMD/frontend|backend/<기능>/*-record.md` (AI 서비스는 `RDMD/ai/`) |
+| AI 지식 | 기능·규칙을 바꾸면 `ai-service/knowledge/*.md` 동기화. AI 키 커밋 금지, 대화 저장 안 함 |
 
 ## 에이전트별 스킬 위치
 

@@ -13,6 +13,24 @@ npm start          # 또는 npm run dev (nodemon)
 - 프론트 정적 파일 + `/api/*` 가 **같은 포트**  
 - `getApiBase()` 가 빈 문자열 → 상대 경로로 API 호출 (배포와 동일)
 
+### AI 전용 서비스 (선택, 2026-10-18~)
+
+`/ai`(휴버봇)를 쓰려면 Python 서비스를 따로 띄운다. 안 띄우면 `/api/ai/*` 만 503 이고 나머지는 정상.
+
+```bash
+cd ai-service
+python -m venv .venv
+.venv/Scripts/python -m pip install -r requirements.txt     # Linux/macOS: .venv/bin/python
+copy .env.example .env                                         # ANTHROPIC_API_KEY 비우면 문서 검색 답(fallback)
+.venv/Scripts/python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+.venv/Scripts/python -m pytest -q                              # 테스트(실제 LLM 호출 없음)
+```
+
+- backend 는 기본으로 `http://127.0.0.1:8000` 을 부른다(`backend/.env` `AI_SERVICE_URL`). `AI_SERVICE_KEY` 는 양쪽 같은 값.
+- **backend 코드(`routes/aiRoutes.js` 등)를 바꾸면 :5000 서버를 재시작**해야 새 라우트가 잡힌다(안 하면 "없는 API" 404). ai-service 도 코드·지식 변경 후 재시작(또는 `POST /reload`).
+- Windows Git Bash `curl` 로 한글 JSON 을 보내면 깨진다 — Node `fetch`·브라우저로 시험.
+- 상세: [`../../ai-service/README.md`](../../ai-service/README.md), [`../features/ai-service.md`](../features/ai-service.md)
+
 ### 대안 (프론트만 다른 포트)
 
 - Live Server 등 `5500/3000/...` + backend `5000` 동시 실행  
@@ -84,6 +102,8 @@ docs(commit_history): 커밋 해시 기입
 | `admin/*` | Admin 헤더 + requireAdmin 쌍 |
 | `tier-image/*` | 용량·파일명·경로 정규화 |
 | `RDMD/*` | 문서만 — 런타임 영향 없음 |
+| `ai-service/knowledge/*.md` | **AI 답이 바뀐다** — 사이트 규칙과 수치가 맞는지 확인 |
+| `ai-service/app/*` | AI 서비스(별도 프로세스) — `pytest` 후 재시작 |
 | `mcps/` | 도구 스키마 — 앱 런타임과 무관 |
 
 ---
@@ -98,6 +118,7 @@ docs(commit_history): 커밋 해시 기입
 4. 커스텀 메이커 배치 → (가능 시) 업로드  
 5. 관리자 로그인 → 공지 하나 작성 → 메인 미리보기  
 6. 문의 작성 → 관리자 답변  
+7. (AI 서비스를 띄웠다면) `/ai` → 추천 질문 클릭 → 답·출처 표시  
 
 실패 시: [path-and-api.md](./path-and-api.md), [security.md](./security.md)
 

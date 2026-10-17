@@ -29,6 +29,7 @@
 | [admin](./admin/grok_skill.md) | 관리자 대시보드 | 관리자, 차단, 신고 관리 |
 | [notifications](./notifications/grok_skill.md) | 알림 | 알림, notification |
 | [backend](./backend/grok_skill.md) | Express API·모델·미들웨어 | API, 라우트, mongoose |
+| [ai-service](./ai-service/grok_skill.md) | AI 전용 서비스(FastAPI · LangChain · LangGraph · RAG), `/api/ai`, `/ai` | AI, 챗봇, 휴버봇, RAG, 지식 문서 |
 | [deploy](./deploy/grok_skill.md) | Render·GH Pages·env | 배포, render, DEPLOY |
 | [rdmd](./rdmd/grok_skill.md) | 개발 기록·가이드 문서 | RDMD, 일지, 문서화 |
 | [project-wide](./project-wide/grok_skill.md) | 전역 규칙·크로스 기능 | 새 기능, 전체, 리팩터 |

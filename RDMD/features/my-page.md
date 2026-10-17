@@ -20,7 +20,8 @@
 | 받은 좋아요 합계 | 위 배열의 `likeCount` 합산(클라이언트) |
 | 행운 뽑기 총 횟수 | `GET /api/luck-draw/stats` `.totalDraws` (누적 — 이력이 5건으로 잘려도 정확함) |
 | 최고 등급 당첨 | `GET /api/luck-draw/stats` `.bestTier` (숫자가 작을수록 희귀) |
-| 행운 포인트 | `GET /api/luck-draw/stats` `.points` (9티어 -5 ~ 1티어 +3 누적, 음수 가능) |
+| 행운 포인트 | `GET /api/luck-draw/stats` `.points` (행운 뽑기·포커·랜덤 뽑기·이벤트 상금·출석체크가 함께 쓰는 지갑, 0 하한 — [luck-draw.md](./luck-draw.md)) |
+| 📅 출석판 (2026-10-18) | `GET /api/luck-draw/attendance` → 7칸(1일 10 · 2일 10 · 3일 10 · 4일 25 · 5일 10 · 6일 10 · 7일 50). 체크된 칸·오늘 칸·다음 칸 표시. 지급은 로그인 시 서버 자동 — 아래 "출석체크" |
 | 내가 쓴 게시글 최근 목록 | 위 tierlists 응답 상위 6개 (비공개는 🔒 표시) |
 | ~~최근 뽑기 기록~~ | 2026-09-20 창시자 지시로 마이페이지에서 제거(`/history` API 는 행운 뽑기 페이지가 계속 사용) |
 
@@ -38,6 +39,13 @@
 닉네임을 바꾸면 서버가 내 글·댓글·알림·문의·뽑기 이력에 문자열로 복사돼 있던 이름을 새 이름으로 같이 갱신하고 새 토큰을 발급한다. 다른 기기에 남은 옛 토큰은 401(`NICKNAME_CHANGED`)로 거부되어 그 기기는 자동 로그아웃 + 안내가 뜬다. 관리자 이름은 `Admin` 체계라 여기서 바꿀 수 없고(버튼 숨김), 사진 변경만 가능하다.
 
 상세: [`../frontend/11-my-page/02-profile-management-record.md`](../frontend/11-my-page/02-profile-management-record.md) · [`../backend/03-auth/09-nickname-change-record.md`](../backend/03-auth/09-nickname-change-record.md)
+
+## 출석체크 · 출석판 — 2026-10-18
+
+- **지급**: 로그인 성공 시 `authController.login` → `utils/attendance.js` `grantDailyAttendance()` 가 하루(KST) 첫 로그인이면 연속 일차 포인트를 `LuckProfile.points` 에 넣는다(누르는 버튼 없음). 원장 `source: 'attendance'`.
+- **연속**: 전날에 이어 로그인 → 다음 일차, 7일차 다음 날·하루 빠짐 → 1일차. 같은 날 재로그인은 지급 없음. 조건부 원자 갱신으로 동시 로그인 중복 지급 방지.
+- **출석판**: `src/components/AttendanceBoard.jsx` — 통계 카드 아래. 서버가 못 주면 섹션만 숨김(백엔드 재시작 전 404 였던 사례).
+- 상세: [`../backend/08-luck-draw/05-attendance-record.md`](../backend/08-luck-draw/05-attendance-record.md)
 
 ## 권한
 

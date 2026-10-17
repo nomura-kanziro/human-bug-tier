@@ -13,7 +13,8 @@
 ## 프로젝트 한 줄
 
 휴먼버그대학교 캐릭터 **공식 티어표** + **커스텀 티어 제작/게시판** +  
-회원·공지·문의·관리자 기능을 갖춘 **Express/MongoDB** 사이트.
+회원·공지·문의·관리자 기능을 갖춘 **Express/MongoDB** 사이트.  
+2026-10-18 부터 **AI 전용 서비스 `ai-service/`**(Python FastAPI · LangChain · LangGraph · RAG)가 `/ai` 휴버봇 답변을 맡는다 — Express 와 분리된 별도 프로세스.
 
 > ⛔ **2026-09-19 창시자 지시 — 프론트 작업은 `root-cloudflare/`(React 정식 버전)에만 한다.**  
 > `root-render/`(바닐라, Render.com 배포)는 **베타 버전에서 업데이트 종료** — 기능 추가·버그 수정 포함 **모든 수정 금지**.  
@@ -30,7 +31,16 @@ npm install
 npm start
 ```
 
-→ **http://localhost:5000/** (프론트 정적 + API 통합)  
+→ **http://localhost:5000/** (프론트 정적 + API 통합)
+
+AI 도우미(`/ai`)까지 보려면 AI 서비스를 따로 띄운다(키 없으면 문서 검색 답으로 동작):
+
+```bash
+cd ai-service
+python -m venv .venv
+.venv/Scripts/python -m pip install -r requirements.txt   # Linux/macOS: .venv/bin/python
+.venv/Scripts/python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+```  
 env 로드: 루트 `.env` 후 `backend/.env` (동일 키는 backend 우선)
 
 `file://` 직접 열기 / GH Pages 만으로는 로그인·게시판 등 API가 동작하지 않습니다.
@@ -61,6 +71,7 @@ env 로드: 루트 `.env` 후 `backend/.env` (동일 키는 backend 우선)
 | 행운 뽑기 | `.claude/skills/luck-draw/SKILL.md` | `luck-draw/`, `backend/*luckDraw*` |
 | 마이페이지 | `.claude/skills/my-page/SKILL.md` | `my-page/`, `common.js`(프로필 드롭다운) |
 | 백엔드 | `.claude/skills/backend/SKILL.md` | `backend/` |
+| AI 전용 서비스 | `.claude/skills/ai-service/SKILL.md` | `ai-service/`(FastAPI·LangGraph·RAG), `backend/routes/aiRoutes.js`, `src/pages/AiHelper.jsx` |
 | 배포 | `.claude/skills/deploy/SKILL.md` | `CLOUDFLARE.md`, `backend/deploy/oracle/` (Oracle 운영 서버), `root-cloudflare/functions/` (Pages `/api` 프록시) |
 | 문서/RDMD | `.claude/skills/rdmd/SKILL.md` | `RDMD/` |
 | 인수인계 | `.claude/skills/handoff/SKILL.md` | 팀 온보딩 |
@@ -81,7 +92,8 @@ env 로드: 루트 `.env` 후 `backend/.env` (동일 키는 backend 우선)
 | 비번 재설정 | 랜덤 토큰 + **SHA-256 해시만 DB** (JWT URL 방식 금지) |
 | 비밀 | `.env` 커밋·출력 금지. `.env.example` 만 공유 |
 | 주석 | **기존 주석 삭제 금지.** 코드가 바뀌면 주석 **문구만** 수정. 사람이 “지워”라고 하기 전엔 유지 |
-| 문서 | 큰 변경 → `RDMD/frontend|backend/<기능>/*-record.md` + features/guides |
+| 문서 | 큰 변경 → `RDMD/frontend|backend/<기능>/*-record.md` + features/guides (AI 서비스는 `RDMD/ai/`) |
+| AI 지식 | 사이트 기능·규칙(수치·메뉴 이름)을 바꾸면 `ai-service/knowledge/*.md` 도 같이 고친다. AI 키는 `ai-service/.env` 에만, 대화는 저장하지 않음 |
 
 ## 문서 지도 (사람 + AI)
 
@@ -105,6 +117,7 @@ env 로드: 루트 `.env` 후 `backend/.env` (동일 키는 backend 우선)
 root-cloudflare/                       # ✅ React 정식 버전 (Vite) — 작업은 여기서만. npm run build → dist/ 를 backend 가 서빙
 root-render/                           # ⛔ Render.com 바닐라 프론트 — 베타 종료, 수정 금지(보관용)
 backend/                               # Express + Mongo + 정적 서빙 (공용, 작업 가능)
+ai-service/                            # AI 전용 서비스 — FastAPI · LangChain · LangGraph · RAG (/api/ai 뒤, 127.0.0.1:8000)
 RDMD/                                  # 기록·가이드
 CLOUDFLARE.md                          # 배포 정본
 .groks/                                # Grok 스킬

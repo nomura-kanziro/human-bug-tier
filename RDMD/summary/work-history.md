@@ -3,8 +3,8 @@
 > `RDMD/frontend/` · `RDMD/backend/` (기능 폴더 + `*-record.md`) 기록을 바탕으로 정리한 **프로젝트 개발 이력 요약**입니다.  
 > 상세 로그: [frontend/README](../frontend/README.md) · [backend/README](../backend/README.md)
 
-**기준일**: 2026-10-02  
-**문서 작성일**: 2026-08-20 (이후 Phase 7 반영 2026-09-01, Phase 8 반영 2026-09-02, Phase 9 반영 2026-09-28, Phase 8b(09-03~09-24 사후 요약)·Phase 10 반영 2026-10-02 — 커밋 단위는 `commit_history/`)
+**기준일**: 2026-10-18  
+**문서 작성일**: 2026-08-20 (이후 Phase 7 반영 2026-09-01, Phase 8 반영 2026-09-02, Phase 9 반영 2026-09-28, Phase 8b(09-03~09-24 사후 요약)·Phase 10 반영 2026-10-02, Phase 11 반영 2026-10-18 — 커밋 단위는 `commit_history/`)
 
 ---
 
@@ -23,6 +23,7 @@
 | React 정식 버전 | 2026-09-03 ~ 09-24 | React 전환·바닐라 베타 종료, 테마·이벤트·행운 뽑기 3모드·디자인 개편, 1.0.0 |
 | 운영 배포 | 2026-09-28 | Oracle Cloud VM 운영 서버(Let's Encrypt), Cloudflare Pages `/api` → Oracle 프록시. 정식 주소 `https://human-bug-tier.com` |
 | 메일·관리·1.0.1 | 2026-09-29 ~ 10-01 | 인증 메일 템플릿, 티어표 수정, 행운 뽑기 관리·포인트 원장, 1.0.1 |
+| 계절 디자인·가이드·출석·AI | 2026-10-02 ~ 10-18 | 1.0.2(사이드 메뉴 계정·모바일 헤더), 사이트 전용 메일 주소, 이벤트 디자인(할로윈·크리스마스 배경), 꾸미기 할로윈 이펙트·이펙트 색, 1.0.5, 가이드 모드, 출석체크·출석판, **AI 전용 서비스(ai-service)** |
 
 ---
 
@@ -206,6 +207,26 @@
 
 **결과물**: 운영 1.0.1 — 정식 주소로 나가는 새 인증 메일, 관리자 행운 뽑기 조회
 
+---
+
+### Phase 11 — 계절 디자인 · 가이드 모드 · 출석체크 · AI 전용 서비스
+
+**기간**: 2026-10-02 ~ 10-18
+**기록**: `backend/03-auth/10-mail-template-record.md`, `frontend/07-admin/13-event-design-record.md`, `frontend/03-custom-maker/14-decorate-halloween-fx-color-record.md`, `frontend/14-guide/01-guide-mode-record.md`, `backend/08-luck-draw/05-attendance-record.md`, `ai/01-ai-service-record.md`
+
+| 영역 | 한 일 |
+|------|--------|
+| 헤더 · 1.0.2 | 사이드 메뉴 맨 아래 계정 영역(비회원 로그인 / 회원 프로필·내 게시글·로그아웃), 모바일 헤더 버튼·테마 스위치·메뉴 버튼 축소 |
+| 메일 | Oracle Email Delivery 로 사이트 전용 주소 발신(개인 Gmail 주소 노출 제거), 사이트 SMTP 를 발송 1순위로 |
+| 이벤트 디자인 | 관리자 "이벤트 디자인 적용" — 할로윈·크리스마스 사이트 배경 ON/OFF(한 번에 하나), 휴버대 눈·고딕 학교 건물·세 자루 창 모티프, 밝은 테마에서는 달 대신 태양 |
+| 꾸미기 | 배경 이펙트 "할로윈" 추가, **이펙트 색** 고르기(색상 회전 짝색) |
+| 버전 | **1.0.5**(10-17, Oracle 배포) |
+| 가이드 | `/guide` + 게임식 가이드 모드(어둡게·강조·말풍선·왼쪽 아래 ✕ 종료), 스테이지 5개 |
+| 출석체크 | 로그인 시 하루(KST) 1회 연속 일차 포인트(10·10·10·25·10·10·50) 자동 지급 + 마이페이지 출석판 |
+| **AI** | 저장소 루트 **`ai-service/`**(FastAPI · LangChain · LangGraph · RAG) 신설, Express `/api/ai` 프록시(요청 제한·키), `/ai` 휴버봇 화면 + 랜덤 추천 질문 3개 |
+
+**결과물**: 1.0.5 운영 중. 가이드 모드·출석체크·AI 도우미는 **커밋까지(10-18), 운영 배포 전**. AI 서비스는 운영 서버 배포 절차(Python 상주·키 설정·deploy.sh 확장)가 남았다.
+
 
 ---
 
@@ -246,6 +267,11 @@
 - [x] 인증 메일 공용 템플릿
 - [x] PWA 홈 화면 설치
 - [x] 관리자 공지 수정 (PUT/PATCH)
+- [x] 이벤트 디자인(할로윈·크리스마스 사이트 배경) 관리자 ON/OFF
+- [x] 커스텀 꾸미기 할로윈 이펙트 · 이펙트 색 (1.0.5)
+- [x] 가이드 페이지 + 게임식 가이드 모드 (운영 배포 전)
+- [x] 출석체크 자동 지급 + 마이페이지 출석판 (운영 배포 전)
+- [x] AI 도우미 `/ai` + AI 전용 서비스 `ai-service/` (운영 배포 전 — 실제 Claude 키 연결 후 답 품질 확인 필요)
 
 ---
 
@@ -264,6 +290,9 @@
 | 핀 제한 | 프론트 `MAX_PINNED_NOTICES = 5` — 백엔드 검증 강화 여지 |
 | 성능 | 캐릭터 다수 시 DOM 기반 티어 렌더 최적화 여지 |
 | 로깅 | 운영용 구조화 로깅(winston 등) 미도입 |
+| AI 서비스 운영 | Oracle VM(1GB)에 Python 상주 필요, `deploy.sh` 미포함, `ANTHROPIC_API_KEY`·`AI_SERVICE_KEY` 설정 필요. 요청 제한은 메모리(재시작 시 초기화) |
+| AI 지식 동기화 | 기능·규칙 변경 시 `ai-service/knowledge/*.md` 를 사람이 같이 고쳐야 함(자동 추출 아님, 티어표만 `tiers.json` 직접 읽음) |
+| 출석체크 | 실제 로그인할 때만 지급(로그인 유지 상태로 접속한 날은 없음) |
 
 ---
 
@@ -272,6 +301,7 @@
 | 문서 | 위치 |
 |------|------|
 | 기능 설명 인덱스 | [../features/README.md](../features/README.md) |
+| AI 전용 서비스 | [../features/ai-service.md](../features/ai-service.md) · [../ai/README.md](../ai/README.md) |
 | 개발 가이드라인 | [../guides/README.md](../guides/README.md) |
 | 타임라인 | [timeline.md](./timeline.md) |
 | 원본 커밋 기록 | [../README.md](../README.md) (information / backend_ 목록) |

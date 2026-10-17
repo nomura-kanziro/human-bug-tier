@@ -235,3 +235,7 @@ area: frontend
 | 파일 | legacy | 요약 |
 |------|--------|------|
 | [01-guide-mode-record.md](./14-guide/01-guide-mode-record.md) | — | 가이드 전용 페이지(`/guide`) + 게임식 "가이드 모드"(어둡게·강조·말풍선·왼쪽 아래 ✕ 종료), 스테이지 5개 |
+
+## 15-ai (→ RDMD/ai)
+
+AI 도우미 화면(`/ai`, `AiHelper.jsx`)은 AI 전용 서비스와 한 묶음이라 [`../ai/`](../ai/README.md) 에 기록한다 — [01-ai-service-record.md](../ai/01-ai-service-record.md).
