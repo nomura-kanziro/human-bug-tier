@@ -419,7 +419,7 @@
 | 388 | 2026-10-18 | [`eee4854`](#eee4854) | refactor(ai-service): 챗봇 폴더마다 schema·router·service·models·repository·database 6개 층으로 재구성 + Oracle 연결 층(MongoDB 미사용) |
 | 389 | 2026-10-18 | [`a864cae`](#a864cae) | docs(ai-service): 6개 층 구조와 Oracle SQL 전용(MongoDB 미사용) 원칙 반영 — README·기능 문서·기록·보안 가이드·AI 스킬 4종 |
 | 390 | 2026-10-18 | [`e0edfc1`](#e0edfc1) | feat(ai-service): 생성 모델을 Ollama gemma4:12b 로 바꾸고 ChromaDB + bge-m3 벡터 검색(BM25 와 RRF 하이브리드)을 가이드 챗봇에 추가 |
-| 391 | 2026-10-18 | [`pending`](#pending391) | docs(ai-service): Ollama gemma4:12b·ChromaDB·bge-m3 반영 — README·기능 문서·기록 02·배포/보안/개발 가이드·AI 스킬 4종 |
+| 391 | 2026-10-18 | [`dac0947`](#dac0947) | docs(ai-service): Ollama gemma4:12b·ChromaDB·bge-m3 반영 — README·기능 문서·기록 02·배포/보안/개발 가이드·AI 스킬 4종 |
 
 ---
 
@@ -7534,15 +7534,15 @@
 
 ---
 
-<a id="pending391"></a>
+<a id="dac0947"></a>
 
-### 391. 2026-10-18 — `pending`
+### 391. 2026-10-18 — `dac0947`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `dac0947`
+- **hash (full)**: `dac094769396738ecba8b00f6631dded4b7e68d3`
 - **author**: nomura
 - **message**: docs(ai-service): Ollama gemma4:12b·ChromaDB·bge-m3 반영 — README·기능 문서·기록 02·배포/보안/개발 가이드·AI 스킬 4종
-- **git**: `git show pending`
+- **git**: `git show dac0947`
 - **범위**: docs / AI 서비스 모델·검색
 - **요약**: ai-service README(구성도·폴더·모델 준비·환경 변수·동작 규칙·운영 배포 선택지), features/ai-service.md(하이브리드 검색·생성 모델·설정·확인·운영 배포), RDMD/ai/02 기록 신설(실측으로 알게 된 것 7가지), 배포 체크리스트(모델 위치 결정·Ollama 포트), 보안(Ollama 내부 전용·인젝션 차단), 개발 가이드(ollama pull·eval 스크립트), AI 스킬 4종(생각 모드·MIN_VECTOR_SIM·내부 전용), CLAUDE.md, work-history.
 - **주요 파일**: `ai-service/README.md`, `RDMD/features/ai-service.md`, `RDMD/ai/*`, `RDMD/guides/*`, `RDMD/summary/work-history.md`, AI 스킬 4종, `CLAUDE.md`
