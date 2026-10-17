@@ -412,7 +412,7 @@
 | 381 | 2026-10-18 | [`84ff75e`](#84ff75e) | docs(rdmd): 기록 규칙에 맞게 정리 — AI 기록을 frontend/15-ai·backend/10-ai·ai/ 로 나누고 인덱스(README) 트리·표·타임라인 갱신 |
 | 382 | 2026-10-18 | [`6ddd0ac`](#6ddd0ac) | docs(features): 공통 인프라·전체 기능 맵을 React 기준으로 재작성하고 기능 문서·작업 이력 현행화 |
 | 383 | 2026-10-18 | [`218089e`](#218089e) | docs(guides): AI 전용 서비스 배포 체크리스트·보안 가이드 추가 |
-| 384 | 2026-10-18 | [`pending`](#pending384) | docs(agents): Codex 팩에 ai-service 스킬 추가, 숨김 폴더 이름(.codex·.groks) 링크 정정 |
+| 384 | 2026-10-18 | [`6ed94a8`](#6ed94a8) | docs(agents): Codex 팩에 ai-service 스킬 추가, 숨김 폴더 이름(.codex·.groks) 링크 정정 |
 
 ---
 
@@ -7401,15 +7401,15 @@
 
 ---
 
-<a id="pending384"></a>
+<a id="6ed94a8"></a>
 
-### 384. 2026-10-18 — `pending`
+### 384. 2026-10-18 — `6ed94a8`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `6ed94a8`
+- **hash (full)**: `6ed94a8a1e4c6e30385eebf6008dfd4afd0a8360`
 - **author**: nomura
 - **message**: docs(agents): Codex 팩에 ai-service 스킬 추가, 숨김 폴더 이름(.codex·.groks) 링크 정정
-- **git**: `git show pending`
+- **git**: `git show 6ed94a8`
 - **범위**: docs / 에이전트 진입 문서
 - **요약**: .codex/ai-service/skill.md 와 인덱스 추가(Claude·Grok 팩과 동일 규칙), CLAUDE.md·AGENTS.md·.agents·.groks 의 codex/·groks/ 경로와 깨진 링크를 실제 폴더 .codex/·.groks/ 로, handoff 스킬의 team 링크 정정.
 - **주요 파일**: `.codex/*`, `CLAUDE.md`, `AGENTS.md`, `.agents/*`, `.groks/README.md`
