@@ -396,7 +396,7 @@
 | 365 | 2026-10-18 | [`b12b7ce`](#b12b7ce) | feat(event-design): 밝은 테마에서는 달 대신 태양 — 할로윈 보름달은 눈이 든 태양, 크리스마스 초승달은 작은 태양 |
 | 366 | 2026-10-18 | [`fe99e6f`](#fe99e6f) | docs(event-design): 밝은 테마 태양 전환 내용 기록 |
 | 367 | 2026-10-18 | [`c4e97b0`](#c4e97b0) | feat(custom-maker): 꾸미기 배경 이펙트에 할로윈 추가 + 이펙트 색 고르기 |
-| 368 | 2026-10-18 | [`pending`](#pending368) | docs(custom-maker): 할로윈 배경 이펙트·이펙트 색 기록 |
+| 368 | 2026-10-18 | [`175403b`](#175403b) | docs(custom-maker): 할로윈 배경 이펙트·이펙트 색 기록 |
 
 ---
 
@@ -7097,15 +7097,15 @@
 
 ---
 
-<a id="pending368"></a>
+<a id="175403b"></a>
 
-### 368. 2026-10-18 — `pending`
+### 368. 2026-10-18 — `175403b`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `175403b`
+- **hash (full)**: `175403ba1ecdc713062eca7f598a6739f9231d37`
 - **author**: nomura
 - **message**: docs(custom-maker): 할로윈 배경 이펙트·이펙트 색 기록
-- **git**: `git show pending`
+- **git**: `git show 175403b`
 - **범위**: docs / 커스텀 메이커 꾸미기
 - **요약**: 14-decorate-halloween-fx-color-record.md 신규(동작·저장 형식·구현·확인·수동 테스트), 11번·react parity 기록의 이펙트/프리셋 개수 보정.
 - **주요 파일**: `RDMD/frontend/03-custom-maker/14-decorate-halloween-fx-color-record.md`
