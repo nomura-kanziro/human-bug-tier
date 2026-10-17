@@ -11,6 +11,8 @@ from pathlib import Path
 SERVICE_DIR = Path(__file__).resolve().parent.parent   # ai-service/
 REPO_ROOT = SERVICE_DIR.parent                          # 저장소 루트
 
+PROVIDERS = ("ollama", "anthropic", "none")
+
 
 def _load_dotenv(path: Path) -> None:
     """아주 단순한 .env 로더 — 이미 환경 변수에 있는 키는 덮어쓰지 않는다(운영 환경 변수 우선)."""
@@ -43,28 +45,71 @@ def _int(env_key: str, default: int, low: int, high: int) -> int:
     return max(low, min(high, value))
 
 
+def _bool(env_key: str, default: bool) -> bool:
+    raw = os.environ.get(env_key, "").strip().lower()
+    if not raw:
+        return default
+    return raw not in ("0", "false", "no", "off")
+
+
 @dataclass(frozen=True)
 class Settings:
-    anthropic_api_key: str      # 없으면 LLM 없이 "문서 검색 답변"(fallback)으로 동작
-    model: str                  # Claude 모델 ID
+    # --- 답변 생성 LLM ---
+    llm_provider: str           # 'ollama'(기본, 내 PC GPU) | 'anthropic'(Claude API) | 'none'(문서 검색 답만)
     max_tokens: int             # 답변 최대 토큰
+    ollama_base_url: str        # Ollama 서버 주소
+    ollama_model: str           # 생성 모델(기본 gemma4:12b — 12GB GPU)
+    ollama_num_ctx: int         # Ollama 컨텍스트 길이(프롬프트가 3~4천 토큰이라 8192 이상 필요)
+    ollama_keep_alive: str      # 모델을 메모리에 붙들어 두는 시간(첫 호출 지연 방지)
+    anthropic_api_key: str
+    anthropic_model: str
+    # --- 임베딩 · 벡터 검색(ChromaDB) ---
+    embed_model: str            # Ollama 임베딩 모델(기본 bge-m3, 1024차원)
+    warmup: bool                # 서비스가 뜰 때 Ollama 모델을 미리 불러 둘지(첫 질문 지연 방지)
+    vector_enabled: bool        # False 면 BM25 만 쓴다
+    chroma_dir: Path            # ChromaDB 저장 폴더(gitignore)
+    # --- 지식 ---
     knowledge_dir: Path         # 사이트 지식 문서(마크다운) 폴더
     tiers_json: Path            # 공식 티어표 정본(root-cloudflare/src/data/tiers.json)
+    # --- 공용 ---
     service_key: str            # Express 프록시와 공유하는 키(X-AI-Key). 비우면 검사 안 함(로컬 개발용)
     top_k: int                  # RAG 검색 문서 수
     history_turns: int          # LLM 에 넘길 최근 대화 수(메시지 단위)
 
     @property
     def llm_enabled(self) -> bool:
-        return bool(self.anthropic_api_key)
+        """LLM 을 쓰도록 설정돼 있는지(ollama 는 켜져 있는지까지는 호출할 때 확인하고, 실패하면 문서 답으로 대신한다)."""
+        if self.llm_provider == "ollama":
+            return True
+        if self.llm_provider == "anthropic":
+            return bool(self.anthropic_api_key)
+        return False
+
+    @property
+    def model(self) -> str:
+        """지금 쓰는 생성 모델 이름."""
+        return self.anthropic_model if self.llm_provider == "anthropic" else self.ollama_model
 
 
 def load_settings() -> Settings:
     _load_dotenv(SERVICE_DIR / ".env")
+    provider = os.environ.get("AI_LLM_PROVIDER", "ollama").strip().lower()
+    if provider not in PROVIDERS:
+        provider = "ollama"
     return Settings(
-        anthropic_api_key=os.environ.get("ANTHROPIC_API_KEY", "").strip(),
-        model=os.environ.get("AI_MODEL", "claude-opus-5-5").strip() or "claude-opus-5-5",
+        llm_provider=provider,
         max_tokens=_int("AI_MAX_TOKENS", 700, 100, 4000),
+        ollama_base_url=os.environ.get("OLLAMA_BASE_URL", "http://127.0.0.1:11434").strip().rstrip("/") or "http://127.0.0.1:11434",
+        ollama_model=os.environ.get("OLLAMA_MODEL", "gemma4:12b").strip() or "gemma4:12b",
+        ollama_num_ctx=_int("OLLAMA_NUM_CTX", 8192, 2048, 65536),
+        ollama_keep_alive=os.environ.get("OLLAMA_KEEP_ALIVE", "30m").strip() or "30m",
+        anthropic_api_key=os.environ.get("ANTHROPIC_API_KEY", "").strip(),
+        # 예전 변수 AI_MODEL 도 받는다(Claude 모델 이름이었다)
+        anthropic_model=(os.environ.get("ANTHROPIC_MODEL") or os.environ.get("AI_MODEL") or "claude-sonnet-5-5").strip(),
+        embed_model=os.environ.get("OLLAMA_EMBED_MODEL", "bge-m3").strip() or "bge-m3",
+        warmup=_bool("AI_WARMUP", True),
+        vector_enabled=_bool("AI_VECTOR_ENABLED", True),
+        chroma_dir=_path("CHROMA_DIR", SERVICE_DIR / "data" / "chroma"),
         knowledge_dir=_path("AI_KNOWLEDGE_DIR", SERVICE_DIR / "knowledge"),
         tiers_json=_path("AI_TIERS_JSON", REPO_ROOT / "root-cloudflare" / "src" / "data" / "tiers.json"),
         service_key=os.environ.get("AI_SERVICE_KEY", "").strip(),

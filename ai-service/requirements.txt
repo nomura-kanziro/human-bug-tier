@@ -4,6 +4,8 @@ uvicorn==0.54.0
 langchain-core==1.6.12
 langchain-text-splitters==1.1.3
 langchain-anthropic==1.7.6
+langchain-ollama==1.1.0     # 기본 생성 모델(gemma4:12b)·임베딩(bge-m3) — 내 PC 의 Ollama
+chromadb==1.5.9             # 벡터 저장소(지식 조각 임베딩 검색)
 langgraph==1.2.16
 rank-bm25==0.2.2
 

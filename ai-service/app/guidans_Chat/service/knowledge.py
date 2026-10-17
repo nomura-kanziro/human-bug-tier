@@ -22,6 +22,7 @@ from langchain_core.retrievers import BaseRetriever
 from langchain_text_splitters import MarkdownHeaderTextSplitter
 from rank_bm25 import BM25Okapi
 
+SHORT_NAME = 3   # 이 글자 수 이하의 캐릭터 이름은 단어 단위로만 찾는다(CharacterIndex.find)
 GRADE_ORDER_NOTE = "갑급이 가장 높고 을급, 병급, 정급 순서"
 
 # ---------------------------------------------------------------------------
@@ -151,21 +152,23 @@ class CharacterIndex:
     def find(self, text: str, limit: int = 5) -> list[Character]:
         q = compact(text)
         found: list[Character] = []
+        # 짧은 이름("사이" 등, 공백·기호 뺀 3글자 이하)은 글자 포함으로 찾으면 "사이트" 같은 일반 단어에 걸린다 → 단어 단위로만 맞춘다
+        words = set()
+        for w in _PUNCT.sub(" ", normalize(text)).split():
+            words.add(compact(w))
+            for j in _JOSA:
+                if len(w) > len(j) + 1 and w.endswith(j):
+                    words.add(compact(w[: -len(j)]))
         # 긴 이름부터 — "누에 토시야"가 "토시야"보다 먼저 잡히게
         for key in sorted(self._full, key=len, reverse=True):
-            if len(key) >= 2 and key in q:
+            hit = (key in words) if len(key) <= SHORT_NAME else (key in q)
+            if len(key) >= 2 and hit:
                 for c in self._full[key]:
                     if c not in found:
                         found.append(c)
                 q = q.replace(key, " ")
         if not found:
             # 이름의 한 부분은 "단어 단위"로만 맞춘다 — '타츠오미'가 '타츠오'(다른 캐릭터)에 걸리지 않게
-            words = set()
-            for w in _PUNCT.sub(" ", normalize(text)).split():
-                words.add(w)
-                for j in _JOSA:
-                    if len(w) > len(j) + 1 and w.endswith(j):
-                        words.add(w[: -len(j)])
             for key in sorted(self._part, key=len, reverse=True):
                 group = self._part[key]
                 if key in words and len({c.plain_name for c in group}) == 1 and group[0] not in found:

@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 389 |
+| **커밋 수** | 390 |
 | **기간** | 2026-03-20 ~ 2026-10-18 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -418,6 +418,7 @@
 | 387 | 2026-10-18 | [`44c140e`](#44c140e) | docs(ai-service): 챗봇 폴더 구분(guidans_Chat·Agent-Bot) 반영 — README·기능 문서·기록·AI 스킬 4종·작업 이력 |
 | 388 | 2026-10-18 | [`eee4854`](#eee4854) | refactor(ai-service): 챗봇 폴더마다 schema·router·service·models·repository·database 6개 층으로 재구성 + Oracle 연결 층(MongoDB 미사용) |
 | 389 | 2026-10-18 | [`a864cae`](#a864cae) | docs(ai-service): 6개 층 구조와 Oracle SQL 전용(MongoDB 미사용) 원칙 반영 — README·기능 문서·기록·보안 가이드·AI 스킬 4종 |
+| 390 | 2026-10-18 | [`pending`](#pending390) | feat(ai-service): 생성 모델을 Ollama gemma4:12b 로 바꾸고 ChromaDB + bge-m3 벡터 검색(BM25 와 RRF 하이브리드)을 가이드 챗봇에 추가 |
 
 ---
 
@@ -7509,5 +7510,23 @@
 - **요약**: ai-service README 폴더 트리·층 책임·데이터베이스 원칙(MongoDB 미사용·Oracle SQL·바인드 변수·대화 비저장), features/ai-service.md 의 층 표·DB 원칙 절, RDMD/ai 기록, security.md 의 Oracle 행, work-history, .agents·.claude·.groks·.codex 스킬(Code map·Do not: MongoDB 금지, 층 분리)을 갱신.
 - **주요 파일**: `ai-service/README.md`, `RDMD/features/ai-service.md`, `RDMD/ai/01-ai-service-record.md`, `RDMD/guides/security.md`, `RDMD/summary/work-history.md`, AI 스킬 4종
 - **관련 RDMD**: `RDMD/features/ai-service.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending390"></a>
+
+### 390. 2026-10-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(ai-service): 생성 모델을 Ollama gemma4:12b 로 바꾸고 ChromaDB + bge-m3 벡터 검색(BM25 와 RRF 하이브리드)을 가이드 챗봇에 추가
+- **git**: `git show pending`
+- **범위**: ai-service / guidans_Chat 모델·검색
+- **요약**: llm.py 를 provider 선택형(ollama 기본·anthropic·none)으로 바꾸고 ChatOllama 의 생각 모드를 꺼 빈 답 문제를 막음, 모델 워밍업. ChromaDB(database/chroma.py·repository/knowledge_vector_repository.py·models/knowledge_chunk.py)에 지식 조각을 bge-m3 임베딩으로 저장하고 새 조각만 동기화, retrieval.py 에서 BM25 와 RRF 로 합침(벡터 실패 시 BM25 로 계속). graph.py 는 관련성을 벡터 유사도(0.50, 실측)로 판단하고 프롬프트 인젝션을 refuse 노드로 차단. CharacterIndex 짧은 이름 오탐 수정, 프롬프트 7번 규칙, eval_guide_chat.py, 의존성(chromadb·langchain-ollama)·.env.example·.gitignore. pytest 22개 통과, 실제 Ollama 로 18개 질문 점검.
+- **주요 파일**: `ai-service/app/config.py`, `ai-service/app/guidans_Chat/service/{llm,embeddings,retrieval,graph,chat_service,knowledge,prompts}.py`, `ai-service/app/guidans_Chat/{database/chroma,repository/knowledge_vector_repository,models/knowledge_chunk}.py`, `ai-service/scripts/eval_guide_chat.py`, `ai-service/tests/*`, `ai-service/requirements.txt`, `ai-service/.env.example`, `.gitignore`
+- **관련 RDMD**: `RDMD/ai/02-ollama-chromadb-record.md`
 
 [▲ 목차로](#목차)
