@@ -405,7 +405,7 @@
 | 374 | 2026-10-18 | [`e151475`](#e151475) | feat(attendance): 연속 출석 일차별 포인트(10·10·10·25·10·10·50) + 마이페이지 출석판 |
 | 375 | 2026-10-18 | [`da8c9a5`](#da8c9a5) | docs(attendance): 출석 기록을 연속 일차·출석판 기준으로 갱신 |
 | 376 | 2026-10-18 | [`b869898`](#b869898) | feat(ai-service): AI 전용 서비스 신설 — FastAPI · LangChain · LangGraph · RAG(사이트 지식 + 공식 티어표) |
-| 377 | 2026-10-18 | [`pending`](#pending377) | feat(ai): Express /api/ai 프록시 — 입력 검사·IP당 요청 제한·공유 키·AI 서비스 장애 격리 |
+| 377 | 2026-10-18 | [`4e50a22`](#4e50a22) | feat(ai): Express /api/ai 프록시 — 입력 검사·IP당 요청 제한·공유 키·AI 서비스 장애 격리 |
 
 ---
 
@@ -7268,15 +7268,15 @@
 
 ---
 
-<a id="pending377"></a>
+<a id="4e50a22"></a>
 
-### 377. 2026-10-18 — `pending`
+### 377. 2026-10-18 — `4e50a22`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `4e50a22`
+- **hash (full)**: `4e50a22dc4fbb458784155ee05415a19c0a9442e`
 - **author**: nomura
 - **message**: feat(ai): Express /api/ai 프록시 — 입력 검사·IP당 요청 제한·공유 키·AI 서비스 장애 격리
-- **git**: `git show pending`
+- **git**: `git show 4e50a22`
 - **범위**: backend / AI 프록시
 - **요약**: backend/routes/aiRoutes.js 신설, server.js 에 /api/ai 연결. GET /questions·POST /chat 을 ai-service(AI_SERVICE_URL, 기본 127.0.0.1:8000)로 넘김. 질문 500자·이전 대화 12개 제한, IP당 10분 20회(429), X-AI-Key, 45초 타임아웃, 실패 시 503. 대화 저장 안 함. .env.example 에 AI_SERVICE_URL/AI_SERVICE_KEY.
 - **주요 파일**: `backend/routes/aiRoutes.js`, `backend/server.js`, `backend/.env.example`
