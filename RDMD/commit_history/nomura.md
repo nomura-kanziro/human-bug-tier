@@ -400,7 +400,7 @@
 | 369 | 2026-10-18 | [`f0837f1`](#f0837f1) | chore(footer): 사이트 버전 표시 1.0.2 → 1.0.5 |
 | 370 | 2026-10-18 | [`f69d96c`](#f69d96c) | feat(guide): 가이드 전용 페이지(/guide) + 게임식 가이드 모드 — 어둡게·강조·말풍선, 왼쪽 아래 ✕ 로 종료 |
 | 371 | 2026-10-18 | [`d54a2bf`](#d54a2bf) | docs(guide): 가이드 모드 기록 추가 |
-| 372 | 2026-10-18 | [`pending`](#pending372) | feat(attendance): 로그인 시 하루(KST) 1회 출석체크 10포인트 자동 지급 |
+| 372 | 2026-10-18 | [`3b3853f`](#3b3853f) | feat(attendance): 로그인 시 하루(KST) 1회 출석체크 10포인트 자동 지급 |
 
 ---
 
@@ -7173,15 +7173,15 @@
 
 ---
 
-<a id="pending372"></a>
+<a id="3b3853f"></a>
 
-### 372. 2026-10-18 — `pending`
+### 372. 2026-10-18 — `3b3853f`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `3b3853f`
+- **hash (full)**: `3b3853f8a4a357a6ef62cd0b3bf45983a485a296`
 - **author**: nomura
 - **message**: feat(attendance): 로그인 시 하루(KST) 1회 출석체크 10포인트 자동 지급
-- **git**: `git show pending`
+- **git**: `git show 3b3853f`
 - **범위**: backend+frontend / 출석체크
 - **요약**: 로그인 성공 직후 grantDailyAttendance() 가 한국 시간 하루 첫 로그인이면 LuckProfile 포인트 +10 을 원자적 갱신으로 지급(동시 로그인 중복 방지, 실패해도 로그인 무영향). lastAttendanceDate 필드·원장 source 'attendance'·관리자 라벨 추가, 로그인 응답 attendance 와 로그인 성공 알림 문구.
 - **주요 파일**: `backend/utils/attendance.js`, `backend/controllers/authController.js`, `backend/models/LuckProfile.js`, `backend/models/LuckPointLog.js`, `backend/controllers/adminLuckController.js`, `root-cloudflare/src/pages/Login.jsx`
