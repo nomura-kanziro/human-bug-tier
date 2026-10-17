@@ -397,7 +397,7 @@
 | 366 | 2026-10-18 | [`fe99e6f`](#fe99e6f) | docs(event-design): 밝은 테마 태양 전환 내용 기록 |
 | 367 | 2026-10-18 | [`c4e97b0`](#c4e97b0) | feat(custom-maker): 꾸미기 배경 이펙트에 할로윈 추가 + 이펙트 색 고르기 |
 | 368 | 2026-10-18 | [`175403b`](#175403b) | docs(custom-maker): 할로윈 배경 이펙트·이펙트 색 기록 |
-| 369 | 2026-10-18 | [`pending`](#pending369) | chore(footer): 사이트 버전 표시 1.0.2 → 1.0.5 |
+| 369 | 2026-10-18 | [`f0837f1`](#f0837f1) | chore(footer): 사이트 버전 표시 1.0.2 → 1.0.5 |
 
 ---
 
@@ -7116,15 +7116,15 @@
 
 ---
 
-<a id="pending369"></a>
+<a id="f0837f1"></a>
 
-### 369. 2026-10-18 — `pending`
+### 369. 2026-10-18 — `f0837f1`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `f0837f1`
+- **hash (full)**: `f0837f1178b8904847016dacc8953db097967cfe`
 - **author**: nomura
 - **message**: chore(footer): 사이트 버전 표시 1.0.2 → 1.0.5
-- **git**: `git show pending`
+- **git**: `git show f0837f1`
 - **범위**: frontend / 푸터 버전
 - **요약**: Footer.jsx SITE_VERSION 을 1.0.2 에서 1.0.5 로 변경.
 - **주요 파일**: `root-cloudflare/src/components/Footer.jsx`
