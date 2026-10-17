@@ -401,7 +401,7 @@
 | 370 | 2026-10-18 | [`f69d96c`](#f69d96c) | feat(guide): 가이드 전용 페이지(/guide) + 게임식 가이드 모드 — 어둡게·강조·말풍선, 왼쪽 아래 ✕ 로 종료 |
 | 371 | 2026-10-18 | [`d54a2bf`](#d54a2bf) | docs(guide): 가이드 모드 기록 추가 |
 | 372 | 2026-10-18 | [`3b3853f`](#3b3853f) | feat(attendance): 로그인 시 하루(KST) 1회 출석체크 10포인트 자동 지급 |
-| 373 | 2026-10-18 | [`pending`](#pending373) | docs(attendance): 출석체크 기록 추가 |
+| 373 | 2026-10-18 | [`29e2543`](#29e2543) | docs(attendance): 출석체크 기록 추가 |
 
 ---
 
@@ -7192,15 +7192,15 @@
 
 ---
 
-<a id="pending373"></a>
+<a id="29e2543"></a>
 
-### 373. 2026-10-18 — `pending`
+### 373. 2026-10-18 — `29e2543`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `29e2543`
+- **hash (full)**: `29e2543cc10bc1815d875ee092c9e75b029cfceb`
 - **author**: nomura
 - **message**: docs(attendance): 출석체크 기록 추가
-- **git**: `git show pending`
+- **git**: `git show 29e2543`
 - **범위**: docs / 출석체크
 - **요약**: 08-luck-draw/05-attendance-record.md 신규(동작·구현·확인·알려진 범위·수동 테스트), 04 원장 source 표와 backend README 색인 갱신.
 - **주요 파일**: `RDMD/backend/08-luck-draw/05-attendance-record.md`, `RDMD/backend/08-luck-draw/04-point-ledger-admin-api-record.md`, `RDMD/backend/README.md`
