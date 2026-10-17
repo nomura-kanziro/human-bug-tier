@@ -402,7 +402,7 @@
 | 371 | 2026-10-18 | [`d54a2bf`](#d54a2bf) | docs(guide): 가이드 모드 기록 추가 |
 | 372 | 2026-10-18 | [`3b3853f`](#3b3853f) | feat(attendance): 로그인 시 하루(KST) 1회 출석체크 10포인트 자동 지급 |
 | 373 | 2026-10-18 | [`29e2543`](#29e2543) | docs(attendance): 출석체크 기록 추가 |
-| 374 | 2026-10-18 | [`pending`](#pending374) | feat(attendance): 연속 출석 일차별 포인트(10·10·10·25·10·10·50) + 마이페이지 출석판 |
+| 374 | 2026-10-18 | [`e151475`](#e151475) | feat(attendance): 연속 출석 일차별 포인트(10·10·10·25·10·10·50) + 마이페이지 출석판 |
 
 ---
 
@@ -7211,15 +7211,15 @@
 
 ---
 
-<a id="pending374"></a>
+<a id="e151475"></a>
 
-### 374. 2026-10-18 — `pending`
+### 374. 2026-10-18 — `e151475`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `e151475`
+- **hash (full)**: `e15147537037dee6b43b33e581da1b8adc381326`
 - **author**: nomura
 - **message**: feat(attendance): 연속 출석 일차별 포인트(10·10·10·25·10·10·50) + 마이페이지 출석판
-- **git**: `git show pending`
+- **git**: `git show e151475`
 - **범위**: backend+frontend / 출석체크
 - **요약**: 출석체크를 하루 일괄 10P 에서 연속 7일 주기(10·10·10·25·10·10·50)로 변경. 전날에 이어 로그인하면 다음 일차, 7일차 다음 날·하루 빠지면 1일차로 초기화. attendanceStreak 필드, describeAttendance 계산 공유, GET /api/luck-draw/attendance, 마이페이지 출석판(AttendanceBoard) 7칸 체크 표시, 로그인 알림에 일차 표시.
 - **주요 파일**: `backend/utils/attendance.js`, `backend/controllers/luckDrawController.js`, `backend/routes/luckDrawRoutes.js`, `backend/models/LuckProfile.js`, `backend/models/LuckPointLog.js`, `root-cloudflare/src/components/AttendanceBoard.jsx`, `root-cloudflare/src/pages/MyPage.jsx`, `root-cloudflare/src/styles/my-page.css`, `root-cloudflare/src/pages/Login.jsx`
