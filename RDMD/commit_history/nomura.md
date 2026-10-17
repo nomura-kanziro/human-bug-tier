@@ -403,7 +403,7 @@
 | 372 | 2026-10-18 | [`3b3853f`](#3b3853f) | feat(attendance): 로그인 시 하루(KST) 1회 출석체크 10포인트 자동 지급 |
 | 373 | 2026-10-18 | [`29e2543`](#29e2543) | docs(attendance): 출석체크 기록 추가 |
 | 374 | 2026-10-18 | [`e151475`](#e151475) | feat(attendance): 연속 출석 일차별 포인트(10·10·10·25·10·10·50) + 마이페이지 출석판 |
-| 375 | 2026-10-18 | [`pending`](#pending375) | docs(attendance): 출석 기록을 연속 일차·출석판 기준으로 갱신 |
+| 375 | 2026-10-18 | [`da8c9a5`](#da8c9a5) | docs(attendance): 출석 기록을 연속 일차·출석판 기준으로 갱신 |
 
 ---
 
@@ -7230,15 +7230,15 @@
 
 ---
 
-<a id="pending375"></a>
+<a id="da8c9a5"></a>
 
-### 375. 2026-10-18 — `pending`
+### 375. 2026-10-18 — `da8c9a5`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `da8c9a5`
+- **hash (full)**: `da8c9a51d20d6364e46dabe7f5821c2f32c1295a`
 - **author**: nomura
 - **message**: docs(attendance): 출석 기록을 연속 일차·출석판 기준으로 갱신
-- **git**: `git show pending`
+- **git**: `git show da8c9a5`
 - **범위**: docs / 출석체크
 - **요약**: 05-attendance-record.md 를 연속 7일 주기·출석판 기준으로 다시 씀(규칙 표, 초기화 해석, 구현, 확인, 수동 테스트), 04 원장 예시·README 색인 문구 갱신.
 - **주요 파일**: `RDMD/backend/08-luck-draw/05-attendance-record.md`, `RDMD/backend/08-luck-draw/04-point-ledger-admin-api-record.md`, `RDMD/backend/README.md`
