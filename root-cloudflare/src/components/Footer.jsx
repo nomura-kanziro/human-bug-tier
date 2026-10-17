@@ -3,7 +3,7 @@
 import { Link } from 'react-router-dom';
 import { LOGO_URL } from '../lib/paths';
 
-export const SITE_VERSION = '1.0.2';
+export const SITE_VERSION = '1.0.5';
 
 export default function Footer() {
   return (
