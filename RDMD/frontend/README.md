@@ -229,3 +229,9 @@ area: frontend
 
 4. 본문 템플릿: [`../guides/rdmd-writing.md`](../guides/rdmd-writing.md)  
 5. 큰 변경이면 [`../summary/work-history.md`](../summary/work-history.md) · 이 README 표 한 줄 갱신
+
+## 14-guide
+
+| 파일 | legacy | 요약 |
+|------|--------|------|
+| [01-guide-mode-record.md](./14-guide/01-guide-mode-record.md) | — | 가이드 전용 페이지(`/guide`) + 게임식 "가이드 모드"(어둡게·강조·말풍선·왼쪽 아래 ✕ 종료), 스테이지 5개 |
