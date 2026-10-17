@@ -39,6 +39,23 @@
 
 ---
 
+## AI. AI 전용 서비스 `ai-service/` (2026-10-18 신설 — ⛔ **아직 운영 배포 전**)
+
+`backend/deploy/oracle/deploy.sh` 는 **ai-service 를 묶지 않는다**(Node 백엔드 + `dist` 만 올림). AI 도우미(`/ai`)를 운영에 열려면 아래를 먼저 해야 한다. 안 올려도 사이트는 정상이고 `/api/ai/*` 만 503("잠시 쉬는 중")이다.
+
+- [ ] Oracle VM 에 Python 3.10+·venv, `ai-service/` 와 `tiers.json` 배치(운영 패키지에는 `root-cloudflare/src` 가 없을 수 있어 `AI_TIERS_JSON` 으로 경로 지정)
+- [ ] `pip install -r ai-service/requirements.txt` (버전 고정됨)
+- [ ] 시크릿은 서버 환경에만: `ANTHROPIC_API_KEY`(Claude), `AI_SERVICE_KEY`(= `backend` 의 같은 이름 값). 로컬 `ai-service/.env` 를 올리지 않는다
+- [ ] uvicorn 을 **`127.0.0.1:8000` 에만** 바인드해 pm2/systemd 로 상시 실행 — 외부 포트·Security List·nginx 에 열지 않는다(바깥 요청은 Express `/api/ai` 로만)
+- [ ] `backend` 쪽 `AI_SERVICE_URL`(기본 `http://127.0.0.1:8000`)·`AI_SERVICE_KEY` 설정 후 **백엔드 재시작**(새 라우트 `/api/ai`)
+- [ ] VM 메모리(1GB + 스왑 2GB): 상주 메모리를 `pm2 monit`/`free -m` 로 측정(백엔드 `max_memory_restart 600M` 과 합쳐 여유 확인)
+- [ ] 확인: 서버에서 `curl 127.0.0.1:8000/health` → `llm: true`, 바깥에서 `https://hbt-tier.duckdns.org:8000` 은 **안 열려야 함**, `/ai` 에서 질문 → `AI 연결 없이…` 배지가 **없는** 답
+- [ ] 지식(`knowledge/*.md`)을 고쳤다면 ai-service 재시작 또는 `POST /reload`(키 필요)
+
+상세: [`../features/ai-service.md`](../features/ai-service.md) · [`../../ai-service/README.md`](../../ai-service/README.md)
+
+---
+
 ## P. Cloudflare Pages (`human-bug-tier.pages.dev` — `/api` 는 Oracle 로 프록시)
 
 - [ ] Pages 프로젝트 빌드 설정: Root directory `root-cloudflare` / Build `npm run build` / Output `dist` (GitHub 연동 빌드가 실제 운영 배포)

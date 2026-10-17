@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 382 |
+| **커밋 수** | 383 |
 | **기간** | 2026-03-20 ~ 2026-10-18 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -411,6 +411,7 @@
 | 380 | 2026-10-18 | [`f3d32f8`](#f3d32f8) | docs(rdmd): 10-02~10-18 누락 기록 보충 — 사이드 메뉴·모바일 헤더, 사이트 전용 SMTP, 7~9티어 정정, 사이트 설정(계절 배경) 백엔드 |
 | 381 | 2026-10-18 | [`84ff75e`](#84ff75e) | docs(rdmd): 기록 규칙에 맞게 정리 — AI 기록을 frontend/15-ai·backend/10-ai·ai/ 로 나누고 인덱스(README) 트리·표·타임라인 갱신 |
 | 382 | 2026-10-18 | [`6ddd0ac`](#6ddd0ac) | docs(features): 공통 인프라·전체 기능 맵을 React 기준으로 재작성하고 기능 문서·작업 이력 현행화 |
+| 383 | 2026-10-18 | [`pending`](#pending383) | docs(guides): AI 전용 서비스 배포 체크리스트·보안 가이드 추가 |
 
 ---
 
@@ -7376,5 +7377,23 @@
 - **요약**: common-infra.md·overview.md 를 바닐라(common.js·header.html) 기준에서 현행 React(Layout·Header·Footer·api·paths·AuthContext·theme·계절 배경·라우트표)로 재작성. custom-maker(꾸미기 11종·이펙트 색), auth(사이트 SMTP 우선 체인·환경 변수), tier-class(10-08 7~9티어), 존재하지 않는 바닐라 모듈 README 링크 정정, features README, work-history Phase 11·체크리스트 보정.
 - **주요 파일**: `RDMD/features/*.md`, `RDMD/summary/work-history.md`
 - **관련 RDMD**: `RDMD/features/common-infra.md`, `RDMD/features/overview.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending383"></a>
+
+### 383. 2026-10-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(guides): AI 전용 서비스 배포 체크리스트·보안 가이드 추가
+- **git**: `git show pending`
+- **범위**: docs / RDMD 가이드
+- **요약**: deploy-checklist 에 ai-service 운영 배포 절차(venv·키·127.0.0.1 바인드·메모리 측정·deploy.sh 미포함)를, security 9절에 키 관리·내부 전용 바인드·요청 제한·프롬프트 인젝션·대화 비저장·HTML 렌더링 금지를, 사고 대응에 AI 키 유출 절차를 추가.
+- **주요 파일**: `RDMD/guides/deploy-checklist.md`, `RDMD/guides/security.md`
+- **관련 RDMD**: `RDMD/guides/deploy-checklist.md`
 
 [▲ 목차로](#목차)
