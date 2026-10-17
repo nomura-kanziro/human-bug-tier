@@ -1,9 +1,11 @@
 /**
  * 앱 메일 발송
+ * 0순위: 사이트 전용 SMTP (SMTP_HOST/SMTP_USER/SMTP_PASS/MAIL_FROM_ADDRESS 가 모두 설정된 경우 — Oracle Email Delivery 등.
+ *        사이트 도메인 주소로 발송되어 개인 Gmail 주소가 보낸 사람으로 노출되지 않는다. 2026-10-03~)
  * 1순위: Brevo HTTPS API (BREVO_API_KEY 설정 시) — 발신자 이메일 1개만 클릭 인증하면 도메인 없이도 임의 수신자에게 발송 가능
  * 2순위: Resend HTTPS API (RESEND_API_KEY 설정 시) — 도메인 미인증 시 계정 소유자 본인에게만 발송 가능
  * 3순위: Gmail SMTP (로컬 등 SMTP가 열린 환경 대비 유지)
- * 세 방식 모두 미설정 시 hasEmailConfig() === false
+ * 위 방식이 모두 미설정이면 hasEmailConfig() === false (앞 방식이 실패하면 설정된 다음 방식으로 자동 대체)
  */
 const nodemailer = require('nodemailer');
 const dnsPromises = require('dns').promises;
