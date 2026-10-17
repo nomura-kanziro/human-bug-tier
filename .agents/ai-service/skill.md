@@ -18,7 +18,8 @@ description: >
 
 ## Code map
 
-- 서비스: `ai-service/app/main.py`(FastAPI), `config.py`, `knowledge.py`(문서 적재·BM25·CharacterIndex), `graph.py`(LangGraph), `prompts.py`, `llm.py`(ChatAnthropic), `questions.py`
+- 서비스 공용: `ai-service/app/main.py`(FastAPI 진입점), `app/config.py`
+- **챗봇은 종류별 폴더로 나눈다**: 가이드 전용 챗봇 = `ai-service/app/guidans_Chat/`(`knowledge.py` 문서 적재·BM25·CharacterIndex, `graph.py` LangGraph, `prompts.py`, `llm.py` ChatAnthropic, `questions.py`). 에이전트 봇 = `ai-service/app/Agent-Bot/`(계획 단계 — 폴더·README 만, 구현·수정 금지). 새 챗봇 코드를 다른 챗봇 폴더에 섞지 않는다
 - 지식: `ai-service/knowledge/01~08-*.md`(사용자용 이용 안내) + `root-cloudflare/src/data/tiers.json`(직접 읽음)
 - 테스트: `ai-service/tests/test_service.py` (`.venv/Scripts/python -m pytest -q`)
 - 프록시: `backend/routes/aiRoutes.js` → `server.js` `app.use('/api/ai', aiRoutes)`
@@ -44,6 +45,7 @@ description: >
 
 ## Do not
 
+- `app/Agent-Bot/` 은 **계획 단계**라 사람이 구현을 지시하기 전에는 코드를 넣지 않는다.
 - LLM 키(`ANTHROPIC_API_KEY`)·`AI_SERVICE_KEY` 를 커밋·로그·응답에 넣지 않는다(`ai-service/.env` 는 gitignore — `.env` 패턴).
 - **대화 내용을 저장하지 않는다**(현재 정책). 저장하려면 보관 기간·탈퇴 시 삭제·별도 DB 를 먼저 사람과 정한다.
 - 관리자 기능·API 주소·서버 구조를 지식 문서에 넣지 않는다(사용자용).

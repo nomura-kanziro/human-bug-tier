@@ -20,23 +20,27 @@ Express(`backend/`)와 **별도 프로세스**로 돌고, 브라우저는 이 �
 |---|---|
 | **FastAPI** + uvicorn | `app/main.py` — `/health`, `/questions`, `/chat`, `/reload` |
 | **LangChain** | `langchain-core`(Document·BaseRetriever·메시지), `langchain-text-splitters`(MarkdownHeaderTextSplitter), `langchain-anthropic`(ChatAnthropic) |
-| **LangGraph** | `app/graph.py` — `StateGraph` 질문 처리 흐름(조건 분기) |
-| **RAG** | `app/knowledge.py` — 문서 적재·분할, BM25 검색기, 캐릭터 이름 색인, 근거를 프롬프트에 넣어 답 생성(`app/prompts.py`) |
+| **LangGraph** | `app/guidans_Chat/graph.py` — `StateGraph` 질문 처리 흐름(조건 분기) |
+| **RAG** | `app/guidans_Chat/knowledge.py` — 문서 적재·분할, BM25 검색기, 캐릭터 이름 색인, 근거를 프롬프트에 넣어 답 생성(`app/guidans_Chat/prompts.py`) |
 
 ## 폴더
+
+챗봇 종류별로 폴더를 나눈다 — **가이드 전용 챗봇**은 `app/guidans_Chat/`, **에이전트 봇**은 `app/Agent-Bot/`(계획 단계, 폴더만).
 
 ```
 ai-service/
 ├── app/
-│   ├── main.py        # FastAPI 앱 · 요청 모델(질문 500자, 이전 대화 12개) · X-AI-Key 검사
-│   ├── config.py      # 환경 변수 / ai-service/.env
-│   ├── knowledge.py   # 지식 베이스: 마크다운 + tiers.json → Document, BM25 검색기, CharacterIndex
-│   ├── graph.py       # LangGraph 흐름 + fallback 답
-│   ├── prompts.py     # 시스템 프롬프트(사이트 정보만으로 답, 추측 금지, 역할 바꾸기 거절)
-│   ├── llm.py         # ChatAnthropic 생성(키 없으면 None)
-│   └── questions.py   # 랜덤 추천 질문(캐릭터 / 티어 / 사이트 갈래 하나씩)
-├── knowledge/         # ★ 사이트 지식 원문 — 기능이 바뀌면 여기를 고친다
-├── tests/             # pytest (실제 LLM 호출 없음)
+│   ├── main.py            # FastAPI 앱(공용 진입점) · 요청 모델(질문 500자, 이전 대화 12개) · X-AI-Key 검사
+│   ├── config.py          # 공용 설정 — 환경 변수 / ai-service/.env
+│   ├── guidans_Chat/      # ★ 가이드 전용 챗봇(휴버봇) — 관련 기능이 전부 이 안에
+│   │   ├── knowledge.py   #   지식 베이스: 마크다운 + tiers.json → Document, BM25 검색기, CharacterIndex
+│   │   ├── graph.py       #   LangGraph 흐름 + fallback 답
+│   │   ├── prompts.py     #   시스템 프롬프트(사이트 정보만으로 답, 추측 금지, 역할 바꾸기 거절)
+│   │   ├── llm.py         #   ChatAnthropic 생성(키 없으면 None)
+│   │   └── questions.py   #   랜덤 추천 질문(캐릭터 / 티어 / 사이트 갈래 하나씩)
+│   └── Agent-Bot/         # 에이전트 봇 자리(계획 단계 — README 만 있음, 구현 없음)
+├── knowledge/             # 사이트 지식 원문(가이드 챗봇이 읽음) — 기능이 바뀌면 여기를 고친다
+├── tests/                 # pytest (실제 LLM 호출 없음)
 ├── requirements.txt
 └── .env.example
 ```

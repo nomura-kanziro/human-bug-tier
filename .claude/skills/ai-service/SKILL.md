@@ -18,7 +18,8 @@ description: >
 
 ## Code map
 
-- 서비스: `ai-service/app/main.py`(FastAPI), `config.py`, `knowledge.py`(문서 적재·BM25·CharacterIndex), `graph.py`(LangGraph), `prompts.py`, `llm.py`(ChatAnthropic), `questions.py`
+- 서비스 공용: `ai-service/app/main.py`(FastAPI 진입점), `app/config.py`
+- **챗봇은 종류별 폴더로 나눈다**: 가이드 전용 챗봇 = `ai-service/app/guidans_Chat/`(`knowledge.py` 문서 적재·BM25·CharacterIndex, `graph.py` LangGraph, `prompts.py`, `llm.py` ChatAnthropic, `questions.py`). 에이전트 봇 = `ai-service/app/Agent-Bot/`(계획 단계 — 폴더·README 만, 구현·수정 금지). 새 챗봇 코드를 다른 챗봇 폴더에 섞지 않는다
 - 지식: `ai-service/knowledge/01~08-*.md`(사용자용 이용 안내) + `root-cloudflare/src/data/tiers.json`(직접 읽음)
 - 테스트: `ai-service/tests/test_service.py` (`.venv/Scripts/python -m pytest -q`)
 - 프록시: `backend/routes/aiRoutes.js` → `server.js` `app.use('/api/ai', aiRoutes)`

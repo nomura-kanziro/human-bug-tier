@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 386 |
+| **커밋 수** | 387 |
 | **기간** | 2026-03-20 ~ 2026-10-18 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -415,6 +415,7 @@
 | 384 | 2026-10-18 | [`6ed94a8`](#6ed94a8) | docs(agents): Codex 팩에 ai-service 스킬 추가, 숨김 폴더 이름(.codex·.groks) 링크 정정 |
 | 385 | 2026-10-18 | [`fe29c16`](#fe29c16) | docs(mail): utils/mail.js 머리 주석에 사이트 전용 SMTP(0순위) 반영 |
 | 386 | 2026-10-18 | [`44354b5`](#44354b5) | refactor(ai-service): 가이드 전용 챗봇 코드를 app/guidans_Chat/ 으로 분리하고 에이전트 봇 자리 app/Agent-Bot/ 추가 |
+| 387 | 2026-10-18 | [`pending`](#pending387) | docs(ai-service): 챗봇 폴더 구분(guidans_Chat·Agent-Bot) 반영 — README·기능 문서·기록·AI 스킬 4종·작업 이력 |
 
 ---
 
@@ -7451,6 +7452,24 @@
 - **범위**: ai-service / 폴더 구조
 - **요약**: knowledge·graph·prompts·llm·questions 를 app/guidans_Chat/ 패키지로 옮기고(git mv, 내용 변경은 import 경로뿐) main.py·tests 의 import 정정. app/Agent-Bot/ 은 계획 단계라 README 만 둔 빈 자리(구현 없음, 하이픈 이름이라 구현 시 import 가능한 이름 필요). 동작·API 변경 없음, pytest 7개 통과.
 - **주요 파일**: `ai-service/app/guidans_Chat/*`, `ai-service/app/Agent-Bot/README.md`, `ai-service/app/main.py`, `ai-service/tests/test_service.py`
+- **관련 RDMD**: `RDMD/features/ai-service.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending387"></a>
+
+### 387. 2026-10-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(ai-service): 챗봇 폴더 구분(guidans_Chat·Agent-Bot) 반영 — README·기능 문서·기록·AI 스킬 4종·작업 이력
+- **git**: `git show pending`
+- **범위**: docs / AI 서비스 구조
+- **요약**: ai-service/README 폴더 트리와 파일 경로, features/ai-service.md 에 챗봇 폴더 구분 표, RDMD/ai 기록, .agents·.claude·.groks·.codex ai-service 스킬 Code map(+Agent-Bot 구현 금지 규칙), work-history AI 행을 새 구조로 갱신.
+- **주요 파일**: `ai-service/README.md`, `RDMD/features/ai-service.md`, `RDMD/ai/01-ai-service-record.md`, `RDMD/summary/work-history.md`, `.agents/ai-service/skill.md` 외 3팩
 - **관련 RDMD**: `RDMD/features/ai-service.md`
 
 [▲ 목차로](#목차)

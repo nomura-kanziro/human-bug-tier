@@ -25,7 +25,7 @@ feature: ai-service
 
 | 구분 | 내용 |
 |---|---|
-| 서비스 | 저장소 루트 `ai-service/` — FastAPI(`/health`·`/questions`·`/chat`·`/reload`), 127.0.0.1 내부 전용 |
+| 서비스 | 저장소 루트 `ai-service/` — FastAPI(`/health`·`/questions`·`/chat`·`/reload`), 127.0.0.1 내부 전용. **챗봇 종류별 폴더**: 가이드 챗봇 코드는 `app/guidans_Chat/`, 에이전트 봇은 `app/Agent-Bot/`(계획 단계, 폴더만) |
 | LangChain | `Document`·`BaseRetriever`(한국어 BM25 검색기 구현)·`MarkdownHeaderTextSplitter`·`ChatAnthropic`·메시지 |
 | LangGraph | `StateGraph` — analyze → (greet) / retrieve → (out_of_scope) / generate |
 | RAG | 지식 = `ai-service/knowledge/*.md` 8개(사용자용 이용 안내, 수치는 서버 상수와 대조) + `tiers.json`(티어 9 + 캐릭터 338 문서). 캐릭터 이름 색인으로 **정확한 티어 정보**를 프롬프트에 주입 |
