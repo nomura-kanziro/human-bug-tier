@@ -4,6 +4,16 @@
 > AI 기능은 Express 와 분리된 **AI 전용 서비스**(저장소 루트 `ai-service/`, Python FastAPI)가 담당한다.
 > 운영 서버에는 **아직 배포하지 않았다**(아래 "운영 배포" 참고).
 
+## 관련 기록 (세 곳에 나눠 있다)
+
+| 조각 | 기록 |
+|---|---|
+| AI 서비스 자체 | [`../ai/01-ai-service-record.md`](../ai/01-ai-service-record.md) (+ 서비스 README [`../../ai-service/README.md`](../../ai-service/README.md)) |
+| Express 프록시 | [`../backend/10-ai/01-ai-proxy-record.md`](../backend/10-ai/01-ai-proxy-record.md) |
+| 화면 | [`../frontend/15-ai/01-ai-helper-page-record.md`](../frontend/15-ai/01-ai-helper-page-record.md) |
+| 작업 규칙(모든 AI 공통 정본) | [`../../.agents/ai-service/skill.md`](../../.agents/ai-service/skill.md) |
+| 배포·보안 | [`../guides/deploy-checklist.md`](../guides/deploy-checklist.md) "AI" 절 · [`../guides/security.md`](../guides/security.md) 9절 |
+
 ## 한 줄 요약
 
 `/ai` 화면에서 질문하면 → Express `/api/ai/chat` 이 검사·제한 후 → `ai-service` 가 **LangGraph** 흐름으로 사이트 지식을 **RAG** 검색해 **Claude(LangChain)** 로 답한다. 키가 없거나 LLM 이 실패하면 찾은 문서로 답한다.
@@ -83,6 +93,10 @@ app/graph.py (LangGraph StateGraph)
 |---|---|
 | `ai-service/.env` | `ANTHROPIC_API_KEY`, `AI_MODEL`(기본 `claude-opus-5-5`), `AI_MAX_TOKENS`, `AI_SERVICE_KEY`, `AI_TOP_K`, `AI_HISTORY_TURNS`, `AI_KNOWLEDGE_DIR`, `AI_TIERS_JSON` |
 | `backend/.env` | `AI_SERVICE_URL`(기본 `http://127.0.0.1:8000`), `AI_SERVICE_KEY`(ai-service 와 같은 값) |
+
+## 지식을 고쳐야 하는 경우 (운영 규칙)
+
+사이트 기능·규칙이 바뀌는 작업(포인트·확률·배수·횟수·메뉴/버튼 이름·새 화면)은 코드와 함께 **`ai-service/knowledge/*.md`** 를 고친다. 안 고치면 AI 가 옛 규칙을 자신 있게 답한다. 수치는 서버 상수에서 옮긴다(출처 파일은 `ai-service/README.md` "지식 고치기"). 공식 티어표는 `tiers.json` 을 직접 읽으므로 따로 고치지 않는다. 체크리스트: [`../guides/new-feature-checklist.md`](../guides/new-feature-checklist.md) 0-1.
 
 ## 확인 (2026-10-18)
 

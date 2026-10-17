@@ -22,17 +22,16 @@
 | [backend-api.md](./backend-api.md) | API 그룹 · 모델 · 미들웨어 |
 | [react-rewrite.md](./react-rewrite.md) | **기획만** — 정식 버전 React 이식. Cloudflare 작업 중지. 구현 지시 전 스캐폴드 금지 |
 
-## 모듈 README (코드 옆 문서)
+## 코드 옆 README
 
 | 기능 | 경로 |
 |------|------|
-| 관리자 | [`root-cloudflare/admin/README.md`](../../root-cloudflare/admin/README.md) |
 | 백엔드 | [`backend/README.md`](../../backend/README.md) |
+| Oracle 배포 | [`backend/deploy/oracle/README.md`](../../backend/deploy/oracle/README.md) |
+| 프론트(React) | [`root-cloudflare/README.md`](../../root-cloudflare/README.md) |
 | AI 전용 서비스 | [`ai-service/README.md`](../../ai-service/README.md) |
-| 커스텀 메이커 | [`root-cloudflare/custom-maker/README.md`](../../root-cloudflare/custom-maker/README.md) |
-| 인증 | [`root-cloudflare/user_login/README.md`](../../root-cloudflare/user_login/README.md) |
-| 공지 | [`root-cloudflare/notice/README.md`](../../root-cloudflare/notice/README.md) |
-| 문의 | [`root-cloudflare/Contact_us/README.md`](../../root-cloudflare/Contact_us/README.md) |
+
+(예전 바닐라 모듈별 README — `admin/` · `custom-maker/` · `user_login/` · `notice/` · `Contact_us/` — 는 `root-render/`(베타 종료)에만 있다.)
 
 ## 읽는 순서 추천
 

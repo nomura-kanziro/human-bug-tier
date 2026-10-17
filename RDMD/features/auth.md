@@ -28,7 +28,7 @@ backend/
 ### 회원가입
 
 1. `POST /api/auth/register` (nickname, email, password)  
-2. 메일 설정 시 인증 메일 발송("계정 인증하기" 버튼, 링크 1시간 유효). 가입 메일도 기본은 **표준 순서(Brevo → Resend → Gmail SMTP)** — `sendSignupMail` 이 `sendAppMail` 체인을 그대로 탄다(2026-09-10 `1c7f473`). `SIGNUP_MAIL_SKIP_API=true` 일 때만 Gmail SMTP 를 먼저 시도하고, 실패하면 공용 체인으로 넘어간다. 운영 서버는 Gmail 만 설정돼 있어 실제로는 Gmail 로 나간다.  
+2. 메일 설정 시 인증 메일 발송("계정 인증하기" 버튼, 링크 1시간 유효). 가입 메일도 기본은 **표준 순서(사이트 SMTP → Brevo → Resend → Gmail SMTP)** — `sendSignupMail` 이 `sendAppMail` 체인을 그대로 탄다(2026-09-10 `1c7f473`). `SIGNUP_MAIL_SKIP_API=true` 일 때만 Gmail SMTP 를 먼저 시도하고, 실패하면 공용 체인으로 넘어간다. **운영 서버는 사이트 전용 SMTP(Oracle Email Delivery)가 설정돼 있어 사이트 도메인 주소로 나가며**(2026-10-03~, 개인 Gmail 주소 숨김), 사이트 SMTP 가 실패할 때만 Gmail 이 대신 나간다 — [`../backend/03-auth/11-site-smtp-mail-record.md`](../backend/03-auth/11-site-smtp-mail-record.md).  
 3. 미설정 시 `isVerified: true` 로 즉시 통과 (개발 편의)  
 4. 메일이 안 오면 계정은 만들어져 있음. 관리자가 `PATCH /api/admin/users/:id/verify` 로 직접 인증 가능.
 
@@ -104,7 +104,7 @@ backend/
 | 변수 | 용도 |
 |------|------|
 | `JWT_SECRET` | JWT 서명 |
-| `BREVO_API_KEY`/`BREVO_FROM`, `RESEND_API_KEY`, `EMAIL_USER`/`EMAIL_APP_PASSWORD`, `SIGNUP_MAIL_SKIP_API` | 이메일 발송(`backend/utils/mail.js`). 설정된 걸 전부 우선순위(Brevo→Resend→Gmail)대로 시도, 앞이 실패하면 자동으로 다음 걸로 대체 발송 — 상세: `RDMD/backend/03-auth/05-mail-provider-fallback-record.md` |
+| `SMTP_HOST`/`SMTP_PORT`/`SMTP_USER`/`SMTP_PASS`/`MAIL_FROM_ADDRESS`(사이트 전용 SMTP, 전부 있어야 켜짐), `BREVO_API_KEY`/`BREVO_FROM`, `RESEND_API_KEY`, `EMAIL_USER`/`EMAIL_APP_PASSWORD`, `SIGNUP_MAIL_SKIP_API` | 이메일 발송(`backend/utils/mail.js`). 설정된 걸 전부 우선순위(사이트 SMTP→Brevo→Resend→Gmail)대로 시도, 앞이 실패하면 자동으로 다음 걸로 대체 발송 — 상세: `RDMD/backend/03-auth/05-mail-provider-fallback-record.md` |
 | `APP_URL` | 인증·재설정 메일 링크와 메일 로고의 절대 URL. 운영 서버는 `https://human-bug-tier.com` (2026-09-29~) |
 | `MONGO_URI` | User 저장 |
 

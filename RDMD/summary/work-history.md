@@ -209,24 +209,24 @@
 
 ---
 
-### Phase 11 — 계절 디자인 · 가이드 모드 · 출석체크 · AI 전용 서비스
+### Phase 11 — 헤더·메일·계절 디자인·꾸미기·가이드·출석체크·AI 전용 서비스
 
 **기간**: 2026-10-02 ~ 10-18
-**기록**: `backend/03-auth/10-mail-template-record.md`, `frontend/07-admin/13-event-design-record.md`, `frontend/03-custom-maker/14-decorate-halloween-fx-color-record.md`, `frontend/14-guide/01-guide-mode-record.md`, `backend/08-luck-draw/05-attendance-record.md`, `ai/01-ai-service-record.md`
+**기록**: `frontend/01-common/14-side-menu-account-mobile-header-record.md`, `backend/03-auth/11-site-smtp-mail-record.md`, `frontend/02-tier-class/10-tier7-9-fix-record.md`, `frontend/07-admin/13-event-design-record.md` + `backend/06-admin/08-site-setting-seasonal-theme-record.md`, `frontend/03-custom-maker/14-decorate-halloween-fx-color-record.md`, `frontend/14-guide/01-guide-mode-record.md`, `backend/08-luck-draw/05-attendance-record.md`, `ai/01-ai-service-record.md` + `backend/10-ai/` + `frontend/15-ai/`
 
-| 영역 | 한 일 |
-|------|--------|
-| 헤더 · 1.0.2 | 사이드 메뉴 맨 아래 계정 영역(비회원 로그인 / 회원 프로필·내 게시글·로그아웃), 모바일 헤더 버튼·테마 스위치·메뉴 버튼 축소 |
-| 메일 | Oracle Email Delivery 로 사이트 전용 주소 발신(개인 Gmail 주소 노출 제거), 사이트 SMTP 를 발송 1순위로 |
-| 이벤트 디자인 | 관리자 "이벤트 디자인 적용" — 할로윈·크리스마스 사이트 배경 ON/OFF(한 번에 하나), 휴버대 눈·고딕 학교 건물·세 자루 창 모티프, 밝은 테마에서는 달 대신 태양 |
-| 꾸미기 | 배경 이펙트 "할로윈" 추가, **이펙트 색** 고르기(색상 회전 짝색) |
-| 버전 | **1.0.5**(10-17, Oracle 배포) |
-| 가이드 | `/guide` + 게임식 가이드 모드(어둡게·강조·말풍선·왼쪽 아래 ✕ 종료), 스테이지 5개 |
-| 출석체크 | 로그인 시 하루(KST) 1회 연속 일차 포인트(10·10·10·25·10·10·50) 자동 지급 + 마이페이지 출석판 |
-| **AI** | 저장소 루트 **`ai-service/`**(FastAPI · LangChain · LangGraph · RAG) 신설, Express `/api/ai` 프록시(요청 제한·키), `/ai` 휴버봇 화면 + 랜덤 추천 질문 3개 |
+| 날짜 | 영역 | 한 일 |
+|------|------|--------|
+| 10-02 | 헤더 · **1.0.2** | 사이드 메뉴 맨 아래 계정 영역(비로그인 로그인 / 로그인 프로필 보기·내 게시글·로그아웃), 모바일 헤더의 로그인·후원 버튼·테마 스위치(32×18)·메뉴 버튼 축소 |
+| 10-03 | 메일 | 사이트 전용 SMTP(Oracle Email Delivery) — 사이트 도메인 주소로 발송하고 개인 Gmail 주소를 숨김, 발송 체인 맨 앞(사이트 SMTP → Brevo → Resend → Gmail). 사용자 제약: Brevo·Resend·새 Gmail 계정 제외 |
+| 10-08 | 티어표 | 7~9티어 이름·이미지 정정(요네쿠라 추가·마네다·가짜 미도·야시키 마사나리·사진 교체) |
+| 10-17~18 | 이벤트 디자인 | 관리자 "이벤트 디자인 적용" — 할로윈·크리스마스 사이트 배경 ON/OFF(한 번에 하나, `SiteSetting.seasonalTheme`), 휴버대 눈·고딕 학교 건물·세 자루 창 모티프로 고도화, 달 속 눈이 한 묶음으로 움직임, 밝은 테마에서는 달 대신 태양. 공지 "할로윈 배경 업데이트" 등록 |
+| 10-18 | 꾸미기 · **1.0.5** | 커스텀 메이커 꾸미기에 배경 이펙트 "할로윈" + **이펙트 색** 고르기. 푸터 버전 1.0.5, Oracle 배포, 공지 "커스텀 메이커 꾸미기 업데이트 (v1.0.5)" 등록 |
+| 10-18 | 가이드 | `/guide` + 게임식 가이드 모드(어둡게·강조·말풍선·왼쪽 아래 ✕ 종료), 스테이지 5개 |
+| 10-18 | 출석체크 | 로그인 시 하루(KST) 1회 연속 일차 포인트(10·10·10·25·10·10·50) 자동 지급 + 마이페이지 출석판 |
+| 10-18 | **AI** | 저장소 루트 **`ai-service/`**(FastAPI · LangChain · LangGraph · RAG) 신설, Express `/api/ai` 프록시(요청 제한·공유 키), `/ai` 휴버봇 화면 + 랜덤 추천 질문 3개 |
+| 10-18 | 문서 | 이 이력·인덱스·기능 문서 전반 보강(공통 인프라·전체 기능 맵을 React 기준으로 재작성, 누락된 기록 보충, AI 스킬 4종) |
 
-**결과물**: 1.0.5 운영 중. 가이드 모드·출석체크·AI 도우미는 **커밋까지(10-18), 운영 배포 전**. AI 서비스는 운영 서버 배포 절차(Python 상주·키 설정·deploy.sh 확장)가 남았다.
-
+**결과물**: 운영 **1.0.5**(Oracle 배포, 10-17~18). 가이드 모드·출석체크·AI 도우미는 **커밋까지, 운영 배포 전**이다. AI 서비스는 운영 서버 배포 절차(Python 상주·키 설정·`deploy.sh` 확장)가 남았다.
 
 ---
 
@@ -245,7 +245,7 @@
 ## 4. 현재 완성된 기능 체크리스트
 
 - [x] 공식 9단계 티어표 (React `/tier/:n`, 데이터 `root-cloudflare/src/data/tiers.json`) + `tier-media/tier-image/1`~`9 tier` 이미지
-- [x] Header/Footer 공통 + 경로 자동 보정
+- [x] 공용 Layout · Header(드롭다운·사이드 메뉴 계정 영역) · Footer(버전 표시) — React
 - [x] 커스텀 티어 제작·다운로드 (PNG/PDF, 모바일 탭 배치)
 - [x] 커스텀 게시판·상세·댓글·좋아요·신고·**본인 글 수정**
 - [x] 공지 / 새 소식 + 핀
@@ -260,12 +260,12 @@
 - [x] GitHub Pages 정적 미리보기
 - [x] Oracle Cloud 운영 서버 (서버 직접 `https://hbt-tier.duckdns.org`)
 - [x] Cloudflare Pages `/api` 프록시 배포 — 정식 주소 `https://human-bug-tier.com` (Pages GitHub 연동 빌드)
-- [x] React 정식 버전 1.0.1 + 라이트/다크 테마
+- [x] React 정식 버전 **1.0.5** + 라이트/다크 테마(서울 시각 자동 전환)
 - [x] 행운 뽑기 3모드(오늘의 행운 티어 · 행운 티어 포커 · 랜덤 뽑기) + 포인트 원장
 - [x] 이벤트(매일 퀴즈 · 메모리 게임 기록 · 티어표 공개) + 관리자 이벤트 관리
 - [x] 관리자 행운 뽑기 관리(조회 전용)
-- [x] 인증 메일 공용 템플릿
-- [x] PWA 홈 화면 설치
+- [x] 인증 메일 공용 템플릿 + 사이트 전용 SMTP 발송(개인 Gmail 주소 숨김)
+- [x] PWA 홈 화면 설치(manifest, 서비스 워커 없음)
 - [x] 관리자 공지 수정 (PUT/PATCH)
 - [x] 이벤트 디자인(할로윈·크리스마스 사이트 배경) 관리자 ON/OFF
 - [x] 커스텀 꾸미기 할로윈 이펙트 · 이펙트 색 (1.0.5)

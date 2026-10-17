@@ -14,7 +14,7 @@ Contact_us/
 관리자 답변 UI: `admin/comments/comment-detail.html`  
 목록/삭제 등: `comment-management` 문의 섹션
 
-상세: [`Contact_us/README.md`](../../Contact_us/README.md)
+코드(React): `root-cloudflare/src/pages/Inquiry.jsx`(`/inquiry`), 서버 `backend/controllers/inquiryController.js`·`routes/inquiryRoutes.js`
 
 ---
 

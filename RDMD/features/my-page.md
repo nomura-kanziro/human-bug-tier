@@ -1,6 +1,6 @@
 # 마이페이지 (my-page)
 
-코드: [`../../my-page/`](../../my-page/README.md)
+코드(React): `root-cloudflare/src/pages/MyPage.jsx`(`/my-page`), `src/components/AttendanceBoard.jsx`, `UserProfileMenu.jsx`
 
 ## 한 줄 요약
 

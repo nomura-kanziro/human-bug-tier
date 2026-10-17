@@ -14,7 +14,8 @@ custom-maker/
     └── *.css
 ```
 
-모듈 상세: [`custom-maker/README.md`](../../custom-maker/README.md)
+코드(React): `root-cloudflare/src/pages/CustomMaker.jsx`(`/custom-maker`)·`PostEdit.jsx`·`Board.jsx`·`PostDetail.jsx`, `src/components/DecoratePanel.jsx`, `src/lib/makerState.js`·`tierStyle.js`  
+(예전 바닐라 모듈 README 는 `root-render/` 와 함께 보관만 한다)
 
 ---
 
@@ -26,7 +27,7 @@ custom-maker/
 | 모바일 탭 배치 | 캐릭터 탭 선택 → 티어 칸 탭으로 배치 / 풀 탭으로 되돌리기 |
 | 티어 단계 | 1~9등급 보드 |
 | 상태 | `tierState` 객체로 배치 관리 |
-| 꾸미기 | 테이블 아래 **꾸미기** 버튼. 테두리 색·배경 이펙트, 이 등급만/모든 등급, 등급마다 다른 테마, **원래 상태로 돌려놓기**. `tierData.style.byGrade`로 저장 |
+| 꾸미기 | 테이블 아래 **꾸미기** 버튼. 테두리 색 · 배경 이펙트(11종: 없음·글로우·오로라·별빛·불씨·서리·네온·핏빛·심연·로얄·**할로윈**) · **이펙트 색**(기본색/스와치 10/직접 선택 — 빛 색만 바뀌고 테두리 색은 따로), 빠른 테마 11종, 이 등급만/모든 등급, 등급마다 다른 테마, **원래 상태로 돌려놓기**. `tierData.style.byGrade` 에 `{ borderColor, effect, effectColor }` 로 저장(옛 글은 `effectColor` 없이도 그대로 열림). 상세 [`../frontend/03-custom-maker/14-decorate-halloween-fx-color-record.md`](../frontend/03-custom-maker/14-decorate-halloween-fx-color-record.md) |
 | 초기화 | 보드 비우기 (꾸미기 설정은 유지) |
 | 다운로드 | **PNG** (html2canvas), **PDF** (jsPDF) — 꾸민 테두리/이펙트 포함 |
 | 풀 화살표 | 캐릭터 풀이 뷰포트에 들어오면 ▲(티어표) · ▼(풀 맨 아래). 캡처 영역 밖 |
@@ -106,7 +107,7 @@ PUT  /api/tierlists/:id      → 본인 글 수정 (PATCH 동일)
 - [ ] 로그인 없이 댓글 시도 시 UX  
 - [ ] 본인 글만 수정 버튼·PUT 권한  
 - [ ] 모바일 탭 배치 / 데스크톱 DnD  
-- [ ] 꾸미기(테두리·이펙트)가 제작·PNG·상세·수정에 같이 남는지  
+- [ ] 꾸미기(테두리·이펙트·이펙트 색)가 제작·PNG·상세·수정에 같이 남는지  
 - [ ] 관리자 신고 삭제 후 목록 갱신  
 - [ ] API Base (`getApiBase`) 로컬/Render 일치  
 

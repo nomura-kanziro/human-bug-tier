@@ -16,7 +16,7 @@ notice/
 메인 `index.html`에서도 최신 공지 미리보기 API를 호출합니다.  
 관리: `admin/comments/comment-management` 공지 섹션.
 
-상세: [`notice/README.md`](../../notice/README.md)
+코드(React): `root-cloudflare/src/pages/NoticeHome·NoticeList·NoticeDetail.jsx`, `src/components/NoticeEditor.jsx`·`NoticeListItem.jsx`, 서버 `backend/controllers/noticeController.js`
 
 ---
 
