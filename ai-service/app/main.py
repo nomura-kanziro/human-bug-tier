@@ -24,10 +24,10 @@ from fastapi.concurrency import run_in_threadpool
 from pydantic import BaseModel, Field
 
 from .config import Settings, load_settings
-from .graph import build_graph
-from .knowledge import KnowledgeBase, build_knowledge_base
-from .llm import make_llm
-from .questions import random_questions
+from .guidans_Chat.graph import build_graph
+from .guidans_Chat.knowledge import KnowledgeBase, build_knowledge_base
+from .guidans_Chat.llm import make_llm
+from .guidans_Chat.questions import random_questions
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name)s: %(message)s")
 log = logging.getLogger("ai-service")

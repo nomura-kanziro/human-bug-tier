@@ -9,9 +9,9 @@ from fastapi.testclient import TestClient
 from langchain_core.language_models.fake_chat_models import FakeListChatModel
 
 from app.config import load_settings
-from app.graph import build_graph
-from app.knowledge import build_knowledge_base
-from app.questions import random_questions
+from app.guidans_Chat.graph import build_graph
+from app.guidans_Chat.knowledge import build_knowledge_base
+from app.guidans_Chat.questions import random_questions
 
 
 @pytest.fixture(scope="module")
