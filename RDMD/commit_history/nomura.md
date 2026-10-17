@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 376 |
+| **커밋 수** | 377 |
 | **기간** | 2026-03-20 ~ 2026-10-18 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -405,6 +405,7 @@
 | 374 | 2026-10-18 | [`e151475`](#e151475) | feat(attendance): 연속 출석 일차별 포인트(10·10·10·25·10·10·50) + 마이페이지 출석판 |
 | 375 | 2026-10-18 | [`da8c9a5`](#da8c9a5) | docs(attendance): 출석 기록을 연속 일차·출석판 기준으로 갱신 |
 | 376 | 2026-10-18 | [`b869898`](#b869898) | feat(ai-service): AI 전용 서비스 신설 — FastAPI · LangChain · LangGraph · RAG(사이트 지식 + 공식 티어표) |
+| 377 | 2026-10-18 | [`pending`](#pending377) | feat(ai): Express /api/ai 프록시 — 입력 검사·IP당 요청 제한·공유 키·AI 서비스 장애 격리 |
 
 ---
 
@@ -7261,6 +7262,24 @@
 - **범위**: ai-service / AI 전용 서비스
 - **요약**: 저장소 루트 ai-service/ 신설. FastAPI(/health·/questions·/chat·/reload, X-AI-Key), LangGraph StateGraph(analyze→retrieve→generate/greet/out_of_scope), RAG(knowledge/*.md 8개 + tiers.json 티어·캐릭터 문서, 한국어 2-gram BM25 LangChain 검색기, 캐릭터 이름 색인으로 정확한 티어 정보 주입), Claude(ChatAnthropic, 키 없음·실패 시 문서 답 fallback), 랜덤 추천 질문 3개, pytest 7개. .gitignore 에 venv·캐시.
 - **주요 파일**: `ai-service/app/*`, `ai-service/knowledge/*.md`, `ai-service/tests/test_service.py`, `ai-service/requirements.txt`, `ai-service/.env.example`, `ai-service/README.md`, `.gitignore`
+- **관련 RDMD**: `RDMD/ai/01-ai-service-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending377"></a>
+
+### 377. 2026-10-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(ai): Express /api/ai 프록시 — 입력 검사·IP당 요청 제한·공유 키·AI 서비스 장애 격리
+- **git**: `git show pending`
+- **범위**: backend / AI 프록시
+- **요약**: backend/routes/aiRoutes.js 신설, server.js 에 /api/ai 연결. GET /questions·POST /chat 을 ai-service(AI_SERVICE_URL, 기본 127.0.0.1:8000)로 넘김. 질문 500자·이전 대화 12개 제한, IP당 10분 20회(429), X-AI-Key, 45초 타임아웃, 실패 시 503. 대화 저장 안 함. .env.example 에 AI_SERVICE_URL/AI_SERVICE_KEY.
+- **주요 파일**: `backend/routes/aiRoutes.js`, `backend/server.js`, `backend/.env.example`
 - **관련 RDMD**: `RDMD/ai/01-ai-service-record.md`
 
 [▲ 목차로](#목차)
