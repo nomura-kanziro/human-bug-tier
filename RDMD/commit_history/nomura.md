@@ -407,7 +407,7 @@
 | 376 | 2026-10-18 | [`b869898`](#b869898) | feat(ai-service): AI 전용 서비스 신설 — FastAPI · LangChain · LangGraph · RAG(사이트 지식 + 공식 티어표) |
 | 377 | 2026-10-18 | [`4e50a22`](#4e50a22) | feat(ai): Express /api/ai 프록시 — 입력 검사·IP당 요청 제한·공유 키·AI 서비스 장애 격리 |
 | 378 | 2026-10-18 | [`77cafa9`](#77cafa9) | feat(ai): AI 도우미 화면(/ai) — 휴버봇 챗봇 + 랜덤 추천 질문 3개, 푸터·가이드 링크 |
-| 379 | 2026-10-18 | [`pending`](#pending379) | docs(ai): AI 전용 서비스 문서 대규모 업데이트 — 기능 문서·RDMD/ai·작업 이력·가이드·AI 스킬 3종·진입 문서 |
+| 379 | 2026-10-18 | [`33d9991`](#33d9991) | docs(ai): AI 전용 서비스 문서 대규모 업데이트 — 기능 문서·RDMD/ai·작업 이력·가이드·AI 스킬 3종·진입 문서 |
 
 ---
 
@@ -7306,15 +7306,15 @@
 
 ---
 
-<a id="pending379"></a>
+<a id="33d9991"></a>
 
-### 379. 2026-10-18 — `pending`
+### 379. 2026-10-18 — `33d9991`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `33d9991`
+- **hash (full)**: `33d99912db1844953a0faa98442af627c6b4250f`
 - **author**: nomura
 - **message**: docs(ai): AI 전용 서비스 문서 대규모 업데이트 — 기능 문서·RDMD/ai·작업 이력·가이드·AI 스킬 3종·진입 문서
-- **git**: `git show pending`
+- **git**: `git show 33d9991`
 - **범위**: docs / AI 전용 서비스 + 10-02~10-18 이력
 - **요약**: features/ai-service.md 신설, RDMD/ai/(README·01 기록) 신설, features README·overview·backend-api·my-page(출석판)·luck-draw(출석체크) 갱신, work-history Phase 11(10-02~10-18)·체크리스트·제약, guides development(ai-service 실행·재시작 주의)·new-feature-checklist(AI 지식 동기화), .agents/.claude/.groks ai-service 스킬과 인덱스, CLAUDE.md·AGENTS.md 진입 문구, RDMD README·frontend/backend README 포인터.
 - **주요 파일**: `RDMD/features/ai-service.md`, `RDMD/ai/*`, `RDMD/summary/work-history.md`, `RDMD/guides/*`, `.agents/ai-service/skill.md`, `.claude/skills/ai-service/SKILL.md`, `.groks/ai-service/grok_skill.md`, `CLAUDE.md`, `AGENTS.md`
