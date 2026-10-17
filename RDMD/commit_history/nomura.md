@@ -406,7 +406,7 @@
 | 375 | 2026-10-18 | [`da8c9a5`](#da8c9a5) | docs(attendance): 출석 기록을 연속 일차·출석판 기준으로 갱신 |
 | 376 | 2026-10-18 | [`b869898`](#b869898) | feat(ai-service): AI 전용 서비스 신설 — FastAPI · LangChain · LangGraph · RAG(사이트 지식 + 공식 티어표) |
 | 377 | 2026-10-18 | [`4e50a22`](#4e50a22) | feat(ai): Express /api/ai 프록시 — 입력 검사·IP당 요청 제한·공유 키·AI 서비스 장애 격리 |
-| 378 | 2026-10-18 | [`pending`](#pending378) | feat(ai): AI 도우미 화면(/ai) — 휴버봇 챗봇 + 랜덤 추천 질문 3개, 푸터·가이드 링크 |
+| 378 | 2026-10-18 | [`77cafa9`](#77cafa9) | feat(ai): AI 도우미 화면(/ai) — 휴버봇 챗봇 + 랜덤 추천 질문 3개, 푸터·가이드 링크 |
 
 ---
 
@@ -7287,15 +7287,15 @@
 
 ---
 
-<a id="pending378"></a>
+<a id="77cafa9"></a>
 
-### 378. 2026-10-18 — `pending`
+### 378. 2026-10-18 — `77cafa9`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `77cafa9`
+- **hash (full)**: `77cafa9da711876ae03ff8fb6c2b22406898c5ba`
 - **author**: nomura
 - **message**: feat(ai): AI 도우미 화면(/ai) — 휴버봇 챗봇 + 랜덤 추천 질문 3개, 푸터·가이드 링크
-- **git**: `git show pending`
+- **git**: `git show 77cafa9`
 - **범위**: frontend / AI 도우미
 - **요약**: AiHelper.jsx·ai-helper.css·lib/aiApi.js 신설, /ai 라우트. 추천 질문 칩·다른 질문, 대화창(출처·fallback 배지·답 쓰는 중 표시), Enter 전송(한글 조합 고려)·500자·대화 지우기, sessionStorage 에만 대화 보관. 푸터 AI 도우미 링크, 가이드 페이지 하단 링크. 페이지 머리말 <header> 에 사이트 헤더 전역 스타일이 걸려 어긋나던 것을 div 로(가이드 .guide-hero 포함).
 - **주요 파일**: `root-cloudflare/src/pages/AiHelper.jsx`, `root-cloudflare/src/lib/aiApi.js`, `root-cloudflare/src/styles/ai-helper.css`, `App.jsx`, `Footer.jsx`, `pages/Guide.jsx`, `styles/guide.css`
