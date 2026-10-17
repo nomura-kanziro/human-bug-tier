@@ -413,7 +413,7 @@
 | 382 | 2026-10-18 | [`6ddd0ac`](#6ddd0ac) | docs(features): 공통 인프라·전체 기능 맵을 React 기준으로 재작성하고 기능 문서·작업 이력 현행화 |
 | 383 | 2026-10-18 | [`218089e`](#218089e) | docs(guides): AI 전용 서비스 배포 체크리스트·보안 가이드 추가 |
 | 384 | 2026-10-18 | [`6ed94a8`](#6ed94a8) | docs(agents): Codex 팩에 ai-service 스킬 추가, 숨김 폴더 이름(.codex·.groks) 링크 정정 |
-| 385 | 2026-10-18 | [`pending`](#pending385) | docs(mail): utils/mail.js 머리 주석에 사이트 전용 SMTP(0순위) 반영 |
+| 385 | 2026-10-18 | [`fe29c16`](#fe29c16) | docs(mail): utils/mail.js 머리 주석에 사이트 전용 SMTP(0순위) 반영 |
 
 ---
 
@@ -7420,15 +7420,15 @@
 
 ---
 
-<a id="pending385"></a>
+<a id="fe29c16"></a>
 
-### 385. 2026-10-18 — `pending`
+### 385. 2026-10-18 — `fe29c16`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `fe29c16`
+- **hash (full)**: `fe29c160e001d4d84ec59f8904b3ca91bc72914d`
 - **author**: nomura
 - **message**: docs(mail): utils/mail.js 머리 주석에 사이트 전용 SMTP(0순위) 반영
-- **git**: `git show pending`
+- **git**: `git show fe29c16`
 - **범위**: backend / 주석만
 - **요약**: mail.js 맨 위 설명 주석이 Brevo 1순위로 남아 있어 사이트 전용 SMTP 0순위와 자동 대체 동작을 반영(코드 변경 없음).
 - **주요 파일**: `backend/utils/mail.js`
