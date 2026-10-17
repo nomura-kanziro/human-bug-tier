@@ -398,7 +398,7 @@
 | 367 | 2026-10-18 | [`c4e97b0`](#c4e97b0) | feat(custom-maker): 꾸미기 배경 이펙트에 할로윈 추가 + 이펙트 색 고르기 |
 | 368 | 2026-10-18 | [`175403b`](#175403b) | docs(custom-maker): 할로윈 배경 이펙트·이펙트 색 기록 |
 | 369 | 2026-10-18 | [`f0837f1`](#f0837f1) | chore(footer): 사이트 버전 표시 1.0.2 → 1.0.5 |
-| 370 | 2026-10-18 | [`pending`](#pending370) | feat(guide): 가이드 전용 페이지(/guide) + 게임식 가이드 모드 — 어둡게·강조·말풍선, 왼쪽 아래 ✕ 로 종료 |
+| 370 | 2026-10-18 | [`f69d96c`](#f69d96c) | feat(guide): 가이드 전용 페이지(/guide) + 게임식 가이드 모드 — 어둡게·강조·말풍선, 왼쪽 아래 ✕ 로 종료 |
 
 ---
 
@@ -7135,15 +7135,15 @@
 
 ---
 
-<a id="pending370"></a>
+<a id="f69d96c"></a>
 
-### 370. 2026-10-18 — `pending`
+### 370. 2026-10-18 — `f69d96c`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `f69d96c`
+- **hash (full)**: `f69d96c699d95126873a9b5bfee47d4f4dec848d`
 - **author**: nomura
 - **message**: feat(guide): 가이드 전용 페이지(/guide) + 게임식 가이드 모드 — 어둡게·강조·말풍선, 왼쪽 아래 ✕ 로 종료
-- **git**: `git show pending`
+- **git**: `git show f69d96c`
 - **범위**: frontend / 가이드
 - **요약**: /guide 시작 화면(스테이지 5개·클리어 표시)과 앱 최상위 GuideMode 오버레이(강조 틀·한 줄 말풍선·진행 막대·이전/다음, Esc·←/→, 뒤 화면 클릭 막이, 단계별 화면 자동 이동, 왼쪽 아래 원형 ✕ 종료, 스테이지 클리어 알림). 상태는 sessionStorage/localStorage, 서버 변경 없음. 푸터에 가이드 링크.
 - **주요 파일**: `root-cloudflare/src/components/GuideMode.jsx`, `root-cloudflare/src/pages/Guide.jsx`, `root-cloudflare/src/lib/guide.js`, `root-cloudflare/src/lib/guideCourses.js`, `root-cloudflare/src/styles/guide.css`, `App.jsx`, `main.jsx`, `Footer.jsx`
