@@ -414,7 +414,7 @@
 | 383 | 2026-10-18 | [`218089e`](#218089e) | docs(guides): AI 전용 서비스 배포 체크리스트·보안 가이드 추가 |
 | 384 | 2026-10-18 | [`6ed94a8`](#6ed94a8) | docs(agents): Codex 팩에 ai-service 스킬 추가, 숨김 폴더 이름(.codex·.groks) 링크 정정 |
 | 385 | 2026-10-18 | [`fe29c16`](#fe29c16) | docs(mail): utils/mail.js 머리 주석에 사이트 전용 SMTP(0순위) 반영 |
-| 386 | 2026-10-18 | [`pending`](#pending386) | refactor(ai-service): 가이드 전용 챗봇 코드를 app/guidans_Chat/ 으로 분리하고 에이전트 봇 자리 app/Agent-Bot/ 추가 |
+| 386 | 2026-10-18 | [`44354b5`](#44354b5) | refactor(ai-service): 가이드 전용 챗봇 코드를 app/guidans_Chat/ 으로 분리하고 에이전트 봇 자리 app/Agent-Bot/ 추가 |
 
 ---
 
@@ -7439,15 +7439,15 @@
 
 ---
 
-<a id="pending386"></a>
+<a id="44354b5"></a>
 
-### 386. 2026-10-18 — `pending`
+### 386. 2026-10-18 — `44354b5`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `44354b5`
+- **hash (full)**: `44354b5ff8590caf9e70c4d17fc5ad359a36aa6c`
 - **author**: nomura
 - **message**: refactor(ai-service): 가이드 전용 챗봇 코드를 app/guidans_Chat/ 으로 분리하고 에이전트 봇 자리 app/Agent-Bot/ 추가
-- **git**: `git show pending`
+- **git**: `git show 44354b5`
 - **범위**: ai-service / 폴더 구조
 - **요약**: knowledge·graph·prompts·llm·questions 를 app/guidans_Chat/ 패키지로 옮기고(git mv, 내용 변경은 import 경로뿐) main.py·tests 의 import 정정. app/Agent-Bot/ 은 계획 단계라 README 만 둔 빈 자리(구현 없음, 하이픈 이름이라 구현 시 import 가능한 이름 필요). 동작·API 변경 없음, pytest 7개 통과.
 - **주요 파일**: `ai-service/app/guidans_Chat/*`, `ai-service/app/Agent-Bot/README.md`, `ai-service/app/main.py`, `ai-service/tests/test_service.py`
