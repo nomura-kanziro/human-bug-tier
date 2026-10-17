@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 374 |
+| **커밋 수** | 375 |
 | **기간** | 2026-03-20 ~ 2026-10-18 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -403,6 +403,7 @@
 | 372 | 2026-10-18 | [`3b3853f`](#3b3853f) | feat(attendance): 로그인 시 하루(KST) 1회 출석체크 10포인트 자동 지급 |
 | 373 | 2026-10-18 | [`29e2543`](#29e2543) | docs(attendance): 출석체크 기록 추가 |
 | 374 | 2026-10-18 | [`e151475`](#e151475) | feat(attendance): 연속 출석 일차별 포인트(10·10·10·25·10·10·50) + 마이페이지 출석판 |
+| 375 | 2026-10-18 | [`pending`](#pending375) | docs(attendance): 출석 기록을 연속 일차·출석판 기준으로 갱신 |
 
 ---
 
@@ -7223,6 +7224,24 @@
 - **범위**: backend+frontend / 출석체크
 - **요약**: 출석체크를 하루 일괄 10P 에서 연속 7일 주기(10·10·10·25·10·10·50)로 변경. 전날에 이어 로그인하면 다음 일차, 7일차 다음 날·하루 빠지면 1일차로 초기화. attendanceStreak 필드, describeAttendance 계산 공유, GET /api/luck-draw/attendance, 마이페이지 출석판(AttendanceBoard) 7칸 체크 표시, 로그인 알림에 일차 표시.
 - **주요 파일**: `backend/utils/attendance.js`, `backend/controllers/luckDrawController.js`, `backend/routes/luckDrawRoutes.js`, `backend/models/LuckProfile.js`, `backend/models/LuckPointLog.js`, `root-cloudflare/src/components/AttendanceBoard.jsx`, `root-cloudflare/src/pages/MyPage.jsx`, `root-cloudflare/src/styles/my-page.css`, `root-cloudflare/src/pages/Login.jsx`
+- **관련 RDMD**: `RDMD/backend/08-luck-draw/05-attendance-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending375"></a>
+
+### 375. 2026-10-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(attendance): 출석 기록을 연속 일차·출석판 기준으로 갱신
+- **git**: `git show pending`
+- **범위**: docs / 출석체크
+- **요약**: 05-attendance-record.md 를 연속 7일 주기·출석판 기준으로 다시 씀(규칙 표, 초기화 해석, 구현, 확인, 수동 테스트), 04 원장 예시·README 색인 문구 갱신.
+- **주요 파일**: `RDMD/backend/08-luck-draw/05-attendance-record.md`, `RDMD/backend/08-luck-draw/04-point-ledger-admin-api-record.md`, `RDMD/backend/README.md`
 - **관련 RDMD**: `RDMD/backend/08-luck-draw/05-attendance-record.md`
 
 [▲ 목차로](#목차)

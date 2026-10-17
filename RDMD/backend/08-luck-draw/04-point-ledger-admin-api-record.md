@@ -42,7 +42,7 @@ feature: luck-draw
 | `quiz` | `eventController.answerQuiz` | "매일 퀴즈 정답 상금 (날짜 · 캐릭터)" |
 | `memory_award` | 메모리 기록 정산 | "메모리 기록 이벤트 1위 상금 [회차명]" |
 | `showcase_award` | 티어표 공개 발표 | "티어표 공개 우승 상금 [회차명]" |
-| `attendance` | 로그인 출석체크(나중에 추가, 8번째 — `05-attendance-record.md`) | "출석체크 (2026-10-18)" |
+| `attendance` | 로그인 출석체크(나중에 추가, 8번째 — `05-attendance-record.md`) | "출석체크 4일차 (2026-10-18)" |
 
 - 이벤트 쪽은 공용 `addPoints(userId, delta, log)` 에 선택 인자 `log` 를 추가했다.
 - 랜덤 뽑기 설명용 `betLabel(betType, betValue)`("묶음 4~6티어"·"홀수 티어"·"3티어 지목")을 `luckLadderController` 에서 내보낸다.
