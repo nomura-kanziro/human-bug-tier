@@ -415,7 +415,7 @@
 | 384 | 2026-10-18 | [`6ed94a8`](#6ed94a8) | docs(agents): Codex 팩에 ai-service 스킬 추가, 숨김 폴더 이름(.codex·.groks) 링크 정정 |
 | 385 | 2026-10-18 | [`fe29c16`](#fe29c16) | docs(mail): utils/mail.js 머리 주석에 사이트 전용 SMTP(0순위) 반영 |
 | 386 | 2026-10-18 | [`44354b5`](#44354b5) | refactor(ai-service): 가이드 전용 챗봇 코드를 app/guidans_Chat/ 으로 분리하고 에이전트 봇 자리 app/Agent-Bot/ 추가 |
-| 387 | 2026-10-18 | [`pending`](#pending387) | docs(ai-service): 챗봇 폴더 구분(guidans_Chat·Agent-Bot) 반영 — README·기능 문서·기록·AI 스킬 4종·작업 이력 |
+| 387 | 2026-10-18 | [`44c140e`](#44c140e) | docs(ai-service): 챗봇 폴더 구분(guidans_Chat·Agent-Bot) 반영 — README·기능 문서·기록·AI 스킬 4종·작업 이력 |
 
 ---
 
@@ -7458,15 +7458,15 @@
 
 ---
 
-<a id="pending387"></a>
+<a id="44c140e"></a>
 
-### 387. 2026-10-18 — `pending`
+### 387. 2026-10-18 — `44c140e`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `44c140e`
+- **hash (full)**: `44c140e64d823b7abdb652703565623fcd5704a4`
 - **author**: nomura
 - **message**: docs(ai-service): 챗봇 폴더 구분(guidans_Chat·Agent-Bot) 반영 — README·기능 문서·기록·AI 스킬 4종·작업 이력
-- **git**: `git show pending`
+- **git**: `git show 44c140e`
 - **범위**: docs / AI 서비스 구조
 - **요약**: ai-service/README 폴더 트리와 파일 경로, features/ai-service.md 에 챗봇 폴더 구분 표, RDMD/ai 기록, .agents·.claude·.groks·.codex ai-service 스킬 Code map(+Agent-Bot 구현 금지 규칙), work-history AI 행을 새 구조로 갱신.
 - **주요 파일**: `ai-service/README.md`, `RDMD/features/ai-service.md`, `RDMD/ai/01-ai-service-record.md`, `RDMD/summary/work-history.md`, `.agents/ai-service/skill.md` 외 3팩
