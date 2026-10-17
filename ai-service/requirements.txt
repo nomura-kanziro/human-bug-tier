@@ -1,0 +1,12 @@
+# 휴버대 티어표 AI 전용 서비스 — 2026-10-18 설치·테스트한 버전
+fastapi==0.143.3
+uvicorn==0.54.0
+langchain-core==1.6.12
+langchain-text-splitters==1.1.3
+langchain-anthropic==1.7.6
+langgraph==1.2.16
+rank-bm25==0.2.2
+
+# 테스트
+pytest==9.1.1
+httpx==0.28.1

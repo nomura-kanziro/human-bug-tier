@@ -101,3 +101,11 @@ cf-pages-deploy/
 # .serverless/
 # .fusebox/
 # .dynamodb/
+
+# ============================================
+# ai-service (FastAPI, Python)
+# ============================================
+ai-service/.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
