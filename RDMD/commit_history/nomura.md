@@ -417,7 +417,7 @@
 | 386 | 2026-10-18 | [`44354b5`](#44354b5) | refactor(ai-service): 가이드 전용 챗봇 코드를 app/guidans_Chat/ 으로 분리하고 에이전트 봇 자리 app/Agent-Bot/ 추가 |
 | 387 | 2026-10-18 | [`44c140e`](#44c140e) | docs(ai-service): 챗봇 폴더 구분(guidans_Chat·Agent-Bot) 반영 — README·기능 문서·기록·AI 스킬 4종·작업 이력 |
 | 388 | 2026-10-18 | [`eee4854`](#eee4854) | refactor(ai-service): 챗봇 폴더마다 schema·router·service·models·repository·database 6개 층으로 재구성 + Oracle 연결 층(MongoDB 미사용) |
-| 389 | 2026-10-18 | [`pending`](#pending389) | docs(ai-service): 6개 층 구조와 Oracle SQL 전용(MongoDB 미사용) 원칙 반영 — README·기능 문서·기록·보안 가이드·AI 스킬 4종 |
+| 389 | 2026-10-18 | [`a864cae`](#a864cae) | docs(ai-service): 6개 층 구조와 Oracle SQL 전용(MongoDB 미사용) 원칙 반영 — README·기능 문서·기록·보안 가이드·AI 스킬 4종 |
 
 ---
 
@@ -7496,15 +7496,15 @@
 
 ---
 
-<a id="pending389"></a>
+<a id="a864cae"></a>
 
-### 389. 2026-10-18 — `pending`
+### 389. 2026-10-18 — `a864cae`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `a864cae`
+- **hash (full)**: `a864cae26b21d6234f5c3f0cf785eac23190bdb7`
 - **author**: nomura
 - **message**: docs(ai-service): 6개 층 구조와 Oracle SQL 전용(MongoDB 미사용) 원칙 반영 — README·기능 문서·기록·보안 가이드·AI 스킬 4종
-- **git**: `git show pending`
+- **git**: `git show a864cae`
 - **범위**: docs / AI 서비스 구조
 - **요약**: ai-service README 폴더 트리·층 책임·데이터베이스 원칙(MongoDB 미사용·Oracle SQL·바인드 변수·대화 비저장), features/ai-service.md 의 층 표·DB 원칙 절, RDMD/ai 기록, security.md 의 Oracle 행, work-history, .agents·.claude·.groks·.codex 스킬(Code map·Do not: MongoDB 금지, 층 분리)을 갱신.
 - **주요 파일**: `ai-service/README.md`, `RDMD/features/ai-service.md`, `RDMD/ai/01-ai-service-record.md`, `RDMD/guides/security.md`, `RDMD/summary/work-history.md`, AI 스킬 4종
