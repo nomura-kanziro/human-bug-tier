@@ -409,7 +409,7 @@
 | 378 | 2026-10-18 | [`77cafa9`](#77cafa9) | feat(ai): AI 도우미 화면(/ai) — 휴버봇 챗봇 + 랜덤 추천 질문 3개, 푸터·가이드 링크 |
 | 379 | 2026-10-18 | [`33d9991`](#33d9991) | docs(ai): AI 전용 서비스 문서 대규모 업데이트 — 기능 문서·RDMD/ai·작업 이력·가이드·AI 스킬 3종·진입 문서 |
 | 380 | 2026-10-18 | [`f3d32f8`](#f3d32f8) | docs(rdmd): 10-02~10-18 누락 기록 보충 — 사이드 메뉴·모바일 헤더, 사이트 전용 SMTP, 7~9티어 정정, 사이트 설정(계절 배경) 백엔드 |
-| 381 | 2026-10-18 | [`pending`](#pending381) | docs(rdmd): 기록 규칙에 맞게 정리 — AI 기록을 frontend/15-ai·backend/10-ai·ai/ 로 나누고 인덱스(README) 트리·표·타임라인 갱신 |
+| 381 | 2026-10-18 | [`84ff75e`](#84ff75e) | docs(rdmd): 기록 규칙에 맞게 정리 — AI 기록을 frontend/15-ai·backend/10-ai·ai/ 로 나누고 인덱스(README) 트리·표·타임라인 갱신 |
 
 ---
 
@@ -7344,15 +7344,15 @@
 
 ---
 
-<a id="pending381"></a>
+<a id="84ff75e"></a>
 
-### 381. 2026-10-18 — `pending`
+### 381. 2026-10-18 — `84ff75e`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `84ff75e`
+- **hash (full)**: `84ff75e944227e25ed27fceef35a270c156f2521`
 - **author**: nomura
 - **message**: docs(rdmd): 기록 규칙에 맞게 정리 — AI 기록을 frontend/15-ai·backend/10-ai·ai/ 로 나누고 인덱스(README) 트리·표·타임라인 갱신
-- **git**: `git show pending`
+- **git**: `git show 84ff75e`
 - **범위**: docs / RDMD 구조·인덱스
 - **요약**: AI 기능 기록을 화면(frontend/15-ai)·프록시(backend/10-ai)·서비스(ai/)로 나눠 서로 링크. frontend/backend README 의 폴더 트리·표에서 문서 끝에 덧붙었던 14-guide·15-ai·AI 프록시 블록을 해당 섹션 안으로 옮기고 누락된 기록 행(14·10·14·11·08) 추가, RDMD/README 트리·표·날짜, rdmd-writing 폴더 목록·ai 규칙, timeline 확장.
 - **주요 파일**: `RDMD/frontend/15-ai/*`, `RDMD/backend/10-ai/*`, `RDMD/ai/*`, `RDMD/README.md`, `RDMD/frontend/README.md`, `RDMD/backend/README.md`, `RDMD/guides/rdmd-writing.md`, `RDMD/summary/timeline.md`
