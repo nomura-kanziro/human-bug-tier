@@ -1,11 +1,13 @@
 // 마이페이지 (my-page/my-page.html + .js 이식)
 //  - 통계 카드 5개 (작성 글 / 받은 좋아요 / 뽑기 횟수 / 최고 등급 / 포인트)
+//  - 출석판(7일 주기 — 로그인 시 서버가 자동 지급, 여기서는 상태만 보여 준다)
 //  - 내가 쓴 게시글 최근 6개 (최근 행운 뽑기 기록 목록은 창시자 지시로 제거 — 뽑기 이력은 행운 뽑기 페이지에서 본다)
 //  - 프로필 관리: 사진 변경/기본 이미지 복원(이 브라우저에만 저장), 닉네임 변경(서버 POST /api/profile/nickname)
 //  - 관리자도 완전히 같은 화면을 쓴다(관리자 전용 UI 없음 — 진입점은 헤더 드롭다운 "관리하기" 하나).
 //    다만 관리자 이름은 Admin 체계라 여기서 바꿀 수 없어 관리자에게는 닉네임 변경 버튼만 숨긴다.
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import AttendanceBoard from '../components/AttendanceBoard';
 import { useAuth } from '../context/AuthContext';
 import { apiRequest, isStaticPreview } from '../lib/api';
 import { LOGO_URL, tierImageUrl } from '../lib/paths';
@@ -44,6 +46,7 @@ export default function MyPage() {
 
   const [posts, setPosts] = useState([]);
   const [luck, setLuck] = useState({ totalDraws: 0, bestTier: null, points: 0 });
+  const [attendance, setAttendance] = useState(null);   // 출석판(서버가 못 주면 null → 섹션 숨김)
   const [loading, setLoading] = useState(true);
 
   // 프로필 관리(사진·닉네임) 상태
@@ -64,12 +67,14 @@ export default function MyPage() {
 
     let cancelled = false;
     (async () => {
-      const [postList, stats] = await Promise.all([
+      const [postList, stats, att] = await Promise.all([
         safeGet(`/api/tierlists?author=${encodeURIComponent(nickname)}&mine=true`, []),
         safeGet('/api/luck-draw/stats', { totalDraws: 0, bestTier: null, points: 0 }),
+        safeGet('/api/luck-draw/attendance', null),
       ]);
       if (cancelled) return;
       setPosts(Array.isArray(postList) ? postList : []);
+      setAttendance(att && Array.isArray(att.rewards) ? att : null);
       setLuck({ totalDraws: stats.totalDraws || 0, bestTier: stats.bestTier, points: stats.points || 0 });
       setLoading(false);
     })();
@@ -207,6 +212,8 @@ export default function MyPage() {
           </div>
         ))}
       </div>
+
+      {attendance && <AttendanceBoard data={attendance} />}
 
       <section className="my-page-section">
         <div className="my-page-section-header">

@@ -32,7 +32,7 @@ export default function Login() {
         // 하루 첫 로그인이면 서버가 출석체크 10포인트를 이미 지급했다 — 알려 주기만 한다
         const att = data.attendance;
         window.alert(att && att.granted ? `로그인 성공!
-📅 출석체크 완료! +${att.points}P (보유 ${att.balance}P)` : '로그인 성공!');
+📅 출석체크 ${att.day}일차 완료! +${att.points}P (보유 ${att.balance}P)` : '로그인 성공!');
         navigate('/');
         return;
       }

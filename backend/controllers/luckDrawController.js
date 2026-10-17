@@ -18,6 +18,7 @@
 const mongoose = require('mongoose');
 const LuckDraw = require('../models/LuckDraw');
 const LuckProfile = require('../models/LuckProfile');
+const { describeAttendance, ATTENDANCE_REWARDS } = require('../utils/attendance');
 const luckPool = require('../data/luckPool');
 const { getKstDateString } = require('../utils/kstDate');
 const { resolveTierMediaPath } = require('../utils/tierMediaDir');
@@ -370,8 +371,31 @@ const getStats = async (req, res) => {
   }
 };
 
+// GET /api/luck-draw/attendance — 마이페이지 출석판용(로그인 전용)
+const getAttendance = async (req, res) => {
+  try {
+    if (!isDbConnected()) {
+      return res.status(503).json({ error: '데이터베이스에 연결되지 않았습니다.' });
+    }
+    const profile = await LuckProfile.findOne({ userId: req.auth.sub }).select('lastAttendanceDate attendanceStreak').lean();
+    const state = describeAttendance(profile);
+    res.json({
+      ok: true,
+      rewards: ATTENDANCE_REWARDS,
+      checkedDays: state.checkedDays,
+      todayDone: state.todayDone,
+      nextDay: state.nextDay,
+      today: state.today,
+    });
+  } catch (err) {
+    console.error('출석판 조회 에러:', err);
+    res.status(500).json({ error: '출석판 조회 실패' });
+  }
+};
+
 module.exports = {
   getConfig,
+  getAttendance,
   drawDailyTier,
   getToday,
   getHistory,

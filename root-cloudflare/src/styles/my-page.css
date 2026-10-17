@@ -391,3 +391,81 @@
 [data-theme="dark"] .my-page-post-thumb {
   background: var(--bg-subtle);
 }
+
+/* ====================== 출석판 (AttendanceBoard) ======================
+   7일 한 주기. 체크된 칸은 브랜드색으로 채우고, 보너스 일차(4일 25P · 7일 50P)는 테두리로 눈에 띄게 한다. */
+.attendance-state {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--brand-strong);
+}
+
+.attendance-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.attendance-cell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 12px 4px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-elevated);
+  color: var(--text-secondary);
+  text-align: center;
+}
+.attendance-day {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+.attendance-mark {
+  font-size: 22px;
+  line-height: 1.3;
+}
+.attendance-points {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.attendance-cell.is-bonus { border-color: color-mix(in srgb, var(--brand) 55%, var(--border-color)); }
+.attendance-cell.is-final {
+  border-color: var(--brand);
+  background: var(--brand-soft);
+}
+
+.attendance-cell.is-checked {
+  border-color: var(--brand);
+  background: var(--brand);
+  color: var(--brand-contrast);
+}
+.attendance-cell.is-checked .attendance-day,
+.attendance-cell.is-checked .attendance-points { color: var(--brand-contrast); }
+.attendance-cell.is-checked .attendance-mark { font-weight: 900; }
+
+/* 오늘 방금 체크된 칸 / 오늘 로그인하면 받을 칸 */
+.attendance-cell.is-today { box-shadow: 0 0 0 3px color-mix(in srgb, var(--brand) 40%, transparent); }
+.attendance-cell.is-next { border-style: dashed; border-color: var(--brand); }
+
+.attendance-hint {
+  margin: 12px 0 0;
+  font-size: 12.5px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+@media (max-width: 560px) {
+  .attendance-grid { gap: 6px; }
+  .attendance-cell { padding: 10px 2px 8px; border-radius: 10px; }
+  .attendance-mark { font-size: 18px; }
+  .attendance-points { font-size: 12px; }
+}

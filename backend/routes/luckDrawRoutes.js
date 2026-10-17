@@ -27,6 +27,7 @@ router.post('/daily', optionalAuth, luckDrawController.drawDailyTier);
 // ====== 로그인 전용 (requireAuth) ======
 router.get('/today', requireAuth, luckDrawController.getToday);     // 오늘 남은 횟수/쿨다운/마지막 결과 조회
 router.get('/history', requireAuth, luckDrawController.getHistory); // 뽑기 이력 조회 (최근 5건만 보관, 초과분 자동 삭제)
+router.get('/attendance', requireAuth, luckDrawController.getAttendance); // 마이페이지 출석판(연속 출석 일차·오늘 출석 여부)
 router.get('/stats', requireAuth, luckDrawController.getStats);     // 마이페이지용 누적 통계(총 횟수/티어별 카운트/포인트)
 
 // ====== 행운 티어 포커 (뽑기로 모은 포인트를 거는 배팅 게임) ======
