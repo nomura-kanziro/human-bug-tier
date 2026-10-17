@@ -410,7 +410,7 @@
 | 379 | 2026-10-18 | [`33d9991`](#33d9991) | docs(ai): AI 전용 서비스 문서 대규모 업데이트 — 기능 문서·RDMD/ai·작업 이력·가이드·AI 스킬 3종·진입 문서 |
 | 380 | 2026-10-18 | [`f3d32f8`](#f3d32f8) | docs(rdmd): 10-02~10-18 누락 기록 보충 — 사이드 메뉴·모바일 헤더, 사이트 전용 SMTP, 7~9티어 정정, 사이트 설정(계절 배경) 백엔드 |
 | 381 | 2026-10-18 | [`84ff75e`](#84ff75e) | docs(rdmd): 기록 규칙에 맞게 정리 — AI 기록을 frontend/15-ai·backend/10-ai·ai/ 로 나누고 인덱스(README) 트리·표·타임라인 갱신 |
-| 382 | 2026-10-18 | [`pending`](#pending382) | docs(features): 공통 인프라·전체 기능 맵을 React 기준으로 재작성하고 기능 문서·작업 이력 현행화 |
+| 382 | 2026-10-18 | [`6ddd0ac`](#6ddd0ac) | docs(features): 공통 인프라·전체 기능 맵을 React 기준으로 재작성하고 기능 문서·작업 이력 현행화 |
 
 ---
 
@@ -7363,15 +7363,15 @@
 
 ---
 
-<a id="pending382"></a>
+<a id="6ddd0ac"></a>
 
-### 382. 2026-10-18 — `pending`
+### 382. 2026-10-18 — `6ddd0ac`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `6ddd0ac`
+- **hash (full)**: `6ddd0aca181196bcea3f014c160da32c05507d95`
 - **author**: nomura
 - **message**: docs(features): 공통 인프라·전체 기능 맵을 React 기준으로 재작성하고 기능 문서·작업 이력 현행화
-- **git**: `git show pending`
+- **git**: `git show 6ddd0ac`
 - **범위**: docs / RDMD 기능 문서
 - **요약**: common-infra.md·overview.md 를 바닐라(common.js·header.html) 기준에서 현행 React(Layout·Header·Footer·api·paths·AuthContext·theme·계절 배경·라우트표)로 재작성. custom-maker(꾸미기 11종·이펙트 색), auth(사이트 SMTP 우선 체인·환경 변수), tier-class(10-08 7~9티어), 존재하지 않는 바닐라 모듈 README 링크 정정, features README, work-history Phase 11·체크리스트 보정.
 - **주요 파일**: `RDMD/features/*.md`, `RDMD/summary/work-history.md`
