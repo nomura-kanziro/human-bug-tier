@@ -6,6 +6,7 @@ import Layout from './components/Layout';
 import AdminCommentDetail from './pages/AdminCommentDetail';
 import AdminDashboard from './pages/AdminDashboard';
 import AdminLogin from './pages/AdminLogin';
+import AiHelper from './pages/AiHelper';
 import Board from './pages/Board';
 import CustomMaker from './pages/CustomMaker';
 import FindAccount from './pages/FindAccount';
@@ -55,6 +56,7 @@ export default function App() {
         <Route path="/custom-maker" element={<CustomMaker />} />
         <Route path="/luck-draw" element={<LuckDraw />} />
         <Route path="/guide" element={<Guide />} />
+        <Route path="/ai" element={<AiHelper />} />
         <Route path="/event" element={<EventPage />} />
         <Route path="/board" element={<Board />} />
         <Route path="/board/post" element={<PostDetail />} />

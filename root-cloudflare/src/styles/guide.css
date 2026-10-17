@@ -323,3 +323,15 @@
 @media (prefers-reduced-motion: reduce) {
   .guide-spot, .guide-bubble, .guide-mascot, .guide-clear-card { animation: none; transition: none; }
 }
+
+/* AI 도우미 바로가기 한 줄 */
+.guide-ai-link {
+  margin: 22px 0 0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+.guide-ai-link a {
+  color: var(--brand-strong);
+  font-weight: 700;
+}
