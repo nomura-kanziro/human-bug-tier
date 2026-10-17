@@ -26,6 +26,7 @@ feature: custom-maker
 - 적용 범위: 이 등급만 / 모든 등급 / 등급마다 다른 테마
 - **원래 상태로 돌려놓기**: 1~9등급 꾸미기를 전부 지우고 처음 골드·이펙트 없음으로 복원. 이 등급만 기본값은 현재 등급만
 - 빠른 테마 10종, 테두리 스와치 + 직접 색, 배경 이펙트 10종
+  (이후 **할로윈 이펙트·이펙트 색**이 추가돼 지금은 이펙트 11종·프리셋 11종 — 자세한 내용은 `14-decorate-halloween-fx-color-record.md`)
 - 화이트리스트 hex·effect만 허용. 예전 글은 style 없어도 기본 골드로 연다
 - localStorage `customMakerTierStyle` (배치 초기화와 별개)
 

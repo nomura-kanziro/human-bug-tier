@@ -58,7 +58,7 @@ npm run sync:render   # sync-from-render.mjs + extract-tiers.mjs
 
 | 파일 | 역할 |
 |------|------|
-| `lib/tierStyle.js` | 꾸미기 — 등급별 테두리 색·배경 이펙트, 프리셋 10종, `tierStyleProps()` 로 CSS 변수 주입 |
+| `lib/tierStyle.js` | 꾸미기 — 등급별 테두리 색·배경 이펙트, 프리셋 10종(이후 할로윈 추가로 11종), `tierStyleProps()` 로 CSS 변수 주입 |
 | `lib/authApi.js` | 로그인/가입/아이디 찾기/비번 재설정 + `EMAIL_NOT_CONFIGURED` 등 에러 문구 |
 | `lib/boardApi.js` | 게시글·댓글 CRUD/좋아요(PATCH)/신고, `@닉네임` 검색 파싱, 날짜 포맷 |
 | `lib/adminApi.js` | 관리자 상수·포맷터·차단 만료 계산·데이터 로더 |

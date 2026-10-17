@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 367 |
+| **커밋 수** | 368 |
 | **기간** | 2026-03-20 ~ 2026-10-18 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -396,6 +396,7 @@
 | 365 | 2026-10-18 | [`b12b7ce`](#b12b7ce) | feat(event-design): 밝은 테마에서는 달 대신 태양 — 할로윈 보름달은 눈이 든 태양, 크리스마스 초승달은 작은 태양 |
 | 366 | 2026-10-18 | [`fe99e6f`](#fe99e6f) | docs(event-design): 밝은 테마 태양 전환 내용 기록 |
 | 367 | 2026-10-18 | [`c4e97b0`](#c4e97b0) | feat(custom-maker): 꾸미기 배경 이펙트에 할로윈 추가 + 이펙트 색 고르기 |
+| 368 | 2026-10-18 | [`pending`](#pending368) | docs(custom-maker): 할로윈 배경 이펙트·이펙트 색 기록 |
 
 ---
 
@@ -7090,6 +7091,24 @@
 - **범위**: frontend / 커스텀 메이커 꾸미기
 - **요약**: 배경 이펙트에 할로윈(보랏빛 밤·주황 달 후광·호박빛·도깨비불·점선 테두리) 추가, 이펙트 색(기본색/스와치/직접 선택) 저장·적용. 이펙트별 기본색을 --fx-* 변수로 바꿔 고른 색이 있을 때만 인라인으로 덮어쓰며 짝색은 색상 회전으로 생성. 옛 글은 모양 그대로.
 - **주요 파일**: `root-cloudflare/src/lib/tierStyle.js`, `root-cloudflare/src/styles/custom-maker.css`, `root-cloudflare/src/components/DecoratePanel.jsx`
+- **관련 RDMD**: `RDMD/frontend/03-custom-maker/14-decorate-halloween-fx-color-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending368"></a>
+
+### 368. 2026-10-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(custom-maker): 할로윈 배경 이펙트·이펙트 색 기록
+- **git**: `git show pending`
+- **범위**: docs / 커스텀 메이커 꾸미기
+- **요약**: 14-decorate-halloween-fx-color-record.md 신규(동작·저장 형식·구현·확인·수동 테스트), 11번·react parity 기록의 이펙트/프리셋 개수 보정.
+- **주요 파일**: `RDMD/frontend/03-custom-maker/14-decorate-halloween-fx-color-record.md`
 - **관련 RDMD**: `RDMD/frontend/03-custom-maker/14-decorate-halloween-fx-color-record.md`
 
 [▲ 목차로](#목차)
