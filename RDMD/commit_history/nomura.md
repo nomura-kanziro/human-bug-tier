@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 379 |
+| **커밋 수** | 380 |
 | **기간** | 2026-03-20 ~ 2026-10-18 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -408,6 +408,7 @@
 | 377 | 2026-10-18 | [`4e50a22`](#4e50a22) | feat(ai): Express /api/ai 프록시 — 입력 검사·IP당 요청 제한·공유 키·AI 서비스 장애 격리 |
 | 378 | 2026-10-18 | [`77cafa9`](#77cafa9) | feat(ai): AI 도우미 화면(/ai) — 휴버봇 챗봇 + 랜덤 추천 질문 3개, 푸터·가이드 링크 |
 | 379 | 2026-10-18 | [`33d9991`](#33d9991) | docs(ai): AI 전용 서비스 문서 대규모 업데이트 — 기능 문서·RDMD/ai·작업 이력·가이드·AI 스킬 3종·진입 문서 |
+| 380 | 2026-10-18 | [`pending`](#pending380) | docs(rdmd): 10-02~10-18 누락 기록 보충 — 사이드 메뉴·모바일 헤더, 사이트 전용 SMTP, 7~9티어 정정, 사이트 설정(계절 배경) 백엔드 |
 
 ---
 
@@ -7319,5 +7320,23 @@
 - **요약**: features/ai-service.md 신설, RDMD/ai/(README·01 기록) 신설, features README·overview·backend-api·my-page(출석판)·luck-draw(출석체크) 갱신, work-history Phase 11(10-02~10-18)·체크리스트·제약, guides development(ai-service 실행·재시작 주의)·new-feature-checklist(AI 지식 동기화), .agents/.claude/.groks ai-service 스킬과 인덱스, CLAUDE.md·AGENTS.md 진입 문구, RDMD README·frontend/backend README 포인터.
 - **주요 파일**: `RDMD/features/ai-service.md`, `RDMD/ai/*`, `RDMD/summary/work-history.md`, `RDMD/guides/*`, `.agents/ai-service/skill.md`, `.claude/skills/ai-service/SKILL.md`, `.groks/ai-service/grok_skill.md`, `CLAUDE.md`, `AGENTS.md`
 - **관련 RDMD**: `RDMD/features/ai-service.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending380"></a>
+
+### 380. 2026-10-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(rdmd): 10-02~10-18 누락 기록 보충 — 사이드 메뉴·모바일 헤더, 사이트 전용 SMTP, 7~9티어 정정, 사이트 설정(계절 배경) 백엔드
+- **git**: `git show pending`
+- **범위**: docs / RDMD 기록 보충
+- **요약**: 기록 파일이 없던 작업 4건을 커밋·코드와 대조해 추가: frontend/01-common/14(사이드 메뉴 계정 영역·모바일 헤더 축소·1.0.2), frontend/02-tier-class/10(7~9티어 정정), backend/03-auth/11(Oracle Email Delivery 사이트 SMTP·선택 근거·체인), backend/06-admin/08(SiteSetting·이벤트 디자인 API·메모리 캐시 전제).
+- **주요 파일**: `RDMD/frontend/01-common/14-*.md`, `RDMD/frontend/02-tier-class/10-*.md`, `RDMD/backend/03-auth/11-*.md`, `RDMD/backend/06-admin/08-*.md`
+- **관련 RDMD**: `RDMD/frontend/README.md`, `RDMD/backend/README.md`
 
 [▲ 목차로](#목차)
