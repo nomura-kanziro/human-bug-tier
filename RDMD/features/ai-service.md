@@ -14,17 +14,32 @@
 | 작업 규칙(모든 AI 공통 정본) | [`../../.agents/ai-service/skill.md`](../../.agents/ai-service/skill.md) |
 | 배포·보안 | [`../guides/deploy-checklist.md`](../guides/deploy-checklist.md) "AI" 절 · [`../guides/security.md`](../guides/security.md) 9절 |
 
-## 챗봇 폴더 구분 (`ai-service/app/`)
+## 챗봇 폴더 구분과 6개 층 (`ai-service/app/`)
 
-챗봇 종류별로 폴더를 나눠 코드가 섞이지 않게 한다.
+챗봇 종류별로 폴더를 나누고, **폴더마다 같은 6개 층**(`schema` · `router` · `service` · `models` · `repository` · `database`)을 둔다.
 
 | 폴더 | 챗봇 | 상태 |
 |---|---|---|
-| `app/guidans_Chat/` | **가이드 전용 챗봇(휴버봇)** — 사이트 이용법·티어표 안내. `knowledge.py`(RAG) · `graph.py`(LangGraph) · `prompts.py` · `llm.py` · `questions.py` 가 전부 이 안에 있다 | 구현됨(`/ai`) |
-| `app/Agent-Bot/` | **에이전트 봇**(공지 "앞으로의 계획") | 계획 단계 — README 만 있는 빈 자리, 방치 |
-| `app/main.py` · `app/config.py` | 공용(FastAPI 진입점·설정) | — |
+| `app/guidans_Chat/` | **가이드 전용 챗봇(휴버봇)** — 사이트 이용법·티어표 안내 | 구현됨(`/ai`) |
+| `app/Agent-Bot/` | **에이전트 봇**(공지 "앞으로의 계획") | 계획 단계 — 6개 층 폴더에 README 만, 파이썬 코드 없음(방치) |
+| `app/main.py` · `config.py` · `deps.py` | 공용(FastAPI 진입점·설정·키 검사) | — |
 
-사이트 지식 원문 `ai-service/knowledge/*.md` 는 가이드 챗봇이 읽는다. 에이전트 봇을 만들 때 자기 지식·도구가 필요하면 그 폴더 안에 둔다.
+| 층 | 책임 | `guidans_Chat` 의 내용 |
+|---|---|---|
+| `schema/` | 요청·응답 JSON 모양(pydantic) | `chat.py` — ChatRequest · ChatResponse · QuestionsResponse · Turn(길이 제한은 Express 와 같은 값) |
+| `router/` | HTTP 입출력 — 서비스를 부르기만 | `chat_router.py` — `GET /questions` · `POST /chat` · `POST /reload` |
+| `service/` | 업무 로직 | `chat_service.py`(GuideChatService — 지식·그래프를 묶음으로 보관·교체) · `knowledge.py`(RAG) · `graph.py`(LangGraph) · `prompts.py` · `llm.py` · `questions.py` |
+| `models/` | Oracle 테이블 한 행의 모양 | 아직 없음(대화를 저장하지 않음) |
+| `repository/` | Oracle SQL 실행 | `base.py` OracleRepository(fetch_all·fetch_one·execute, **바인드 변수**, 쓰기 후 commit) — 쓰는 곳 아직 없음 |
+| `database/` | Oracle 연결 | `oracle.py` — python-oracledb(thin) 커넥션 풀, 설정이 있을 때만 지연 생성 |
+
+호출 방향은 router → service → repository → database 한 방향. 사이트 지식 원문 `ai-service/knowledge/*.md` 는 가이드 챗봇이 읽는다.
+
+### 데이터베이스 원칙 — MongoDB 를 쓰지 않는다
+
+- ai-service 는 **MongoDB 를 쓰지 않는다.** DB 가 필요하면 **Oracle SQL**(Autonomous Database 등)만 쓴다. 사이트 본체 `backend/` 의 MongoDB 와는 완전히 별개다.
+- 지금은 **DB 를 쓰지 않는다**(대화 비저장 정책). `database/`·`repository/` 는 연결과 SQL 실행 도우미만 준비된 층이다. `ORACLE_USER`/`ORACLE_PASSWORD`/`ORACLE_DSN`(+ Autonomous DB 지갑 `ORACLE_WALLET_DIR`)이 비어 있으면 연결하지 않는다.
+- 저장이 필요해지면 먼저 보관 기간·탈퇴 시 삭제를 사람과 정하고, 테이블마다 `models/` 에 행 모양, `repository/` 에 SQL, DDL 은 `RDMD/ai/` 기록에 남긴다. 실제 Oracle 연결은 아직 시험하지 못했다(가짜 연결로 SQL 실행 도우미만 시험).
 
 ## 한 줄 요약
 
@@ -54,7 +69,7 @@ backend/routes/aiRoutes.js (/api/ai, server.js 에 연결)
 ai-service/app/main.py (FastAPI, 127.0.0.1:8000)
         │  GET /health · GET /questions · POST /chat · POST /reload(키 필요)
         ▼
-app/guidans_Chat/graph.py (LangGraph StateGraph)
+app/guidans_Chat/service/graph.py (LangGraph StateGraph)
   START → analyze ─┬─ 인사 ───────────────▶ greet ────────▶ END
                    └─ retrieve(RAG) ─┬─ 근거 없음 ─▶ out_of_scope ─▶ END
                                      └─ 근거 있음 ─▶ generate ────▶ END
@@ -78,7 +93,7 @@ app/guidans_Chat/graph.py (LangGraph StateGraph)
 - 캐릭터 찾기: 전체 이름(공백·`*` 무시) 우선, 없으면 이름의 한 단어(2글자 이상, 한 명에게만 해당, **단어 단위 일치** — '타츠오미'가 '타츠오'에 걸리지 않게).
 - 지식 문서의 수치는 2026-10-18 서버 코드 상수와 대조했다(행운 뽑기 확률·포인트, 포커 배수, 랜덤 뽑기 배수, 퀴즈 상금표, 출석 포인트, 닉네임 규칙, 1시간 자동 로그아웃 등).
 
-## 프롬프트 원칙 (`app/guidans_Chat/prompts.py`)
+## 프롬프트 원칙 (`app/guidans_Chat/service/prompts.py`)
 
 1. 근거(티어 정보·사이트 문서)에 있는 내용만, 없으면 "찾을 수 없어요" + 문의하기
 2. 캐릭터 티어는 `[정확한 티어 정보]` 가 정답, 작품 줄거리·능력 등은 지어내지 않음
@@ -88,7 +103,7 @@ app/guidans_Chat/graph.py (LangGraph StateGraph)
 
 ## 랜덤 추천 질문
 
-`app/guidans_Chat/questions.py` — LLM 없이 즉시 생성. 캐릭터("○○는 몇 티어야?", tiers.json 무작위) · 티어("N티어에는 누가 있어?" / "N티어는 어떤 등급이야?") · 사이트(15개 목록) 갈래에서 하나씩 뽑아 섞는다. 조사(은/는)는 받침으로 고른다. 화면 "🔄 다른 질문" 으로 새로 받는다.
+`app/guidans_Chat/service/questions.py` — LLM 없이 즉시 생성. 캐릭터("○○는 몇 티어야?", tiers.json 무작위) · 티어("N티어에는 누가 있어?" / "N티어는 어떤 등급이야?") · 사이트(15개 목록) 갈래에서 하나씩 뽑아 섞는다. 조사(은/는)는 받침으로 고른다. 화면 "🔄 다른 질문" 으로 새로 받는다.
 
 ## 화면 (`/ai`, `AiHelper.jsx` + `styles/ai-helper.css`)
 

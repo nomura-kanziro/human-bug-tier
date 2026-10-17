@@ -18,32 +18,44 @@ Express(`backend/`)와 **별도 프로세스**로 돌고, 브라우저는 이 �
 
 | 구성 | 쓰는 곳 |
 |---|---|
-| **FastAPI** + uvicorn | `app/main.py` — `/health`, `/questions`, `/chat`, `/reload` |
+| **FastAPI** + uvicorn | `app/main.py`(진입) · `app/guidans_Chat/router/` — `/health`, `/questions`, `/chat`, `/reload` |
 | **LangChain** | `langchain-core`(Document·BaseRetriever·메시지), `langchain-text-splitters`(MarkdownHeaderTextSplitter), `langchain-anthropic`(ChatAnthropic) |
-| **LangGraph** | `app/guidans_Chat/graph.py` — `StateGraph` 질문 처리 흐름(조건 분기) |
-| **RAG** | `app/guidans_Chat/knowledge.py` — 문서 적재·분할, BM25 검색기, 캐릭터 이름 색인, 근거를 프롬프트에 넣어 답 생성(`app/guidans_Chat/prompts.py`) |
+| **LangGraph** | `app/guidans_Chat/service/graph.py` — `StateGraph` 질문 처리 흐름(조건 분기) |
+| **RAG** | `app/guidans_Chat/service/knowledge.py` — 문서 적재·분할, BM25 검색기, 캐릭터 이름 색인, 근거를 프롬프트에 넣어 답 생성(`app/guidans_Chat/service/prompts.py`) |
 
 ## 폴더
 
-챗봇 종류별로 폴더를 나눈다 — **가이드 전용 챗봇**은 `app/guidans_Chat/`, **에이전트 봇**은 `app/Agent-Bot/`(계획 단계, 폴더만).
+**챗봇 종류별로 폴더**를 나누고, 폴더마다 **같은 6개 층**을 둔다 — `schema` · `router` · `service` · `models` · `repository` · `database`.
+가이드 전용 챗봇은 `app/guidans_Chat/`, 에이전트 봇은 `app/Agent-Bot/`(계획 단계 — 층 폴더와 README 만 있는 빈 자리).
 
 ```
 ai-service/
 ├── app/
-│   ├── main.py            # FastAPI 앱(공용 진입점) · 요청 모델(질문 500자, 이전 대화 12개) · X-AI-Key 검사
+│   ├── main.py            # FastAPI 진입점(공용) — 설정 로드 · 챗봇 라우터 연결 · /health
 │   ├── config.py          # 공용 설정 — 환경 변수 / ai-service/.env
-│   ├── guidans_Chat/      # ★ 가이드 전용 챗봇(휴버봇) — 관련 기능이 전부 이 안에
-│   │   ├── knowledge.py   #   지식 베이스: 마크다운 + tiers.json → Document, BM25 검색기, CharacterIndex
-│   │   ├── graph.py       #   LangGraph 흐름 + fallback 답
-│   │   ├── prompts.py     #   시스템 프롬프트(사이트 정보만으로 답, 추측 금지, 역할 바꾸기 거절)
-│   │   ├── llm.py         #   ChatAnthropic 생성(키 없으면 None)
-│   │   └── questions.py   #   랜덤 추천 질문(캐릭터 / 티어 / 사이트 갈래 하나씩)
-│   └── Agent-Bot/         # 에이전트 봇 자리(계획 단계 — README 만 있음, 구현 없음)
+│   ├── deps.py            # 공용 의존성 — X-AI-Key 검사
+│   ├── guidans_Chat/      # ★ 가이드 전용 챗봇(휴버봇)
+│   │   ├── schema/        #   요청·응답 JSON 모양(pydantic): ChatRequest · ChatResponse · QuestionsResponse
+│   │   ├── router/        #   HTTP: GET /questions · POST /chat · POST /reload
+│   │   ├── service/       #   업무 로직: chat_service.py(진입) · knowledge.py(RAG) · graph.py(LangGraph) · prompts.py · llm.py · questions.py
+│   │   ├── models/        #   Oracle 테이블 한 행의 모양 — 아직 없음(대화 비저장)
+│   │   ├── repository/    #   Oracle SQL 실행: base.py OracleRepository(바인드 변수·commit) — 쓰는 곳 아직 없음
+│   │   └── database/      #   Oracle 연결: oracle.py(python-oracledb 풀, 지연 생성) — 연결 준비만
+│   └── Agent-Bot/         # 에이전트 봇 자리(계획 단계) — 위와 같은 6개 층 폴더, 각각 README 만
 ├── knowledge/             # 사이트 지식 원문(가이드 챗봇이 읽음) — 기능이 바뀌면 여기를 고친다
-├── tests/                 # pytest (실제 LLM 호출 없음)
+├── tests/                 # pytest (실제 LLM·실제 Oracle 호출 없음)
 ├── requirements.txt
 └── .env.example
 ```
+
+층의 책임(위에서 아래로만 부른다): **router**(HTTP 입출력) → **service**(업무 로직·LLM·검색) → **repository**(SQL) → **database**(연결). **schema** 는 요청·응답 JSON, **models** 는 DB 테이블 한 행. 라우터가 SQL 을 알거나, 서비스가 HTTP 를 아는 일이 없게 한다.
+
+## 데이터베이스 — MongoDB 를 쓰지 않는다
+
+- ai-service 는 **MongoDB 를 쓰지 않는다.** DB 가 필요하면 **Oracle SQL**(Autonomous Database 등, `python-oracledb` thin 모드)만 쓴다. 사이트 본체(`backend/`)의 MongoDB 와는 별개다.
+- 지금 가이드 챗봇은 **대화를 저장하지 않아** DB 를 쓰지 않는다. `database/oracle.py`·`repository/base.py` 는 연결·SQL 실행 도우미만 준비해 둔 것이다(`ORACLE_USER`/`ORACLE_PASSWORD`/`ORACLE_DSN` 이 비어 있으면 풀도 만들지 않는다).
+- SQL 은 Oracle 문법 그대로, 값은 항상 **바인드 변수**(`:name`)로 넘긴다. 테이블을 만들 때는 DDL 을 `RDMD/ai/` 기록에 남긴다.
+- 대화·사용자 데이터를 저장하려면 먼저 사람과 보관 기간·탈퇴 시 삭제를 정한다([`../RDMD/guides/security.md`](../RDMD/guides/security.md) 9절).
 
 ## 로컬 실행
 

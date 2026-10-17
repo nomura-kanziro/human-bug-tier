@@ -19,7 +19,10 @@ description: >
 ## Code map
 
 - 서비스 공용: `ai-service/app/main.py`(FastAPI 진입점), `app/config.py`
-- **챗봇은 종류별 폴더로 나눈다**: 가이드 전용 챗봇 = `ai-service/app/guidans_Chat/`(`knowledge.py` 문서 적재·BM25·CharacterIndex, `graph.py` LangGraph, `prompts.py`, `llm.py` ChatAnthropic, `questions.py`). 에이전트 봇 = `ai-service/app/Agent-Bot/`(계획 단계 — 폴더·README 만, 구현·수정 금지). 새 챗봇 코드를 다른 챗봇 폴더에 섞지 않는다
+- **챗봇은 종류별 폴더로 나누고, 폴더마다 같은 6개 층을 둔다**: `schema/`(요청·응답 pydantic) · `router/`(HTTP) · `service/`(업무 로직) · `models/`(Oracle 테이블 행 모양) · `repository/`(Oracle SQL) · `database/`(Oracle 연결). 호출은 router → service → repository → database 한 방향.
+  - 가이드 전용 챗봇 = `ai-service/app/guidans_Chat/` — `service/` 에 `chat_service.py`(진입)·`knowledge.py`(RAG·BM25·CharacterIndex)·`graph.py`(LangGraph)·`prompts.py`·`llm.py`·`questions.py`, `router/chat_router.py`, `schema/chat.py`
+  - 에이전트 봇 = `ai-service/app/Agent-Bot/`(계획 단계 — 6개 층 폴더에 README 만, 구현·수정 금지). 새 챗봇 코드를 다른 챗봇 폴더에 섞지 않는다
+  - 공용: `app/main.py`(진입·라우터 연결), `config.py`, `deps.py`(X-AI-Key 검사)
 - 지식: `ai-service/knowledge/01~08-*.md`(사용자용 이용 안내) + `root-cloudflare/src/data/tiers.json`(직접 읽음)
 - 테스트: `ai-service/tests/test_service.py` (`.venv/Scripts/python -m pytest -q`)
 - 프록시: `backend/routes/aiRoutes.js` → `server.js` `app.use('/api/ai', aiRoutes)`
@@ -45,6 +48,8 @@ description: >
 
 ## Do not
 
+- **ai-service 에서 MongoDB 를 쓰지 않는다.** DB 가 필요하면 **Oracle SQL**(python-oracledb)만 — 값은 항상 바인드 변수(`:name`), 문자열을 SQL 에 이어 붙이지 않는다. 사이트 본체 `backend/` 의 MongoDB 와 섞지 않는다.
+- 라우터에서 SQL 을 직접 쓰거나 서비스에서 HTTP 를 다루지 않는다(층 분리).
 - LLM 키(`ANTHROPIC_API_KEY`)·`AI_SERVICE_KEY` 를 커밋·로그·응답에 넣지 않는다(`ai-service/.env` 는 gitignore — `.env` 패턴).
 - **대화 내용을 저장하지 않는다**(현재 정책). 저장하려면 보관 기간·탈퇴 시 삭제·별도 DB 를 먼저 사람과 정한다.
 - 관리자 기능·API 주소·서버 구조를 지식 문서에 넣지 않는다(사용자용).
