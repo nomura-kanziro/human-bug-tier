@@ -58,6 +58,11 @@ const luckProfileSchema = new mongoose.Schema({
     type: Date,
     default: null,
   },
+  // 마지막으로 출석체크 포인트를 받은 날짜(KST, 'YYYY-MM-DD'). 오늘과 다르면 로그인 시 10포인트를 지급한다(utils/attendance.js).
+  lastAttendanceDate: {
+    type: String,
+    default: '',
+  },
 }, {
   timestamps: true,
 });

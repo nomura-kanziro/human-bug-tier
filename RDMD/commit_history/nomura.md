@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 371 |
+| **커밋 수** | 372 |
 | **기간** | 2026-03-20 ~ 2026-10-18 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -400,6 +400,7 @@
 | 369 | 2026-10-18 | [`f0837f1`](#f0837f1) | chore(footer): 사이트 버전 표시 1.0.2 → 1.0.5 |
 | 370 | 2026-10-18 | [`f69d96c`](#f69d96c) | feat(guide): 가이드 전용 페이지(/guide) + 게임식 가이드 모드 — 어둡게·강조·말풍선, 왼쪽 아래 ✕ 로 종료 |
 | 371 | 2026-10-18 | [`d54a2bf`](#d54a2bf) | docs(guide): 가이드 모드 기록 추가 |
+| 372 | 2026-10-18 | [`pending`](#pending372) | feat(attendance): 로그인 시 하루(KST) 1회 출석체크 10포인트 자동 지급 |
 
 ---
 
@@ -7167,5 +7168,23 @@
 - **요약**: RDMD/frontend/14-guide/01-guide-mode-record.md 신규(동작·스테이지 표·구조·확인·수동 테스트)와 frontend README 색인 추가.
 - **주요 파일**: `RDMD/frontend/14-guide/01-guide-mode-record.md`, `RDMD/frontend/README.md`
 - **관련 RDMD**: `RDMD/frontend/14-guide/01-guide-mode-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending372"></a>
+
+### 372. 2026-10-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(attendance): 로그인 시 하루(KST) 1회 출석체크 10포인트 자동 지급
+- **git**: `git show pending`
+- **범위**: backend+frontend / 출석체크
+- **요약**: 로그인 성공 직후 grantDailyAttendance() 가 한국 시간 하루 첫 로그인이면 LuckProfile 포인트 +10 을 원자적 갱신으로 지급(동시 로그인 중복 방지, 실패해도 로그인 무영향). lastAttendanceDate 필드·원장 source 'attendance'·관리자 라벨 추가, 로그인 응답 attendance 와 로그인 성공 알림 문구.
+- **주요 파일**: `backend/utils/attendance.js`, `backend/controllers/authController.js`, `backend/models/LuckProfile.js`, `backend/models/LuckPointLog.js`, `backend/controllers/adminLuckController.js`, `root-cloudflare/src/pages/Login.jsx`
+- **관련 RDMD**: `RDMD/backend/08-luck-draw/05-attendance-record.md`
 
 [▲ 목차로](#목차)

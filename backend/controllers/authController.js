@@ -23,6 +23,7 @@ const User = require('../models/User');
 const getClientIp = require('../utils/getClientIp');
 const { isUserBlocked } = require('../utils/checkBlocked');
 const { signUserToken, getJwtSecret } = require('../utils/jwtAuth');
+const { grantDailyAttendance } = require('../utils/attendance');
 const { getAppBaseUrl } = require('../utils/appUrl');
 // 세 메일(가입 인증·아이디 찾기·비번 재설정)이 공용으로 쓰는 HTML 틀
 const { buildAppMailHtml, escapeHtml } = require('../utils/mailTemplate');
@@ -238,7 +239,7 @@ const verifyEmail = async (req, res) => {
 //   4. utils/checkBlocked.js의 isUserBlocked()로 닉네임/접속 IP 기준 차단 여부 확인
 //      - 이 함수가 조회하는 Block 컬렉션은 blockController.js(관리자 차단 기능)가 추가/삭제한다.
 //      - 차단 중이면 403 + 차단 만료 시각(expiresAt)을 함께 내려줘서 프론트가 안내할 수 있게 함
-//   5. 통과하면 signUserToken()으로 일반 유저용 JWT 발급(7일 만료) 후 응답
+//   5. 통과하면 grantDailyAttendance()로 출석체크(하루 첫 로그인 +10P)를 처리하고, signUserToken()으로 일반 유저용 JWT 발급(7일 만료) 후 응답
 //      - 관리자 로그인(adminController.login)과는 별도 토큰 체계이며, 프론트는 이 토큰을
 //        localStorage.authToken 에 저장해 이후 요청의 Authorization 헤더로 사용한다.
 // 각 실패 단계는 일부러 서로 다른 에러 메시지를 주는데, 이는 기존 동작을 그대로 유지한 것이며
@@ -274,10 +275,14 @@ const login = async (req, res) => {
 
     const token = signUserToken(user);
 
+    // 출석체크 — 하루(KST) 첫 로그인이면 10포인트 자동 지급. 실패해도 로그인에는 영향 없다.
+    const attendance = await grantDailyAttendance(user._id);
+
     res.json({
       success: true,
       message: '로그인 성공',
       token,
+      attendance,
       user: {
         nickname: user.nickname,
         email: user.email,

@@ -29,7 +29,10 @@ export default function Login() {
         // 1시간 자동 로그아웃(AuthContext) 기준으로 삼는 로그인 시각
         localStorage.setItem('loginAt', String(Date.now()));
         refresh();
-        window.alert('로그인 성공!');
+        // 하루 첫 로그인이면 서버가 출석체크 10포인트를 이미 지급했다 — 알려 주기만 한다
+        const att = data.attendance;
+        window.alert(att && att.granted ? `로그인 성공!
+📅 출석체크 완료! +${att.points}P (보유 ${att.balance}P)` : '로그인 성공!');
         navigate('/');
         return;
       }

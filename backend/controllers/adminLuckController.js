@@ -34,6 +34,7 @@ const POINT_SOURCE_LABELS = {
   quiz: '이벤트 퀴즈',
   memory_award: '메모리 기록 상금',
   showcase_award: '티어표 공개 상금',
+  attendance: '출석체크',
 };
 
 function isDbConnected() {

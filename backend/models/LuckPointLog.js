@@ -13,6 +13,7 @@ const mongoose = require('mongoose');
  *   quiz            이벤트 매일 퀴즈 상금                       controllers/eventController.js
  *   memory_award    이벤트 메모리 기록 1위 상금                 controllers/eventController.js
  *   showcase_award  이벤트 티어표 공개 우승 상금                controllers/eventController.js
+ *   attendance      출석체크(로그인 시 하루 1회 +10P)           utils/attendance.js
  *
  * delta 는 실제로 반영된 증감이다(포인트는 0 밑으로 내려가지 않으므로 계산값과 다를 수 있다).
  * 증감이 0 인 경우는 남기지 않는다. 이 원장은 기능이 추가된 뒤(2026-10)부터 쌓이며, 그 전 증감은 없다.
@@ -25,7 +26,7 @@ const luckPointLogSchema = new mongoose.Schema({
   },
   source: {
     type: String,
-    enum: ['daily_tier', 'poker_bet', 'poker_payout', 'ladder', 'quiz', 'memory_award', 'showcase_award'],
+    enum: ['daily_tier', 'poker_bet', 'poker_payout', 'ladder', 'quiz', 'memory_award', 'showcase_award', 'attendance'],
     required: true,
   },
   delta: { type: Number, required: true },
