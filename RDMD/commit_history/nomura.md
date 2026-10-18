@@ -427,7 +427,7 @@
 | 396 | 2026-10-18 | [`d18a7bb`](#d18a7bb) | feat(ai-service): AI 서버(Ollama) ON/OFF 감지 — 꺼져 있으면 LLM 을 기다리지 않고 지식 문서 문장 그대로 답하기 |
 | 397 | 2026-10-18 | [`a20dcd5`](#a20dcd5) | feat(ai): /ai 화면에 AI 서버 ON/OFF 알림("AI 서버 OFF 상태 (사이트의 정보내용을 끌어다 대답합니다.)") + Express /api/ai/status |
 | 398 | 2026-10-18 | [`175eb41`](#175eb41) | feat(ai-service): knowledge 고도화 — FAQ·용어집·단계별 사용법·문제 해결·공지/문의/알림·업데이트 이력 6개 추가, 족보 16종 보강, 지식↔코드 동기화 테스트 |
-| 399 | 2026-10-18 | [`pending`](#pending399) | docs(ai): AI 서버 OFF 모드·지식 고도화 기록 — 기록 03, README·기능 문서·프록시/화면 기록·가이드·AI 스킬 4종, 족보 16종 정정 |
+| 399 | 2026-10-18 | [`bcf668d`](#bcf668d) | docs(ai): AI 서버 OFF 모드·지식 고도화 기록 — 기록 03, README·기능 문서·프록시/화면 기록·가이드·AI 스킬 4종, 족보 16종 정정 |
 
 ---
 
@@ -7686,15 +7686,15 @@
 
 ---
 
-<a id="pending399"></a>
+<a id="bcf668d"></a>
 
-### 399. 2026-10-18 — `pending`
+### 399. 2026-10-18 — `bcf668d`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `bcf668d`
+- **hash (full)**: `bcf668d7a617fe27c5b498de4a9ffb70e5091aec`
 - **author**: nomura
 - **message**: docs(ai): AI 서버 OFF 모드·지식 고도화 기록 — 기록 03, README·기능 문서·프록시/화면 기록·가이드·AI 스킬 4종, 족보 16종 정정
-- **git**: `git show pending`
+- **git**: `git show bcf668d`
 - **범위**: docs / AI
 - **요약**: RDMD/ai/03 신설(요청·변경·실측·찾아 고친 문제·한계), ai-service README(ON/OFF·dev_service·Chroma 폴더 경고·기준값), features/ai-service.md(지식 문서 구성 표·ON/OFF 절), 프록시·화면 기록 갱신, development·new-feature-checklist(동기화 테스트·구어체 FAQ 추가), work-history, AI 스킬 4종(OFF 규칙·Chroma 폴더·동기화 테스트). RDMD luck-draw 문서의 족보 15종 오류를 16종(파이브 플러시)로 정정.
 - **주요 파일**: `RDMD/ai/*`, `RDMD/features/ai-service.md`, `RDMD/features/luck-draw.md`, `RDMD/backend/*`, `RDMD/frontend/15-ai/*`, `RDMD/guides/*`, `RDMD/summary/work-history.md`, `ai-service/README.md`, AI 스킬 4종
