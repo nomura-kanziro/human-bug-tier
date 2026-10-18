@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 391 |
+| **커밋 수** | 392 |
 | **기간** | 2026-03-20 ~ 2026-10-18 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -420,6 +420,7 @@
 | 389 | 2026-10-18 | [`a864cae`](#a864cae) | docs(ai-service): 6개 층 구조와 Oracle SQL 전용(MongoDB 미사용) 원칙 반영 — README·기능 문서·기록·보안 가이드·AI 스킬 4종 |
 | 390 | 2026-10-18 | [`e0edfc1`](#e0edfc1) | feat(ai-service): 생성 모델을 Ollama gemma4:12b 로 바꾸고 ChromaDB + bge-m3 벡터 검색(BM25 와 RRF 하이브리드)을 가이드 챗봇에 추가 |
 | 391 | 2026-10-18 | [`dac0947`](#dac0947) | docs(ai-service): Ollama gemma4:12b·ChromaDB·bge-m3 반영 — README·기능 문서·기록 02·배포/보안/개발 가이드·AI 스킬 4종 |
+| 392 | 2026-10-18 | [`pending`](#pending392) | fix(ai-service): .env 같은 줄 뒤 주석(값   # 설명)을 값으로 읽어 임베딩 모델명·keep_alive 가 깨지던 문제 수정 |
 
 ---
 
@@ -7546,6 +7547,24 @@
 - **범위**: docs / AI 서비스 모델·검색
 - **요약**: ai-service README(구성도·폴더·모델 준비·환경 변수·동작 규칙·운영 배포 선택지), features/ai-service.md(하이브리드 검색·생성 모델·설정·확인·운영 배포), RDMD/ai/02 기록 신설(실측으로 알게 된 것 7가지), 배포 체크리스트(모델 위치 결정·Ollama 포트), 보안(Ollama 내부 전용·인젝션 차단), 개발 가이드(ollama pull·eval 스크립트), AI 스킬 4종(생각 모드·MIN_VECTOR_SIM·내부 전용), CLAUDE.md, work-history.
 - **주요 파일**: `ai-service/README.md`, `RDMD/features/ai-service.md`, `RDMD/ai/*`, `RDMD/guides/*`, `RDMD/summary/work-history.md`, AI 스킬 4종, `CLAUDE.md`
+- **관련 RDMD**: `RDMD/ai/02-ollama-chromadb-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending392"></a>
+
+### 392. 2026-10-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: fix(ai-service): .env 같은 줄 뒤 주석(값   # 설명)을 값으로 읽어 임베딩 모델명·keep_alive 가 깨지던 문제 수정
+- **git**: `git show pending`
+- **범위**: ai-service / .env 로더
+- **요약**: config._load_dotenv 가 `OLLAMA_EMBED_MODEL=bge-m3   # 설명` 의 주석을 값에 포함해 벡터 색인·Ollama 호출이 실패하고 문서 답으로 떨어지던 버그. 공백 + # 뒤를 떼고 따옴표 안의 #·공백 없는 #은 값으로 유지, 회귀 테스트 추가(23개 통과). 로컬에서 Ollama·ai-service·backend 를 켜 /api/ai 로 LLM 답·범위 밖 거절·인젝션 거절 확인.
+- **주요 파일**: `ai-service/app/config.py`, `ai-service/tests/test_service.py`
 - **관련 RDMD**: `RDMD/ai/02-ollama-chromadb-record.md`
 
 [▲ 목차로](#목차)

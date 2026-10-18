@@ -5,6 +5,7 @@
 from __future__ import annotations
 
 import os
+import re
 from dataclasses import dataclass
 from pathlib import Path
 
@@ -12,6 +13,18 @@ SERVICE_DIR = Path(__file__).resolve().parent.parent   # ai-service/
 REPO_ROOT = SERVICE_DIR.parent                          # 저장소 루트
 
 PROVIDERS = ("ollama", "anthropic", "none")
+
+
+def _clean_value(raw: str) -> str:
+    """.env 값 정리 — 따옴표로 감싼 값은 그 안쪽 그대로, 아니면 `값   # 설명` 의 같은 줄 뒤 주석(공백 + #)을 뗀다.
+    (.env.example 의 `OLLAMA_EMBED_MODEL=bge-m3      # 다국어…` 를 그대로 복사해 써도 값이 깨지지 않게)"""
+    value = raw.strip()
+    if value[:1] in ("'", '"'):
+        end = value.find(value[0], 1)
+        if end != -1:
+            return value[1:end]
+        return value[1:]
+    return re.split(r"\s+#", value, maxsplit=1)[0].strip()
 
 
 def _load_dotenv(path: Path) -> None:
@@ -24,9 +37,8 @@ def _load_dotenv(path: Path) -> None:
             continue
         key, value = line.split("=", 1)
         key = key.strip()
-        value = value.strip().strip('"').strip("'")
         if key and key not in os.environ:
-            os.environ[key] = value
+            os.environ[key] = _clean_value(value)
 
 
 def _path(env_key: str, default: Path) -> Path:

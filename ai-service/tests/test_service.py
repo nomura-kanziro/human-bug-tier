@@ -137,3 +137,26 @@ def test_relevance_uses_vector_similarity_when_available(kb):
     assert near["mode"] == "fallback"
     no_vec = build_graph(kb, None, searcher=FakeSearcher(0.0, used=False)).invoke({"question": "오늘 날씨 어때?", "history": []})
     assert no_vec["mode"] == "fallback"  # 벡터를 못 쓰면 BM25 기준(기존 동작)
+
+
+def test_dotenv_inline_comments_are_stripped(tmp_path, monkeypatch):
+    """.env.example 를 그대로 복사해 쓰면 `값   # 설명` 이 되는데, 주석이 값에 붙으면 모델명·keep_alive 가 깨졌다."""
+    from app import config
+
+    env = tmp_path / ".env"
+    env.write_text(
+        'T_MODEL=bge-m3      # 다국어 1024차원\n'
+        'T_KEEP=30m          # 모델 유지\n'
+        'T_QUOTED="a # b"    # 따옴표 안의 #은 값이다\n'
+        'T_HASH=abc#def\n'          # 공백 없는 # 는 값의 일부
+        '# 전체 주석\nT_EMPTY=\n',
+        encoding="utf-8",
+    )
+    for k in ("T_MODEL", "T_KEEP", "T_QUOTED", "T_HASH", "T_EMPTY"):
+        monkeypatch.delenv(k, raising=False)
+    config._load_dotenv(env)
+    import os as _os
+    assert _os.environ["T_MODEL"] == "bge-m3" and _os.environ["T_KEEP"] == "30m"
+    assert _os.environ["T_QUOTED"] == "a # b" and _os.environ["T_HASH"] == "abc#def" and _os.environ["T_EMPTY"] == ""
+    for k in ("T_MODEL", "T_KEEP", "T_QUOTED", "T_HASH", "T_EMPTY"):
+        _os.environ.pop(k, None)
