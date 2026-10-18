@@ -426,7 +426,7 @@
 | 395 | 2026-10-18 | [`4f94b0e`](#4f94b0e) | docs(ai): 타임아웃 설정과 로컬 GPU 가 느려 503 이 났던 원인·조치 기록 |
 | 396 | 2026-10-18 | [`d18a7bb`](#d18a7bb) | feat(ai-service): AI 서버(Ollama) ON/OFF 감지 — 꺼져 있으면 LLM 을 기다리지 않고 지식 문서 문장 그대로 답하기 |
 | 397 | 2026-10-18 | [`a20dcd5`](#a20dcd5) | feat(ai): /ai 화면에 AI 서버 ON/OFF 알림("AI 서버 OFF 상태 (사이트의 정보내용을 끌어다 대답합니다.)") + Express /api/ai/status |
-| 398 | 2026-10-18 | [`pending`](#pending398) | feat(ai-service): knowledge 고도화 — FAQ·용어집·단계별 사용법·문제 해결·공지/문의/알림·업데이트 이력 6개 추가, 족보 16종 보강, 지식↔코드 동기화 테스트 |
+| 398 | 2026-10-18 | [`175eb41`](#175eb41) | feat(ai-service): knowledge 고도화 — FAQ·용어집·단계별 사용법·문제 해결·공지/문의/알림·업데이트 이력 6개 추가, 족보 16종 보강, 지식↔코드 동기화 테스트 |
 
 ---
 
@@ -7667,15 +7667,15 @@
 
 ---
 
-<a id="pending398"></a>
+<a id="175eb41"></a>
 
-### 398. 2026-10-18 — `pending`
+### 398. 2026-10-18 — `175eb41`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `175eb41`
+- **hash (full)**: `175eb41a5a0bbc9f04e79177d9efe83abad0bd6e`
 - **author**: nomura
 - **message**: feat(ai-service): knowledge 고도화 — FAQ·용어집·단계별 사용법·문제 해결·공지/문의/알림·업데이트 이력 6개 추가, 족보 16종 보강, 지식↔코드 동기화 테스트
-- **git**: `git show pending`
+- **git**: `git show 175eb41`
 - **범위**: ai-service / knowledge
 - **요약**: knowledge 8개→14개(조각 382→469): 09 FAQ(31문)·10 용어집(별칭)·11 단계별 사용법(12가지)·12 문제 해결(21가지)·13 공지·문의·신고·알림·14 업데이트 이력 신설, 01(테마·홈 화면 추가·후원·버전)·03(PNG 등급별 파일)·05(족보 16종 전부)·07 보강. 화면 문구·서버 응답을 코드로 확인해 작성. tests/test_knowledge_sync.py 가 확률·포인트·족보 배수·한도·출석·퀴즈 상금표를 코드와 비교하며 지식에 파이브 플러시(배수 10)가 빠져 있던 것을 발견.
 - **주요 파일**: `ai-service/knowledge/*.md`, `ai-service/tests/test_knowledge_sync.py`
