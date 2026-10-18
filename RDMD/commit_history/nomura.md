@@ -422,7 +422,7 @@
 | 391 | 2026-10-18 | [`dac0947`](#dac0947) | docs(ai-service): Ollama gemma4:12b·ChromaDB·bge-m3 반영 — README·기능 문서·기록 02·배포/보안/개발 가이드·AI 스킬 4종 |
 | 392 | 2026-10-18 | [`dd8dd6c`](#dd8dd6c) | fix(ai-service): .env 같은 줄 뒤 주석(값   # 설명)을 값으로 읽어 임베딩 모델명·keep_alive 가 깨지던 문제 수정 |
 | 393 | 2026-10-18 | [`4aa948d`](#4aa948d) | docs(ai-service): .env 주석 버그 발견·수정 내용 기록 |
-| 394 | 2026-10-18 | [`pending`](#pending394) | fix(ai): 로컬 LLM 이 느릴 때 Express 45초 제한에 걸려 503 이 나던 문제 — 대기 시간을 설정으로(기본 3분, 0 이면 제한 없음) |
+| 394 | 2026-10-18 | [`fe12516`](#fe12516) | fix(ai): 로컬 LLM 이 느릴 때 Express 45초 제한에 걸려 503 이 나던 문제 — 대기 시간을 설정으로(기본 3분, 0 이면 제한 없음) |
 
 ---
 
@@ -7591,15 +7591,15 @@
 
 ---
 
-<a id="pending394"></a>
+<a id="fe12516"></a>
 
-### 394. 2026-10-18 — `pending`
+### 394. 2026-10-18 — `fe12516`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `fe12516`
+- **hash (full)**: `fe1251664599e45aca352ecd44550e90ef35fd07`
 - **author**: nomura
 - **message**: fix(ai): 로컬 LLM 이 느릴 때 Express 45초 제한에 걸려 503 이 나던 문제 — 대기 시간을 설정으로(기본 3분, 0 이면 제한 없음)
-- **git**: `git show pending`
+- **git**: `git show fe12516`
 - **범위**: backend + ai-service / 타임아웃
 - **요약**: aiRoutes.js 의 AI 대기 제한을 AI_TIMEOUT_MS(기본 180000ms, 0 이면 제한 없음)로, ai-service 의 Ollama 호출 제한을 OLLAMA_TIMEOUT(기본 180초, 0/off 이면 None)으로 바꾸고 채팅·임베딩 클라이언트에 적용. .env.example 두 곳, 설정 테스트 추가(24개 통과). 재시작 후 긴 목록 질문 31초·보통 4~7초에 200 응답.
 - **주요 파일**: `backend/routes/aiRoutes.js`, `backend/.env.example`, `ai-service/app/config.py`, `ai-service/app/guidans_Chat/service/{llm,embeddings}.py`, `ai-service/.env.example`, `ai-service/tests/test_service.py`
