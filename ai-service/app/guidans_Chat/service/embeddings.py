@@ -25,5 +25,5 @@ def make_embeddings(settings: Settings) -> OllamaEmbeddings:
         model=settings.embed_model,
         base_url=settings.ollama_base_url,
         keep_alive=keep_alive_seconds(settings.ollama_keep_alive),
-        client_kwargs={"timeout": 60},
+        client_kwargs={"timeout": settings.ollama_timeout},
     )

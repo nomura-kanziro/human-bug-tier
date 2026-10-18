@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 393 |
+| **커밋 수** | 394 |
 | **기간** | 2026-03-20 ~ 2026-10-18 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -422,6 +422,7 @@
 | 391 | 2026-10-18 | [`dac0947`](#dac0947) | docs(ai-service): Ollama gemma4:12b·ChromaDB·bge-m3 반영 — README·기능 문서·기록 02·배포/보안/개발 가이드·AI 스킬 4종 |
 | 392 | 2026-10-18 | [`dd8dd6c`](#dd8dd6c) | fix(ai-service): .env 같은 줄 뒤 주석(값   # 설명)을 값으로 읽어 임베딩 모델명·keep_alive 가 깨지던 문제 수정 |
 | 393 | 2026-10-18 | [`4aa948d`](#4aa948d) | docs(ai-service): .env 주석 버그 발견·수정 내용 기록 |
+| 394 | 2026-10-18 | [`pending`](#pending394) | fix(ai): 로컬 LLM 이 느릴 때 Express 45초 제한에 걸려 503 이 나던 문제 — 대기 시간을 설정으로(기본 3분, 0 이면 제한 없음) |
 
 ---
 
@@ -7584,6 +7585,24 @@
 - **범위**: docs / AI 서비스
 - **요약**: 02 기록에 .env 같은 줄 주석 버그(증상·원인·발견 경로·수정)를 추가하고 테스트 수 갱신, ai-service README 에 .env.example 를 그대로 복사해도 된다는 안내.
 - **주요 파일**: `RDMD/ai/02-ollama-chromadb-record.md`, `ai-service/README.md`
+- **관련 RDMD**: `RDMD/ai/02-ollama-chromadb-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending394"></a>
+
+### 394. 2026-10-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: fix(ai): 로컬 LLM 이 느릴 때 Express 45초 제한에 걸려 503 이 나던 문제 — 대기 시간을 설정으로(기본 3분, 0 이면 제한 없음)
+- **git**: `git show pending`
+- **범위**: backend + ai-service / 타임아웃
+- **요약**: aiRoutes.js 의 AI 대기 제한을 AI_TIMEOUT_MS(기본 180000ms, 0 이면 제한 없음)로, ai-service 의 Ollama 호출 제한을 OLLAMA_TIMEOUT(기본 180초, 0/off 이면 None)으로 바꾸고 채팅·임베딩 클라이언트에 적용. .env.example 두 곳, 설정 테스트 추가(24개 통과). 재시작 후 긴 목록 질문 31초·보통 4~7초에 200 응답.
+- **주요 파일**: `backend/routes/aiRoutes.js`, `backend/.env.example`, `ai-service/app/config.py`, `ai-service/app/guidans_Chat/service/{llm,embeddings}.py`, `ai-service/.env.example`, `ai-service/tests/test_service.py`
 - **관련 RDMD**: `RDMD/ai/02-ollama-chromadb-record.md`
 
 [▲ 목차로](#목차)

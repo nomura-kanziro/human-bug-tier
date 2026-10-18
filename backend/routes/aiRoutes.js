@@ -14,7 +14,11 @@ const getClientIp = require('../utils/getClientIp');
 const router = express.Router();
 
 const AI_URL = (process.env.AI_SERVICE_URL || 'http://127.0.0.1:8000').replace(/\/+$/, '');
-const TIMEOUT_MS = 45 * 1000;
+// AI 서비스를 기다리는 최대 시간. 로컬 LLM(Ollama)은 GPU 상황에 따라 한 답에 수십 초가 걸려 예전 45초 제한에 자주 걸렸다(503).
+// 기본 3분, AI_TIMEOUT_MS=0 이면 제한을 두지 않는다(Node 의 연결 기본 제한 5분은 남는다). 단위 ms.
+const TIMEOUT_MS = process.env.AI_TIMEOUT_MS === undefined || process.env.AI_TIMEOUT_MS === ''
+  ? 180 * 1000
+  : Math.max(0, Number(process.env.AI_TIMEOUT_MS) || 0);
 const MAX_MESSAGE = 500;
 const MAX_HISTORY = 12;
 const MAX_HISTORY_CHARS = 2000;
@@ -47,7 +51,11 @@ setInterval(() => {
 async function callAi(path, init = {}) {
   const headers = { 'Content-Type': 'application/json', ...(init.headers || {}) };
   if (process.env.AI_SERVICE_KEY) headers['X-AI-Key'] = process.env.AI_SERVICE_KEY;
-  const res = await fetch(`${AI_URL}${path}`, { ...init, headers, signal: AbortSignal.timeout(TIMEOUT_MS) });
+  const res = await fetch(`${AI_URL}${path}`, {
+    ...init,
+    headers,
+    ...(TIMEOUT_MS > 0 ? { signal: AbortSignal.timeout(TIMEOUT_MS) } : {}),
+  });
   const data = await res.json().catch(() => ({}));
   return { status: res.status, data };
 }

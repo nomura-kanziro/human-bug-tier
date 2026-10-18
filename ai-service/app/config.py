@@ -57,6 +57,20 @@ def _int(env_key: str, default: int, low: int, high: int) -> int:
     return max(low, min(high, value))
 
 
+def _timeout(env_key: str, default: int) -> float | None:
+    """초 단위. 0 이하(또는 'off')면 None = 제한 없음."""
+    raw = os.environ.get(env_key, "").strip().lower()
+    if not raw:
+        return float(default)
+    if raw in ("off", "none", "false"):
+        return None
+    try:
+        value = float(raw)
+    except ValueError:
+        return float(default)
+    return value if value > 0 else None
+
+
 def _bool(env_key: str, default: bool) -> bool:
     raw = os.environ.get(env_key, "").strip().lower()
     if not raw:
@@ -73,6 +87,7 @@ class Settings:
     ollama_model: str           # 생성 모델(기본 gemma4:12b — 12GB GPU)
     ollama_num_ctx: int         # Ollama 컨텍스트 길이(프롬프트가 3~4천 토큰이라 8192 이상 필요)
     ollama_keep_alive: str      # 모델을 메모리에 붙들어 두는 시간(첫 호출 지연 방지)
+    ollama_timeout: float | None  # Ollama 응답을 기다리는 최대 시간(초). None 이면 제한 없음(OLLAMA_TIMEOUT=0)
     anthropic_api_key: str
     anthropic_model: str
     # --- 임베딩 · 벡터 검색(ChromaDB) ---
@@ -115,6 +130,7 @@ def load_settings() -> Settings:
         ollama_model=os.environ.get("OLLAMA_MODEL", "gemma4:12b").strip() or "gemma4:12b",
         ollama_num_ctx=_int("OLLAMA_NUM_CTX", 8192, 2048, 65536),
         ollama_keep_alive=os.environ.get("OLLAMA_KEEP_ALIVE", "30m").strip() or "30m",
+        ollama_timeout=_timeout("OLLAMA_TIMEOUT", 180),
         anthropic_api_key=os.environ.get("ANTHROPIC_API_KEY", "").strip(),
         # 예전 변수 AI_MODEL 도 받는다(Claude 모델 이름이었다)
         anthropic_model=(os.environ.get("ANTHROPIC_MODEL") or os.environ.get("AI_MODEL") or "claude-sonnet-5-5").strip(),

@@ -26,7 +26,7 @@ def make_llm(settings: Settings) -> BaseChatModel | None:
             temperature=0.2,           # 사실 안내 봇이라 낮게
             reasoning=False,           # ★ 생각 모드 끄기(위 설명)
             keep_alive=settings.ollama_keep_alive,
-            client_kwargs={"timeout": 60},
+            client_kwargs={"timeout": settings.ollama_timeout},   # 느린 GPU 에서도 끊기지 않게(기본 180초, 0 이면 제한 없음)
         )
     if settings.llm_provider == "anthropic" and settings.anthropic_api_key:
         from langchain_anthropic import ChatAnthropic

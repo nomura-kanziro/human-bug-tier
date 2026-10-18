@@ -160,3 +160,19 @@ def test_dotenv_inline_comments_are_stripped(tmp_path, monkeypatch):
     assert _os.environ["T_QUOTED"] == "a # b" and _os.environ["T_HASH"] == "abc#def" and _os.environ["T_EMPTY"] == ""
     for k in ("T_MODEL", "T_KEEP", "T_QUOTED", "T_HASH", "T_EMPTY"):
         _os.environ.pop(k, None)
+
+
+def test_ollama_timeout_setting(monkeypatch):
+    """느린 로컬 GPU 에서 호출이 끊기지 않도록 시간 제한을 설정하고, 0/off 면 제한 없음(None)."""
+    from app.config import load_settings as ls
+
+    monkeypatch.delenv("OLLAMA_TIMEOUT", raising=False)
+    assert ls().ollama_timeout == 180.0
+    monkeypatch.setenv("OLLAMA_TIMEOUT", "0")
+    assert ls().ollama_timeout is None
+    monkeypatch.setenv("OLLAMA_TIMEOUT", "off")
+    assert ls().ollama_timeout is None
+    monkeypatch.setenv("OLLAMA_TIMEOUT", "90")
+    assert ls().ollama_timeout == 90.0
+    monkeypatch.setenv("OLLAMA_TIMEOUT", "abc")
+    assert ls().ollama_timeout == 180.0
