@@ -23,6 +23,7 @@ from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_core.messages import AIMessage, BaseMessage, HumanMessage, SystemMessage
 from langgraph.graph import END, START, StateGraph
 
+from .doc_answer import build_doc_answer_with_sources
 from .knowledge import Character, KnowledgeBase
 from .prompts import SYSTEM_PROMPT, build_context_block
 
@@ -30,10 +31,11 @@ log = logging.getLogger("ai-service.graph")
 
 # 사이트와 관계있는 질문인지 가르는 기준 — 캐릭터·티어 언급이 없을 때, BM25 최고 점수나 벡터 최고 유사도(bge-m3,
 # 코사인) 중 하나라도 넘어야 한다. 둘 다 낮으면 "사이트와 관계없는 질문"으로 LLM 없이 정해진 답을 한다.
-# bge-m3 로 실제 측정(2026-10-18): 범위 밖 질문 0.35~0.49, 사이트 질문 0.52 이상 → 0.50. 벡터를 못 쓸 때만 BM25 기준을 쓴다
+# bge-m3 로 실제 측정(2026-10-18, 지식 469조각): 범위 밖 질문 0.37~0.50, 사이트 질문 0.53 이상 → 0.52. 벡터를 못 쓸 때만 BM25 기준을 쓴다
 # (BM25 는 "어때·알려줘" 같은 흔한 말에도 점수가 나와 범위 밖 질문을 못 거른다).
 MIN_RELEVANCE = 10.0
-MIN_VECTOR_SIM = 0.50
+MIN_VECTOR_SIM = 0.52
+MIN_LEXICAL_CLEAN = 12.0   # 벡터를 못 쓸 때(AI 서버 OFF): 군더더기 말을 뺀 질문의 BM25 점수 기준(실측으로 정함 — scripts/calibrate_relevance.py)
 
 _GREETING = re.compile(r"^\s*(안녕|하이|ㅎㅇ|hello|hi|반가워|헬로)[\s!~.?ㅎㅋ]*$", re.IGNORECASE)
 # 지시 무시·프롬프트 공개 요구 같은 뻔한 시도는 LLM 에 보내지 않고 바로 거절한다(비용 0, 모델이 넘어갈 여지 없음)
@@ -54,13 +56,15 @@ class ChatState(TypedDict, total=False):
     docs: list[Document]
     best_score: float
     best_vector: float
+    best_clean: float
     used_vector: bool
     answer: str
     mode: Literal["llm", "fallback", "fixed"]
     sources: list[str]
 
 
-def build_graph(kb: KnowledgeBase, llm: BaseChatModel | None, *, top_k: int = 5, history_turns: int = 6, searcher=None):
+def build_graph(kb: KnowledgeBase, llm: BaseChatModel | None, *, top_k: int = 5, history_turns: int = 6, searcher=None, gate=None):
+    """gate: LlmStatus 같은 객체(is_on() · failed() · succeeded()). 없으면 LLM 이 있으면 항상 시도한다."""
     def analyze(state: ChatState) -> ChatState:
         q = state["question"]
         if _GREETING.match(q):
@@ -74,10 +78,11 @@ def build_graph(kb: KnowledgeBase, llm: BaseChatModel | None, *, top_k: int = 5,
         q = state["question"]
         if searcher is not None:   # BM25 + 벡터(ChromaDB) 하이브리드
             result = searcher.search(q, top_k)
-            hits, best, best_vec, used_vec = result.hits, result.lexical_best, result.vector_best, result.used_vector
+            hits, best, best_vec, used_vec, best_clean = result.hits, result.lexical_best, result.vector_best, result.used_vector, result.lexical_clean
         else:                      # BM25 만
             hits = kb.retriever.search(q, top_k)
             best, best_vec, used_vec = (hits[0][1] if hits else 0.0), 0.0, False
+            best_clean = best
         found = {c.plain_name for c in state.get("characters", [])}
         # 캐릭터를 찾았으면, 이름이 비슷해 걸린 다른 캐릭터 문서는 뺀다(혼동 방지)
         if found:
@@ -89,7 +94,7 @@ def build_graph(kb: KnowledgeBase, llm: BaseChatModel | None, *, top_k: int = 5,
             for d in kb.documents:
                 if d.metadata.get("kind") == "tier" and d.metadata.get("tier") == t and d not in docs:
                     docs.insert(0, d)
-        return {"docs": docs, "best_score": best, "best_vector": best_vec, "used_vector": used_vec}
+        return {"docs": docs, "best_score": best, "best_vector": best_vec, "best_clean": best_clean, "used_vector": used_vec}
 
     def route_after_retrieve(state: ChatState) -> str:
         if state.get("characters") or state.get("tier_numbers"):
@@ -97,7 +102,8 @@ def build_graph(kb: KnowledgeBase, llm: BaseChatModel | None, *, top_k: int = 5,
         if state.get("used_vector"):
             relevant = state.get("best_vector", 0) >= MIN_VECTOR_SIM
         else:
-            relevant = state.get("best_score", 0) >= MIN_RELEVANCE
+            # 벡터를 못 쓰는 상태(AI 서버 OFF 등)에서는 군더더기 말을 뺀 BM25 점수로 판단한다(searcher 없이 BM25 만 쓸 땐 기존 기준)
+            relevant = state.get("best_clean", 0) >= (MIN_LEXICAL_CLEAN if searcher is not None else MIN_RELEVANCE)
         return "generate" if relevant else "out_of_scope"
 
     def greet(state: ChatState) -> ChatState:
@@ -129,7 +135,8 @@ def build_graph(kb: KnowledgeBase, llm: BaseChatModel | None, *, top_k: int = 5,
             sources = _unique([f"공식 티어표 › {c.tier}티어" for c in chars] + [d.metadata.get("title", "") for d in docs[:2] if d.metadata.get("kind") == "guide"])
         else:
             sources = _unique([d.metadata.get("title", "") for d in docs[:3]])
-        if llm is not None:
+        # AI 서버가 꺼져 있다고 알려져 있으면 LLM 을 부르지 않고(기다리지 않고) 바로 지식 문서 답으로 간다
+        if llm is not None and (gate is None or gate.is_on()):
             try:
                 messages: list[BaseMessage] = [SystemMessage(SYSTEM_PROMPT)]
                 for turn in (state.get("history") or [])[-history_turns:] if history_turns else []:
@@ -138,10 +145,16 @@ def build_graph(kb: KnowledgeBase, llm: BaseChatModel | None, *, top_k: int = 5,
                 reply = llm.invoke(messages)
                 text = _text_of(reply.content).strip()
                 if text:
+                    if gate is not None:
+                        gate.succeeded()
                     return {"answer": text, "mode": "llm", "sources": sources}
             except Exception as err:  # noqa: BLE001 — 어떤 실패든 문서 답으로 대신한다
                 log.warning("LLM 호출 실패, 문서 답으로 대신함: %s", type(err).__name__)
-        return {"answer": _fallback_answer(facts, docs), "mode": "fallback", "sources": sources}
+                if gate is not None:
+                    gate.failed()
+        answer, shown = build_doc_answer_with_sources(state["question"], facts, docs)
+        # 문서 답에서는 실제로 보여 준 문서만 출처로 올린다(캐릭터 질문은 위에서 정한 티어표 출처 그대로)
+        return {"answer": answer, "mode": "fallback", "sources": sources if chars else shown}
 
     graph = StateGraph(ChatState)
     graph.add_node("analyze", analyze)
@@ -178,21 +191,3 @@ def _text_of(content: Any) -> str:
     if isinstance(content, list):  # 블록 리스트 응답
         return "".join(b.get("text", "") if isinstance(b, dict) else str(b) for b in content)
     return str(content)
-
-
-def _fallback_answer(facts: list[str], docs: list[Document]) -> str:
-    """LLM 없이 근거만으로 만드는 답 — 캐릭터 사실을 먼저, 그다음 가장 관련 있는 문서 한두 개의 본문."""
-    parts: list[str] = []
-    if facts:
-        # 캐릭터 질문은 정확한 티어 사실만으로 충분하다
-        parts.append("\n".join(f"• {f}" for f in facts))
-        parts.append("메뉴 \"티어표\"에서 해당 티어 화면을 열면 같은 등급의 다른 캐릭터도 볼 수 있어요.")
-        return "\n\n".join(parts)
-    for d in docs[:2]:
-        body = d.page_content
-        if body.startswith("["):
-            body = body.split("\n", 1)[1] if "\n" in body else body
-        parts.append(f"📄 {d.metadata.get('title', '')}\n{body.strip()[:700]}")
-    if not parts:
-        return "관련 정보를 찾지 못했어요. 푸터의 \"문의하기\"로 남겨 주세요."
-    return "\n\n".join(parts)

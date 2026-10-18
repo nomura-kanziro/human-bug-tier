@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, Request
 from fastapi.concurrency import run_in_threadpool
 
 from ...deps import check_key
-from ..schema import ChatRequest, ChatResponse, QuestionsResponse
+from ..schema import ChatRequest, ChatResponse, QuestionsResponse, StatusResponse
 from ..service.chat_service import GuideChatService
 
 router = APIRouter(dependencies=[Depends(check_key)])
@@ -19,6 +19,12 @@ def get_service(request: Request) -> GuideChatService:
     if service is None:
         raise HTTPException(503, "AI 서비스가 아직 준비되지 않았습니다.")
     return service
+
+
+@router.get("/status", response_model=StatusResponse)
+def status(service: GuideChatService = Depends(get_service)):
+    """AI 서버(LLM) ON/OFF — `/ai` 화면이 "AI 서버 OFF 상태 (사이트의 정보내용을 끌어다 대답합니다.)" 알림을 띄우는 근거."""
+    return StatusResponse(**service.status_info())
 
 
 @router.get("/questions", response_model=QuestionsResponse)

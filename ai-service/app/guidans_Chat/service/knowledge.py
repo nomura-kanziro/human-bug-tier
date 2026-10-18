@@ -42,6 +42,32 @@ def compact(text: str) -> str:
     return re.sub(r"[\s\W_]+", "", normalize(text))
 
 
+# 질문 끝말·군말 — BM25 가 "어때·알려줘" 같은 흔한 말에도 점수를 주어 범위 밖 질문을 못 거르므로, 관련성 판단용 검색에서는 뺀다
+_QUESTION_WORDS = frozenset((
+    "알려줘", "알려", "알려주세요", "알려줄래", "어때", "어떻게", "어떤", "뭐야", "뭔가요", "뭐에요", "무엇", "해줘", "해주세요", "줘", "좀",
+    "있어", "있나요", "있어요", "가능", "방법", "하는", "하려면", "되나요", "돼요", "인가요", "이야", "야", "어디", "언제", "몇", "얼마", "얼마야",
+    "오늘", "지금", "그냥", "혹시", "제발", "나", "내", "저", "우리", "이거", "저거", "그거", "뭐", "왜", "누가", "누구", "맞아", "맞나요",
+    "싶어", "싶어요", "하고", "해요", "할까", "할래", "해", "봐", "보여줘", "보여", "추천해줘", "추천",
+    "하면", "하면은", "되면", "할때", "때", "법", "줘요", "주나요", "주나", "받나요", "되요", "되나",
+))
+
+
+def strip_question_words(text: str) -> str:
+    """질문에서 군더더기 말을 뺀 문자열 — 남는 단어가 실제 주제어다(없으면 빈 문자열)."""
+    words = _PUNCT.sub(" ", normalize(text)).split()
+    keep = []
+    for w in words:
+        base = w
+        for j in _JOSA:
+            if len(w) > len(j) + 1 and w.endswith(j):
+                base = w[: -len(j)]
+                break
+        if w in _QUESTION_WORDS or base in _QUESTION_WORDS:
+            continue
+        keep.append(w)
+    return " ".join(keep)
+
+
 def tokenize(text: str) -> list[str]:
     words = _PUNCT.sub(" ", normalize(text)).split()
     tokens: list[str] = []

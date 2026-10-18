@@ -22,9 +22,19 @@ class ChatRequest(BaseModel):
 
 class ChatResponse(BaseModel):
     answer: str
-    mode: Literal["llm", "fallback", "fixed"]
+    mode: Literal["llm", "fallback", "fixed"]   # llm = AI 가 답함 · fallback = AI 서버가 꺼져 지식 문서에서 뽑은 답 · fixed = 정해진 문구
     sources: list[str]
     characters: list[dict]
+    ai: Literal["on", "off"] = "on"             # 이 답을 만들 때 AI 서버(LLM) 상태
+
+
+class StatusResponse(BaseModel):
+    ai: Literal["on", "off"]
+    reason: str = ""                            # off 일 때: unreachable | model_missing | disabled | no_key
+    provider: str
+    model: str | None = None
+    vector_ready: bool = False
+    documents: int = 0
 
 
 class QuestionsResponse(BaseModel):

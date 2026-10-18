@@ -37,9 +37,9 @@ def test_character_lookup_full_and_partial(kb):
 
 def test_retrieval_finds_rules(kb):
     top = kb.retriever.search("출석체크 7일차 포인트", 1)[0][0]
-    assert "50" in top.page_content and top.metadata["source"] == "07-account-mypage.md"
-    top = kb.retriever.search("포커 족보 배수", 1)[0][0]
-    assert "로얄 스트레이트 플러시" in top.page_content
+    assert "50" in top.page_content and top.metadata["source"] in ("07-account-mypage.md", "09-faq.md")   # 본문 또는 FAQ
+    top3 = [d for d, _ in kb.retriever.search("포커 족보 배수", 3)]      # 단계별 설명·FAQ 도 상위에 올 수 있어 상위 3개 안에서 본다
+    assert any("로얄 스트레이트 플러시" in d.page_content for d in top3)
 
 
 def test_graph_fallback_without_llm(kb):
@@ -125,8 +125,9 @@ def test_relevance_uses_vector_similarity_when_available(kb):
     from app.guidans_Chat.service.retrieval import SearchResult
 
     class FakeSearcher:
-        def __init__(self, vector_best, used=True):
-            self.r = SearchResult(hits=[], lexical_best=15.0, vector_best=vector_best, used_vector=used)
+        def __init__(self, vector_best, used=True, clean=0.0):
+            # 흔한 말 때문에 BM25 가 15 점이어도(lexical_best) 군더더기를 뺀 점수(lexical_clean)는 0 인 범위 밖 질문
+            self.r = SearchResult(hits=[], lexical_best=15.0, lexical_clean=clean, vector_best=vector_best, used_vector=used)
 
         def search(self, q, k):
             return self.r
@@ -135,8 +136,11 @@ def test_relevance_uses_vector_similarity_when_available(kb):
     assert far["mode"] == "fixed"       # BM25 가 15 점이어도 벡터가 멀면 범위 밖
     near = build_graph(kb, None, searcher=FakeSearcher(0.60)).invoke({"question": "출첵 몇 점 줘?", "history": []})
     assert near["mode"] == "fallback"
-    no_vec = build_graph(kb, None, searcher=FakeSearcher(0.0, used=False)).invoke({"question": "오늘 날씨 어때?", "history": []})
-    assert no_vec["mode"] == "fallback"  # 벡터를 못 쓰면 BM25 기준(기존 동작)
+    # 벡터를 못 쓰면(AI 서버 OFF) 군더더기를 뺀 BM25 점수로 판단한다
+    no_vec_far = build_graph(kb, None, searcher=FakeSearcher(0.0, used=False, clean=3.0)).invoke({"question": "오늘 날씨 어때?", "history": []})
+    assert no_vec_far["mode"] == "fixed"
+    no_vec_near = build_graph(kb, None, searcher=FakeSearcher(0.0, used=False, clean=30.0)).invoke({"question": "출석체크 포인트", "history": []})
+    assert no_vec_near["mode"] == "fallback"
 
 
 def test_dotenv_inline_comments_are_stripped(tmp_path, monkeypatch):

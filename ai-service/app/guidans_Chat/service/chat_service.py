@@ -20,6 +20,7 @@ from .embeddings import make_embeddings
 from .graph import build_graph
 from .knowledge import KnowledgeBase, build_knowledge_base
 from .llm import make_llm
+from .llm_status import LlmStatus
 from .questions import random_questions
 from .retrieval import HybridSearcher
 
@@ -35,6 +36,7 @@ class GuideChatService:
         self._embeddings_override = embeddings
         self.kb: KnowledgeBase | None = None
         self._graph = None
+        self.llm_status = LlmStatus(settings)     # AI 서버(Ollama) ON/OFF
         self.vector_info: dict = {"enabled": settings.vector_enabled, "ready": False}
         self.reload()
 
@@ -66,8 +68,10 @@ class GuideChatService:
         s = self.settings
         kb = build_knowledge_base(s.knowledge_dir, s.tiers_json, k=s.top_k)
         repo, embed_query = self._build_vector_index(kb)
-        searcher = HybridSearcher(kb.retriever, repo, embed_query)
-        graph = build_graph(kb, make_llm(s), top_k=s.top_k, history_turns=s.history_turns, searcher=searcher)
+        # 임베딩도 Ollama 로 하므로, provider 가 ollama 이고 꺼져 있으면 벡터 검색을 시도조차 하지 않는다
+        vec_gate = self.llm_status.is_on if s.llm_provider == "ollama" else None
+        searcher = HybridSearcher(kb.retriever, repo, embed_query, available=vec_gate)
+        graph = build_graph(kb, make_llm(s), top_k=s.top_k, history_turns=s.history_turns, searcher=searcher, gate=self.llm_status)
         with self._lock:
             self.kb, self._graph = kb, graph
         self._warm_up()
@@ -99,8 +103,22 @@ class GuideChatService:
             "characters": len(kb.characters.characters) if kb else 0,
             "llm": s.llm_enabled,
             "provider": s.llm_provider,
+            "ai": self.llm_status.get().label,
             "model": s.model if s.llm_enabled else None,
             "vector": self.vector_info,
+        }
+
+    def status_info(self) -> dict:
+        """화면의 ON/OFF 알림용. 켜져 있는지 확인(10초 기억)해서 돌려준다."""
+        st = self.llm_status.get()
+        s = self.settings
+        return {
+            "ai": st.label,
+            "reason": st.reason,
+            "provider": s.llm_provider,
+            "model": s.model if s.llm_enabled else None,
+            "vector_ready": bool(self.vector_info.get("ready")),
+            "documents": len(self.kb.documents) if self.kb else 0,
         }
 
     def questions(self, count: int = 3) -> list[str]:
@@ -117,4 +135,5 @@ class GuideChatService:
             mode=result.get("mode", "fallback"),
             sources=result.get("sources", []),
             characters=[{"name": c.plain_name, "tier": c.tier, "grade": c.grade} for c in result.get("characters", [])],
+            ai="on" if self.llm_status.get().on else "off",
         )

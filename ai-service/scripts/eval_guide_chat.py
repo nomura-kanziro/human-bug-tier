@@ -8,12 +8,16 @@
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 import time
 from dataclasses import replace
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+# ⚠ 서비스(uvicorn)가 쓰는 ChromaDB 폴더를 이 스크립트가 같이 열면 두 프로세스가 같은 파일을 만져 서비스가 죽을 수 있다(실제로 겪음).
+# 그래서 스크립트는 따로 CHROMA_DIR(data/chroma-scripts)을 쓴다 — 처음 한 번 전체 임베딩(약 20초)이 더 걸린다.
+os.environ.setdefault("CHROMA_DIR", str(Path(__file__).resolve().parent.parent / "data" / "chroma-scripts"))
 
 from app.config import load_settings  # noqa: E402
 from app.guidans_Chat.schema import ChatRequest  # noqa: E402
