@@ -425,7 +425,7 @@
 | 394 | 2026-10-18 | [`fe12516`](#fe12516) | fix(ai): 로컬 LLM 이 느릴 때 Express 45초 제한에 걸려 503 이 나던 문제 — 대기 시간을 설정으로(기본 3분, 0 이면 제한 없음) |
 | 395 | 2026-10-18 | [`4f94b0e`](#4f94b0e) | docs(ai): 타임아웃 설정과 로컬 GPU 가 느려 503 이 났던 원인·조치 기록 |
 | 396 | 2026-10-18 | [`d18a7bb`](#d18a7bb) | feat(ai-service): AI 서버(Ollama) ON/OFF 감지 — 꺼져 있으면 LLM 을 기다리지 않고 지식 문서 문장 그대로 답하기 |
-| 397 | 2026-10-18 | [`pending`](#pending397) | feat(ai): /ai 화면에 AI 서버 ON/OFF 알림("AI 서버 OFF 상태 (사이트의 정보내용을 끌어다 대답합니다.)") + Express /api/ai/status |
+| 397 | 2026-10-18 | [`a20dcd5`](#a20dcd5) | feat(ai): /ai 화면에 AI 서버 ON/OFF 알림("AI 서버 OFF 상태 (사이트의 정보내용을 끌어다 대답합니다.)") + Express /api/ai/status |
 
 ---
 
@@ -7648,15 +7648,15 @@
 
 ---
 
-<a id="pending397"></a>
+<a id="a20dcd5"></a>
 
-### 397. 2026-10-18 — `pending`
+### 397. 2026-10-18 — `a20dcd5`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `a20dcd5`
+- **hash (full)**: `a20dcd5e5789d0a3f98e7977a63a96f62fe20664`
 - **author**: nomura
 - **message**: feat(ai): /ai 화면에 AI 서버 ON/OFF 알림("AI 서버 OFF 상태 (사이트의 정보내용을 끌어다 대답합니다.)") + Express /api/ai/status
-- **git**: `git show pending`
+- **git**: `git show a20dcd5`
 - **범위**: backend + frontend / AI 알림
 - **요약**: aiRoutes.js 에 GET /api/ai/status(on|off|down)와 chat 응답의 ai 전달, aiApi.js fetchAiStatus, AiHelper.jsx 상단 알림 바(ON 초록·OFF 주황·down 빨강, 20초 주기·답이 오면 즉시 갱신·503 이면 down)와 OFF 배지 문구, ai-helper.css. 빌드 후 PC·모바일 Chrome 으로 ON/OFF 문구·배지 확인.
 - **주요 파일**: `backend/routes/aiRoutes.js`, `root-cloudflare/src/lib/aiApi.js`, `root-cloudflare/src/pages/AiHelper.jsx`, `root-cloudflare/src/styles/ai-helper.css`
