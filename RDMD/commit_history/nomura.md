@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 396 |
+| **커밋 수** | 397 |
 | **기간** | 2026-03-20 ~ 2026-10-18 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -425,6 +425,7 @@
 | 394 | 2026-10-18 | [`fe12516`](#fe12516) | fix(ai): 로컬 LLM 이 느릴 때 Express 45초 제한에 걸려 503 이 나던 문제 — 대기 시간을 설정으로(기본 3분, 0 이면 제한 없음) |
 | 395 | 2026-10-18 | [`4f94b0e`](#4f94b0e) | docs(ai): 타임아웃 설정과 로컬 GPU 가 느려 503 이 났던 원인·조치 기록 |
 | 396 | 2026-10-18 | [`d18a7bb`](#d18a7bb) | feat(ai-service): AI 서버(Ollama) ON/OFF 감지 — 꺼져 있으면 LLM 을 기다리지 않고 지식 문서 문장 그대로 답하기 |
+| 397 | 2026-10-18 | [`pending`](#pending397) | feat(ai): /ai 화면에 AI 서버 ON/OFF 알림("AI 서버 OFF 상태 (사이트의 정보내용을 끌어다 대답합니다.)") + Express /api/ai/status |
 
 ---
 
@@ -7641,6 +7642,24 @@
 - **범위**: ai-service / OFF 모드
 - **요약**: llm_status.py(Ollama /api/tags 확인·캐시·호출 실패 시 즉시 OFF), doc_answer.py(질문 주제어와 겹치는 줄만 골라 출처와 함께 보여 주는 문서 답, 보여 준 문서만 출처), graph.py 의 gate·refuse 이후 흐름, retrieval.py 의 available(OFF 면 임베딩도 시도 안 함)·lexical_clean, knowledge.py 군더더기 말 제거(strip_question_words)·짧은 이름 단어 단위 일치, GET /status·응답 ai 필드·/health ai, 범위 판단 기준(벡터 0.52·군말 뺀 BM25 12), scripts/dev_service.py(떼어서 띄우기)·calibrate_relevance.py, 점검 스크립트의 Chroma 폴더 분리. OFF 모드 테스트 13개 추가(42개 통과).
 - **주요 파일**: `ai-service/app/guidans_Chat/service/{llm_status,doc_answer,graph,retrieval,knowledge,chat_service}.py`, `ai-service/app/guidans_Chat/{router/chat_router,schema/chat,schema/__init__}.py`, `ai-service/scripts/*`, `ai-service/tests/{test_offline_mode,test_service}.py`, `ai-service/.gitignore`
+- **관련 RDMD**: `RDMD/ai/03-offline-doc-answer-knowledge-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending397"></a>
+
+### 397. 2026-10-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(ai): /ai 화면에 AI 서버 ON/OFF 알림("AI 서버 OFF 상태 (사이트의 정보내용을 끌어다 대답합니다.)") + Express /api/ai/status
+- **git**: `git show pending`
+- **범위**: backend + frontend / AI 알림
+- **요약**: aiRoutes.js 에 GET /api/ai/status(on|off|down)와 chat 응답의 ai 전달, aiApi.js fetchAiStatus, AiHelper.jsx 상단 알림 바(ON 초록·OFF 주황·down 빨강, 20초 주기·답이 오면 즉시 갱신·503 이면 down)와 OFF 배지 문구, ai-helper.css. 빌드 후 PC·모바일 Chrome 으로 ON/OFF 문구·배지 확인.
+- **주요 파일**: `backend/routes/aiRoutes.js`, `root-cloudflare/src/lib/aiApi.js`, `root-cloudflare/src/pages/AiHelper.jsx`, `root-cloudflare/src/styles/ai-helper.css`
 - **관련 RDMD**: `RDMD/ai/03-offline-doc-answer-knowledge-record.md`
 
 [▲ 목차로](#목차)

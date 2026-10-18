@@ -6,6 +6,9 @@ import { apiRequest } from './api';
 
 export const AI_MAX_MESSAGE = 500;
 
+// AI 서버 ON/OFF — { ai: 'on' | 'off' | 'down' }
+export const fetchAiStatus = () => apiRequest('/api/ai/status', { auth: false });
+
 export const fetchAiQuestions = () => apiRequest('/api/ai/questions', { auth: false });
 
 // history: [{ role: 'user' | 'assistant', content }] — 최근 대화만 보낸다(서버도 다시 자른다)

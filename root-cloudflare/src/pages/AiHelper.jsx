@@ -2,14 +2,24 @@
 //  - 답은 저장소 루트 ai-service/(FastAPI + LangChain + LangGraph)가 만든다. 화면은 /api/ai/* 만 부른다.
 //  - 대화는 이 탭(sessionStorage)에만 남고 서버에는 저장되지 않는다. "대화 지우기"로 비운다.
 //  - 추천 질문을 누르면 바로 물어본다. "다른 질문"은 새 3개를 받아 온다.
+//  - AI 서버(Ollama) ON/OFF 를 위에 알린다. OFF 면 "AI 서버 OFF 상태 (사이트의 정보내용을 끌어다 대답합니다.)" — 이때 답은
+//    ai-service/knowledge 의 지식 문서에서 그대로 뽑은 것이다. ai-service 자체가 꺼진 'down' 이면 답을 못 한다.
 import { useEffect, useRef, useState } from 'react';
-import { AI_MAX_MESSAGE, askAi, fetchAiQuestions } from '../lib/aiApi';
+import { AI_MAX_MESSAGE, askAi, fetchAiQuestions, fetchAiStatus } from '../lib/aiApi';
 import { isStaticPreview } from '../lib/api';
 import { LOGO_URL } from '../lib/paths';
 import '../styles/ai-helper.css';
 
 const STORE_KEY = 'hbtAiChat';
 const MAX_KEEP = 40; // 화면에 남겨 둘 최대 메시지 수
+const STATUS_POLL_MS = 20 * 1000; // AI 서버 ON/OFF 를 다시 확인하는 주기
+
+// 상단 알림 문구 — OFF 문구는 창시자 지정 그대로
+const STATUS_VIEW = {
+  on: { cls: 'is-on', text: 'AI 서버 ON' },
+  off: { cls: 'is-off', text: 'AI 서버 OFF 상태 (사이트의 정보내용을 끌어다 대답합니다.)' },
+  down: { cls: 'is-down', text: 'AI 서비스에 연결할 수 없어요. 잠시 뒤에 다시 시도해 주세요.' },
+};
 
 function loadChat() {
   try {
@@ -27,6 +37,7 @@ export default function AiHelper() {
   const [questions, setQuestions] = useState([]);
   const [qBusy, setQBusy] = useState(false);
   const [notice, setNotice] = useState('');
+  const [aiState, setAiState] = useState(null);   // 'on' | 'off' | 'down' | null(확인 전)
   const listRef = useRef(null);
 
   useEffect(() => { document.title = 'AI 도우미 | 휴버대 티어표'; }, []);
@@ -53,6 +64,24 @@ export default function AiHelper() {
 
   useEffect(() => { loadQuestions(); }, []);
 
+  // AI 서버 ON/OFF — 들어올 때 한 번, 그 뒤 주기적으로(탭이 보일 때만)
+  useEffect(() => {
+    if (isStaticPreview()) return undefined;
+    let alive = true;
+    const check = async () => {
+      if (document.hidden) return;
+      try {
+        const res = await fetchAiStatus();
+        if (alive) setAiState(res.ok && ['on', 'off', 'down'].includes(res.data.ai) ? res.data.ai : 'down');
+      } catch {
+        if (alive) setAiState('down');
+      }
+    };
+    check();
+    const timer = setInterval(check, STATUS_POLL_MS);
+    return () => { alive = false; clearInterval(timer); };
+  }, []);
+
   const send = async (text) => {
     const message = String(text || '').trim();
     if (!message || busy) return;
@@ -69,7 +98,9 @@ export default function AiHelper() {
       const res = await askAi(message, history);
       if (res.ok) {
         setMessages((cur) => [...cur, { role: 'assistant', content: res.data.answer, mode: res.data.mode, sources: res.data.sources || [] }]);
+        if (res.data.ai === 'on' || res.data.ai === 'off') setAiState(res.data.ai);   // 답이 온 순간의 상태로 바로 갱신
       } else {
+        if (res.status === 503) setAiState('down');
         setMessages((cur) => [...cur, { role: 'assistant', content: res.data?.error || '답을 가져오지 못했어요.', error: true }]);
       }
     } catch {
@@ -101,6 +132,13 @@ export default function AiHelper() {
         </div>
       </div>
 
+      {aiState && (
+        <div className={`ai-status ${STATUS_VIEW[aiState].cls}`} role="status" aria-live="polite">
+          <span className="ai-status-dot" aria-hidden="true" />
+          {STATUS_VIEW[aiState].text}
+        </div>
+      )}
+
       <section className="ai-suggest" aria-label="추천 질문">
         <div className="ai-suggest-head">
           <strong>💡 이런 걸 물어볼 수 있어요</strong>
@@ -129,7 +167,7 @@ export default function AiHelper() {
               {m.role === 'assistant' && <img src={LOGO_URL} alt="" className="ai-avatar" width="30" height="30" />}
               <div className="ai-bubble">
                 <div className="ai-text">{m.content}</div>
-                {m.mode === 'fallback' && <span className="ai-badge">AI 연결 없이 사이트 문서에서 찾은 답이에요</span>}
+                {m.mode === 'fallback' && <span className="ai-badge">AI 서버 OFF — 사이트 지식 문서에서 그대로 가져온 답이에요</span>}
                 {m.sources?.length > 0 && (
                   <div className="ai-sources">참고: {m.sources.join(' · ')}</div>
                 )}

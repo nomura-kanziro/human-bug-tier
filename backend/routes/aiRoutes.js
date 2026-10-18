@@ -6,7 +6,8 @@
 //   - AI 서비스는 서버 안쪽(127.0.0.1:8000)에만 열어 두고, Cloudflare Pages 의 /api 프록시도 그대로 쓴다.
 //   - 요청 수 제한(IP 기준)과 입력 길이 검사를 여기서 먼저 해 LLM 비용·남용을 막는다.
 //   - AI_SERVICE_KEY 를 X-AI-Key 헤더로 붙여 보내, AI 서비스는 이 서버가 보낸 요청만 받는다.
-// AI 서비스가 꺼져 있으면 503 으로 "잠시 쉬는 중" 안내만 하고, 사이트의 다른 기능에는 영향이 없다.
+// AI 서버(Ollama)만 꺼져 있으면 ai-service 가 지식 문서(knowledge/)에서 뽑은 답(mode 'fallback')을 돌려준다.
+// ai-service 자체가 꺼져 있으면 503 으로 "잠시 쉬는 중" 안내만 하며, 어느 경우든 사이트의 다른 기능에는 영향이 없다.
 // 대화 내용은 저장하지 않는다(서버·DB 어디에도 남기지 않음).
 const express = require('express');
 const getClientIp = require('../utils/getClientIp');
@@ -62,6 +63,18 @@ async function callAi(path, init = {}) {
 
 const UNAVAILABLE = { error: 'AI 도우미가 잠시 쉬는 중이에요. 조금 뒤에 다시 시도해 주세요.', unavailable: true };
 
+// GET /api/ai/status — AI 서버(LLM, Ollama) ON/OFF. 화면이 "AI 서버 OFF 상태 (사이트의 정보내용을 끌어다 대답합니다.)" 알림을 띄우는 근거.
+//   { ai: 'on' | 'off' | 'down' } — 'down' 은 ai-service 자체가 꺼져 답을 못 하는 상태(OFF 는 지식 문서로 계속 답한다)
+router.get('/status', async (req, res) => {
+  try {
+    const { status, data } = await callAi('/status');
+    if (status !== 200) return res.json({ ok: true, ai: 'down' });
+    res.json({ ok: true, ai: data.ai === 'on' ? 'on' : 'off', reason: data.reason || '', model: data.model || null, vectorReady: Boolean(data.vector_ready) });
+  } catch (err) {
+    res.json({ ok: true, ai: 'down' });
+  }
+});
+
 // GET /api/ai/questions — 랜덤 추천 질문 3개
 router.get('/questions', async (req, res) => {
   try {
@@ -101,6 +114,7 @@ router.post('/chat', async (req, res) => {
       ok: true,
       answer: String(data.answer || ''),
       mode: data.mode || 'fallback',
+      ai: data.ai === 'off' ? 'off' : 'on',
       sources: Array.isArray(data.sources) ? data.sources.slice(0, 6) : [],
     });
   } catch (err) {
