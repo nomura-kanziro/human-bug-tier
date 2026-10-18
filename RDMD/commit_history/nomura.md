@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 397 |
+| **커밋 수** | 398 |
 | **기간** | 2026-03-20 ~ 2026-10-18 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -426,6 +426,7 @@
 | 395 | 2026-10-18 | [`4f94b0e`](#4f94b0e) | docs(ai): 타임아웃 설정과 로컬 GPU 가 느려 503 이 났던 원인·조치 기록 |
 | 396 | 2026-10-18 | [`d18a7bb`](#d18a7bb) | feat(ai-service): AI 서버(Ollama) ON/OFF 감지 — 꺼져 있으면 LLM 을 기다리지 않고 지식 문서 문장 그대로 답하기 |
 | 397 | 2026-10-18 | [`a20dcd5`](#a20dcd5) | feat(ai): /ai 화면에 AI 서버 ON/OFF 알림("AI 서버 OFF 상태 (사이트의 정보내용을 끌어다 대답합니다.)") + Express /api/ai/status |
+| 398 | 2026-10-18 | [`pending`](#pending398) | feat(ai-service): knowledge 고도화 — FAQ·용어집·단계별 사용법·문제 해결·공지/문의/알림·업데이트 이력 6개 추가, 족보 16종 보강, 지식↔코드 동기화 테스트 |
 
 ---
 
@@ -7660,6 +7661,24 @@
 - **범위**: backend + frontend / AI 알림
 - **요약**: aiRoutes.js 에 GET /api/ai/status(on|off|down)와 chat 응답의 ai 전달, aiApi.js fetchAiStatus, AiHelper.jsx 상단 알림 바(ON 초록·OFF 주황·down 빨강, 20초 주기·답이 오면 즉시 갱신·503 이면 down)와 OFF 배지 문구, ai-helper.css. 빌드 후 PC·모바일 Chrome 으로 ON/OFF 문구·배지 확인.
 - **주요 파일**: `backend/routes/aiRoutes.js`, `root-cloudflare/src/lib/aiApi.js`, `root-cloudflare/src/pages/AiHelper.jsx`, `root-cloudflare/src/styles/ai-helper.css`
+- **관련 RDMD**: `RDMD/ai/03-offline-doc-answer-knowledge-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending398"></a>
+
+### 398. 2026-10-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(ai-service): knowledge 고도화 — FAQ·용어집·단계별 사용법·문제 해결·공지/문의/알림·업데이트 이력 6개 추가, 족보 16종 보강, 지식↔코드 동기화 테스트
+- **git**: `git show pending`
+- **범위**: ai-service / knowledge
+- **요약**: knowledge 8개→14개(조각 382→469): 09 FAQ(31문)·10 용어집(별칭)·11 단계별 사용법(12가지)·12 문제 해결(21가지)·13 공지·문의·신고·알림·14 업데이트 이력 신설, 01(테마·홈 화면 추가·후원·버전)·03(PNG 등급별 파일)·05(족보 16종 전부)·07 보강. 화면 문구·서버 응답을 코드로 확인해 작성. tests/test_knowledge_sync.py 가 확률·포인트·족보 배수·한도·출석·퀴즈 상금표를 코드와 비교하며 지식에 파이브 플러시(배수 10)가 빠져 있던 것을 발견.
+- **주요 파일**: `ai-service/knowledge/*.md`, `ai-service/tests/test_knowledge_sync.py`
 - **관련 RDMD**: `RDMD/ai/03-offline-doc-answer-knowledge-record.md`
 
 [▲ 목차로](#목차)
