@@ -420,7 +420,7 @@
 | 389 | 2026-10-18 | [`a864cae`](#a864cae) | docs(ai-service): 6개 층 구조와 Oracle SQL 전용(MongoDB 미사용) 원칙 반영 — README·기능 문서·기록·보안 가이드·AI 스킬 4종 |
 | 390 | 2026-10-18 | [`e0edfc1`](#e0edfc1) | feat(ai-service): 생성 모델을 Ollama gemma4:12b 로 바꾸고 ChromaDB + bge-m3 벡터 검색(BM25 와 RRF 하이브리드)을 가이드 챗봇에 추가 |
 | 391 | 2026-10-18 | [`dac0947`](#dac0947) | docs(ai-service): Ollama gemma4:12b·ChromaDB·bge-m3 반영 — README·기능 문서·기록 02·배포/보안/개발 가이드·AI 스킬 4종 |
-| 392 | 2026-10-18 | [`pending`](#pending392) | fix(ai-service): .env 같은 줄 뒤 주석(값   # 설명)을 값으로 읽어 임베딩 모델명·keep_alive 가 깨지던 문제 수정 |
+| 392 | 2026-10-18 | [`dd8dd6c`](#dd8dd6c) | fix(ai-service): .env 같은 줄 뒤 주석(값   # 설명)을 값으로 읽어 임베딩 모델명·keep_alive 가 깨지던 문제 수정 |
 
 ---
 
@@ -7553,15 +7553,15 @@
 
 ---
 
-<a id="pending392"></a>
+<a id="dd8dd6c"></a>
 
-### 392. 2026-10-18 — `pending`
+### 392. 2026-10-18 — `dd8dd6c`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `dd8dd6c`
+- **hash (full)**: `dd8dd6cba5737f3f4e0447f6c821278b5dc6e73c`
 - **author**: nomura
 - **message**: fix(ai-service): .env 같은 줄 뒤 주석(값   # 설명)을 값으로 읽어 임베딩 모델명·keep_alive 가 깨지던 문제 수정
-- **git**: `git show pending`
+- **git**: `git show dd8dd6c`
 - **범위**: ai-service / .env 로더
 - **요약**: config._load_dotenv 가 `OLLAMA_EMBED_MODEL=bge-m3   # 설명` 의 주석을 값에 포함해 벡터 색인·Ollama 호출이 실패하고 문서 답으로 떨어지던 버그. 공백 + # 뒤를 떼고 따옴표 안의 #·공백 없는 #은 값으로 유지, 회귀 테스트 추가(23개 통과). 로컬에서 Ollama·ai-service·backend 를 켜 /api/ai 로 LLM 답·범위 밖 거절·인젝션 거절 확인.
 - **주요 파일**: `ai-service/app/config.py`, `ai-service/tests/test_service.py`
