@@ -63,7 +63,7 @@ root-cloudflare/src/pages/AiHelper.jsx (/ai) ─ lib/aiApi.js
 backend/routes/aiRoutes.js (/api/ai, server.js 에 연결)
         │  · 질문 1~500자, 이전 대화 최근 12개(각 2000자)만
         │  · IP 당 10분 20회(메모리, 초과 429 + 남은 시간)
-        │  · X-AI-Key = AI_SERVICE_KEY 첨부, 45초 타임아웃
+        │  · X-AI-Key = AI_SERVICE_KEY 첨부, 기본 3분 타임아웃(`AI_TIMEOUT_MS`)
         │  · AI 서비스 응답 실패 → 503 { unavailable:true }
         ▼
 ai-service/app/main.py (FastAPI, 127.0.0.1:8000)

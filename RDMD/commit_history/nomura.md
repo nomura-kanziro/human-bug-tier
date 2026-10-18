@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 394 |
+| **커밋 수** | 395 |
 | **기간** | 2026-03-20 ~ 2026-10-18 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -423,6 +423,7 @@
 | 392 | 2026-10-18 | [`dd8dd6c`](#dd8dd6c) | fix(ai-service): .env 같은 줄 뒤 주석(값   # 설명)을 값으로 읽어 임베딩 모델명·keep_alive 가 깨지던 문제 수정 |
 | 393 | 2026-10-18 | [`4aa948d`](#4aa948d) | docs(ai-service): .env 주석 버그 발견·수정 내용 기록 |
 | 394 | 2026-10-18 | [`fe12516`](#fe12516) | fix(ai): 로컬 LLM 이 느릴 때 Express 45초 제한에 걸려 503 이 나던 문제 — 대기 시간을 설정으로(기본 3분, 0 이면 제한 없음) |
+| 395 | 2026-10-18 | [`pending`](#pending395) | docs(ai): 타임아웃 설정과 로컬 GPU 가 느려 503 이 났던 원인·조치 기록 |
 
 ---
 
@@ -7603,6 +7604,24 @@
 - **범위**: backend + ai-service / 타임아웃
 - **요약**: aiRoutes.js 의 AI 대기 제한을 AI_TIMEOUT_MS(기본 180000ms, 0 이면 제한 없음)로, ai-service 의 Ollama 호출 제한을 OLLAMA_TIMEOUT(기본 180초, 0/off 이면 None)으로 바꾸고 채팅·임베딩 클라이언트에 적용. .env.example 두 곳, 설정 테스트 추가(24개 통과). 재시작 후 긴 목록 질문 31초·보통 4~7초에 200 응답.
 - **주요 파일**: `backend/routes/aiRoutes.js`, `backend/.env.example`, `ai-service/app/config.py`, `ai-service/app/guidans_Chat/service/{llm,embeddings}.py`, `ai-service/.env.example`, `ai-service/tests/test_service.py`
+- **관련 RDMD**: `RDMD/ai/02-ollama-chromadb-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending395"></a>
+
+### 395. 2026-10-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(ai): 타임아웃 설정과 로컬 GPU 가 느려 503 이 났던 원인·조치 기록
+- **git**: `git show pending`
+- **범위**: docs / AI
+- **요약**: 02 기록에 503 원인(Express 45초)·조치·진짜 느린 이유(GPU 메모리 11.8/12.3GB 경합으로 생성 속도 52→9 tok/s)·남은 개선 후보를 추가하고, 프록시 기록·기능 문서·README 의 45초 서술과 환경 변수 표를 갱신.
+- **주요 파일**: `RDMD/ai/*`, `RDMD/backend/10-ai/01-ai-proxy-record.md`, `RDMD/backend/README.md`, `RDMD/features/ai-service.md`, `ai-service/README.md`
 - **관련 RDMD**: `RDMD/ai/02-ollama-chromadb-record.md`
 
 [▲ 목차로](#목차)

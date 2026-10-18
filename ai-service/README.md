@@ -102,6 +102,7 @@ python -m venv .venv
 | `AI_LLM_PROVIDER` | `ollama` | `ollama` · `anthropic` · `none`(문서 답만) |
 | `OLLAMA_BASE_URL` / `OLLAMA_MODEL` | `http://127.0.0.1:11434` / `gemma4:12b` | 생성 모델 |
 | `OLLAMA_NUM_CTX` / `OLLAMA_KEEP_ALIVE` | 8192 / `30m` | 컨텍스트 길이 / 모델 유지 시간 |
+| `OLLAMA_TIMEOUT` | 180 | Ollama 응답을 기다리는 최대 시간(초), 0 이면 제한 없음 |
 | `AI_WARMUP` | true | 서비스가 뜰 때 모델을 미리 올림 |
 | `OLLAMA_EMBED_MODEL` | `bge-m3` | 임베딩 모델(바꾸면 새 컬렉션으로 다시 색인) |
 | `AI_VECTOR_ENABLED` / `CHROMA_DIR` | true / `data/chroma` | 벡터 검색 켜기 / 벡터 DB 폴더 |

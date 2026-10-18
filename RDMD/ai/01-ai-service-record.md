@@ -33,7 +33,7 @@ feature: ai-service
 | RAG | 지식 = `ai-service/knowledge/*.md` 8개(사용자용 이용 안내, 수치는 서버 상수와 대조) + `tiers.json`(티어 9 + 캐릭터 338 문서). 캐릭터 이름 색인으로 **정확한 티어 정보**를 프롬프트에 주입 |
 | LLM | Claude(`AI_MODEL`, 기본 `claude-opus-5-5`). 키 없음·호출 실패 → 근거 문서 답(`mode: fallback`) |
 | 추천 질문 | LLM 없이 캐릭터·티어·사이트 갈래에서 하나씩 3개 |
-| Express | `backend/routes/aiRoutes.js` → `/api/ai/questions`, `/api/ai/chat`. 질문 500자·대화 12개 제한, IP당 10분 20회(429), `X-AI-Key`, 45초 타임아웃, 실패 503. `server.js` 연결, `.env.example` 에 `AI_SERVICE_URL`/`AI_SERVICE_KEY` |
+| Express | `backend/routes/aiRoutes.js` → `/api/ai/questions`, `/api/ai/chat`. 질문 500자·대화 12개 제한, IP당 10분 20회(429), `X-AI-Key`, 기본 3분 타임아웃(처음 45초 → 02 기록 참고), 실패 503. `server.js` 연결, `.env.example` 에 `AI_SERVICE_URL`/`AI_SERVICE_KEY` |
 | 화면 | `/ai`(`AiHelper.jsx`·`ai-helper.css`·`lib/aiApi.js`) — 추천 질문 칩·다른 질문, 대화창, 출처·fallback 배지, Enter 전송(한글 조합 고려), 대화 지우기, 개인정보 안내. 푸터 "AI 도우미", 가이드 페이지 하단 링크 |
 | 대화 저장 | **하지 않음** — 브라우저 `sessionStorage` 에만. 서버·DB 기록 없음 |
 
