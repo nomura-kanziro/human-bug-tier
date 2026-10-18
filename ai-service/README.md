@@ -88,7 +88,7 @@ python -m venv .venv
 .venv/bin/python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-- `copy .env.example .env`(기본값 그대로 Ollama gemma4:12b + bge-m3). Ollama 가 꺼져 있으면 **LLM 없이 문서 검색 답(fallback)** 으로 동작한다. `AI_LLM_PROVIDER=anthropic` + `ANTHROPIC_API_KEY` 로 Claude 를 쓸 수도 있다.
+- `copy .env.example .env`(같은 줄 뒤 `# 주석` 은 로더가 떼어 주므로 그대로 복사해도 된다. 기본값 그대로 Ollama gemma4:12b + bge-m3). Ollama 가 꺼져 있으면 **LLM 없이 문서 검색 답(fallback)** 으로 동작한다. `AI_LLM_PROVIDER=anthropic` + `ANTHROPIC_API_KEY` 로 Claude 를 쓸 수도 있다.
 - 처음 뜰 때 지식 조각(약 380개)을 임베딩해 ChromaDB 에 넣는다(약 15초). 이후에는 **바뀐 조각만** 다시 임베딩한다(재시작 0.3초). 지식을 고친 뒤에는 `POST /reload`(키 필요) 또는 재시작.
 - 품질 점검: `.venv/Scripts/python scripts/eval_guide_chat.py` (`--no-llm` 으로 검색·분기만)
 - 백엔드(`backend`, :5000)를 같이 띄우면 http://localhost:5000/ai 에서 쓴다. 백엔드는 기본으로 `http://127.0.0.1:8000` 을 부른다(`backend/.env` 의 `AI_SERVICE_URL`).

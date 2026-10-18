@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 392 |
+| **커밋 수** | 393 |
 | **기간** | 2026-03-20 ~ 2026-10-18 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -421,6 +421,7 @@
 | 390 | 2026-10-18 | [`e0edfc1`](#e0edfc1) | feat(ai-service): 생성 모델을 Ollama gemma4:12b 로 바꾸고 ChromaDB + bge-m3 벡터 검색(BM25 와 RRF 하이브리드)을 가이드 챗봇에 추가 |
 | 391 | 2026-10-18 | [`dac0947`](#dac0947) | docs(ai-service): Ollama gemma4:12b·ChromaDB·bge-m3 반영 — README·기능 문서·기록 02·배포/보안/개발 가이드·AI 스킬 4종 |
 | 392 | 2026-10-18 | [`dd8dd6c`](#dd8dd6c) | fix(ai-service): .env 같은 줄 뒤 주석(값   # 설명)을 값으로 읽어 임베딩 모델명·keep_alive 가 깨지던 문제 수정 |
+| 393 | 2026-10-18 | [`pending`](#pending393) | docs(ai-service): .env 주석 버그 발견·수정 내용 기록 |
 
 ---
 
@@ -7565,6 +7566,24 @@
 - **범위**: ai-service / .env 로더
 - **요약**: config._load_dotenv 가 `OLLAMA_EMBED_MODEL=bge-m3   # 설명` 의 주석을 값에 포함해 벡터 색인·Ollama 호출이 실패하고 문서 답으로 떨어지던 버그. 공백 + # 뒤를 떼고 따옴표 안의 #·공백 없는 #은 값으로 유지, 회귀 테스트 추가(23개 통과). 로컬에서 Ollama·ai-service·backend 를 켜 /api/ai 로 LLM 답·범위 밖 거절·인젝션 거절 확인.
 - **주요 파일**: `ai-service/app/config.py`, `ai-service/tests/test_service.py`
+- **관련 RDMD**: `RDMD/ai/02-ollama-chromadb-record.md`
+
+[▲ 목차로](#목차)
+
+---
+
+<a id="pending393"></a>
+
+### 393. 2026-10-18 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(ai-service): .env 주석 버그 발견·수정 내용 기록
+- **git**: `git show pending`
+- **범위**: docs / AI 서비스
+- **요약**: 02 기록에 .env 같은 줄 주석 버그(증상·원인·발견 경로·수정)를 추가하고 테스트 수 갱신, ai-service README 에 .env.example 를 그대로 복사해도 된다는 안내.
+- **주요 파일**: `RDMD/ai/02-ollama-chromadb-record.md`, `ai-service/README.md`
 - **관련 RDMD**: `RDMD/ai/02-ollama-chromadb-record.md`
 
 [▲ 목차로](#목차)
