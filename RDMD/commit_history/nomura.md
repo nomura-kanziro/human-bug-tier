@@ -421,7 +421,7 @@
 | 390 | 2026-10-18 | [`e0edfc1`](#e0edfc1) | feat(ai-service): 생성 모델을 Ollama gemma4:12b 로 바꾸고 ChromaDB + bge-m3 벡터 검색(BM25 와 RRF 하이브리드)을 가이드 챗봇에 추가 |
 | 391 | 2026-10-18 | [`dac0947`](#dac0947) | docs(ai-service): Ollama gemma4:12b·ChromaDB·bge-m3 반영 — README·기능 문서·기록 02·배포/보안/개발 가이드·AI 스킬 4종 |
 | 392 | 2026-10-18 | [`dd8dd6c`](#dd8dd6c) | fix(ai-service): .env 같은 줄 뒤 주석(값   # 설명)을 값으로 읽어 임베딩 모델명·keep_alive 가 깨지던 문제 수정 |
-| 393 | 2026-10-18 | [`pending`](#pending393) | docs(ai-service): .env 주석 버그 발견·수정 내용 기록 |
+| 393 | 2026-10-18 | [`4aa948d`](#4aa948d) | docs(ai-service): .env 주석 버그 발견·수정 내용 기록 |
 
 ---
 
@@ -7572,15 +7572,15 @@
 
 ---
 
-<a id="pending393"></a>
+<a id="4aa948d"></a>
 
-### 393. 2026-10-18 — `pending`
+### 393. 2026-10-18 — `4aa948d`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `4aa948d`
+- **hash (full)**: `4aa948de93c98c89db265493e4f853a586d9a822`
 - **author**: nomura
 - **message**: docs(ai-service): .env 주석 버그 발견·수정 내용 기록
-- **git**: `git show pending`
+- **git**: `git show 4aa948d`
 - **범위**: docs / AI 서비스
 - **요약**: 02 기록에 .env 같은 줄 주석 버그(증상·원인·발견 경로·수정)를 추가하고 테스트 수 갱신, ai-service README 에 .env.example 를 그대로 복사해도 된다는 안내.
 - **주요 파일**: `RDMD/ai/02-ollama-chromadb-record.md`, `ai-service/README.md`
