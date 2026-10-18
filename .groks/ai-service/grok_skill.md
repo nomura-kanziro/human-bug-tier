@@ -23,7 +23,8 @@ description: >
   - 가이드 전용 챗봇 = `ai-service/app/guidans_Chat/` — `service/` 에 `chat_service.py`(진입)·`knowledge.py`(문서·BM25·CharacterIndex)·`embeddings.py`(bge-m3)·`retrieval.py`(BM25+벡터 RRF)·`graph.py`(LangGraph)·`prompts.py`·`llm.py`(Ollama/Claude)·`questions.py`, `database/chroma.py`·`repository/knowledge_vector_repository.py`·`models/knowledge_chunk.py`(ChromaDB 벡터 저장), `router/chat_router.py`, `schema/chat.py`
   - 에이전트 봇 = `ai-service/app/Agent-Bot/`(계획 단계 — 6개 층 폴더에 README 만, 구현·수정 금지). 새 챗봇 코드를 다른 챗봇 폴더에 섞지 않는다
   - 공용: `app/main.py`(진입·라우터 연결), `config.py`, `deps.py`(X-AI-Key 검사)
-- 지식: `ai-service/knowledge/01~08-*.md`(사용자용 이용 안내) + `root-cloudflare/src/data/tiers.json`(직접 읽음)
+- 지식: `ai-service/knowledge/01~14-*.md`(사용자용 — 이용 안내 8개 + **FAQ·용어집·단계별 사용법·문제 해결·공지/문의/알림·업데이트 이력** 6개) + `root-cloudflare/src/data/tiers.json`(직접 읽음). **AI 서버(Ollama)가 꺼져도 이 문서에서 그대로 답한다**(`service/doc_answer.py`) — 그래서 지식 문서가 곧 "AI OFF 시의 답"이다
+- AI 서버 ON/OFF: `service/llm_status.py`(Ollama `/api/tags` 확인, 10초 기억), `GET /status`(ai-service) · `GET /api/ai/status`(Express) → `/ai` 화면 상단 알림("AI 서버 OFF 상태 (사이트의 정보내용을 끌어다 대답합니다.)")
 - 테스트: `ai-service/tests/` (`.venv/Scripts/python -m pytest -q` — 가짜 모델·가짜 임베딩·메모리 ChromaDB 라 Ollama 없이 돈다). 실제 모델 점검: `scripts/eval_guide_chat.py`
 - 프록시: `backend/routes/aiRoutes.js` → `server.js` `app.use('/api/ai', aiRoutes)`
 - 화면: `root-cloudflare/src/pages/AiHelper.jsx`, `src/lib/aiApi.js`, `src/styles/ai-helper.css`, 라우트 `/ai`, 푸터 링크, 가이드 페이지 링크
@@ -39,7 +40,7 @@ description: >
 - 브라우저 → **Express `/api/ai`** → ai-service 순서 유지. ai-service 는 127.0.0.1 에만 바인드, 외부 포트·nginx 직접 연결 금지.
 - 요청 제한·입력 길이 검사는 Express 에서 먼저(LLM 비용·남용 방지). ai-service 도 pydantic 으로 다시 검사.
 - 운영에서는 `AI_SERVICE_KEY` 를 양쪽에 같은 값으로 설정(X-AI-Key).
-- 기능·규칙 변경 시 **`ai-service/knowledge/*.md` 수치·문구를 서버 상수와 대조해 같이 고친다.** 공식 티어표는 `tiers.json` 을 읽으므로 옮겨 적지 않는다.
+- 기능·규칙 변경 시 **`ai-service/knowledge/*.md` 수치·문구를 서버 상수와 대조해 같이 고친다.** `tests/test_knowledge_sync.py` 가 확률·포인트·족보 배수·한도·출석 포인트·퀴즈 상금표를 코드와 비교하므로 **고친 뒤 `pytest` 를 돌린다**(안 맞으면 실패). 공식 티어표는 `tiers.json` 을 읽으므로 옮겨 적지 않는다.
 - 지식 문서는 사용자 말(메뉴·버튼 이름)로, `##` 하나에 주제 하나.
 - 캐릭터 티어는 검색 순위가 아니라 `CharacterIndex` 사실 주입으로 답한다 — 이 경로를 유지.
 - LLM 실패는 예외 대신 fallback 답(`mode: fallback`). 키 없이도 서비스가 떠야 한다.
@@ -48,9 +49,11 @@ description: >
 
 ## Do not
 
+- **AI 서버가 꺼졌을 때 LLM 을 부르려고 기다리지 않는다**(`gate`). OFF 면 바로 지식 문서 답으로 가고, 화면에 OFF 안내가 나가야 한다. 문서 답은 지식 문서의 문장을 **그대로** 보여 주며 새 말을 지어내지 않는다.
+- 서비스(uvicorn)가 쓰는 ChromaDB 폴더(`data/chroma`)를 다른 프로세스(스크립트·두 번째 서비스)가 같이 열지 않는다 — 서비스가 죽을 수 있다(스크립트는 `data/chroma-scripts` 를 쓴다). 로컬에서 띄울 때는 `scripts/dev_service.py`.
 - **생성 모델(Ollama `gemma4:12b`)의 생각 모드를 켜지 않는다**(`reasoning=False`) — 켜면 토큰을 생각에 다 써서 답이 빈 문자열이 된다. 모델을 바꾸면 빈 답·속도를 먼저 확인한다.
 - 벡터 색인이 실패해도 서비스는 BM25 로 계속 돌아야 한다(예외로 죽지 않게). 임베딩 모델을 바꾸면 컬렉션이 새로 만들어져 다시 색인된다.
-- `MIN_VECTOR_SIM`(범위 밖 판단 기준, 0.50)은 실측값이다 — 지식·임베딩 모델을 바꾸면 `scripts/eval_guide_chat.py` 로 다시 확인하고 바꾼다.
+- `MIN_VECTOR_SIM`(범위 밖 판단 기준, 0.52)·`MIN_LEXICAL_CLEAN`(벡터를 못 쓸 때, 12)은 실측값이다 — 지식·임베딩 모델을 바꾸면 `scripts/calibrate_relevance.py` 로 다시 확인하고 바꾼다.
 - Ollama(11434)와 ai-service(8000)를 외부에 열지 않는다.
 - **ai-service 에서 MongoDB 를 쓰지 않는다.** DB 가 필요하면 **Oracle SQL**(python-oracledb)만 — 값은 항상 바인드 변수(`:name`), 문자열을 SQL 에 이어 붙이지 않는다. 사이트 본체 `backend/` 의 MongoDB 와 섞지 않는다.
 - 라우터에서 SQL 을 직접 쓰거나 서비스에서 HTTP 를 다루지 않는다(층 분리).

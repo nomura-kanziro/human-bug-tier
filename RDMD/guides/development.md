@@ -23,7 +23,8 @@ cd ai-service
 python -m venv .venv
 .venv/Scripts/python -m pip install -r requirements.txt     # Linux/macOS: .venv/bin/python
 copy .env.example .env                                         # 기본값 = Ollama gemma4:12b + bge-m3. Ollama 가 꺼져 있으면 문서 검색 답(fallback)
-.venv/Scripts/python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+.venv/Scripts/python scripts/dev_service.py start             # 떼어서 띄움(터미널을 닫아도 안 꺼짐) · status · stop. 또는 아래 uvicorn 직접 실행
+# .venv/Scripts/python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 .venv/Scripts/python -m pytest -q                              # 테스트(Ollama·Claude·Oracle 호출 없음)
 .venv/Scripts/python scripts/eval_guide_chat.py                # 실제 모델로 질문 묶음 점검(--no-llm 은 검색·분기만)
 ```

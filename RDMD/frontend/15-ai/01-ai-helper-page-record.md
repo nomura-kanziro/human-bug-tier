@@ -21,12 +21,16 @@ feature: ai
 - 하단 안내: 대화는 서버에 저장되지 않음 · 개인정보 입력 금지 · 답이 틀릴 수 있음.
 - 모바일(600px 이하): 말풍선 폭 96%, 대화창 높이 58vh.
 
+## AI 서버 ON/OFF 알림 (2026-10-18 추가)
+
+머리말 아래 알림 바: **ON** "AI 서버 ON"(초록 점) · **OFF** "AI 서버 OFF 상태 (사이트의 정보내용을 끌어다 대답합니다.)"(주황) · **down** "AI 서비스에 연결할 수 없어요. 잠시 뒤에 다시 시도해 주세요."(빨강). 들어올 때 `GET /api/ai/status` 로 확인하고 20초마다(탭이 보일 때만) 다시 확인, 답이 오면 응답의 `ai` 로 즉시 갱신, 503 이면 down. OFF 때 답에는 "AI 서버 OFF — 사이트 지식 문서에서 그대로 가져온 답이에요" 배지(첫 버전의 "AI 연결 없이…" 문구를 교체). 상세 [`../../ai/03-offline-doc-answer-knowledge-record.md`](../../ai/03-offline-doc-answer-knowledge-record.md).
+
 ## 구현
 
 | 파일 | 내용 |
 |---|---|
 | `src/pages/AiHelper.jsx` | 화면 전체. 대화는 `sessionStorage.hbtAiChat`(최근 40개)에만 보관. 질문마다 직전 대화를 `history` 로 같이 보냄(서버·AI 서비스가 다시 최근 것만 사용) |
-| `src/lib/aiApi.js` | `fetchAiQuestions()`(`GET /api/ai/questions`), `askAi(message, history)`(`POST /api/ai/chat`). `auth:false` — 토큰을 붙이지 않는다. `AI_MAX_MESSAGE = 500` |
+| `src/lib/aiApi.js` | `fetchAiStatus()`(`GET /api/ai/status`), `fetchAiQuestions()`(`GET /api/ai/questions`), `askAi(message, history)`(`POST /api/ai/chat`). `auth:false` — 토큰을 붙이지 않는다. `AI_MAX_MESSAGE = 500` |
 | `src/styles/ai-helper.css` | 사이트 CSS 변수(`--brand`, `--bg-elevated` …)만 써서 라이트·다크 모두 맞음. `prefers-reduced-motion` 이면 점 애니메이션 끔 |
 | `App.jsx`, `Footer.jsx`, `pages/Guide.jsx`, `styles/guide.css` | 라우트·푸터 링크·가이드 하단 링크 한 줄 |
 

@@ -20,6 +20,8 @@
 
 - [ ] 메뉴 이름·버튼 이름·포인트·확률·배수·횟수·기간이 바뀌면 `ai-service/knowledge/*.md` 를 같이 고친다(서버 상수와 대조)  
 - [ ] 새 기능이면 사용자용 설명 `##` 절을 추가한다(관리자 기능·API 주소는 넣지 않음)  
+- [ ] `cd ai-service && .venv/Scripts/python -m pytest -q` — `test_knowledge_sync.py` 가 확률·포인트·배수·한도를 코드와 비교한다(안 맞으면 지식 문서를 고친다)  
+- [ ] 새 기능이면 FAQ(09)·용어집(10)·단계별(11)·문제 해결(12)에 **사용자가 실제로 쓰는 말**로 한두 줄(AI 서버가 꺼졌을 때는 이 문서 문장이 그대로 답이 된다)  
 - [ ] AI 서비스 재시작 또는 `POST /reload` 후 `/ai` 에서 한두 개 질문해 확인  
 
 정본: [`.agents/ai-service/skill.md`](../../.agents/ai-service/skill.md)

@@ -20,8 +20,9 @@ feature: ai
 
 | 메서드 | 경로 | 동작 |
 |---|---|---|
+| GET | `/api/ai/status` | AI 서버(Ollama) ON/OFF → `{ ok, ai: 'on'\|'off'\|'down', reason?, model?, vectorReady? }`. **down = ai-service 자체가 꺼짐**(OFF 는 지식 문서로 계속 답하므로 구분). 항상 200 으로 응답 |
 | GET | `/api/ai/questions` | ai-service `/questions?count=3` 결과 → `{ ok, questions: [3개] }` |
-| POST | `/api/ai/chat` | `{ message, history? }` → `{ ok, answer, mode: 'llm'\|'fallback'\|'fixed', sources: [최대 6] }` |
+| POST | `/api/ai/chat` | `{ message, history? }` → `{ ok, answer, mode: 'llm'\|'fallback'\|'fixed', ai: 'on'\|'off', sources: [최대 6] }`(`fallback` = AI 서버 OFF 라 `knowledge/` 문서에서 뽑은 답) |
 
 공개(로그인 불필요). 대화는 **저장하지 않는다**(메모리 상 요청 처리만).
 

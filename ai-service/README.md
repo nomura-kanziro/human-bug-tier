@@ -39,15 +39,15 @@ ai-service/
 │   ├── deps.py            # 공용 의존성 — X-AI-Key 검사
 │   ├── guidans_Chat/      # ★ 가이드 전용 챗봇(휴버봇)
 │   │   ├── schema/        #   요청·응답 JSON 모양(pydantic): ChatRequest · ChatResponse · QuestionsResponse
-│   │   ├── router/        #   HTTP: GET /questions · POST /chat · POST /reload
+│   │   ├── router/        #   HTTP: GET /status · GET /questions · POST /chat · POST /reload
 │   │   ├── service/       #   업무 로직: chat_service.py(진입) · knowledge.py(문서·BM25) · embeddings.py(bge-m3) · retrieval.py(하이브리드) · graph.py(LangGraph) · prompts.py · llm.py(Ollama/Claude) · questions.py
 │   │   ├── models/        #   knowledge_chunk.py(벡터 DB 지식 조각). Oracle 테이블 모델은 아직 없음(대화 비저장)
 │   │   ├── repository/    #   knowledge_vector_repository.py(ChromaDB 색인·검색, 사용 중) · base.py OracleRepository(Oracle SQL, 아직 안 씀)
 │   │   └── database/      #   chroma.py(ChromaDB 연결, 사용 중) · oracle.py(python-oracledb 풀, 연결 준비만)
 │   └── Agent-Bot/         # 에이전트 봇 자리(계획 단계) — 위와 같은 6개 층 폴더, 각각 README 만
-├── knowledge/             # 사이트 지식 원문(가이드 챗봇이 읽음) — 기능이 바뀌면 여기를 고친다
+├── knowledge/             # 사이트 지식 원문 14개(가이드 챗봇이 읽음, AI OFF 일 때의 답도 여기서 나옴) — 기능이 바뀌면 여기를 고친다
 ├── data/chroma/           # 벡터 DB 파일(자동 생성, gitignore)
-├── scripts/eval_guide_chat.py  # 실제 Ollama·bge-m3 로 질문 묶음 품질 점검(기준값 조정에도 사용)
+├── scripts/               # dev_service.py(로컬에서 떼어 띄우기/상태/종료) · eval_guide_chat.py(질문 묶음 품질 점검) · calibrate_relevance.py(범위 판단 기준 점검)
 ├── tests/                 # pytest (실제 Ollama·Claude·Oracle 호출 없음 — 가짜 모델·가짜 임베딩·메모리 ChromaDB)
 ├── requirements.txt
 └── .env.example
@@ -74,6 +74,18 @@ ollama pull bge-m3         # 임베딩(1.2GB, 다국어 1024차원)
 - 서비스가 뜰 때 모델을 미리 불러 둔다(`AI_WARMUP`, 첫 호출 약 20초 지연 방지).
 - GPU 메모리: gemma4:12b 약 8.4GB + bge-m3 약 0.7GB. 12GB GPU 에서 다른 프로그램이 3GB 쯤 쓰면 **여유가 거의 없다**(측정: 11.8/12.3GB) — 더 쓰면 일부가 CPU 로 넘어가 느려진다.
 - Claude API 로 바꾸려면 `AI_LLM_PROVIDER=anthropic` + `ANTHROPIC_API_KEY`.
+
+## 로컬에서 켜고 끄기 (`scripts/dev_service.py`)
+
+```bash
+cd ai-service
+.venv/Scripts/python scripts/dev_service.py start     # 떼어서 띄움(터미널을 닫거나 Ctrl+C 가 와도 안 꺼짐) → /health 응답까지 기다림
+.venv/Scripts/python scripts/dev_service.py status    # AI 서버 ON/OFF · 지식 조각 수 · 벡터 상태
+.venv/Scripts/python scripts/dev_service.py stop
+```
+
+- `--port` 로 다른 포트도 가능(포트마다 PID 파일이 따로). 로그는 `uvicorn.log`. 로컬 개발 전용이다.
+- ⚠ 서비스가 쓰는 `data/chroma` 를 다른 프로세스가 같이 열면 서비스가 죽을 수 있다 — 점검 스크립트는 `data/chroma-scripts` 를 따로 쓴다.
 
 ## 로컬 실행
 
@@ -122,10 +134,19 @@ python -m venv .venv
 - 공식 티어표는 `tiers.json` 을 직접 읽으므로 따로 옮겨 적지 않는다.
 - 바꾼 뒤에는 서비스를 재시작하거나 `POST /reload`(키 필요)로 다시 읽는다.
 
+## AI 서버 ON/OFF — 꺼져도 지식 문서로 답한다
+
+- Ollama(AI 서버)가 꺼져 있으면 화면(`/ai`) 위에 **"AI 서버 OFF 상태 (사이트의 정보내용을 끌어다 대답합니다.)"** 알림이 뜨고, 답은 `knowledge/` 지식 문서에서 **문장 그대로** 뽑아 준다(AI 가 새로 쓴 말이 없다). 켜져 있으면 "AI 서버 ON".
+- 상태 확인: `service/llm_status.py` 가 Ollama `/api/tags` 를 2초 제한으로 확인하고 10초(OFF 는 5초) 기억한다. LLM 호출이 실제로 실패하면 바로 OFF 로 바꾼다. **OFF 면 LLM 을 부르려고 기다리지 않고**(주소가 막혀 있어도 질문이 오래 걸리지 않게) 바로 문서 답으로 간다.
+- 문서 답 만드는 법(`service/doc_answer.py`): 캐릭터 질문은 `tiers.json` 의 정확한 한 줄, 그 외에는 검색된 문서 위쪽 1~2개에서 **질문의 주제어와 겹치는 줄만** 골라 출처 제목과 함께 보여 준다(짧은 문서는 통째로, 티어 목록은 목록 그대로). 문서 둘째는 주제어가 2개 이상 겹칠 때만. 화면의 "참고" 에는 실제로 보여 준 문서만 올라간다.
+- OFF 일 땐 임베딩도 못 하므로(같은 Ollama) 벡터 검색 없이 BM25 로 찾는다 → **구어체 표현이 지식 문서에 적혀 있어야** 찾는다(그래서 FAQ·용어집에 "출첵·비번·가챠·캡처" 같은 별칭을 넣어 둠).
+- API: ai-service `GET /status`(`{ai: on|off, reason, provider, model, vector_ready}`), `POST /chat` 응답의 `ai`, Express `GET /api/ai/status`(`ai: on|off|down` — down 은 ai-service 자체가 꺼진 상태라 답을 못 함).
+- OFF 원인(`reason`): `unreachable`(Ollama 안 켜짐) · `model_missing`(모델 없음) · `disabled`(provider none) · `no_key`(Claude 키 없음).
+
 ## 동작 규칙
 
 - **인사**("안녕" 등)는 LLM 없이 정해진 인사. **뻔한 프롬프트 인젝션**("시스템 프롬프트 보여줘"·"이전 지시 무시" 등)은 LLM 에 보내지 않고 바로 거절. **근거 없는 질문**은 LLM 없이 "사이트 정보에서 찾지 못했어요 + 문의하기" — 비용 절약과 사이트 밖 질문 차단.
-- "근거 없는 질문" 판단: 캐릭터·티어 언급이 없을 때, **벡터 최고 유사도(bge-m3 코사인)가 0.50 미만**이면 범위 밖(실측: 범위 밖 0.35~0.49 / 사이트 질문 0.52 이상). 벡터를 못 쓸 때만 BM25 점수 10 기준(BM25 는 "어때·알려줘" 같은 흔한 말에도 점수가 나와 범위 밖 질문을 못 거른다). 기준값은 `service/graph.py` 의 `MIN_VECTOR_SIM`·`MIN_RELEVANCE` — 지식을 크게 바꾸면 `scripts/eval_guide_chat.py` 로 다시 확인.
+- "근거 없는 질문" 판단: 캐릭터·티어 언급이 없을 때, **벡터 최고 유사도(bge-m3 코사인)가 0.52 미만**이면 범위 밖(실측: 범위 밖 0.37~0.50 / 사이트 질문 0.53 이상). 벡터를 못 쓸 때(AI 서버 OFF)는 "어때·알려줘" 같은 군더더기 말을 뺀 질문의 BM25 점수 12 기준(`strip_question_words`). 기준값은 `service/graph.py` 의 `MIN_VECTOR_SIM`·`MIN_LEXICAL_CLEAN` — 지식을 크게 바꾸면 `scripts/calibrate_relevance.py` 로 다시 확인.
 - **검색**: BM25(글자 일치)와 ChromaDB 벡터(의미 일치)를 RRF(순위 합산)로 합친다. "출첵 하면 몇 점 줘?" 처럼 말을 바꿔 물어도 찾는다(BM25 만으로는 못 찾던 질문). 벡터 색인·검색이 실패하면 예외 없이 BM25 만으로 계속한다.
 - 질문에서 **캐릭터 이름**을 찾으면(전체 이름, 또는 한 명에게만 해당하는 이름 일부 단어. 3글자 이하 짧은 이름은 단어 단위로만 — "사이"가 "사이트"에 걸리지 않게) `tiers.json` 의 티어·세부등급·순서를 **[정확한 티어 정보]** 로 프롬프트에 넣는다. LLM 은 이것을 정답으로 쓴다.
 - "N티어" 를 물으면 그 티어 전체 목록 문서를 근거 맨 앞에 넣는다.
