@@ -423,7 +423,7 @@
 | 392 | 2026-10-18 | [`dd8dd6c`](#dd8dd6c) | fix(ai-service): .env 같은 줄 뒤 주석(값   # 설명)을 값으로 읽어 임베딩 모델명·keep_alive 가 깨지던 문제 수정 |
 | 393 | 2026-10-18 | [`4aa948d`](#4aa948d) | docs(ai-service): .env 주석 버그 발견·수정 내용 기록 |
 | 394 | 2026-10-18 | [`fe12516`](#fe12516) | fix(ai): 로컬 LLM 이 느릴 때 Express 45초 제한에 걸려 503 이 나던 문제 — 대기 시간을 설정으로(기본 3분, 0 이면 제한 없음) |
-| 395 | 2026-10-18 | [`pending`](#pending395) | docs(ai): 타임아웃 설정과 로컬 GPU 가 느려 503 이 났던 원인·조치 기록 |
+| 395 | 2026-10-18 | [`4f94b0e`](#4f94b0e) | docs(ai): 타임아웃 설정과 로컬 GPU 가 느려 503 이 났던 원인·조치 기록 |
 
 ---
 
@@ -7610,15 +7610,15 @@
 
 ---
 
-<a id="pending395"></a>
+<a id="4f94b0e"></a>
 
-### 395. 2026-10-18 — `pending`
+### 395. 2026-10-18 — `4f94b0e`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `4f94b0e`
+- **hash (full)**: `4f94b0ef1b8fbcc79940db76a7a39a452f2ad09c`
 - **author**: nomura
 - **message**: docs(ai): 타임아웃 설정과 로컬 GPU 가 느려 503 이 났던 원인·조치 기록
-- **git**: `git show pending`
+- **git**: `git show 4f94b0e`
 - **범위**: docs / AI
 - **요약**: 02 기록에 503 원인(Express 45초)·조치·진짜 느린 이유(GPU 메모리 11.8/12.3GB 경합으로 생성 속도 52→9 tok/s)·남은 개선 후보를 추가하고, 프록시 기록·기능 문서·README 의 45초 서술과 환경 변수 표를 갱신.
 - **주요 파일**: `RDMD/ai/*`, `RDMD/backend/10-ai/01-ai-proxy-record.md`, `RDMD/backend/README.md`, `RDMD/features/ai-service.md`, `ai-service/README.md`
