@@ -28,7 +28,7 @@ area: frontend
 - Modified: `root-cloudflare/src/App.jsx` (`/tier` → `/tier/1`, `/custom-maker`·`/luck-draw` 실제 페이지 연결)
 - Added(복사): `root-cloudflare/src/styles/custom-maker.css`, `luck-draw.css`
 - Removed: `root-cloudflare/src/styles/tier/tier1~9.css`, `tier-responsive.css` (tier-board.css 로 대체)
-- Modified: `root-cloudflare/README.md`, `RDMD/features/react-rewrite.md`, `.agents`/`.claude` react-rewrite 스킬
+- Modified: `root-cloudflare/README.md`, `RDMD/features/react-rewrite.md`, `.Agents`/`.Claude` react-rewrite 스킬
 
 ## 주요 구현 내용
 

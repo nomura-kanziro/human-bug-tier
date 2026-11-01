@@ -144,4 +144,4 @@ area: backend
 1. `summary/work-history.md`  
 2. `features/*.md`  
 3. 필요 시 `guides/*`  
-4. `.claude/skills` / `groks` / `codex` 규칙 동기화  
+4. `.Agents` 정본과 에이전트 폴더 7종 규칙 동기화  

@@ -82,7 +82,7 @@ npm start
 
 > ⛔ **2026-09-19 창시자 지시 — 모든 프론트 작업은 `root-cloudflare/`(React)에만 한다.**  
 > `root-render/`(Render.com 바닐라)는 베타 버전에서 업데이트 종료 — 기능 추가·버그 수정 포함 수정 금지.  
-> `backend/` 는 공용 API 서버라 계속 작업한다. 정본: [`.agents/common-rules.md`](./.agents/common-rules.md) ０항
+> `backend/` 는 공용 API 서버라 계속 작업한다. 정본: [`.Agents/common-rules.md`](./.Agents/common-rules.md) ０항
 
 ### 로컬 — Cloudflare 프론트 (기본)
 
@@ -230,11 +230,11 @@ copy .env.example .env
 - DB 변경 시 `backend/models/`와 컨트롤러 동기화
 - 새 관리자 추가는 `ADMIN_INPUT_*` 환경변수 또는 시드 로직으로 처리
 - 공지/문의 기능 추가 시 `requireAdmin` 미들웨어 적용 필수
-- GitHub Pages 배포 시 `getBasePath()` 로직이 서브패스 대응하는지 확인
+- GitHub Pages 는 정적 미리보기라 API 가 동작하지 않음
 - 이메일 기능 사용 시 Gmail 앱 비밀번호 사용
 
 ### 6. 문제 해결
-- Header/Footer 404 → `root-cloudflare/common.js` (Render면 `root-render/common.js`) 의 `getBasePath()` 확인
+- 링크 404 → `root-cloudflare/src/App.jsx` 라우트, `src/lib/paths.js` 확인
 - 관리자 401 → `getAdminAuthHeaders()` 사용 여부 확인
 - 회원가입 실패 → EMAIL_* 설정 여부 확인 (미설정 시 즉시 인증 처리)
 
@@ -254,13 +254,15 @@ copy .env.example .env
 | 주체 | 위치 |
 |------|------|
 | **사람** (창시자·팀원) | [`team/`](./team/README.md) |
-| **AI 공통 정본** (룰 + 기능 skill, 번외 AI 포함) | [`.agents/`](./.agents/README.md) |
-| **Grok** (Admin · 주 골격) | [`.groks/`](./.groks/README.md) |
-| **Claude** (주 골격) | [`CLAUDE.md`](./CLAUDE.md) + [`.claude/skills/`](./.claude/README.md) |
-| **Codex** (주 골격) | [`AGENTS.md`](./AGENTS.md) + [`.codex/`](./.codex/README.md) |
+| **AI 공통 정본** (룰 + 기능 skill, 번외 AI 포함) | [`.Agents/`](./.Agents/README.md) |
+| **Grok** (Admin) | [`.Grok/`](./.Grok/README.md) |
+| **Claude** (Admin) | [`CLAUDE.md`](./CLAUDE.md) + [`.Claude/`](./.Claude/README.md) |
+| **Cursor** (Admin) | [`.Cursor/`](./.Cursor/README.md) |
+| **Codex** (실무) | [`AGENTS.md`](./AGENTS.md) + [`.Codex/`](./.Codex/README.md) |
+| **Antigravity · Manus · Qwen** (실무) | [`.Antigravity/`](./.Antigravity/README.md) · [`.Manus/`](./.Manus/README.md) · [`.Qwen/`](./.Qwen/README.md) |
 | 개발 이력·기능 설명 | [`RDMD/`](./RDMD/README.md) |
 
-> 주 골격 3종만 전용 skill 팩이 있는 이유: 가장 많이 쓰는 AI이고 도구별 로드 형식이 다름.  
-> 그 외 AI는 `.agents/<기능>/skill.md` 만 보면 됨.
+> 모든 에이전트 폴더는 구조가 같음: `README.md` + `skills/<기능>/SKILL.md`.  
+> 그 외 AI는 `.Agents/skills/<기능>/SKILL.md` 만 보면 됨.
 
 즐거운 티어링 되세요! 🔥

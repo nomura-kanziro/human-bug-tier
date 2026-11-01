@@ -1,5 +1,7 @@
 # 경로 · API Base 가이드라인
 
+> ⚠ **2026-11-02 기준 현재 규칙**: React(`root-cloudflare/`)는 React Router 절대 경로(`<Link to="/…">`)와 `src/lib/api.js` 를 쓴다. 정본은 `.Agents/common-rules.md` B절이다. 아래 `getBasePath` · `fixRootLinksInElement` 내용은 바닐라(`root-render/`, 수정 금지) 설명으로 남겨 둔다.
+
 배포(GitHub Pages 서브패스, Render 루트)와 로컬 다중 포트를 동시에 지원하기 위한 **필수 규칙**입니다.  
 관련 구현: `common.js`, `auth_api.js`, `admin_api.js`, `backend/server.js`  
 관련 기록: information27, information28, backend_27

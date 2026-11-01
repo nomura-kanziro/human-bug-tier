@@ -53,6 +53,7 @@ RDMD/frontend/
 | [14-header-dropdown-click-record.md](./01-common/14-header-dropdown-click-record.md) | — | 헤더 드롭다운 hover → 클릭식(바깥 클릭·Esc 닫기) + 사이드 메뉴 하위 항목 간격 83→46px |
 | [15-quick-card-submenu-gap-record.md](./01-common/15-quick-card-submenu-gap-record.md) | — | 메인 화면 퀵카드(커스텀 메이커·행운 뽑기) 하위 링크 간격 0→8px |
 | [16-theme-contrast-audit-record.md](./01-common/16-theme-contrast-audit-record.md) | — | 전 페이지 라이트/다크 색 겹침 전수 점검 — 다크 티어표 6~9등급 이름·노란 버튼 파란 글자·찾기 탭 등 수정 |
+| [17-agent-folders-authority-record.md](./01-common/17-agent-folders-authority-record.md) | — | 에이전트 폴더 대문자화 · 구조 통일 · 최고 권한 확대 |
 | [14-side-menu-account-mobile-header-record.md](./01-common/14-side-menu-account-mobile-header-record.md) | — | 사이드 메뉴 맨 아래 계정 영역(비로그인 로그인 / 로그인 프로필·내 게시글·로그아웃) + 모바일 헤더 버튼·테마 스위치 축소 (1.0.2) |
 
 ## 02-tier-class

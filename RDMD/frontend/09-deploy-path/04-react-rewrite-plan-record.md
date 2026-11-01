@@ -12,7 +12,7 @@ feature: deploy-path
 ## 파일
 
 - `RDMD/features/react-rewrite.md`
-- `.agents/react-rewrite/skill.md` + Claude/Grok/Codex 팩
+- `.Agents/skills/react-rewrite/SKILL.md` + Claude/Grok/Codex 팩
 - `team/README.md`, `handoff` 스킬, `CLOUDFLARE.md` 상단 중지 안내
 
 ## 날짜

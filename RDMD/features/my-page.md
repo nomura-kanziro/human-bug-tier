@@ -66,4 +66,4 @@
 - 다른 사람의 공개 프로필 페이지
 - 게시글 목록 페이지네이션
 
-관련 스킬: `.agents/my-page/skill.md`, `.claude/skills/my-page/SKILL.md`
+관련 스킬: `.Agents/skills/my-page/SKILL.md`, `.Claude/skills/my-page/SKILL.md`

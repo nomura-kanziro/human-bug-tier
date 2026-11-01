@@ -24,7 +24,7 @@
 - [ ] 새 기능이면 FAQ(09)·용어집(10)·단계별(11)·문제 해결(12)에 **사용자가 실제로 쓰는 말**로 한두 줄(AI 서버가 꺼졌을 때는 이 문서 문장이 그대로 답이 된다)  
 - [ ] AI 서비스 재시작 또는 `POST /reload` 후 `/ai` 에서 한두 개 질문해 확인  
 
-정본: [`.agents/ai-service/skill.md`](../../.agents/ai-service/skill.md)
+정본: [`.Agents/skills/ai-service/SKILL.md`](../../.Agents/skills/ai-service/SKILL.md)
 
 ---
 
@@ -46,7 +46,7 @@
 
 - [ ] 기능 폴더 `*.html` / `*.js` / `*.css`  
 - [ ] header/footer placeholder + common 로드  
-- [ ] 링크·에셋에 getBasePath 규칙  
+- [ ] 링크는 React Router, 이미지는 `tierImageUrl()`
 - [ ] API: get*ApiBase + 가드 (`GITHUB_STATIC`)  
 - [ ] 헤더: `getAuthHeaders` 또는 `getAdminAuthHeaders`  
 - [ ] 헤더/사이드 메뉴 진입점 (필요 시 `header.html`)  

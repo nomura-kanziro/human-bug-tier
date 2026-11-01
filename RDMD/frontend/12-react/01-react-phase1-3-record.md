@@ -24,7 +24,7 @@ area: frontend
 - Added: `root-cloudflare/src/pages/{Home,TierPage,NoticeHome,NoticeList,NoticeDetail,PendingPage,LegacyRedirect}.jsx`
 - Added: `root-cloudflare/src/styles/**` (바닐라 CSS 그대로 복사: theme, loading-screen, common, Header_Footer, index-home, notice, tier-nav, tier-responsive, tier/tier1~9)
 - Modified: `backend/server.js` (`resolveStaticRoot` 기본값 → `root-cloudflare/dist`, SPA 폴백, favicon 후보 경로)
-- Modified: `root-cloudflare/README.md`, `RDMD/features/react-rewrite.md`, `.agents/react-rewrite/skill.md`, `.claude/skills/react-rewrite/SKILL.md`
+- Modified: `root-cloudflare/README.md`, `RDMD/features/react-rewrite.md`, `.Agents/skills/react-rewrite/SKILL.md`, `.Claude/skills/react-rewrite/SKILL.md`
 
 ## 주요 구현 내용
 

@@ -18,7 +18,7 @@
 
 ## HTML
 
-- 페이지에 header/footer placeholder + `common.js` 로드 패턴 유지  
+- 새 페이지는 `src/pages/` + `App.jsx` 라우트 (`Layout` 이 헤더·푸터를 붙임)  
 - 인라인 `onclick` 지양 → JS에서 `addEventListener`  
 - 접근성: 버튼에 type, 의미 있는 텍스트  
 
@@ -41,7 +41,7 @@ fetch(..., { headers: getAdminAuthHeaders() });
 ```
 
 - localStorage 키 임의 변경 금지: `authToken`, `user`, `adminAuthToken`, `isAdmin`  
-- 새 전역 헬퍼는 `common.js` 또는 모듈 `*_api.js` 에 일관되게  
+- 새 전역 헬퍼는 `src/lib/` 에 일관되게  
 
 ## JavaScript (백엔드)
 
@@ -51,12 +51,9 @@ fetch(..., { headers: getAdminAuthHeaders() });
 
 ## 파일·폴더
 
-- 기능 단위: `html` + `js` + `css` 동반  
+- 기능 단위: `src/pages/*.jsx` + `src/styles/*.css`  
 - 문서 일지: `RDMD/frontend|backend/<기능>/NN-이름-record.md`  
-- 에이전트 스킬 파일명 규칙  
-  - Grok: `grok_skill.md`  
-  - Claude: `SKILL.md`  
-  - Codex: `skill.md`  
+- 에이전트 스킬 파일: 모든 에이전트 폴더에서 `.<에이전트>/skills/<기능>/SKILL.md`  
 
 ## 바이브 코딩 후 정리
 

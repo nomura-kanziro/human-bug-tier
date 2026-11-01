@@ -14,7 +14,7 @@ Render.com 배포는 방치하고, Cloudflare Pages 프로젝트 `human-bug-tier
 - `CLOUDFLARE.md` — 배포 정본
 - `.github/workflows/deploy-cloudflare-pages.yml` — master/main 푸시 시 Pages 재배포 (GitHub 시크릿 필요)
 - `.gitignore` — `cf-pages-deploy/`
-- `.agents/deploy/skill.md` 및 Claude/Grok/Codex 배포 스킬
+- `.Agents/skills/deploy/SKILL.md` 및 Claude/Grok/Codex 배포 스킬
 
 ## 구현
 

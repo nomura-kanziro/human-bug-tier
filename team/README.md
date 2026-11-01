@@ -3,8 +3,8 @@
 이 폴더는 **사람이** 코드를 짤 때 보는 규칙입니다.  
 (바이브 코딩 · 하드코딩 · PR · 리뷰 모두 해당)
 
-AI 에이전트 공통 룰은 [`.agents/`](../.agents/README.md) 입니다.  
-사람은 여기(`team/`)를 먼저, AI는 `.agents` 를 먼저 봅니다.  
+AI 에이전트 공통 룰은 [`.Agents/`](../.Agents/README.md) 입니다.  
+사람은 여기(`team/`)를 먼저, AI는 `.Agents` 를 먼저 봅니다.  
 둘 다 **같은 제품 품질**을 목표로 합니다.
 
 ## 누구를 위한가
@@ -35,25 +35,26 @@ AI 에이전트 공통 룰은 [`.agents/`](../.agents/README.md) 입니다.
 - ⛔ **`root-render/`(Render.com 바닐라)는 베타 버전에서 업데이트 종료 — 수정 금지**(보관용)
 - ⛔ `npm run sync:render` 실행 금지 — React 수정이 바닐라 구본으로 덮어쓰임
 - ✅ `backend/` 는 공용 API 서버라 계속 작업
-- Cloudflare **배포 인프라**(Pages/CI/시크릿)만 여전히 지시 대기 — 코드 작업과 혼동 금지
-- 정본: [`.agents/common-rules.md`](../.agents/common-rules.md) ０항
+- Cloudflare Pages·Oracle 로 운영 중. 배포와 인프라 변경은 창시자 지시가 있을 때만
+- 정본: [`.Agents/common-rules.md`](../.Agents/common-rules.md) ０항
 
 ## AI와의 관계
 
 ```
 사람 작업  →  team/  (+ RDMD, 모듈 README)
 
-AI 작업    →  .agents/common-rules + .agents/<기능>/skill.md   ← 모든 AI 정본
+AI 작업    →  .Agents/common-rules + .Agents/skills/<기능>/SKILL.md   ← 모든 AI 정본
                  │
-                 ├─ 주 골격: groks | .claude | codex (도구별 복제)
+                 ├─ 에이전트 폴더: .Grok | .Claude | .Cursor | .Codex | .Antigravity | .Manus | .Qwen (같은 구조)
                  └─ 번외 AI: 정본만으로 작업
 ```
 
-- **왜 Grok/Claude/Codex 만 전용 skill 팩?**  
-  이 프로젝트의 **주 뼈대 AI**라서 도구별 진입 형식이 다름.  
-  그 외 AI는 `.agents/<기능>/skill.md` 로 동일 기준 적용.
+- **에이전트 폴더 구조**  
+  모두 `README.md` + `skills/<기능>/SKILL.md`. 정본은 `.Agents`, 나머지는 복제본.  
+  그 외 AI는 `.Agents/skills/<기능>/SKILL.md` 로 동일 기준 적용.
 - AI 결과물이 **team 금지사항**을 깨면 머지하지 마세요.  
-- 충돌: **창시자 > .agents 정본 > 주 골격 팩 > 옛 RDMD**
+- 최고 권한 AI: **Grok · Claude · Cursor** (동등). 실무 AI: Codex · Antigravity · Manus · Qwen  
+- 충돌: **창시자 > .Agents 정본 > 에이전트 전용 폴더 > 옛 RDMD**
 
 ## 빠른 링크
 
@@ -63,8 +64,8 @@ AI 작업    →  .agents/common-rules + .agents/<기능>/skill.md   ← 모든 
 | 배포 | [../DEPLOY.md](../DEPLOY.md) |
 | 기능 맵 | [../RDMD/features/overview.md](../RDMD/features/overview.md) |
 | 경로·API 상세 | [../RDMD/guides/path-and-api.md](../RDMD/guides/path-and-api.md) |
-| AI 공통 룰 | [../.agents/common-rules.md](../.agents/common-rules.md) |
-| 온보딩 (AI 안내) | `codex/handoff`, `.claude/skills/handoff` |
+| AI 공통 룰 | [../.Agents/common-rules.md](../.Agents/common-rules.md) |
+| 온보딩 (AI 안내) | `.Codex/skills/handoff`, `.Claude/skills/handoff` |
 
 ---
 

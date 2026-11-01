@@ -92,4 +92,4 @@
 - 포인트 원장·관리 API: [`../backend/08-luck-draw/04-point-ledger-admin-api-record.md`](../backend/08-luck-draw/04-point-ledger-admin-api-record.md)
 - 메인 위젯·화면: [`../frontend/10-luck-draw/`](../frontend/10-luck-draw/)
 
-관련 스킬: `.agents/luck-draw/skill.md`, `.claude/skills/luck-draw/SKILL.md`
+관련 스킬: `.Agents/skills/luck-draw/SKILL.md`, `.Claude/skills/luck-draw/SKILL.md`

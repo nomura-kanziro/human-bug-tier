@@ -3,7 +3,7 @@
 > ✅ **2026-09-19 창시자 지시 — 모든 프론트 작업은 이 폴더에만 한다.**  
 > `root-render/`(바닐라)는 **베타 버전에서 업데이트 종료 → 수정 금지**(보관용).  
 > 따라서 **`npm run sync:render` 는 더 이상 돌리지 않는다** — 돌리면 `src/styles/*.css` 가 바닐라 구본으로 덮어쓰여져 이곳 수정이 사라진다.  
-> 정본: [`../.agents/common-rules.md`](../.agents/common-rules.md) ０항
+> 정본: [`../.Agents/common-rules.md`](../.Agents/common-rules.md) ０항
 
 바닐라 전체 기능은 이미 100% 반영됐다. 기획 정본: `RDMD/features/react-rewrite.md`.
 

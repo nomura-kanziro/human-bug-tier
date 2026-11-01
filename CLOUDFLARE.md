@@ -4,7 +4,7 @@
 > **작업은 `root-cloudflare/`(React)에만 한다.**  
 > `root-render/`(바닐라, Render.com)는 **베타 버전에서 업데이트 종료 → 수정 금지**.  
 > 즉 아래 “지금 실무는 Render.com만” 문구는 **폐기**되었다. 단, Cloudflare **배포 인프라**(Pages/CI/Wrangler/시크릿)를 새로 구성하는 것은 여전히 별도 지시 후에 한다 — **금지된 건 배포 작업이지 `root-cloudflare/` 코드 작업이 아니다.**  
-> 정본: [`.agents/common-rules.md`](./.agents/common-rules.md) ０항
+> 정본: [`.Agents/common-rules.md`](./.Agents/common-rules.md) ０항
 
 > **2026-09-28 — 현재 운영 구조**  
 > 창시자 지시로 백엔드를 **Oracle Cloud VM** 에 올리고(`https://hbt-tier.duckdns.org`, 가이드 [`backend/deploy/oracle/README.md`](./backend/deploy/oracle/README.md)),

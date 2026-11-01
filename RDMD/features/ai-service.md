@@ -11,7 +11,7 @@
 | AI 서비스 자체 | [`../ai/01-ai-service-record.md`](../ai/01-ai-service-record.md) (+ 서비스 README [`../../ai-service/README.md`](../../ai-service/README.md)) |
 | Express 프록시 | [`../backend/10-ai/01-ai-proxy-record.md`](../backend/10-ai/01-ai-proxy-record.md) |
 | 화면 | [`../frontend/15-ai/01-ai-helper-page-record.md`](../frontend/15-ai/01-ai-helper-page-record.md) |
-| 작업 규칙(모든 AI 공통 정본) | [`../../.agents/ai-service/skill.md`](../../.agents/ai-service/skill.md) |
+| 작업 규칙(모든 AI 공통 정본) | [`../../.Agents/skills/ai-service/SKILL.md`](../../.Agents/skills/ai-service/SKILL.md) |
 | 배포·보안 | [`../guides/deploy-checklist.md`](../guides/deploy-checklist.md) "AI" 절 · [`../guides/security.md`](../guides/security.md) 9절 |
 
 ## 챗봇 폴더 구분과 6개 층 (`ai-service/app/`)

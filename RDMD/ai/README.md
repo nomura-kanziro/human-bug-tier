@@ -12,7 +12,7 @@
 | 화면 | [`../frontend/15-ai/01-ai-helper-page-record.md`](../frontend/15-ai/01-ai-helper-page-record.md) | `/ai` 휴버봇 대화창 · 추천 질문 · 푸터/가이드 링크 |
 | 기능 설명(what) | [`../features/ai-service.md`](../features/ai-service.md) | 구조·흐름·지식·설정·운영 배포 상태 |
 | 서비스 README(how) | [`../../ai-service/README.md`](../../ai-service/README.md) | 실행·테스트·지식 고치기·운영 배포 절차 |
-| 작업 규칙 | [`../../.agents/ai-service/skill.md`](../../.agents/ai-service/skill.md) | 모든 AI 공통 정본(Claude·Grok·Codex 팩은 복제본) |
+| 작업 규칙 | [`../../.Agents/skills/ai-service/SKILL.md`](../../.Agents/skills/ai-service/SKILL.md) | 모든 AI 공통 정본(Claude·Grok·Codex 팩은 복제본) |
 
 ## 기록 원칙 (AI 서비스 한정)
 

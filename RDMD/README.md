@@ -193,13 +193,15 @@ RDMD/
 | 대상 | 위치 |
 |------|------|
 | **사람 규칙** | [`../team/`](../team/README.md) |
-| **AI 공통 룰** (Grok Admin) | [`../.agents/`](../.agents/README.md) |
-| Claude | [`CLAUDE.md`](../CLAUDE.md), [`.claude/skills/`](../.claude/README.md) |
-| Grok | [`.groks/`](../.groks/README.md) |
-| Codex | [`AGENTS.md`](../AGENTS.md), [`.codex/`](../.codex/README.md) |
+| **AI 공통 룰** (Admin AI: Grok · Claude · Cursor) | [`../.Agents/`](../.Agents/README.md) |
+| Claude | [`CLAUDE.md`](../CLAUDE.md), [`.Claude/`](../.Claude/README.md) |
+| Grok | [`.Grok/`](../.Grok/README.md) |
+| Codex | [`AGENTS.md`](../AGENTS.md), [`.Codex/`](../.Codex/README.md) |
+| Cursor | [`.Cursor/`](../.Cursor/README.md) |
+| Antigravity · Manus · Qwen | [`.Antigravity/`](../.Antigravity/README.md) · [`.Manus/`](../.Manus/README.md) · [`.Qwen/`](../.Qwen/README.md) |
 | 배포 | [`../DEPLOY.md`](../DEPLOY.md) |
 
-충돌 시: 사람 지시 → `.agents` → 에이전트 스킬 → RDMD 이력.
+충돌 시: 사람 지시 → `.Agents` → 에이전트 스킬 → RDMD 이력.
 
 ---
 

@@ -226,6 +226,7 @@
 | 10-18 | **AI** | 저장소 루트 **`ai-service/`**(FastAPI · LangChain · LangGraph · RAG) 신설, Express `/api/ai` 프록시(요청 제한·공유 키), `/ai` 휴버봇 화면 + 랜덤 추천 질문 3개. 챗봇은 종류별 폴더로 분리 — 가이드 챗봇 `app/guidans_Chat/`, 에이전트 봇 `app/Agent-Bot/`(계획 단계, 폴더만), 생성 모델 Ollama gemma4:12b + ChromaDB·bge-m3 하이브리드 검색, 폴더마다 schema·router·service·models·repository·database 6개 층, ai-service 는 MongoDB 대신 Oracle SQL 전용 |
 | 10-18 | **AI 고도화** | AI 서버(Ollama) ON/OFF 감지·`/ai` 알림("AI 서버 OFF 상태 (사이트의 정보내용을 끌어다 대답합니다.)"), 꺼져도 `knowledge/` 문서 문장 그대로 답하기, 지식 8개→14개(FAQ·용어집·단계별·문제 해결·소통 기능·업데이트 이력)·조각 469개, 지식↔코드 동기화 테스트(파이브 플러시 누락 발견), 로컬 기동 스크립트 |
 | 10-18 | 문서 | 이 이력·인덱스·기능 문서 전반 보강(공통 인프라·전체 기능 맵을 React 기준으로 재작성, 누락된 기록 보충, AI 스킬 4종) |
+| 11-02 | **에이전트** | 에이전트 폴더 대문자화, 4종 추가(`.Antigravity`·`.Cursor`·`.Manus`·`.Qwen`), 모든 폴더를 `README.md` + `skills/<기능>/SKILL.md` 로 통일, 최고 권한 AI 를 Grok·Claude·Cursor 로 확대, 완성도 점검 `.Agents/agent-status.md` |
 
 **결과물**: 운영 **1.0.5**(Oracle 배포, 10-17~18). 가이드 모드·출석체크·AI 도우미는 **커밋까지, 운영 배포 전**이다. AI 서비스는 운영 서버 배포 절차(Python 상주·키 설정·`deploy.sh` 확장)가 남았다.
 

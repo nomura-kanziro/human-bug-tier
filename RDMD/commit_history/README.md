@@ -26,7 +26,7 @@
 
 - 파일 없으면 **본인 이름으로 새로 만든다** (`nomura.md` 형식 복사).  
 - nomura → [nomura.md](./nomura.md)  
-- 이 규칙은 `team/`, `.agents/`, RDMD 가이드에도 동일하게 명시됨.
+- 이 규칙은 `team/`, `.Agents/`, RDMD 가이드에도 동일하게 명시됨.
 
 ---
 

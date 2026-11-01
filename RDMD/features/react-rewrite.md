@@ -4,7 +4,7 @@
 > `root-render/`(바닐라)는 **베타 버전에서 업데이트 종료 → 수정 금지**.  
 > 아래 “바닐라가 정본” / “실무는 Render.com만” 문구는 **폐기**되었다.  
 > **`npm run sync:render` 는 더 이상 돌리지 않는다** — 돌리면 React 수정이 바닐라 구본으로 덮어쓰여진다.  
-> 정본: [`../../.agents/common-rules.md`](../../.agents/common-rules.md) ０항
+> 정본: [`../../.Agents/common-rules.md`](../../.Agents/common-rules.md) ０항
 
 **상태**: 바닐라 기능 100% 반영 완료. **2026-09-19부터 React가 유일한 작업 대상.**  
 **날짜**: 2026-09-01 기획 · 2026-09-05 이식 시작 · 2026-09-17 패리티 완료 · 2026-09-19 바닐라 동결  
@@ -144,6 +144,6 @@ Pages/GH Pages = 로그인·게시판 없음. 풀기능은 `backend` + (선택) 
 ## 에이전트
 
 요청이 “React”, “정식 버전 이식”, “리액트로 다시”여도 **이 문서를 먼저 읽고**, 창시자가 구현을 시키기 전에는 스캐폴드하지 않는다.  
-스킬: `.agents/react-rewrite/skill.md` (주 골격 팩 동기화됨)
+스킬: `.Agents/skills/react-rewrite/SKILL.md` (에이전트 폴더 동기화됨)
 
 관련: [overview.md](./overview.md) · [backend-api.md](./backend-api.md) · [CLOUDFLARE.md](../../CLOUDFLARE.md)

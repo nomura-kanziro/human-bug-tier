@@ -14,7 +14,7 @@
 ## 구현 중
 
 - [ ] 변경 파일이 요청 범위 안  
-- [ ] 프론트: getBasePath / getApiBase / 올바른 Auth 헤더  
+- [ ] 프론트: React Router 경로 / `lib/api.js` / 올바른 Auth 헤더  
 - [ ] 백엔드: 미들웨어 권한 맞음  
 - [ ] 관리 기능이면 requireAdmin + getAdminAuthHeaders  
 - [ ] 시크릿·localhost 하드코딩 없음  
@@ -39,7 +39,7 @@
 - [ ] 커밋 메시지 이해 가능  
 - [ ] diff에 `.env` / 키 / 비밀번호 없음  
 - [ ] (권장) 큰 기능이면 `frontend`/`backend` record  
-- [ ] (규칙 변경 시) `.agents` + `team` + 에이전트 스킬 동기화 여부  
+- [ ] (규칙 변경 시) `.Agents` + `team` + 에이전트 스킬 동기화 여부  
 - [ ] 그 다음 `git commit` → `git push`
 
 ## AI 결과물 받을 때 추가

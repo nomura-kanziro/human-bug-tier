@@ -9,7 +9,7 @@
 ### 파일 배치
 
 - 기능 단위 폴더: `html` + `js` + `css` 동반  
-- 공통만 루트 (`common.js`, `common.css`, `header.html`, `footer.html`)  
+- 공통은 `root-cloudflare/src/components/` · `src/lib/` · `src/styles/`  
 - 페이지 전용 API 헬퍼는 모듈 안 (`auth_api.js`, `admin_api.js`)
 
 ### HTML
@@ -36,7 +36,7 @@
 - 코드가 바뀌면 주석 **내용만** 고친다. 리팩터·정리·짧게 만들기 위해 주석을 지우지 않는다.  
 - 사람이 **“주석 지워”**라고 하기 전까지 삭제 금지. AI는 스스로 지우지 않는다.  
 - 새 기능을 넣으면 “이 블록이 무엇을 하는지” 알 수 있는 주석을 남긴다.  
-- 정본: `.agents/common-rules.md` D-5. Grok은 다른 AI가 지운 주석을 복원한다.  
+- 정본: `.Agents/common-rules.md` D-5. Admin AI 는 다른 AI가 지운 주석을 복원한다.  
 
 ### CSS
 
@@ -102,6 +102,6 @@ router.get('/', requireAuth, listMine);
 
 - `node_modules`, `.env` 커밋  
 - 관리 API에 인증 없는 새 엔드포인트  
-- GH Pages 전용 절대 하드코딩 (`/human-bug-tier/...` 고정) — getBasePath 사용  
+- GH Pages 전용 절대 하드코딩 (`/human-bug-tier/...` 고정)  
 - 비밀번호 재설정 토큰 **평문 DB 저장**  
 - 기존 localStorage 키 임의 변경 (로그인 전역 깨짐)  

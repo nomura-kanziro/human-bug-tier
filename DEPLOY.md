@@ -4,7 +4,7 @@
 > `root-render/`(Render.com 바닐라 프론트)는 **업데이트가 끝났고 수정이 금지**되었다.  
 > 모든 신규 작업은 **`root-cloudflare/`(React)** 에만 한다.  
 > 이 문서는 이미 떠있는 Render 서비스의 환경변수 참고용으로만 남긴다.  
-> 정본: [`.agents/common-rules.md`](./.agents/common-rules.md) ０항
+> 정본: [`.Agents/common-rules.md`](./.Agents/common-rules.md) ０항
 
 ## Prerequisites
 - MongoDB Atlas account (free tier OK)

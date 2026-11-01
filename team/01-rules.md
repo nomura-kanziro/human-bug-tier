@@ -1,7 +1,7 @@
 # 01 — 공통 룰 (사람 · 팀)
 
 창시자·팀원 **전원**이 지키는 최소 규칙입니다.  
-AI 쪽 대응 문서: [`.agents/common-rules.md`](../.agents/common-rules.md)
+AI 쪽 대응 문서: [`.Agents/common-rules.md`](../.Agents/common-rules.md)
 
 ---
 
@@ -25,8 +25,7 @@ AI 쪽 대응 문서: [`.agents/common-rules.md`](../.agents/common-rules.md)
 
 ## 3. 경로 · 프론트
 
-- 하위 폴더 페이지에서도 헤더/푸터가 깨지지 않게  
-  → `getBasePath`, 상대 링크, `common.js` 패턴 유지  
+- 내부 이동은 React Router 절대 경로(`<Link to="/…">`), 이미지는 `tierImageUrl()`  
 - API 주소 하드코딩 (`https://...` 또는 프로덕션에 localhost) 금지  
 - 상세: `RDMD/guides/path-and-api.md`
 
@@ -40,7 +39,7 @@ AI 쪽 대응 문서: [`.agents/common-rules.md`](../.agents/common-rules.md)
 
 - 이슈/요청과 **관련 없는 파일**을 대량 수정하지 말 것  
 - “일단 전체 포맷” 금지 (리뷰 불가능)  
-- 공용 파일(`common.js`, `middleware/auth.js`) 수정 시 **회귀 테스트** 필수  
+- 공용 파일(`src/lib/api.js`, `Header.jsx`, `middleware/auth.js`) 수정 시 **회귀 테스트** 필수  
 - **기존 주석 삭제 금지.** 코드가 바뀌면 주석 **내용만** 수정. “주석 지워”라고 하기 전에는 유지 (AI도 동일)  
 
 ## 6. 기록 · 커밋 전 로그 (필수)
@@ -66,10 +65,10 @@ AI 쪽 대응 문서: [`.agents/common-rules.md`](../.agents/common-rules.md)
 ### 6-2. 기능 일지 (권장)
 
 - 의미 있는 기능 변경 후 `RDMD/frontend` 또는 `RDMD/backend` 에 `*-record.md`  
-- 규칙 자체를 바꿀 때는 **창시자 합의** + `.agents` / `team` 동시 갱신
+- 규칙 자체를 바꿀 때는 **창시자 합의** + `.Agents` / `team` 동시 갱신
 
 ## 7. AI 사용 시 (사람)
 
 - AI가 준 코드도 **이 룰·04-prohibitions** 를 통과해야 머지  
-- Grok = 규칙/전역 정렬에 강한 Admin AI, Claude/Codex = 구현 보조로 활용 가능  
+- Admin AI = Grok · Claude · Cursor(규칙·전역 정렬 담당, 동등), 실무 AI = Codex · Antigravity · Manus · Qwen(구현 보조)  
 - AI에게 시크릿을 붙여 넣지 말 것  

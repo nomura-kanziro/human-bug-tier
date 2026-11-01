@@ -23,7 +23,7 @@
 
 | 할 일 | 주로 볼 곳 |
 |------|------------|
-| 헤더/경로/공통 | `common.js`, `header.html`, `footer.html` |
+| 헤더/경로/공통 | `src/components/Header.jsx`, `Footer.jsx`, `src/lib/` |
 | 공식 티어 | `tier-class/`, `tier-image/` |
 | 커스텀·게시판 | `custom-maker/` |
 | 로그인 | `user_login/` |
@@ -62,5 +62,5 @@ AI에게 맡길 때도 위 경로를 지정하면 범위가 좁혀집니다.
 ## 창시자가 추가로 해야 할 것
 
 - 팀 온보딩: `team/` + `RDMD/summary` + `README` 시연  
-- 규칙 개정 시 `.agents` + `team` + 에이전트 3팩 동기화 지시 (Grok Admin AI 활용 가능)  
+- 규칙 개정 시 `.Agents` + `team` + 에이전트 폴더 동기화 지시 (Admin AI 활용 가능)  
 - 시크릿·인프라 최종 관리  

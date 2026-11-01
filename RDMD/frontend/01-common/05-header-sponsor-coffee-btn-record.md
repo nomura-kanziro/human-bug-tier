@@ -16,7 +16,7 @@ feature: common
 - `header.html` — `#header-sponsor-btn` (커피 SVG)
 - `common.js` — `SPONSOR_PROFILE_URL`, `renderSponsorButton()`
 - `Header_Footer.css` — 원형 아이콘 버튼 · 모바일 44px
-- `RDMD/features/common-infra.md`, `.agents/common/skill.md`, `.claude/skills/common/SKILL.md`
+- `RDMD/features/common-infra.md`, `.Agents/skills/common/SKILL.md`, `.Claude/skills/common/SKILL.md`
 
 ## 주요 구현
 1. **로그아웃**: 로그인 버튼 왼쪽
