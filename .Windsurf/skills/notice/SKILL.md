@@ -1,0 +1,61 @@
+---
+name: notice
+description: >
+  공지사항, 새 소식, 핀, notice 페이지, 메인 미리보기. Use when /notice.
+---
+
+# Windsurf 스킬 — 공지사항
+
+> 정본 [`.Agents/skills/notice/SKILL.md`](../../../.Agents/skills/notice/SKILL.md) 의 복제본입니다. 규칙은 정본부터 고칩니다.
+
+## When
+
+- 공지/뉴스 목록·상세, 핀, 메인 미리보기, 관리자 공지 UI
+
+## Code map
+
+- `notice/*`, `index.html` 미리보기
+- `admin/comments/comment-management.*`
+- backend notice controller/model/routes
+
+## Read first
+
+- `RDMD/features/notice.md`
+- `notice/README.md`
+
+## 현재 (작업 전 이해)
+
+- 공개 GET. 작성·**본문 수정**·핀·삭제는 **requireAdmin**
+- 본문 수정: `PUT`/`PATCH` `/api/notices/:id` (제목·본문·요약·분류)
+- 핀은 별도 `PATCH` `/api/notices/:id/pin`
+- 관리 페이지 목록의 **수정** 버튼으로 폼을 채워 저장
+- 유튜브 커뮤니티 → 새 소식: `youtubeCommunitySync.js`, `POST /api/notices/youtube-sync` (Admin). 쓰기는 공개하지 않음
+- 일본어 커뮤니티 글은 한국어로 번역해 저장 (`translateJaKo.js`). 원문은 상세에서 토글
+
+## Do
+
+1. GET 공개 / 쓰기·수정·핀·삭제 = **requireAdmin**
+2. category `notice`|`news` — 확장 시 라벨·필터 동시 수정
+3. 정렬: pinned → pinnedAt → createdAt
+4. 관리 UI 색 #10b981, fetch **getAdminAuthHeaders()**
+5. 내부 링크는 React Router
+- 핀 상한(`MAX_PINNED_NOTICES` 5) 변경 시 백엔드 검증 필요 여부를 함께 본다
+
+## Do not
+
+- 공지 쓰기를 일반 회원에게 개방
+- 관리 삭제/수정 시 헤더 누락
+- 공지 쓰기를 일반 `requireAuth` 만으로 열어 두기
+- 메인 미리보기와 목록 API 응답 필드 불일치 방치
+
+## Tasks
+
+**A. 유저 UI** — 목록/상세 GET, 빈 목록·오류 상태  
+**B. 핀/카테고리** — PATCH + 메인 반영  
+**C. 관리 섹션** — `admin` 스킬 + create/update/delete/pin  
+
+## Checklist
+
+- [ ] 비로그인 읽기
+- [ ] 비관리자 쓰기·수정 거부
+- [ ] 관리자 CRUD(수정 포함)·메인 미리보기

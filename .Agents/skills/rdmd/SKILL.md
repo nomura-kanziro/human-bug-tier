@@ -17,7 +17,7 @@ description: >
 - `RDMD/frontend/<기능>/*-record.md`
 - `RDMD/backend/<기능>/*-record.md`
 - 규칙: `.Agents/`, `team/`
-- 에이전트 폴더: `.Grok/`, `.Claude/`, `.Cursor/`, `.Codex/`, `.Antigravity/`, `.Manus/`, `.Qwen/`
+- 에이전트 폴더: `.Grok/`, `.Claude/`, `.Cursor/`, `.Codex/`, `.Antigravity/`, `.Manus/`, `.Qwen/`, `.Gemini/`, `.Ollama/`, `.Opencode/`, `.Kimi/`, `.Windsurf/`
 
 ## Read first
 

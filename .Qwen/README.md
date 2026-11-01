@@ -85,6 +85,11 @@
 | Antigravity | 실무 | `.Antigravity/skills/*/SKILL.md` | — |
 | Manus | 실무 | `.Manus/skills/*/SKILL.md` | — |
 | Qwen | 실무 | `.Qwen/skills/*/SKILL.md` | — |
+| Gemini | 실무 | `.Gemini/skills/*/SKILL.md` | — |
+| Ollama | 실무 | `.Ollama/skills/*/SKILL.md` | — |
+| Opencode | 실무 | `.Opencode/skills/*/SKILL.md` | — |
+| Kimi | 실무 | `.Kimi/skills/*/SKILL.md` | — |
+| Windsurf | 실무 | `.Windsurf/skills/*/SKILL.md` | — |
 
 규칙은 동일합니다. 한쪽에만 수정하지 마세요([`sync-skills.md`](../.Agents/sync-skills.md)).
 

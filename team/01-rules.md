@@ -70,5 +70,5 @@ AI 쪽 대응 문서: [`.Agents/common-rules.md`](../.Agents/common-rules.md)
 ## 7. AI 사용 시 (사람)
 
 - AI가 준 코드도 **이 룰·04-prohibitions** 를 통과해야 머지  
-- Admin AI = Grok · Claude · Cursor(규칙·전역 정렬 담당, 동등), 실무 AI = Codex · Antigravity · Manus · Qwen(구현 보조)  
+- Admin AI = Grok · Claude · Cursor(규칙·전역 정렬 담당, 동등), 실무 AI = Codex · Antigravity · Manus · Qwen · Gemini · Ollama · Opencode · Kimi · Windsurf(구현 보조)  
 - AI에게 시크릿을 붙여 넣지 말 것  

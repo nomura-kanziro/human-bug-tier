@@ -108,7 +108,7 @@ env 로드: 루트 `.env` 후 `backend/.env` (동일 키는 backend 우선)
 | Grok 전용 스킬 | `.Grok/` (Claude는 `.Claude/skills` 우선) |
 | Claude 스킬 | `.Claude/skills/*/SKILL.md` |
 | Codex 스킬 | `AGENTS.md` + `.Codex/skills/*/SKILL.md` |
-| 에이전트 폴더 | `.Grok` · `.Claude` · `.Cursor` · `.Codex` · `.Antigravity` · `.Manus` · `.Qwen` (모두 `README.md` + `skills/<기능>/SKILL.md`) |
+| 에이전트 폴더 | `.Grok` · `.Claude` · `.Cursor` · `.Codex` · `.Antigravity` · `.Manus` · `.Qwen` · `.Gemini` · `.Ollama` · `.Opencode` · `.Kimi` · `.Windsurf` (모두 `README.md` + `skills/<기능>/SKILL.md`) |
 | 에이전트 완성도 점검 | `.Agents/agent-status.md` |
 | **AI 공통 룰** | **`.Agents/`** |
 | **사람 규칙** | **`team/`** |
@@ -123,7 +123,7 @@ ai-service/                            # AI 전용 서비스 — FastAPI · Lang
 RDMD/                                  # 기록·가이드
 CLOUDFLARE.md                          # 배포 정본
 .Agents/                               # 모든 AI 공통 정본 (룰 + 기능 skill)
-.Grok/ · .Claude/ · .Cursor/ · .Codex/ · .Antigravity/ · .Manus/ · .Qwen/  # 에이전트 폴더 (같은 구조: README.md + skills/<기능>/SKILL.md)
+.Grok/ · .Claude/ · .Cursor/ · .Codex/ · .Antigravity/ · .Manus/ · .Qwen/ · .Gemini/ · .Ollama/ · .Opencode/ · .Kimi/ · .Windsurf/  # 에이전트 폴더 (같은 구조: README.md + skills/<기능>/SKILL.md)
 ```
 
 ## 작업 종료 시 Claude가 할 일
@@ -141,6 +141,6 @@ CLOUDFLARE.md                          # 배포 정본
 - Grok 사용: `.Grok/README.md` + `.Grok/skills/<기능>/SKILL.md`
 - Codex 사용: `AGENTS.md` + `.Codex/skills/<기능>/SKILL.md`
 - Cursor 사용: `.Cursor/README.md` + `.Cursor/skills/<기능>/SKILL.md`
-- Antigravity · Manus · Qwen 사용: 각 폴더 `README.md` + `skills/<기능>/SKILL.md`
-- 에이전트 폴더 7종은 **같은 구조·같은 규칙**입니다. 규칙 변경 시 `.Agents` 정본부터 고치고 7종을 맞추세요.
-- ⚠ 도구가 찾는 폴더 이름은 소문자입니다(`.claude`, `.cursor`). Linux 에서는 `ln -s .Claude .claude` · `ln -s .Cursor .cursor` 가 필요합니다.
+- Antigravity · Manus · Qwen · Gemini · Ollama · Opencode · Kimi · Windsurf 사용: 각 폴더 `README.md` + `skills/<기능>/SKILL.md`
+- 에이전트 폴더 12종은 **같은 구조·같은 규칙**입니다. 규칙 변경 시 `.Agents` 정본부터 고치고 12종을 맞추세요.
+- ⚠ 도구가 찾는 폴더 이름은 소문자입니다(`.claude`, `.cursor`, `.gemini`, `.opencode`, `.windsurf`). Linux 에서는 `ln -s .Claude .claude` · `ln -s .Cursor .cursor` · `ln -s .Gemini .gemini` · `ln -s .Opencode .opencode` · `ln -s .Windsurf .windsurf` 가 필요합니다.

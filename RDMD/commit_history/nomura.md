@@ -431,6 +431,7 @@
 | 400 | 2026-11-02 | [`f7bb72d`](#f7bb72d) | refactor(agents): 에이전트 폴더 구조 통일 — 대문자 이름, 4종 추가, README + skills/<기능>/SKILL.md 19개, 최고 권한 Grok·Claude·Cursor, 공통 룰을 현재 코드 기준으로 개정 |
 | 401 | 2026-11-02 | [`27654f7`](#27654f7) | docs(agents): 새 폴더 구조·권한·경로 규칙을 문서에 반영 — CLAUDE.md 기능 표 React 기준, team·guides·README 갱신, 작업 기록 17 추가 |
 | 402 | 2026-11-02 | [`16a8e5b`](#16a8e5b) | feat(tier-class): 2티어 무급 신설 — 6명 이동, 행운 뽑기 풀·AI 지식 문서 반영 |
+| 403 | 2026-11-02 | [`pending`](#pending) | docs(agents): 실무 에이전트 폴더 5종 추가 — Gemini·Ollama·Opencode·Kimi·Windsurf, README + 스킬 19개, 문서 12종 정렬 |
 
 ---
 
@@ -7750,5 +7751,21 @@
 - **요약**: 2티어 정급 아래에 무급을 만들고 6명을 옮김(5명은 3티어 갑급에서, 카니는 2티어 정급에서). 이미지는 옛 글 보호를 위해 옮기지 않음. 행운 뽑기 풀을 맞추고 3티어 풀에 4명 보충. AI 지식의 세부등급 설명 갱신
 - **주요 파일**: `root-cloudflare/src/data/tiers.json`, `backend/data/luckPool.js`, `ai-service/knowledge/*`, `ai-service/app/guidans_Chat/service/knowledge.py`, `.Agents/skills/tier-class/*` 외 7개 에이전트 폴더 복제본
 - **관련 RDMD**: `RDMD/frontend/02-tier-class/11-tier2-mu-grade-record.md`
+
+[▲ 목차로](#목차)
+
+<a id="pending"></a>
+
+### 403. 2026-11-02 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(agents): 실무 에이전트 폴더 5종 추가 — Gemini·Ollama·Opencode·Kimi·Windsurf, README + 스킬 19개, 문서 12종 정렬
+- **git**: `git show pending`
+- **범위**: docs / agents
+- **요약**: `.Gemini`·`.Ollama`·`.Opencode`·`.Kimi`·`.Windsurf` 를 기존 실무 폴더와 같이 `README.md` + 스킬 19개로 추가했다. 스킬 본문은 `.Qwen` 과 같고 제목의 이름만 다르다. 살아 있는 규칙 문서의 에이전트 목록을 12종으로 맞췄다.
+- **주요 파일**: `.Gemini/*`, `.Ollama/*`, `.Opencode/*`, `.Kimi/*`, `.Windsurf/*`, `.Agents/*`, `CLAUDE.md`, `AGENTS.md`, `README.md`, `team/*`
+- **관련 RDMD**: `RDMD/frontend/01-common/18-agent-folders-five-record.md`
 
 [▲ 목차로](#목차)

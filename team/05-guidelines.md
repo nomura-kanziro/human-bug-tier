@@ -52,7 +52,7 @@
 | **Claude** | 기능 단위 구현, 리팩터, 인수인계 문서, 전역 규칙 정렬(Admin AI) |
 | **Cursor** | IDE 안에서 기능 구현·리팩터, 전역 규칙 정렬(Admin AI) |
 | **Codex** | 패치·테스트·반복 구현, AGENTS.md 기반 작업 |
-| **Antigravity · Manus · Qwen** | 맡긴 범위의 실무 작업(각 폴더 README 를 먼저 읽게 하기) |
+| **Antigravity · Manus · Qwen · Gemini · Ollama · Opencode · Kimi · Windsurf** | 맡긴 범위의 실무 작업(각 폴더 README 를 먼저 읽게 하기) |
 
 공통: 시크릿 넣지 않기, 범위 명시하기, 결과는 team 체크로 검증.
 

@@ -199,6 +199,7 @@ RDMD/
 | Codex | [`AGENTS.md`](../AGENTS.md), [`.Codex/`](../.Codex/README.md) |
 | Cursor | [`.Cursor/`](../.Cursor/README.md) |
 | Antigravity · Manus · Qwen | [`.Antigravity/`](../.Antigravity/README.md) · [`.Manus/`](../.Manus/README.md) · [`.Qwen/`](../.Qwen/README.md) |
+| Gemini · Ollama · Opencode · Kimi · Windsurf | [`.Gemini/`](../.Gemini/README.md) · [`.Ollama/`](../.Ollama/README.md) · [`.Opencode/`](../.Opencode/README.md) · [`.Kimi/`](../.Kimi/README.md) · [`.Windsurf/`](../.Windsurf/README.md) |
 | 배포 | [`../DEPLOY.md`](../DEPLOY.md) |
 
 충돌 시: 사람 지시 → `.Agents` → 에이전트 스킬 → RDMD 이력.

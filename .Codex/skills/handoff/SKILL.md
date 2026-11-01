@@ -35,6 +35,11 @@ description: >
    - Antigravity → `.Antigravity/`  
    - Manus → `.Manus/`  
    - Qwen → `.Qwen/`  
+   - Gemini → `.Gemini/`  
+   - Ollama → `.Ollama/`  
+   - Opencode → `.Opencode/`  
+   - Kimi → `.Kimi/`  
+   - Windsurf → `.Windsurf/`  
 4. 실행: `cd backend && npm start` → `:5000`  
 5. 시크릿 실값 묻지/출력하지 말 것  
 
@@ -104,7 +109,7 @@ npm start
 
 담당자가 떠날 때 / 큰 기능 완료 시:
 
-1. `.Agents` 정본과 에이전트 폴더 7종 규칙 동기화
+1. `.Agents` 정본과 에이전트 폴더 12종 규칙 동기화
 2. `CLAUDE.md` / `AGENTS.md` 표·경로가 맞는지 확인
 
 ## 함정 6
@@ -124,5 +129,5 @@ npm start
 - [ ] 담당 기능 스킬 경로 제시
 - [ ] team / .Agents 경로 안내
 - [ ] commit_history 규칙 안내 (커밋 전 필수)
-- [ ] 에이전트 폴더 7종(같은 구조) / 번외 AI 구분 설명
+- [ ] 에이전트 폴더 12종(같은 구조) / 번외 AI 구분 설명
 - [ ] 시크릿 미노출

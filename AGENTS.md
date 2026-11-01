@@ -73,7 +73,7 @@ AI 서비스(선택): `cd ai-service` → venv + `pip install -r requirements.tx
 | Claude | `CLAUDE.md` + `.Claude/skills/*/SKILL.md` |
 | Grok | `.Grok/README.md` + `.Grok/skills/<기능>/SKILL.md` |
 | Cursor | `.Cursor/README.md` + `.Cursor/skills/<기능>/SKILL.md` |
-| Antigravity · Manus · Qwen | 각 폴더 `README.md` + `skills/<기능>/SKILL.md` |
+| Antigravity · Manus · Qwen · Gemini · Ollama · Opencode · Kimi · Windsurf | 각 폴더 `README.md` + `skills/<기능>/SKILL.md` |
 
 규칙 변경: [`.Agents/sync-skills.md`](./.Agents/sync-skills.md)
 

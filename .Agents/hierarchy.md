@@ -1,6 +1,7 @@
 # 권한 계층 (Hierarchy)
 
 > 2026-11-02 창시자 지시로 개편: 최고 권한 AI 를 **Grok · Claude · Cursor** 셋으로 넓혔고, 에이전트 폴더를 대문자로 시작하는 이름으로 바꿨다.
+> 같은 날 실무 폴더 `.Gemini` · `.Ollama` · `.Opencode` · `.Kimi` · `.Windsurf` 를 같은 구조로 추가했다.
 
 ## 1. 최상위: 사람
 
@@ -26,9 +27,9 @@ AI보다 항상 위입니다.
 │  .Agents 정본 유지           │
 └──────────────┬──────────────┘
                │  공통 룰 강제 · 스킬 정합 지시
-   ┌───────┬───┴────┬───────┐
-   ▼       ▼        ▼       ▼
- Codex  Antigravity Manus  Qwen
+               ▼
+ Codex · Antigravity · Manus · Qwen
+ Gemini · Ollama · Opencode · Kimi · Windsurf
               (실무 에이전트)
 ```
 
@@ -46,7 +47,7 @@ AI보다 항상 위입니다.
   - 창시자 명시 지시를 무시
 - **Admin AI 끼리 해석이 다르면** 어느 쪽도 혼자 정하지 않고 **사람에게 묻는다.** 다른 Admin AI 의 정렬 결과를 말없이 되돌리지 않는다.
 
-### Codex · Antigravity · Manus · Qwen (실무 에이전트)
+### Codex · Antigravity · Manus · Qwen · Gemini · Ollama · Opencode · Kimi · Windsurf (실무 에이전트)
 
 - 기능 단위 구현·리팩터·문서 보조
 - **반드시** `.Agents/common-rules.md` 준수
@@ -62,7 +63,7 @@ AI보다 항상 위입니다.
 | 0 | 사람 지시 | 대화·이슈·PR |
 | 1 | 공통 AI 룰 + **기능 skill 정본** | **`.Agents/`** (`common-rules` + `skills/<기능>/SKILL.md`) |
 | 2a | Admin AI — Grok · Claude · Cursor | `.Grok/` · `.Claude/` (+ `CLAUDE.md`) · `.Cursor/` |
-| 2b | 실무 AI — Codex · Antigravity · Manus · Qwen | `.Codex/` (+ 루트 `AGENTS.md`) · `.Antigravity/` · `.Manus/` · `.Qwen/` |
+| 2b | 실무 AI — Codex · Antigravity · Manus · Qwen · Gemini · Ollama · Opencode · Kimi · Windsurf | `.Codex/` (+ 루트 `AGENTS.md`) · `.Antigravity/` · `.Manus/` · `.Qwen/` · `.Gemini/` · `.Ollama/` · `.Opencode/` · `.Kimi/` · `.Windsurf/` |
 | 2c | **번외 AI** (그 밖의 AI) | 전용 폴더 없음 → **`.Agents` 만** 사용 |
 | 3 | 배경 지식 | `RDMD/` |
 | 4 | 사람 작업 규칙 | `team/` |
@@ -82,7 +83,7 @@ AI보다 항상 위입니다.
 저장소 폴더는 대문자로 시작한다(`.Claude`, `.Cursor` …). 그런데 도구가 자동으로 찾는 이름은 소문자다(Claude Code 는 `.claude/`, Cursor 는 `.cursor/`).
 
 - **Windows · macOS 기본 설정**: 파일 시스템이 대소문자를 구분하지 않아 그대로 동작한다.
-- **Linux(대소문자 구분)**: 도구가 폴더를 못 찾는다. 그 환경에서 쓸 때는 링크를 만든다 → `ln -s .Claude .claude` · `ln -s .Cursor .cursor`
+- **Linux(대소문자 구분)**: 도구가 폴더를 못 찾는다. 그 환경에서 쓸 때는 링크를 만든다 → `ln -s .Claude .claude` · `ln -s .Cursor .cursor` · `ln -s .Gemini .gemini` · `ln -s .Opencode .opencode` · `ln -s .Windsurf .windsurf`
 
 ---
 
@@ -101,4 +102,4 @@ AI보다 항상 위입니다.
 - [ ] 새 기능 전 공통 룰 위반 여부 점검  
 - [ ] 에이전트 스킬 추가 시 `.Agents` 와 모순 없는지 확인  
 - [ ] 경로·Admin 인증·시크릿 관련 실수 차단  
-- [ ] 큰 변경 후 RDMD + 에이전트 폴더 7종 동기화 제안  
+- [ ] 큰 변경 후 RDMD + 에이전트 폴더 12종 동기화 제안  

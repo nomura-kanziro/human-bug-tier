@@ -45,7 +45,7 @@ AI 에이전트 공통 룰은 [`.Agents/`](../.Agents/README.md) 입니다.
 
 AI 작업    →  .Agents/common-rules + .Agents/skills/<기능>/SKILL.md   ← 모든 AI 정본
                  │
-                 ├─ 에이전트 폴더: .Grok | .Claude | .Cursor | .Codex | .Antigravity | .Manus | .Qwen (같은 구조)
+                 ├─ 에이전트 폴더: .Grok | .Claude | .Cursor | .Codex | .Antigravity | .Manus | .Qwen | .Gemini | .Ollama | .Opencode | .Kimi | .Windsurf (같은 구조)
                  └─ 번외 AI: 정본만으로 작업
 ```
 
@@ -53,7 +53,7 @@ AI 작업    →  .Agents/common-rules + .Agents/skills/<기능>/SKILL.md   ← 
   모두 `README.md` + `skills/<기능>/SKILL.md`. 정본은 `.Agents`, 나머지는 복제본.  
   그 외 AI는 `.Agents/skills/<기능>/SKILL.md` 로 동일 기준 적용.
 - AI 결과물이 **team 금지사항**을 깨면 머지하지 마세요.  
-- 최고 권한 AI: **Grok · Claude · Cursor** (동등). 실무 AI: Codex · Antigravity · Manus · Qwen  
+- 최고 권한 AI: **Grok · Claude · Cursor** (동등). 실무 AI: Codex · Antigravity · Manus · Qwen · Gemini · Ollama · Opencode · Kimi · Windsurf  
 - 충돌: **창시자 > .Agents 정본 > 에이전트 전용 폴더 > 옛 RDMD**
 
 ## 빠른 링크

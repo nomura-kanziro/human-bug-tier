@@ -1,6 +1,6 @@
 # `.Agents` — 전 AI 공통 권한 · 기능 스킬 (Canonical)
 
-이 폴더는 **어떤 AI를 쓰든** (Grok · Claude · Cursor · Codex · Antigravity · Manus · Qwen · **그 외 번외 AI**)  
+이 폴더는 **어떤 AI를 쓰든** (Grok · Claude · Cursor · Codex · Antigravity · Manus · Qwen · Gemini · Ollama · Opencode · Kimi · Windsurf · **그 외 번외 AI**)  
 지켜야 할 **공통 룰 + 기능별 표준 `skills/<기능>/SKILL.md`** 의 **정본(canonical)** 입니다.
 
 ---
@@ -9,8 +9,8 @@
 
 | 구분 | 역할 |
 |------|------|
-| **에이전트 폴더 7종** `.Grok` · `.Claude` · `.Cursor` · `.Codex` · `.Antigravity` · `.Manus` · `.Qwen` | 모두 같은 구조(`README.md` + `skills/<기능>/SKILL.md`). 정본 스킬을 에이전트별로 복제해 둔 폴더. |
-| **`.Agents`** | 도구와 무관한 **공통 정본**. 전용 폴더가 없는 번외 AI(Gemini, 기타 채팅 등)도 **여기만 보고** 같은 품질로 작업 가능. |
+| **에이전트 폴더 12종** `.Grok` · `.Claude` · `.Cursor` · `.Codex` · `.Antigravity` · `.Manus` · `.Qwen` · `.Gemini` · `.Ollama` · `.Opencode` · `.Kimi` · `.Windsurf` | 모두 같은 구조(`README.md` + `skills/<기능>/SKILL.md`). 정본 스킬을 에이전트별로 복제해 둔 폴더. |
+| **`.Agents`** | 도구와 무관한 **공통 정본**. 전용 폴더가 없는 번외 AI(그 외 채팅 등)도 **여기만 보고** 같은 품질로 작업 가능. |
 | **Grok · Claude · Cursor** | 사람 다음 **최고 권한 Admin AI**(셋은 동등). `.Agents` 수호, 다른 폴더 정합. |
 
 ```
@@ -19,7 +19,7 @@
         ▼
    .Agents/          ← 모든 AI 공통 정본 (룰 + skills/<기능>/SKILL.md)
         │
-   ├─ 에이전트 폴더(같은 구조의 복제본) .Grok · .Claude · .Cursor · .Codex · .Antigravity · .Manus · .Qwen
+   ├─ 에이전트 폴더(같은 구조의 복제본) .Grok · .Claude · .Cursor · .Codex · .Antigravity · .Manus · .Qwen · .Gemini · .Ollama · .Opencode · .Kimi · .Windsurf
    └─ 번외 AI 는 .Agents 만으로 충분
 ```
 
@@ -31,6 +31,11 @@
   - Antigravity → `.Antigravity/skills/<기능>/SKILL.md` + `.Antigravity/README.md`  
   - Manus → `.Manus/skills/<기능>/SKILL.md` + `.Manus/README.md`  
   - Qwen → `.Qwen/skills/<기능>/SKILL.md` + `.Qwen/README.md`  
+  - Gemini → `.Gemini/skills/<기능>/SKILL.md` + `.Gemini/README.md`  
+  - Ollama → `.Ollama/skills/<기능>/SKILL.md` + `.Ollama/README.md`  
+  - Opencode → `.Opencode/skills/<기능>/SKILL.md` + `.Opencode/README.md`  
+  - Kimi → `.Kimi/skills/<기능>/SKILL.md` + `.Kimi/README.md`  
+  - Windsurf → `.Windsurf/skills/<기능>/SKILL.md` + `.Windsurf/README.md`  
 - 전용 폴더 내용이 `.Agents` 와 **모순되면 `.Agents` 가 이김** (Admin AI 가 정렬).  
 - **번외 AI** 사용 인원:  
   1. `.Agents/common-rules.md`  
@@ -100,7 +105,7 @@
 ```
 사람 창시자 지시
   > .Agents (common-rules + 기능 SKILL.md)
-  > 에이전트 전용 폴더 (.Grok / .Claude / .Codex / .Cursor / .Antigravity / .Manus / .Qwen)
+  > 에이전트 전용 폴더 (.Grok / .Claude / .Codex / .Cursor / .Antigravity / .Manus / .Qwen / .Gemini / .Ollama / .Opencode / .Kimi / .Windsurf)
   > RDMD 과거 일지
 ```
 

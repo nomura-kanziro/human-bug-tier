@@ -1,6 +1,6 @@
 # 권한 매트릭스
 
-**Admin AI** = Grok · Claude · Cursor (동등) / **실무 AI** = Codex · Antigravity · Manus · Qwen
+**Admin AI** = Grok · Claude · Cursor (동등) / **실무 AI** = Codex · Antigravity · Manus · Qwen · Gemini · Ollama · Opencode · Kimi · Windsurf
 
 | 행위 | 사람(창시자) | 사람(팀원) | Admin AI | 실무 AI |
 |------|:------------:|:----------:|:--------:|:-------:|
@@ -21,6 +21,6 @@
 ## 해석
 
 - **Admin AI(Grok·Claude·Cursor)**: 규칙·정합·전역 품질을 맡는다. 셋은 동등하며, 해석이 갈리면 사람에게 묻는다  
-- **실무 AI(Codex·Antigravity·Manus·Qwen)**: 구현 실행력, 공통 룰 아래 동작  
+- **실무 AI(Codex·Antigravity·Manus·Qwen·Gemini·Ollama·Opencode·Kimi·Windsurf)**: 구현 실행력, 공통 룰 아래 동작  
 - **팀원**: `team/` + 담당 스킬/모듈 README  
 - **창시자**: 모든 것의 최종 키  

@@ -1,6 +1,6 @@
 # 전 에이전트 공통 룰 (MUST)
 
-**모든 AI**(Grok, Claude, Cursor, Codex, Antigravity, Manus, Qwen 및 이후 추가 에이전트)는  
+**모든 AI**(Grok, Claude, Cursor, Codex, Antigravity, Manus, Qwen, Gemini, Ollama, Opencode, Kimi, Windsurf 및 이후 추가 에이전트)는  
 기능 스킬을 읽기 **전에** 이 문서를 준수합니다.
 
 Grok · Claude · Cursor 는 이 문서의 **수호자(Admin AI)** 입니다.  
@@ -83,7 +83,7 @@ Grok · Claude · Cursor 는 이 문서의 **수호자(Admin AI)** 입니다.
    - 상세: `RDMD/commit_history/README.md`  
 2. 의미 있는 변경 → `RDMD/frontend|backend/<기능>/*-record.md` (해당 시)  
 3. 공통 룰 변경 → **`.Agents` 먼저**, 그다음  
-   - 에이전트 폴더 `.Grok/` · `.Claude/` · `.Cursor/` · `.Codex/` · `.Antigravity/` · `.Manus/` · `.Qwen/`, `team/`  
+   - 에이전트 폴더 `.Grok/` · `.Claude/` · `.Cursor/` · `.Codex/` · `.Antigravity/` · `.Manus/` · `.Qwen/` · `.Gemini/` · `.Ollama/` · `.Opencode/` · `.Kimi/` · `.Windsurf/`, `team/`  
 4. 한 에이전트 스킬만 “느슨한 규칙”으로 단독 변경 금지  
 5. 상세 이력은 `RDMD/` 링크  
 

@@ -10,7 +10,7 @@ description: >
 > 정본 [`.Agents/skills/project-wide/SKILL.md`](../../../.Agents/skills/project-wide/SKILL.md) 의 복제본입니다. 규칙은 정본부터 고칩니다.
 
 > **정본**: `.Agents` · 모든 AI(번외 포함) 적용  
-> 에이전트 폴더 7종은 이 내용을 복제한 것.
+> 에이전트 폴더 12종은 이 내용을 복제한 것.
 
 ## When
 

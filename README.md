@@ -260,6 +260,7 @@ copy .env.example .env
 | **Cursor** (Admin) | [`.Cursor/`](./.Cursor/README.md) |
 | **Codex** (실무) | [`AGENTS.md`](./AGENTS.md) + [`.Codex/`](./.Codex/README.md) |
 | **Antigravity · Manus · Qwen** (실무) | [`.Antigravity/`](./.Antigravity/README.md) · [`.Manus/`](./.Manus/README.md) · [`.Qwen/`](./.Qwen/README.md) |
+| **Gemini · Ollama · Opencode · Kimi · Windsurf** (실무) | [`.Gemini/`](./.Gemini/README.md) · [`.Ollama/`](./.Ollama/README.md) · [`.Opencode/`](./.Opencode/README.md) · [`.Kimi/`](./.Kimi/README.md) · [`.Windsurf/`](./.Windsurf/README.md) |
 | 개발 이력·기능 설명 | [`RDMD/`](./RDMD/README.md) |
 
 > 모든 에이전트 폴더는 구조가 같음: `README.md` + `skills/<기능>/SKILL.md`.  
