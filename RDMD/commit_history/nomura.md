@@ -430,7 +430,7 @@
 | 399 | 2026-10-18 | [`bcf668d`](#bcf668d) | docs(ai): AI 서버 OFF 모드·지식 고도화 기록 — 기록 03, README·기능 문서·프록시/화면 기록·가이드·AI 스킬 4종, 족보 16종 정정 |
 | 400 | 2026-11-02 | [`f7bb72d`](#f7bb72d) | refactor(agents): 에이전트 폴더 구조 통일 — 대문자 이름, 4종 추가, README + skills/<기능>/SKILL.md 19개, 최고 권한 Grok·Claude·Cursor, 공통 룰을 현재 코드 기준으로 개정 |
 | 401 | 2026-11-02 | [`27654f7`](#27654f7) | docs(agents): 새 폴더 구조·권한·경로 규칙을 문서에 반영 — CLAUDE.md 기능 표 React 기준, team·guides·README 갱신, 작업 기록 17 추가 |
-| 402 | 2026-11-02 | `pending402` | feat(tier-class): 2티어 무급 신설 — 6명 이동, 행운 뽑기 풀·AI 지식 문서 반영 |
+| 402 | 2026-11-02 | [`16a8e5b`](#16a8e5b) | feat(tier-class): 2티어 무급 신설 — 6명 이동, 행운 뽑기 풀·AI 지식 문서 반영 |
 
 ---
 
@@ -7737,15 +7737,15 @@
 
 [▲ 목차로](#목차)
 
-<a id="pending402"></a>
+<a id="16a8e5b"></a>
 
-### 402. 2026-11-02 — `pending402`
+### 402. 2026-11-02 — `16a8e5b`
 
-- **hash (short)**: `pending402`
-- **hash (full)**: `pendingfull402`
+- **hash (short)**: `16a8e5b`
+- **hash (full)**: `16a8e5b9292a3616bafceedbe9114ab2a4e02166`
 - **author**: nomura
 - **message**: feat(tier-class): 2티어 무급 신설 — 6명 이동, 행운 뽑기 풀·AI 지식 문서 반영
-- **git**: `git show pending402`
+- **git**: `git show 16a8e5b`
 - **범위**: tier-class / luck-draw / ai
 - **요약**: 2티어 정급 아래에 무급을 만들고 6명을 옮김(5명은 3티어 갑급에서, 카니는 2티어 정급에서). 이미지는 옛 글 보호를 위해 옮기지 않음. 행운 뽑기 풀을 맞추고 3티어 풀에 4명 보충. AI 지식의 세부등급 설명 갱신
 - **주요 파일**: `root-cloudflare/src/data/tiers.json`, `backend/data/luckPool.js`, `ai-service/knowledge/*`, `ai-service/app/guidans_Chat/service/knowledge.py`, `.Agents/skills/tier-class/*` 외 7개 에이전트 폴더 복제본
