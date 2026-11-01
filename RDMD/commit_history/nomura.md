@@ -428,8 +428,8 @@
 | 397 | 2026-10-18 | [`a20dcd5`](#a20dcd5) | feat(ai): /ai 화면에 AI 서버 ON/OFF 알림("AI 서버 OFF 상태 (사이트의 정보내용을 끌어다 대답합니다.)") + Express /api/ai/status |
 | 398 | 2026-10-18 | [`175eb41`](#175eb41) | feat(ai-service): knowledge 고도화 — FAQ·용어집·단계별 사용법·문제 해결·공지/문의/알림·업데이트 이력 6개 추가, 족보 16종 보강, 지식↔코드 동기화 테스트 |
 | 399 | 2026-10-18 | [`bcf668d`](#bcf668d) | docs(ai): AI 서버 OFF 모드·지식 고도화 기록 — 기록 03, README·기능 문서·프록시/화면 기록·가이드·AI 스킬 4종, 족보 16종 정정 |
-| 400 | 2026-11-02 | `pending400` | refactor(agents): 에이전트 폴더 구조 통일 — 대문자 이름, 4종 추가, README + skills/<기능>/SKILL.md 19개, 최고 권한 Grok·Claude·Cursor, 공통 룰을 현재 코드 기준으로 개정 |
-| 401 | 2026-11-02 | `pending401` | docs(agents): 새 폴더 구조·권한·경로 규칙을 문서에 반영 — CLAUDE.md 기능 표 React 기준, team·guides·README 갱신, 작업 기록 17 추가 |
+| 400 | 2026-11-02 | [`f7bb72d`](#f7bb72d) | refactor(agents): 에이전트 폴더 구조 통일 — 대문자 이름, 4종 추가, README + skills/<기능>/SKILL.md 19개, 최고 권한 Grok·Claude·Cursor, 공통 룰을 현재 코드 기준으로 개정 |
+| 401 | 2026-11-02 | [`27654f7`](#27654f7) | docs(agents): 새 폴더 구조·권한·경로 규칙을 문서에 반영 — CLAUDE.md 기능 표 React 기준, team·guides·README 갱신, 작업 기록 17 추가 |
 
 ---
 
@@ -7704,15 +7704,15 @@
 
 [▲ 목차로](#목차)
 
-<a id="pending400"></a>
+<a id="f7bb72d"></a>
 
-### 400. 2026-11-02 — `pending400`
+### 400. 2026-11-02 — `f7bb72d`
 
-- **hash (short)**: `pending400`
-- **hash (full)**: `pendingfull400`
+- **hash (short)**: `f7bb72d`
+- **hash (full)**: `f7bb72dc04a2b2cad50b607b6b1e3e786a106834`
 - **author**: nomura
 - **message**: refactor(agents): 에이전트 폴더 구조 통일 — 대문자 이름, 4종 추가, README + skills/<기능>/SKILL.md 19개, 최고 권한 Grok·Claude·Cursor, 공통 룰을 현재 코드 기준으로 개정
-- **git**: `git show pending400`
+- **git**: `git show f7bb72d`
 - **범위**: agents
 - **요약**: `.agents`·`.claude`·`.codex`·`.groks` 를 대문자 이름으로 바꾸고 `.Antigravity`·`.Cursor`·`.Manus`·`.Qwen` 추가. 8개 폴더를 `README.md` + `skills/<기능>/SKILL.md` 로 통일하고 정본을 복제. 정본을 React 기준으로 갱신, 기존 스킬에만 있던 유효한 내용 이관, `guide`·`event` 스킬 신설. 공통 룰 개정: 경로 규칙을 React Router 로, AI 배포는 창시자 명시 지시 때 Admin AI 만, Cloudflare 지시 대기 문구 정리
 - **주요 파일**: `.Agents/*`, `.Claude/*`, `.Codex/*`, `.Grok/*`, `.Antigravity/*`, `.Cursor/*`, `.Manus/*`, `.Qwen/*`
@@ -7720,15 +7720,15 @@
 
 [▲ 목차로](#목차)
 
-<a id="pending401"></a>
+<a id="27654f7"></a>
 
-### 401. 2026-11-02 — `pending401`
+### 401. 2026-11-02 — `27654f7`
 
-- **hash (short)**: `pending401`
-- **hash (full)**: `pendingfull401`
+- **hash (short)**: `27654f7`
+- **hash (full)**: `27654f7e588c597490f2189dd27a2cb3c56658ab`
 - **author**: nomura
 - **message**: docs(agents): 새 폴더 구조·권한·경로 규칙을 문서에 반영 — CLAUDE.md 기능 표 React 기준, team·guides·README 갱신, 작업 기록 17 추가
-- **git**: `git show pending401`
+- **git**: `git show 27654f7`
 - **범위**: docs / agents
 - **요약**: CLAUDE.md·AGENTS.md·README·team·RDMD 의 에이전트 경로와 권한 문구를 새 구조로 수정. CLAUDE.md 기능 표를 React 경로로 교체, 경로 규칙 문구 갱신, 작업 기록과 work-history 추가
 - **주요 파일**: `CLAUDE.md`, `AGENTS.md`, `README.md`, `team/*`, `RDMD/guides/*`, `RDMD/summary/work-history.md`
