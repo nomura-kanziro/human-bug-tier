@@ -1,0 +1,104 @@
+# .Claude — Claude 스킬 · 팀 인수인계
+
+Claude Code가 자동으로 찾는 프로젝트 스킬 위치입니다.
+
+**모든 AI 공통 정본(더 상위)**: [`.Agents/`](../.Agents/README.md)
+— `common-rules` + **`skills/<기능>/SKILL.md`**. Admin AI(Grok · Claude · Cursor)가 수호.
+**사람 규칙**: [`team/`](../team/README.md)
+
+**주석**: 기존 설명 주석은 삭제 금지. 코드가 바뀌면 문구만 수정. 사람이 “지워” 하기 전엔 유지 (`.Agents/common-rules.md` D-5).
+
+```
+.Claude/
+├── README.md                 ← 지금 이 파일
+└── skills/
+    ├── project-wide/SKILL.md
+    ├── common/SKILL.md
+    ├── tier-class/SKILL.md
+    ├── custom-maker/SKILL.md
+    ├── auth/SKILL.md
+    ├── notice/SKILL.md
+    ├── inquiry/SKILL.md
+    ├── admin/SKILL.md
+    ├── notifications/SKILL.md
+    ├── luck-draw/SKILL.md
+    ├── ai-service/SKILL.md   ← AI 전용 서비스(FastAPI · LangGraph · RAG)
+    ├── my-page/SKILL.md
+    ├── guide/SKILL.md        ← 가이드 페이지 · 가이드 모드
+    ├── event/SKILL.md        ← 이벤트 · 이벤트 디자인
+    ├── backend/SKILL.md
+    ├── deploy/SKILL.md
+    ├── rdmd/SKILL.md
+    ├── handoff/SKILL.md      ← 팀 온보딩·인수인계 전용
+    └── react-rewrite/SKILL.md ← React 전환 기록
+```
+
+루트 **`CLAUDE.md`**: 프로젝트를 열 때 Claude(와 사람)가 먼저 읽는 총괄 지침.
+
+## 권한과 할 일
+
+이 에이전트는 **최고 권한 AI (Admin AI)** 입니다. Grok · Claude · Cursor 는 동등합니다.
+
+- 다른 에이전트의 스킬·출력이 공통 룰과 어긋나면 **지적하고 정렬**합니다.
+- 다른 에이전트가 **기존 주석을 지운** 흔적이 있으면 지적하고 복원합니다(삭제는 사람이 “지워”라고 할 때만).
+- 경로·보안·관리자 권한·시크릿 관련은 **기능 스킬보다 `.Agents` 우선**입니다.
+- 규칙을 바꾸면 [`sync-skills.md`](../.Agents/sync-skills.md) 순서로 모든 에이전트 폴더와 `team/` 을 맞춥니다.
+- 다른 Admin AI 와 해석이 다르면 혼자 정하지 말고 **사람에게 묻습니다.**
+- 최종 배포 승인과 시크릿 입력은 **사람**의 몫입니다.
+
+## Claude 에서 쓰는 법
+
+| 방식 | 설명 |
+|------|------|
+| 자동 | 요청 내용이 skill `description` 과 맞으면 Claude가 로드 |
+| 슬래시 | `/project-wide`, `/common`, `/admin` … (폴더 이름) |
+| 인수인계 | `/handoff` 또는 “온보딩”, “인수인계” 요청 |
+
+⚠ Claude Code 가 찾는 이름은 소문자 `.claude/` 입니다. Windows·macOS 기본 설정은 대소문자를 구분하지 않아 그대로 동작하고, Linux 에서는 `ln -s .Claude .claude` 가 필요합니다([hierarchy.md](../.Agents/hierarchy.md) 3절).
+
+## 작업 순서
+
+1. `.Agents/common-rules.md` + `.Agents/skills/<기능>/SKILL.md` (정본)
+2. `.Claude/skills/<기능>/SKILL.md` (이 폴더)
+3. 범위가 넓으면 `skills/project-wide/SKILL.md`
+4. 배경은 `RDMD/`, 사람 규칙은 `team/`
+5. 충돌하면 **`.Agents` 우선** (약화 금지)
+
+## 작업 종료 시
+
+1. 변경 요약 (무엇을 / 왜)
+2. 수동 테스트 방법 (`:5000` 기준)
+3. **커밋·푸시 전** `RDMD/commit_history/{작성자}.md` 작성 필수 안내
+4. 큰 기능이면 `RDMD/` record 제안
+5. 시크릿이 diff 에 없는지 확인
+
+## 사람과 팀원
+
+1. 루트 `README.md` · `CLAUDE.md` 읽기
+2. `skills/handoff/SKILL.md`
+3. `RDMD/features/overview.md`
+4. 담당 기능 `SKILL.md` + 모듈 `README.md`
+
+## 다른 에이전트와의 관계
+
+모든 에이전트 폴더는 구조가 같습니다.
+
+| 에이전트 | 권한 | 스킬 위치 | 루트 진입 문서 |
+|----------|------|-----------|----------------|
+| Grok | Admin | `.Grok/skills/*/SKILL.md` | — |
+| Claude | Admin | `.Claude/skills/*/SKILL.md` | `CLAUDE.md` |
+| Cursor | Admin | `.Cursor/skills/*/SKILL.md` | — |
+| Codex | 실무 | `.Codex/skills/*/SKILL.md` | `AGENTS.md` |
+| Antigravity | 실무 | `.Antigravity/skills/*/SKILL.md` | — |
+| Manus | 실무 | `.Manus/skills/*/SKILL.md` | — |
+| Qwen | 실무 | `.Qwen/skills/*/SKILL.md` | — |
+
+규칙은 동일합니다. 한쪽에만 수정하지 마세요([`sync-skills.md`](../.Agents/sync-skills.md)).
+
+## 스킬 작성 규칙
+
+- 위치·파일명: **`.Claude/skills/<name>/SKILL.md`** (모든 에이전트 동일)
+- YAML frontmatter: `name`(폴더 이름과 같게), `description` (트리거 키워드 포함)
+- 본문: When / Do / Do not / Tasks / Checklist
+- 배경 설명은 `RDMD/` 로 링크
+- 시크릿·실 `.env` 값 금지

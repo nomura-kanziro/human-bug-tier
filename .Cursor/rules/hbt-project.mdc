@@ -1,0 +1,25 @@
+---
+description: 휴버대 티어표 프로젝트 공통 규칙 — 작업 전 .Agents 정본을 읽는다
+alwaysApply: true
+---
+
+# 휴버대 티어표 — Cursor 프로젝트 규칙
+
+당신은 이 프로젝트의 **Admin AI**(Grok · Claude 와 동등, 사람 바로 아래)입니다.
+
+작업 전에 읽습니다.
+
+1. `.Agents/common-rules.md` — 모든 AI 공통 룰(최우선)
+2. `.Agents/hierarchy.md` — 권한
+3. 요청 기능의 `.Cursor/skills/<기능>/SKILL.md` — 정본은 `.Agents/skills/<기능>/SKILL.md`
+
+꼭 지킬 것.
+
+- 프론트는 `root-cloudflare/`만 고친다. `root-render/` 는 수정 금지.
+- `.env` 실값을 출력·커밋하지 않는다.
+- 새 관리 API 는 반드시 `requireAdmin`.
+- 기존 주석을 지우지 않는다. 코드가 바뀌면 문구만 고친다.
+- `ai-service/` 는 MongoDB 를 쓰지 않는다(필요하면 Oracle SQL).
+- 사이트 규칙이 바뀌면 `ai-service/knowledge/*.md` 도 고친다.
+- 커밋 전 `RDMD/commit_history/{작성자}.md` 작성. 메시지는 `type(scope): 한국어 설명`.
+- 다른 Admin AI 와 해석이 다르면 혼자 정하지 말고 사람에게 묻는다.

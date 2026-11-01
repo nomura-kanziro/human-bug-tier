@@ -7,8 +7,8 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 399 |
-| **기간** | 2026-03-20 ~ 2026-10-18 |
+| **커밋 수** | 400 |
+| **기간** | 2026-03-20 ~ 2026-11-02 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
 > 폴더 안내: [README.md](./README.md)  ·  상세 기능 일지: [../frontend/](../frontend/README.md) · [../backend/](../backend/README.md)
@@ -428,6 +428,7 @@
 | 397 | 2026-10-18 | [`a20dcd5`](#a20dcd5) | feat(ai): /ai 화면에 AI 서버 ON/OFF 알림("AI 서버 OFF 상태 (사이트의 정보내용을 끌어다 대답합니다.)") + Express /api/ai/status |
 | 398 | 2026-10-18 | [`175eb41`](#175eb41) | feat(ai-service): knowledge 고도화 — FAQ·용어집·단계별 사용법·문제 해결·공지/문의/알림·업데이트 이력 6개 추가, 족보 16종 보강, 지식↔코드 동기화 테스트 |
 | 399 | 2026-10-18 | [`bcf668d`](#bcf668d) | docs(ai): AI 서버 OFF 모드·지식 고도화 기록 — 기록 03, README·기능 문서·프록시/화면 기록·가이드·AI 스킬 4종, 족보 16종 정정 |
+| 400 | 2026-11-02 | `pending400` | refactor(agents): 에이전트 폴더 구조 통일 — 대문자 이름, 4종 추가, README + skills/<기능>/SKILL.md 19개, 최고 권한 Grok·Claude·Cursor, 공통 룰을 현재 코드 기준으로 개정 |
 
 ---
 
@@ -7699,5 +7700,21 @@
 - **요약**: RDMD/ai/03 신설(요청·변경·실측·찾아 고친 문제·한계), ai-service README(ON/OFF·dev_service·Chroma 폴더 경고·기준값), features/ai-service.md(지식 문서 구성 표·ON/OFF 절), 프록시·화면 기록 갱신, development·new-feature-checklist(동기화 테스트·구어체 FAQ 추가), work-history, AI 스킬 4종(OFF 규칙·Chroma 폴더·동기화 테스트). RDMD luck-draw 문서의 족보 15종 오류를 16종(파이브 플러시)로 정정.
 - **주요 파일**: `RDMD/ai/*`, `RDMD/features/ai-service.md`, `RDMD/features/luck-draw.md`, `RDMD/backend/*`, `RDMD/frontend/15-ai/*`, `RDMD/guides/*`, `RDMD/summary/work-history.md`, `ai-service/README.md`, AI 스킬 4종
 - **관련 RDMD**: `RDMD/ai/03-offline-doc-answer-knowledge-record.md`
+
+[▲ 목차로](#목차)
+
+<a id="pending400"></a>
+
+### 400. 2026-11-02 — `pending400`
+
+- **hash (short)**: `pending400`
+- **hash (full)**: `pendingfull400`
+- **author**: nomura
+- **message**: refactor(agents): 에이전트 폴더 구조 통일 — 대문자 이름, 4종 추가, README + skills/<기능>/SKILL.md 19개, 최고 권한 Grok·Claude·Cursor, 공통 룰을 현재 코드 기준으로 개정
+- **git**: `git show pending400`
+- **범위**: agents
+- **요약**: `.agents`·`.claude`·`.codex`·`.groks` 를 대문자 이름으로 바꾸고 `.Antigravity`·`.Cursor`·`.Manus`·`.Qwen` 추가. 8개 폴더를 `README.md` + `skills/<기능>/SKILL.md` 로 통일하고 정본을 복제. 정본을 React 기준으로 갱신, 기존 스킬에만 있던 유효한 내용 이관, `guide`·`event` 스킬 신설. 공통 룰 개정: 경로 규칙을 React Router 로, AI 배포는 창시자 명시 지시 때 Admin AI 만, Cloudflare 지시 대기 문구 정리
+- **주요 파일**: `.Agents/*`, `.Claude/*`, `.Codex/*`, `.Grok/*`, `.Antigravity/*`, `.Cursor/*`, `.Manus/*`, `.Qwen/*`
+- **관련 RDMD**: `RDMD/frontend/01-common/17-agent-folders-authority-record.md`
 
 [▲ 목차로](#목차)
