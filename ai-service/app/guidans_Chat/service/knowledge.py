@@ -23,7 +23,7 @@ from langchain_text_splitters import MarkdownHeaderTextSplitter
 from rank_bm25 import BM25Okapi
 
 SHORT_NAME = 3   # 이 글자 수 이하의 캐릭터 이름은 단어 단위로만 찾는다(CharacterIndex.find)
-GRADE_ORDER_NOTE = "갑급이 가장 높고 을급, 병급, 정급 순서"
+GRADE_ORDER_NOTE = "갑급이 가장 높고 을급, 병급, 정급 순서(2티어는 정급 아래에 무급이 더 있음)"
 
 # ---------------------------------------------------------------------------
 # 토큰화

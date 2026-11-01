@@ -30,12 +30,12 @@ description: >
 
 - DB 없음. 티어표는 `tiers.json` 한 파일이 정본이고, 2026-09-19 이후 수정은 전부 이 파일에 직접 한다
 - `npm run extract:tiers` / `npm run sync:render` 는 바닐라 HTML 로 `tiers.json` 을 **통째로 덮어쓴다** — 바닐라에는 09-20 이후 수정이 없어 실행하면 최근 수정이 되돌아간다. **실행 금지**
-- 이미지 폴더 = 티어 번호(`6 tier` 이미지는 6티어). 같은 파일명으로 덮어쓰면 데이터 수정 불필요, 파일명·확장자가 바뀌면 `tiers.json` + `luckPool.js` 둘 다
+- 이미지 폴더 = 티어 번호가 기본이지만 예외가 있다(2티어 무급의 5명은 `3 tier/` 이미지를 그대로 쓴다). `6 tier` 이미지는 6티어. 같은 파일명으로 덮어쓰면 데이터 수정 불필요, 파일명·확장자가 바뀌면 `tiers.json` + `luckPool.js` 둘 다
 
 ## Do
 
 1. 추가: 이미지를 `public/tier-media/tier-image/N tier/` 에 넣고 `tiers.json` 지정 세부등급·위치에 `{ img, alt, name }`
-2. 티어 이동: `git mv` 로 이미지 폴더 이동 + `tiers.json` 항목 이동·`img` 경로 수정 + `luckPool.js` 에 있으면 티어 키·경로 수정
+2. 티어 이동: `tiers.json` 항목 이동 + `luckPool.js` 에 있으면 티어 키 수정. 이미지 폴더 이동(`git mv`)과 `img` 경로 수정은 **게시판 글에 이미 쓰인 캐릭터면 하지 않는다** — 글에 경로가 저장돼 있어 옛 글의 사진이 깨진다(이 경우 이미지 폴더 번호와 티어가 달라도 된다)
 3. 같은 티어 재배치: `tiers.json` 항목 순서만
 4. 수정 후 `npm run build` → `/tier/N` 화면과 커스텀 메이커 풀 확인, 이미지 로딩 실패 0건
 5. 등급 색은 `tier-board.css` 의 해당 블록에서만

@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 401 |
+| **커밋 수** | 402 |
 | **기간** | 2026-03-20 ~ 2026-11-02 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -430,6 +430,7 @@
 | 399 | 2026-10-18 | [`bcf668d`](#bcf668d) | docs(ai): AI 서버 OFF 모드·지식 고도화 기록 — 기록 03, README·기능 문서·프록시/화면 기록·가이드·AI 스킬 4종, 족보 16종 정정 |
 | 400 | 2026-11-02 | [`f7bb72d`](#f7bb72d) | refactor(agents): 에이전트 폴더 구조 통일 — 대문자 이름, 4종 추가, README + skills/<기능>/SKILL.md 19개, 최고 권한 Grok·Claude·Cursor, 공통 룰을 현재 코드 기준으로 개정 |
 | 401 | 2026-11-02 | [`27654f7`](#27654f7) | docs(agents): 새 폴더 구조·권한·경로 규칙을 문서에 반영 — CLAUDE.md 기능 표 React 기준, team·guides·README 갱신, 작업 기록 17 추가 |
+| 402 | 2026-11-02 | `pending402` | feat(tier-class): 2티어 무급 신설 — 6명 이동, 행운 뽑기 풀·AI 지식 문서 반영 |
 
 ---
 
@@ -7733,5 +7734,21 @@
 - **요약**: CLAUDE.md·AGENTS.md·README·team·RDMD 의 에이전트 경로와 권한 문구를 새 구조로 수정. CLAUDE.md 기능 표를 React 경로로 교체, 경로 규칙 문구 갱신, 작업 기록과 work-history 추가
 - **주요 파일**: `CLAUDE.md`, `AGENTS.md`, `README.md`, `team/*`, `RDMD/guides/*`, `RDMD/summary/work-history.md`
 - **관련 RDMD**: `RDMD/frontend/01-common/17-agent-folders-authority-record.md`
+
+[▲ 목차로](#목차)
+
+<a id="pending402"></a>
+
+### 402. 2026-11-02 — `pending402`
+
+- **hash (short)**: `pending402`
+- **hash (full)**: `pendingfull402`
+- **author**: nomura
+- **message**: feat(tier-class): 2티어 무급 신설 — 6명 이동, 행운 뽑기 풀·AI 지식 문서 반영
+- **git**: `git show pending402`
+- **범위**: tier-class / luck-draw / ai
+- **요약**: 2티어 정급 아래에 무급을 만들고 6명을 옮김(5명은 3티어 갑급에서, 카니는 2티어 정급에서). 이미지는 옛 글 보호를 위해 옮기지 않음. 행운 뽑기 풀을 맞추고 3티어 풀에 4명 보충. AI 지식의 세부등급 설명 갱신
+- **주요 파일**: `root-cloudflare/src/data/tiers.json`, `backend/data/luckPool.js`, `ai-service/knowledge/*`, `ai-service/app/guidans_Chat/service/knowledge.py`, `.Agents/skills/tier-class/*` 외 7개 에이전트 폴더 복제본
+- **관련 RDMD**: `RDMD/frontend/02-tier-class/11-tier2-mu-grade-record.md`
 
 [▲ 목차로](#목차)

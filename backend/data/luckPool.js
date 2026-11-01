@@ -28,14 +28,18 @@ module.exports = {
     { name: '코사카 신타로', imagePath: 'tier-media/tier-image/2 tier/kosaka shintaro.png' },
     { name: '다비츠', imagePath: 'tier-media/tier-image/2 tier/davits.jpg' },
     { name: '호자키 킷페이', imagePath: 'tier-media/tier-image/2 tier/hozaki kikpei.jpg' },
-  ],
-  3: [
     { name: '긴다 에이카쿠', imagePath: 'tier-media/tier-image/3 tier/ginda eikaku.jpg' },
     { name: '타츠미 하루키', imagePath: 'tier-media/tier-image/3 tier/tatsumi haruki.jpg' },
     { name: '이부 하야토', imagePath: 'tier-media/tier-image/3 tier/ibu hayato.jpg' },
     { name: '와나카 소이치로', imagePath: 'tier-media/tier-image/3 tier/wanaka soichiro.png' },
     { name: '아소 세나', imagePath: 'tier-media/tier-image/3 tier/aso sena.jpg' },
+  ],
+  3: [
     { name: '루이스', imagePath: 'tier-media/tier-image/3 tier/louis.jpg' },
+    { name: '야기라 카즈미츠', imagePath: 'tier-media/tier-image/3 tier/yagira kazumotsu.jpg' },
+    { name: '시노미야 타케시', imagePath: 'tier-media/tier-image/3 tier/shinoyagi takeshi.jpg' },
+    { name: '이누와시', imagePath: 'tier-media/tier-image/3 tier/inuwashi.jpg' },
+    { name: '파비앙 주니어', imagePath: 'tier-media/tier-image/3 tier/pabian junia.png' },
   ],
   4: [
     { name: '왓산', imagePath: 'tier-media/tier-image/4 tier/what san.jpg' },

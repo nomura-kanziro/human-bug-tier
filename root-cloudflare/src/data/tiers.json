@@ -328,14 +328,44 @@
             "name": "츄러스"
           },
           {
+            "img": "2 tier/matsuo kuranosuke.jpg",
+            "alt": "*마츠오 쿠라노스케",
+            "name": "*마츠오 쿠라노스케"
+          }
+        ]
+      },
+      {
+        "label": "무급",
+        "items": [
+          {
+            "img": "3 tier/ginda eikaku.jpg",
+            "alt": "긴다 에이카쿠",
+            "name": "긴다 에이카쿠"
+          },
+          {
             "img": "2 tier/kani.jpg",
             "alt": "카니",
             "name": "카니"
           },
           {
-            "img": "2 tier/matsuo kuranosuke.jpg",
-            "alt": "*마츠오 쿠라노스케",
-            "name": "*마츠오 쿠라노스케"
+            "img": "3 tier/tatsumi haruki.jpg",
+            "alt": "타츠미 하루키",
+            "name": "타츠미 하루키"
+          },
+          {
+            "img": "3 tier/aso sena.jpg",
+            "alt": "아소 세나",
+            "name": "아소 세나"
+          },
+          {
+            "img": "3 tier/ibu hayato.jpg",
+            "alt": "이부 하야토",
+            "name": "이부 하야토"
+          },
+          {
+            "img": "3 tier/wanaka soichiro.png",
+            "alt": "와나카 소이치로",
+            "name": "와나카 소이치로"
           }
         ]
       }
@@ -348,31 +378,6 @@
       {
         "label": "갑급",
         "items": [
-          {
-            "img": "3 tier/ginda eikaku.jpg",
-            "alt": "긴다 에이카쿠",
-            "name": "긴다 에이카쿠"
-          },
-          {
-            "img": "3 tier/tatsumi haruki.jpg",
-            "alt": "타츠미 하루키",
-            "name": "타츠미 하루키"
-          },
-          {
-            "img": "3 tier/ibu hayato.jpg",
-            "alt": "이부 하야토",
-            "name": "이부 하야토"
-          },
-          {
-            "img": "3 tier/wanaka soichiro.png",
-            "alt": "와나카 소이치로",
-            "name": "와나카 소이치로"
-          },
-          {
-            "img": "3 tier/aso sena.jpg",
-            "alt": "아소 세나",
-            "name": "아소 세나"
-          },
           {
             "img": "3 tier/louis.jpg",
             "alt": "루이스",

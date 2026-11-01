@@ -70,6 +70,7 @@ RDMD/frontend/
 | [08-hayami-taiki-duplicate-record.md](./02-tier-class/08-hayami-taiki-duplicate-record.md) | — | 5티어 하야미 타이키(이미지 없는 상자) · 7티어 카타쿠라 중복 제거 |
 | [09-tier1-2-update-record.md](./02-tier-class/09-tier1-2-update-record.md) | — | 1·2티어 수정(우류 1장·츠루기 갑급·세르지오 정급 맨 앞·이미지 교체)·9티어 야시키 중복 + 티어 데이터 정본은 `tiers.json`(extract 금지) |
 | [10-tier7-9-fix-record.md](./02-tier-class/10-tier7-9-fix-record.md) | — | 7~9티어 이름·이미지 정정(가짜 미도·마네다·요네쿠라 추가, 야시키 마사나리 오타, 사진 교체) |
+| [11-tier2-mu-grade-record.md](./02-tier-class/11-tier2-mu-grade-record.md) | — | 2티어 무급 신설, 6명 이동(이미지는 그대로), 행운 뽑기 풀·AI 지식 반영 |
 
 ## 03-custom-maker
 
