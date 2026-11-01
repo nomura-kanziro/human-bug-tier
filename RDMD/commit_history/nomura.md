@@ -431,7 +431,7 @@
 | 400 | 2026-11-02 | [`f7bb72d`](#f7bb72d) | refactor(agents): 에이전트 폴더 구조 통일 — 대문자 이름, 4종 추가, README + skills/<기능>/SKILL.md 19개, 최고 권한 Grok·Claude·Cursor, 공통 룰을 현재 코드 기준으로 개정 |
 | 401 | 2026-11-02 | [`27654f7`](#27654f7) | docs(agents): 새 폴더 구조·권한·경로 규칙을 문서에 반영 — CLAUDE.md 기능 표 React 기준, team·guides·README 갱신, 작업 기록 17 추가 |
 | 402 | 2026-11-02 | [`16a8e5b`](#16a8e5b) | feat(tier-class): 2티어 무급 신설 — 6명 이동, 행운 뽑기 풀·AI 지식 문서 반영 |
-| 403 | 2026-11-02 | [`pending`](#pending) | docs(agents): 실무 에이전트 폴더 5종 추가 — Gemini·Ollama·Opencode·Kimi·Windsurf, README + 스킬 19개, 문서 12종 정렬 |
+| 403 | 2026-11-02 | [`1270d9f`](#1270d9f) | docs(agents): 실무 에이전트 폴더 5종 추가 — Gemini·Ollama·Opencode·Kimi·Windsurf, README + 스킬 19개, 문서 12종 정렬 |
 
 ---
 
@@ -7754,15 +7754,15 @@
 
 [▲ 목차로](#목차)
 
-<a id="pending"></a>
+<a id="1270d9f"></a>
 
-### 403. 2026-11-02 — `pending`
+### 403. 2026-11-02 — `1270d9f`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `1270d9f`
+- **hash (full)**: `1270d9fa1a939fb2d61fc7069405d838f31dc929`
 - **author**: nomura
 - **message**: docs(agents): 실무 에이전트 폴더 5종 추가 — Gemini·Ollama·Opencode·Kimi·Windsurf, README + 스킬 19개, 문서 12종 정렬
-- **git**: `git show pending`
+- **git**: `git show 1270d9f`
 - **범위**: docs / agents
 - **요약**: `.Gemini`·`.Ollama`·`.Opencode`·`.Kimi`·`.Windsurf` 를 기존 실무 폴더와 같이 `README.md` + 스킬 19개로 추가했다. 스킬 본문은 `.Qwen` 과 같고 제목의 이름만 다르다. 살아 있는 규칙 문서의 에이전트 목록을 12종으로 맞췄다.
 - **주요 파일**: `.Gemini/*`, `.Ollama/*`, `.Opencode/*`, `.Kimi/*`, `.Windsurf/*`, `.Agents/*`, `CLAUDE.md`, `AGENTS.md`, `README.md`, `team/*`
