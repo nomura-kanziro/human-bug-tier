@@ -435,7 +435,7 @@
 | 404 | 2026-11-05 | [`3615231`](#3615231) | feat(deploy): AI 서비스 운영 배포 준비 — deploy.sh ai-setup/ai-env·pm2 hbt-ai, 가벼운 설치(requirements-prod.txt·지연 import), 문서·테스트 |
 | 405 | 2026-11-05 | [`e206110`](#e206110) | docs(legal): 독점 라이선스·기여 수칙·보안 정책 추가 — LICENSE, CONTRIBUTING.md, SECURITY.md (무단 clone 금지 안내) |
 | 406 | 2026-11-05 | [`579fd8c`](#579fd8c) | docs(readme): 루트 README 전면 개편 — 프레임워크·아키텍처 그림, 기능별 GIF·PNG, Mermaid 로직 구조, 재생성 도구 docs/readme |
-| 407 | 2026-11-05 | `pending407` | docs(readme): 하위 README 33개 고도화 — 로직 구조 Mermaid, 화면·그림 추가, 빠진 API·모델·페이지 보강 |
+| 407 | 2026-11-05 | [`32b8ed0`](#32b8ed0) | docs(readme): 하위 README 33개 고도화 — 로직 구조 Mermaid, 화면·그림 추가, 빠진 API·모델·페이지 보강 |
 
 ---
 
@@ -7822,15 +7822,15 @@
 
 [▲ 목차로](#목차)
 
-<a id="pending407"></a>
+<a id="32b8ed0"></a>
 
-### 407. 2026-11-05 — `pending407`
+### 407. 2026-11-05 — `32b8ed0`
 
-- **hash (short)**: `pending407`
-- **hash (full)**: `pendingfull407`
+- **hash (short)**: `32b8ed0`
+- **hash (full)**: `32b8ed0982945e11a932a20bc4509dbcc3215314`
 - **author**: nomura
 - **message**: docs(readme): 하위 README 33개 고도화 — 로직 구조 Mermaid, 화면·그림 추가, 빠진 API·모델·페이지 보강
-- **git**: `git show pending407`
+- **git**: `git show 32b8ed0`
 - **범위**: docs / readme
 - **요약**: root-cloudflare·backend·ai-service·oracle·team·RDMD·에이전트 폴더 13종·Agent-Bot 층별 README 에 로직 구조 다이어그램을 넣고, 주요 README 에 배지와 화면을 추가. backend README 의 API·모델 목록과 root-cloudflare 의 페이지·구조 목록에서 빠진 이벤트·가이드·AI·포인트 원장 등을 보강. RDMD 색인의 옛 바닐라 설명을 현재 기준으로 고침. Mermaid 42개 렌더링과 상대 경로를 검사해 통과. root-render README 는 수정 금지라 제외
 - **주요 파일**: `root-cloudflare/README.md`, `backend/README.md`, `ai-service/README.md`, `backend/deploy/oracle/README.md`, `team/README.md`, `RDMD/*/README.md`, 에이전트 폴더 `README.md`
