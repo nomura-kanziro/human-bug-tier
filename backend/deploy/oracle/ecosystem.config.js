@@ -19,5 +19,24 @@ module.exports = {
       },
       time: true,
     },
+    // AI 전용 서비스(FastAPI) — shared/ai.env 가 있을 때만 deploy.sh 가 띄운다(`--only hbt-ai`).
+    // 127.0.0.1 에만 바인드한다: 바깥(nginx·보안 목록)에 8000 을 열지 않고, 브라우저는 backend 의 /api/ai 만 부른다.
+    // 파이썬 가상환경은 릴리스 밖(shared/ai-venv)에 둬서 배포마다 다시 만들지 않는다. 시크릿은 ai-service/.env → shared/ai.env.
+    {
+      name: 'hbt-ai',
+      cwd: '/opt/human-bug-tier/current/ai-service',
+      script: '/opt/human-bug-tier/shared/ai-venv/bin/python',
+      args: '-m uvicorn app.main:app --host 127.0.0.1 --port 8000',
+      interpreter: 'none',
+      instances: 1,
+      exec_mode: 'fork',
+      autorestart: true,
+      // 1GB VM 이라 백엔드(600M 상한)와 합쳐 넘치지 않게 낮게 잡는다. 벡터를 끈 상태의 상주 메모리는 100~150MB 안팎
+      max_memory_restart: '300M',
+      env: {
+        PYTHONUNBUFFERED: '1',
+      },
+      time: true,
+    },
   ],
 };

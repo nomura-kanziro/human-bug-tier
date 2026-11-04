@@ -180,3 +180,46 @@ def test_ollama_timeout_setting(monkeypatch):
     assert ls().ollama_timeout == 90.0
     monkeypatch.setenv("OLLAMA_TIMEOUT", "abc")
     assert ls().ollama_timeout == 180.0
+
+
+# ---------------------------------------------------------------- 가벼운 설치(운영 VM 1GB)
+def _lean_env(tmp_path):
+    env = {k: v for k, v in os.environ.items() if not k.startswith(("AI_", "OLLAMA_", "ANTHROPIC_"))}
+    env.update(AI_LLM_PROVIDER="none", AI_VECTOR_ENABLED="false", AI_WARMUP="false", CHROMA_DIR=str(tmp_path / "chroma"))
+    return env
+
+
+def test_app_starts_without_chromadb_or_langchain_ollama(tmp_path):
+    """벡터 검색을 끄고 쓰는 서버에는 chromadb·langchain_ollama 가 없어도 된다 — 아예 불러오지 않는지 새 프로세스로 확인."""
+    import subprocess
+    import sys
+
+    code = (
+        "import sys\n"
+        "from fastapi.testclient import TestClient\n"
+        "from app.main import app\n"
+        "with TestClient(app) as c:\n"
+        "    r = c.get('/health'); assert r.status_code == 200, r.text\n"
+        "    assert r.json()['ai'] == 'off' and r.json()['vector']['ready'] is False\n"
+        "bad = [m for m in ('chromadb', 'langchain_ollama') if m in sys.modules]\n"
+        "assert not bad, bad\n"
+        "print('lean-ok')\n"
+    )
+    out = subprocess.run([sys.executable, "-c", code], cwd=os.path.dirname(os.path.dirname(__file__)), env=_lean_env(tmp_path),
+                         capture_output=True, text=True, timeout=120)
+    assert out.returncode == 0 and "lean-ok" in out.stdout, out.stdout + out.stderr
+
+
+def test_vector_on_but_chromadb_missing_falls_back_to_bm25(monkeypatch):
+    """벡터를 켜 뒀는데 chromadb 가 설치돼 있지 않아도 죽지 않고 BM25 로 답한다."""
+    import sys
+
+    from app.guidans_Chat.service.chat_service import GuideChatService
+
+    monkeypatch.setitem(sys.modules, "chromadb", None)       # import chromadb → ImportError
+    monkeypatch.setenv("AI_LLM_PROVIDER", "none")
+    monkeypatch.setenv("AI_VECTOR_ENABLED", "true")
+    monkeypatch.setenv("AI_WARMUP", "false")
+    svc = GuideChatService(load_settings())
+    assert svc.vector_info["ready"] is False and svc.vector_info.get("error") in ("ImportError", "ModuleNotFoundError")
+    assert svc.kb is not None and svc.kb.retriever.search("출석체크", 1)

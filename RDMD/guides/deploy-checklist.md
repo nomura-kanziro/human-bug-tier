@@ -39,29 +39,29 @@
 
 ---
 
-## AI. AI 전용 서비스 `ai-service/` (2026-10-18 신설 — ⛔ **아직 운영 배포 전**)
+## AI. AI 전용 서비스 `ai-service/` (배포 스크립트 준비 완료 2026-11-05 — 서버 반영은 `deploy` 실행 때)
 
-`backend/deploy/oracle/deploy.sh` 는 **ai-service 를 묶지 않는다**(Node 백엔드 + `dist` 만 올림). 안 올려도 사이트는 정상이고 `/api/ai/*` 만 503("잠시 쉬는 중")이다.
+`backend/deploy/oracle/deploy.sh` 는 `shared/ai.env` 가 **있을 때만** ai-service 를 함께 올린다. 없으면 사이트만 올라가고 `/api/ai/*` 만 503("잠시 쉬는 중")이다.
 
-**먼저 정할 것 — 모델이 어디서 도는가.** 생성 모델(gemma4:12b)과 임베딩(bge-m3)은 Ollama 이고 GPU 가 필요하다. **Oracle VM(1GB RAM)에는 올릴 수 없다**(ChromaDB·임베딩도 무겁다).
+**먼저 정할 것 — 생성 모델(`AI_PROVIDER`).** Oracle VM(1GB RAM)에는 Ollama(gemma4:12b)·임베딩·ChromaDB 를 올릴 수 없어, 서버는 벡터 검색을 끈 가벼운 모드(BM25)로 돈다.
 
-- [ ] A. Claude API 로 운영 — `AI_LLM_PROVIDER=anthropic` + `ANTHROPIC_API_KEY`, 임베딩을 돌릴 곳이 없으면 `AI_VECTOR_ENABLED=false`(BM25 만)
-- [ ] B. 내 PC 의 Ollama 를 서버가 호출(터널) — `OLLAMA_BASE_URL`. PC 가 꺼지면 문서 답으로 떨어짐
-- [ ] C. GPU 서버에 ai-service + Ollama
+- [ ] `none` — LLM 없이 문서 답(무료). 화면에 "AI 서버 OFF 상태" 안내가 뜬다
+- [ ] `anthropic` — Claude API. 서버 `shared/ai.env` 에 `ANTHROPIC_API_KEY` 를 **서버에서 직접** 채운다(비용 발생)
+- [ ] `ollama` — 다른 PC/GPU 의 Ollama (`OLLAMA_BASE_URL`)
 
-공통:
+순서:
 
-- [ ] Python 3.10+ venv, `ai-service/` 와 `tiers.json`(운영 패키지에는 `root-cloudflare/src` 가 없을 수 있어 `AI_TIERS_JSON` 으로 경로 지정), `pip install -r ai-service/requirements.txt`(버전 고정)
-- [ ] 시크릿은 서버 환경에만: `AI_SERVICE_KEY`(= `backend` 의 같은 이름 값), (A 라면) `ANTHROPIC_API_KEY`. 로컬 `ai-service/.env` 를 올리지 않는다
-- [ ] uvicorn 을 **`127.0.0.1:8000` 에만** 바인드해 pm2/systemd 로 상시 실행 — 외부 포트·Security List·nginx 에 열지 않는다. **Ollama `11434` 도 외부에 열지 않는다**(인증이 없다)
-- [ ] `backend` 쪽 `AI_SERVICE_URL`·`AI_SERVICE_KEY` 설정 후 **백엔드 재시작**(새 라우트 `/api/ai`)
-- [ ] 메모리: 서비스 상주 메모리를 `free -m` 으로 측정(백엔드 `max_memory_restart 600M` 과 합쳐 확인)
-- [ ] 확인: 서버에서 `curl 127.0.0.1:8000/health` → `llm: true`, `vector.ready: true`(또는 의도한 BM25 만), 바깥에서 8000·11434 가 **안 열려야 함**, `/ai` 에서 질문 → "AI 연결 없이…" 배지가 **없는** 답
-- [ ] 지식(`knowledge/*.md`)을 고쳤다면 ai-service 재시작 또는 `POST /reload`(키 필요) — 바뀐 조각만 다시 임베딩
+- [ ] `deploy.sh ai-setup` — VM 에 python3-venv·pip 와 `shared/ai-venv/` (최초 1회)
+- [ ] `AI_PROVIDER=<선택> deploy.sh ai-env` — `shared/ai.env` 생성, `AI_SERVICE_KEY` 를 backend `.env` 와 같은 값으로(값은 출력하지 않음)
+- [ ] (anthropic 이라면) 서버에서 `ANTHROPIC_API_KEY` 채우기
+- [ ] `deploy.sh deploy` — 의존성 설치(`requirements-prod.txt`, 처음엔 몇 분) → 링크 교체 → `human-bug-tier`·`hbt-ai` 재시작 → 두 `/health` 확인
+- [ ] `deploy.sh status` — AI `/health` 의 `provider`·`ai`, 메모리(`free -m`: 백엔드 상한 600M + AI 상한 300M 이 합쳐도 넘치지 않는지)
+- [ ] 바깥에서 8000·11434 가 **안 열려야 함**, `/ai` 에서 질문 → 답이 온다(`none` 이면 "AI 서버 OFF" 안내가 정상)
+- [ ] 지식(`knowledge/*.md`)·`tiers.json` 을 고쳤다면 `deploy`(= `hbt-ai` 재시작) — 서비스는 시작할 때 읽는다
 
-상세: [`../features/ai-service.md`](../features/ai-service.md) · [`../../ai-service/README.md`](../../ai-service/README.md)
+문제가 생기면 `deploy.sh logs ai` · `deploy.sh rollback`(이전 릴리스에 ai-service 가 없으면 `hbt-ai` 만 멈춘다).
 
----
+상세: [`../features/ai-service.md`](../features/ai-service.md) · [`../../ai-service/README.md`](../../ai-service/README.md) · [`../ai/04-production-deploy-prep-record.md`](../ai/04-production-deploy-prep-record.md)
 
 ## P. Cloudflare Pages (`human-bug-tier.pages.dev` — `/api` 는 Oracle 로 프록시)
 

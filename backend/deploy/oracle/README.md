@@ -76,7 +76,7 @@ bash backend/deploy/oracle/deploy.sh deploy   # 배포(이후 업데이트도 �
 `deploy` 가 하는 일: 프론트 빌드 → 묶기(약 50 MB) → 업로드 → `releases/<시각>` 에 풀기 → `npm ci --omit=dev`
 → `current` 링크 교체 → `pm2 startOrReload` → `/health` 확인. 실패하면 `rollback` 으로 바로 전 버전 복귀.
 
-기타: `status`(pm2·헬스) · `logs`(최근 로그 100줄) · `rollback` · `package`(업로드 없이 묶기만).
+기타: `status`(pm2·헬스) · `logs`(최근 로그 100줄, `logs ai` 는 AI 서비스) · `rollback` · `package`(업로드 없이 묶기만) · `ai-setup`·`ai-env`(5절).
 
 확인: 브라우저로 `http://<VM 공인 IP>/` , `http://<VM 공인 IP>/health` (4절 HTTPS 를 붙인 뒤에는 `https://<도메인>/`, `https://<도메인>/health`)
 
@@ -118,6 +118,26 @@ bash backend/deploy/oracle/deploy.sh deploy   # 또는 서버에서 pm2 reload h
 1. Cloudflare DNS 에 `A  @  <VM 공인 IP>` (프록시 **주황 구름 켬**)
 2. SSL/TLS 모드: 우선 **Flexible** 로 접속 확인 → 이후 Cloudflare **Origin Certificate** 를 VM nginx 443 에 붙이고 **Full (strict)** 로 올리는 것을 권장
 3. 도메인 없이 IP 로만 쓸 거면 이 단계는 생략(HTTP 로만 동작)
+
+## 5. AI 전용 서비스 (`ai-service/`) 함께 올리기
+
+`shared/ai.env` 가 있을 때만 `deploy` 가 ai-service 를 함께 올린다(pm2 `hbt-ai`, `127.0.0.1:8000`, 메모리 300M 초과 시 재시작).
+서버는 메모리 1GB 라 벡터 검색을 끈 가벼운 모드로 돌고, 생성 모델은 `AI_PROVIDER` 로 고른다(`none` 문서 답 / `anthropic` Claude API / `ollama` 원격).
+
+```bash
+export OCI_HOST=ubuntu@161.33.190.199
+export OCI_KEY=~/.ssh/oracle_hbt_rsa
+
+bash backend/deploy/oracle/deploy.sh ai-setup                    # 최초 1회: VM 에 파이썬 가상환경(python3-venv·pip 설치 포함)
+AI_PROVIDER=none bash backend/deploy/oracle/deploy.sh ai-env     # 최초 1회: shared/ai.env 생성 + AI_SERVICE_KEY 를 backend 와 같은 값으로(값 출력 안 함)
+bash backend/deploy/oracle/deploy.sh deploy                      # 사이트 + ai-service 함께 배포
+bash backend/deploy/oracle/deploy.sh status                      # pm2 + /health + AI /health + 메모리
+```
+
+- 가상환경은 릴리스 밖 `shared/ai-venv/`, 시크릿은 `shared/ai.env`(각 릴리스 `ai-service/.env` 로 링크). `ai-env` 는 값을 출력하지 않는다.
+- `anthropic` 이면 서버에서 `ANTHROPIC_API_KEY` 를 직접 채운다: `ssh ... 'nano /opt/human-bug-tier/shared/ai.env'`
+- 8000 은 nginx·보안 목록에 열지 않는다(브라우저는 `/api/ai` 만). 로그는 `deploy.sh logs ai`.
+- 자세한 내용: [`ai-service/README.md`](../../../ai-service/README.md) "운영 배포", [`deploy-checklist.md`](../../../RDMD/guides/deploy-checklist.md) AI 절
 
 ## ⚠️ 운영 전에 꼭 알아둘 것
 

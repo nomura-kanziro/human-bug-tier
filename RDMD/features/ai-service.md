@@ -2,7 +2,7 @@
 
 > 2026-10-18 신설. 사이트 지식으로 답하는 챗봇 **휴버봇**과 **랜덤 추천 질문 3개**.
 > AI 기능은 Express 와 분리된 **AI 전용 서비스**(저장소 루트 `ai-service/`, Python FastAPI)가 담당한다.
-> 운영 서버에는 **아직 배포하지 않았다**(아래 "운영 배포" 참고). 생성 모델은 내 PC 의 Ollama(gemma4:12b), 검색은 ChromaDB + bge-m3(2026-10-18 적용).
+> 운영 서버에는 **아직 배포하지 않았다**(배포 스크립트·설치 목록은 2026-11-05 준비 완료 — 아래 "운영 배포" 참고). 생성 모델은 내 PC 의 Ollama(gemma4:12b), 검색은 ChromaDB + bge-m3(2026-10-18 적용).
 
 ## 관련 기록 (세 곳에 나눠 있다)
 
@@ -183,14 +183,26 @@ app/guidans_Chat/service/graph.py (LangGraph StateGraph)
 - 지식 고도화 후(469조각) 재측정: 사이트 질문 벡터 유사도가 전반적으로 올랐고(예: "출첵 하면 몇 점 줘?" 0.666 → 0.745, "비번 까먹었어" BM25 0점인데 0.663) 범위 밖은 그대로 0.37~0.50 이라 기준을 0.50 → 0.52 로 올림. OFF 상태 점검: 질문 8개가 0~2초에 지식 문서 문장으로 답(닉네임 7일·출석 일차별 포인트·비번 재설정·알림 끄기·포커 단계·캡처 등), 날씨는 거절.
 - 한계: 질문 약 40개(+범위 밖)로 기준값을 정했다. 지식·모델을 바꾸면 다시 확인할 것. 화면(`/ai`)은 이번 변경 후 다시 캡처하지 않았다(API 응답 형식은 그대로).
 
-## 운영 배포 (미완)
+## 운영 배포 (준비 완료 · 서버 반영 전)
 
-**Oracle VM(1GB RAM)에는 gemma4:12b 도 임베딩·ChromaDB 도 올릴 수 없다.** 모델이 어디서 도는지부터 정해야 한다(자세히는 [`../../ai-service/README.md`](../../ai-service/README.md) "운영 배포"):
+**Oracle VM(1GB RAM)에는 gemma4:12b 도 임베딩·ChromaDB 도 올릴 수 없다.** 그래서 서버에서는 벡터 검색을 끈 가벼운 모드(BM25)로 돌리고, 생성 모델은 `AI_PROVIDER` 로 고른다(자세히는 [`../../ai-service/README.md`](../../ai-service/README.md) "운영 배포", 기록은 [`../ai/04-production-deploy-prep-record.md`](../ai/04-production-deploy-prep-record.md)).
 
-1. **Claude API 로 운영**(`AI_LLM_PROVIDER=anthropic`, 임베딩은 Ollama 라 운영에는 `AI_VECTOR_ENABLED=false` 로 BM25 만) — 가장 단순
-2. **내 PC 의 Ollama 를 서버가 호출**(터널) — 비용 0, PC 가 꺼지면 문서 답
-3. **GPU 서버에 ai-service + Ollama**
-- 공통: Python venv, `AI_SERVICE_KEY`(양쪽), uvicorn 은 127.0.0.1 에만, **Ollama 11434 도 외부에 열지 않음**, `deploy.sh` 확장 필요, Cloudflare Pages 는 기존 `/api/*` 프록시 그대로
+- `none` — LLM 없이 지식 문서 답(무료, "AI 서버 OFF 상태" 안내)
+- `anthropic` — Claude API(서버에서 `ANTHROPIC_API_KEY` 를 직접 채움, 호출마다 비용)
+- `ollama` — 다른 PC/GPU 의 Ollama(이 VM 에서는 못 돌림)
+
+```bash
+export OCI_HOST=ubuntu@161.33.190.199
+export OCI_KEY=~/.ssh/oracle_hbt_rsa
+
+bash backend/deploy/oracle/deploy.sh ai-setup                    # 최초 1회: VM 에 파이썬 가상환경(python3-venv·pip 설치 포함)
+AI_PROVIDER=none bash backend/deploy/oracle/deploy.sh ai-env     # 최초 1회: shared/ai.env 생성 + AI_SERVICE_KEY 를 backend 와 같은 값으로(값 출력 안 함)
+bash backend/deploy/oracle/deploy.sh deploy                      # 사이트 + ai-service 함께 배포
+bash backend/deploy/oracle/deploy.sh status                      # pm2 + /health + AI /health + 메모리
+```
+
+- `shared/ai.env` 가 있을 때만 ai-service 를 올린다(pm2 `hbt-ai`, `127.0.0.1:8000`). 가상환경은 `shared/ai-venv/`, 설치 목록은 `ai-service/requirements-prod.txt`.
+- 공통 주의: 8000·Ollama 11434 를 외부에 열지 않는다, `AI_SERVICE_KEY` 는 양쪽 같은 값(`ai-env` 가 맞춤), Cloudflare Pages 는 기존 `/api/*` 프록시 그대로.
 
 ## 다음 단계(제안)
 

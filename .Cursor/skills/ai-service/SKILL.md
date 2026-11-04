@@ -51,6 +51,10 @@ description: >
 
 ## Do not
 
+- 서버(`shared/ai.env`)에 올릴 `ANTHROPIC_API_KEY` 를 채팅·명령줄·로그에 남기기 — 서버에서 직접 채운다
+- 8000(ai-service)·11434(Ollama)를 nginx·보안 목록에 여는 것
+- `requirements.txt` 를 고치고 `requirements-prod.txt` 를 빼먹기(운영 설치 목록은 따로 있다)
+
 - **AI 서버가 꺼졌을 때 LLM 을 부르려고 기다리지 않는다**(`gate`). OFF 면 바로 지식 문서 답으로 가고, 화면에 OFF 안내가 나가야 한다. 문서 답은 지식 문서의 문장을 **그대로** 보여 주며 새 말을 지어내지 않는다.
 - 서비스(uvicorn)가 쓰는 ChromaDB 폴더(`data/chroma`)를 다른 프로세스(스크립트·두 번째 서비스)가 같이 열지 않는다 — 서비스가 죽을 수 있다(스크립트는 `data/chroma-scripts` 를 쓴다). 로컬에서 띄울 때는 `scripts/dev_service.py`.
 - **생성 모델(Ollama `gemma4:12b`)의 생각 모드를 켜지 않는다**(`reasoning=False`) — 켜면 토큰을 생각에 다 써서 답이 빈 문자열이 된다. 모델을 바꾸면 빈 답·속도를 먼저 확인한다.
@@ -72,6 +76,7 @@ description: >
 - `uvicorn app.main:app --port 8000` + `backend` :5000 → http://localhost:5000/ai
 - 한글 질문 시험은 Node `fetch`·브라우저로(Windows Git Bash `curl` 은 한글 JSON 이 깨진다)
 
-## 상태 (2026-10-18)
+## 상태 (2026-11-05)
 
-- 커밋 완료, **운영 배포 전**. 기본 모델은 로컬 Ollama `gemma4:12b`(`AI_LLM_PROVIDER=ollama`)이고, Claude API(`anthropic`)는 선택 사항이며 실제 키로는 답 품질 미검증. `backend/deploy/oracle/deploy.sh` 는 ai-service 를 아직 묶지 않는다.
+- 커밋 완료, **배포 스크립트 준비 완료 · 서버 반영 전**. 운영 VM(1GB)에서는 벡터를 끈 가벼운 모드(`requirements-prod.txt`)로 돌고, `AI_PROVIDER`(`none` 문서 답 / `anthropic` / `ollama`)로 생성 모델을 고른다. 올리는 순서는 `deploy.sh ai-setup` → `AI_PROVIDER=… deploy.sh ai-env` → `deploy.sh deploy` (`RDMD/guides/deploy-checklist.md` AI 절). 실제 Claude 키로는 답 품질을 확인하지 않았다.
+- `shared/ai.env` 가 없으면 `deploy.sh` 는 ai-service 를 올리지 않는다(사이트 정상, `/api/ai` 만 503).

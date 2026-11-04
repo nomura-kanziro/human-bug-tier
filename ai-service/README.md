@@ -155,19 +155,46 @@ python -m venv .venv
 
 ## 운영 배포
 
-**아직 운영 서버에 올리지 않았다.** 그리고 **Oracle VM(1GB RAM)에는 gemma4:12b 도 ChromaDB+임베딩도 올릴 수 없다** — 모델은 GPU 가 있는 내 PC 에서 돈다. 운영에 열려면 먼저 모델이 어디서 도는지 정해야 한다:
+**준비는 끝났고(2026-11-05), 서버에 올리는 것은 창시자가 `deploy` 를 실행할 때다.** Oracle VM 은 메모리 1GB 라 gemma4:12b 도 ChromaDB+임베딩도 올릴 수 없어서, 서버에서는 **벡터 검색을 끈 가벼운 모드**(BM25 키워드 검색)로 돌린다. 생성 모델은 아래 중 하나를 고른다(`AI_PROVIDER`).
 
-- A. **Claude API 로 운영**(`AI_LLM_PROVIDER=anthropic`) — 임베딩(bge-m3)도 Ollama 라서 운영에는 `AI_VECTOR_ENABLED=false`(BM25 만)로 두거나, 임베딩을 돌릴 곳이 따로 있어야 한다. 가장 단순하다.
-- B. **내 PC 의 Ollama 를 서버가 호출**(터널 등) — 비용 0, PC 가 꺼지면 문서 답으로 떨어진다. `OLLAMA_BASE_URL` 로 지정.
-- C. **GPU 가 있는 별도 서버**에 ai-service 와 Ollama 를 같이 올림.
+| `AI_PROVIDER` | 답 | 비용 | 필요한 것 |
+|---|---|---|---|
+| `none` | 사이트 지식 문서에서 그대로 가져온 답. 화면에 "AI 서버 OFF 상태" 안내 | 0 | 없음 |
+| `anthropic` | Claude API 가 문서를 근거로 답 | 호출마다 | 서버 `shared/ai.env` 의 `ANTHROPIC_API_KEY` (서버에서 직접 채운다) |
+| `ollama` | 다른 PC/GPU 의 Ollama | 0 | `OLLAMA_BASE_URL` (이 VM 에서는 못 돌린다) |
 
-어느 쪽이든 공통으로 할 일:
+### 올리는 순서
 
-1. Python 3.10+ venv, `ai-service/` 와 `tiers.json`(`AI_TIERS_JSON`) 배치
-2. `AI_SERVICE_KEY`(양쪽 같은 값), `backend` 쪽 `AI_SERVICE_URL`
-3. uvicorn 을 **127.0.0.1 에만** 바인드해 pm2/systemd 로 상시 실행 — 외부 포트를 열지 않는다(nginx 에도 연결하지 않음)
-4. Ollama 의 `11434` 포트도 외부에 열지 않는다(인증이 없다)
-5. `backend/deploy/oracle/deploy.sh` 는 아직 ai-service 를 묶지 않는다 — 배포 스크립트 확장이 필요하다
-6. Cloudflare Pages 는 이미 `/api/*` 를 Oracle 로 넘기므로 추가 설정이 필요 없다
+```bash
+export OCI_HOST=ubuntu@161.33.190.199
+export OCI_KEY=~/.ssh/oracle_hbt_rsa
+
+bash backend/deploy/oracle/deploy.sh ai-setup                    # 최초 1회: VM 에 파이썬 가상환경(python3-venv·pip 설치 포함)
+AI_PROVIDER=none bash backend/deploy/oracle/deploy.sh ai-env     # 최초 1회: shared/ai.env 생성 + AI_SERVICE_KEY 를 backend 와 같은 값으로(값 출력 안 함)
+bash backend/deploy/oracle/deploy.sh deploy                      # 사이트 + ai-service 함께 배포
+bash backend/deploy/oracle/deploy.sh status                      # pm2 + /health + AI /health + 메모리
+```
+
+- `deploy.sh` 는 `shared/ai.env` 가 **있을 때만** ai-service 를 올린다. 없으면 사이트만 올라가고 `/api/ai` 는 503("잠시 쉬는 중")이다.
+- 서버 구성: `shared/ai-venv/`(릴리스 밖 가상환경 — `requirements-prod.txt` 가 바뀔 때만 다시 설치), pm2 프로세스 `hbt-ai`(`127.0.0.1:8000`, 메모리 300M 초과 시 재시작), 시크릿 `shared/ai.env` → 각 릴리스 `ai-service/.env`.
+- 운영 설치 목록은 `requirements-prod.txt` — `chromadb`·`oracledb`·`pytest`·`httpx` 를 뺐다(코드는 쓸 때만 불러온다). 벡터 검색까지 켜려면 임베딩을 돌릴 Ollama 가 있어야 하고, 그때만 `chromadb` 를 더 설치한다.
+- 되돌리기: `rollback` — 이전 릴리스에 `ai-service/` 가 없으면 `hbt-ai` 만 멈추고 사이트는 정상이다.
+- 로그: `deploy.sh logs ai`
+
+### 지켜야 할 것
+
+1. uvicorn 은 **127.0.0.1 에만** 바인드한다. 8000 을 nginx·보안 목록·iptables 에 열지 않는다(브라우저는 `backend` 의 `/api/ai` 만 부른다).
+2. Ollama `11434` 도 외부에 열지 않는다(인증이 없다).
+3. `AI_SERVICE_KEY` 는 `shared/ai.env` 와 `shared/.env`(backend) 에 같은 값이어야 한다 — `ai-env` 가 맞춘다.
+4. 로컬 `ai-service/.env` 와 `data/` 는 서버로 올리지 않는다(묶을 때 제외).
+5. nginx `proxy_read_timeout` 은 60초다. 느린 모델(Ollama 원격)을 쓰면 60초를 넘는 답이 끊길 수 있다.
+6. Cloudflare Pages 는 이미 `/api/*` 를 Oracle 로 넘기므로 추가 설정이 필요 없다.
+
+### 확인
+
+```bash
+bash backend/deploy/oracle/deploy.sh status      # AI /health 에 "provider":"none"(또는 anthropic), 메모리
+```
+서버 밖에서 `http://<IP>:8000` 이 **열리면 안 된다**. 사이트 `/ai` 에서 질문하면 답이 오고, `none` 이면 상단에 "AI 서버 OFF 상태" 가 보인다.
 
 AI 서비스가 꺼져 있어도 `/api/ai/*` 만 503("AI 도우미가 잠시 쉬는 중")이고 사이트의 다른 기능은 그대로다.

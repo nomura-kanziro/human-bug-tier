@@ -6,10 +6,12 @@ Ollama 가 꺼져 있거나 모델이 없으면 호출이 예외를 낸다 — �
 from __future__ import annotations
 
 import re
-
-from langchain_ollama import OllamaEmbeddings
+from typing import TYPE_CHECKING
 
 from ...config import Settings
+
+if TYPE_CHECKING:   # langchain_ollama 는 make_embeddings 가 불리는 때 불러온다(벡터 검색을 안 쓰는 서버엔 없어도 됨)
+    from langchain_ollama import OllamaEmbeddings
 
 
 def keep_alive_seconds(value: str, default: int = 1800) -> int:
@@ -21,6 +23,8 @@ def keep_alive_seconds(value: str, default: int = 1800) -> int:
 
 
 def make_embeddings(settings: Settings) -> OllamaEmbeddings:
+    from langchain_ollama import OllamaEmbeddings
+
     return OllamaEmbeddings(
         model=settings.embed_model,
         base_url=settings.ollama_base_url,

@@ -11,8 +11,7 @@ from __future__ import annotations
 import re
 from pathlib import Path
 
-import chromadb
-from chromadb.config import Settings as ChromaSettings
+# chromadb 는 ChromaStore 를 만들 때 불러온다 — 벡터 검색을 끄고 쓰는 서버(메모리 1GB 운영 VM)에는 설치하지 않아도 서비스가 뜨게 한다
 
 COLLECTION_PREFIX = "guide_knowledge"
 
@@ -26,6 +25,9 @@ class ChromaStore:
     """ChromaDB 클라이언트와 컬렉션 하나를 들고 있다. path=None 이면 메모리에만 둔다(테스트)."""
 
     def __init__(self, path: Path | None, embed_model: str):
+        import chromadb
+        from chromadb.config import Settings as ChromaSettings
+
         opts = ChromaSettings(anonymized_telemetry=False)
         if path is None:
             self.client = chromadb.EphemeralClient(settings=opts)

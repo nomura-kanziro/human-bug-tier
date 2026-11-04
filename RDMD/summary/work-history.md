@@ -229,6 +229,7 @@
 | 11-02 | **에이전트** | 에이전트 폴더 대문자화, 4종 추가(`.Antigravity`·`.Cursor`·`.Manus`·`.Qwen`), 모든 폴더를 `README.md` + `skills/<기능>/SKILL.md` 로 통일, 최고 권한 AI 를 Grok·Claude·Cursor 로 확대, 완성도 점검 `.Agents/agent-status.md` |
 | 11-02 | **티어표** | 2티어에 세부등급 **무급** 신설, 6명 이동(긴다 에이카쿠·카니·타츠미 하루키·아소 세나·이부 하야토·와나카 소이치로), 행운 뽑기 풀·AI 지식 문서 반영 |
 | 11-02 | **에이전트** | 실무 에이전트 폴더 5종 추가(`.Gemini`·`.Ollama`·`.Opencode`·`.Kimi`·`.Windsurf`). 기존 실무 폴더와 같이 `README.md` + 스킬 19개. 살아 있는 문서의 7종 표기를 12종으로 맞춤 |
+| 11-05 | **AI** | AI 서비스 운영 배포 준비(서버 반영 전) — 운영 VM 조건 점검, 가벼운 설치(`requirements-prod.txt`·지연 import), `deploy.sh ai-setup`/`ai-env`, pm2 `hbt-ai` |
 
 **결과물**: 운영 **1.0.5**(Oracle 배포, 10-17~18). 가이드 모드·출석체크·AI 도우미는 **커밋까지, 운영 배포 전**이다. AI 서비스는 운영 서버 배포 절차(Python 상주·키 설정·`deploy.sh` 확장)가 남았다.
 
