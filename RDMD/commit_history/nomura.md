@@ -433,7 +433,7 @@
 | 402 | 2026-11-02 | [`16a8e5b`](#16a8e5b) | feat(tier-class): 2티어 무급 신설 — 6명 이동, 행운 뽑기 풀·AI 지식 문서 반영 |
 | 403 | 2026-11-02 | [`1270d9f`](#1270d9f) | docs(agents): 실무 에이전트 폴더 5종 추가 — Gemini·Ollama·Opencode·Kimi·Windsurf, README + 스킬 19개, 문서 12종 정렬 |
 | 404 | 2026-11-05 | [`3615231`](#3615231) | feat(deploy): AI 서비스 운영 배포 준비 — deploy.sh ai-setup/ai-env·pm2 hbt-ai, 가벼운 설치(requirements-prod.txt·지연 import), 문서·테스트 |
-| 405 | 2026-11-05 | `pending405` | docs(legal): 독점 라이선스·기여 수칙·보안 정책 추가 — LICENSE, CONTRIBUTING.md, SECURITY.md (무단 clone 금지 안내) |
+| 405 | 2026-11-05 | [`e206110`](#e206110) | docs(legal): 독점 라이선스·기여 수칙·보안 정책 추가 — LICENSE, CONTRIBUTING.md, SECURITY.md (무단 clone 금지 안내) |
 
 ---
 
@@ -7788,15 +7788,15 @@
 
 [▲ 목차로](#목차)
 
-<a id="pending405"></a>
+<a id="e206110"></a>
 
-### 405. 2026-11-05 — `pending405`
+### 405. 2026-11-05 — `e206110`
 
-- **hash (short)**: `pending405`
-- **hash (full)**: `pendingfull405`
+- **hash (short)**: `e206110`
+- **hash (full)**: `e2061106b9b34a4727971833675426d57f9d9b82`
 - **author**: nomura
 - **message**: docs(legal): 독점 라이선스·기여 수칙·보안 정책 추가 — LICENSE, CONTRIBUTING.md, SECURITY.md (무단 clone 금지 안내)
-- **git**: `git show pending405`
+- **git**: `git show e206110`
 - **범위**: docs / legal
 - **요약**: 저장소 사용 수칙 문서 3종을 루트에 추가. LICENSE 는 오픈소스가 아닌 독점(All Rights Reserved) 라이선스로, 창시자가 서면 지정한 관리자만 clone·fork·실행·배포할 수 있고 그 외에는 금지. CONTRIBUTING.md 는 권한표·금지 사항·관리자 수칙·이미 clone 한 경우의 조치를 정리. SECURITY.md 는 취약점 비공개 제보와 비밀 정보 처리·유출 대응 절차. 문서만으로는 막을 수 없으므로 GitHub Private 전환·협업자 제한·브랜치 보호 체크리스트를 CONTRIBUTING.md 7항에 넣음(창시자 담당, 아직 미적용). 코드·설정은 변경 없음
 - **주요 파일**: `LICENSE`, `CONTRIBUTING.md`, `SECURITY.md`
