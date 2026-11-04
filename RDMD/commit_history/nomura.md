@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 404 |
+| **커밋 수** | 405 |
 | **기간** | 2026-03-20 ~ 2026-11-05 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -433,6 +433,7 @@
 | 402 | 2026-11-02 | [`16a8e5b`](#16a8e5b) | feat(tier-class): 2티어 무급 신설 — 6명 이동, 행운 뽑기 풀·AI 지식 문서 반영 |
 | 403 | 2026-11-02 | [`1270d9f`](#1270d9f) | docs(agents): 실무 에이전트 폴더 5종 추가 — Gemini·Ollama·Opencode·Kimi·Windsurf, README + 스킬 19개, 문서 12종 정렬 |
 | 404 | 2026-11-05 | [`3615231`](#3615231) | feat(deploy): AI 서비스 운영 배포 준비 — deploy.sh ai-setup/ai-env·pm2 hbt-ai, 가벼운 설치(requirements-prod.txt·지연 import), 문서·테스트 |
+| 405 | 2026-11-05 | `pending405` | docs(legal): 독점 라이선스·기여 수칙·보안 정책 추가 — LICENSE, CONTRIBUTING.md, SECURITY.md (무단 clone 금지 안내) |
 
 ---
 
@@ -7784,5 +7785,21 @@
 - **요약**: 운영 VM(메모리 1GB·pip 없음) 조건을 읽기 전용으로 점검하고 부족한 것을 채움. chromadb·langchain_ollama 를 쓸 때만 불러오게 바꿔 벡터를 끈 서버에는 설치하지 않아도 되게 하고(테스트 2개 추가), 운영 설치 목록 requirements-prod.txt·운영 env 템플릿을 추가. deploy.sh 에 ai-setup·ai-env 와 ai-service 묶기·설치·재시작·헬스 확인, status/logs ai/rollback 의 AI 처리를 더하고 ecosystem 에 hbt-ai 추가. 묶음을 풀어 띄워 인증·답변·메모리 확인. 서버에는 아직 올리지 않음
 - **주요 파일**: `backend/deploy/oracle/deploy.sh`, `ecosystem.config.js`, `README.md`, `ai-service/requirements-prod.txt`, `.env.production.example`, `app/guidans_Chat/database/chroma.py`, `service/embeddings.py`, `tests/test_service.py`, `.Agents/skills/ai-service/SKILL.md` 외 12개 에이전트 폴더 복제본
 - **관련 RDMD**: `RDMD/ai/04-production-deploy-prep-record.md`
+
+[▲ 목차로](#목차)
+
+<a id="pending405"></a>
+
+### 405. 2026-11-05 — `pending405`
+
+- **hash (short)**: `pending405`
+- **hash (full)**: `pendingfull405`
+- **author**: nomura
+- **message**: docs(legal): 독점 라이선스·기여 수칙·보안 정책 추가 — LICENSE, CONTRIBUTING.md, SECURITY.md (무단 clone 금지 안내)
+- **git**: `git show pending405`
+- **범위**: docs / legal
+- **요약**: 저장소 사용 수칙 문서 3종을 루트에 추가. LICENSE 는 오픈소스가 아닌 독점(All Rights Reserved) 라이선스로, 창시자가 서면 지정한 관리자만 clone·fork·실행·배포할 수 있고 그 외에는 금지. CONTRIBUTING.md 는 권한표·금지 사항·관리자 수칙·이미 clone 한 경우의 조치를 정리. SECURITY.md 는 취약점 비공개 제보와 비밀 정보 처리·유출 대응 절차. 문서만으로는 막을 수 없으므로 GitHub Private 전환·협업자 제한·브랜치 보호 체크리스트를 CONTRIBUTING.md 7항에 넣음(창시자 담당, 아직 미적용). 코드·설정은 변경 없음
+- **주요 파일**: `LICENSE`, `CONTRIBUTING.md`, `SECURITY.md`
+- **관련 RDMD**: 없음
 
 [▲ 목차로](#목차)
