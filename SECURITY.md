@@ -1,7 +1,7 @@
 # SECURITY — 보안 정책
 
 이 프로젝트는 회원 계정, 게시판, 관리자 기능, 배포 서버(Oracle Cloud · Cloudflare Pages · MongoDB)를 다룹니다.  
-저장소와 서버는 **비공개**이며, 접근은 **창시자가 지정한 관리자**에게만 허용됩니다. ([LICENSE](./LICENSE) · [CONTRIBUTING.md](./CONTRIBUTING.md))
+저장소의 사용과 서버 접근은 **창시자가 지정한 관리자**에게만 허용됩니다. ([LICENSE](./LICENSE) · [CONTRIBUTING.md](./CONTRIBUTING.md))
 
 ## 1. 취약점·유출을 발견했다면
 

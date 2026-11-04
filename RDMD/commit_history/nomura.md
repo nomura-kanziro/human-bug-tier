@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 405 |
+| **커밋 수** | 406 |
 | **기간** | 2026-03-20 ~ 2026-11-05 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -434,6 +434,7 @@
 | 403 | 2026-11-02 | [`1270d9f`](#1270d9f) | docs(agents): 실무 에이전트 폴더 5종 추가 — Gemini·Ollama·Opencode·Kimi·Windsurf, README + 스킬 19개, 문서 12종 정렬 |
 | 404 | 2026-11-05 | [`3615231`](#3615231) | feat(deploy): AI 서비스 운영 배포 준비 — deploy.sh ai-setup/ai-env·pm2 hbt-ai, 가벼운 설치(requirements-prod.txt·지연 import), 문서·테스트 |
 | 405 | 2026-11-05 | [`e206110`](#e206110) | docs(legal): 독점 라이선스·기여 수칙·보안 정책 추가 — LICENSE, CONTRIBUTING.md, SECURITY.md (무단 clone 금지 안내) |
+| 406 | 2026-11-05 | `pending406` | docs(readme): 루트 README 전면 개편 — 프레임워크·아키텍처 그림, 기능별 GIF·PNG, Mermaid 로직 구조, 재생성 도구 docs/readme |
 
 ---
 
@@ -7801,5 +7802,21 @@
 - **요약**: 저장소 사용 수칙 문서 3종을 루트에 추가. LICENSE 는 오픈소스가 아닌 독점(All Rights Reserved) 라이선스로, 창시자가 서면 지정한 관리자만 clone·fork·실행·배포할 수 있고 그 외에는 금지. CONTRIBUTING.md 는 권한표·금지 사항·관리자 수칙·이미 clone 한 경우의 조치를 정리. SECURITY.md 는 취약점 비공개 제보와 비밀 정보 처리·유출 대응 절차. 문서만으로는 막을 수 없으므로 GitHub Private 전환·협업자 제한·브랜치 보호 체크리스트를 CONTRIBUTING.md 7항에 넣음(창시자 담당, 아직 미적용). 코드·설정은 변경 없음
 - **주요 파일**: `LICENSE`, `CONTRIBUTING.md`, `SECURITY.md`
 - **관련 RDMD**: 없음
+
+[▲ 목차로](#목차)
+
+<a id="pending406"></a>
+
+### 406. 2026-11-05 — `pending406`
+
+- **hash (short)**: `pending406`
+- **hash (full)**: `pendingfull406`
+- **author**: nomura
+- **message**: docs(readme): 루트 README 전면 개편 — 프레임워크·아키텍처 그림, 기능별 GIF·PNG, Mermaid 로직 구조, 재생성 도구 docs/readme
+- **git**: `git show pending406`
+- **범위**: docs / readme
+- **요약**: 루트 README 를 히어로·숫자 표·기능 지도·기술 스택·아키텍처·기능별 장면·로직 다이어그램·실행·환경 변수·주소·API·문제 해결·문서 지도로 새로 작성. 이미지는 임시 Mongo + 가상 데이터로 찍은 GIF 8개·PNG 23장과 HTML 로 렌더링한 다이어그램 5개. backend/.env 가 셸 변수를 덮어쓰므로 guard-env.js 로 운영 DB 연결을 차단하고 캡처. 낡은 바닐라 설명과 서버 IP 를 뺐고, 사실과 달랐던 CONTRIBUTING·SECURITY 의 비공개 문구를 고침. 재생성 도구와 사용법을 docs/readme 에 둠
+- **주요 파일**: `README.md`, `CONTRIBUTING.md`, `SECURITY.md`, `docs/readme/`
+- **관련 RDMD**: `RDMD/frontend/16-docs/01-readme-overhaul-record.md`
 
 [▲ 목차로](#목차)

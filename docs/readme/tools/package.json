@@ -1,0 +1,9 @@
+{
+  "name": "hbt-readme-tools",
+  "private": true,
+  "description": "README 이미지 재생성 도구 — 로컬 임시 DB 로 띄운 사이트를 캡처하고 다이어그램을 PNG 로 렌더링한다",
+  "dependencies": {
+    "puppeteer-core": "24.10.0",
+    "simple-icons": "15.3.0"
+  }
+}

@@ -112,3 +112,6 @@ __pycache__/
 
 # 벡터 DB 파일(ChromaDB)
 ai-service/data/
+
+# README 캡처 원본 프레임 (GIF 재생성용 임시 파일)
+docs/readme/raw/
