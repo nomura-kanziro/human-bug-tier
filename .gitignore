@@ -115,3 +115,6 @@ ai-service/data/
 
 # README 캡처 원본 프레임 (GIF 재생성용 임시 파일)
 docs/readme/raw/
+
+# 작업 중 생성되는 외부 보고서 (추적하지 않음)
+JULES_REPORT.md

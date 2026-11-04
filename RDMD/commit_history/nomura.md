@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 408 |
+| **커밋 수** | 409 |
 | **기간** | 2026-03-20 ~ 2026-11-05 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -437,6 +437,7 @@
 | 406 | 2026-11-05 | [`579fd8c`](#579fd8c) | docs(readme): 루트 README 전면 개편 — 프레임워크·아키텍처 그림, 기능별 GIF·PNG, Mermaid 로직 구조, 재생성 도구 docs/readme |
 | 407 | 2026-11-05 | [`32b8ed0`](#32b8ed0) | docs(readme): 하위 README 33개 고도화 — 로직 구조 Mermaid, 화면·그림 추가, 빠진 API·모델·페이지 보강 |
 | 408 | 2026-11-05 | [`e2d0df2`](#e2d0df2) | docs(guides): README 개편 후속 문서 갱신 — 개발·보안 가이드, 신규 기능 체크리스트, rdmd 스킬, 문서 지도, 기록 |
+| 409 | 2026-11-05 | `pending409` | chore(gitignore): 추적하지 않는 작업 보고서 JULES_REPORT.md 무시 목록에 추가 |
 
 ---
 
@@ -7852,5 +7853,21 @@
 - **요약**: 개발 가이드에 backend/.env 우선순위 경고와 React 기준 경로를 넣고, 코딩 컨벤션에 현재 기준 안내를 추가. 보안 가이드에 저장소 접근·공개 자료 절을 추가(문서는 clone 을 기술적으로 막지 못한다는 점 포함). 신규 기능 체크리스트와 rdmd 스킬(정본 + 복제본 12개)에 README 이미지 규칙 추가. CLAUDE.md·AGENTS.md 문서 지도에 CONTRIBUTING·LICENSE·SECURITY·docs/readme 연결. README 개편 기록과 작업 이력 추가
 - **주요 파일**: `RDMD/guides/development.md`, `security.md`, `coding-conventions.md`, `new-feature-checklist.md`, `.Agents/skills/rdmd/SKILL.md` 외 12개, `CLAUDE.md`, `AGENTS.md`
 - **관련 RDMD**: `RDMD/frontend/16-docs/01-readme-overhaul-record.md`
+
+[▲ 목차로](#목차)
+
+<a id="pending409"></a>
+
+### 409. 2026-11-05 — `pending409`
+
+- **hash (short)**: `pending409`
+- **hash (full)**: `pendingfull409`
+- **author**: nomura
+- **message**: chore(gitignore): 추적하지 않는 작업 보고서 JULES_REPORT.md 무시 목록에 추가
+- **git**: `git show pending409`
+- **범위**: chore / gitignore
+- **요약**: 에이전트가 만든 `JULES_REPORT.md` 는 추적 대상이 아니므로 `.gitignore` 에 넣었다. 코드·설정 동작은 바뀌지 않음
+- **주요 파일**: `.gitignore`
+- **관련 RDMD**: 없음
 
 [▲ 목차로](#목차)
