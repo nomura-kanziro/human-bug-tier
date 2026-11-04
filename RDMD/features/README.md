@@ -1,5 +1,26 @@
 # 기능 설명 (Features)
 
+<!-- readme-overview -->
+<img src="../../docs/readme/diagrams/feature-map.png" alt="기능 지도" width="100%" />
+
+### 로직 구조 — 사용자가 지나가는 길
+
+```mermaid
+flowchart LR
+    V["방문"] --> H["홈"]
+    H --> T["공식 티어표"]
+    H --> M["커스텀 메이커"]
+    H --> G["가이드 · AI 도우미"]
+    M --> L{"로그인?"}
+    L -->|예| B["게시판 업로드"]
+    L -->|아니오| D["PNG · PDF 저장"]
+    B --> N["댓글 → 알림"]
+    H --> P["행운 뽑기 · 이벤트"]
+    P --> W["포인트"]
+    W --> MY["마이페이지"]
+```
+<!-- /readme-overview -->
+
 휴버대 티어표의 **구성 기능**을 영역별로 설명합니다.  
 모듈 폴더의 README와 연동되어 있으며, 온보딩·유지보수 시 이 폴더부터 읽으면 됩니다.
 
@@ -8,7 +29,7 @@
 | 문서 | 설명 |
 |------|------|
 | [overview.md](./overview.md) | 전체 기능 맵 · 폴더 대응 · 사용자 여정 |
-| [common-infra.md](./common-infra.md) | common.js, Header/Footer, 경로·API Base |
+| [common-infra.md](./common-infra.md) | Layout · Header · Footer, 경로 · API Base, 테마 · 계절 배경 |
 | [tier-class.md](./tier-class.md) | 공식 1~9 티어표 |
 | [custom-maker.md](./custom-maker.md) | 커스텀 제작 · 게시판 · 댓글 · 본인 글 수정 |
 | [auth.md](./auth.md) | 회원가입 · 로그인 · 비번 재설정 |

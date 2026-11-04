@@ -1,5 +1,40 @@
 # Backend (Express + MongoDB)
 
+<!-- readme-overview -->
+<img alt="Node.js" src="https://img.shields.io/badge/Node.js-339933?logo=nodedotjs&logoColor=white" /> <img alt="Express" src="https://img.shields.io/badge/Express_5-000000?logo=express&logoColor=white" /> <img alt="MongoDB" src="https://img.shields.io/badge/MongoDB-47A248?logo=mongodb&logoColor=white" /> <img alt="JWT" src="https://img.shields.io/badge/JWT-000000?logo=jsonwebtokens&logoColor=white" />
+
+<img src="../docs/readme/diagrams/architecture.png" alt="시스템 아키텍처" width="100%" />
+
+### 로직 구조
+
+요청은 항상 **라우터 → 미들웨어 → 컨트롤러 → 모델** 순서로 내려갑니다. 라우터는 주소와 권한만 정하고, 판단은 컨트롤러가 합니다.
+
+```mermaid
+flowchart LR
+    R["클라이언트"] --> S["server.js<br/>CORS · JSON"]
+    S --> RT["routes/<br/>주소 → 핸들러"]
+    RT --> MW["middleware/auth.js<br/>requireAuth · requireAdmin"]
+    MW --> C["controllers/<br/>업무 판단"]
+    C --> M["models/<br/>Mongoose"]
+    M --> D[("MongoDB")]
+    C --> U["utils/<br/>메일 · 알림 · 출석 · KST"]
+    RT -->|"/api/ai"| AI["ai-service :8000"]
+    S -->|"/api 외"| F["정적 dist/ + SPA 폴백"]
+```
+
+서버가 뜨면 함께 도는 작업:
+
+```mermaid
+flowchart LR
+    B["서버 기동"] --> DB{"DB 연결?"}
+    DB -->|예| A["seedAdmin<br/>관리자 계정 생성"]
+    A --> L["사다리 라운드<br/>5분 스케줄러"]
+    L --> E["이벤트 스케줄러<br/>공개 · 마감"]
+    DB -->|아니오| N["DB 없이 계속 실행<br/>/health 는 응답"]
+    B --> Y["유튜브 동기화<br/>주기 실행"]
+```
+<!-- /readme-overview -->
+
 휴버대 티어표의 **전체 백엔드 서버**입니다.
 
 프론트엔드 정적 파일도 함께 서빙하며, 모든 API 요청을 처리합니다.
@@ -66,7 +101,11 @@ backend/
 | `/api/inquiries`      | 문의 + 답변              | 일부 Admin |
 | `/api/admin`          | 관리자 전용 (유저, 차단, 신고) | requireAdmin |
 | `/api/notifications`  | 알림                     | requireAuth |
-| `/api/luck-draw`      | 오늘의 행운 티어 뽑기 (게스트 체크만/로그인 저장, 이력 최근 5건 유지, 티어별 포인트 적립), `/stats` 누적 통계 | optionalAuth(뽑기) · requireAuth(조회/통계) |
+| `/api/luck-draw`      | 오늘의 행운 티어 뽑기 (게스트 체크만/로그인 저장, 이력 최근 5건 유지, 티어별 포인트 적립), `/stats` 누적 통계, `/attendance` 출석판, `/poker/*` 티어 포커, `/ladder/*` 랜덤 뽑기 | optionalAuth(뽑기) · requireAuth(조회/통계/배팅) |
+| `/api/profile`        | 마이페이지 프로필(닉네임 변경) | requireAuth |
+| `/api/events`         | 매일 퀴즈 · 메모리 게임 · 티어표 공개 | 참여 requireAuth · 관리 requireAdmin |
+| `/api/site`           | 사이트 설정 공개 조회(계절 디자인) | 공개 |
+| `/api/ai`             | AI 도우미 프록시 (`/status` · `/questions` · `/chat`, IP당 10분 20회) | 공개 |
 
 ## 데이터 모델 (주요)
 
@@ -78,7 +117,15 @@ backend/
 - **Block**: 사용자/IP 차단
 - **Admin**: 관리자 계정
 - **LuckDraw**: userId, mode(daily_tier/random_char), tier, characterName, imagePath, drawDate(KST) — 유저당 최근 5건만 유지(자동 삭제)
-- **LuckProfile**: userId(unique), points(누적), totalDraws(누적), tierCounts, bestTier, todayCount/todayDate, lastDrawAt — LuckDraw 삭제와 무관하게 유지되는 누적 카운터
+- **LuckProfile**: userId(unique), points(누적), totalDraws(누적), tierCounts, bestTier, todayCount/todayDate, lastDrawAt, lastAttendanceDate, attendanceStreak — LuckDraw 삭제와 무관하게 유지되는 누적 카운터
+- **LuckPointLog**: 포인트 원장(뽑기 · 출석 · 포커 · 사다리 등 출처 기록)
+- **LuckPokerRound / LuckLadderRound / LuckLadderBet**: 티어 포커 판, 랜덤 뽑기 라운드와 배팅
+- **EventQuizAttempt**: 매일 퀴즈 응시(유저 + 날짜 유니크)
+- **EventMemoryPeriod / EventMemorySession**: 메모리 게임 회차와 판
+- **EventShowcase / EventShowcaseEntry / EventShowcaseVote**: 티어표 공개 회차, 출품, 투표
+- **Notification**: 헤더 알림
+- **SiteSetting**: 사이트 운영 설정(계절 디자인)
+- **TierLike**: 게시글 좋아요(1인 1회)
 
 ## 인증 시스템 원리
 

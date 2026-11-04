@@ -1,5 +1,38 @@
 # root-cloudflare — 정식 버전 React 프론트 (Vite + React 18 + React Router 6)
 
+<!-- readme-overview -->
+<img alt="React" src="https://img.shields.io/badge/React_18-20232A?logo=react&logoColor=61DAFB" /> <img alt="Vite" src="https://img.shields.io/badge/Vite_5-646CFF?logo=vite&logoColor=white" /> <img alt="React Router" src="https://img.shields.io/badge/React_Router_6-CA4245?logo=reactrouter&logoColor=white" /> <img alt="Cloudflare Pages" src="https://img.shields.io/badge/Cloudflare_Pages-F38020?logo=cloudflarepages&logoColor=white" />
+
+사이트의 **모든 화면**을 담당하는 React 앱입니다. 빌드 결과 `dist/` 를 Cloudflare Pages 와 backend 가 서빙합니다.
+
+<table>
+<tr>
+<td width="50%"><img src="../docs/readme/gifs/maker.gif" alt="커스텀 메이커에서 캐릭터를 끌어다 놓는 장면" width="100%" /></td>
+<td width="50%"><img src="../docs/readme/gifs/tier.gif" alt="공식 티어표 전환 장면" width="100%" /></td>
+</tr>
+</table>
+
+### 로직 구조
+
+```mermaid
+flowchart TD
+    M["main.jsx<br/>전역 CSS · Router"] --> A["App.jsx<br/>라우트 표"]
+    A --> L["Layout<br/>Header · Outlet · Footer"]
+    L --> P["pages/<br/>화면 25개"]
+    P --> C["components/<br/>패널 · 메뉴 · 모달"]
+    P --> LIB["lib/<br/>기능별 API · 상태 헬퍼"]
+    C --> LIB
+    LIB --> API["lib/api.js<br/>apiRequest · getApiBase · 토큰 헤더"]
+    API -->|"/api/*"| B[(backend)]
+    AUTH["context/AuthContext<br/>localStorage 신원"] --> L
+    AUTH --> P
+    DATA[("data/tiers.json<br/>티어 정본")] --> T["data/tiers.js"]
+    T --> P
+```
+
+**API 주소 결정** (`getApiBase`): 개발 포트 → `localhost:5000` · 같은 오리진 → `''` · GitHub Pages → `GITHUB_STATIC`
+<!-- /readme-overview -->
+
 > ✅ **2026-09-19 창시자 지시 — 모든 프론트 작업은 이 폴더에만 한다.**  
 > `root-render/`(바닐라)는 **베타 버전에서 업데이트 종료 → 수정 금지**(보관용).  
 > 따라서 **`npm run sync:render` 는 더 이상 돌리지 않는다** — 돌리면 `src/styles/*.css` 가 바닐라 구본으로 덮어쓰여져 이곳 수정이 사라진다.  
@@ -46,6 +79,9 @@ npm start
 | 7-1 문의 | ✅ | `/inquiry` |
 | 7-2 알림 전체보기 | ✅ | `/notifications` |
 | 7-3 관리자 | ✅ | `/admin/login` `/admin` `/admin/comment` |
+| 이식 후 추가 — 이벤트 | ✅ | `/event` (매일 퀴즈 · 메모리 게임 · 티어표 공개) |
+| 이식 후 추가 — 가이드 모드 | ✅ | `/guide` + 화면 위 안내 오버레이 |
+| 이식 후 추가 — AI 도우미 | ✅ | `/ai` (휴버봇, `ai-service/` 연동) |
 
 **바닐라(`root-render/`) 기능 100% 반영 완료.** 바닐라는 2026-09-19 부로 동결됐으므로
 이후 모든 수정은 이 폴더의 `src/` 에서 직접 한다 (`npm run sync:render` 금지).
@@ -75,9 +111,9 @@ root-cloudflare/
 └─ src/
    ├─ main.jsx / App.jsx       # 전역 CSS import, 라우트
    ├─ context/AuthContext.jsx  # localStorage(user/authToken/isAdmin/adminName/profileImage) 신원
-   ├─ lib/                     # api · paths · theme · notifications · noticeFormat · noticeApi · makerState · loadScript
-   ├─ components/              # Header · Footer · ThemeToggle · SponsorButton · NotificationBell · UserProfileMenu · LoadingScreen · Layout · NoticeListItem · HomeLuckWidget
-   ├─ pages/                   # Home · TierPage · CustomMaker · LuckDraw · Notice* · PendingPage · LegacyRedirect
+   ├─ lib/                     # api · paths · theme · season · notifications · authApi · adminApi · boardApi · aiApi · noticeApi · noticeFormat · eventFormat · makerState · tierStyle · guide · guideCourses · loadScript
+   ├─ components/              # 공통(Header · Footer · Layout · ThemeToggle · NotificationBell · UserProfileMenu · LoadingScreen · SeasonalBackdrop · ReportModal · GuideMode) · 메이커(DecoratePanel) · 뽑기(HomeLuckWidget · LuckPokerPanel · LuckLadderPanel) · 이벤트(EventQuizPanel · EventMemoryPanel · EventShowcasePanel) · 관리자(Admin*) · 출석(AttendanceBoard)
+   ├─ pages/                   # Home · TierPage · CustomMaker · Board · PostDetail · PostEdit · LuckDraw · EventPage · AiHelper · Guide · MyPage · Notifications · Inquiry · Notice* · Login · SignUp · FindAccount · ResetPassword · Admin* · PendingPage · LegacyRedirect
    ├─ data/                    # tiers.json(생성물) + tiers.js(등급·세부등급·캐릭터 풀 파생)
    └─ styles/                  # 바닐라 CSS 그대로(theme, loading-screen, common, Header_Footer, index-home, notice,
                               #  tier-nav, luck-draw, custom-maker) + tier-board.css(등급별 변수 통합, 신규)

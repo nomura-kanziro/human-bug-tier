@@ -1,5 +1,17 @@
 # RDMD/ai — AI 전용 서비스 기록
 
+<!-- readme-overview -->
+### 로직 구조 — AI 기능 하나가 세 곳에 걸친다
+
+```mermaid
+flowchart LR
+    F["화면 /ai<br/>../frontend/15-ai"] -->|"/api/ai"| B["Express 프록시<br/>../backend/10-ai"]
+    B -->|"X-AI-Key"| A["ai-service<br/>이 폴더"]
+    A --> K["knowledge/*.md + tiers.json"]
+    A --> M["Ollama / Claude / 문서 답"]
+```
+<!-- /readme-overview -->
+
 저장소 루트 **`ai-service/`**(Python FastAPI · LangChain · LangGraph · RAG)는 Express 와 분리된 **별도 서비스**라서, 서비스 자체의 기록은 이 폴더에 둔다.
 같은 작업의 **화면·프록시 조각은 기존 규칙대로 `frontend/`·`backend/` 에 기록**하고 서로 링크한다(AI 기능 하나가 세 곳에 걸치므로 아래 표를 같이 본다).
 

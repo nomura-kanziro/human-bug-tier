@@ -1,5 +1,55 @@
 # ai-service — 휴버대 티어표 AI 전용 서비스
 
+<!-- readme-overview -->
+<img alt="Python" src="https://img.shields.io/badge/Python-3776AB?logo=python&logoColor=white" /> <img alt="FastAPI" src="https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white" /> <img alt="LangChain" src="https://img.shields.io/badge/LangChain-1C3C3C?logo=langchain&logoColor=white" /> <img alt="LangGraph" src="https://img.shields.io/badge/LangGraph-1C3C3C?logo=langchain&logoColor=white" /> <img alt="Ollama" src="https://img.shields.io/badge/Ollama-000000?logo=ollama&logoColor=white" />
+
+<table>
+<tr>
+<td width="50%"><img src="../docs/readme/gifs/ai.gif" alt="휴버봇에게 질문하고 답을 받는 장면" width="100%" /></td>
+<td>
+
+- 사이트 지식 문서 + 공식 티어표로만 답합니다
+- 답 아래에 참고한 문서를 보여 줍니다
+- 모델이 꺼져 있으면 문서 문장으로 답합니다
+- 대화를 저장하지 않습니다
+- **운영 서버에는 아직 올리지 않았습니다** (스크립트는 준비됨)
+
+</td>
+</tr>
+</table>
+
+<img src="../docs/readme/diagrams/ai-flow.png" alt="휴버봇 질문 처리 흐름" width="100%" />
+
+### 로직 구조
+
+**질문 처리** (`service/graph.py` 의 실제 노드와 분기)
+
+```mermaid
+flowchart TD
+    S((시작)) --> A["analyze<br/>캐릭터·티어 찾기, 의도 분류"]
+    A -->|인사| G["greet"]
+    A -->|인젝션 시도| R["refuse"]
+    A -->|사이트 질문| RT["retrieve<br/>BM25 + 벡터 → RRF"]
+    RT -->|근거 충분| GEN["generate<br/>Ollama / Claude / 문서 답"]
+    RT -->|근거 부족| O["out_of_scope"]
+    G --> E((끝))
+    R --> E
+    GEN --> E
+    O --> E
+```
+
+**코드 층** (위에서 아래로만 호출)
+
+```mermaid
+flowchart LR
+    SC["schema<br/>요청·응답 모양"] -.-> RO
+    RO["router<br/>HTTP"] --> SV["service<br/>업무 로직 · LLM · 검색"]
+    SV --> RE["repository<br/>검색 색인 · SQL"]
+    RE --> DB["database<br/>연결"]
+    MD["models<br/>저장 한 행"] -.-> RE
+```
+<!-- /readme-overview -->
+
 사이트 지식으로 답하는 챗봇 **휴버봇**(`/ai` 화면)과 **랜덤 추천 질문 3개**를 만드는 Python 서비스다.
 Express(`backend/`)와 **별도 프로세스**로 돌고, 브라우저는 이 서비스를 직접 부르지 않는다.
 

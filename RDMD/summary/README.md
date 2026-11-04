@@ -1,5 +1,16 @@
 # Summary — 작업 정리
 
+<!-- readme-overview -->
+### 로직 구조
+
+```mermaid
+flowchart LR
+    C["commit_history<br/>커밋 단위"] --> R["record<br/>작업 단위"]
+    R --> W["work-history<br/>Phase 단위"]
+    W --> T["timeline<br/>날짜 단위"]
+```
+<!-- /readme-overview -->
+
 지금까지의 개발을 **한곳에서 훑어보는** 요약 문서입니다.
 
 | 문서 | 설명 |

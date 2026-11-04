@@ -1,5 +1,21 @@
 # .Claude — Claude 스킬 · 팀 인수인계
 
+<!-- readme-overview -->
+### 로직 구조 — 작업 지침을 읽는 순서
+
+```mermaid
+flowchart TD
+    H["사람 (창시자 지시)"] --> C[".Agents/common-rules.md<br/>공통 룰"]
+    C --> S[".Agents/skills/기능/SKILL.md<br/>기능 정본"]
+    S --> T[".Claude/skills/기능/SKILL.md<br/>이 폴더의 복제본"]
+    T --> W["작업"]
+    W --> R["RDMD 기록 + commit_history"]
+    C -. "충돌하면 .Agents 가 이김" .-> T
+```
+
+**역할:** Admin AI — 공통 룰을 지키고 다른 폴더를 정렬한다. Admin AI 끼리 해석이 다르면 사람에게 묻는다.
+<!-- /readme-overview -->
+
 Claude Code가 자동으로 찾는 프로젝트 스킬 위치입니다.
 
 **모든 AI 공통 정본(더 상위)**: [`.Agents/`](../.Agents/README.md)

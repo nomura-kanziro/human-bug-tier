@@ -1,5 +1,18 @@
 # Agent-Bot (에이전트 봇) — 계획 단계, 아직 구현 없음
 
+<!-- readme-overview -->
+### 로직 구조 (예정 — 아직 구현 없음)
+
+```mermaid
+flowchart LR
+    RO["router<br/>/agent"] --> SV["service<br/>에이전트 · 도구 호출"]
+    SV --> RE["repository<br/>SQL"]
+    RE --> DB["database<br/>Oracle 연결"]
+    SC["schema"] -.-> RO
+    MD["models"] -.-> RE
+```
+<!-- /readme-overview -->
+
 > 이 폴더는 **자리만 잡아 둔 것**이다. 지금은 방치한다(창시자 지시: "아직 계획 단계라 폴더만").
 > 사이트 공지 "앞으로의 계획"의 **에이전트 봇** 전용 챗봇이 들어올 자리다.
 

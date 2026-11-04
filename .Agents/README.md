@@ -1,5 +1,19 @@
 # `.Agents` — 전 AI 공통 권한 · 기능 스킬 (Canonical)
 
+<!-- readme-overview -->
+### 로직 구조 — 권한과 정본의 방향
+
+```mermaid
+flowchart TD
+    H["사람 (창시자 · 팀)<br/>team/"] --> A[".Agents/<br/>공통 룰 + 기능 스킬 정본"]
+    A --> AD["Admin AI<br/>Grok · Claude · Cursor (동등)"]
+    A --> W["실무 AI<br/>Codex · Antigravity · Manus · Qwen<br/>Gemini · Ollama · Opencode · Kimi · Windsurf"]
+    AD -->|"수호 · 정렬"| A
+    A -->|"스킬 복제"| F["에이전트 폴더 12종<br/>README.md + skills/기능/SKILL.md"]
+    A --> O["전용 폴더 없는 번외 AI<br/>.Agents 만 읽음"]
+```
+<!-- /readme-overview -->
+
 이 폴더는 **어떤 AI를 쓰든** (Grok · Claude · Cursor · Codex · Antigravity · Manus · Qwen · Gemini · Ollama · Opencode · Kimi · Windsurf · **그 외 번외 AI**)  
 지켜야 할 **공통 룰 + 기능별 표준 `skills/<기능>/SKILL.md`** 의 **정본(canonical)** 입니다.
 

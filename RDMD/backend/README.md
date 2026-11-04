@@ -1,5 +1,17 @@
 # RDMD / backend — 백엔드 작업 기록
 
+<!-- readme-overview -->
+### 로직 구조 — 일지를 찾는 법
+
+```mermaid
+flowchart LR
+    Q["찾는 내용"] --> N["번호 폴더 = 기능 대역"]
+    N --> R["NN-이름-record.md<br/>작업 상세"]
+    R --> C["../commit_history<br/>해당 커밋"]
+    R --> F["../features<br/>현재 동작"]
+```
+<!-- /readme-overview -->
+
 백엔드(Express · MongoDB · 미들웨어 · 배포 서버) 커밋·작업 상세 일지입니다.  
 **기능별 폴더 + 순서 번호 + `*-record.md`** 로 관리합니다. (`frontend/` 와 동일 규칙)
 

@@ -1,5 +1,21 @@
 # .Codex — Codex 스킬 · 팀 인수인계
 
+<!-- readme-overview -->
+### 로직 구조 — 작업 지침을 읽는 순서
+
+```mermaid
+flowchart TD
+    H["사람 (창시자 지시)"] --> C[".Agents/common-rules.md<br/>공통 룰"]
+    C --> S[".Agents/skills/기능/SKILL.md<br/>기능 정본"]
+    S --> T[".Codex/skills/기능/SKILL.md<br/>이 폴더의 복제본"]
+    T --> W["작업"]
+    W --> R["RDMD 기록 + commit_history"]
+    C -. "충돌하면 .Agents 가 이김" .-> T
+```
+
+**역할:** 실무 AI — 공통 룰과 스킬을 따라 작업한다. 공통 룰을 고치지 않는다.
+<!-- /readme-overview -->
+
 **휴버대 티어표** 저장소에서 Codex(CLI/IDE)가 따를 기능별 작업 지침입니다.
 
 **모든 AI 공통 정본(더 상위)**: [`.Agents/`](../.Agents/README.md)

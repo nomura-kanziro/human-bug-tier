@@ -1,5 +1,28 @@
 # `team/` — 사람 작업자 규칙 (창시자 · 팀원)
 
+<!-- readme-overview -->
+### 작업 흐름
+
+```mermaid
+flowchart LR
+    A["작업 범위 확인<br/>root-cloudflare · backend · ai-service"] --> B["구현"]
+    B --> C["로컬 :5000 테스트"]
+    C --> D["06-checklist 확인"]
+    D --> E["commit_history 작성<br/>필수"]
+    E --> F["커밋 · 푸시"]
+    F --> G["배포<br/>창시자 지시가 있을 때만"]
+```
+
+### 무엇이 우선인가
+
+```mermaid
+flowchart LR
+    H["창시자"] --> A[".Agents 정본"] --> B["에이전트 전용 폴더"] --> C["옛 RDMD"]
+```
+
+> 저장소 접근 권한은 [CONTRIBUTING.md](../CONTRIBUTING.md), 라이선스는 [LICENSE](../LICENSE), 보안 제보와 비밀 정보 규칙은 [SECURITY.md](../SECURITY.md) 를 봅니다.
+<!-- /readme-overview -->
+
 이 폴더는 **사람이** 코드를 짤 때 보는 규칙입니다.  
 (바이브 코딩 · 하드코딩 · PR · 리뷰 모두 해당)
 
@@ -61,6 +84,8 @@ AI 작업    →  .Agents/common-rules + .Agents/skills/<기능>/SKILL.md   ← 
 | 목적 | 위치 |
 |------|------|
 | 로컬 실행·시연 | [../README.md](../README.md) |
+| clone 권한·사용 수칙 | [../CONTRIBUTING.md](../CONTRIBUTING.md) |
+| 보안 제보·비밀 정보 | [../SECURITY.md](../SECURITY.md) |
 | 배포 | [../DEPLOY.md](../DEPLOY.md) |
 | 기능 맵 | [../RDMD/features/overview.md](../RDMD/features/overview.md) |
 | 경로·API 상세 | [../RDMD/guides/path-and-api.md](../RDMD/guides/path-and-api.md) |

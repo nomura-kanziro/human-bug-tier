@@ -1,5 +1,18 @@
 # 개발 가이드라인 (Guides)
 
+<!-- readme-overview -->
+### 로직 구조 — 언제 어떤 문서를 보나
+
+```mermaid
+flowchart LR
+    A["처음 실행"] --> D["development"]
+    D --> C["coding-conventions"]
+    C --> P["path-and-api"]
+    P --> S["security"]
+    S --> DP["deploy-checklist"]
+```
+<!-- /readme-overview -->
+
 휴버대 티어표 기여·유지보수 시 따라야 할 **규칙과 체크리스트**입니다.  
 기능이 *무엇인지* 는 [`../features/`](../features/README.md), *무엇을 해왔는지* 는 [`../summary/`](../summary/work-history.md) 를 보세요.
 
@@ -9,9 +22,9 @@
 |------|------|
 | [development.md](./development.md) | 로컬 실행, 브랜치, 작업 흐름 |
 | [coding-conventions.md](./coding-conventions.md) | 프론트·백엔드 코딩 규칙 |
-| [path-and-api.md](./path-and-api.md) | getBasePath / getApiBase / 인증 헤더 |
+| [path-and-api.md](./path-and-api.md) | React 절대 경로 · getApiBase · 인증 헤더 (getBasePath 는 바닐라 기록) |
 | [security.md](./security.md) | JWT, Admin, 토큰, env |
-| [deploy-checklist.md](./deploy-checklist.md) | Render · GH Pages 배포 전 확인 |
+| [deploy-checklist.md](./deploy-checklist.md) | Cloudflare Pages · Oracle · AI 서비스 배포 전 확인 |
 | [rdmd-writing.md](./rdmd-writing.md) | RDMD 기록 작성 방법 |
 | [new-feature-checklist.md](./new-feature-checklist.md) | 새 기능 추가 체크리스트 |
 | [mobile-pwa.md](./mobile-pwa.md) | 모바일 반응형 · PWA 설치·검증 |
@@ -27,7 +40,7 @@
 ## 절대 원칙 (요약)
 
 1. **풀스택 테스트는 항상** `backend` 포트 5000 통합 실행  
-2. **내부 링크**는 서브패스·하위 폴더를 깨지 않게 (getBasePath)  
+2. **내부 링크**는 React Router 절대 경로로 (`<Link to="/…">`, 이미지는 `tierImageUrl()`)  
 3. **API 호출**은 get*ApiBase + 올바른 Auth 헤더  
 4. **관리 API**는 반드시 `requireAdmin`  
 5. **`.env` 커밋 금지**  

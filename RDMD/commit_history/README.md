@@ -1,5 +1,18 @@
 # commit_history — 작성자별 커밋 기록
 
+<!-- readme-overview -->
+### 로직 구조 — 커밋 한 건의 순서
+
+```mermaid
+flowchart LR
+    A["코드 작업 · 테스트"] --> B["{작성자}.md 에 기록<br/>표 + 상세, 해시는 임시값"]
+    B --> C["git commit"]
+    C --> D["실제 해시 기입"]
+    D --> E["해시 기입 커밋<br/>번호를 새로 세지 않음"]
+    E --> F["푸시"]
+```
+<!-- /readme-overview -->
+
 기능별 상세 일지(`frontend/`, `backend/`)와 별도로,  
 **누가 어떤 커밋을 남겼는지** 사람 단위로 모아 두는 폴더입니다.
 

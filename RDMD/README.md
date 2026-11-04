@@ -1,5 +1,19 @@
 # RDMD — 휴버대 티어표 개발 기록실
 
+<!-- readme-overview -->
+### 기록이 쌓이는 구조
+
+```mermaid
+flowchart TD
+    W["작업 완료"] --> CH["commit_history/{작성자}.md<br/>커밋마다 필수"]
+    W --> REC["frontend · backend · ai<br/>기능 폴더 *-record.md<br/>큰 작업"]
+    REC --> F["features/<br/>지금 기능이 무엇인지"]
+    REC --> G["guides/<br/>어떻게 고치는지"]
+    CH --> S["summary/<br/>전체 이력 요약"]
+    REC --> S
+```
+<!-- /readme-overview -->
+
 **RDMD** = **R**ecor**d** + **MD** (Markdown).  
 휴버대 티어표(`human-bug-tier`) 프로젝트의 **작업 이력 · 기능 설명 · 개발 가이드**를 모아 둔 문서 폴더입니다.
 
@@ -65,7 +79,7 @@
 | 문서 | 주제 |
 |------|------|
 | [overview.md](./features/overview.md) | 전체 맵 · 사용자 여정 · 권한 표 |
-| [common-infra.md](./features/common-infra.md) | common.js, Header/Footer, 경로·API Base |
+| [common-infra.md](./features/common-infra.md) | Layout · Header · Footer, 경로 · API Base, 테마 · 계절 배경 |
 | [tier-class.md](./features/tier-class.md) | 공식 1~9 티어표 |
 | [custom-maker.md](./features/custom-maker.md) | 커스텀 제작 · 게시판 · 댓글 · 본인 글 수정 |
 | [auth.md](./features/auth.md) | 회원가입 · 로그인 · 비번 재설정 |
@@ -93,7 +107,7 @@
 |------|------|
 | [development.md](./guides/development.md) | 로컬 실행, 작업 흐름 |
 | [coding-conventions.md](./guides/coding-conventions.md) | 프론트·백 코딩 규칙 |
-| [path-and-api.md](./guides/path-and-api.md) | getBasePath / getApiBase / 인증 헤더 |
+| [path-and-api.md](./guides/path-and-api.md) | React 절대 경로 · getApiBase · 인증 헤더 (getBasePath 는 바닐라 기록) |
 | [security.md](./guides/security.md) | JWT, Admin, 토큰, env |
 | [deploy-checklist.md](./guides/deploy-checklist.md) | Oracle Cloud · Cloudflare Pages · Render(레거시) · GH Pages 체크리스트 |
 | [rdmd-writing.md](./guides/rdmd-writing.md) | RDMD에 기록 남기는 방법 |

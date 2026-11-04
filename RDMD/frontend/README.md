@@ -1,5 +1,19 @@
 # RDMD / frontend — 프론트엔드 작업 기록
 
+<!-- readme-overview -->
+### 로직 구조 — 일지를 찾는 법
+
+```mermaid
+flowchart LR
+    Q["찾는 화면"] --> N["번호 폴더 = 기능 대역"]
+    N --> R["NN-이름-record.md<br/>작업 상세"]
+    R --> C["../commit_history<br/>해당 커밋"]
+    R --> F["../features<br/>현재 동작"]
+```
+
+> 코드 작업 대상은 `root-cloudflare/`(React)입니다. 바닐라 시절 일지는 `root-render/` 기준이니 이력으로만 읽습니다.
+<!-- /readme-overview -->
+
 프론트엔드 커밋·작업 상세 일지입니다.  
 기능별 폴더 + 순서 번호 + `*-record.md` 파일명으로 관리합니다.
 
@@ -26,7 +40,8 @@ RDMD/frontend/
 ├── 12-react/            # 정식 버전 React 이식 (root-cloudflare)
 ├── 13-event/            # 이벤트 페이지 (퀴즈 · 티어표 공개 · 메모리 게임)
 ├── 14-guide/            # 가이드 페이지(/guide) + 게임식 가이드 모드
-└── 15-ai/               # AI 도우미 화면(/ai) — AI 전용 서비스의 프론트 조각
+├── 15-ai/               # AI 도우미 화면(/ai) — AI 전용 서비스의 프론트 조각
+└── 16-docs/             # README 개편 · 이미지 재생성 도구
 ```
 
 파일명 규칙: `{순서}-{기능키워드}-record.md`
@@ -251,3 +266,9 @@ area: frontend
 
 4. 본문 템플릿: [`../guides/rdmd-writing.md`](../guides/rdmd-writing.md)  
 5. 큰 변경이면 [`../summary/work-history.md`](../summary/work-history.md) · 이 README 표 한 줄 갱신
+
+## 16-docs
+
+| 문서 | 번호 | 내용 |
+|------|------|------|
+| [01-readme-overhaul-record.md](./16-docs/01-readme-overhaul-record.md) | — | README 전면 개편 — 실제 화면 GIF · PNG, 프레임워크 그림, 전 README 로직 다이어그램, 격리 캡처 도구 |

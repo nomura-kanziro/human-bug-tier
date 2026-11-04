@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 406 |
+| **커밋 수** | 407 |
 | **기간** | 2026-03-20 ~ 2026-11-05 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -435,6 +435,7 @@
 | 404 | 2026-11-05 | [`3615231`](#3615231) | feat(deploy): AI 서비스 운영 배포 준비 — deploy.sh ai-setup/ai-env·pm2 hbt-ai, 가벼운 설치(requirements-prod.txt·지연 import), 문서·테스트 |
 | 405 | 2026-11-05 | [`e206110`](#e206110) | docs(legal): 독점 라이선스·기여 수칙·보안 정책 추가 — LICENSE, CONTRIBUTING.md, SECURITY.md (무단 clone 금지 안내) |
 | 406 | 2026-11-05 | [`579fd8c`](#579fd8c) | docs(readme): 루트 README 전면 개편 — 프레임워크·아키텍처 그림, 기능별 GIF·PNG, Mermaid 로직 구조, 재생성 도구 docs/readme |
+| 407 | 2026-11-05 | `pending407` | docs(readme): 하위 README 33개 고도화 — 로직 구조 Mermaid, 화면·그림 추가, 빠진 API·모델·페이지 보강 |
 
 ---
 
@@ -7817,6 +7818,22 @@
 - **범위**: docs / readme
 - **요약**: 루트 README 를 히어로·숫자 표·기능 지도·기술 스택·아키텍처·기능별 장면·로직 다이어그램·실행·환경 변수·주소·API·문제 해결·문서 지도로 새로 작성. 이미지는 임시 Mongo + 가상 데이터로 찍은 GIF 8개·PNG 23장과 HTML 로 렌더링한 다이어그램 5개. backend/.env 가 셸 변수를 덮어쓰므로 guard-env.js 로 운영 DB 연결을 차단하고 캡처. 낡은 바닐라 설명과 서버 IP 를 뺐고, 사실과 달랐던 CONTRIBUTING·SECURITY 의 비공개 문구를 고침. 재생성 도구와 사용법을 docs/readme 에 둠
 - **주요 파일**: `README.md`, `CONTRIBUTING.md`, `SECURITY.md`, `docs/readme/`
+- **관련 RDMD**: `RDMD/frontend/16-docs/01-readme-overhaul-record.md`
+
+[▲ 목차로](#목차)
+
+<a id="pending407"></a>
+
+### 407. 2026-11-05 — `pending407`
+
+- **hash (short)**: `pending407`
+- **hash (full)**: `pendingfull407`
+- **author**: nomura
+- **message**: docs(readme): 하위 README 33개 고도화 — 로직 구조 Mermaid, 화면·그림 추가, 빠진 API·모델·페이지 보강
+- **git**: `git show pending407`
+- **범위**: docs / readme
+- **요약**: root-cloudflare·backend·ai-service·oracle·team·RDMD·에이전트 폴더 13종·Agent-Bot 층별 README 에 로직 구조 다이어그램을 넣고, 주요 README 에 배지와 화면을 추가. backend README 의 API·모델 목록과 root-cloudflare 의 페이지·구조 목록에서 빠진 이벤트·가이드·AI·포인트 원장 등을 보강. RDMD 색인의 옛 바닐라 설명을 현재 기준으로 고침. Mermaid 42개 렌더링과 상대 경로를 검사해 통과. root-render README 는 수정 금지라 제외
+- **주요 파일**: `root-cloudflare/README.md`, `backend/README.md`, `ai-service/README.md`, `backend/deploy/oracle/README.md`, `team/README.md`, `RDMD/*/README.md`, 에이전트 폴더 `README.md`
 - **관련 RDMD**: `RDMD/frontend/16-docs/01-readme-overhaul-record.md`
 
 [▲ 목차로](#목차)

@@ -1,5 +1,39 @@
 # Oracle Cloud 배포 가이드 (백엔드 + React 프론트 한 서버)
 
+<!-- readme-overview -->
+<img src="../../../docs/readme/diagrams/architecture.png" alt="운영 구성" width="100%" />
+
+### 로직 구조
+
+**`deploy.sh deploy` 한 번의 흐름** — 의존성은 링크를 바꾸기 전에 설치하므로, 실패해도 사이트는 이전 버전 그대로입니다.
+
+```mermaid
+flowchart TD
+    A["로컬 코드 묶기<br/>.env · node_modules 제외"] --> B["서버 업로드<br/>releases/시각"]
+    B --> C["shared/.env 링크"]
+    C --> D["backend 의존성 설치"]
+    D --> E{"shared/ai.env 있음?"}
+    E -->|예| F["ai-service/.env 링크<br/>목록이 바뀌었으면 pip install"]
+    E -->|아니오| G
+    F --> G["current 링크 교체"]
+    G --> H["pm2 startOrReload<br/>human-bug-tier"]
+    H --> I{"ai.env 있음?"}
+    I -->|예| J["pm2 hbt-ai 재시작"]
+    I -->|아니오| K
+    J --> K["/health 확인 + 메모리 출력"]
+    K -. 문제 발생 .-> L["deploy.sh rollback<br/>이전 릴리스로 되돌림"]
+```
+
+**서버 폴더**
+
+```text
+/opt/human-bug-tier/
+├── releases/<시각>/   배포마다 새 폴더
+├── current →          지금 쓰는 릴리스를 가리키는 링크
+└── shared/            배포와 무관하게 유지: .env · ai.env · ai-venv/
+```
+<!-- /readme-overview -->
+
 이 폴더의 스크립트로 **지금 로컬 코드**를 Oracle Cloud VM 한 대에 올린다.
 Node 서버 하나가 API 와 React 빌드(`root-cloudflare/dist`)를 같이 서빙하므로(로컬 `:5000` 과 똑같은 구조) 코드 수정은 없다.
 
