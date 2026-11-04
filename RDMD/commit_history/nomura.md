@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 407 |
+| **커밋 수** | 408 |
 | **기간** | 2026-03-20 ~ 2026-11-05 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -436,6 +436,7 @@
 | 405 | 2026-11-05 | [`e206110`](#e206110) | docs(legal): 독점 라이선스·기여 수칙·보안 정책 추가 — LICENSE, CONTRIBUTING.md, SECURITY.md (무단 clone 금지 안내) |
 | 406 | 2026-11-05 | [`579fd8c`](#579fd8c) | docs(readme): 루트 README 전면 개편 — 프레임워크·아키텍처 그림, 기능별 GIF·PNG, Mermaid 로직 구조, 재생성 도구 docs/readme |
 | 407 | 2026-11-05 | [`32b8ed0`](#32b8ed0) | docs(readme): 하위 README 33개 고도화 — 로직 구조 Mermaid, 화면·그림 추가, 빠진 API·모델·페이지 보강 |
+| 408 | 2026-11-05 | `pending408` | docs(guides): README 개편 후속 문서 갱신 — 개발·보안 가이드, 신규 기능 체크리스트, rdmd 스킬, 문서 지도, 기록 |
 
 ---
 
@@ -7834,6 +7835,22 @@
 - **범위**: docs / readme
 - **요약**: root-cloudflare·backend·ai-service·oracle·team·RDMD·에이전트 폴더 13종·Agent-Bot 층별 README 에 로직 구조 다이어그램을 넣고, 주요 README 에 배지와 화면을 추가. backend README 의 API·모델 목록과 root-cloudflare 의 페이지·구조 목록에서 빠진 이벤트·가이드·AI·포인트 원장 등을 보강. RDMD 색인의 옛 바닐라 설명을 현재 기준으로 고침. Mermaid 42개 렌더링과 상대 경로를 검사해 통과. root-render README 는 수정 금지라 제외
 - **주요 파일**: `root-cloudflare/README.md`, `backend/README.md`, `ai-service/README.md`, `backend/deploy/oracle/README.md`, `team/README.md`, `RDMD/*/README.md`, 에이전트 폴더 `README.md`
+- **관련 RDMD**: `RDMD/frontend/16-docs/01-readme-overhaul-record.md`
+
+[▲ 목차로](#목차)
+
+<a id="pending408"></a>
+
+### 408. 2026-11-05 — `pending408`
+
+- **hash (short)**: `pending408`
+- **hash (full)**: `pendingfull408`
+- **author**: nomura
+- **message**: docs(guides): README 개편 후속 문서 갱신 — 개발·보안 가이드, 신규 기능 체크리스트, rdmd 스킬, 문서 지도, 기록
+- **git**: `git show pending408`
+- **범위**: docs / guides
+- **요약**: 개발 가이드에 backend/.env 우선순위 경고와 React 기준 경로를 넣고, 코딩 컨벤션에 현재 기준 안내를 추가. 보안 가이드에 저장소 접근·공개 자료 절을 추가(문서는 clone 을 기술적으로 막지 못한다는 점 포함). 신규 기능 체크리스트와 rdmd 스킬(정본 + 복제본 12개)에 README 이미지 규칙 추가. CLAUDE.md·AGENTS.md 문서 지도에 CONTRIBUTING·LICENSE·SECURITY·docs/readme 연결. README 개편 기록과 작업 이력 추가
+- **주요 파일**: `RDMD/guides/development.md`, `security.md`, `coding-conventions.md`, `new-feature-checklist.md`, `.Agents/skills/rdmd/SKILL.md` 외 12개, `CLAUDE.md`, `AGENTS.md`
 - **관련 RDMD**: `RDMD/frontend/16-docs/01-readme-overhaul-record.md`
 
 [▲ 목차로](#목차)

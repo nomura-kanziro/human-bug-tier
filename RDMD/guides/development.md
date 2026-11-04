@@ -1,5 +1,7 @@
 # 개발 환경 · 작업 흐름
 
+> ⚠ `backend/.env` 는 `override: true` 로 읽혀 **셸 환경 변수보다 우선**합니다. `MONGO_URI` 를 셸에서 넘겨도 `.env` 의 DB 로 붙으니, 테스트 데이터를 넣기 전에 `/health` 와 `.env` 를 먼저 확인하세요. 격리 실행 예시: [`docs/readme/tools/guard-env.js`](../../docs/readme/tools/guard-env.js)
+
 ## 권장 로컬 실행
 
 ```bash
@@ -100,10 +102,11 @@ docs(commit_history): 커밋 해시 기입
 
 | 경로 | 수정 시 |
 |------|---------|
-| `common.js`, header/footer | **전 페이지** 영향 — 회귀 테스트 필수 |
+| `root-cloudflare/src/components/Layout.jsx`, `Header.jsx`, `Footer.jsx`, `src/lib/api.js` | **전 페이지** 영향 — 회귀 테스트 필수 |
 | `backend/middleware/auth.js` | 보안 전역 — 신중히 |
 | `backend/models/*` | 컨트롤러·프론트 필드 동기화 |
-| `admin/*` | Admin 헤더 + requireAdmin 쌍 |
+| `root-cloudflare/src/pages/Admin*.jsx`, `components/Admin*.jsx` | Admin 헤더 + requireAdmin 쌍 |
+| 화면 · 기능 · 숫자 | README 장면 · 숫자도 함께 갱신 ([`docs/readme/README.md`](../../docs/readme/README.md)) |
 | `tier-image/*` | 용량·파일명·경로 정규화 |
 | `RDMD/*` | 문서만 — 런타임 영향 없음 |
 | `ai-service/knowledge/*.md` | **AI 답이 바뀐다** — 사이트 규칙과 수치가 맞는지 확인 |

@@ -12,7 +12,9 @@
 정본: [`.Agents/README.md`](./.Agents/README.md)  
 (모든 에이전트 폴더는 `README.md` + `skills/<기능>/SKILL.md` 로 구조가 같음. 충돌 시 `.Agents` 우선)
 
-사람(창시자·팀원) 규칙: [`team/README.md`](./team/README.md)
+사람(창시자·팀원) 규칙: [`team/README.md`](./team/README.md)  
+저장소 사용 수칙·라이선스·보안: [`CONTRIBUTING.md`](./CONTRIBUTING.md) · [`LICENSE`](./LICENSE) · [`SECURITY.md`](./SECURITY.md)  
+README 이미지 재생성: [`docs/readme/README.md`](./docs/readme/README.md) (운영 DB 보호를 위해 `guard-env.js` 필수)
 
 ## 프로젝트
 

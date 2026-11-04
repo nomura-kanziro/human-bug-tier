@@ -100,6 +100,10 @@ env 로드: 루트 `.env` 후 `backend/.env` (동일 키는 backend 우선)
 | 목적 | 위치 |
 |------|------|
 | 시연·소개 | `README.md` |
+| 사용 수칙·clone 권한 | `CONTRIBUTING.md` |
+| 라이선스 | `LICENSE` (독점, 지정 관리자 전용) |
+| 보안 제보·비밀 정보 | `SECURITY.md` |
+| README 이미지·재생성 도구 | `docs/readme/` (캡처는 `guard-env.js` 로만) |
 | 배포 | `DEPLOY.md` |
 | 작업 이력 요약 | `RDMD/summary/work-history.md` |
 | 기능 설명 | `RDMD/features/` |
@@ -121,6 +125,7 @@ root-render/                           # ⛔ Render.com 바닐라 프론트 — 
 backend/                               # Express + Mongo + 정적 서빙 (공용, 작업 가능)
 ai-service/                            # AI 전용 서비스 — FastAPI · LangChain · LangGraph · RAG (/api/ai 뒤, 127.0.0.1:8000)
 RDMD/                                  # 기록·가이드
+docs/readme/                           # README 이미지 + 재생성 도구
 CLOUDFLARE.md                          # 배포 정본
 .Agents/                               # 모든 AI 공통 정본 (룰 + 기능 skill)
 .Grok/ · .Claude/ · .Cursor/ · .Codex/ · .Antigravity/ · .Manus/ · .Qwen/ · .Gemini/ · .Ollama/ · .Opencode/ · .Kimi/ · .Windsurf/  # 에이전트 폴더 (같은 구조: README.md + skills/<기능>/SKILL.md)

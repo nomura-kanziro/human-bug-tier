@@ -1,5 +1,7 @@
 # 코딩 컨벤션
 
+> ⚠ **2026-11-05 기준**: 프론트 작업은 `root-cloudflare/`(React 18 · Vite · React Router)에서 합니다. 아래의 바닐라 규칙은 `root-render/`(수정 금지) 기록이고, 현재 경로·API 규칙은 [`path-and-api.md`](./path-and-api.md) 첫머리와 `.Agents/common-rules.md` B절이 정본입니다. 일관성을 우선한다는 원칙은 그대로입니다.
+
 프로젝트가 **바닐라 HTML/CSS/JS + Express** 구조이므로, 프레임워크 규칙 대신 **일관성**을 우선합니다.
 
 ---

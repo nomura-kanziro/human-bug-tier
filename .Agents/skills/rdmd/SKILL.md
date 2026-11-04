@@ -58,3 +58,10 @@ description: >
 - [ ] 기능 폴더·순서 번호
 - [ ] 시크릿 없음
 - [ ] README · 정본 동기화
+
+## README 이미지
+
+- README 이미지는 `docs/readme/` 도구로만 다시 만든다(사용법: `docs/readme/README.md`).
+- 캡처는 반드시 `guard-env.js` + 임시 Mongo + 가상 데이터로 한다. `backend/.env` 가 셸 변수를 덮어써 그냥 띄우면 운영 DB 에 붙는다.
+- 실제 회원 닉네임 · 이메일이 찍힌 화면을 올리지 않는다.
+- 흐름이 바뀌면 해당 README 의 Mermaid 도 고친다.

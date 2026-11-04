@@ -108,3 +108,10 @@
 4. 관리자만 관리 동작
 5. 잘못된 토큰 → 401/403
 ```
+
+## README 반영
+
+- [ ] 화면이 새로 생겼거나 크게 바뀌었으면 루트 README 장면을 다시 찍는다 ([`docs/readme/README.md`](../../docs/readme/README.md))
+- [ ] 페이지 · 라우터 · 모델 · 캐릭터 · 지식 문서 수가 바뀌면 루트 README 숫자 표와 `render-diagrams.js` 를 고친다
+- [ ] 흐름이 바뀌면 해당 폴더 README 의 Mermaid 를 고친다
+- [ ] 캡처에는 `guard-env.js` 와 가상 데이터만 쓴다
