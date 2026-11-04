@@ -231,6 +231,7 @@
 | 11-02 | **에이전트** | 실무 에이전트 폴더 5종 추가(`.Gemini`·`.Ollama`·`.Opencode`·`.Kimi`·`.Windsurf`). 기존 실무 폴더와 같이 `README.md` + 스킬 19개. 살아 있는 문서의 7종 표기를 12종으로 맞춤 |
 | 11-05 | **AI** | AI 서비스 운영 배포 준비(서버 반영 전) — 운영 VM 조건 점검, 가벼운 설치(`requirements-prod.txt`·지연 import), `deploy.sh ai-setup`/`ai-env`, pm2 `hbt-ai` |
 | 11-05 | **문서** | README 전면 개편 — 실제 화면 GIF·PNG(가상 데이터), 프레임워크·아키텍처 그림, 전 README Mermaid 로직 구조, 재생성 도구 `docs/readme/` |
+| 11-05 | **문서** | LICENSE·SECURITY·CONTRIBUTING 고도화 — 라이선스 14개 조항, 제보 채널을 비공개로 정정, 적용된 보안 장치·유출 대응·관리자 지정·오프보딩 절차 |
 
 **결과물**: 운영 **1.0.5**(Oracle 배포, 10-17~18). 가이드 모드·출석체크·AI 도우미는 **커밋까지, 운영 배포 전**이다. AI 서비스는 운영 서버 배포 절차(Python 상주·키 설정·`deploy.sh` 확장)가 남았다.
 

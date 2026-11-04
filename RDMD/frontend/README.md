@@ -272,3 +272,4 @@ area: frontend
 | 문서 | 번호 | 내용 |
 |------|------|------|
 | [01-readme-overhaul-record.md](./16-docs/01-readme-overhaul-record.md) | — | README 전면 개편 — 실제 화면 GIF · PNG, 프레임워크 그림, 전 README 로직 다이어그램, 격리 캡처 도구 |
+| [02-legal-docs-overhaul-record.md](./16-docs/02-legal-docs-overhaul-record.md) | — | LICENSE · SECURITY · CONTRIBUTING 고도화 — 라이선스 조항, 비공개 제보 채널, 적용된 보안 장치, 관리자 지정·오프보딩 |
