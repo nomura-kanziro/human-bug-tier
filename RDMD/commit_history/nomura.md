@@ -437,7 +437,7 @@
 | 406 | 2026-11-05 | [`579fd8c`](#579fd8c) | docs(readme): 루트 README 전면 개편 — 프레임워크·아키텍처 그림, 기능별 GIF·PNG, Mermaid 로직 구조, 재생성 도구 docs/readme |
 | 407 | 2026-11-05 | [`32b8ed0`](#32b8ed0) | docs(readme): 하위 README 33개 고도화 — 로직 구조 Mermaid, 화면·그림 추가, 빠진 API·모델·페이지 보강 |
 | 408 | 2026-11-05 | [`e2d0df2`](#e2d0df2) | docs(guides): README 개편 후속 문서 갱신 — 개발·보안 가이드, 신규 기능 체크리스트, rdmd 스킬, 문서 지도, 기록 |
-| 409 | 2026-11-05 | `pending409` | chore(gitignore): 추적하지 않는 작업 보고서 JULES_REPORT.md 무시 목록에 추가 |
+| 409 | 2026-11-05 | [`2d3c5f1`](#2d3c5f1) | chore(gitignore): 추적하지 않는 작업 보고서 JULES_REPORT.md 무시 목록에 추가 |
 
 ---
 
@@ -7856,15 +7856,15 @@
 
 [▲ 목차로](#목차)
 
-<a id="pending409"></a>
+<a id="2d3c5f1"></a>
 
-### 409. 2026-11-05 — `pending409`
+### 409. 2026-11-05 — `2d3c5f1`
 
-- **hash (short)**: `pending409`
-- **hash (full)**: `pendingfull409`
+- **hash (short)**: `2d3c5f1`
+- **hash (full)**: `2d3c5f1f92712290972f8d32e4bdc7518e39c3bd`
 - **author**: nomura
 - **message**: chore(gitignore): 추적하지 않는 작업 보고서 JULES_REPORT.md 무시 목록에 추가
-- **git**: `git show pending409`
+- **git**: `git show 2d3c5f1`
 - **범위**: chore / gitignore
 - **요약**: 에이전트가 만든 `JULES_REPORT.md` 는 추적 대상이 아니므로 `.gitignore` 에 넣었다. 코드·설정 동작은 바뀌지 않음
 - **주요 파일**: `.gitignore`
