@@ -432,7 +432,7 @@
 | 401 | 2026-11-02 | [`27654f7`](#27654f7) | docs(agents): 새 폴더 구조·권한·경로 규칙을 문서에 반영 — CLAUDE.md 기능 표 React 기준, team·guides·README 갱신, 작업 기록 17 추가 |
 | 402 | 2026-11-02 | [`16a8e5b`](#16a8e5b) | feat(tier-class): 2티어 무급 신설 — 6명 이동, 행운 뽑기 풀·AI 지식 문서 반영 |
 | 403 | 2026-11-02 | [`1270d9f`](#1270d9f) | docs(agents): 실무 에이전트 폴더 5종 추가 — Gemini·Ollama·Opencode·Kimi·Windsurf, README + 스킬 19개, 문서 12종 정렬 |
-| 404 | 2026-11-05 | `pending404` | feat(deploy): AI 서비스 운영 배포 준비 — deploy.sh ai-setup/ai-env·pm2 hbt-ai, 가벼운 설치(requirements-prod.txt·지연 import), 문서·테스트 |
+| 404 | 2026-11-05 | [`3615231`](#3615231) | feat(deploy): AI 서비스 운영 배포 준비 — deploy.sh ai-setup/ai-env·pm2 hbt-ai, 가벼운 설치(requirements-prod.txt·지연 import), 문서·테스트 |
 
 ---
 
@@ -7771,15 +7771,15 @@
 
 [▲ 목차로](#목차)
 
-<a id="pending404"></a>
+<a id="3615231"></a>
 
-### 404. 2026-11-05 — `pending404`
+### 404. 2026-11-05 — `3615231`
 
-- **hash (short)**: `pending404`
-- **hash (full)**: `pendingfull404`
+- **hash (short)**: `3615231`
+- **hash (full)**: `3615231fde7bc4bbc85cd1997acd71986280bbb6`
 - **author**: nomura
 - **message**: feat(deploy): AI 서비스 운영 배포 준비 — deploy.sh ai-setup/ai-env·pm2 hbt-ai, 가벼운 설치(requirements-prod.txt·지연 import), 문서·테스트
-- **git**: `git show pending404`
+- **git**: `git show 3615231`
 - **범위**: deploy / ai-service
 - **요약**: 운영 VM(메모리 1GB·pip 없음) 조건을 읽기 전용으로 점검하고 부족한 것을 채움. chromadb·langchain_ollama 를 쓸 때만 불러오게 바꿔 벡터를 끈 서버에는 설치하지 않아도 되게 하고(테스트 2개 추가), 운영 설치 목록 requirements-prod.txt·운영 env 템플릿을 추가. deploy.sh 에 ai-setup·ai-env 와 ai-service 묶기·설치·재시작·헬스 확인, status/logs ai/rollback 의 AI 처리를 더하고 ecosystem 에 hbt-ai 추가. 묶음을 풀어 띄워 인증·답변·메모리 확인. 서버에는 아직 올리지 않음
 - **주요 파일**: `backend/deploy/oracle/deploy.sh`, `ecosystem.config.js`, `README.md`, `ai-service/requirements-prod.txt`, `.env.production.example`, `app/guidans_Chat/database/chroma.py`, `service/embeddings.py`, `tests/test_service.py`, `.Agents/skills/ai-service/SKILL.md` 외 12개 에이전트 폴더 복제본
