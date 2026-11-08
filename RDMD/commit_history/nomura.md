@@ -440,7 +440,7 @@
 | 409 | 2026-11-05 | [`2d3c5f1`](#2d3c5f1) | chore(gitignore): 추적하지 않는 작업 보고서 JULES_REPORT.md 무시 목록에 추가 |
 | 410 | 2026-11-05 | [`a7d92b3`](#a7d92b3) | docs(legal): LICENSE·SECURITY·CONTRIBUTING 고도화 — 14개 조항 라이선스, 제보 채널 비공개로 정정, 적용된 보안 장치·유출 대응, 관리자 지정·오프보딩 절차 |
 | 411 | 2026-11-08 | [`6a8b03e`](#6a8b03e) | feat(backend): Oracle Autonomous DB 연결 모듈과 /api/db-health 추가 |
-| 412 | 2026-11-08 | `pending412` | feat(backend): Oracle 샘플 테이블·/api/db-sample 과 원클릭 배포 ship.sh 추가 |
+| 412 | 2026-11-08 | [`8197618`](#8197618) | feat(backend): Oracle 샘플 테이블·/api/db-sample 과 원클릭 배포 ship.sh 추가 |
 
 ---
 
@@ -7907,15 +7907,15 @@
 
 [▲ 목차로](#목차)
 
-<a id="pending412"></a>
+<a id="8197618"></a>
 
-### 412. 2026-11-08 — `pending412`
+### 412. 2026-11-08 — `8197618`
 
-- **hash (short)**: `pending412`
-- **hash (full)**: `pendingfull412`
+- **hash (short)**: `8197618`
+- **hash (full)**: `8197618b473ac23c1f7bb04279bad0aab0c46663`
 - **author**: nomura
 - **message**: feat(backend): Oracle 샘플 테이블·/api/db-sample 과 원클릭 배포 ship.sh 추가
-- **git**: `git show pending412`
+- **git**: `git show 8197618`
 - **범위**: feat / backend · deploy
 - **요약**: `scripts/init-sample.js` 로 HBT_SAMPLE 테이블을 만들고(이미 있으면 통과, 비어 있으면 예시 2행), `GET /api/db-sample`(최근 20행)·`POST /api/db-sample`(name 1~50자·note 0~200자 검증, 바인드 변수만, IP 당 분당 10회 제한) 라우트 추가. `deploy/oracle/ship.sh` 는 deploy.sh 를 고치지 않고 호출만 하는 원클릭 배포: 서버 shared/.env 백업 후 없는 ORACLE_* 키만 값 출력 없이 덧붙이고(기존 키는 덮어쓰지 않음), git HEAD 를 임시 worktree 로 꺼내 커밋된 코드만 배포, 샘플 준비·/api/db-health·/api/db-sample 확인, 실패 시 자동 롤백. 접속 정보는 git 무시 대상 `ship.local.env` 에 둔다
 - **주요 파일**: `backend/scripts/init-sample.js`, `backend/db-sample-route.js`, `backend/server.js`, `backend/deploy/oracle/ship.sh`, `.gitignore`
