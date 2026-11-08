@@ -439,7 +439,7 @@
 | 408 | 2026-11-05 | [`e2d0df2`](#e2d0df2) | docs(guides): README 개편 후속 문서 갱신 — 개발·보안 가이드, 신규 기능 체크리스트, rdmd 스킬, 문서 지도, 기록 |
 | 409 | 2026-11-05 | [`2d3c5f1`](#2d3c5f1) | chore(gitignore): 추적하지 않는 작업 보고서 JULES_REPORT.md 무시 목록에 추가 |
 | 410 | 2026-11-05 | [`a7d92b3`](#a7d92b3) | docs(legal): LICENSE·SECURITY·CONTRIBUTING 고도화 — 14개 조항 라이선스, 제보 채널 비공개로 정정, 적용된 보안 장치·유출 대응, 관리자 지정·오프보딩 절차 |
-| 411 | 2026-11-08 | `pending411` | feat(backend): Oracle Autonomous DB 연결 모듈과 /api/db-health 추가 |
+| 411 | 2026-11-08 | [`6a8b03e`](#6a8b03e) | feat(backend): Oracle Autonomous DB 연결 모듈과 /api/db-health 추가 |
 
 ---
 
@@ -7890,15 +7890,15 @@
 
 [▲ 목차로](#목차)
 
-<a id="pending411"></a>
+<a id="6a8b03e"></a>
 
-### 411. 2026-11-08 — `pending411`
+### 411. 2026-11-08 — `6a8b03e`
 
-- **hash (short)**: `pending411`
-- **hash (full)**: `pendingfull411`
+- **hash (short)**: `6a8b03e`
+- **hash (full)**: `6a8b03eb373df66051eb2e5daf2939092806a49b`
 - **author**: nomura
 - **message**: feat(backend): Oracle Autonomous DB 연결 모듈과 /api/db-health 추가
-- **git**: `git show pending411`
+- **git**: `git show 6a8b03e`
 - **범위**: feat / backend
 - **요약**: node-oracledb Thin 모드 + 지갑으로 Oracle Autonomous DB 에 붙는 연결 풀(`backend/db.js`: getPool·query·closePool, poolMax 4)을 추가하고, `SELECT 1 FROM DUAL` 로 연결을 확인하는 `GET /api/db-health` 라우트를 등록. `.env.example` 에 ORACLE_* 키(값 비움), `.gitignore` 에 지갑 파일 패턴 추가, oracledb 의존성 추가. 기존 Mongo 경로는 그대로
 - **주요 파일**: `backend/db.js`, `backend/db-health-route.js`, `backend/server.js`, `backend/.env.example`, `backend/package.json`, `.gitignore`
