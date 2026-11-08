@@ -127,3 +127,4 @@ Wallet_*.zip
 *.p12
 *.jks
 ewallet.pem
+backend/deploy/oracle/ship.local.env
