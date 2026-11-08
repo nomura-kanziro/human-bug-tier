@@ -161,6 +161,7 @@ app.use('/api/profile', profileRoutes);      // 마이페이지 프로필(닉네
 app.use('/api/events', eventRoutes);         // 이벤트(매일 퀴즈 · 메모리 게임 · 티어표 공개)
 app.use('/api/site', siteRoutes);            // 사이트 운영 설정 공개 조회(이벤트 디자인 = 계절 배경)
 app.use('/api/ai', aiRoutes);                // AI 도우미 — ai-service(FastAPI)로 넘기는 프록시
+app.use('/api', require('./db-health-route')); // Oracle Autonomous DB 연결 확인 (GET /api/db-health)
 
 // 위에 등록된 /api/* 중 아무 라우트에도 안 걸린 요청
 app.use('/api', (req, res) => {

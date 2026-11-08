@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 410 |
+| **커밋 수** | 411 |
 | **기간** | 2026-03-20 ~ 2026-11-05 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -439,6 +439,7 @@
 | 408 | 2026-11-05 | [`e2d0df2`](#e2d0df2) | docs(guides): README 개편 후속 문서 갱신 — 개발·보안 가이드, 신규 기능 체크리스트, rdmd 스킬, 문서 지도, 기록 |
 | 409 | 2026-11-05 | [`2d3c5f1`](#2d3c5f1) | chore(gitignore): 추적하지 않는 작업 보고서 JULES_REPORT.md 무시 목록에 추가 |
 | 410 | 2026-11-05 | [`a7d92b3`](#a7d92b3) | docs(legal): LICENSE·SECURITY·CONTRIBUTING 고도화 — 14개 조항 라이선스, 제보 채널 비공개로 정정, 적용된 보안 장치·유출 대응, 관리자 지정·오프보딩 절차 |
+| 411 | 2026-11-08 | `pending411` | feat(backend): Oracle Autonomous DB 연결 모듈과 /api/db-health 추가 |
 
 ---
 
@@ -7886,5 +7887,21 @@
 - **요약**: LICENSE 를 14개 조항(정의·사용 권리·금지·소유권과 기여물·제3자 권리·플랫폼 약관·AI 도구·개인정보·종료·위반 조치·책임 제한·준거법)과 영문 요약으로 다시 씀. SECURITY.md 는 문의 목록 API 가 인증 없이 전체를 돌려줘 문의하기가 비공개 채널이 아니라는 점을 확인해 제보 채널을 GitHub 비공개 제보로 정정하고, 코드에서 확인한 보안 장치 표·심각도·처리 절차·비밀 교체 표·개인정보 규칙을 추가. CONTRIBUTING.md 는 30초 판단 흐름, 확장 권한표, 관리자 지정·온보딩·오프보딩, 커밋·리뷰 규칙, AI 도구, 창시자 저장소 설정 체크리스트를 추가. Mermaid 12개·링크·앵커 검증. 코드 변경 없음, 미해결 취약점의 구체 내용은 공개 저장소라 문서에 적지 않음
 - **주요 파일**: `LICENSE`, `SECURITY.md`, `CONTRIBUTING.md`, `RDMD/frontend/16-docs/02-legal-docs-overhaul-record.md`
 - **관련 RDMD**: `RDMD/frontend/16-docs/02-legal-docs-overhaul-record.md`
+
+[▲ 목차로](#목차)
+
+<a id="pending411"></a>
+
+### 411. 2026-11-08 — `pending411`
+
+- **hash (short)**: `pending411`
+- **hash (full)**: `pendingfull411`
+- **author**: nomura
+- **message**: feat(backend): Oracle Autonomous DB 연결 모듈과 /api/db-health 추가
+- **git**: `git show pending411`
+- **범위**: feat / backend
+- **요약**: node-oracledb Thin 모드 + 지갑으로 Oracle Autonomous DB 에 붙는 연결 풀(`backend/db.js`: getPool·query·closePool, poolMax 4)을 추가하고, `SELECT 1 FROM DUAL` 로 연결을 확인하는 `GET /api/db-health` 라우트를 등록. `.env.example` 에 ORACLE_* 키(값 비움), `.gitignore` 에 지갑 파일 패턴 추가, oracledb 의존성 추가. 기존 Mongo 경로는 그대로
+- **주요 파일**: `backend/db.js`, `backend/db-health-route.js`, `backend/server.js`, `backend/.env.example`, `backend/package.json`, `.gitignore`
+- **관련 RDMD**: 없음
 
 [▲ 목차로](#목차)

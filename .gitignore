@@ -118,3 +118,12 @@ docs/readme/raw/
 
 # 작업 중 생성되는 외부 보고서 (추적하지 않음)
 JULES_REPORT.md
+
+# Oracle Autonomous DB 지갑 (커밋 금지)
+wallet/
+Wallet_*/
+Wallet_*.zip
+*.sso
+*.p12
+*.jks
+ewallet.pem
