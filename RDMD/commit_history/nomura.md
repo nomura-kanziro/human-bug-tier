@@ -442,7 +442,7 @@
 | 411 | 2026-11-08 | [`6a8b03e`](#6a8b03e) | feat(backend): Oracle Autonomous DB 연결 모듈과 /api/db-health 추가 |
 | 412 | 2026-11-08 | [`8197618`](#8197618) | feat(backend): Oracle 샘플 테이블·/api/db-sample 과 원클릭 배포 ship.sh 추가 |
 | 413 | 2026-11-11 | [`849804c`](#849804c) | feat(ai-service): Oracle 저장(통계·대화 원문, 기본 꺼짐)·init_oracle·deploy.sh ai-wallet/oracle-pass/ai-oracle, 새 Oracle VM 전환 기록 |
-| 414 | 2026-11-11 | [`pending`](#pending) | feat(deploy): HBT_APP 최소 권한 계정 전환·oracle-grant, 사이트 버전 1.1.0, 옛 서버 정리 기록 |
+| 414 | 2026-11-11 | [`c38bc2a`](#c38bc2a) | feat(deploy): HBT_APP 최소 권한 계정 전환·oracle-grant, 사이트 버전 1.1.0, 옛 서버 정리 기록 |
 
 ---
 
@@ -7941,15 +7941,15 @@
 
 [▲ 목차로](#목차)
 
-<a id="pending"></a>
+<a id="c38bc2a"></a>
 
-### 414. 2026-11-11 — `pending`
+### 414. 2026-11-11 — `c38bc2a`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `c38bc2a`
+- **hash (full)**: `c38bc2a2da40e08d96e1d9f1d3ebdffdf0e497bb`
 - **author**: nomura
 - **message**: feat(deploy): HBT_APP 최소 권한 계정 전환·oracle-grant, 사이트 버전 1.1.0, 옛 서버 정리 기록
-- **git**: `git show pending`
+- **git**: `git show c38bc2a`
 - **범위**: feat / deploy · docs · footer
 - **요약**: 서버 DB 계정을 `ADMIN` 에서 최소 권한 앱 계정 `HBT_APP`(CREATE SESSION·TABLE·SEQUENCE)으로 전환 — DB 에 `HBT_APP` 이 없던 것이 처음 ORA-01017 의 원인이었고, 서버 안에서 무작위 비밀번호로 만들어 env 두 개에만 넣었다(출력·기록 없음). IDENTITY 컬럼에 CREATE SEQUENCE 가 필요해(ORA-01031) 콘솔 Database Actions 에서 GRANT 했고, 같은 일을 반복할 수 있게 `deploy.sh oracle-grant`(ADMIN 비밀번호 숨김 입력, 저장 안 함)를 추가. 사이트 버전 `SITE_VERSION` 1.0.5 → 1.1.0 과 AI 지식 문서 `14-site-updates.md`(현재 버전·1.1.0 항목)·`RDMD/features/ai-service.md` 를 맞췄다. 옛 서버는 pm2 앱 삭제·nginx/certbot 해제·배포 코드 삭제(비밀 백업은 유지), `ship.local.env`(git 무시)는 새 VM 으로 변경. `RDMD/ai/05-oracle-storage-record.md` 갱신. pytest 51개 통과, 서버에서 `HBT_APP` 으로 db-health·db-sample·AI 통계 저장 확인. `ADMIN` 스키마의 테스트 테이블 3개는 남아 있다(앱은 안 씀)
 - **주요 파일**: `root-cloudflare/src/components/Footer.jsx`, `ai-service/knowledge/14-site-updates.md`, `backend/deploy/oracle/deploy.sh`, `RDMD/ai/05-oracle-storage-record.md`, `RDMD/features/ai-service.md`
