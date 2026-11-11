@@ -443,7 +443,7 @@
 | 412 | 2026-11-08 | [`8197618`](#8197618) | feat(backend): Oracle 샘플 테이블·/api/db-sample 과 원클릭 배포 ship.sh 추가 |
 | 413 | 2026-11-11 | [`849804c`](#849804c) | feat(ai-service): Oracle 저장(통계·대화 원문, 기본 꺼짐)·init_oracle·deploy.sh ai-wallet/oracle-pass/ai-oracle, 새 Oracle VM 전환 기록 |
 | 414 | 2026-11-11 | [`c38bc2a`](#c38bc2a) | feat(deploy): HBT_APP 최소 권한 계정 전환·oracle-grant, 사이트 버전 1.1.0, 옛 서버 정리 기록 |
-| 415 | 2026-11-11 | [`pending`](#pending) | docs(ai): ADMIN 스키마 테스트 테이블 삭제 반영 |
+| 415 | 2026-11-11 | [`9ee197f`](#9ee197f) | docs(ai): ADMIN 스키마 테스트 테이블 삭제 반영 |
 
 ---
 
@@ -7958,15 +7958,15 @@
 
 [▲ 목차로](#목차)
 
-<a id="pending"></a>
+<a id="9ee197f"></a>
 
-### 415. 2026-11-11 — `pending`
+### 415. 2026-11-11 — `9ee197f`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `9ee197f`
+- **hash (full)**: `9ee197f70dffe961bfa14653316eb4cbdb2dc35b`
 - **author**: nomura
 - **message**: docs(ai): ADMIN 스키마 테스트 테이블 삭제 반영
-- **git**: `git show pending`
+- **git**: `git show 9ee197f`
 - **범위**: docs / ai
 - **요약**: 처음 `ADMIN` 계정으로 만들었던 테스트 테이블 3개(`ADMIN.HBT_CHAT_STAT`·`HBT_CHAT_LOG`·`HBT_SAMPLE`)를 콘솔 Database Actions SQL 에서 `DROP TABLE … PURGE` 로 지우고 확인 조회로 `HBT_APP` 소유 3개만 남은 것을 확인한 뒤, 기록 문서(`05-oracle-storage-record.md`)와 414번 요약의 "남아 있다" 문구를 사실에 맞게 고쳤다. 코드 변경 없음
 - **주요 파일**: `RDMD/ai/05-oracle-storage-record.md`, `RDMD/commit_history/nomura.md`
