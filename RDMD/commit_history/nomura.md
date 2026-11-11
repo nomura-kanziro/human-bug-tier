@@ -7,8 +7,8 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 412 |
-| **기간** | 2026-03-20 ~ 2026-11-05 |
+| **커밋 수** | 413 |
+| **기간** | 2026-03-20 ~ 2026-11-11 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
 > 폴더 안내: [README.md](./README.md)  ·  상세 기능 일지: [../frontend/](../frontend/README.md) · [../backend/](../backend/README.md)
@@ -441,6 +441,7 @@
 | 410 | 2026-11-05 | [`a7d92b3`](#a7d92b3) | docs(legal): LICENSE·SECURITY·CONTRIBUTING 고도화 — 14개 조항 라이선스, 제보 채널 비공개로 정정, 적용된 보안 장치·유출 대응, 관리자 지정·오프보딩 절차 |
 | 411 | 2026-11-08 | [`6a8b03e`](#6a8b03e) | feat(backend): Oracle Autonomous DB 연결 모듈과 /api/db-health 추가 |
 | 412 | 2026-11-08 | [`8197618`](#8197618) | feat(backend): Oracle 샘플 테이블·/api/db-sample 과 원클릭 배포 ship.sh 추가 |
+| 413 | 2026-11-11 | [`pending`](#pending) | feat(ai-service): Oracle 저장(통계·대화 원문, 기본 꺼짐)·init_oracle·deploy.sh ai-wallet/oracle-pass/ai-oracle, 새 Oracle VM 전환 기록 |
 
 ---
 
@@ -7920,5 +7921,21 @@
 - **요약**: `scripts/init-sample.js` 로 HBT_SAMPLE 테이블을 만들고(이미 있으면 통과, 비어 있으면 예시 2행), `GET /api/db-sample`(최근 20행)·`POST /api/db-sample`(name 1~50자·note 0~200자 검증, 바인드 변수만, IP 당 분당 10회 제한) 라우트 추가. `deploy/oracle/ship.sh` 는 deploy.sh 를 고치지 않고 호출만 하는 원클릭 배포: 서버 shared/.env 백업 후 없는 ORACLE_* 키만 값 출력 없이 덧붙이고(기존 키는 덮어쓰지 않음), git HEAD 를 임시 worktree 로 꺼내 커밋된 코드만 배포, 샘플 준비·/api/db-health·/api/db-sample 확인, 실패 시 자동 롤백. 접속 정보는 git 무시 대상 `ship.local.env` 에 둔다
 - **주요 파일**: `backend/scripts/init-sample.js`, `backend/db-sample-route.js`, `backend/server.js`, `backend/deploy/oracle/ship.sh`, `.gitignore`
 - **관련 RDMD**: 없음
+
+[▲ 목차로](#목차)
+
+<a id="pending"></a>
+
+### 413. 2026-11-11 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(ai-service): Oracle 저장(통계·대화 원문, 기본 꺼짐)·init_oracle·deploy.sh ai-wallet/oracle-pass/ai-oracle, 새 Oracle VM 전환 기록
+- **git**: `git show pending`
+- **범위**: feat / ai-service · deploy
+- **요약**: ai-service 에 Oracle 저장 층을 추가. 스위치 `AI_STORE_STATS`(질문 수·답변 방식·응답 시간 통계, 내용 없음 → `HBT_CHAT_STAT`)와 `AI_STORE_CHAT`(질문·답변 원문 → `HBT_CHAT_LOG`, `AI_CHAT_RETENTION_DAYS` 지나면 자동 삭제)는 둘 다 기본 꺼짐이라 지금처럼 대화를 저장하지 않고, Oracle 접속 정보가 없거나 저장이 실패해도 답변에는 영향이 없다(뒤 스레드 저장). 테이블 모델(DDL 포함)·`ChatStatRepository`/`ChatLogRepository`(바인드 변수만)·`database/migrate.py`(없는 테이블만 생성)·`scripts/init_oracle.py` 를 추가하고 `/health` 에 oracle 설정 여부를 노출. 실제 DB 에 붙여 보고 컬럼 `mode`(Oracle 예약어)를 `answer_mode` 로 바꿨다. `deploy.sh` 에 `ai-wallet`(지갑 업로드)·`oracle-pass`(비밀번호를 숨김 입력→ssh 표준입력으로 서버 두 env 에 반영, 화면·기록에 안 남김)·`ai-oracle`(연결 확인·테이블 생성) 추가, 패키지에 `init_oracle.py` 가 들어가도록 `ai-service/scripts` 통째 제외를 나머지 3개 파일 제외로 변경, `requirements-prod.txt` 에 `oracledb` 추가, `.env.example`·`.env.production.example`·README 정책 문구 갱신. 같은 날 사이트 전체를 새 Oracle VM(158.101.145.56)으로 전환(Ollama gemma4:e4b·bge-m3, 지갑·ADB 접근 제어·DuckDNS·certbot, 옛 서버 백엔드 stop). pytest 51개 통과(저장 테스트는 가짜 연결), 서버에서 실제 질문 1건이 통계 행으로 저장되는 것 확인. 비밀 값(비밀번호·지갑·토큰)은 diff·문서에 없음
+- **주요 파일**: `ai-service/app/config.py`, `ai-service/app/guidans_Chat/models/chat_stat.py`, `ai-service/app/guidans_Chat/models/chat_log.py`, `ai-service/app/guidans_Chat/repository/chat_repository.py`, `ai-service/app/guidans_Chat/database/migrate.py`, `ai-service/app/guidans_Chat/service/chat_service.py`, `ai-service/scripts/init_oracle.py`, `ai-service/tests/test_oracle_storage.py`, `backend/deploy/oracle/deploy.sh`, `ai-service/requirements-prod.txt`
+- **관련 RDMD**: `RDMD/ai/05-oracle-storage-record.md`
 
 [▲ 목차로](#목차)

@@ -102,6 +102,10 @@ class Settings:
     service_key: str            # Express 프록시와 공유하는 키(X-AI-Key). 비우면 검사 안 함(로컬 개발용)
     top_k: int                  # RAG 검색 문서 수
     history_turns: int          # LLM 에 넘길 최근 대화 수(메시지 단위)
+    # --- Oracle 저장(둘 다 기본 꺼짐 — 켜도 ORACLE_USER/PASSWORD/DSN 이 없으면 저장하지 않는다) ---
+    store_stats: bool = False   # 사용 통계(질문·답변 내용 제외)를 hbt_chat_stat 에 남길지
+    store_chat: bool = False    # 질문·답변 원문을 hbt_chat_log 에 남길지(개인정보 안내 문구와 함께 켜야 한다)
+    chat_retention_days: int = 30   # 대화 원문 보관 일수 — 지나면 자동 삭제
 
     @property
     def llm_enabled(self) -> bool:
@@ -143,4 +147,7 @@ def load_settings() -> Settings:
         service_key=os.environ.get("AI_SERVICE_KEY", "").strip(),
         top_k=_int("AI_TOP_K", 5, 1, 12),
         history_turns=_int("AI_HISTORY_TURNS", 6, 0, 20),
+        store_stats=_bool("AI_STORE_STATS", False),
+        store_chat=_bool("AI_STORE_CHAT", False),
+        chat_retention_days=_int("AI_CHAT_RETENTION_DAYS", 30, 1, 365),
     )

@@ -1,5 +1,5 @@
 # 운영 서버(Oracle VM, 메모리 1GB)용 최소 설치 목록 — 로컬 개발·테스트는 requirements.txt 를 쓴다.
-# chromadb(벡터 DB)·oracledb(DB)·pytest·httpx 는 뺐다: 벡터 검색을 끄고(AI_VECTOR_ENABLED=false) 쓰는 서버에는 필요 없고,
+# chromadb(벡터 DB)·pytest·httpx 는 뺐다(oracledb 는 Oracle DB 저장용이라 넣었다): 벡터 검색을 끄고(AI_VECTOR_ENABLED=false) 쓰는 서버에는 필요 없고,
 # 코드도 쓸 때만 불러온다(app/guidans_Chat/database/chroma.py, service/embeddings.py).
 # 벡터 검색까지 켜려면 Ollama(임베딩 bge-m3)가 필요하고, 그때만 `pip install chromadb==1.5.9` 를 더한다.
 # 버전은 requirements.txt 와 같은 값으로 맞춘다(2026-10-18 설치·테스트한 버전).
@@ -11,3 +11,4 @@ langchain-anthropic==1.7.6   # AI_LLM_PROVIDER=anthropic (Claude API)
 langchain-ollama==1.1.0      # AI_LLM_PROVIDER=ollama (다른 PC/GPU 의 Ollama 를 부를 때)
 langgraph==1.2.16
 rank-bm25==0.2.2
+oracledb==26.0.1             # Oracle DB 저장(thin 모드, Oracle Client 불필요) — AI_STORE_STATS / AI_STORE_CHAT

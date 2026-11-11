@@ -4,17 +4,19 @@
   지식 베이스(마크다운 + tiers.json) → ChromaDB 벡터 색인(bge-m3 임베딩, 바뀐 조각만 다시) → 하이브리드 검색기
   → LangGraph 그래프(생성 모델: 기본 Ollama gemma4:12b)
 벡터 색인을 못 만들면(Ollama 꺼짐·bge-m3 없음 등) 예외 대신 BM25 만으로 계속한다 — /reload 로 다시 시도할 수 있다.
-Oracle(SQL)은 쓰지 않는다 — 대화는 저장하지 않는 정책이라 그 층은 아직 연결하지 않았다.
+Oracle(SQL)은 스위치가 켜졌을 때만 쓴다: AI_STORE_STATS(통계, 내용 없음) · AI_STORE_CHAT(질문·답변 원문, 만료 자동 삭제).
+기본은 둘 다 꺼짐 = 대화를 저장하지 않는다. 저장은 응답을 늦추지 않게 뒤 스레드에서 하고, 실패해도 답변에는 영향이 없다.
 """
 from __future__ import annotations
 
 import logging
 import threading
+import time
 
 from ...config import Settings
-from ..database import ChromaStore
-from ..models import KnowledgeChunk
-from ..repository import KnowledgeVectorRepository
+from ..database import ChromaStore, OracleDatabase
+from ..models import ChatLog, ChatStat, KnowledgeChunk
+from ..repository import ChatLogRepository, ChatStatRepository, KnowledgeVectorRepository
 from ..schema import ChatRequest, ChatResponse
 from .embeddings import make_embeddings
 from .graph import build_graph
@@ -28,9 +30,11 @@ log = logging.getLogger("ai-service.guidans_chat")
 
 
 class GuideChatService:
-    def __init__(self, settings: Settings, *, store: ChromaStore | None = None, embeddings=None):
-        """store/embeddings 는 테스트에서 가짜를 꽂을 때만 넘긴다."""
+    def __init__(self, settings: Settings, *, store: ChromaStore | None = None, embeddings=None, oracle: OracleDatabase | None = None):
+        """store/embeddings/oracle 은 테스트에서 가짜를 꽂을 때만 넘긴다."""
         self.settings = settings
+        self._oracle = oracle
+        self._last_purge = 0.0
         self._lock = threading.Lock()
         self._store_override = store
         self._embeddings_override = embeddings
@@ -106,6 +110,7 @@ class GuideChatService:
             "ai": self.llm_status.get().label,
             "model": s.model if s.llm_enabled else None,
             "vector": self.vector_info,
+            "oracle": self.oracle_info(),
         }
 
     def status_info(self) -> dict:
@@ -124,16 +129,58 @@ class GuideChatService:
     def questions(self, count: int = 3) -> list[str]:
         return random_questions(self.kb, count)
 
+    # ------------------------------------------------------------------ Oracle 저장
+    def _oracle_db(self) -> OracleDatabase:
+        if self._oracle is None:
+            self._oracle = OracleDatabase()
+        return self._oracle
+
+    def oracle_info(self) -> dict:
+        """/health 용 — 설정 여부와 저장 스위치만(DB 에 접속하지 않고, 비밀 값은 담지 않는다)."""
+        s = self.settings
+        return {"configured": self._oracle_db().is_configured, "stats": s.store_stats, "chat": s.store_chat}
+
+    def _store(self, question: str, response: ChatResponse, latency_ms: int) -> None:
+        """스위치가 켜져 있고 Oracle 설정이 있을 때만 저장한다. 실패해도 예외를 밖으로 내지 않는다."""
+        s = self.settings
+        db = self._oracle_db()
+        if not (s.store_stats or s.store_chat) or not db.is_configured:
+            return
+        try:
+            if s.store_stats:
+                ChatStatRepository(db).add(ChatStat(
+                    mode=response.mode, ai=response.ai, provider=s.llm_provider, question_len=len(question),
+                    source_count=len(response.sources), character_count=len(response.characters), latency_ms=latency_ms,
+                ))
+            if s.store_chat:
+                logs = ChatLogRepository(db)
+                logs.add(ChatLog(mode=response.mode, question=question, answer=response.answer, retention_days=s.chat_retention_days))
+                now = time.monotonic()
+                if now - self._last_purge > 3600:      # 만료된 원문은 최대 1시간 간격으로 지운다
+                    self._last_purge = now
+                    logs.purge_expired()
+        except Exception as err:  # noqa: BLE001 — 저장 실패가 답변을 막으면 안 된다
+            log.warning("Oracle 저장 실패(답변에는 영향 없음): %s", type(err).__name__)
+
+    def _store_async(self, question: str, response: ChatResponse, latency_ms: int) -> None:
+        s = self.settings
+        if not (s.store_stats or s.store_chat):
+            return
+        threading.Thread(target=self._store, args=(question, response, latency_ms), name="oracle-store", daemon=True).start()
+
     def ask(self, body: ChatRequest) -> ChatResponse:
         """질문 하나를 처리한다(LLM 호출이 블로킹이라 라우터가 스레드풀에서 부른다)."""
+        started = time.perf_counter()
         state = {"question": body.message.strip(), "history": [t.model_dump() for t in body.history]}
         with self._lock:
             graph = self._graph
         result = graph.invoke(state)
-        return ChatResponse(
+        response = ChatResponse(
             answer=result.get("answer", ""),
             mode=result.get("mode", "fallback"),
             sources=result.get("sources", []),
             characters=[{"name": c.plain_name, "tier": c.tier, "grade": c.grade} for c in result.get("characters", [])],
             ai="on" if self.llm_status.get().on else "off",
         )
+        self._store_async(state["question"], response, int((time.perf_counter() - started) * 1000))
+        return response

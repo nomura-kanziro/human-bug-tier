@@ -109,7 +109,7 @@ ai-service/
 
 - **MongoDB 는 쓰지 않는다.** 표 형태의 업무 데이터가 필요해지면 **Oracle SQL**(Autonomous Database 등, `python-oracledb` thin 모드)만 쓴다. 사이트 본체 `backend/` 의 MongoDB 와는 별개다.
 - **지식 검색용 벡터는 ChromaDB**(로컬 파일, 임베디드 — 별도 서버 없음)에 둔다. Oracle 과 역할이 다르다: Oracle = 업무 데이터(SQL), ChromaDB = 검색용 벡터.
-- 지금 가이드 챗봇은 **대화를 저장하지 않아** Oracle 은 쓰지 않는다. `database/oracle.py`·`repository/base.py` 는 연결·SQL 실행 도우미만 준비해 둔 것이다(`ORACLE_USER`/`ORACLE_PASSWORD`/`ORACLE_DSN` 이 비어 있으면 풀도 만들지 않는다). SQL 은 항상 **바인드 변수**(`:name`).
+- Oracle 저장은 **스위치 두 개(둘 다 기본 꺼짐 = 대화를 저장하지 않는다)**: `AI_STORE_STATS`(질문 수·모드·응답 시간 통계, 내용 없음 → `HBT_CHAT_STAT`) · `AI_STORE_CHAT`(질문·답변 원문 → `HBT_CHAT_LOG`, `AI_CHAT_RETENTION_DAYS` 지나면 자동 삭제). 원문 저장을 켜기 전에 `/ai` 화면·개인정보 안내의 "대화를 저장하지 않습니다" 문구부터 고친다. `ORACLE_USER`/`ORACLE_PASSWORD`/`ORACLE_DSN` 이 비어 있으면 스위치가 켜져 있어도 저장하지 않고, 저장이 실패해도 답변에는 영향이 없다. 테이블은 `python scripts/init_oracle.py`(서버에서는 `deploy.sh ai-oracle`)로 만든다. SQL 은 항상 **바인드 변수**(`:name`).
 - 대화·사용자 데이터를 저장하려면 먼저 사람과 보관 기간·탈퇴 시 삭제를 정한다([`../RDMD/guides/security.md`](../RDMD/guides/security.md) 9절).
 
 ## 모델 (Ollama) — 처음 한 번

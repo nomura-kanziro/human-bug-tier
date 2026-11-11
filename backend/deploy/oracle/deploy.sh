@@ -20,6 +20,8 @@
 #   bash backend/deploy/oracle/deploy.sh ai-setup  # VM 에 파이썬 가상환경 준비(python3-venv 설치 포함)
 #   AI_PROVIDER=none bash backend/deploy/oracle/deploy.sh ai-env   # shared/ai.env 만들기 + AI_SERVICE_KEY 를 backend 와 맞추기
 #       AI_PROVIDER = none(문서 답만, 무료) | anthropic(Claude API — 서버에서 ANTHROPIC_API_KEY 를 직접 채운다) | ollama
+#   bash backend/deploy/oracle/deploy.sh ai-wallet <Wallet.zip>  # Autonomous DB 지갑을 서버에 풀기(비밀번호는 서버 ai.env 에 직접 입력)
+#   bash backend/deploy/oracle/deploy.sh ai-oracle [--check]    # Oracle 연결 확인 + 테이블 생성(--check 는 연결만) — deploy 후에 실행
 #   그 다음 `deploy` 를 하면 ai-service 도 함께 올라간다. shared/ai.env 가 없으면 ai-service 는 올리지 않는다(사이트는 정상, /api/ai 만 503).
 #
 # 서버 구조:
@@ -68,7 +70,7 @@ make_package() {
     --exclude='backend/.env' --exclude='backend/.env.*' --exclude='*.log' \
     --exclude='backend/deploy' \
     --exclude='ai-service/.venv' --exclude='ai-service/data' --exclude='ai-service/.env' --exclude='ai-service/.env.*' \
-    --exclude='ai-service/.dev_service-*' --exclude='ai-service/tests' --exclude='ai-service/scripts' --exclude='__pycache__' --exclude='.pytest_cache' \
+    --exclude='ai-service/.dev_service-*' --exclude='ai-service/tests' --exclude='ai-service/scripts/calibrate_relevance.py' --exclude='ai-service/scripts/dev_service.py' --exclude='ai-service/scripts/eval_guide_chat.py' --exclude='__pycache__' --exclude='.pytest_cache' \
     backend \
     ai-service \
     root-cloudflare/dist \
@@ -154,6 +156,57 @@ if [ "$(getv "$AI_ENV" AI_LLM_PROVIDER)" = anthropic ] && [ -z "$(getv "$AI_ENV"
 fi
 EOF
     echo "   backend 는 다음 deploy(또는 pm2 reload human-bug-tier --update-env) 때 새 키를 읽습니다."
+    ;;
+
+  ai-wallet)
+    # Autonomous DB 지갑(Wallet_*.zip, Oracle 콘솔 → DB 연결 → 지갑 다운로드)을 서버에 풀고 ORACLE_WALLET_DIR 을 채운다.
+    # 지갑 비밀번호·DB 비밀번호·DSN 은 이 스크립트를 거치지 않는다 — 서버에서 직접 ai.env 에 적는다.
+    need_host
+    ZIP="${2:-}"
+    [ -f "$ZIP" ] || { echo "사용법: bash $0 ai-wallet <Wallet_xxx.zip>" >&2; exit 1; }
+    echo "== 지갑 업로드 → $APP_DIR/shared/oracle-wallet (내용은 출력하지 않음) =="
+    rscp "$ZIP" "$OCI_HOST:/tmp/oracle-wallet.zip"
+    rssh bash -s <<'EOF'
+set -euo pipefail
+W=/opt/human-bug-tier/shared/oracle-wallet
+AI_ENV=/opt/human-bug-tier/shared/ai.env
+[ -f "$AI_ENV" ] || { echo "shared/ai.env 가 없습니다 — 먼저 ai-env 를 실행하세요" >&2; exit 1; }
+command -v unzip >/dev/null || sudo apt-get install -y -qq unzip >/dev/null
+rm -rf "$W"; mkdir -p "$W"; chmod 700 "$W"
+unzip -q -o /tmp/oracle-wallet.zip -d "$W"; rm -f /tmp/oracle-wallet.zip
+chmod 600 "$W"/* 2>/dev/null || true
+if grep -qE "^ORACLE_WALLET_DIR=" "$AI_ENV"; then sed -i "s#^ORACLE_WALLET_DIR=.*#ORACLE_WALLET_DIR=$W#" "$AI_ENV"; else echo "ORACLE_WALLET_DIR=$W" >> "$AI_ENV"; fi
+echo "   지갑 파일 $(ls "$W" | wc -l)개 풀림, ORACLE_WALLET_DIR 설정됨"
+echo "   다음: ssh ... 'nano $AI_ENV'  → ORACLE_USER / ORACLE_PASSWORD / ORACLE_DSN(tnsnames 별칭) / ORACLE_WALLET_PASSWORD 입력"
+EOF
+    ;;
+
+  oracle-pass)
+    # Oracle DB 비밀번호를 서버 shared/.env · shared/ai.env 의 ORACLE_PASSWORD 에 넣는다.
+    # 비밀번호는 이 PC 터미널에서 숨김 입력으로만 받고(화면·기록·명령줄에 남지 않음), ssh 표준입력으로 서버에 전달한다.
+    need_host
+    read -rs -p "Oracle DB 비밀번호(입력 내용은 화면에 안 보임): " ORA_PW; echo
+    [ -n "$ORA_PW" ] || { echo "비어 있어서 중단합니다" >&2; exit 1; }
+    PYSRC='import sys,os
+pw=sys.stdin.read()
+for f in ("/opt/human-bug-tier/shared/ai.env","/opt/human-bug-tier/shared/.env"):
+    if not os.path.exists(f): continue
+    lines=open(f).read().split("\n")
+    out=[("ORACLE_PASSWORD="+pw) if l.startswith("ORACLE_PASSWORD=") else l for l in lines]
+    if not any(l.startswith("ORACLE_PASSWORD=") for l in lines): out.insert(len(out)-1 if out and out[-1]=="" else len(out),"ORACLE_PASSWORD="+pw)
+    open(f,"w").write("\n".join(out)); os.chmod(f,0o600)
+    print("  갱신:",f)
+'
+    PYB64="$(printf '%s' "$PYSRC" | base64 | tr -d '\n')"
+    printf '%s' "$ORA_PW" | rssh "echo $PYB64 | base64 -d > /tmp/hbt-sp.py && python3 /tmp/hbt-sp.py; rm -f /tmp/hbt-sp.py"
+    unset ORA_PW
+    echo "   서버 반영 완료. 이어서: bash $0 ai-oracle --check"
+    ;;
+
+  ai-oracle)
+    # 서버에서 ai-service 의 Oracle 연결을 확인하고(--check 없이) 테이블을 만든다. 이미 있는 테이블은 그대로 둔다.
+    need_host
+    rssh "cd $APP_DIR/current/ai-service && $APP_DIR/shared/ai-venv/bin/python scripts/init_oracle.py ${2:-}"
     ;;
 
   package)

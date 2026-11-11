@@ -21,6 +21,7 @@ flowchart LR
 | 〃 (이어서) | [02-ollama-chromadb-record.md](./02-ollama-chromadb-record.md) | 생성 모델을 **Ollama gemma4:12b** 로(생각 모드 끔) · **ChromaDB + bge-m3** 벡터 검색(BM25 와 RRF 하이브리드) · 프롬프트 인젝션 차단 · 실측으로 정한 기준값·찾아 고친 문제 |
 | 〃 (이어서) | [03-offline-doc-answer-knowledge-record.md](./03-offline-doc-answer-knowledge-record.md) | **AI 서버 ON/OFF 알림**("AI 서버 OFF 상태 (사이트의 정보내용을 끌어다 대답합니다.)") · 꺼져도 `knowledge/` 문서 문장 그대로 답하기 · 지식 8개→14개 고도화(FAQ·용어집·단계별·문제 해결·소통 기능·업데이트 이력) · 지식↔코드 동기화 테스트 |
 | 〃 (이어서) | [04-production-deploy-prep-record.md](./04-production-deploy-prep-record.md) | **운영 VM(1GB) 배포 준비** — 서버 조건 점검, 지연 import·`requirements-prod.txt`, `deploy.sh` `ai-setup`/`ai-env` · pm2 `hbt-ai`, 묶음을 풀어 띄운 검증(서버 반영 전) |
+| 〃 (이어서) | [05-oracle-storage-record.md](./05-oracle-storage-record.md) | **Oracle 저장(통계·대화 원문, 기본 꺼짐)** + 새 Oracle VM 전환 — 테이블·스위치·`deploy.sh` 새 명령·ACL/지갑/비밀번호 처리 · 확인 결과 |
 | Express 프록시 | [`../backend/10-ai/01-ai-proxy-record.md`](../backend/10-ai/01-ai-proxy-record.md) | `/api/ai` — 입력 검사 · IP당 요청 제한 · 공유 키 · 장애 시 503 |
 | 화면 | [`../frontend/15-ai/01-ai-helper-page-record.md`](../frontend/15-ai/01-ai-helper-page-record.md) | `/ai` 휴버봇 대화창 · 추천 질문 · 푸터/가이드 링크 |
 | 기능 설명(what) | [`../features/ai-service.md`](../features/ai-service.md) | 구조·흐름·지식·설정·운영 배포 상태 |
