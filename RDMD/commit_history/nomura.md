@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 414 |
+| **커밋 수** | 415 |
 | **기간** | 2026-03-20 ~ 2026-11-11 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -443,6 +443,7 @@
 | 412 | 2026-11-08 | [`8197618`](#8197618) | feat(backend): Oracle 샘플 테이블·/api/db-sample 과 원클릭 배포 ship.sh 추가 |
 | 413 | 2026-11-11 | [`849804c`](#849804c) | feat(ai-service): Oracle 저장(통계·대화 원문, 기본 꺼짐)·init_oracle·deploy.sh ai-wallet/oracle-pass/ai-oracle, 새 Oracle VM 전환 기록 |
 | 414 | 2026-11-11 | [`c38bc2a`](#c38bc2a) | feat(deploy): HBT_APP 최소 권한 계정 전환·oracle-grant, 사이트 버전 1.1.0, 옛 서버 정리 기록 |
+| 415 | 2026-11-11 | [`pending`](#pending) | docs(ai): ADMIN 스키마 테스트 테이블 삭제 반영 |
 
 ---
 
@@ -7951,8 +7952,24 @@
 - **message**: feat(deploy): HBT_APP 최소 권한 계정 전환·oracle-grant, 사이트 버전 1.1.0, 옛 서버 정리 기록
 - **git**: `git show c38bc2a`
 - **범위**: feat / deploy · docs · footer
-- **요약**: 서버 DB 계정을 `ADMIN` 에서 최소 권한 앱 계정 `HBT_APP`(CREATE SESSION·TABLE·SEQUENCE)으로 전환 — DB 에 `HBT_APP` 이 없던 것이 처음 ORA-01017 의 원인이었고, 서버 안에서 무작위 비밀번호로 만들어 env 두 개에만 넣었다(출력·기록 없음). IDENTITY 컬럼에 CREATE SEQUENCE 가 필요해(ORA-01031) 콘솔 Database Actions 에서 GRANT 했고, 같은 일을 반복할 수 있게 `deploy.sh oracle-grant`(ADMIN 비밀번호 숨김 입력, 저장 안 함)를 추가. 사이트 버전 `SITE_VERSION` 1.0.5 → 1.1.0 과 AI 지식 문서 `14-site-updates.md`(현재 버전·1.1.0 항목)·`RDMD/features/ai-service.md` 를 맞췄다. 옛 서버는 pm2 앱 삭제·nginx/certbot 해제·배포 코드 삭제(비밀 백업은 유지), `ship.local.env`(git 무시)는 새 VM 으로 변경. `RDMD/ai/05-oracle-storage-record.md` 갱신. pytest 51개 통과, 서버에서 `HBT_APP` 으로 db-health·db-sample·AI 통계 저장 확인. `ADMIN` 스키마의 테스트 테이블 3개는 남아 있다(앱은 안 씀)
+- **요약**: 서버 DB 계정을 `ADMIN` 에서 최소 권한 앱 계정 `HBT_APP`(CREATE SESSION·TABLE·SEQUENCE)으로 전환 — DB 에 `HBT_APP` 이 없던 것이 처음 ORA-01017 의 원인이었고, 서버 안에서 무작위 비밀번호로 만들어 env 두 개에만 넣었다(출력·기록 없음). IDENTITY 컬럼에 CREATE SEQUENCE 가 필요해(ORA-01031) 콘솔 Database Actions 에서 GRANT 했고, 같은 일을 반복할 수 있게 `deploy.sh oracle-grant`(ADMIN 비밀번호 숨김 입력, 저장 안 함)를 추가. 사이트 버전 `SITE_VERSION` 1.0.5 → 1.1.0 과 AI 지식 문서 `14-site-updates.md`(현재 버전·1.1.0 항목)·`RDMD/features/ai-service.md` 를 맞췄다. 옛 서버는 pm2 앱 삭제·nginx/certbot 해제·배포 코드 삭제(비밀 백업은 유지), `ship.local.env`(git 무시)는 새 VM 으로 변경. `RDMD/ai/05-oracle-storage-record.md` 갱신. pytest 51개 통과, 서버에서 `HBT_APP` 으로 db-health·db-sample·AI 통계 저장 확인. `ADMIN` 스키마의 테스트 테이블 3개는 이후 415번에서 삭제
 - **주요 파일**: `root-cloudflare/src/components/Footer.jsx`, `ai-service/knowledge/14-site-updates.md`, `backend/deploy/oracle/deploy.sh`, `RDMD/ai/05-oracle-storage-record.md`, `RDMD/features/ai-service.md`
+- **관련 RDMD**: `RDMD/ai/05-oracle-storage-record.md`
+
+[▲ 목차로](#목차)
+
+<a id="pending"></a>
+
+### 415. 2026-11-11 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(ai): ADMIN 스키마 테스트 테이블 삭제 반영
+- **git**: `git show pending`
+- **범위**: docs / ai
+- **요약**: 처음 `ADMIN` 계정으로 만들었던 테스트 테이블 3개(`ADMIN.HBT_CHAT_STAT`·`HBT_CHAT_LOG`·`HBT_SAMPLE`)를 콘솔 Database Actions SQL 에서 `DROP TABLE … PURGE` 로 지우고 확인 조회로 `HBT_APP` 소유 3개만 남은 것을 확인한 뒤, 기록 문서(`05-oracle-storage-record.md`)와 414번 요약의 "남아 있다" 문구를 사실에 맞게 고쳤다. 코드 변경 없음
+- **주요 파일**: `RDMD/ai/05-oracle-storage-record.md`, `RDMD/commit_history/nomura.md`
 - **관련 RDMD**: `RDMD/ai/05-oracle-storage-record.md`
 
 [▲ 목차로](#목차)

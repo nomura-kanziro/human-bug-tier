@@ -50,7 +50,7 @@ ai-service 가 Oracle Autonomous DB 에 **사용 통계**와 **대화 원문**�
 
 ## 남은 일 · 주의
 
-- `ADMIN` 스키마에 처음 만든 테스트 테이블 3개(`ADMIN.HBT_CHAT_STAT`·`HBT_CHAT_LOG`·`HBT_SAMPLE`)가 남아 있다. 앱은 쓰지 않으니 필요하면 `DROP TABLE ADMIN.… PURGE;` 로 지운다
+- `ADMIN` 스키마에 처음 만든 테스트 테이블 3개(`ADMIN.HBT_CHAT_STAT`·`HBT_CHAT_LOG`·`HBT_SAMPLE`)는 콘솔 Database Actions SQL 에서 `DROP TABLE … PURGE` 로 지웠다. 지금 `HBT_*` 테이블은 `HBT_APP` 소유 3개뿐이다
 - `deploy.sh oracle-grant`: ADMIN 비밀번호를 숨김 입력으로 받아 `HBT_APP` 에 `CREATE SEQUENCE` 를 주는 명령(이번에는 콘솔 Database Actions 에서 같은 GRANT 를 실행했다)
 - 같은 Atlas DB 로 두 서버 백엔드를 동시에 켜지 않는다(랜덤 뽑기·이벤트 스케줄러 중복). 옛 서버(`161.33.190.199`)는 서비스를 모두 멈추고 정리했다
 - `ship.sh` 는 `ship.local.env`(git 무시 대상)의 `OCI_HOST`·`OCI_KEY` 를 읽는다 — 지금은 새 VM(`158.101.145.56`, 키 `~/.ssh/oracle_hbt_rsa`)
