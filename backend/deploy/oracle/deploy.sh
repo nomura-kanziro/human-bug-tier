@@ -203,6 +203,27 @@ for f in ("/opt/human-bug-tier/shared/ai.env","/opt/human-bug-tier/shared/.env")
     echo "   서버 반영 완료. 이어서: bash $0 ai-oracle --check"
     ;;
 
+  oracle-grant)
+    # HBT_APP(앱 계정)에 IDENTITY 컬럼 테이블을 만드는 데 필요한 CREATE SEQUENCE 권한을 준다. ADMIN 비밀번호가 필요하다.
+    # ADMIN 비밀번호는 이 PC 터미널에서 숨김 입력으로만 받아 ssh 표준입력으로 한 번 쓰고 버린다(서버 파일·기록에 저장하지 않음).
+    need_host
+    read -rs -p "Oracle ADMIN 비밀번호(입력 내용은 화면에 안 보임): " ORA_ADMIN_PW; echo
+    [ -n "$ORA_ADMIN_PW" ] || { echo "비어 있어서 중단합니다" >&2; exit 1; }
+    PYSRC='import os,sys
+sys.path.insert(0,"/opt/human-bug-tier/current/ai-service")
+from app.config import load_settings
+load_settings()
+import oracledb
+w=os.environ["ORACLE_WALLET_DIR"]
+c=oracledb.connect(user="ADMIN",password=sys.stdin.read(),dsn=os.environ["ORACLE_DSN"],config_dir=w,wallet_location=w,wallet_password=os.environ["ORACLE_WALLET_PASSWORD"])
+c.cursor().execute("GRANT CREATE SEQUENCE TO HBT_APP")
+print("  HBT_APP 에 CREATE SEQUENCE 권한 부여 완료 (접속 계정:",c.username,")")
+'
+    PYB64="$(printf '%s' "$PYSRC" | base64 | tr -d '\n')"
+    printf '%s' "$ORA_ADMIN_PW" | rssh "echo $PYB64 | base64 -d > /tmp/hbt-gr.py && cd /opt/human-bug-tier/current/ai-service && /opt/human-bug-tier/shared/ai-venv/bin/python /tmp/hbt-gr.py; rm -f /tmp/hbt-gr.py"
+    unset ORA_ADMIN_PW
+    ;;
+
   ai-oracle)
     # 서버에서 ai-service 의 Oracle 연결을 확인하고(--check 없이) 테이블을 만든다. 이미 있는 테이블은 그대로 둔다.
     need_host

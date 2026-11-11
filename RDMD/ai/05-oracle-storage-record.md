@@ -37,7 +37,10 @@ ai-service 가 Oracle Autonomous DB 에 **사용 통계**와 **대화 원문**�
 2. Ollama 0.40.16(arm64, systemd 서비스 127.0.0.1:11434), 모델 `bge-m3`·`gemma4:e4b`(CPU 약 6토큰/초, 답 하나 30~40초). 서버 설정: `AI_LLM_PROVIDER=ollama`, `OLLAMA_MODEL=gemma4:e4b`, `AI_MAX_TOKENS=400`, 벡터 검색은 끔
 3. 기존 서버에서 지갑·`shared/.env` 를 복사하고, PC 의 `ORACLE_*` 만 덧붙임 → `deploy.sh deploy`
 4. 기존 서버 백엔드는 `pm2 stop`(스케줄러 중복 방지). DuckDNS `hbt-tier` → 새 IP, certbot(Let's Encrypt, 자동 갱신)
-5. Autonomous DB 접근 제어(ACL)에 새 VM IP 추가. Oracle `ADMIN` 비밀번호를 새로 정하고 서버 `ORACLE_USER=ADMIN` 으로 설정
+5. Autonomous DB 접근 제어(ACL)에 새 VM IP 추가. DB 에는 `HBT_APP` 계정이 아예 없었다(처음 ORA-01017 의 원인). 먼저 `ADMIN` 비밀번호를 새로 정해 서버를 `ADMIN` 으로 연결해 테이블을 만들었고, 같은 날 최소 권한 앱 계정 `HBT_APP` 으로 옮겼다
+6. `HBT_APP` 생성: ADMIN 으로 접속해 무작위 24자 비밀번호로 `CREATE USER`, 권한은 `CREATE SESSION`·`CREATE TABLE`·`CREATE SEQUENCE` 만(IDENTITY 컬럼에 CREATE SEQUENCE 가 필요 — 없으면 ORA-01031). 비밀번호는 서버 `shared/.env`·`ai.env` 에만 있고 출력·기록하지 않았다. 서버 `ORACLE_USER=HBT_APP`. 테이블(`HBT_CHAT_STAT`·`HBT_CHAT_LOG`·`HBT_SAMPLE`)은 `HBT_APP` 소유로 다시 만들었다
+7. 옛 서버(161.33.190.199): pm2 앱 삭제, nginx 중지·자동 시작 해제, certbot 갱신 해제, 배포 코드(releases) 삭제. 비밀 백업(`shared/.env`·지갑)은 남겨 뒀다
+8. `ship.local.env` 를 새 VM 으로 변경, 사이트 버전 `SITE_VERSION` 1.0.5 → 1.1.0
 
 ## 확인한 것
 
@@ -47,7 +50,8 @@ ai-service 가 Oracle Autonomous DB 에 **사용 통계**와 **대화 원문**�
 
 ## 남은 일 · 주의
 
-- 서버가 `ADMIN` 계정을 쓴다(권한이 큼). `HBT_APP` 비밀번호를 정리해 되돌리는 것을 권장
-- 같은 Atlas DB 로 두 서버 백엔드를 동시에 켜지 않는다(랜덤 뽑기·이벤트 스케줄러 중복). 옛 서버(`161.33.190.199`)는 `pm2 stop` 상태
-- `ship.sh` 는 `ship.local.env` 가 옛 서버를 가리킨다 — 새 VM 에 쓰려면 `OCI_HOST` 를 바꾼다
+- `ADMIN` 스키마에 처음 만든 테스트 테이블 3개(`ADMIN.HBT_CHAT_STAT`·`HBT_CHAT_LOG`·`HBT_SAMPLE`)가 남아 있다. 앱은 쓰지 않으니 필요하면 `DROP TABLE ADMIN.… PURGE;` 로 지운다
+- `deploy.sh oracle-grant`: ADMIN 비밀번호를 숨김 입력으로 받아 `HBT_APP` 에 `CREATE SEQUENCE` 를 주는 명령(이번에는 콘솔 Database Actions 에서 같은 GRANT 를 실행했다)
+- 같은 Atlas DB 로 두 서버 백엔드를 동시에 켜지 않는다(랜덤 뽑기·이벤트 스케줄러 중복). 옛 서버(`161.33.190.199`)는 서비스를 모두 멈추고 정리했다
+- `ship.sh` 는 `ship.local.env`(git 무시 대상)의 `OCI_HOST`·`OCI_KEY` 를 읽는다 — 지금은 새 VM(`158.101.145.56`, 키 `~/.ssh/oracle_hbt_rsa`)
 - 답변이 느리면 `AI_LLM_PROVIDER=anthropic` 으로 바꾸는 방법이 있다
