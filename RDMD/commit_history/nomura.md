@@ -448,7 +448,7 @@
 | 417 | 2026-11-12 | [`cb4e9a9`](#cb4e9a9) | feat(backend): 에이전트 봇 프록시 /api/ai/agent — 작업 강도별 포인트 차감·환불, 스트림 전달, 전용 조회 API |
 | 418 | 2026-11-12 | [`3559ed2`](#3559ed2) | feat(agent-bot): 오른쪽 아래 원형 버튼·대형 모달 추가 — 모달을 닫아도 작업 계속, 요금표 상시 표시, 초안을 커스텀 메이커로 열기 |
 | 419 | 2026-11-12 | [`7ec4957`](#7ec4957) | docs(agent-bot): 에이전트 봇 문서화 — 기능 설명·기록 3종 신설, 스킬 정본+12종·README·가이드·작업 이력 갱신, 낡은 AI 배포 상태 표기 정정 |
-| 420 | 2026-11-12 | [`pending`](#pending) | docs(oracle): Autonomous DB ?? ?? ?? ?? |
+| 420 | 2026-11-12 | [`4b81199`](#4b81199) | docs(oracle): Autonomous DB ?? ?? ?? ?? |
 
 ---
 
@@ -8043,15 +8043,15 @@
 
 [▲ 목차로](#목차)
 
-<a id="pending"></a>
+<a id="4b81199"></a>
 
-### 420. 2026-11-12 ? `pending`
+### 420. 2026-11-12 ? `4b81199`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `4b81199`
+- **hash (full)**: `4b81199939e4d12bf440c25812a92e604ad62be4`
 - **author**: nomura
 - **message**: docs(oracle): Autonomous DB ?? ?? ?? ??
-- **git**: `git show pending`
+- **git**: `git show 4b81199`
 - **??**: docs
 - **??**: ?? ?? Oracle Autonomous DB ?? HTML? ???? ????. DB ?? ??, ?? ?? ??, AI ?? ???, ??????? ??? ?? DB ?? ??? ???.
 - **?? ??**: `docs/oracle-autonomous-db-guide.html`, `RDMD/commit_history/nomura.md`
