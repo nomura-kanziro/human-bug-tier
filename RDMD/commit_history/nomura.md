@@ -445,7 +445,7 @@
 | 414 | 2026-11-11 | [`c38bc2a`](#c38bc2a) | feat(deploy): HBT_APP 최소 권한 계정 전환·oracle-grant, 사이트 버전 1.1.0, 옛 서버 정리 기록 |
 | 415 | 2026-11-11 | [`9ee197f`](#9ee197f) | docs(ai): ADMIN 스키마 테스트 테이블 삭제 반영 |
 | 416 | 2026-11-12 | [`febe87f`](#febe87f) | feat(ai-service): 휴버대 에이전트 봇 구현 — 티어표 초안·분석·요약·브리핑·검색 도구와 NDJSON 스트리밍 |
-| 417 | 2026-11-12 | [`pending`](#pending) | feat(backend): 에이전트 봇 프록시 /api/ai/agent — 작업 강도별 포인트 차감·환불, 스트림 전달, 전용 조회 API |
+| 417 | 2026-11-12 | [`cb4e9a9`](#cb4e9a9) | feat(backend): 에이전트 봇 프록시 /api/ai/agent — 작업 강도별 포인트 차감·환불, 스트림 전달, 전용 조회 API |
 
 ---
 
@@ -7992,15 +7992,15 @@
 
 [▲ 목차로](#목차)
 
-<a id="pending"></a>
+<a id="cb4e9a9"></a>
 
-### 417. 2026-11-12 — `pending`
+### 417. 2026-11-12 — `cb4e9a9`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `cb4e9a9`
+- **hash (full)**: `cb4e9a9fb8d56ae67190e7c8d42cc33db04c4791`
 - **author**: nomura
 - **message**: feat(backend): 에이전트 봇 프록시 /api/ai/agent — 작업 강도별 포인트 차감·환불, 스트림 전달, 전용 조회 API
-- **git**: `git show pending`
+- **git**: `git show cb4e9a9`
 - **범위**: feat / backend (ai) · ai-service knowledge · deploy(nginx)
 - **요약**: `controllers/aiAgentController.js` 신설, `routes/aiRoutes.js` 에 연결. `GET /api/ai/agent/info`(요금표·작업 목록·내 포인트·AI 서버 상태, 로그인 없이도 요금표 조회) · `POST /api/ai/agent/run`(requireAuth, 회원 전용 — 관리자 계정은 포인트가 없어 403) · `GET /api/ai/agent/data/posts|notices`(ai-service 도구 전용 조회 — `AI_SERVICE_KEY` 가 있으면 X-AI-Key 일치, 없으면 이 서버 안에서 직접 온 요청만 허용, 공개 글·공지의 가벼운 필드만). 실행 시 회원 현재 상태(포인트·뽑기·출석·내 글 집계)를 읽어 ai-service 에 넘기고(토큰·이메일은 넘기지 않음) NDJSON 스트림을 브라우저로 그대로 흘려보낸다. `plan` 이벤트에서 작업 강도별 요금 `AGENT_COSTS`(가벼움 2P · 보통 4P · 무거움 8P · 무료 0P)를 조건부 갱신(`points >= cost`)으로 차감하고 원장(`LuckPointLog` source `agent_bot`)에 남기며, 오류 이벤트·중간 끊김·시간 초과 시 환불한다. AI 서버 OFF 면 AI 해설이 없으므로 가벼움 요금까지만 받는다. 회원당 10분 12회 제한, 동시에 한 작업, 잔액이 최소 요금 미만이면 402, 브라우저가 끊으면 위쪽 요청도 중단(이미 차감한 포인트는 환불하지 않음 — 받고 끊기 방지), 15초마다 ping 으로 중간 프록시 끊김 방지, `AI_AGENT_TIMEOUT_MS`(기본 5분). 관리자 포인트 내역에 `에이전트 봇` 라벨 추가. nginx 템플릿에 `/api/ai/agent/run` 전용 location(버퍼링 끔, 330초) 추가. 지식 문서(08·09·10·01·05·14)에 에이전트 봇 설명·요금을 넣고 `tests/test_knowledge_sync.py` 에 요금·한도·작업 이름 대조 테스트를 추가했다(pytest 85개 통과). 격리 포트에서 임시 회원으로 실측: 20P → 8·4·4·2 차감, 잔액 부족 시 차감 없이 안내, 오류 이벤트·끊김 시 8P 환불, AI OFF 2P — 원장으로 확인 후 임시 회원·원장 삭제.
 - **주요 파일**: `backend/controllers/aiAgentController.js`, `backend/routes/aiRoutes.js`, `backend/models/LuckPointLog.js`, `backend/controllers/adminLuckController.js`, `backend/.env.example`, `backend/deploy/oracle/nginx-human-bug-tier.conf`, `ai-service/knowledge/08-guide-and-ai.md`, `ai-service/knowledge/09-faq.md`, `ai-service/tests/test_knowledge_sync.py`
