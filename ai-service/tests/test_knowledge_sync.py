@@ -100,3 +100,32 @@ def test_ids_and_limits_mentioned_in_knowledge():
     routes = read(BACKEND / "routes" / "aiRoutes.js")
     assert "MAX_MESSAGE = 500" in routes and "CHAT_LIMIT = 20" in routes
     assert "10분에 20번" in knowledge("12-troubleshooting.md") and "500자" in knowledge("12-troubleshooting.md")
+
+
+def test_agent_bot_costs_and_limits():
+    """에이전트 봇 요금(작업 강도별 포인트)·요청 한도가 지식 문서·ai-service 작업 목록과 같은지."""
+    src = read(BACKEND / "controllers" / "aiAgentController.js")
+    costs = {k: int(v) for k, v in re.findall(r"(\w+):\s*(\d+)", re.search(r"AGENT_COSTS = \{(.*?)\};", src).group(1))}
+    assert set(costs) == {"free", "light", "normal", "heavy"} and costs["free"] == 0
+    limit = int(re.search(r"RUN_LIMIT = (\d+)", src).group(1))
+    minutes = int(re.search(r"RUN_WINDOW_MS = (\d+) \* 60 \* 1000", src).group(1))
+    assert "MAX_MESSAGE = 500" in src
+    expect = [f"가벼운 작업 {costs['light']}P", f"보통 작업 {costs['normal']}P", f"무거운 작업 {costs['heavy']}P"]
+    for name in ("08-guide-and-ai.md", "09-faq.md"):
+        text = knowledge(name)
+        for phrase in expect:
+            assert phrase in text, f"{name}: {phrase}"
+        assert f"어떤 작업이든 {costs['light']}P만" in text, f"{name}: AI 서버 OFF 요금"
+    guide = knowledge("08-guide-and-ai.md")
+    assert f"{minutes}분에 {limit}번" in guide and "500자" in guide
+    assert f"{costs['light']}P, {costs['normal']}P, {costs['heavy']}P" in knowledge("05-luck-draw.md")
+    # 지식 문서가 말하는 작업 이름이 실제 작업 목록(ai-service)과 같아야 한다
+    from app.agent_loader import load_agent_bot
+
+    load_agent_bot()
+    from app.agent_bot.service.planner import TASKS
+
+    for _level, label, _desc, _example in TASKS.values():
+        assert label in guide, f"작업 이름: {label}"
+    levels = {task: level for task, (level, *_rest) in TASKS.items()}
+    assert levels["search"] == "light" and levels["tier_build"] == "heavy"

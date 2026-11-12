@@ -9,8 +9,16 @@
 // AI 서버(Ollama)만 꺼져 있으면 ai-service 가 지식 문서(knowledge/)에서 뽑은 답(mode 'fallback')을 돌려준다.
 // ai-service 자체가 꺼져 있으면 503 으로 "잠시 쉬는 중" 안내만 하며, 어느 경우든 사이트의 다른 기능에는 영향이 없다.
 // 대화 내용은 저장하지 않는다(서버·DB 어디에도 남기지 않음).
+//
+// 에이전트 봇(/api/ai/agent/*)도 여기에 붙는다 — 회원 전용이고 작업 강도만큼 포인트를 쓴다(controllers/aiAgentController.js):
+//   GET  /agent/info            요금표 · 작업 목록 · 내 포인트 · AI 서버 상태
+//   POST /agent/run             요청 실행(NDJSON 이벤트 스트림, 로그인 필요)
+//   GET  /agent/data/posts      ┐ ai-service 의 도구가 게시판·공지를 읽는 조회 API(ai-service 전용, 브라우저용 아님)
+//   GET  /agent/data/notices    ┘
 const express = require('express');
 const getClientIp = require('../utils/getClientIp');
+const { optionalAuth, requireAuth } = require('../utils/jwtAuth');
+const aiAgentController = require('../controllers/aiAgentController');
 
 const router = express.Router();
 
@@ -122,5 +130,11 @@ router.post('/chat', async (req, res) => {
     res.status(503).json(UNAVAILABLE);
   }
 });
+
+// ---- 에이전트 봇 ----
+router.get('/agent/info', optionalAuth, aiAgentController.getInfo);
+router.post('/agent/run', requireAuth, aiAgentController.runAgent);
+router.get('/agent/data/posts', aiAgentController.internalOnly, aiAgentController.dataPosts);
+router.get('/agent/data/notices', aiAgentController.internalOnly, aiAgentController.dataNotices);
 
 module.exports = router;

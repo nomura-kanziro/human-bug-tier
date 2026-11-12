@@ -35,6 +35,7 @@ const POINT_SOURCE_LABELS = {
   memory_award: '메모리 기록 상금',
   showcase_award: '티어표 공개 상금',
   attendance: '출석체크',
+  agent_bot: '에이전트 봇',
 };
 
 function isDbConnected() {

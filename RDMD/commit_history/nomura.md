@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 416 |
+| **커밋 수** | 417 |
 | **기간** | 2026-03-20 ~ 2026-11-12 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -445,6 +445,7 @@
 | 414 | 2026-11-11 | [`c38bc2a`](#c38bc2a) | feat(deploy): HBT_APP 최소 권한 계정 전환·oracle-grant, 사이트 버전 1.1.0, 옛 서버 정리 기록 |
 | 415 | 2026-11-11 | [`9ee197f`](#9ee197f) | docs(ai): ADMIN 스키마 테스트 테이블 삭제 반영 |
 | 416 | 2026-11-12 | [`febe87f`](#febe87f) | feat(ai-service): 휴버대 에이전트 봇 구현 — 티어표 초안·분석·요약·브리핑·검색 도구와 NDJSON 스트리밍 |
+| 417 | 2026-11-12 | [`pending`](#pending) | feat(backend): 에이전트 봇 프록시 /api/ai/agent — 작업 강도별 포인트 차감·환불, 스트림 전달, 전용 조회 API |
 
 ---
 
@@ -7987,6 +7988,22 @@
 - **범위**: feat / ai-service (app/Agent-Bot)
 - **요약**: 계획 단계로 폴더만 있던 `ai-service/app/Agent-Bot/` 에 에이전트 봇을 구현했다(창시자 지시). 가이드 챗봇이 "설명"만 하는 것과 달리 요청을 작업으로 바꿔 도구를 실행한다: `tier_build`(프롬프트로 커스텀 티어표 초안 — 공식 티어표 바탕에 범위·이동·한 단계 올리기/내리기·제외·랜덤·제목, 무거움) · `review`(커스텀 메이커 배치를 공식과 비교, 보통) · `digest`(게시판 인기·최신 글/공지 요약, 보통) · `briefing`(내 포인트·출석·뽑기·게시글 현황, 보통) · `search`(캐릭터·게시판·공지 통합 검색, 가벼움). 이용법 질문은 가이드 챗봇과 겹쳐 무료로 `/ai` 를 안내하고, 게시글 대리 작성·행운 뽑기 대리 실행은 오남용 우려로 넣지 않았다. 폴더 이름의 하이픈 때문에 `app/agent_loader.py` 가 `importlib` 로 `app.agent_bot` 패키지로 올린다. 층은 가이드 챗봇과 같은 6개(schema·router·service·models·repository·database)이고 MongoDB·Oracle 을 직접 쓰지 않는다(게시판·공지는 사이트 백엔드 조회 API 를 urllib 로 호출, 대화 저장 없음). 흐름은 LangGraph(plan → 도구 노드)이며, 빠르게 답하도록 작업 판별은 규칙이 먼저(0초)이고 애매한 말만 LLM 에 JSON 으로 묻는다. 결과물은 계산 즉시 먼저 내보내고 해설만 LLM 이 스트리밍으로 쓴다(`POST /agent/run` NDJSON: plan·step·result·token·reset·done·error, `GET /agent/info`). 모델은 따로 지정하지 않으면 가이드 챗봇과 같은 `OLLAMA_MODEL`(운영 gemma4:e4b)·같은 `num_ctx`·생각 모드 끔으로 모델 재적재를 피한다. AI 서버 OFF·LLM 실패 시 도구가 만든 정해진 해설로 대신한다. 설정 `AGENT_OLLAMA_MODEL`·`AGENT_SUMMARY_TOKENS`·`AGENT_SITE_API_URL`·`AGENT_SITE_API_TIMEOUT` 추가. 테스트 `tests/test_agent_bot.py`(가짜 LLM·가짜 조회 API) 추가, `test_service.py` 의 "Agent-Bot 은 코드 없음" 검사를 층별 패키지 검사로 변경. gemma4:e4b 실측(RTX 4070 SUPER): 결과물 0.07초, 첫 글자 0.2~0.5초, 전체 3~5.5초, LLM 판별 0.9초.
 - **주요 파일**: `ai-service/app/Agent-Bot/`, `ai-service/app/agent_loader.py`, `ai-service/app/main.py`, `ai-service/app/config.py`, `ai-service/tests/test_agent_bot.py`, `ai-service/tests/test_service.py`, `ai-service/.env.example`, `ai-service/.env.production.example`
+- **관련 RDMD**: `RDMD/ai/06-agent-bot-record.md`
+
+[▲ 목차로](#목차)
+
+<a id="pending"></a>
+
+### 417. 2026-11-12 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(backend): 에이전트 봇 프록시 /api/ai/agent — 작업 강도별 포인트 차감·환불, 스트림 전달, 전용 조회 API
+- **git**: `git show pending`
+- **범위**: feat / backend (ai) · ai-service knowledge · deploy(nginx)
+- **요약**: `controllers/aiAgentController.js` 신설, `routes/aiRoutes.js` 에 연결. `GET /api/ai/agent/info`(요금표·작업 목록·내 포인트·AI 서버 상태, 로그인 없이도 요금표 조회) · `POST /api/ai/agent/run`(requireAuth, 회원 전용 — 관리자 계정은 포인트가 없어 403) · `GET /api/ai/agent/data/posts|notices`(ai-service 도구 전용 조회 — `AI_SERVICE_KEY` 가 있으면 X-AI-Key 일치, 없으면 이 서버 안에서 직접 온 요청만 허용, 공개 글·공지의 가벼운 필드만). 실행 시 회원 현재 상태(포인트·뽑기·출석·내 글 집계)를 읽어 ai-service 에 넘기고(토큰·이메일은 넘기지 않음) NDJSON 스트림을 브라우저로 그대로 흘려보낸다. `plan` 이벤트에서 작업 강도별 요금 `AGENT_COSTS`(가벼움 2P · 보통 4P · 무거움 8P · 무료 0P)를 조건부 갱신(`points >= cost`)으로 차감하고 원장(`LuckPointLog` source `agent_bot`)에 남기며, 오류 이벤트·중간 끊김·시간 초과 시 환불한다. AI 서버 OFF 면 AI 해설이 없으므로 가벼움 요금까지만 받는다. 회원당 10분 12회 제한, 동시에 한 작업, 잔액이 최소 요금 미만이면 402, 브라우저가 끊으면 위쪽 요청도 중단(이미 차감한 포인트는 환불하지 않음 — 받고 끊기 방지), 15초마다 ping 으로 중간 프록시 끊김 방지, `AI_AGENT_TIMEOUT_MS`(기본 5분). 관리자 포인트 내역에 `에이전트 봇` 라벨 추가. nginx 템플릿에 `/api/ai/agent/run` 전용 location(버퍼링 끔, 330초) 추가. 지식 문서(08·09·10·01·05·14)에 에이전트 봇 설명·요금을 넣고 `tests/test_knowledge_sync.py` 에 요금·한도·작업 이름 대조 테스트를 추가했다(pytest 85개 통과). 격리 포트에서 임시 회원으로 실측: 20P → 8·4·4·2 차감, 잔액 부족 시 차감 없이 안내, 오류 이벤트·끊김 시 8P 환불, AI OFF 2P — 원장으로 확인 후 임시 회원·원장 삭제.
+- **주요 파일**: `backend/controllers/aiAgentController.js`, `backend/routes/aiRoutes.js`, `backend/models/LuckPointLog.js`, `backend/controllers/adminLuckController.js`, `backend/.env.example`, `backend/deploy/oracle/nginx-human-bug-tier.conf`, `ai-service/knowledge/08-guide-and-ai.md`, `ai-service/knowledge/09-faq.md`, `ai-service/tests/test_knowledge_sync.py`
 - **관련 RDMD**: `RDMD/ai/06-agent-bot-record.md`
 
 [▲ 목차로](#목차)
