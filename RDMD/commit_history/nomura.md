@@ -446,7 +446,7 @@
 | 415 | 2026-11-11 | [`9ee197f`](#9ee197f) | docs(ai): ADMIN 스키마 테스트 테이블 삭제 반영 |
 | 416 | 2026-11-12 | [`febe87f`](#febe87f) | feat(ai-service): 휴버대 에이전트 봇 구현 — 티어표 초안·분석·요약·브리핑·검색 도구와 NDJSON 스트리밍 |
 | 417 | 2026-11-12 | [`cb4e9a9`](#cb4e9a9) | feat(backend): 에이전트 봇 프록시 /api/ai/agent — 작업 강도별 포인트 차감·환불, 스트림 전달, 전용 조회 API |
-| 418 | 2026-11-12 | [`pending`](#pending) | feat(agent-bot): 오른쪽 아래 원형 버튼·대형 모달 추가 — 모달을 닫아도 작업 계속, 요금표 상시 표시, 초안을 커스텀 메이커로 열기 |
+| 418 | 2026-11-12 | [`3559ed2`](#3559ed2) | feat(agent-bot): 오른쪽 아래 원형 버튼·대형 모달 추가 — 모달을 닫아도 작업 계속, 요금표 상시 표시, 초안을 커스텀 메이커로 열기 |
 
 ---
 
@@ -8009,15 +8009,15 @@
 
 [▲ 목차로](#목차)
 
-<a id="pending"></a>
+<a id="3559ed2"></a>
 
-### 418. 2026-11-12 — `pending`
+### 418. 2026-11-12 — `3559ed2`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `3559ed2`
+- **hash (full)**: `3559ed289c91741f93074770655429ff6b4bedb4`
 - **author**: nomura
 - **message**: feat(agent-bot): 오른쪽 아래 원형 버튼·대형 모달 추가 — 모달을 닫아도 작업 계속, 요금표 상시 표시, 초안을 커스텀 메이커로 열기
-- **git**: `git show pending`
+- **git**: `git show 3559ed2`
 - **범위**: feat / frontend (root-cloudflare) — agent-bot · custom-maker · ai
 - **요약**: 화면 오른쪽 아래에 원형 버튼 "휴버대 에이전트 봇"(`components/AgentBot.jsx`)을 띄우고, 누르면 대형 모달이 열린다. 상태(대화·진행 중인 스트림)는 라우트 바깥의 `context/AgentBotContext.jsx`(main.jsx 에서 App 을 감쌈)에 있어 모달을 닫거나 다른 페이지로 이동·스크롤해도 작업이 끝까지 진행되고, 그동안 버튼에 "작업 중…" 고리가, 끝나면 "작업 완료 ✓"가 표시된다. 모달 왼쪽에는 작업 목록·강도별 요금(서버 `GET /api/ai/agent/info` 값)과 포인트 규칙(차감 시점·무료 범위·환불·AI OFF 요금·요청 한도·대화 미저장)을 항상 보여 주고, 헤더에 AI 서버 상태와 보유 포인트를 표시한다. 메시지마다 작업 이름·강도·차감 포인트, 진행 단계, 결과 카드(티어표 초안·분석·요약·브리핑·검색), 해설을 그린다. 초안 카드의 "커스텀 메이커에서 열기"는 `zonesToMakerState` 로 저장 형식으로 바꿔 저장하고 `MAKER_REPLACED_EVENT` 로 열려 있는 커스텀 메이커에도 반영한다(기존 배치가 있으면 확인). 느려지지 않게 해설 글자는 ref 에 모았다가 requestAnimationFrame 마다 한 번에 반영하고 메시지는 memo 로 마지막 것만 다시 그린다. `lib/api.js` 에 NDJSON 스트림 래퍼 `apiStream`, `lib/agentApi.js` 추가. 비로그인·관리자는 안내만 보이고, 로그인·관리자 화면과 가이드 모드 중에는 버튼을 숨긴다. `/ai` 머리말에 에이전트 봇으로 가는 안내 추가. 가짜 API + 헤드리스 크롬으로 PC·모바일·다크·비로그인 화면과 "닫고 /board 로 이동해도 작업 계속 → 완료 → 커스텀 메이커 63명 반영" 흐름을 확인했다.
 - **주요 파일**: `root-cloudflare/src/components/AgentBot.jsx`, `root-cloudflare/src/context/AgentBotContext.jsx`, `root-cloudflare/src/lib/agentApi.js`, `root-cloudflare/src/lib/api.js`, `root-cloudflare/src/lib/makerState.js`, `root-cloudflare/src/styles/agent-bot.css`, `root-cloudflare/src/main.jsx`, `root-cloudflare/src/pages/CustomMaker.jsx`, `root-cloudflare/src/pages/AiHelper.jsx`, `root-cloudflare/src/styles/ai-helper.css`
