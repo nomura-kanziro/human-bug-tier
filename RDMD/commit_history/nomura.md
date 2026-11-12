@@ -447,7 +447,7 @@
 | 416 | 2026-11-12 | [`febe87f`](#febe87f) | feat(ai-service): 휴버대 에이전트 봇 구현 — 티어표 초안·분석·요약·브리핑·검색 도구와 NDJSON 스트리밍 |
 | 417 | 2026-11-12 | [`cb4e9a9`](#cb4e9a9) | feat(backend): 에이전트 봇 프록시 /api/ai/agent — 작업 강도별 포인트 차감·환불, 스트림 전달, 전용 조회 API |
 | 418 | 2026-11-12 | [`3559ed2`](#3559ed2) | feat(agent-bot): 오른쪽 아래 원형 버튼·대형 모달 추가 — 모달을 닫아도 작업 계속, 요금표 상시 표시, 초안을 커스텀 메이커로 열기 |
-| 419 | 2026-11-12 | [`pending`](#pending) | docs(agent-bot): 에이전트 봇 문서화 — 기능 설명·기록 3종 신설, 스킬 정본+12종·README·가이드·작업 이력 갱신, 낡은 AI 배포 상태 표기 정정 |
+| 419 | 2026-11-12 | [`7ec4957`](#7ec4957) | docs(agent-bot): 에이전트 봇 문서화 — 기능 설명·기록 3종 신설, 스킬 정본+12종·README·가이드·작업 이력 갱신, 낡은 AI 배포 상태 표기 정정 |
 
 ---
 
@@ -8026,15 +8026,15 @@
 
 [▲ 목차로](#목차)
 
-<a id="pending"></a>
+<a id="7ec4957"></a>
 
-### 419. 2026-11-12 — `pending`
+### 419. 2026-11-12 — `7ec4957`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `7ec4957`
+- **hash (full)**: `7ec49578c081b55d08f8b705d3661b25da9bc31a`
 - **author**: nomura
 - **message**: docs(agent-bot): 에이전트 봇 문서화 — 기능 설명·기록 3종 신설, 스킬 정본+12종·README·가이드·작업 이력 갱신, 낡은 AI 배포 상태 표기 정정
-- **git**: `git show pending`
+- **git**: `git show 7ec4957`
 - **범위**: docs / agent-bot · ai-service · 스킬(.Agents + 12종) · RDMD 전반
 - **요약**: 에이전트 봇 구현(416~418)에 맞춰 문서를 전체 점검해 고쳤다. 신설: 기능 설명 `RDMD/features/agent-bot.md`(작업·요금·말로 정할 수 있는 조건·넣은 기능과 뺀 기능 평가·구조·느려지지 않게 한 것·설정·운영 반영 방법·확인한 것과 못 한 것), 기록 `RDMD/ai/06-agent-bot-record.md`(판단·구성·실측 표·찾아 고친 것·남은 일), `RDMD/backend/10-ai/02-agent-bot-proxy-record.md`(API·실행 순서·요금·원장으로 확인한 결과), `RDMD/frontend/15-ai/02-agent-bot-ui-record.md`(파일·동작·성능·화면 확인). 스킬 정본 `.Agents/skills/ai-service/SKILL.md` 와 에이전트 폴더 12종 복제본에서 "Agent-Bot 계획 단계·구현 금지"를 지우고 코드 지도·에이전트 봇 규칙(이름·배치는 도구가 계산, 요금은 `AGENT_COSTS` 한 곳, plan 에서 차감·실패 시 환불, 쓰기 대행 금지, 모델·num_ctx 를 가이드 챗봇과 같게)·상태를 넣었다. `ai-service/app/Agent-Bot/README.md` 와 층별 README 6개를 구현 내용으로 다시 썼고 `ai-service/README.md` 에 에이전트 봇 절·폴더 트리를 추가했다. 루트 `README.md`(기능 소개·페이지/API 표·트리), `CLAUDE.md`, `AGENTS.md`, `.Agents/README.md`, `RDMD/README.md`, features(ai-service·README·overview·backend-api·luck-draw·custom-maker·admin), guides(path-and-api 의 `apiStream`, security 9절, deploy-checklist 에이전트 봇 반영 순서), ai/backend/frontend README 인덱스를 갱신했다. 점검 중 발견한 낡은 표기도 바로잡았다: 2026-11-11 새 Oracle VM 전환으로 휴버봇이 이미 운영 중인데 "아직 운영 서버에 올리지 않았다/운영 배포 전"으로 남아 있던 README·features/ai-service·deploy-checklist·스킬 상태·work-history 체크리스트·timeline 을 기록 05 의 사실에 맞췄고, work-history·timeline 에 빠져 있던 11-08(Oracle DB)·11-11(새 VM·1.1.0)·11-12(에이전트 봇) 행을 채웠다. 코드 변경은 `guidans_Chat/__init__.py` 주석 한 줄뿐이다.
 - **주요 파일**: `RDMD/features/agent-bot.md`, `RDMD/ai/06-agent-bot-record.md`, `RDMD/backend/10-ai/02-agent-bot-proxy-record.md`, `RDMD/frontend/15-ai/02-agent-bot-ui-record.md`, `.Agents/skills/ai-service/SKILL.md`, `ai-service/app/Agent-Bot/README.md`, `ai-service/README.md`, `README.md`, `CLAUDE.md`, `AGENTS.md`, `RDMD/summary/work-history.md`, `RDMD/guides/deploy-checklist.md`, `RDMD/guides/security.md`
