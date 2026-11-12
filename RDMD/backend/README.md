@@ -34,7 +34,7 @@ RDMD/backend/
 ├── 07-deploy/       # Render · 정적 서빙 · Oracle Cloud 배포
 ├── 08-luck-draw/    # 행운 뽑기 모델·API · 포인트 원장 · 출석체크
 ├── 09-event/        # 이벤트 (매일 퀴즈 · 메모리 게임 · 티어표 공개) API
-└── 10-ai/           # AI 프록시 /api/ai (AI 전용 서비스 ai-service 의 백엔드 조각)
+└── 10-ai/           # AI 프록시 /api/ai · 에이전트 봇 /api/ai/agent (AI 전용 서비스 ai-service 의 백엔드 조각)
 ```
 
 파일명 규칙: `{순서}-{기능키워드}-record.md`
@@ -141,6 +141,7 @@ AI 기능은 프론트·백엔드·AI 서비스에 걸쳐 있어 **세 곳에 �
 | 파일 | legacy | 요약 |
 |------|--------|------|
 | 기본 3분 타임아웃·장애 시 503, 대화 저장 안 함 |
+| [02-agent-bot-proxy-record.md](./10-ai/02-agent-bot-proxy-record.md) | — | 에이전트 봇 `/api/ai/agent` — `GET /info`(요금표·작업 목록·내 포인트) · `POST /run`(NDJSON 스트림, 회원 전용, 작업 강도별 2·4·8P 차감·실패 시 환불·원장 `agent_bot`, 10분 12회·동시 1건) · `GET /data/posts`·`/data/notices`(ai-service 전용 조회) |
 
 ## legacy backend_N → 새 경로
 

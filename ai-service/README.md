@@ -71,7 +71,7 @@ Express(`backend/`)와 **별도 프로세스**로 돌고, 브라우저는 이 �
 |---|---|
 | **FastAPI** + uvicorn | `app/main.py`(진입) · `app/guidans_Chat/router/` — `/health`, `/questions`, `/chat`, `/reload` |
 | **LangChain** | `langchain-core`(Document·BaseRetriever·메시지), `langchain-text-splitters`(MarkdownHeaderTextSplitter), `langchain-ollama`(ChatOllama·OllamaEmbeddings), `langchain-anthropic`(ChatAnthropic, 선택) |
-| **LangGraph** | `app/guidans_Chat/service/graph.py` — `StateGraph` 질문 처리 흐름(조건 분기) |
+| **LangGraph** | `app/guidans_Chat/service/graph.py` — `StateGraph` 질문 처리 흐름(조건 분기) · `app/Agent-Bot/service/graph.py` — 작업 판별 → 도구 노드 |
 | **RAG** | `service/knowledge.py`(문서 적재·분할·BM25·캐릭터 이름 색인) + **ChromaDB 벡터 검색(bge-m3 임베딩)** → `service/retrieval.py` 에서 BM25 와 RRF 로 합침 → 근거를 `service/prompts.py` 로 프롬프트에 넣어 답 생성 |
 | **ChromaDB** | `database/chroma.py`(저장소 연결) · `repository/knowledge_vector_repository.py`(색인 동기화·검색) · `models/knowledge_chunk.py` |
 | **Ollama** | 생성 `gemma4:12b`, 임베딩 `bge-m3` — 내 PC(RTX 4070 SUPER 12GB)에서 실행 |
@@ -79,7 +79,7 @@ Express(`backend/`)와 **별도 프로세스**로 돌고, 브라우저는 이 �
 ## 폴더
 
 **챗봇 종류별로 폴더**를 나누고, 폴더마다 **같은 6개 층**을 둔다 — `schema` · `router` · `service` · `models` · `repository` · `database`.
-가이드 전용 챗봇은 `app/guidans_Chat/`, 에이전트 봇은 `app/Agent-Bot/`(계획 단계 — 층 폴더와 README 만 있는 빈 자리).
+가이드 전용 챗봇은 `app/guidans_Chat/`, 에이전트 봇은 `app/Agent-Bot/`(2026-11-12 구현 — 폴더 이름에 하이픈이 있어 `app/agent_loader.py` 가 `app.agent_bot` 패키지로 올린다).
 
 ```
 ai-service/
@@ -94,7 +94,14 @@ ai-service/
 │   │   ├── models/        #   knowledge_chunk.py(벡터 DB 지식 조각). Oracle 테이블 모델은 아직 없음(대화 비저장)
 │   │   ├── repository/    #   knowledge_vector_repository.py(ChromaDB 색인·검색, 사용 중) · base.py OracleRepository(Oracle SQL, 아직 안 씀)
 │   │   └── database/      #   chroma.py(ChromaDB 연결, 사용 중) · oracle.py(python-oracledb 풀, 연결 준비만)
-│   └── Agent-Bot/         # 에이전트 봇 자리(계획 단계) — 위와 같은 6개 층 폴더, 각각 README 만
+│   ├── agent_loader.py    # `Agent-Bot` 폴더를 app.agent_bot 패키지로 올린다(하이픈 때문에 직접 import 불가)
+│   └── Agent-Bot/         # ★ 에이전트 봇 — 말로 시킨 작업을 도구로 실행(회원 전용 · 포인트)
+│       ├── schema/        #   agent.py: AgentRunRequest · UserContext · 이벤트 형식(NDJSON)
+│       ├── router/        #   HTTP: GET /agent/info · POST /agent/run(스트림)
+│       ├── service/       #   agent_service.py(진입) · planner.py(작업 판별) · graph.py(LangGraph) · tools/(tier_builder·tier_review·digest·briefing·site_search) · catalog.py · prompts.py · llm.py
+│       ├── models/        #   site.py: BoardPost · SiteNotice
+│       ├── repository/    #   site_repository.py: 게시판·공지 조회
+│       └── database/      #   site_api.py: 사이트 백엔드 조회 API 연결(urllib) — DB 에 직접 붙지 않는다
 ├── knowledge/             # 사이트 지식 원문 14개(가이드 챗봇이 읽음, AI OFF 일 때의 답도 여기서 나옴) — 기능이 바뀌면 여기를 고친다
 ├── data/chroma/           # 벡터 DB 파일(자동 생성, gitignore)
 ├── scripts/               # dev_service.py(로컬에서 떼어 띄우기/상태/종료) · eval_guide_chat.py(질문 묶음 품질 점검) · calibrate_relevance.py(범위 판단 기준 점검)
@@ -104,6 +111,25 @@ ai-service/
 ```
 
 층의 책임(위에서 아래로만 부른다): **router**(HTTP 입출력) → **service**(업무 로직·LLM·검색) → **repository**(SQL) → **database**(연결). **schema** 는 요청·응답 JSON, **models** 는 DB 테이블 한 행. 라우터가 SQL 을 알거나, 서비스가 HTTP 를 아는 일이 없게 한다.
+
+## 에이전트 봇 (`app/Agent-Bot/`)
+
+가이드 챗봇이 "설명"을 한다면 에이전트 봇은 말로 시킨 "작업"을 한다. 사이트 오른쪽 아래 원형 버튼에서 쓰고, 회원 전용이며 작업 강도만큼 포인트를 쓴다(차감은 사이트 백엔드가 한다).
+
+| 작업 | 강도 | 하는 일 |
+|---|---|---|
+| `tier_build` | 무거움 | 공식 티어표를 바탕으로 범위·이동·올리기/내리기·제외·랜덤·제목을 말로 받아 커스텀 메이커 배치를 만든다 |
+| `review` | 보통 | 커스텀 메이커에 배치한 티어표를 공식과 비교 |
+| `digest` | 보통 | 게시판 인기·최신 글과 최근 공지 요약 |
+| `briefing` | 보통 | 내 포인트·출석·뽑기·게시글 현황 |
+| `search` | 가벼움 | 캐릭터·게시판·공지 통합 검색(LLM 없이 바로) |
+
+- `GET /agent/info` — AI 서버 ON/OFF · 모델 · 작업 목록. `POST /agent/run` — 줄 단위 JSON(NDJSON) 스트림: `plan` → `step` → `result` → `token` → `done`(실패 `error`).
+- 작업 판별은 규칙이 먼저이고 애매한 말만 LLM 에 묻는다. **이름·배치·숫자는 도구가 계산**하고 LLM 은 해설만 쓴다. 결과물이 해설보다 먼저 나간다.
+- 모델은 가이드 챗봇과 같다(`AGENT_OLLAMA_MODEL` 을 비워 두면 `OLLAMA_MODEL`). 모델·`num_ctx` 를 다르게 두면 Ollama 가 다시 올려 느려진다.
+- 게시판·공지는 사이트 백엔드의 전용 조회 API(`AGENT_SITE_API_URL`, 기본 `http://127.0.0.1:5000`)로 읽는다. MongoDB·Oracle 에 직접 붙지 않고, 대화를 저장하지 않는다.
+- 설정: `AGENT_OLLAMA_MODEL` · `AGENT_SUMMARY_TOKENS`(해설 최대 토큰, 기본 260 — CPU 서버에서는 120 정도 권장) · `AGENT_SITE_API_URL` · `AGENT_SITE_API_TIMEOUT`.
+- 테스트: `tests/test_agent_bot.py`(가짜 LLM·가짜 조회 API). 폴더 설명은 [`app/Agent-Bot/README.md`](./app/Agent-Bot/README.md), 기능 설명은 [`../RDMD/features/agent-bot.md`](../RDMD/features/agent-bot.md).
 
 ## 데이터베이스 · 벡터 저장소
 

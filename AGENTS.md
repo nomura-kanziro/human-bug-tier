@@ -20,7 +20,7 @@ README 이미지 재생성: [`docs/readme/README.md`](./docs/readme/README.md) (
 
 **휴버대 티어표** — 바닐라 HTML/CSS/JS + Express/MongoDB.  
 공식 1~9티어(이미지 폴더 일치) · 커스텀 제작/게시판/**본인 글 수정** · 회원 · 공지(관리자 수정) · 문의 · 관리자 · PWA.  
-**AI 전용 서비스** `ai-service/`(Python FastAPI · LangChain · LangGraph · RAG) — `/ai` 휴버봇. Express `/api/ai` 뒤에서만 호출. 정본 스킬 `.Agents/skills/ai-service/SKILL.md`.
+**AI 전용 서비스** `ai-service/`(Python FastAPI · LangChain · LangGraph · RAG) — `/ai` 휴버봇 + **에이전트 봇**(오른쪽 아래 원형 버튼, 티어표 초안·분석·요약·브리핑·검색, 회원 전용 · 작업 강도별 포인트, `app/Agent-Bot` · `/api/ai/agent`). Express `/api/ai` 뒤에서만 호출. 정본 스킬 `.Agents/skills/ai-service/SKILL.md`.
 
 > ⛔ **2026-09-19 창시자 지시 — 작업은 `root-cloudflare/`(React)에만 한다.**  
 > `root-render/`(바닐라, Render.com)는 **베타 버전에서 업데이트 종료 → 수정 금지**.  

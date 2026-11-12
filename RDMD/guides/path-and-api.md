@@ -58,6 +58,8 @@ header/footer 주입 직후 호출.
 
 **원칙**: 새 헬퍼를 만들 때 **위 표와 동일한 분기**를 복사·공유. 하드코딩 URL 금지.
 
+**React(`root-cloudflare/src/lib/api.js`)**: 일반 요청은 `apiRequest`(관리자는 `adminRequest`), 답이 조금씩 오는 스트림(에이전트 봇 `/api/ai/agent/run`)은 **`apiStream`** — 서버가 한 줄에 JSON 하나씩(NDJSON) 보내는 응답을 읽어 줄마다 `onEvent` 를 부른다. 스트림이 아닌 오류 응답은 `apiRequest` 와 같은 `{ ok:false, status, data }` 로 돌려준다. 컴포넌트에서 `fetch` 를 직접 쓰지 않는다.
+
 ---
 
 ## 4. 인증 헤더

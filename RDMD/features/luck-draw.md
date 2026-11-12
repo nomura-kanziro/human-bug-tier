@@ -18,6 +18,7 @@
 - **증감 원장**: 포인트가 바뀔 때마다 `LuckPointLog` 에 1건(출처·증감·직후 잔액·설명). 2026-10-01 추가 — 그 전 증감은 원장에 없다. 관리자 페이지 "행운 뽑기 관리"에서 본다([admin.md](./admin.md)).
 - 이벤트 상금(매일 퀴즈·메모리 기록 1위·티어표 공개 우승)도 같은 지갑에 더해지고 원장에 남는다.
 - **출석체크**(2026-10-18): 로그인 시 하루(KST) 1회 연속 일차별 10·10·10·25·10·10·50P 자동 지급, 원장 `attendance`. `GET /attendance` 는 마이페이지 출석판용 — [my-page.md](./my-page.md), [`../backend/08-luck-draw/05-attendance-record.md`](../backend/08-luck-draw/05-attendance-record.md)
+- **에이전트 봇 사용료**(2026-11-12): 에이전트 봇 작업 강도별로 2·4·8P 를 차감하고 실패하면 환불한다. 원장 `agent_bot`(환불은 양수, 설명에 "(환불)") — [agent-bot.md](./agent-bot.md).
 
 ## 1. 오늘의 행운 티어
 

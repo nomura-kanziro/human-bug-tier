@@ -33,6 +33,7 @@ custom-maker/
 | 풀 화살표 | 캐릭터 풀이 뷰포트에 들어오면 ▲(티어표) · ▼(풀 맨 아래). 캡처 영역 밖 |
 
 로그인 없이도 제작·다운로드 가능합니다.  
+**에이전트 봇 초안**(2026-11-12): 에이전트 봇이 만든 티어표 초안의 "커스텀 메이커에서 열기"를 누르면 그 배치가 저장소(`customMakerTierState`)에 들어오고, 화면이 열려 있으면 `hbt:maker-state-replaced` 이벤트로 바로 반영된다(`src/lib/makerState.js` `zonesToMakerState`). 기존 배치가 있으면 먼저 확인한다 — [agent-bot.md](./agent-bot.md).  
 **게시판 업로드**는 보통 로그인·API 연동이 필요합니다.
 
 ---

@@ -2,7 +2,8 @@
 
 > 2026-10-18 신설. 사이트 지식으로 답하는 챗봇 **휴버봇**과 **랜덤 추천 질문 3개**.
 > AI 기능은 Express 와 분리된 **AI 전용 서비스**(저장소 루트 `ai-service/`, Python FastAPI)가 담당한다.
-> 운영 서버에는 **아직 배포하지 않았다**(배포 스크립트·설치 목록은 2026-11-05 준비 완료 — 아래 "운영 배포" 참고). 생성 모델은 내 PC 의 Ollama(gemma4:12b), 검색은 ChromaDB + bge-m3(2026-10-18 적용).
+> **운영 중**(2026-11-11 새 Oracle VM 전환 — 서버 안 Ollama `gemma4:e4b`, 벡터 검색은 끔, 통계만 Oracle 저장. [`../ai/05-oracle-storage-record.md`](../ai/05-oracle-storage-record.md)). 로컬 개발은 내 PC 의 Ollama(`gemma4:12b`) + ChromaDB + bge-m3(2026-10-18 적용).
+> 같은 서비스에 **에이전트 봇**(2026-11-12)이 추가됐다 — [agent-bot.md](./agent-bot.md).
 
 ## 관련 기록 (세 곳에 나눠 있다)
 
@@ -21,7 +22,7 @@
 | 폴더 | 챗봇 | 상태 |
 |---|---|---|
 | `app/guidans_Chat/` | **가이드 전용 챗봇(휴버봇)** — 사이트 이용법·티어표 안내 | 구현됨(`/ai`) |
-| `app/Agent-Bot/` | **에이전트 봇**(공지 "앞으로의 계획") | 계획 단계 — 6개 층 폴더에 README 만, 파이썬 코드 없음(방치) |
+| `app/Agent-Bot/` | **에이전트 봇** — 말로 시킨 작업(티어표 초안·분석·요약·브리핑·검색) | 구현됨(2026-11-12, 오른쪽 아래 원형 버튼) — [agent-bot.md](./agent-bot.md). `agent_loader.py` 가 `app.agent_bot` 으로 올린다 |
 | `app/main.py` · `config.py` · `deps.py` | 공용(FastAPI 진입점·설정·키 검사) | — |
 
 | 층 | 책임 | `guidans_Chat` 의 내용 |
@@ -183,7 +184,7 @@ app/guidans_Chat/service/graph.py (LangGraph StateGraph)
 - 지식 고도화 후(469조각) 재측정: 사이트 질문 벡터 유사도가 전반적으로 올랐고(예: "출첵 하면 몇 점 줘?" 0.666 → 0.745, "비번 까먹었어" BM25 0점인데 0.663) 범위 밖은 그대로 0.37~0.50 이라 기준을 0.50 → 0.52 로 올림. OFF 상태 점검: 질문 8개가 0~2초에 지식 문서 문장으로 답(닉네임 7일·출석 일차별 포인트·비번 재설정·알림 끄기·포커 단계·캡처 등), 날씨는 거절.
 - 한계: 질문 약 40개(+범위 밖)로 기준값을 정했다. 지식·모델을 바꾸면 다시 확인할 것. 화면(`/ai`)은 이번 변경 후 다시 캡처하지 않았다(API 응답 형식은 그대로).
 
-## 운영 배포 (준비 완료 · 서버 반영 전)
+## 운영 배포 (2026-11-11 새 VM 에 반영됨 · 아래는 처음 올릴 때의 절차)
 
 **Oracle VM(1GB RAM)에는 gemma4:12b 도 임베딩·ChromaDB 도 올릴 수 없다.** 그래서 서버에서는 벡터 검색을 끈 가벼운 모드(BM25)로 돌리고, 생성 모델은 `AI_PROVIDER` 로 고른다(자세히는 [`../../ai-service/README.md`](../../ai-service/README.md) "운영 배포", 기록은 [`../ai/04-production-deploy-prep-record.md`](../ai/04-production-deploy-prep-record.md)).
 

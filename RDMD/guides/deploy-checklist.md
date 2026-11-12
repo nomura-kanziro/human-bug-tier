@@ -39,11 +39,11 @@
 
 ---
 
-## AI. AI 전용 서비스 `ai-service/` (배포 스크립트 준비 완료 2026-11-05 — 서버 반영은 `deploy` 실행 때)
+## AI. AI 전용 서비스 `ai-service/` (2026-11-11 새 VM 에 반영됨 — 아래는 처음 올릴 때의 순서)
 
 `backend/deploy/oracle/deploy.sh` 는 `shared/ai.env` 가 **있을 때만** ai-service 를 함께 올린다. 없으면 사이트만 올라가고 `/api/ai/*` 만 503("잠시 쉬는 중")이다.
 
-**먼저 정할 것 — 생성 모델(`AI_PROVIDER`).** Oracle VM(1GB RAM)에는 Ollama(gemma4:12b)·임베딩·ChromaDB 를 올릴 수 없어, 서버는 벡터 검색을 끈 가벼운 모드(BM25)로 돈다.
+**먼저 정할 것 — 생성 모델(`AI_PROVIDER`).** 옛 VM(1GB RAM)에는 Ollama·임베딩·ChromaDB 를 올릴 수 없어 벡터 검색을 끈 가벼운 모드(BM25)로 만들었다. 지금 VM(4코어/24GB)은 서버 안 Ollama(`gemma4:e4b`, CPU)로 답하고 벡터 검색은 계속 꺼 둔다([`../ai/05-oracle-storage-record.md`](../ai/05-oracle-storage-record.md)).
 
 - [ ] `none` — LLM 없이 문서 답(무료). 화면에 "AI 서버 OFF 상태" 안내가 뜬다
 - [ ] `anthropic` — Claude API. 서버 `shared/ai.env` 에 `ANTHROPIC_API_KEY` 를 **서버에서 직접** 채운다(비용 발생)
@@ -60,6 +60,16 @@
 - [ ] 지식(`knowledge/*.md`)·`tiers.json` 을 고쳤다면 `deploy`(= `hbt-ai` 재시작) — 서비스는 시작할 때 읽는다
 
 문제가 생기면 `deploy.sh logs ai` · `deploy.sh rollback`(이전 릴리스에 ai-service 가 없으면 `hbt-ai` 만 멈춘다).
+
+### 에이전트 봇 (2026-11-12 커밋 — 서버 반영 전)
+
+- [ ] `deploy.sh deploy` — 새 의존성 없음(`requirements-prod.txt` 그대로). 사이트·ai-service 가 함께 올라간다
+- [ ] 서버 nginx 설정에 `/api/ai/agent/run` location 추가(저장소 `backend/deploy/oracle/nginx-human-bug-tier.conf` 의 블록 — `proxy_buffering off`, `proxy_read_timeout 330s`). certbot 이 고친 설정을 덮어쓰지 않게 **손으로 추가** → `sudo nginx -t && sudo systemctl reload nginx`
+- [ ] (권장) `shared/ai.env` 에 `AGENT_SUMMARY_TOKENS=120` — 서버는 CPU(약 6토큰/초)라 해설이 길면 느리다. `AGENT_SITE_API_URL` 은 기본값(`http://127.0.0.1:5000`) 그대로
+- [ ] 회원 계정으로 오른쪽 아래 원형 버튼 → 검색(2P) → 티어표 초안(8P) → "커스텀 메이커에서 열기"
+- [ ] 글자가 조각조각 오는지(한꺼번에 몰려 오면 nginx location 누락), 작업 중 모달을 닫아도 계속되는지
+- [ ] 관리자 → 행운 뽑기 관리 → 포인트 내역에 "에이전트 봇"이 남는지
+- [ ] 바깥에서 `/api/ai/agent/data/posts` 가 **401/403** 인지(ai-service 전용)
 
 상세: [`../features/ai-service.md`](../features/ai-service.md) · [`../../ai-service/README.md`](../../ai-service/README.md) · [`../ai/04-production-deploy-prep-record.md`](../ai/04-production-deploy-prep-record.md)
 

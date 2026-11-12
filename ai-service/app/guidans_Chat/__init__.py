@@ -7,5 +7,5 @@
   models/      Oracle 테이블 한 행의 모양(아직 없음 — 대화 비저장)
   repository/  Oracle SQL 실행 도우미
   database/    Oracle 연결(python-oracledb). ai-service 는 MongoDB 를 쓰지 않는다.
-공용 설정(config.py)·키 검사(deps.py)·FastAPI 진입점(main.py)은 app/ 에 있다. 에이전트 봇은 ../Agent-Bot/ (아직 계획 단계).
+공용 설정(config.py)·키 검사(deps.py)·FastAPI 진입점(main.py)은 app/ 에 있다. 에이전트 봇은 ../Agent-Bot/ (2026-11-12 구현 — agent_loader 가 app.agent_bot 으로 올린다).
 """

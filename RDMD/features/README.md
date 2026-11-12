@@ -40,6 +40,7 @@ flowchart LR
 | [luck-draw.md](./luck-draw.md) | 행운 뽑기 (오늘의 행운 티어) |
 | [my-page.md](./my-page.md) | 마이페이지 (프로필 드롭다운 + 내 활동 집계 + 출석판) |
 | [ai-service.md](./ai-service.md) | **AI 도우미 · AI 전용 서비스** — `/ai` 챗봇 휴버봇 + 랜덤 추천 질문, `ai-service/`(FastAPI · LangChain · LangGraph · RAG) |
+| [agent-bot.md](./agent-bot.md) | **휴버대 에이전트 봇** — 오른쪽 아래 원형 버튼, 티어표 초안·분석·요약·브리핑·검색 작업, 작업 강도별 포인트 요금, 넣은 기능·뺀 기능 평가 |
 | [backend-api.md](./backend-api.md) | API 그룹 · 모델 · 미들웨어 |
 | [react-rewrite.md](./react-rewrite.md) | **기획만** — 정식 버전 React 이식. Cloudflare 작업 중지. 구현 지시 전 스캐폴드 금지 |
 

@@ -40,7 +40,7 @@ RDMD/frontend/
 ├── 12-react/            # 정식 버전 React 이식 (root-cloudflare)
 ├── 13-event/            # 이벤트 페이지 (퀴즈 · 티어표 공개 · 메모리 게임)
 ├── 14-guide/            # 가이드 페이지(/guide) + 게임식 가이드 모드
-├── 15-ai/               # AI 도우미 화면(/ai) — AI 전용 서비스의 프론트 조각
+├── 15-ai/               # AI 도우미 화면(/ai) · 에이전트 봇 화면(원형 버튼·모달) — AI 전용 서비스의 프론트 조각
 └── 16-docs/             # README 개편 · 이미지 재생성 도구
 ```
 
@@ -212,6 +212,7 @@ AI 기능은 프론트·백엔드·AI 서비스에 걸쳐 있어 **세 곳에 �
 | 파일 | legacy | 요약 |
 |------|--------|------|
 | [01-ai-helper-page-record.md](./15-ai/01-ai-helper-page-record.md) | — | AI 도우미 화면(`/ai`) — 휴버봇 대화창·추천 질문 3개·출처/fallback 배지, 대화는 브라우저 탭에만 |
+| [02-agent-bot-ui-record.md](./15-ai/02-agent-bot-ui-record.md) | `3559ed2` | 휴버대 에이전트 봇 화면 — 오른쪽 아래 원형 버튼·대형 모달, 라우트 바깥 상태(닫아도 작업 계속), 요금표 상시 표시, 결과 카드 5종, 초안을 커스텀 메이커로 열기, NDJSON 스트림(`apiStream`) |
 
 ---
 

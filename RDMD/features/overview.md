@@ -50,10 +50,11 @@
 | `src/pages/MyPage.jsx` + `AttendanceBoard.jsx` | 마이페이지·프로필·출석판 — [my-page.md](./my-page.md) | 회원 |
 | `src/pages/Guide.jsx` + `components/GuideMode.jsx` | 가이드 페이지 + 게임식 가이드 모드 | 방문자 |
 | `src/pages/AiHelper.jsx` + **`ai-service/`** | AI 도우미(휴버봇·추천 질문) — [ai-service.md](./ai-service.md) | 방문자 |
+| `src/components/AgentBot.jsx` + `context/AgentBotContext.jsx` + **`ai-service/app/Agent-Bot`** | 휴버대 에이전트 봇(오른쪽 아래 원형 버튼 — 티어표 초안·분석·요약·브리핑·검색, 포인트 사용) — [agent-bot.md](./agent-bot.md) | 회원 |
 | `src/pages/AdminDashboard.jsx` + `Admin*.jsx` | 관리자 통합 관리(공지·문의·신고·차단·이벤트 관리·행운 뽑기 관리·이벤트 디자인) — [admin.md](./admin.md) | Admin |
 | `src/components/SeasonalBackdrop.jsx`, `lib/season.js` | 계절 배경(할로윈·크리스마스, 관리자가 켬) | 전체 |
 | `backend/` | API + 정적 서빙(`dist`) — [backend-api.md](./backend-api.md) | 서버 |
-| `ai-service/` | **AI 전용 서비스**(Python FastAPI · LangChain · LangGraph · RAG) — Express `/api/ai` 뒤에서만 호출 | 서버 |
+| `ai-service/` | **AI 전용 서비스**(Python FastAPI · LangChain · LangGraph · RAG) — 휴버봇(`app/guidans_Chat`) + 에이전트 봇(`app/Agent-Bot`). Express `/api/ai` 뒤에서만 호출 | 서버 |
 | `root-cloudflare/functions/api/[[path]].js` | Cloudflare Pages `/api` 프록시 | 서버 |
 | `backend/deploy/oracle/` | Oracle VM 배포 스크립트 | 운영 |
 | `root-render/` | ⛔ 바닐라 베타(보관, 수정 금지) | — |

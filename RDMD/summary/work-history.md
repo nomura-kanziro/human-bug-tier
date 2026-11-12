@@ -24,6 +24,7 @@
 | 운영 배포 | 2026-09-28 | Oracle Cloud VM 운영 서버(Let's Encrypt), Cloudflare Pages `/api` → Oracle 프록시. 정식 주소 `https://human-bug-tier.com` |
 | 메일·관리·1.0.1 | 2026-09-29 ~ 10-01 | 인증 메일 템플릿, 티어표 수정, 행운 뽑기 관리·포인트 원장, 1.0.1 |
 | 계절 디자인·가이드·출석·AI | 2026-10-02 ~ 10-18 | 1.0.2(사이드 메뉴 계정·모바일 헤더), 사이트 전용 메일 주소, 이벤트 디자인(할로윈·크리스마스 배경), 꾸미기 할로윈 이펙트·이펙트 색, 1.0.5, 가이드 모드, 출석체크·출석판, **AI 전용 서비스(ai-service)** |
+| 문서·Oracle·새 서버·에이전트 봇 | 2026-11-02 ~ 11-12 | 에이전트 폴더 12종 통일, README·라이선스 정비, Oracle Autonomous DB 연결, **새 Oracle VM 전환 · 1.1.0**(서버 안 Ollama `gemma4:e4b` 로 휴버봇 운영), **휴버대 에이전트 봇**(티어표 초안·분석·요약·브리핑·검색, 작업 강도별 포인트) |
 
 ---
 
@@ -232,8 +233,11 @@
 | 11-05 | **AI** | AI 서비스 운영 배포 준비(서버 반영 전) — 운영 VM 조건 점검, 가벼운 설치(`requirements-prod.txt`·지연 import), `deploy.sh ai-setup`/`ai-env`, pm2 `hbt-ai` |
 | 11-05 | **문서** | README 전면 개편 — 실제 화면 GIF·PNG(가상 데이터), 프레임워크·아키텍처 그림, 전 README Mermaid 로직 구조, 재생성 도구 `docs/readme/` |
 | 11-05 | **문서** | LICENSE·SECURITY·CONTRIBUTING 고도화 — 라이선스 14개 조항, 제보 채널을 비공개로 정정, 적용된 보안 장치·유출 대응·관리자 지정·오프보딩 절차 |
+| 11-08 | **Oracle DB** | 백엔드에 Oracle Autonomous DB 연결 모듈·`GET /api/db-health`·샘플 테이블 `/api/db-sample`, 원클릭 배포 `ship.sh` |
+| 11-11 | **AI · 서버** | ai-service Oracle 저장(통계 `HBT_CHAT_STAT` · 대화 원문 `HBT_CHAT_LOG`, 둘 다 기본 꺼짐) + `deploy.sh ai-wallet`/`oracle-pass`/`ai-oracle`. **새 Oracle VM(4코어/24GB)으로 전체 전환** — 서버 안 Ollama `gemma4:e4b`(CPU)로 휴버봇 운영, 최소 권한 DB 계정 `HBT_APP`, 옛 서버 정리, **1.1.0** |
+| 11-12 | **에이전트 봇** | 화면 오른쪽 아래 원형 버튼 "휴버대 에이전트 봇" — 말로 시킨 작업을 도구로 실행: 티어표 초안 만들기(8P) · 내 티어표 분석(4P) · 게시판·공지 요약(4P) · 내 활동 브리핑(4P) · 통합 검색(2P). 회원 전용, 실패 시 환불, AI OFF 는 2P. 결과물 먼저 + 해설 스트리밍, 모달을 닫아도 작업 계속, 초안을 커스텀 메이커로 열기. `ai-service/app/Agent-Bot`(LangGraph) · `/api/ai/agent` · `AgentBot.jsx`. 커밋 완료 · **운영 반영 전** |
 
-**결과물**: 운영 **1.0.5**(Oracle 배포, 10-17~18). 가이드 모드·출석체크·AI 도우미는 **커밋까지, 운영 배포 전**이다. AI 서비스는 운영 서버 배포 절차(Python 상주·키 설정·`deploy.sh` 확장)가 남았다.
+**결과물**: 운영 **1.1.0**(2026-11-11 새 Oracle VM 전환 — 가이드 모드·출석체크·AI 도우미 포함, 휴버봇은 서버 안 Ollama `gemma4:e4b` 로 답한다). **에이전트 봇**(11-12)은 **커밋까지, 운영 반영 전**이다 — `deploy` 와 서버 nginx 의 스트림용 location 추가가 남았다([`../features/agent-bot.md`](../features/agent-bot.md) "운영 반영").
 
 ---
 
@@ -267,7 +271,7 @@
 - [x] GitHub Pages 정적 미리보기
 - [x] Oracle Cloud 운영 서버 (서버 직접 `https://hbt-tier.duckdns.org`)
 - [x] Cloudflare Pages `/api` 프록시 배포 — 정식 주소 `https://human-bug-tier.com` (Pages GitHub 연동 빌드)
-- [x] React 정식 버전 **1.0.5** + 라이트/다크 테마(서울 시각 자동 전환)
+- [x] React 정식 버전 **1.1.0** + 라이트/다크 테마(서울 시각 자동 전환)
 - [x] 행운 뽑기 3모드(오늘의 행운 티어 · 행운 티어 포커 · 랜덤 뽑기) + 포인트 원장
 - [x] 이벤트(매일 퀴즈 · 메모리 게임 기록 · 티어표 공개) + 관리자 이벤트 관리
 - [x] 관리자 행운 뽑기 관리(조회 전용)
@@ -276,9 +280,11 @@
 - [x] 관리자 공지 수정 (PUT/PATCH)
 - [x] 이벤트 디자인(할로윈·크리스마스 사이트 배경) 관리자 ON/OFF
 - [x] 커스텀 꾸미기 할로윈 이펙트 · 이펙트 색 (1.0.5)
-- [x] 가이드 페이지 + 게임식 가이드 모드 (운영 배포 전)
-- [x] 출석체크 자동 지급 + 마이페이지 출석판 (운영 배포 전)
-- [x] AI 도우미 `/ai` + AI 전용 서비스 `ai-service/` (운영 배포 전 — 실제 Claude 키 연결 후 답 품질 확인 필요)
+- [x] 가이드 페이지 + 게임식 가이드 모드
+- [x] 출석체크 자동 지급 + 마이페이지 출석판
+- [x] AI 도우미 `/ai` + AI 전용 서비스 `ai-service/` (2026-11-11 운영 — 서버 안 Ollama `gemma4:e4b`. Claude API 로는 답 품질을 확인하지 않음)
+- [x] Oracle Autonomous DB 연결(`/api/db-health`) + ai-service 통계 저장(대화 원문 저장은 꺼짐)
+- [x] 휴버대 에이전트 봇 — 티어표 초안·분석·요약·브리핑·검색, 작업 강도별 포인트 (커밋 완료 · 운영 반영 전)
 
 ---
 
@@ -297,7 +303,8 @@
 | 핀 제한 | 프론트 `MAX_PINNED_NOTICES = 5` — 백엔드 검증 강화 여지 |
 | 성능 | 캐릭터 다수 시 DOM 기반 티어 렌더 최적화 여지 |
 | 로깅 | 운영용 구조화 로깅(winston 등) 미도입 |
-| AI 서비스 운영 | Oracle VM(1GB)에 Python 상주 필요, `deploy.sh` 미포함, `ANTHROPIC_API_KEY`·`AI_SERVICE_KEY` 설정 필요. 요청 제한은 메모리(재시작 시 초기화) |
+| AI 서비스 운영 | 운영 서버는 CPU 로 모델(`gemma4:e4b`)을 돌려 답 하나에 30~40초(약 6토큰/초). 벡터 검색은 서버에서 끔(BM25). 요청 제한은 메모리(재시작 시 초기화). 빠르게 하려면 `AI_LLM_PROVIDER=anthropic`(비용 발생) |
+| 에이전트 봇 | 운영 반영 전. 서버 nginx 에 `/api/ai/agent/run` location(버퍼링 끔)을 손으로 넣어야 글자가 흐른다. CPU 서버에서는 해설이 느리므로 `AGENT_SUMMARY_TOKENS` 를 줄일 것. 쓰기 대행(글 작성·뽑기 실행)은 없음. 탭을 닫으면 진행 중인 작업은 멈춘다(차감한 포인트는 환불 안 됨) |
 | AI 지식 동기화 | 기능·규칙 변경 시 `ai-service/knowledge/*.md` 를 사람이 같이 고쳐야 함(자동 추출 아님, 티어표만 `tiers.json` 직접 읽음) |
 | 출석체크 | 실제 로그인할 때만 지급(로그인 유지 상태로 접속한 날은 없음) |
 

@@ -67,7 +67,7 @@
 | **JWT · bcryptjs** | 회원과 관리자 토큰 분리, 비밀번호 해시 | `backend/utils/jwtAuth.js`, `backend/middleware/auth.js` |
 | **Nodemailer** | 가입 인증, 아이디·비밀번호 찾기 메일 | `backend/utils/mail.js` |
 | **FastAPI** | AI 전용 서비스 API. Express 와 별도 프로세스 | `ai-service/app/main.py` |
-| **LangGraph** | 질문을 분석해 검색·답변·거절로 나누는 흐름 | `ai-service/app/guidans_Chat/service/graph.py` |
+| **LangGraph** | 질문을 분석해 검색·답변·거절로 나누는 흐름(휴버봇) · 요청을 작업으로 바꿔 도구를 실행하는 흐름(에이전트 봇) | `ai-service/app/guidans_Chat/service/graph.py` · `ai-service/app/Agent-Bot/service/graph.py` |
 | **LangChain** | 문서 분할, Ollama · Claude 모델 연결 | `service/knowledge.py`, `service/llm.py` |
 | **ChromaDB · BM25** | 벡터 + 키워드 하이브리드 검색 (운영 VM 은 BM25 만) | `service/retrieval.py` |
 | **Cloudflare Pages** | 프론트 호스팅, Pages Function 으로 `/api/*` 프록시 | `root-cloudflare/functions/api/[[path]].js` |
@@ -83,7 +83,7 @@
 <img src="docs/readme/diagrams/architecture.png" alt="시스템 아키텍처: 브라우저, Cloudflare Pages, Oracle VM의 nginx, Express, ai-service, MongoDB Atlas" width="100%" />
 
 > [!NOTE]
-> `ai-service` 의 운영 배포 스크립트는 준비되어 있지만 **아직 운영 서버에 올리지 않았습니다.** 지금은 로컬에서 동작합니다. 절차는 [`ai-service/README.md`](./ai-service/README.md) 를 보세요.
+> `ai-service`(휴버봇)는 2026-11-11 부터 운영 서버에서 동작합니다(서버 안 Ollama `gemma4:e4b`). **에이전트 봇**은 2026-11-12 에 커밋했고 운영 반영은 다음 배포 때입니다. 절차는 [`ai-service/README.md`](./ai-service/README.md) 를 보세요.
 
 ---
 
@@ -197,6 +197,22 @@
 </td>
 </tr>
 </table>
+
+### 🛠️ 휴버대 에이전트 봇 (오른쪽 아래 원형 버튼)
+
+휴버봇이 사이트를 **설명**한다면, 에이전트 봇은 말로 시킨 **작업**을 대신 합니다. 회원 전용이고 작업 강도만큼 포인트를 씁니다.
+
+| 작업 | 강도 · 포인트 | 예시 |
+|---|---|---|
+| 티어표 초안 만들기 | 무거움 · 8P | "1~3티어 캐릭터로 티어표 만들어줘. 츠루기 시노부는 2티어로" → 커스텀 메이커에서 바로 열기 |
+| 내 티어표 분석 | 보통 · 4P | "지금 만들고 있는 티어표 공식이랑 비교해줘" |
+| 게시판 · 공지 요약 | 보통 · 4P | "요즘 인기 있는 티어표 정리해줘" |
+| 내 활동 브리핑 | 보통 · 4P | "내 포인트랑 출석 현황 브리핑해줘" |
+| 사이트 통합 검색 | 가벼움 · 2P | "이름에 '류'가 들어가는 캐릭터 찾아줘" |
+
+- 결과물이 먼저 나오고 해설이 타자 치듯 이어집니다. 창을 닫거나 다른 화면으로 가도 작업은 계속됩니다.
+- 이용법 질문은 무료로 휴버봇을 안내하고, 작업이 실패하면 포인트를 돌려줍니다.
+- 캐릭터 이름·배치·숫자는 도구가 계산하고, LLM 은 해설만 씁니다. 자세히: [`RDMD/features/agent-bot.md`](./RDMD/features/agent-bot.md)
 
 <img src="docs/readme/diagrams/ai-flow.png" alt="휴버봇 질문 처리 흐름: analyze, retrieve, greet, refuse, generate, out_of_scope" width="100%" />
 
@@ -454,6 +470,7 @@ Ollama 가 꺼져 있으면 지식 문서 문장으로 답합니다. 자세한 �
 | `/luck-draw` | 행운 뽑기 · 포커 · 랜덤 뽑기 | 저장·배팅 시 |
 | `/event` | 퀴즈 · 메모리 게임 · 티어표 공개 | 참여 시 |
 | `/ai` · `/guide` | AI 도우미 · 가이드 | |
+| (모든 화면) 오른쪽 아래 원형 버튼 | 휴버대 에이전트 봇 — 티어표 초안·분석·요약·브리핑·검색 | 회원 · 포인트 |
 | `/notice` · `/notice/:id` | 공지 · 새 소식 | |
 | `/inquiry` | 문의하기 | 작성 시 |
 | `/my-page` · `/notifications` | 마이페이지 · 알림 | ✅ |
@@ -474,6 +491,7 @@ Ollama 가 꺼져 있으면 지식 문서 문장으로 답합니다. 자세한 �
 | `/api/events` | 퀴즈, 메모리, 티어표 공개 | 일부 JWT · 관리자 |
 | `/api/site` | 사이트 설정 공개 조회 | 공개 |
 | `/api/ai` | AI 도우미 프록시 | 공개(제한 있음) |
+| `/api/ai/agent` | 에이전트 봇 — 요금표 조회 · 실행(스트림) | 실행은 회원(포인트 차감) |
 | `/api/admin` | 관리 기능 | 관리자 |
 
 ---
@@ -494,7 +512,7 @@ human-bug-tier/
 │   └── deploy/oracle/    운영 서버 배포 스크립트
 ├── ai-service/           FastAPI · LangGraph · RAG
 │   ├── app/guidans_Chat/ 휴버봇 (6개 층)
-│   ├── app/Agent-Bot/    에이전트 봇 자리 (계획 단계)
+│   ├── app/Agent-Bot/    에이전트 봇 (6개 층 — 티어표 초안·분석·요약·브리핑·검색)
 │   └── knowledge/        지식 문서 14개
 ├── root-render/          ⛔ 베타 종료 — 수정 금지 (보관용)
 ├── docs/readme/          README 이미지와 재생성 도구

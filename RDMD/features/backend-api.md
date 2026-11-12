@@ -64,6 +64,7 @@ backend/
 | `/api/events` | 매일 퀴즈(`/quiz/*`) · 메모리 게임(`/memory/*`) · 티어표 공개(`/showcase/*`) | requireAuth / optionalAuth, 관리 기능 requireAdmin |
 | `/api/site` | 사이트 운영 설정 조회 — 이벤트 디자인(`/settings`). 변경은 `/api/admin/site/seasonal-theme` | 공개 |
 | `/api/ai` | AI 도우미 — `GET /questions`(추천 질문 3개) · `POST /chat`. **프록시**: `ai-service`(FastAPI, `AI_SERVICE_URL`)로 넘김, 입력 검사·IP당 10분 20회 제한, 대화 저장 안 함, AI 서비스 꺼짐 → 503 — [ai-service.md](./ai-service.md) | 공개 |
+| `/api/ai/agent` | **에이전트 봇** — `GET /info`(요금표·작업 목록·내 포인트·AI 상태) · `POST /run`(NDJSON 스트림, 작업 강도별 포인트 차감 2·4·8P, 실패 시 환불, 회원당 10분 12회·동시 1건) · `GET /data/posts`·`/data/notices`(ai-service 전용 조회). `controllers/aiAgentController.js` — [agent-bot.md](./agent-bot.md) | `/info` 공개 · `/run` 회원 · `/data/*` ai-service 전용 |
 | `/api/ext` | 브라우저 확장이 치는 주소 — 204 만 돌려줌(우리 API 아님) | — |
 | `/health` | 헬스체크(DB·메일·APP_URL·유튜브 동기화 상태) | 공개 |
 

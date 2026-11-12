@@ -100,7 +100,7 @@ flowchart TD
 | [skills/admin/SKILL.md](./skills/admin/SKILL.md) | 관리자 |
 | [skills/notifications/SKILL.md](./skills/notifications/SKILL.md) | 알림 |
 | [skills/luck-draw/SKILL.md](./skills/luck-draw/SKILL.md) | 행운 뽑기 (+ 출석체크) |
-| [skills/ai-service/SKILL.md](./skills/ai-service/SKILL.md) | **AI 전용 서비스** — `/ai` 휴버봇, `ai-service/`(FastAPI · LangChain · LangGraph · RAG), `/api/ai` 프록시, 지식 문서 |
+| [skills/ai-service/SKILL.md](./skills/ai-service/SKILL.md) | **AI 전용 서비스** — `/ai` 휴버봇, **에이전트 봇**(원형 버튼 · `/api/ai/agent` · 포인트 요금), `ai-service/`(FastAPI · LangChain · LangGraph · RAG), `/api/ai` 프록시, 지식 문서 |
 | [skills/my-page/SKILL.md](./skills/my-page/SKILL.md) | 마이페이지 · 프로필 드롭다운 |
 | [skills/guide/SKILL.md](./skills/guide/SKILL.md) | 가이드 페이지 · 가이드 모드 |
 | [skills/event/SKILL.md](./skills/event/SKILL.md) | 이벤트 · 이벤트 디자인 |
