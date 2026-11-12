@@ -91,7 +91,7 @@ def test_api(monkeypatch):
 
 
 def test_layer_folders_exist():
-    """챗봇 폴더마다 schema·router·service·models·repository·database 층이 있다(Agent-Bot 은 README 자리만)."""
+    """챗봇 폴더마다 schema·router·service·models·repository·database 층이 있다(Agent-Bot 은 2026-11-12 부터 구현됨)."""
     from pathlib import Path
 
     app_dir = Path(__file__).resolve().parent.parent / "app"
@@ -99,7 +99,8 @@ def test_layer_folders_exist():
     for bot in ("guidans_Chat", "Agent-Bot"):
         for layer in layers:
             assert (app_dir / bot / layer).is_dir(), f"{bot}/{layer}"
-    assert not list((app_dir / "Agent-Bot").rglob("*.py")), "Agent-Bot 은 계획 단계 — 파이썬 코드가 없어야 한다"
+    # 에이전트 봇도 구현됐다 — 층마다 패키지(__init__.py)가 있어야 agent_loader 가 app.agent_bot 으로 올릴 수 있다
+    assert all((app_dir / "Agent-Bot" / layer / "__init__.py").is_file() for layer in layers), "Agent-Bot 층에 __init__.py 가 있어야 한다"
 
 
 def test_short_character_names_need_whole_word(kb):

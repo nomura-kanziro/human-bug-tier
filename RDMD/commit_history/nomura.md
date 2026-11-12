@@ -7,8 +7,8 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 415 |
-| **기간** | 2026-03-20 ~ 2026-11-11 |
+| **커밋 수** | 416 |
+| **기간** | 2026-03-20 ~ 2026-11-12 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
 > 폴더 안내: [README.md](./README.md)  ·  상세 기능 일지: [../frontend/](../frontend/README.md) · [../backend/](../backend/README.md)
@@ -444,6 +444,7 @@
 | 413 | 2026-11-11 | [`849804c`](#849804c) | feat(ai-service): Oracle 저장(통계·대화 원문, 기본 꺼짐)·init_oracle·deploy.sh ai-wallet/oracle-pass/ai-oracle, 새 Oracle VM 전환 기록 |
 | 414 | 2026-11-11 | [`c38bc2a`](#c38bc2a) | feat(deploy): HBT_APP 최소 권한 계정 전환·oracle-grant, 사이트 버전 1.1.0, 옛 서버 정리 기록 |
 | 415 | 2026-11-11 | [`9ee197f`](#9ee197f) | docs(ai): ADMIN 스키마 테스트 테이블 삭제 반영 |
+| 416 | 2026-11-12 | [`pending`](#pending) | feat(ai-service): 휴버대 에이전트 봇 구현 — 티어표 초안·분석·요약·브리핑·검색 도구와 NDJSON 스트리밍 |
 
 ---
 
@@ -7971,5 +7972,21 @@
 - **요약**: 처음 `ADMIN` 계정으로 만들었던 테스트 테이블 3개(`ADMIN.HBT_CHAT_STAT`·`HBT_CHAT_LOG`·`HBT_SAMPLE`)를 콘솔 Database Actions SQL 에서 `DROP TABLE … PURGE` 로 지우고 확인 조회로 `HBT_APP` 소유 3개만 남은 것을 확인한 뒤, 기록 문서(`05-oracle-storage-record.md`)와 414번 요약의 "남아 있다" 문구를 사실에 맞게 고쳤다. 코드 변경 없음
 - **주요 파일**: `RDMD/ai/05-oracle-storage-record.md`, `RDMD/commit_history/nomura.md`
 - **관련 RDMD**: `RDMD/ai/05-oracle-storage-record.md`
+
+[▲ 목차로](#목차)
+
+<a id="pending"></a>
+
+### 416. 2026-11-12 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(ai-service): 휴버대 에이전트 봇 구현 — 티어표 초안·분석·요약·브리핑·검색 도구와 NDJSON 스트리밍
+- **git**: `git show pending`
+- **범위**: feat / ai-service (app/Agent-Bot)
+- **요약**: 계획 단계로 폴더만 있던 `ai-service/app/Agent-Bot/` 에 에이전트 봇을 구현했다(창시자 지시). 가이드 챗봇이 "설명"만 하는 것과 달리 요청을 작업으로 바꿔 도구를 실행한다: `tier_build`(프롬프트로 커스텀 티어표 초안 — 공식 티어표 바탕에 범위·이동·한 단계 올리기/내리기·제외·랜덤·제목, 무거움) · `review`(커스텀 메이커 배치를 공식과 비교, 보통) · `digest`(게시판 인기·최신 글/공지 요약, 보통) · `briefing`(내 포인트·출석·뽑기·게시글 현황, 보통) · `search`(캐릭터·게시판·공지 통합 검색, 가벼움). 이용법 질문은 가이드 챗봇과 겹쳐 무료로 `/ai` 를 안내하고, 게시글 대리 작성·행운 뽑기 대리 실행은 오남용 우려로 넣지 않았다. 폴더 이름의 하이픈 때문에 `app/agent_loader.py` 가 `importlib` 로 `app.agent_bot` 패키지로 올린다. 층은 가이드 챗봇과 같은 6개(schema·router·service·models·repository·database)이고 MongoDB·Oracle 을 직접 쓰지 않는다(게시판·공지는 사이트 백엔드 조회 API 를 urllib 로 호출, 대화 저장 없음). 흐름은 LangGraph(plan → 도구 노드)이며, 빠르게 답하도록 작업 판별은 규칙이 먼저(0초)이고 애매한 말만 LLM 에 JSON 으로 묻는다. 결과물은 계산 즉시 먼저 내보내고 해설만 LLM 이 스트리밍으로 쓴다(`POST /agent/run` NDJSON: plan·step·result·token·reset·done·error, `GET /agent/info`). 모델은 따로 지정하지 않으면 가이드 챗봇과 같은 `OLLAMA_MODEL`(운영 gemma4:e4b)·같은 `num_ctx`·생각 모드 끔으로 모델 재적재를 피한다. AI 서버 OFF·LLM 실패 시 도구가 만든 정해진 해설로 대신한다. 설정 `AGENT_OLLAMA_MODEL`·`AGENT_SUMMARY_TOKENS`·`AGENT_SITE_API_URL`·`AGENT_SITE_API_TIMEOUT` 추가. 테스트 `tests/test_agent_bot.py`(가짜 LLM·가짜 조회 API) 추가, `test_service.py` 의 "Agent-Bot 은 코드 없음" 검사를 층별 패키지 검사로 변경. gemma4:e4b 실측(RTX 4070 SUPER): 결과물 0.07초, 첫 글자 0.2~0.5초, 전체 3~5.5초, LLM 판별 0.9초.
+- **주요 파일**: `ai-service/app/Agent-Bot/`, `ai-service/app/agent_loader.py`, `ai-service/app/main.py`, `ai-service/app/config.py`, `ai-service/tests/test_agent_bot.py`, `ai-service/tests/test_service.py`, `ai-service/.env.example`, `ai-service/.env.production.example`
+- **관련 RDMD**: `RDMD/ai/06-agent-bot-record.md`
 
 [▲ 목차로](#목차)

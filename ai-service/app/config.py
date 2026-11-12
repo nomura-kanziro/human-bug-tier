@@ -106,6 +106,11 @@ class Settings:
     store_stats: bool = False   # 사용 통계(질문·답변 내용 제외)를 hbt_chat_stat 에 남길지
     store_chat: bool = False    # 질문·답변 원문을 hbt_chat_log 에 남길지(개인정보 안내 문구와 함께 켜야 한다)
     chat_retention_days: int = 30   # 대화 원문 보관 일수 — 지나면 자동 삭제
+    # --- 에이전트 봇(app/Agent-Bot) ---
+    agent_model: str = ""           # 에이전트 봇 생성 모델(Ollama). 비우면 가이드 챗봇과 같은 모델(ollama_model)을 쓴다 — 모델을 두 개 올리면 GPU 에서 서로 밀어내 느려진다
+    agent_summary_tokens: int = 260  # 에이전트 봇 해설(스트리밍) 최대 토큰 — 짧게 잡아 빨리 끝낸다
+    site_api_url: str = "http://127.0.0.1:5000"   # 에이전트 봇 도구가 게시판·공지를 읽어 오는 사이트 백엔드(Express) 주소
+    site_api_timeout: float = 6.0   # 사이트 백엔드 응답을 기다리는 최대 시간(초)
 
     @property
     def llm_enabled(self) -> bool:
@@ -120,6 +125,13 @@ class Settings:
     def model(self) -> str:
         """지금 쓰는 생성 모델 이름."""
         return self.anthropic_model if self.llm_provider == "anthropic" else self.ollama_model
+
+    @property
+    def agent_model_name(self) -> str:
+        """에이전트 봇이 쓰는 생성 모델 이름(따로 정하지 않으면 가이드 챗봇과 같다)."""
+        if self.llm_provider == "anthropic":
+            return self.anthropic_model
+        return self.agent_model or self.ollama_model
 
 
 def load_settings() -> Settings:
@@ -150,4 +162,8 @@ def load_settings() -> Settings:
         store_stats=_bool("AI_STORE_STATS", False),
         store_chat=_bool("AI_STORE_CHAT", False),
         chat_retention_days=_int("AI_CHAT_RETENTION_DAYS", 30, 1, 365),
+        agent_model=os.environ.get("AGENT_OLLAMA_MODEL", "").strip(),
+        agent_summary_tokens=_int("AGENT_SUMMARY_TOKENS", 260, 60, 1200),
+        site_api_url=os.environ.get("AGENT_SITE_API_URL", "http://127.0.0.1:5000").strip().rstrip("/") or "http://127.0.0.1:5000",
+        site_api_timeout=float(_int("AGENT_SITE_API_TIMEOUT", 6, 1, 60)),
     )
