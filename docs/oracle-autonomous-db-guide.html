@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>휴버대 Autonomous DB 가이드</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: 한 줄 세로 흐름. 구조도 → 콘솔 경로 → 생성 카드 → AI 요청 → 보안 → 주의. 각 섹션은 왼쪽 단계 번호 기둥 */
+:root{
+  --bg:#f5f6f4; --surface:#ffffff; --fg:#1d2422; --muted:#5b6662; --line:#d9dedb;
+  --accent:#b4471f; --accent-soft:#f7e6dd; --teal:#1f5f5b; --teal-soft:#dcebe8;
+  --warn:#8a5a00; --warn-soft:#fbefd2; --danger:#a1262b; --danger-soft:#f8dfe0;
+  --code-bg:#1e2624; --code-fg:#e6ede9;
+  --f-body:"IBM Plex Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#141917; --surface:#1c2320; --fg:#e4ebe7; --muted:#9aa7a1; --line:#2f3934;
+  --accent:#f08a5d; --accent-soft:#3a251b; --teal:#7cc7bf; --teal-soft:#1d3532;
+  --warn:#f1c062; --warn-soft:#3a2f14; --danger:#f08a8e; --danger-soft:#3b1e20;
+  --code-bg:#0e1211; --code-fg:#dfe8e3; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#141917; --surface:#1c2320; --fg:#e4ebe7; --muted:#9aa7a1; --line:#2f3934;
+  --accent:#f08a5d; --accent-soft:#3a251b; --teal:#7cc7bf; --teal-soft:#1d3532;
+  --warn:#f1c062; --warn-soft:#3a2f14; --danger:#f08a8e; --danger-soft:#3b1e20;
+  --code-bg:#0e1211; --code-fg:#dfe8e3; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.7;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.wrap{max-width:880px;margin:0 auto;padding-block:40px 80px;display:flex;flex-direction:column;gap:56px}
+h1,h2,h3{text-wrap:balance;line-height:1.3;margin:0}
+h1{font-size:clamp(28px,5vw,40px);font-weight:700;letter-spacing:-.01em}
+h2{font-size:24px;font-weight:700}
+h3{font-size:17px;font-weight:700}
+p{margin:0}
+code,.mono{font-family:var(--f-mono);font-size:.88em}
+:not(pre)>code{background:var(--teal-soft);color:var(--teal);padding:1px 6px;border-radius:4px;word-break:break-all}
+a{color:var(--accent)}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);font-weight:600}
+.lede{color:var(--muted);max-width:64ch}
+header{display:flex;flex-direction:column;gap:14px}
+.toc{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.toc a{font-size:14px;text-decoration:none;color:var(--fg);border:1px solid var(--line);background:var(--surface);padding:4px 12px;border-radius:999px}
+.toc a:hover,.toc a:focus-visible{border-color:var(--accent);outline:none}
+
+section{display:flex;flex-direction:column;gap:20px;scroll-margin-top:16px}
+.sec-head{display:flex;gap:14px;align-items:baseline}
+.sec-num{font-family:var(--f-mono);font-weight:600;color:var(--accent);font-size:15px;flex:none}
+.sec-head p{color:var(--muted);margin-top:4px}
+
+/* 구조도 */
+.diagram{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto}
+.diagram svg{display:block;width:100%;min-width:640px;height:auto}
+.d-box{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.d-inst{fill:var(--teal-soft);stroke:var(--teal);stroke-width:1.5}
+.d-db{fill:var(--accent-soft);stroke:var(--accent);stroke-width:1.5}
+.d-inner{fill:var(--surface);stroke:var(--teal);stroke-width:1}
+.d-key{fill:var(--warn-soft);stroke:var(--warn);stroke-width:1.2}
+.d-t{fill:var(--fg);font-family:var(--f-body);font-size:14px;font-weight:700}
+.d-s{fill:var(--muted);font-family:var(--f-body);font-size:12px}
+.d-m{fill:var(--fg);font-family:var(--f-mono);font-size:11.5px}
+.d-line{stroke:var(--muted);stroke-width:1.5;fill:none}
+.d-line-db{stroke:var(--accent);stroke-width:2;fill:none}
+.d-line-dash{stroke:var(--warn);stroke-width:1.5;fill:none;stroke-dasharray:5 4}
+.d-arrow{fill:var(--muted)} .d-arrow-db{fill:var(--accent)} .d-arrow-w{fill:var(--warn)}
+.legend{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.legend div{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:14.5px}
+.legend b{display:block;margin-bottom:2px}
+
+/* 콘솔 경로 */
+.path{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:15px}
+.crumb{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:6px 12px;font-weight:500}
+.crumb.end{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.sep{color:var(--muted);font-family:var(--f-mono)}
+.note{font-size:14.5px;color:var(--muted)}
+
+/* 단계 카드 */
+.steps{display:flex;flex-direction:column;gap:12px;counter-reset:st;list-style:none;padding:0;margin:0}
+.step{display:grid;grid-template-columns:44px 1fr;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px 18px}
+.step::before{counter-increment:st;content:counter(st);font-family:var(--f-mono);font-weight:600;font-size:15px;
+  width:32px;height:32px;border-radius:50%;display:grid;place-items:center;background:var(--teal-soft);color:var(--teal)}
+.step>div{min-width:0;display:flex;flex-direction:column;gap:8px}
+.kv{display:grid;grid-template-columns:minmax(120px,max-content) 1fr;gap:4px 14px;font-size:14.5px;margin:0}
+.kv dt{color:var(--muted)} .kv dd{margin:0;min-width:0}
+.pick{font-weight:700;color:var(--accent)}
+.tip{font-size:14px;color:var(--muted)}
+
+/* 서비스명 표 */
+.tbl-wrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:14.5px;min-width:520px}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12.5px;letter-spacing:.06em;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+.tag{display:inline-block;font-size:12px;font-weight:700;padding:1px 8px;border-radius:999px;background:var(--teal-soft);color:var(--teal)}
+
+/* 체크리스트 */
+.checks{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px}
+.checks li{display:flex;gap:10px;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:14.5px}
+.checks li>span:first-child{flex:none;width:18px;height:18px;border:2px solid var(--teal);border-radius:4px;margin-top:4px}
+.checks li>div{min-width:0}
+.checks b{display:block}
+.checks small{color:var(--muted);font-size:13.5px}
+
+/* 코드 */
+.code{position:relative}
+pre{margin:0;background:var(--code-bg);color:var(--code-fg);border-radius:10px;padding:18px;overflow-x:auto;font-family:var(--f-mono);font-size:13.5px;line-height:1.65;white-space:pre}
+.copy{position:absolute;top:10px;right:10px;font-family:var(--f-body);font-size:13px;font-weight:600;cursor:pointer;
+  background:var(--accent);color:#fff;border:0;border-radius:6px;padding:6px 12px}
+.copy:focus-visible{outline:2px solid var(--fg);outline-offset:2px}
+.code-label{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);margin-bottom:6px}
+
+/* 보안 do/don't */
+.dd{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:12px}
+.dd>div{border-radius:10px;padding:16px 18px;display:flex;flex-direction:column;gap:8px;min-width:0}
+.dd .no{background:var(--danger-soft);border:1px solid var(--danger)}
+.dd .yes{background:var(--teal-soft);border:1px solid var(--teal)}
+.dd h3{font-size:15px} .dd .no h3{color:var(--danger)} .dd .yes h3{color:var(--teal)}
+.dd ul{margin:0;padding-left:18px;font-size:14.5px}
+
+/* 주의 타임라인 */
+.timeline{display:grid;grid-template-columns:repeat(3,1fr);gap:0;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
+.timeline>div{padding:16px 18px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.timeline>div+div{border-left:1px solid var(--line)}
+.tl-when{font-family:var(--f-mono);font-size:13px;font-weight:600}
+.tl-ok .tl-when{color:var(--teal)} .tl-stop{background:var(--warn-soft)} .tl-stop .tl-when{color:var(--warn)}
+.tl-del{background:var(--danger-soft)} .tl-del .tl-when{color:var(--danger)}
+.timeline p{font-size:14.5px}
+@media (max-width:620px){.timeline{grid-template-columns:1fr}.timeline>div+div{border-left:0;border-top:1px solid var(--line)}
+  .kv{grid-template-columns:1fr}.kv dt{margin-top:6px}.step{grid-template-columns:1fr}}
+footer{font-size:13.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+<header>
+  <span class="eyebrow">휴버대 티어표 · Oracle Cloud</span>
+  <h1>Autonomous Database 만들고 웹앱에 연결하기</h1>
+  <p class="lede">지금 쓰고 있는 OCI 인스턴스(웹 서버) 옆에 무료 Oracle DB를 하나 만들고, 서버 코드가 그 DB에 접속하게 하는 전체 흐름이에요. 콘솔에서 할 일, AI에게 알려 줄 정보, 지켜야 할 보안 규칙을 순서대로 정리했어요.</p>
+  <nav class="toc" aria-label="목차">
+    <a href="#map">1. 전체 구조</a><a href="#create">2. DB 만들기</a><a href="#ask">3. AI에게 요청하기</a><a href="#secure">4. 비밀번호와 지갑</a><a href="#warn">5. 주의할 점</a>
+  </nav>
+</header>
+
+<!-- 1 -->
+<section id="map">
+  <div class="sec-head"><span class="sec-num">1</span><div><h2>전체 구조 한눈에 보기</h2><p>누가 누구에게 접속하는지, 지갑 파일이 어디로 옮겨지는지를 그렸어요.</p></div></div>
+  <div class="diagram">
+    <svg viewBox="0 0 820 400" role="img" aria-label="방문자 브라우저가 OCI 인스턴스의 Nginx와 Node 앱에 접속하고, 앱은 지갑을 사용해 포트 1522로 Autonomous Database에 접속한다. 개발자 PC는 콘솔에서 지갑을 내려받아 인스턴스로 복사한다.">
+      <defs>
+        <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" class="d-arrow"/></marker>
+        <marker id="ardb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" class="d-arrow-db"/></marker>
+        <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0L10,5L0,10z" class="d-arrow-w"/></marker>
+      </defs>
+
+      <!-- 방문자 -->
+      <rect x="20" y="40" width="150" height="74" rx="8" class="d-box"/>
+      <text x="36" y="70" class="d-t">방문자 브라우저</text>
+      <text x="36" y="92" class="d-s">사이트 접속 (HTTPS 443)</text>
+
+      <!-- 인스턴스 -->
+      <rect x="230" y="20" width="300" height="250" rx="10" class="d-inst"/>
+      <text x="248" y="48" class="d-t">OCI 인스턴스 (웹 서버)</text>
+      <text x="248" y="68" class="d-s">E2.1.Micro · Ubuntu · 공인 IP</text>
+      <rect x="248" y="84" width="264" height="40" rx="6" class="d-inner"/>
+      <text x="262" y="109" class="d-m">Nginx  :80 / :443</text>
+      <rect x="248" y="134" width="264" height="40" rx="6" class="d-inner"/>
+      <text x="262" y="159" class="d-m">Node 앱 (backend/server.js, PM2)</text>
+      <rect x="248" y="184" width="126" height="68" rx="6" class="d-key"/>
+      <text x="260" y="208" class="d-t" style="font-size:13px">.env</text>
+      <text x="260" y="228" class="d-s">DB 계정·비밀번호</text>
+      <text x="260" y="244" class="d-s">(Git에 안 올림)</text>
+      <rect x="386" y="184" width="126" height="68" rx="6" class="d-key"/>
+      <text x="398" y="208" class="d-t" style="font-size:13px">wallet/</text>
+      <text x="398" y="228" class="d-s">지갑 압축 해제본</text>
+      <text x="398" y="244" class="d-s">(Git에 안 올림)</text>
+      <line x1="380" y1="124" x2="380" y2="132" class="d-line"/>
+
+      <!-- DB -->
+      <rect x="610" y="20" width="190" height="150" rx="10" class="d-db"/>
+      <text x="626" y="48" class="d-t">Autonomous DB</text>
+      <text x="626" y="68" class="d-s">Always Free · 20 GB</text>
+      <text x="626" y="88" class="d-s">Transaction Processing</text>
+      <text x="626" y="118" class="d-m">hbtdb_low</text>
+      <text x="626" y="136" class="d-m">hbtdb_medium</text>
+      <text x="626" y="154" class="d-m">hbtdb_high</text>
+
+      <!-- 개발자 PC -->
+      <rect x="20" y="300" width="300" height="80" rx="8" class="d-box"/>
+      <text x="36" y="328" class="d-t">내 PC (D:\vscode\human_bug_tier)</text>
+      <text x="36" y="350" class="d-s">콘솔에서 지갑 zip 다운로드 → 서버로 scp 복사</text>
+      <text x="36" y="368" class="d-s">AI에게는 변수 이름만 알려 주기</text>
+
+      <!-- 화살표 -->
+      <path d="M170 77 H228" class="d-line" marker-end="url(#ar)"/>
+      <path d="M512 154 H560 V95 H608" class="d-line-db" marker-end="url(#ardb)"/>
+      <text x="540" y="210" class="d-m" style="fill:var(--accent)">TCPS :1522</text>
+      <text x="540" y="226" class="d-s">지갑으로 암호화 접속</text>
+      <path d="M705 170 V330 H322" class="d-line-dash" marker-end="url(#arw)"/>
+      <text x="470" y="322" class="d-s" style="fill:var(--warn)">① 지갑 다운로드 (콘솔)</text>
+      <path d="M200 300 V272 Q200 262 210 262 H440 V254" class="d-line-dash" marker-end="url(#arw)"/>
+      <text x="76" y="288" class="d-s" style="fill:var(--warn)">② scp로 서버에 복사</text>
+    </svg>
+  </div>
+  <div class="legend">
+    <div><b>인스턴스</b>이미 만든 웹 서버예요. 코드, <code>.env</code>, 지갑 폴더가 여기에 있어요.</div>
+    <div><b>Autonomous DB</b>Oracle이 관리해 주는 DB예요. 서버를 따로 만들지 않고 콘솔에서 바로 만들어요.</div>
+    <div><b>지갑 (Wallet)</b>DB 접속용 인증서와 주소가 든 zip 파일이에요. 열쇠라서 Git에 올리면 안 돼요.</div>
+    <div><b>웹앱</b>Node 앱이 <code>.env</code>의 값과 지갑을 읽어서 DB에 접속해요. 인스턴스의 기본 아웃바운드 규칙으로 1522 포트 접속이 가능해요.</div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section id="create">
+  <div class="sec-head"><span class="sec-num">2</span><div><h2>콘솔에서 DB 만들기</h2><p>인스턴스를 만든 리전(서울 또는 춘천)과 같은 리전에서 만드세요. 홈 리전에서만 Always Free를 쓸 수 있어요.</p></div></div>
+
+  <div class="path" aria-label="콘솔 메뉴 경로">
+    <span class="crumb">☰ 왼쪽 위 메뉴</span><span class="sep">→</span>
+    <span class="crumb">Oracle Database</span><span class="sep">→</span>
+    <span class="crumb end">Autonomous Database</span><span class="sep">→</span>
+    <span class="crumb">Create Autonomous Database</span>
+  </div>
+  <p class="note">콘솔 개편 때 메뉴 이름이 조금 바뀔 수 있어요. 안 보이면 위쪽 검색창에 <code>Autonomous Database</code>를 입력하세요. 왼쪽의 Compartment가 인스턴스와 같은지도 확인하세요.</p>
+
+  <ol class="steps">
+    <li class="step"><div>
+      <h3>기본 정보 입력</h3>
+      <dl class="kv">
+        <dt>Display name</dt><dd><code>hbt-db</code> (콘솔에 보이는 이름)</dd>
+        <dt>Database name</dt><dd><code>hbtdb</code> (영문·숫자만, 14자 이하. 서비스명 앞부분이 돼요)</dd>
+        <dt>Compartment</dt><dd>인스턴스와 같은 곳</dd>
+      </dl>
+    </div></li>
+
+    <li class="step"><div>
+      <h3>워크로드와 배포 방식 고르기</h3>
+      <dl class="kv">
+        <dt>Workload type</dt><dd><span class="pick">Transaction Processing</span> (웹 서비스용. 회원, 투표, 게시글 같은 짧은 읽기·쓰기에 맞아요)</dd>
+        <dt>Deployment type</dt><dd>Serverless</dd>
+      </dl>
+    </div></li>
+
+    <li class="step"><div>
+      <h3>Always Free 켜기</h3>
+      <dl class="kv">
+        <dt>Always Free</dt><dd><span class="pick">스위치 켜기</span></dd>
+        <dt>무료 한도</dt><dd>계정당 <b>DB 2개</b>, 각각 <b>저장공간 20 GB</b>, CPU 고정(자동 확장 불가)</dd>
+        <dt>Database version</dt><dd>기본값(가장 최신)</dd>
+      </dl>
+      <p class="tip">스위치를 켜면 CPU, 스토리지 칸이 회색으로 잠겨요. 잠기지 않았다면 Always Free가 꺼진 상태라 요금이 나갈 수 있어요.</p>
+    </div></li>
+
+    <li class="step"><div>
+      <h3>ADMIN 비밀번호 정하기</h3>
+      <dl class="kv">
+        <dt>Username</dt><dd><code>ADMIN</code> (고정)</dd>
+        <dt>규칙</dt><dd>12~30자, 대문자·소문자·숫자 각 1개 이상, 큰따옴표(<code>"</code>)와 <code>admin</code> 단어는 쓸 수 없어요</dd>
+      </dl>
+      <p class="tip">비밀번호 관리자에 바로 저장하세요. ADMIN은 관리용이고, 앱에서는 나중에 만드는 전용 계정(<code>HBT_APP</code> 등)을 쓰는 게 안전해요.</p>
+    </div></li>
+
+    <li class="step"><div>
+      <h3>네트워크 접근 정하기</h3>
+      <dl class="kv">
+        <dt>Access type</dt><dd><span class="pick">Secure access from allowed IPs and VCNs only</span></dd>
+        <dt>허용할 IP</dt><dd>인스턴스 공인 IP, 그리고 내 PC에서 테스트할 거라면 내 집 IP</dd>
+        <dt>Require mTLS</dt><dd>처음에는 <b>켜 둔 채</b>로 두세요 (지갑 방식, 아래 3장 참고)</dd>
+      </dl>
+      <p class="tip">"Secure access from everywhere"도 지갑이 있어야 접속되니 안전하지만, IP를 제한하면 한 겹 더 막을 수 있어요. 집 IP가 바뀌면 여기서 다시 추가하면 돼요.</p>
+    </div></li>
+
+    <li class="step"><div>
+      <h3>Create 누르고 기다리기</h3>
+      <p>상태가 <b>Provisioning</b> → <b>Available</b>(초록색)로 바뀌면 끝이에요. 보통 2~5분 걸려요.</p>
+    </div></li>
+
+    <li class="step"><div>
+      <h3>지갑(Wallet) 다운로드</h3>
+      <dl class="kv">
+        <dt>위치</dt><dd>DB 상세 화면 → <b>Database connection</b> 버튼 → Wallet type은 <b>Instance wallet</b> → <b>Download wallet</b></dd>
+        <dt>지갑 비밀번호</dt><dd>새로 정하는 비밀번호예요 (ADMIN 비밀번호와 다르게). 이것도 비밀번호 관리자에 저장</dd>
+        <dt>받은 파일</dt><dd><code>Wallet_hbtdb.zip</code> → 압축을 풀면 <code>tnsnames.ora</code>, <code>cwallet.sso</code>, <code>ewallet.pem</code>, <code>sqlnet.ora</code> 등이 나와요</dd>
+      </dl>
+      <p class="tip">같은 화면 아래쪽 Connection strings 표에서 <code>hbtdb_low</code>, <code>hbtdb_medium</code>, <code>hbtdb_high</code> 같은 서비스명을 볼 수 있어요.</p>
+    </div></li>
+
+    <li class="step"><div>
+      <h3>지갑을 서버로 복사</h3>
+      <p>PC에서 압축을 푼 폴더를 인스턴스로 올리고, 다른 사용자가 못 읽게 권한을 잠가요. 키 파일 이름과 IP는 본인 값으로 바꾸세요.</p>
+      <div class="code">
+        <pre><code># 내 PC (PowerShell)
+scp -i ~/.ssh/oci_hbt -r .\wallet ubuntu@&lt;인스턴스_공인IP&gt;:~/hbt-wallet
+
+# 서버 (SSH 접속 후)
+chmod 700 ~/hbt-wallet
+chmod 600 ~/hbt-wallet/*</code></pre>
+      </div>
+    </div></li>
+  </ol>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>서비스명</th><th>특징</th><th>언제 쓰나</th></tr></thead>
+      <tbody>
+        <tr><td><code>hbtdb_low</code> <span class="tag">추천</span></td><td>동시 접속을 가장 많이 받고, 쿼리 하나당 CPU를 적게 써요</td><td>웹앱 기본 연결</td></tr>
+        <tr><td><code>hbtdb_tp</code></td><td>Transaction Processing 전용, low와 비슷해요</td><td>짧은 읽기·쓰기 위주 앱</td></tr>
+        <tr><td><code>hbtdb_medium</code></td><td>동시 접속 수가 제한되고, 쿼리당 CPU를 더 써요</td><td>통계, 랭킹 집계</td></tr>
+        <tr><td><code>hbtdb_high</code></td><td>CPU를 가장 많이 쓰고, 동시에 몇 개만 실행돼요</td><td>가끔 하는 무거운 작업</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 3 -->
+<section id="ask">
+  <div class="sec-head"><span class="sec-num">3</span><div><h2>AI에게 연결 코드를 부탁할 때</h2><p>아래 정보가 있으면 AI가 한 번에 맞는 코드를 써 줄 수 있어요. 비밀번호 값은 하나도 필요 없어요.</p></div></div>
+
+  <ul class="checks">
+    <li><span></span><div><b>언어 / 프레임워크</b><small>웹 백엔드는 Node.js + Express, AI 서비스는 Python (<code>ai-service</code>)</small></div></li>
+    <li><span></span><div><b>리전</b><small>예: <code>ap-seoul-1</code> (서울) 또는 <code>ap-chuncheon-1</code> (춘천)</small></div></li>
+    <li><span></span><div><b>DB 이름과 서비스명</b><small><code>hbtdb</code>, 쓸 서비스명은 <code>hbtdb_low</code></small></div></li>
+    <li><span></span><div><b>지갑 위치</b><small>서버: <code>/home/ubuntu/hbt-wallet</code>, PC: <code>D:\vscode\human_bug_tier\wallet</code></small></div></li>
+    <li><span></span><div><b>mTLS 또는 TLS</b><small>지갑을 쓰면 mTLS, 지갑 없이 쓰면 TLS (아래 설명)</small></div></li>
+    <li><span></span><div><b>필요한 테이블</b><small>예: users, tiers, votes. 컬럼이 정해졌다면 같이 적기</small></div></li>
+    <li><span></span><div><b>배포 위치</b><small>OCI 인스턴스(E2.1.Micro, PM2 실행)인지, PC에서만 테스트인지</small></div></li>
+    <li><span></span><div><b>.env 변수 이름</b><small>값 말고 이름만. 아래 템플릿에 들어 있어요</small></div></li>
+  </ul>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th>방식</th><th>지갑</th><th>콘솔 설정</th><th>고르는 기준</th></tr></thead>
+      <tbody>
+        <tr><td><b>mTLS</b> <span class="tag">기본</span></td><td>필요 (<code>wallet/</code> 폴더)</td><td>Require mTLS 켬</td><td>처음 시작할 때. 어디서든 안전하게 접속</td></tr>
+        <tr><td><b>TLS</b></td><td>필요 없음</td><td>허용 IP 등록 + Require mTLS 끔</td><td>지갑 파일 관리가 귀찮고, 접속하는 IP가 고정일 때</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div>
+    <p class="code-label">복사해서 AI 채팅에 붙여넣는 요청 템플릿 · &lt;꺾쇠&gt; 부분만 고치세요</p>
+    <div class="code">
+      <button class="copy" type="button" id="copy-prompt" data-target="prompt">복사</button>
+<pre id="prompt">human-bug-tier 웹앱을 Oracle Autonomous Database에 연결하는 코드를 만들어 줘.
+
+[환경]
+- 언어/프레임워크: Node.js + Express (backend/server.js). 드라이버는 node-oracledb Thin 모드
+- 리전: &lt;ap-seoul-1&gt;
+- DB: Autonomous Database (Always Free, Transaction Processing)
+- DB 이름: hbtdb / 서비스명: hbtdb_low
+- 접속 방식: mTLS (지갑 사용)
+- 지갑 위치: 서버 /home/ubuntu/hbt-wallet, 로컬 D:\vscode\human_bug_tier\wallet
+- 배포 위치: OCI 인스턴스 (Ubuntu, E2.1.Micro 1GB, PM2로 실행, Nginx 뒤)
+
+[비밀 값] 값은 내가 .env에 직접 넣을게. 코드에서는 아래 변수 이름만 써 줘.
+- ORACLE_USER
+- ORACLE_PASSWORD
+- ORACLE_CONNECT_STRING   (예: hbtdb_low)
+- ORACLE_WALLET_DIR
+- ORACLE_WALLET_PASSWORD
+
+[필요한 테이블]
+- &lt;users (id, nickname, created_at)&gt;
+- &lt;tiers (id, name, rank)&gt;
+- &lt;votes (id, user_id, tier_id, created_at)&gt;
+
+[요청]
+1. 커넥션 풀을 만드는 db.js (메모리가 1GB라 poolMax는 작게)
+2. 위 테이블을 만드는 SQL. ADMIN 말고 앱 전용 사용자(HBT_APP)를 만드는 SQL도 같이
+3. 연결 확인용 GET /api/db-health 라우트
+4. .env.example 파일과 .gitignore에 추가할 줄
+5. 서버에서 실행·확인하는 명령어</pre>
+    </div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section id="secure">
+  <div class="sec-head"><span class="sec-num">4</span><div><h2>비밀번호와 지갑 지키기</h2><p>DB 비밀번호와 지갑은 서버 열쇠와 같아요. 한 번 새어 나가면 DB 전체를 읽고 지울 수 있어요.</p></div></div>
+  <div class="dd">
+    <div class="no">
+      <h3>하지 마세요</h3>
+      <ul>
+        <li>ADMIN 비밀번호, 지갑 비밀번호를 AI 채팅에 붙여넣기</li>
+        <li><code>.env</code> 파일 내용을 통째로 복사해서 보여 주기</li>
+        <li>지갑 zip이나 <code>wallet/</code> 폴더를 GitHub에 올리기</li>
+        <li>코드 안에 비밀번호를 직접 적기</li>
+      </ul>
+    </div>
+    <div class="yes">
+      <h3>이렇게 하세요</h3>
+      <ul>
+        <li>AI에게는 <code>ORACLE_PASSWORD</code> 같은 <b>변수 이름만</b> 알려 주기</li>
+        <li>값은 서버와 PC의 <code>.env</code>에 내가 직접 입력</li>
+        <li>값 없이 이름만 적은 <code>.env.example</code>은 커밋해도 돼요</li>
+        <li>실수로 올렸다면 콘솔에서 비밀번호 변경 + <b>Rotate wallet</b></li>
+      </ul>
+    </div>
+  </div>
+
+  <div>
+    <p class="code-label">.gitignore 맨 아래에 추가 (지금 레포에는 .env는 있고 지갑 규칙은 없어요)</p>
+    <div class="code">
+      <button class="copy" type="button" id="copy-gitignore" data-target="gitignore">복사</button>
+<pre id="gitignore"># ============================================
+# Oracle Autonomous DB 지갑 (절대 커밋 금지!)
+# ============================================
+wallet/
+Wallet_*/
+Wallet_*.zip
+*.sso
+*.p12
+*.jks
+ewallet.pem</pre>
+    </div>
+  </div>
+
+  <div>
+    <p class="code-label">.env (서버와 PC에 각각, 값은 직접 입력)</p>
+    <div class="code">
+<pre>ORACLE_USER=HBT_APP
+ORACLE_PASSWORD=          # 직접 입력, 채팅에 붙여넣지 않기
+ORACLE_CONNECT_STRING=hbtdb_low
+ORACLE_WALLET_DIR=/home/ubuntu/hbt-wallet
+ORACLE_WALLET_PASSWORD=   # 지갑 다운로드 때 정한 비밀번호</pre>
+    </div>
+  </div>
+</section>
+
+<!-- 5 -->
+<section id="warn">
+  <div class="sec-head"><span class="sec-num">5</span><div><h2>Always Free DB가 멈추거나 지워지는 경우</h2><p>무료 DB는 아무도 안 쓰면 Oracle이 자동으로 멈추고, 오래 멈춰 있으면 회수해 가요.</p></div></div>
+  <div class="timeline">
+    <div class="tl-ok"><span class="tl-when">사용 중</span><p>앱이나 SQL 도구로 접속이 있으면 계속 켜져 있어요.</p></div>
+    <div class="tl-stop"><span class="tl-when">7일 동안 접속 없음 → 중지</span><p>자동으로 Stopped가 돼요. 콘솔에서 <b>Start</b>를 누르면 데이터 그대로 다시 켜져요.</p></div>
+    <div class="tl-del"><span class="tl-when">중지 상태로 3개월 → 삭제 가능</span><p>Oracle이 DB를 회수할 수 있어요. 지워지면 데이터는 되살릴 수 없어요.</p></div>
+  </div>
+  <ul class="checks">
+    <li><span></span><div><b>사이트가 운영 중이면 걱정 없어요</b><small>방문자가 있으면 앱이 계속 접속하니까 7일 조건에 안 걸려요</small></div></li>
+    <li><span></span><div><b>개발만 하는 동안에는</b><small>일주일에 한 번은 접속하거나, 서버 cron으로 하루 한 번 <code>/api/db-health</code>를 호출하세요</small></div></li>
+    <li><span></span><div><b>중지 알림 메일 확인</b><small>Oracle이 중지·삭제 전에 계정 메일로 알려 줘요</small></div></li>
+    <li><span></span><div><b>중요한 데이터는 따로 백업</b><small>Always Free는 자동 백업 복원이 제한돼요. 가끔 Data Pump나 CSV로 내보내 두세요</small></div></li>
+  </ul>
+</section>
+
+<footer>2026년 11월 기준 Oracle Cloud 콘솔 화면으로 정리했어요. 메뉴 이름이나 무료 한도는 Oracle 정책에 따라 바뀔 수 있으니, 생성 화면의 Always Free 표시를 꼭 확인하세요.</footer>
+</div>
+
+<script>
+document.querySelectorAll('.copy').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    var el=document.getElementById(btn.dataset.target); var text=el.innerText;
+    var done=function(){btn.textContent='복사됨';setTimeout(function(){btn.textContent='복사'},1600)};
+    var fallback=function(){var r=document.createRange();r.selectNodeContents(el);var s=getSelection();s.removeAllRanges();s.addRange(r);btn.textContent='선택됨, Ctrl+C';};
+    try{navigator.clipboard.writeText(text).then(done,fallback)}catch(e){fallback()}
+  });
+});
+</script>
+</body>
+</html>
