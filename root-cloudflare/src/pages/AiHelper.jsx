@@ -5,6 +5,7 @@
 //  - AI 서버(Ollama) ON/OFF 를 위에 알린다. OFF 면 "AI 서버 OFF 상태 (사이트의 정보내용을 끌어다 대답합니다.)" — 이때 답은
 //    ai-service/knowledge 의 지식 문서에서 그대로 뽑은 것이다. ai-service 자체가 꺼진 'down' 이면 답을 못 한다.
 import { useEffect, useRef, useState } from 'react';
+import { useAgentBot } from '../context/AgentBotContext';
 import { AI_MAX_MESSAGE, askAi, fetchAiQuestions, fetchAiStatus } from '../lib/aiApi';
 import { isStaticPreview } from '../lib/api';
 import { LOGO_URL } from '../lib/paths';
@@ -39,6 +40,7 @@ export default function AiHelper() {
   const [notice, setNotice] = useState('');
   const [aiState, setAiState] = useState(null);   // 'on' | 'off' | 'down' | null(확인 전)
   const listRef = useRef(null);
+  const { openBot } = useAgentBot();
 
   useEffect(() => { document.title = 'AI 도우미 | 휴버대 티어표'; }, []);
 
@@ -129,6 +131,12 @@ export default function AiHelper() {
           <span className="ai-kicker">AI 도우미</span>
           <h1>휴버봇에게 물어보세요</h1>
           <p>티어표, 캐릭터 티어, 티어표 만들기, 행운 뽑기, 이벤트, 출석체크까지 — 사이트 정보로만 답해요.</p>
+          {/* 휴버봇은 "설명", 에이전트 봇은 "작업" — 헷갈리지 않게 갈 길을 알려 준다 */}
+          <p className="ai-head-agent">
+            티어표 초안 만들기·내 티어표 분석 같은 <b>작업</b>을 맡기려면{' '}
+            <button type="button" className="ai-agent-link" onClick={openBot}>🤖 휴버대 에이전트 봇</button>
+            을 써 보세요(회원 전용 · 포인트 사용).
+          </p>
         </div>
       </div>
 

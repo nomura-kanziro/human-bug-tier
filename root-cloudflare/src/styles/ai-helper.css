@@ -281,3 +281,21 @@
   color: var(--text-primary);
 }
 .ai-status.is-down .ai-status-dot { background: #ef4444; box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2); }
+
+/* 에이전트 봇 안내(머리말 아래 한 줄) — 설명은 휴버봇, 작업은 에이전트 봇 */
+.ai-head-agent {
+  margin-top: 6px;
+  font-size: 0.86rem;
+  color: var(--text-secondary);
+}
+.ai-agent-link {
+  padding: 2px 8px;
+  border: 1px solid var(--brand);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--brand-strong);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+.ai-agent-link:hover { background: var(--brand); color: var(--brand-contrast); }

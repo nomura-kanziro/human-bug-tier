@@ -9,7 +9,41 @@ import { buildStylePayload } from './tierStyle';
 
 export const MAKER_STORAGE_KEY = 'customMakerTierState';
 
+// 다른 곳(에이전트 봇 초안 적용)에서 저장된 배치를 통째로 바꿨을 때 커스텀 메이커 화면에 알리는 이벤트 이름
+export const MAKER_REPLACED_EVENT = 'hbt:maker-state-replaced';
+
 export const zoneKey = (tierIndex, subTier) => `${tierIndex}_${subTier}`;
+
+// 에이전트 봇이 준 초안({ "0_갑급": ["이름", ...] })을 저장 형식({ id, name, img })으로 바꾼다.
+// 이름은 카탈로그(tiers.json) 표기 그대로 온다 — 카탈로그에 없는 이름은 버린다(이미지가 없어 깨진 카드가 되므로).
+export function zonesToMakerState(zones) {
+  const byName = new Map(ALL_CHARACTERS.map((c) => [c.name, c]));
+  const next = {};
+  Object.entries(zones || {}).forEach(([key, names]) => {
+    if (!Array.isArray(names)) return;
+    const seen = new Set();
+    const items = [];
+    names.forEach((name) => {
+      const c = byName.get(String(name));
+      if (!c || seen.has(c.id)) return;
+      seen.add(c.id);
+      items.push({ id: c.id, name: c.name, img: c.img });
+    });
+    if (items.length) next[key] = items;
+  });
+  return next;
+}
+
+// 지금 배치를 이름만 추려 낸다({ "0_갑급": ["이름", ...] }) — 에이전트 봇의 "내 티어표 분석"에 보낸다.
+export function makerStateToZones(state) {
+  const zones = {};
+  Object.entries(state || {}).forEach(([key, chars]) => {
+    if (!Array.isArray(chars)) return;
+    const names = chars.map((c) => c?.name).filter(Boolean);
+    if (names.length) zones[key] = names;
+  });
+  return zones;
+}
 
 export function loadMakerState() {
   try {

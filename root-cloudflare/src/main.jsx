@@ -5,6 +5,8 @@ import App from './App';
 import GuideMode from './components/GuideMode';
 import LoadingScreen from './components/LoadingScreen';
 import SeasonalBackdrop from './components/SeasonalBackdrop';
+import AgentBot from './components/AgentBot';
+import { AgentBotProvider } from './context/AgentBotContext';
 import { AuthProvider } from './context/AuthContext';
 
 // 전역 CSS — 바닐라 root-render 의 파일을 그대로 가져왔다(클래스명 동일). 순서는 바닐라 <head> 순서와 같다.
@@ -29,8 +31,12 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <AuthProvider>
         <LoadingScreen />
         <SeasonalBackdrop />
-        <App />
-        <GuideMode />
+        {/* 에이전트 봇 상태는 라우트 바깥에 둔다 — 페이지를 옮겨도, 모달을 닫아도 작업이 끝까지 진행된다 */}
+        <AgentBotProvider>
+          <App />
+          <GuideMode />
+          <AgentBot />
+        </AgentBotProvider>
       </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>,

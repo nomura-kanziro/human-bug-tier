@@ -23,7 +23,7 @@ import { fetchPostById, isSameAuthor, isValidPostId, updatePost } from '../lib/b
 import { loadHtml2Canvas, loadJsPdf } from '../lib/loadScript';
 import {
   buildJsonExport, buildUploadPayload, compressImageFile, getPlacedKeys, getThumbnailFromState,
-  hasPlacedCharacters, loadMakerState, placeChar, rematchToCatalog, removeChar, saveMakerState, zoneKey,
+  hasPlacedCharacters, loadMakerState, MAKER_REPLACED_EVENT, placeChar, rematchToCatalog, removeChar, saveMakerState, zoneKey,
 } from '../lib/makerState';
 import { LOGO_URL, tierImageUrl } from '../lib/paths';
 import { loadTierStyle, normalizeStyleMap, saveTierStyle, tierStyleProps } from '../lib/tierStyle';
@@ -135,6 +135,15 @@ export default function CustomMaker({ editId = null }) {
   // 신규 제작만 localStorage 에 저장한다. 수정 모드까지 저장하면 작업 중이던 내 티어표가 덮어써진다.
   useEffect(() => { if (!isEdit) saveMakerState(state); }, [state, isEdit]);
   useEffect(() => { if (!isEdit) saveTierStyle(styleMap); }, [styleMap, isEdit]);
+
+  // 에이전트 봇이 만든 초안을 "커스텀 메이커에서 열기"로 보냈을 때 — 이미 이 화면이 열려 있으면
+  // 저장소(localStorage)만 바뀌고 화면 상태는 그대로라, 알림 이벤트를 받아 다시 읽어 온다(신규 제작 화면에서만).
+  useEffect(() => {
+    if (isEdit) return undefined;
+    const reload = () => { setState(loadMakerState()); setIndex(0); setSelectedIds([]); };
+    window.addEventListener(MAKER_REPLACED_EVENT, reload);
+    return () => window.removeEventListener(MAKER_REPLACED_EVENT, reload);
+  }, [isEdit]);
 
   // 수정 모드: 서버에서 게시글을 받아 배치·꾸미기를 복원하고 소유자인지 확인한다(서버도 다시 검증).
   useEffect(() => {

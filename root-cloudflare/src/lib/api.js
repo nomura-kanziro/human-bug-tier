@@ -69,5 +69,46 @@ export async function apiRequest(path, { auth = true, admin = false, headers = {
   return { ok: res.ok, status: res.status, data };
 }
 
+// 스트림 요청 래퍼 — 서버가 "한 줄에 JSON 하나"(NDJSON)씩 흘려보내는 응답을 읽어, 줄이 올 때마다 onEvent(event) 를 부른다.
+// 에이전트 봇처럼 답이 조금씩 오는 API 에 쓴다(전부 끝날 때까지 기다리지 않고 오는 대로 화면에 그린다).
+//  - 스트림이 아닌 응답(400·401·402·429·503 등 JSON 오류)은 apiRequest 와 같은 { ok:false, status, data } 로 돌려준다.
+//  - signal(AbortController) 로 중간에 끊을 수 있다. 끊으면 fetch 가 AbortError 를 던진다(호출부가 잡는다).
+export async function apiStream(path, { body, signal, onEvent, headers = {} } = {}) {
+  const base = getApiBase();
+  if (base === GITHUB_STATIC) throw new Error(GITHUB_STATIC);
+  const res = await fetch(`${base}${path}`, {
+    method: 'POST',
+    headers: getAuthHeaders(headers),
+    body: JSON.stringify(body || {}),
+    signal,
+  });
+  const type = res.headers.get('content-type') || '';
+  if (!res.ok || !type.includes('ndjson') || !res.body) {
+    const data = await res.json().catch(() => ({}));
+    if (res.status === 401 && data?.code === 'NICKNAME_CHANGED') handleNicknameChanged();
+    return { ok: false, status: res.status, data };
+  }
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+  const emit = (line) => {
+    if (!line.trim()) return;
+    try { onEvent?.(JSON.parse(line)); } catch { /* 깨진 줄은 건너뛴다 */ }
+  };
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, { stream: true });
+    let idx = buffer.indexOf('\n');
+    while (idx !== -1) {
+      emit(buffer.slice(0, idx));
+      buffer = buffer.slice(idx + 1);
+      idx = buffer.indexOf('\n');
+    }
+  }
+  emit(buffer);
+  return { ok: true, status: res.status, data: {} };
+}
+
 // 관리자 API 전용 단축 래퍼
 export const adminRequest = (path, options = {}) => apiRequest(path, { ...options, admin: true });
