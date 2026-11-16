@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 419 |
+| **커밋 수** | 421 |
 | **기간** | 2026-03-20 ~ 2026-11-12 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -449,6 +449,7 @@
 | 418 | 2026-11-12 | [`3559ed2`](#3559ed2) | feat(agent-bot): 오른쪽 아래 원형 버튼·대형 모달 추가 — 모달을 닫아도 작업 계속, 요금표 상시 표시, 초안을 커스텀 메이커로 열기 |
 | 419 | 2026-11-12 | [`7ec4957`](#7ec4957) | docs(agent-bot): 에이전트 봇 문서화 — 기능 설명·기록 3종 신설, 스킬 정본+12종·README·가이드·작업 이력 갱신, 낡은 AI 배포 상태 표기 정정 |
 | 420 | 2026-11-12 | [`4b81199`](#4b81199) | docs(oracle): Autonomous DB ?? ?? ?? ?? |
+| 421 | 2026-11-12 | [`pending`](#pending) | fix(tier-class): 2티어 을급 코바야시 유키사다 누락 복원 |
 
 ---
 
@@ -8058,3 +8059,19 @@
 - **??**: HTML ID ??, ?? ????? ??, ??? JavaScript ??, ?? ? ?? ?? ??. ???? ??? ?? Oracle ??? ???.
 
 [? ???](#??)
+
+<a id="pending"></a>
+
+### 421. 2026-11-12 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: fix(tier-class): 2티어 을급 코바야시 유키사다 누락 복원
+- **git**: `git show pending`
+- **범위**: fix / tier-class
+- **요약**: 정본 `tiers.json`(React) 의 2티어 을급에서 `코바야시 유키사다`가 빠져 있었다. 동결된 바닐라 정본 `root-render/tier-class/tier2.html` 에는 토가리 겐야와 소리마치 코지로 사이에 있는데, React 전환(tiers.json 추출) 때 누락된 것으로 보인다. 이미지(`2 tier/kobayashi.jpg`)는 `root-cloudflare/public` 에 이미 있어 바로 복원했다. 같은 자리(토가리 겐야 다음, 소리마치 코지로 앞)에 넣었다. `npx vite build` 통과, ai-service pytest 85개 통과(캐릭터 수 영향 없음).
+- **주요 파일**: `root-cloudflare/src/data/tiers.json`
+- **관련 RDMD**: _(없음)_
+
+[▲ 목차로](#목차)
