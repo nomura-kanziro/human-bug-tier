@@ -8,6 +8,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AdminEventManager from '../components/AdminEventManager';
+import AdminAiTokens from '../components/AdminAiTokens';
 import AdminLuckManager from '../components/AdminLuckManager';
 import AdminSeasonManager from '../components/AdminSeasonManager';
 import AdminPagination from '../components/AdminPagination';
@@ -126,6 +127,7 @@ export default function AdminDashboard() {
     { id: 'admin-showcase', icon: '🖼️', label: '티어표 공개', hint: '제작한 티어표 공개 이벤트 관리' },
     { id: 'admin-season', icon: '🎨', label: '이벤트 디자인', hint: '할로윈·크리스마스 배경 켜기/끄기' },
     { id: 'admin-luck', icon: '🍀', label: '행운 뽑기 관리', hint: '회원별 뽑기 기록·포인트 내역' },
+    { id: 'admin-ai-tokens', icon: '🪙', label: '휴버토큰 관리', hint: '충전 신청 승인·직접 지급' },
     { id: 'admin-blocks', icon: '🚫', label: '차단', hint: '회원 / IP 차단 관리', count: activeBlocks.length },
   ], [inquiries.length, tierPosts.length, tierComments.length, notices.length, activeBlocks.length]);
   const findBlock = (value) => activeBlocks.find((b) => b.value === value);
@@ -587,6 +589,8 @@ export default function AdminDashboard() {
       <AdminSeasonManager />
 
       <AdminLuckManager />
+
+      <AdminAiTokens />
 
       {/* ==================== ④ 차단 관리 ==================== */}
       <section className="block-section" id="admin-blocks" data-admin-anchor>

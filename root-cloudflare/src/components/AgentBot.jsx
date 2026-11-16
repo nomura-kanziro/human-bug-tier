@@ -1,16 +1,19 @@
 // 휴버대 에이전트 봇 — 화면 오른쪽 아래 원형 버튼 + 누르면 뜨는 대형 모달.
 //  - 가이드 챗봇(/ai 휴버봇)은 "설명"을 하고, 에이전트 봇은 "일"을 한다: 티어표 초안 만들기 · 내 티어표 분석 ·
-//    게시판/공지 요약 · 내 활동 브리핑 · 통합 검색. 회원 전용이고 작업 강도만큼 포인트를 쓴다(요금표는 모달 왼쪽에 항상 보인다).
+//    게시판/공지 요약 · 내 활동 브리핑 · 통합 검색. 회원 전용이다.
+//  - 엔진을 고른다: 무료 엔진(서버의 Ollama, 하루 횟수 제한) / Claude 엔진(모델·effort 선택, AI 전용 포인트 "휴버토큰" 사용).
+//    고른 엔진·남은 횟수·토큰·한 번에 드는 값은 모달 왼쪽에 항상 보인다. 충전(구매·후원 신청)은 AgentBotPanels 의 TokenShop.
 //  - 상태는 AgentBotContext(라우트 바깥)에 있어서, 모달을 닫거나 다른 페이지로 가도 작업이 끝까지 진행된다.
 //    그동안 원형 버튼에 "작업 중"이 돌고, 끝나면 "작업 완료"가 뜬다.
 //  - 결과물(티어표 초안·검색 결과 등)이 먼저 나오고 해설 글이 타자 치듯 이어진다.
 //  - 로그인·관리자 화면처럼 헤더가 없는 단독 페이지에서는 버튼을 띄우지 않는다.
-import { memo, useEffect, useRef, useState } from 'react';
+import { memo, useCallback, useEffect, useRef, useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAgentBot } from '../context/AgentBotContext';
 import { AGENT_MAX_MESSAGE } from '../lib/agentApi';
 import { isStaticPreview } from '../lib/api';
 import { useGuide } from '../lib/guide';
+import { engineCost, EnginePicker, TokenShop } from './AgentBotPanels';
 import {
   hasPlacedCharacters, loadMakerState, MAKER_REPLACED_EVENT, saveMakerState, zonesToMakerState,
 } from '../lib/makerState';
@@ -21,8 +24,8 @@ import '../styles/agent-bot.css';
 const HIDDEN_PATHS = /^\/(login|signup|find-account|reset-password|admin)(\/|$)/;
 
 const AI_VIEW = {
-  on: { cls: 'is-on', text: 'AI 서버 ON' },
-  off: { cls: 'is-off', text: 'AI 서버 OFF — 해설 없이 결과만' },
+  on: { cls: 'is-on', text: '무료 엔진 ON' },
+  off: { cls: 'is-off', text: '무료 엔진 OFF — 해설 없이 결과만' },
   down: { cls: 'is-down', text: '연결할 수 없음' },
 };
 const LEVEL_CLASS = { free: 'is-free', light: 'is-light', normal: 'is-normal', heavy: 'is-heavy' };
@@ -217,7 +220,7 @@ function ResultCard({ result, onApply, onGo }) {
 
 // ---------------------------------------------------------------- 메시지 한 개
 // memo: 해설 글자가 들어올 때 바뀌는 건 마지막 메시지 하나뿐이다 — 나머지는 다시 그리지 않는다.
-const Message = memo(function Message({ m, onApply, onGo }) {
+const Message = memo(function Message({ m, onApply, onGo, onShop }) {
   if (m.role === 'user') {
     return (
       <div className="agent-msg is-user">
@@ -236,7 +239,11 @@ const Message = memo(function Message({ m, onApply, onGo }) {
           <div className="agent-plan">
             <span className={`agent-level ${LEVEL_CLASS[plan.level] || ''}`}>{plan.levelLabel || '작업'}</span>
             <strong>{plan.label}</strong>
-            <span className="agent-cost">{plan.cost > 0 ? `−${plan.cost}P` : '무료'}</span>
+            <span className="agent-cost">
+              {plan.unit === 'token' && `−${plan.cost} 휴버토큰 · ${plan.modelLabel || 'Claude'}${plan.effortLabel ? ` · ${plan.effortLabel}` : ''}`}
+              {plan.unit === 'free' && `무료 ${plan.engine === 'tool' ? '도구' : '엔진'} · 오늘 ${plan.freeLeft ?? '-'}회 남음`}
+              {plan.unit !== 'token' && plan.unit !== 'free' && '무료'}
+            </span>
           </div>
         )}
         {m.steps?.length > 0 && (
@@ -254,14 +261,15 @@ const Message = memo(function Message({ m, onApply, onGo }) {
           <div className="agent-bubble">
             {m.content && <div className="agent-text">{m.content}{busy && <span className="agent-caret" aria-hidden="true" />}</div>}
             {!m.content && busy && <div className="agent-typing" aria-label="작업 중"><span /><span /><span /></div>}
-            {m.status === 'done' && m.mode === 'fallback' && <span className="agent-note">AI 서버 OFF — AI 해설 없이 정리한 결과예요</span>}
-            {m.status === 'error' && m.refunded > 0 && <span className="agent-note">차감했던 {m.refunded}P는 돌려드렸어요</span>}
-            {m.status === 'stopped' && <span className="agent-note">중지됨{m.stoppedNote ? ' — 이미 시작한 작업의 포인트는 돌려받지 못해요' : ''}</span>}
+            {m.status === 'done' && m.mode === 'fallback' && <span className="agent-note">AI 해설 없이 정리한 결과예요</span>}
+            {m.status === 'done' && m.refunded > 0 && <span className="agent-note">{m.refundReason || '휴버토큰을 돌려드렸어요.'} (+{m.refunded}토큰){m.engineUsed === 'ollama' ? ' 답은 무료 엔진이 이어서 썼어요.' : ''}</span>}
+            {m.status === 'error' && m.refunded > 0 && <span className="agent-note">{m.refundUnit === 'token' ? `받았던 ${m.refunded} 휴버토큰은 돌려드렸어요` : '오늘 무료 횟수는 줄지 않았어요'}</span>}
+            {m.status === 'stopped' && <span className="agent-note">중지됨{m.stoppedNote ? ' — 이미 시작한 작업의 토큰은 돌려받지 못해요' : ''}</span>}
             {m.status === 'done' && freeGuide && (
               <Link className="agent-btn-ghost" to="/ai" onClick={onGo}>AI 도우미(휴버봇)에게 물어보기 →</Link>
             )}
-            {m.status === 'error' && m.code === 'NO_POINTS' && (
-              <Link className="agent-btn-ghost" to="/luck-draw#daily" onClick={onGo}>포인트 모으러 가기 →</Link>
+            {m.status === 'error' && m.code === 'NO_TOKENS' && (
+              <button type="button" className="agent-btn-ghost" onClick={onShop}>휴버토큰 충전하기 →</button>
             )}
           </div>
         )}
@@ -273,8 +281,9 @@ const Message = memo(function Message({ m, onApply, onGo }) {
 // ---------------------------------------------------------------- 모달
 function AgentModal() {
   const {
-    closeBot, messages, running, info, points, send, stop, clear, isLoggedIn, isAdmin,
+    closeBot, messages, running, info, tokens, free, engine, setEngine, setTokens, send, stop, clear, isLoggedIn, isAdmin,
   } = useAgentBot();
+  const [shopOpen, setShopOpen] = useState(false);      // 휴버토큰 충전 패널(대화 자리에 겹쳐 띄운다)
   const navigate = useNavigate();
   const [input, setInput] = useState('');
   const listRef = useRef(null);
@@ -339,6 +348,9 @@ function AgentModal() {
   };
 
   const examples = tasks.length ? tasks.map((t) => t.example) : FALLBACK_EXAMPLES;
+  const price = engineCost(info?.pricing, engine);
+  const openShop = useCallback(() => setShopOpen(true), []);
+  const onShopData = useCallback((d) => { if (typeof d?.tokens === 'number') setTokens(d.tokens); }, [setTokens]);
 
   return (
     <div className="agent-overlay" onMouseDown={(e) => { if (e.target === e.currentTarget) closeBot(); }}>
@@ -347,18 +359,26 @@ function AgentModal() {
           <span className="agent-head-icon" aria-hidden="true"><BotIcon size={26} /></span>
           <div className="agent-head-title">
             <strong>휴버대 에이전트 봇</strong>
-            <span>말로 시키면 대신 해 주는 작업 봇 · 회원 전용 · 포인트 사용</span>
+            <span>말로 시키면 대신 해 주는 작업 봇 · 회원 전용 · 무료 엔진 / Claude(휴버토큰)</span>
           </div>
           <div className="agent-head-right">
             {ai && <span className={`agent-chip ${AI_VIEW[ai].cls}`}><i aria-hidden="true" />{AI_VIEW[ai].text}</span>}
-            {canUse && typeof points === 'number' && <span className="agent-chip is-points">보유 {points}P</span>}
+            {canUse && typeof tokens === 'number' && (
+              <button type="button" className="agent-chip is-points" onClick={openShop} title="휴버토큰 충전 · 요금표">🪙 {tokens.toLocaleString('ko-KR')} 토큰</button>
+            )}
             <button type="button" className="agent-close" onClick={closeBot} aria-label="닫기 (작업은 계속 진행돼요)">✕</button>
           </div>
         </div>
 
         <div className="agent-main">
-          <aside className="agent-side" aria-label="할 수 있는 작업과 요금">
-            <h3>할 수 있는 작업 · 요금</h3>
+          <aside className="agent-side" aria-label="엔진과 할 수 있는 작업">
+            {canUse && (
+              <>
+                <h3>엔진 고르기</h3>
+                <EnginePicker info={info} engine={engine} onChange={setEngine} tokens={tokens} free={free} disabled={running} onOpenShop={openShop} />
+              </>
+            )}
+            <h3>할 수 있는 작업</h3>
             {tasks.length === 0 && <p className="agent-side-empty">{ai === 'down' ? '에이전트 봇에 연결할 수 없어요.' : '불러오는 중…'}</p>}
             <ul className="agent-tasks">
               {tasks.map((t) => (
@@ -366,7 +386,7 @@ function AgentModal() {
                   <button type="button" onClick={() => { setInput(t.example); inputRef.current?.focus(); }} disabled={!canUse} title="예시를 입력창에 넣기">
                     <span className="agent-task-top">
                       <b>{t.label}</b>
-                      <span className={`agent-level ${LEVEL_CLASS[t.level] || ''}`}>{info?.levelLabels?.[t.level] || t.level} {t.cost}P</span>
+                      <span className={`agent-level ${LEVEL_CLASS[t.level] || ''}`}>{info?.levelLabels?.[t.level] || t.level}{t.usesLlm === false ? ' · 토큰 0' : ''}</span>
                     </span>
                     <span className="agent-task-desc">{t.description}</span>
                   </button>
@@ -375,12 +395,12 @@ function AgentModal() {
             </ul>
             {/* 좁은 화면에서는 대화 자리를 넓히려고 접어 둔다(눌러서 펼침) */}
             <details className="agent-rules" open={wideRef.current}>
-              <summary><b>포인트는 이렇게 써요</b></summary>
+              <summary><b>요금은 이렇게 돼요</b></summary>
               <ul>
-                <li>작업이 정해지는 순간 강도만큼 차감돼요{info?.costs ? ` (가벼움 ${info.costs.light}P · 보통 ${info.costs.normal}P · 무거움 ${info.costs.heavy}P)` : ''}.</li>
-                <li>이용법 안내·못 알아들은 말은 <b>무료</b>예요.</li>
-                <li>작업이 실패하면 차감한 포인트를 돌려드려요.</li>
-                <li>AI 서버가 OFF면 AI 해설 없이 결과만 나오고{info?.offCost ? ` 어떤 작업이든 ${info.offCost}P만` : ' 가벼움 요금만'} 받아요.</li>
+                <li><b>무료 엔진</b>은 토큰 없이 하루 {info?.pricing?.freeDailyLimit ?? 20}번까지 쓸 수 있어요.</li>
+                <li><b>Claude 엔진</b>은 고른 모델·effort 의 평균값만큼 <b>휴버토큰</b>이 들어요(처음에 {info?.pricing?.defaultTokens ?? 500}토큰 지급).</li>
+                <li>이용법 안내·못 알아들은 말은 횟수도 토큰도 들지 않아요. 통합 검색은 토큰이 들지 않아요.</li>
+                <li>작업이 실패하거나 Claude 가 답을 못 쓰면 받은 값을 돌려드려요. 그때도 작업은 무료 엔진으로 끝까지 이어져요.</li>
                 {info?.limit && <li>{info.limit.minutes}분에 {info.limit.count}번까지 요청할 수 있어요.</li>}
                 <li>창을 닫아도 작업은 계속돼요. 대화는 서버에 저장되지 않아요.</li>
               </ul>
@@ -389,7 +409,8 @@ function AgentModal() {
           </aside>
 
           <div className="agent-chat">
-            <div className="agent-messages" ref={listRef} onScroll={onScroll} aria-live="polite">
+            {shopOpen && <TokenShop info={info} onClose={() => setShopOpen(false)} onChanged={onShopData} />}
+            <div className="agent-messages" ref={listRef} onScroll={onScroll} aria-live="polite" hidden={shopOpen}>
               {messages.length === 0 && (
                 <div className="agent-empty">
                   <span className="agent-empty-icon" aria-hidden="true"><BotIcon size={40} /></span>
@@ -402,22 +423,22 @@ function AgentModal() {
                   </div>
                 </div>
               )}
-              {messages.map((m) => <Message key={m.id} m={m} onApply={applyTierList} onGo={closeBot} />)}
+              {messages.map((m) => <Message key={m.id} m={m} onApply={applyTierList} onGo={closeBot} onShop={openShop} />)}
             </div>
 
             {!canUse ? (
               <div className="agent-gate">
                 {isStaticPreview() && <p>서버가 있는 환경에서만 쓸 수 있어요.</p>}
-                {!isStaticPreview() && isAdmin && <p>에이전트 봇은 포인트를 쓰는 기능이라 <b>회원 계정</b>으로만 쓸 수 있어요. (관리자 계정은 포인트가 없어요.)</p>}
+                {!isStaticPreview() && isAdmin && <p>에이전트 봇은 <b>회원 계정</b>으로만 쓸 수 있어요. (관리자 계정에는 휴버토큰 지갑이 없어요.)</p>}
                 {!isStaticPreview() && !isAdmin && (
                   <>
-                    <p>에이전트 봇은 <b>로그인한 회원</b>만 쓸 수 있어요. 작업 강도에 따라 포인트를 써요.</p>
+                    <p>에이전트 봇은 <b>로그인한 회원</b>만 쓸 수 있어요. 무료 엔진은 하루 횟수 제한, Claude 모델은 휴버토큰을 써요.</p>
                     <Link className="agent-btn-primary" to="/login" onClick={closeBot}>로그인하러 가기 →</Link>
                   </>
                 )}
               </div>
             ) : (
-              <form className="agent-form" onSubmit={(e) => { e.preventDefault(); submit(); }}>
+              <form className="agent-form" onSubmit={(e) => { e.preventDefault(); submit(); }} hidden={shopOpen}>
                 <textarea
                   ref={inputRef}
                   value={input}
@@ -430,6 +451,7 @@ function AgentModal() {
                 />
                 <div className="agent-form-row">
                   <span className="agent-count">{input.length}/{AGENT_MAX_MESSAGE}</span>
+                  <span className="agent-run-cost">{price.unit === 'token' ? `${price.model?.label || 'Claude'} · ${price.cost} 휴버토큰` : `무료 엔진 · 오늘 ${free?.left ?? '-'}회 남음`}</span>
                   {messages.length > 0 && !running && <button type="button" className="agent-btn-text" onClick={clear}>대화 지우기</button>}
                   {running
                     ? <button type="button" className="agent-btn-stop" onClick={stop}>■ 중지</button>

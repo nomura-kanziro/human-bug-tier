@@ -19,7 +19,19 @@ const AgentBotContext = createContext(null);
 
 const STORE_KEY = 'hbtAgentBot';
 const MAX_KEEP = 24;                 // 남겨 둘 최대 메시지 수(결과물이 들어 있어 너무 많이 두지 않는다)
-const INFO_POLL_MS = 30 * 1000;      // 모달이 열려 있는 동안 AI 서버 상태·포인트를 다시 확인하는 주기
+const INFO_POLL_MS = 30 * 1000;      // 모달이 열려 있는 동안 AI 서버 상태·휴버토큰·무료 횟수를 다시 확인하는 주기
+const ENGINE_KEY = 'hbtAgentEngine';  // 마지막으로 고른 엔진(이 기기에만 기억 — 다음에 열어도 그대로)
+const DEFAULT_ENGINE = { provider: 'ollama', model: '', effort: '' };
+
+function loadEngine() {
+  try {
+    const v = JSON.parse(localStorage.getItem(ENGINE_KEY));
+    if (v && (v.provider === 'ollama' || v.provider === 'claude')) {
+      return { provider: v.provider, model: String(v.model || ''), effort: String(v.effort || '') };
+    }
+  } catch { /* 저장 값이 깨졌으면 기본값 */ }
+  return DEFAULT_ENGINE;
+}
 
 let seq = 0;
 const newId = () => `${Date.now().toString(36)}-${(seq += 1)}`;
@@ -42,8 +54,10 @@ export function AgentBotProvider({ children }) {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState(loadMessages);
   const [running, setRunning] = useState(false);
-  const [info, setInfo] = useState(null);          // GET /api/ai/agent/info 응답(요금표·작업 목록·AI 상태)
-  const [points, setPoints] = useState(null);      // 내 포인트(작업할 때마다 서버가 알려 주는 값으로 갱신)
+  const [info, setInfo] = useState(null);          // GET /api/ai/agent/info 응답(엔진·요금표·작업 목록·AI 상태)
+  const [tokens, setTokens] = useState(null);      // 내 휴버토큰(작업할 때마다 서버가 알려 주는 값으로 갱신)
+  const [free, setFree] = useState(null);          // 무료 엔진 오늘 횟수 { limit, used, left }
+  const [engine, setEngineState] = useState(loadEngine);   // 고른 엔진 { provider, model, effort }
   const [unseen, setUnseen] = useState(false);     // 모달이 닫힌 사이에 작업이 끝났는지(원형 버튼에 표시)
 
   const abortRef = useRef(null);
@@ -52,6 +66,17 @@ export function AgentBotProvider({ children }) {
   const frameRef = useRef(0);
   const messagesRef = useRef(messages);
   messagesRef.current = messages;
+  const engineRef = useRef(engine);
+  engineRef.current = engine;
+
+  const setEngine = useCallback((next) => {
+    setEngineState(next);
+    try { localStorage.setItem(ENGINE_KEY, JSON.stringify(next)); } catch { /* 저장만 실패 */ }
+  }, []);
+  // 서버가 알려 준 남은 무료 횟수를 반영
+  const applyFreeLeft = useCallback((left) => {
+    setFree((cur) => (cur ? { ...cur, left, used: Math.max(0, cur.limit - left) } : cur));
+  }, []);
   openRef.current = open;
 
   // 대화 보관 — 작업이 도는 동안은 글자마다 저장하지 않고, 상태가 바뀔 때(끝남·새 요청)만 저장한다
@@ -85,7 +110,8 @@ export function AgentBotProvider({ children }) {
       const res = await fetchAgentInfo();
       if (res.ok) {
         setInfo(res.data);
-        if (typeof res.data.points === 'number') setPoints(res.data.points);
+        if (typeof res.data.tokens === 'number') setTokens(res.data.tokens);
+        if (res.data.free) setFree(res.data.free);
       } else {
         setInfo((cur) => ({ ...(cur || {}), ai: 'down', tasks: cur?.tasks || [] }));
       }
@@ -111,7 +137,8 @@ export function AgentBotProvider({ children }) {
     if (isLoggedIn) return;
     abortRef.current?.abort();
     setMessages([]);
-    setPoints(null);
+    setTokens(null);
+    setFree(null);
     setUnseen(false);
     try { sessionStorage.removeItem(STORE_KEY); } catch { /* 무시 */ }
   }, [isLoggedIn]);
@@ -156,10 +183,15 @@ export function AgentBotProvider({ children }) {
     const onEvent = (e) => {
       switch (e.type) {
         case 'plan':
-          if (typeof e.points === 'number') setPoints(e.points);
+          if (typeof e.tokens === 'number') setTokens(e.tokens);
+          if (typeof e.freeLeft === 'number') applyFreeLeft(e.freeLeft);
           patch(botId, (m) => ({
             ...m,
-            plan: { task: e.task, label: e.label, level: e.level, levelLabel: e.levelLabel, cost: e.cost || 0, via: e.via, ai: e.ai },
+            plan: {
+              task: e.task, label: e.label, level: e.level, levelLabel: e.levelLabel, via: e.via, ai: e.ai,
+              // 이번 작업에 든 값 — unit: 'token'(휴버토큰) | 'free'(무료 횟수 1회) | 'none'(무료 안내)
+              cost: e.cost || 0, unit: e.unit || 'none', engine: e.engine, modelLabel: e.modelLabel, effortLabel: e.effortLabel, freeLeft: e.freeLeft,
+            },
             steps: (e.steps || []).map((label) => ({ label, status: 'wait' })),
           }));
           break;
@@ -180,12 +212,19 @@ export function AgentBotProvider({ children }) {
         case 'done':
           // 서버가 준 최종 글로 맞춘다(스트림 조각과 같지만, 중간에 정해진 해설로 바뀐 경우를 위해)
           pendingRef.current.text = '';
-          finish((m) => ({ status: 'done', mode: e.mode, content: e.answer || m.content, steps: m.steps.map((s) => ({ ...s, status: 'done' })) }));
+          // Claude 가 답을 못 써서 휴버토큰을 돌려받은 경우(작업은 무료 엔진·정해진 해설로 끝까지 갔다)
+          if (typeof e.tokens === 'number') setTokens(e.tokens);
+          finish((m) => ({
+            status: 'done', mode: e.mode, engineUsed: e.engine_used, content: e.answer || m.content,
+            refunded: e.refunded || 0, refundUnit: e.unit, refundReason: e.refundReason,
+            steps: m.steps.map((s) => ({ ...s, status: 'done' })),
+          }));
           break;
         case 'error':
-          if (typeof e.points === 'number') setPoints(e.points);
+          if (typeof e.tokens === 'number') setTokens(e.tokens);
+          if (typeof e.freeLeft === 'number') applyFreeLeft(e.freeLeft);
           pendingRef.current.text = '';
-          finish({ status: 'error', content: e.message || '작업을 끝내지 못했어요.', refunded: e.refunded || 0, code: e.code });
+          finish({ status: 'error', content: e.message || '작업을 끝내지 못했어요.', refunded: e.refunded || 0, refundUnit: e.unit, code: e.code });
           break;
         default:
           break;
@@ -194,9 +233,10 @@ export function AgentBotProvider({ children }) {
 
     try {
       const maker = makerStateToZones(loadMakerState());
-      const res = await runAgent(message, { history, maker, signal: controller.signal, onEvent });
+      const res = await runAgent(message, { history, maker, engine: engineRef.current, signal: controller.signal, onEvent });
       if (!res.ok) {
-        if (typeof res.data?.points === 'number') setPoints(res.data.points);
+        if (typeof res.data?.tokens === 'number') setTokens(res.data.tokens);
+        if (typeof res.data?.freeLeft === 'number') applyFreeLeft(res.data.freeLeft);
         const fallback = res.status === 401 ? '로그인이 필요해요. 다시 로그인한 뒤 시도해 주세요.' : '요청을 보내지 못했어요.';
         finish({ status: 'error', content: res.data?.error || fallback, code: res.data?.code });
       } else if (!ended) {
@@ -215,7 +255,7 @@ export function AgentBotProvider({ children }) {
       setRunning(false);
       if (!openRef.current) setUnseen(true);
     }
-  }, [patch, scheduleFlush]);
+  }, [patch, scheduleFlush, applyFreeLeft]);
 
   const clear = useCallback(() => {
     if (abortRef.current) return;
@@ -229,10 +269,10 @@ export function AgentBotProvider({ children }) {
   const value = useMemo(() => ({
     open, openBot, closeBot,
     messages, running, unseen,
-    info, points, refreshInfo,
+    info, tokens, free, engine, setEngine, setTokens, refreshInfo,
     send, stop, clear,
     isLoggedIn, isAdmin,
-  }), [open, openBot, closeBot, messages, running, unseen, info, points, refreshInfo, send, stop, clear, isLoggedIn, isAdmin]);
+  }), [open, openBot, closeBot, messages, running, unseen, info, tokens, free, engine, setEngine, refreshInfo, send, stop, clear, isLoggedIn, isAdmin]);
 
   return <AgentBotContext.Provider value={value}>{children}</AgentBotContext.Provider>;
 }
