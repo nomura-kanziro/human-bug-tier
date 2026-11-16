@@ -451,7 +451,7 @@
 | 420 | 2026-11-12 | [`4b81199`](#4b81199) | docs(oracle): Autonomous DB ?? ?? ?? ?? |
 | 421 | 2026-11-12 | [`af20676`](#af20676) | fix(tier-class): 2티어 을급 코바야시 유키사다 누락 복원 |
 | 422 | 2026-11-17 | [`bb5a584`](#bb5a584) | feat(agent-bot): 엔진 선택 도입 — 무료 엔진(Ollama) 하루 횟수 제한, Claude 엔진(모델·effort)과 AI 전용 포인트 휴버토큰·충전 신청 |
-| 423 | 2026-11-17 | [`pending`](#pending) | feat(agent-bot): 엔진·모델·effort 선택 UI, 휴버토큰 잔액·요금표·충전 신청 패널, 관리자 휴버토큰 관리 화면 |
+| 423 | 2026-11-17 | [`dc9f084`](#dc9f084) | feat(agent-bot): 엔진·모델·effort 선택 UI, 휴버토큰 잔액·요금표·충전 신청 패널, 관리자 휴버토큰 관리 화면 |
 
 ---
 
@@ -8094,15 +8094,15 @@
 
 [▲ 목차로](#목차)
 
-<a id="pending"></a>
+<a id="dc9f084"></a>
 
-### 423. 2026-11-17 — `pending`
+### 423. 2026-11-17 — `dc9f084`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `dc9f084`
+- **hash (full)**: `dc9f0844c2b2c853a90917200ff393e250c09864`
 - **author**: nomura
 - **message**: feat(agent-bot): 엔진·모델·effort 선택 UI, 휴버토큰 잔액·요금표·충전 신청 패널, 관리자 휴버토큰 관리 화면
-- **git**: `git show pending`
+- **git**: `git show dc9f084`
 - **범위**: feat / frontend (root-cloudflare) — agent-bot · admin
 - **요약**: 에이전트 봇 모달 왼쪽에 "엔진 고르기"(`AgentBotPanels.jsx` EnginePicker)를 넣었다: 무료 엔진(오늘 남은 횟수) / Claude 엔진(휴버토큰 잔액) 탭, Claude 는 모델 select(Haiku·Sonnet·Opus·Fable 묶음, 평균 토큰 표시)와 effort 4단계(small·medium·high·extra high — effort 를 지원하지 않는 모델은 비활성), 한 번에 드는 휴버토큰을 실행 전에 보여 준다. 고른 엔진은 이 기기에 기억한다(localStorage `hbtAgentEngine`). 헤더의 토큰 버튼이나 "휴버토큰 충전 · 요금표"를 누르면 대화 자리에 충전 패널(TokenShop)이 뜬다: 잔액, 모델×effort 요금표, 묶음 구매 신청, 후원 페이지 링크 + 후원 확인 신청, 결제 정보를 적지 말라는 안내, 내 신청 상태, 최근 원장. 메시지의 작업 줄에 실제로 든 값(−N 휴버토큰 · 모델 · effort / 무료 엔진 · 오늘 N회 남음 / 무료)을, 환불되면 사유와 "답은 무료 엔진이 이어서 썼어요"를 표시한다. 작업 목록은 강도만 보이고 통합 검색에는 "토큰 0" 표시, 규칙 안내 문구를 새 요금으로 교체. `AgentBotContext` 는 tokens·free·engine 상태를 들고 plan/done/error 이벤트의 잔액·남은 횟수를 반영한다. `agentApi.js` 에 `fetchMyTokens`·`createTokenOrder`, runAgent 에 engine. 관리자 대시보드에 "🪙 휴버토큰 관리"(`AdminAiTokens.jsx`): 신청 목록(대기·승인·거절·전체), 적립 토큰 입력 후 승인/거절, 닉네임으로 직접 지급·회수. `npx vite build` 통과, 가짜 API + 헤드리스 크롬으로 엔진 선택 → Claude(Sonnet 5.5 · high = 20토큰) 실행 → 잔액 480 반영 → 충전 패널 화면을 확인했다.
 - **주요 파일**: `root-cloudflare/src/components/AgentBotPanels.jsx`, `root-cloudflare/src/components/AgentBot.jsx`, `root-cloudflare/src/context/AgentBotContext.jsx`, `root-cloudflare/src/lib/agentApi.js`, `root-cloudflare/src/components/AdminAiTokens.jsx`, `root-cloudflare/src/pages/AdminDashboard.jsx`, `root-cloudflare/src/styles/agent-bot.css`
