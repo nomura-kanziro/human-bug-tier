@@ -103,22 +103,35 @@ def test_ids_and_limits_mentioned_in_knowledge():
 
 
 def test_agent_bot_costs_and_limits():
-    """에이전트 봇 요금(작업 강도별 포인트)·요청 한도가 지식 문서·ai-service 작업 목록과 같은지."""
-    src = read(BACKEND / "controllers" / "aiAgentController.js")
-    costs = {k: int(v) for k, v in re.findall(r"(\w+):\s*(\d+)", re.search(r"AGENT_COSTS = \{(.*?)\};", src).group(1))}
-    assert set(costs) == {"free", "light", "normal", "heavy"} and costs["free"] == 0
-    limit = int(re.search(r"RUN_LIMIT = (\d+)", src).group(1))
-    minutes = int(re.search(r"RUN_WINDOW_MS = (\d+) \* 60 \* 1000", src).group(1))
-    assert "MAX_MESSAGE = 500" in src
-    expect = [f"가벼운 작업 {costs['light']}P", f"보통 작업 {costs['normal']}P", f"무거운 작업 {costs['heavy']}P"]
-    for name in ("08-guide-and-ai.md", "09-faq.md"):
-        text = knowledge(name)
-        for phrase in expect:
-            assert phrase in text, f"{name}: {phrase}"
-        assert f"어떤 작업이든 {costs['light']}P만" in text, f"{name}: AI 서버 OFF 요금"
+    """에이전트 봇 요금(무료 엔진 하루 횟수 · Claude 모델별 휴버토큰 · effort 배수 · 기본 지급 · 묶음)과 요청 한도가 지식 문서와 같은지."""
+    tok = read(BACKEND / "utils" / "aiTokens.js")
+    default_tokens = int(re.search(r"DEFAULT_TOKENS = (\d+)", tok).group(1))
+    free_limit = int(re.search(r"FREE_DAILY_LIMIT = (\d+)", tok).group(1))
+    models = re.findall(r"label: '([\w. ]+)', base: (\d+)", tok)
+    efforts = re.findall(r"\{ id: '\w+', label: '([\w ]+)', mult: ([\d.]+) \}", tok)
+    packs = re.findall(r"tokens: (\d+), price: (\d+)", tok)
+    assert len(models) == 8 and len(efforts) == 4 and len(packs) == 3
+
     guide = knowledge("08-guide-and-ai.md")
+    faq = knowledge("09-faq.md")
+    for label, base in models:
+        assert f"{label} {base}토큰" in guide, f"모델 평균값: {label} {base}토큰"
+    for label, mult in efforts:
+        assert label in guide and f"{num(float(mult))}배" in guide, f"effort 배수: {label} {mult}"
+    for tokens, price in packs:
+        assert f"{int(tokens):,}토큰 {int(price):,}원" in guide, f"묶음: {tokens}토큰 {price}원"
+    for text, name in ((guide, "08"), (faq, "09")):
+        assert f"하루 {free_limit}번" in text, f"{name}: 무료 엔진 하루 횟수"
+        assert f"{default_tokens}토큰" in text, f"{name}: 기본 지급"
+
+    ctl = read(BACKEND / "controllers" / "aiAgentController.js")
+    limit = int(re.search(r"RUN_LIMIT = (\d+)", ctl).group(1))
+    minutes = int(re.search(r"RUN_WINDOW_MS = (\d+) \* 60 \* 1000", ctl).group(1))
+    assert "MAX_MESSAGE = 500" in ctl
     assert f"{minutes}분에 {limit}번" in guide and "500자" in guide
-    assert f"{costs['light']}P, {costs['normal']}P, {costs['heavy']}P" in knowledge("05-luck-draw.md")
+    pending = int(re.search(r"MAX_PENDING = (\d+)", read(BACKEND / "controllers" / "aiTokenController.js")).group(1))
+    assert f"신청은 {pending}건까지" in guide
+
     # 지식 문서가 말하는 작업 이름이 실제 작업 목록(ai-service)과 같아야 한다
     from app.agent_loader import load_agent_bot
 
@@ -127,5 +140,3 @@ def test_agent_bot_costs_and_limits():
 
     for _level, label, _desc, _example in TASKS.values():
         assert label in guide, f"작업 이름: {label}"
-    levels = {task: level for task, (level, *_rest) in TASKS.items()}
-    assert levels["search"] == "light" and levels["tier_build"] == "heavy"

@@ -345,3 +345,141 @@ def test_http_info_and_run_stream(client):
     assert client.post("/agent/run", json={"message": "   "}).status_code == 400
     assert client.post("/agent/run", json={"message": "분석", "maker": {"0_갑급": ["가" * 200]}}).status_code == 400
     assert client.get("/health").json()["agent"]["characters"] > 300
+
+
+# ---------------------------------------------------------------------------
+# Claude 엔진(가짜 클라이언트 — 실제 API 를 부르지 않는다)
+# ---------------------------------------------------------------------------
+class _FakeStream:
+    def __init__(self, texts, stop_reason="end_turn", fail_after=None):
+        self.texts, self.stop_reason, self.fail_after = texts, stop_reason, fail_after
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+    @property
+    def text_stream(self):
+        for i, text in enumerate(self.texts):
+            if self.fail_after is not None and i >= self.fail_after:
+                raise RuntimeError("끊김")
+            yield text
+
+    def get_final_message(self):
+        return type("M", (), {"stop_reason": self.stop_reason})()
+
+
+class _FakeMessages:
+    def __init__(self, owner, beta=False):
+        self.owner, self.beta = owner, beta
+
+    def stream(self, **kwargs):
+        self.owner.calls.append(("beta.stream" if self.beta else "stream", kwargs))
+        if self.owner.fail:
+            return _FakeStream(["쓰다가", "끊김"], fail_after=1)
+        return _FakeStream(self.owner.texts, stop_reason=self.owner.stop_reason)
+
+    def create(self, **kwargs):
+        self.owner.calls.append(("create", kwargs))
+        block = type("B", (), {"type": "text", "text": self.owner.plan_json})()
+        return type("M", (), {"stop_reason": "end_turn", "content": [block]})()
+
+
+class FakeClaude:
+    """anthropic.Anthropic 흉내 — client.messages / client.beta.messages 의 stream·create 만."""
+
+    def __init__(self, texts=("Claude 가 ", "쓴 해설이에요."), fail=False, stop_reason="end_turn", plan_json='{"task": "none"}'):
+        self.texts, self.fail, self.stop_reason, self.plan_json = list(texts), fail, stop_reason, plan_json
+        self.calls: list[tuple[str, dict]] = []
+        self.messages = _FakeMessages(self)
+        self.beta = type("Beta", (), {"messages": _FakeMessages(self, beta=True)})()
+
+
+def make_claude_service(fake, *, on=True):
+    return AgentBotService(
+        load_settings(), site=SiteRepository(FakeSiteApi()),
+        planner_llm=FakeListChatModel(responses=['{"task": "none"}']),
+        writer_llm=FakeListChatModel(responses=["무료 엔진이 쓴 해설이에요."]),
+        status=OnStatus(on), rng=random.Random(7), claude_client=fake,
+    )
+
+
+def claude_engine(model="claude-sonnet-5-5", effort="high"):
+    return {"provider": "claude", "model": model, "effort": effort}
+
+
+def test_claude_models_match_backend_price_table():
+    """ai-service 가 받는 모델 목록과 백엔드 요금표(utils/aiTokens.js)의 모델·effort 지원 여부가 같아야 한다."""
+    import re
+    from pathlib import Path
+
+    from app.agent_bot.service import claude
+
+    src = Path(__file__).resolve().parents[2] / "backend" / "utils" / "aiTokens.js"
+    if not src.is_file():
+        pytest.skip("backend/ 코드가 없는 환경")
+    rows = re.findall(r"\{ id: '(claude-[a-z0-9-]+)',.*?effort: (true|false)", src.read_text(encoding="utf-8"))
+    assert {mid: flag == "true" for mid, flag in rows} == claude.CLAUDE_MODELS
+    efforts = re.findall(r"\{ id: '(\w+)', label: '[\w ]+', mult:", src.read_text(encoding="utf-8"))
+    assert tuple(efforts) == claude.EFFORTS
+
+
+def test_claude_choice_is_normalized():
+    from app.agent_bot.service import claude
+
+    assert claude.normalize_choice("claude-opus-5-5", "xhigh") == ("claude-opus-5-5", "xhigh")
+    assert claude.normalize_choice("없는-모델", "이상함") == (claude.DEFAULT_MODEL, claude.DEFAULT_EFFORT)
+    assert claude.normalize_choice("claude-haiku-4-5", "high") == ("claude-haiku-4-5", None)      # effort 를 지원하지 않는 모델
+
+
+def test_claude_engine_writes_with_chosen_model_and_effort():
+    fake = FakeClaude()
+    events = run(make_claude_service(fake), "1티어 캐릭터로 티어표 만들어줘", engine=claude_engine("claude-opus-5-5", "xhigh"))
+    assert events[0]["engine"] == "claude" and events[0]["uses_llm"] is True and events[0]["ai"] == "on"
+    assert events[-1]["mode"] == "llm" and events[-1]["engine_used"] == "claude" and events[-1]["answer"] == "Claude 가 쓴 해설이에요."
+    kind, kwargs = fake.calls[-1]
+    assert kind == "beta.stream" and kwargs["model"] == "claude-opus-5-5" and kwargs["output_config"] == {"effort": "xhigh"}
+    assert kwargs["fallbacks"] == "default" and "thinking" not in kwargs and "temperature" not in kwargs
+    assert kwargs["messages"][0]["role"] == "user"
+
+
+def test_claude_haiku45_sends_no_effort_and_no_fallbacks():
+    fake = FakeClaude()
+    run(make_claude_service(fake), "내 포인트랑 출석 브리핑해줘", engine=claude_engine("claude-haiku-4-5", "high"))
+    kind, kwargs = fake.calls[-1]
+    assert kind == "stream" and kwargs["model"] == "claude-haiku-4-5" and "output_config" not in kwargs and "fallbacks" not in kwargs
+
+
+def test_claude_failure_continues_with_free_engine():
+    """Claude 가 중간에 끊겨도 작업은 무료 엔진으로 이어서 끝난다(백엔드는 engine_used 를 보고 휴버토큰을 돌려준다)."""
+    events = run(make_claude_service(FakeClaude(fail=True)), "1티어 캐릭터로 티어표 만들어줘", engine=claude_engine())
+    assert of(events, "reset") and events[-1]["type"] == "done"
+    assert events[-1]["mode"] == "llm" and events[-1]["engine_used"] == "ollama" and events[-1]["answer"] == "무료 엔진이 쓴 해설이에요."
+    # 무료 엔진도 꺼져 있으면 정해진 해설로 끝까지 간다
+    events = run(make_claude_service(FakeClaude(fail=True), on=False), "1티어 캐릭터로 티어표 만들어줘", engine=claude_engine())
+    assert events[-1]["mode"] == "fallback" and events[-1]["engine_used"] == "none"
+
+
+def test_claude_refusal_is_treated_as_failure():
+    events = run(make_claude_service(FakeClaude(stop_reason="refusal")), "1티어 캐릭터로 티어표 만들어줘", engine=claude_engine())
+    assert events[-1]["engine_used"] == "ollama"
+
+
+def test_claude_without_key_falls_back_and_search_needs_no_llm():
+    service = make_service()                         # 키도 가짜 클라이언트도 없다
+    assert service.info()["claude"] is False
+    events = run(service, "1티어 캐릭터로 티어표 만들어줘", engine=claude_engine())
+    assert events[0]["ai"] == "off" and events[-1]["engine_used"] == "ollama"
+    fake = FakeClaude()
+    events = run(make_claude_service(fake), "츠루기 시노부 찾아줘", engine=claude_engine())
+    assert events[0]["uses_llm"] is False and events[-1]["mode"] == "tool" and fake.calls == []
+
+
+def test_claude_engine_classifies_vague_text():
+    fake = FakeClaude(plan_json='{"task": "tier_build", "keyword": "", "tiers": [1], "random": false}')
+    events = run(make_claude_service(fake), "강한 애들만 모아서 표 하나 짜줄래", engine=claude_engine("claude-haiku-5-5", "medium"))
+    assert events[0]["task"] == "tier_build" and events[0]["via"] == "llm"
+    kind, kwargs = fake.calls[0]
+    assert kind == "create" and kwargs["output_config"] == {"effort": "low"}      # 분류는 가장 낮은 effort 로

@@ -1,13 +1,14 @@
 """에이전트 봇 API 스키마. 길이 제한은 Express(`backend/routes/aiRoutes.js`)와 같은 값이다 — 한쪽을 바꾸면 같이 바꾼다.
 
 응답은 한 번에 오지 않고 **줄 단위 JSON(NDJSON) 스트림**으로 나간다. 한 줄이 이벤트 하나다:
-  {"type":"plan",   "task", "label", "level", "steps":[...], "via"}   어떤 작업을 할지(이때 Express 가 포인트를 차감한다)
+  {"type":"plan",   "task", "label", "level", "steps":[...], "via", "uses_llm", "engine", "ai"}
+                                                                      어떤 작업을 할지(이때 Express 가 휴버토큰 또는 무료 횟수를 받는다)
   {"type":"step",   "index", "label", "status":"running"|"done"}      진행 상황
   {"type":"result", "kind", "data"}                                   결과물(티어표 초안·검색 결과·브리핑 카드 등)
   {"type":"token",  "text"}                                           해설 글자(나오는 대로)
   {"type":"reset"}                                                    쓰다 만 해설을 지운다(LLM 이 중간에 끊겨 정해진 해설로 바꿀 때)
-  {"type":"done",   "ok", "answer", "mode", "ai"}                     끝
-  {"type":"error",  "message"}                                        실패(Express 가 포인트를 돌려준다)
+  {"type":"done",   "ok", "answer", "mode", "engine_used", "ai"}      끝(engine_used: 해설을 실제로 쓴 엔진 claude|ollama|none)
+  {"type":"error",  "message"}                                        실패(Express 가 받은 값을 돌려준다)
 """
 from __future__ import annotations
 
@@ -52,8 +53,17 @@ class UserContext(BaseModel):
     post_views: int = Field(default=0, ge=0)
 
 
+class EngineChoice(BaseModel):
+    """어떤 엔진으로 할지 — 무료 엔진(ollama, 하루 횟수 제한) 또는 Claude 엔진(휴버토큰 사용, 모델·effort 선택).
+    모델·effort 가 허용 목록에 없으면 서비스가 기본값으로 맞춘다(`service/claude.py` normalize_choice)."""
+    provider: Literal["ollama", "claude"] = "ollama"
+    model: str | None = Field(default=None, max_length=60)
+    effort: str | None = Field(default=None, max_length=12)
+
+
 class AgentRunRequest(BaseModel):
     message: str = Field(min_length=1, max_length=MAX_MESSAGE)
+    engine: EngineChoice = Field(default_factory=EngineChoice)
     history: list[Turn] = Field(default_factory=list, max_length=MAX_HISTORY_ITEMS)
     user: UserContext = Field(default_factory=UserContext)
     # 지금 커스텀 메이커에 배치된 상태 — { "<0부터 시작하는 등급 번호>_<세부등급>": [캐릭터 이름, ...] }. 분석(review) 때만 쓴다
@@ -64,6 +74,7 @@ class TaskInfo(BaseModel):
     task: str
     label: str
     level: Level
+    uses_llm: bool = True          # False 면 도구만으로 끝나는 작업(통합 검색) — Claude 엔진을 골라도 휴버토큰이 들지 않는다
     description: str
     example: str
 
@@ -72,4 +83,6 @@ class AgentInfoResponse(BaseModel):
     ai: Literal["on", "off"]
     reason: str = ""
     model: str | None = None
+    claude: bool = False           # Claude 엔진을 쓸 수 있는지(ANTHROPIC_API_KEY 가 있는지)
+    claude_models: list[str] = Field(default_factory=list)
     tasks: list[TaskInfo]

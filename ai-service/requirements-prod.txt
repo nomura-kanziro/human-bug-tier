@@ -8,6 +8,7 @@ uvicorn==0.54.0
 langchain-core==1.6.12
 langchain-text-splitters==1.1.3
 langchain-anthropic==1.7.6   # AI_LLM_PROVIDER=anthropic (Claude API)
+anthropic==1.15.0            # 에이전트 봇 Claude 엔진(공식 SDK 스트리밍·effort) — langchain-anthropic 과 같이 설치되던 버전을 고정
 langchain-ollama==1.1.0      # AI_LLM_PROVIDER=ollama (다른 PC/GPU 의 Ollama 를 부를 때)
 langgraph==1.2.16
 rank-bm25==0.2.2

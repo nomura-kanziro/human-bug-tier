@@ -52,6 +52,7 @@ class AgentState(TypedDict, total=False):
     user: UserContext
     maker: dict[str, list[str]]
     plan: Plan
+    planner: Any         # (선택) 요청마다 다른 작업 분류기 — Claude 엔진일 때 agent_service 가 넣는다
     kind: str            # 결과물 종류(화면이 어떤 카드로 그릴지)
     result: dict
     facts: str           # LLM 해설용 사실 묶음(없으면 해설을 LLM 에 맡기지 않는다)
@@ -78,14 +79,18 @@ def _parse_json(text: str) -> dict | None:
 def build_graph(catalog: Catalog, site: SiteRepository, planner_llm: BaseChatModel | None = None, *, gate=None, rng: random.Random | None = None):
     """gate: LlmStatus 같은 객체(is_on() · failed() · succeeded()). 없으면 planner_llm 이 있을 때 항상 시도한다."""
 
-    def ask_llm_plan(text: str, maker_count: int) -> Plan | None:
-        if planner_llm is None or (gate is not None and not gate.is_on()):
+    def ask_llm_plan(text: str, maker_count: int, custom=None) -> Plan | None:
+        """custom: 요청마다 다른 분류기(Claude 엔진) — (system, user) → 답 문자열. 없으면 무료 엔진(planner_llm)을 쓴다."""
+        if custom is None and (planner_llm is None or (gate is not None and not gate.is_on())):
             return None
         try:
-            out = planner_llm.invoke([SystemMessage(planner.PLANNER_SYSTEM), HumanMessage(f"사용자: {text}")])
-            data = _parse_json(getattr(out, "content", out))
-            if gate is not None:
-                gate.succeeded()
+            if custom is not None:
+                data = _parse_json(custom(planner.PLANNER_SYSTEM, f"사용자: {text}"))
+            else:
+                out = planner_llm.invoke([SystemMessage(planner.PLANNER_SYSTEM), HumanMessage(f"사용자: {text}")])
+                data = _parse_json(getattr(out, "content", out))
+                if gate is not None:
+                    gate.succeeded()
             if data is None:
                 return None
             plan = planner.plan_from_llm_json(data, text, catalog, maker_count=maker_count)
@@ -93,6 +98,8 @@ def build_graph(catalog: Catalog, site: SiteRepository, planner_llm: BaseChatMod
             return plan
         except Exception as err:  # noqa: BLE001 — 분류 실패는 안내 문구로 대신한다
             log.warning("작업 분류 LLM 실패: %s", type(err).__name__)
+            if custom is not None:
+                return ask_llm_plan(text, maker_count)      # Claude 분류가 실패하면 무료 엔진으로 한 번 더(끊기지 않게)
             if gate is not None:
                 gate.failed()
             return None
@@ -102,10 +109,10 @@ def build_graph(catalog: Catalog, site: SiteRepository, planner_llm: BaseChatMod
         count = _maker_count(state.get("maker"))
         plan = planner.plan_by_rules(text, catalog, maker_count=count)
         if plan is None:
-            plan = ask_llm_plan(text, count) or planner.free_plan("unknown", planner.UNKNOWN_MESSAGE)
+            plan = ask_llm_plan(text, count, state.get("planner")) or planner.free_plan("unknown", planner.UNKNOWN_MESSAGE)
         elif plan.task == "tier_build" and planner.build_needs_llm(plan.args, text):
             # 만들라는 건 알겠는데 조건을 규칙으로 못 읽은 긴 말 — LLM 이 읽은 범위·랜덤만 보탠다
-            refined = ask_llm_plan(text, count)
+            refined = ask_llm_plan(text, count, state.get("planner"))
             if refined is not None and refined.task == "tier_build":
                 plan = refined
         return {"plan": plan}

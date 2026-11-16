@@ -26,23 +26,26 @@ from ..repository import SiteRepository
 from ..schema import AgentRunRequest
 from .catalog import Catalog, build_catalog
 from .graph import STEPS, build_graph
+from . import claude
 from .llm import make_agent_llm
 from .planner import TASKS
 from .prompts import SYSTEM_PROMPT, build_user_prompt
 
 log = logging.getLogger("ai-service.agent_bot")
 
+NO_LLM_TASKS = frozenset({"search"})   # LLM 해설 없이 도구만으로 끝나는 작업(Claude 엔진을 골라도 휴버토큰이 들지 않는다)
 HISTORY_TURNS = 4   # 해설에 넘기는 이전 대화 수(메시지 단위) — 길수록 느려져 짧게 둔다
 
 
 class AgentBotService:
     def __init__(self, settings: Settings, *, site: SiteRepository | None = None, planner_llm=None, writer_llm=None,
-                 status: LlmStatus | None = None, rng: random.Random | None = None):
-        """site/planner_llm/writer_llm/status/rng 는 테스트에서 가짜를 꽂을 때만 넘긴다."""
+                 status: LlmStatus | None = None, rng: random.Random | None = None, claude_client=None):
+        """site/planner_llm/writer_llm/status/rng/claude_client 는 테스트에서 가짜를 꽂을 때만 넘긴다."""
         self.settings = settings
         self._lock = threading.Lock()
         self._site = site or SiteRepository(SiteApi(settings.site_api_url, key=settings.service_key, timeout=settings.site_api_timeout))
         self._rng = rng
+        self._claude_client = claude_client     # Claude 엔진 클라이언트(실제로는 처음 쓸 때 만든다)
         self._llm_override = planner_llm is not None or writer_llm is not None
         self._planner_llm = planner_llm if self._llm_override else make_agent_llm(settings, json_mode=True)
         self._writer_llm = writer_llm if self._llm_override else make_agent_llm(settings)
@@ -78,6 +81,10 @@ class AgentBotService:
         threading.Thread(target=run, name="agent-warmup", daemon=True).start()
 
     # ------------------------------------------------------------------ 조회
+    def claude_on(self) -> bool:
+        """Claude 엔진을 쓸 수 있는지(키가 있거나, 테스트에서 가짜 클라이언트를 꽂았을 때)."""
+        return self._claude_client is not None or claude.claude_enabled(self.settings)
+
     def info(self) -> dict:
         st = self.llm_status.get()
         s = self.settings
@@ -85,7 +92,9 @@ class AgentBotService:
             "ai": st.label,
             "reason": st.reason,
             "model": s.agent_model_name if s.llm_enabled else None,
-            "tasks": [{"task": task, "label": label, "level": level, "description": desc, "example": example}
+            "claude": self.claude_on(),
+            "claude_models": list(claude.CLAUDE_MODELS),
+            "tasks": [{"task": task, "label": label, "level": level, "uses_llm": task not in NO_LLM_TASKS, "description": desc, "example": example}
                       for task, (level, label, desc, example) in TASKS.items()],
         }
 
@@ -95,12 +104,13 @@ class AgentBotService:
             "characters": len(self.catalog.characters) if self.catalog else 0,
             "model": s.agent_model_name if s.llm_enabled else None,
             "ai": self.llm_status.get().label,
+            "claude": self.claude_on(),
             "tasks": list(TASKS),
         }
 
     # ------------------------------------------------------------------ 실행
     def _write(self, task: str, request: str, facts: str, history: list[dict]) -> Iterator[str]:
-        """해설을 LLM 이 쓰는 대로 조각조각 내놓는다."""
+        """무료 엔진 — 해설을 LLM 이 쓰는 대로 조각조각 내놓는다."""
         messages: list[BaseMessage] = [SystemMessage(SYSTEM_PROMPT)]
         for turn in history[-HISTORY_TURNS:]:
             messages.append(HumanMessage(turn["content"]) if turn["role"] == "user" else AIMessage(turn["content"]))
@@ -112,13 +122,35 @@ class AgentBotService:
             if text:
                 yield text
 
+    def _claude(self):
+        """Claude 클라이언트(처음 쓸 때 한 번 만든다). 키가 없으면 ClaudeUnavailable."""
+        if self._claude_client is None:
+            self._claude_client = claude.make_client(self.settings)
+        return self._claude_client
+
+    def _write_claude(self, model: str, effort: str | None, task: str, request: str, facts: str, history: list[dict]) -> Iterator[str]:
+        """Claude 엔진 — 회원이 고른 모델·effort 로 해설을 스트리밍한다."""
+        messages = [{"role": t["role"], "content": t["content"]} for t in history[-HISTORY_TURNS:]]
+        # Claude API 는 첫 메시지가 user 여야 한다 — 앞에 남은 assistant 메시지는 뗀다
+        while messages and messages[0]["role"] != "user":
+            messages.pop(0)
+        messages.append({"role": "user", "content": build_user_prompt(task, request, facts)})
+        yield from claude.stream_text(self._claude(), model, effort, SYSTEM_PROMPT, messages)
+
     def run(self, body: AgentRunRequest) -> Iterator[dict]:
         """요청 하나를 처리하며 이벤트를 차례로 내놓는다(LLM 호출이 블로킹이라 라우터가 스레드에서 돌린다)."""
         request = body.message.strip()
+        use_claude = body.engine.provider == "claude"
+        model, effort = claude.normalize_choice(body.engine.model, body.engine.effort) if use_claude else (None, None)
+        free_on = self._writer_llm is not None and self.llm_status.is_on()      # 무료 엔진(Ollama)을 쓸 수 있는지
+        ai_on = self.claude_on() if use_claude else free_on                     # 고른 엔진으로 AI 해설을 쓸 수 있는지
         state = {"request": request, "user": body.user, "maker": body.maker}
+        if use_claude and self.claude_on():
+            # 애매한 말의 작업 분류도 고른 Claude 모델에게 맡긴다(규칙으로 정해지면 부르지 않는다)
+            state["planner"] = lambda system, user: claude.complete_text(self._claude(), model, effort, system, user)
         with self._lock:
             graph = self._graph
-        ai_on = self._writer_llm is not None and self.llm_status.is_on()
+        engine_info = {"ai": "on" if ai_on else "off", "engine": "claude" if use_claude else "ollama"}
         plan = None
         final: dict = {}
         try:
@@ -128,17 +160,18 @@ class AgentBotService:
                     if node == "plan":
                         plan = values["plan"]
                         if plan.is_free:
-                            yield {"type": "plan", "task": plan.task, "label": plan.label, "level": "free", "steps": [], "via": plan.via, "ai": "on" if ai_on else "off"}
-                            yield {"type": "done", "ok": True, "answer": plan.message, "mode": "fixed", "ai": "on" if ai_on else "off"}
+                            yield {"type": "plan", "task": plan.task, "label": plan.label, "level": "free", "steps": [], "via": plan.via, "uses_llm": False, **engine_info}
+                            yield {"type": "done", "ok": True, "answer": plan.message, "mode": "fixed", "engine_used": "none", "ai": engine_info["ai"]}
                             return
                         steps = STEPS.get(plan.task, [])
-                        yield {"type": "plan", "task": plan.task, "label": plan.label, "level": plan.level, "steps": steps, "via": plan.via, "ai": "on" if ai_on else "off"}
+                        yield {"type": "plan", "task": plan.task, "label": plan.label, "level": plan.level, "steps": steps, "via": plan.via,
+                               "uses_llm": plan.task not in NO_LLM_TASKS, **engine_info}
                         yield {"type": "step", "index": 0, "label": steps[0] if steps else plan.label, "status": "done"}
                         if len(steps) > 1:
                             yield {"type": "step", "index": 1, "label": steps[1], "status": "running"}
                     else:
                         final = values
-        except Exception as err:  # noqa: BLE001 — 도구가 죽어도 스트림은 오류 이벤트로 끝낸다(백엔드가 포인트를 돌려준다)
+        except Exception as err:  # noqa: BLE001 — 도구가 죽어도 스트림은 오류 이벤트로 끝낸다(백엔드가 받은 값을 돌려준다)
             log.exception("에이전트 봇 작업 실패: %s", type(err).__name__)
             yield {"type": "error", "message": "작업을 끝내지 못했어요. 잠시 뒤에 다시 시도해 주세요."}
             return
@@ -155,26 +188,37 @@ class AgentBotService:
         # 결과물을 먼저 — 계산은 이미 끝났다
         yield {"type": "result", "kind": final["kind"], "data": final["result"]}
 
-        answer, mode = final["fallback"], "fallback"
-        if writes and ai_on:
+        answer, mode, engine_used = final["fallback"], "fallback", "none"
+        history = [t.model_dump() for t in body.history]
+        if writes:
             if tool_last < last:
                 yield {"type": "step", "index": last, "label": steps[last], "status": "running"}
-            parts: list[str] = []
-            try:
-                for text in self._write(plan.task, request, final["facts"], [t.model_dump() for t in body.history]):
-                    parts.append(text)
-                    yield {"type": "token", "text": text}
-                written = "".join(parts).strip()
-                if written:
-                    answer, mode = written, "llm"
-                    self.llm_status.succeeded()
-            except Exception as err:  # noqa: BLE001 — 해설 실패는 정해진 해설로 대신한다(결과물은 이미 나갔다)
-                log.warning("에이전트 봇 해설 LLM 실패, 정해진 해설로 대신: %s", type(err).__name__)
-                self.llm_status.failed()
-                if parts:
-                    yield {"type": "reset"}          # 쓰다 만 글은 지우고 정해진 해설로 바꾼다
+            # 작업이 끊기지 않게 차례로 시도한다: 고른 엔진 → (Claude 가 실패하면) 무료 엔진 → 정해진 해설
+            attempts: list[tuple[str, Iterator[str]]] = []
+            if use_claude and self.claude_on():
+                attempts.append(("claude", self._write_claude(model, effort, plan.task, request, final["facts"], history)))
+            if free_on:
+                attempts.append(("ollama", self._write(plan.task, request, final["facts"], history)))
+            for name, stream in attempts:
+                parts: list[str] = []
+                try:
+                    for text in stream:
+                        parts.append(text)
+                        yield {"type": "token", "text": text}
+                    written = "".join(parts).strip()
+                    if written:
+                        answer, mode, engine_used = written, "llm", name
+                        if name == "ollama":
+                            self.llm_status.succeeded()
+                        break
+                except Exception as err:  # noqa: BLE001 — 해설 실패는 다음 방법으로 넘어간다(결과물은 이미 나갔다)
+                    log.warning("에이전트 봇 해설 실패(%s), 다음 방법으로: %s", name, type(err).__name__)
+                    if name == "ollama":
+                        self.llm_status.failed()
+                    if parts:
+                        yield {"type": "reset"}          # 쓰다 만 글은 지우고 다음 방법으로 다시 쓴다
         if tool_last < last:
             yield {"type": "step", "index": last, "label": steps[last], "status": "done"}
         if mode != "llm" and plan.task == "search":
             mode = "tool"                                 # 검색은 원래 LLM 해설이 없는 작업
-        yield {"type": "done", "ok": True, "answer": answer, "mode": mode, "ai": "on" if self.llm_status.get().on else "off"}
+        yield {"type": "done", "ok": True, "answer": answer, "mode": mode, "engine_used": engine_used, "ai": engine_info["ai"]}

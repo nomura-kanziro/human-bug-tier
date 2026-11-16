@@ -2,40 +2,41 @@
  * controllers/aiAgentController.js — 휴버대 에이전트 봇 (/api/ai/agent)
  * ------------------------------------------------------------------
  * 에이전트 봇의 "두뇌"는 ai-service(FastAPI · LangGraph, app/Agent-Bot)에 있고, 여기는 사이트 쪽 일을 맡는다:
- *   1) 로그인 회원인지 확인(포인트를 쓰는 기능이라 회원 전용 — 관리자 계정은 포인트가 없어 쓸 수 없다)
+ *   1) 로그인 회원인지 확인(회원 전용 — 관리자 계정은 지갑이 없어 쓸 수 없다)
  *   2) 요청 수 제한 · 회원 한 명당 동시에 한 작업만
- *   3) 회원의 현재 상태(포인트·출석·뽑기·내 글)를 읽어 ai-service 에 같이 넘긴다(토큰은 넘기지 않는다)
+ *   3) 회원의 현재 상태(포인트·출석·뽑기·내 글)를 읽어 ai-service 에 같이 넘긴다(로그인 토큰은 넘기지 않는다)
  *   4) ai-service 가 보내는 이벤트 스트림(NDJSON)을 브라우저로 그대로 흘려보내면서,
- *      "plan" 이벤트(어떤 작업인지 정해진 순간)에 작업 강도만큼 포인트를 차감하고 원장(LuckPointLog)에 남긴다.
- *      작업이 실패하면(오류 이벤트 · ai-service 끊김) 차감한 포인트를 돌려준다.
+ *      "plan" 이벤트(어떤 작업인지 정해진 순간)에 엔진에 맞는 값을 받는다. 실패하면 돌려준다.
  *   5) ai-service 의 도구가 게시판·공지를 읽을 수 있게 가벼운 조회 API(/agent/data/*)를 연다(ai-service 전용).
  *
- * 요금(작업 강도별) — 이 값을 바꾸면 ai-service/knowledge/08-guide-and-ai.md 와 화면 문구도 같이 바뀐다
- * (화면은 GET /agent/info 로 받아 쓰고, 지식 문서는 tests/test_knowledge_sync.py 가 대조한다).
- *   가벼움(light)  통합 검색                         → AGENT_COSTS.light
- *   보통(normal)   내 티어표 분석 · 요약 · 브리핑    → AGENT_COSTS.normal
- *   무거움(heavy)  티어표 초안 만들기                → AGENT_COSTS.heavy
- *   무료(free)     이용 안내 · 거절 · 못 알아들은 말
- * AI 서버(LLM)가 OFF 면 AI 해설 없이 결과만 나가므로 어떤 작업이든 가벼움 요금만 받는다.
- * 대화 내용은 저장하지 않는다(원장에는 "어떤 작업에 몇 포인트"만 남는다).
+ * 엔진과 요금(2026-11-17~) — 값의 정본은 utils/aiTokens.js
+ *   무료 엔진(ollama) : 서버의 Ollama 모델. 무료, 하루(KST) FREE_DAILY_LIMIT 번. 행운 뽑기 포인트는 더 이상 쓰지 않는다.
+ *   Claude 엔진       : 모델(haiku·sonnet·opus·fable)과 effort 를 골라 쓰고 "휴버토큰"(AI 전용 포인트)이 든다.
+ *                       한 번에 "모델 평균값 × effort 배수"를 정액으로 받는다(tokenCost).
+ *   무료로 끝나는 것   : 이용 안내 · 거절 · 못 알아들은 말(횟수도 토큰도 들지 않는다).
+ *   LLM 을 안 쓰는 작업(통합 검색)은 Claude 엔진을 골라도 토큰이 들지 않는다.
+ * 작업이 끊기지 않게: AI 해설이 실패하면 ai-service 가 정해진 해설로 끝까지 답하고(mode fallback), Claude 엔진이었다면
+ * 그때 받은 휴버토큰을 돌려준다. 오류·중간 끊김·시간 초과도 환불(무료 엔진은 횟수 되돌림)한다.
+ * 대화 내용은 저장하지 않는다(원장에는 "어떤 작업 · 어떤 모델"만 남는다).
  * ==================================================================== */
 const mongoose = require('mongoose');
 const LuckProfile = require('../models/LuckProfile');
 const TierList = require('../models/TierList');
 const Notice = require('../models/Notice');
-const { recordPointChange } = require('../utils/luckPointLog');
 const { describeAttendance, ATTENDANCE_REWARDS } = require('../utils/attendance');
 const { getKstDateString } = require('../utils/kstDate');
 const { MEMBER_DAILY_LIMIT } = require('./luckDrawController');
+const aiTokens = require('../utils/aiTokens');
 
 const AI_URL = (process.env.AI_SERVICE_URL || 'http://127.0.0.1:8000').replace(/\/+$/, '');
-// 에이전트 봇 작업 하나를 기다리는 최대 시간(ms). 스트림이라 글자는 계속 오지만, 전체가 이보다 길어지면 끊고 포인트를 돌려준다.
+// 에이전트 봇 작업 하나를 기다리는 최대 시간(ms). 스트림이라 글자는 계속 오지만, 전체가 이보다 길어지면 끊고 받은 값을 돌려준다.
 const RUN_TIMEOUT_MS = process.env.AI_AGENT_TIMEOUT_MS === undefined || process.env.AI_AGENT_TIMEOUT_MS === ''
   ? 300 * 1000
   : Math.max(0, Number(process.env.AI_AGENT_TIMEOUT_MS) || 0);
 
-const AGENT_COSTS = { free: 0, light: 2, normal: 4, heavy: 8 };
+// 작업 강도 — 이제 요금이 아니라 "얼마나 큰 일인지" 표시용이다(무료 작업 여부만 요금에 쓰인다)
 const LEVEL_LABELS = { free: '무료', light: '가벼움', normal: '보통', heavy: '무거움' };
+const ENGINES = ['ollama', 'claude'];
 
 const MAX_MESSAGE = 500;
 const MAX_HISTORY = 8;
@@ -137,52 +138,68 @@ function cleanMaker(raw) {
   return out;
 }
 
-// 포인트 차감(잔액이 모자라면 null) — 조건부 갱신이라 동시에 요청해도 0 밑으로 내려가지 않는다
-async function chargePoints(userId, cost, detail) {
-  if (cost <= 0) return { points: null };
-  const updated = await LuckProfile.findOneAndUpdate(
-    { userId, points: { $gte: cost } },
-    { $inc: { points: -cost } },
-    { new: true },
-  );
-  if (!updated) return null;
-  await recordPointChange({ userId, source: 'agent_bot', delta: -cost, balanceAfter: updated.points, detail });
-  return { points: updated.points };
+// 휴버토큰 차감·환불과 무료 엔진 하루 횟수는 utils/aiTokens.js 가 맡는다(조건부 갱신이라 동시에 요청해도 0 밑으로 내려가지 않는다)
+// 요청의 엔진 선택을 검사해 정리한다 — { provider, model, effort, cost } (무료 엔진은 model·effort 없음, cost 0)
+function readEngine(raw) {
+  const provider = raw && ENGINES.includes(raw.provider) ? raw.provider : 'ollama';
+  if (provider !== 'claude') return { provider: 'ollama', model: null, effort: null, cost: 0 };
+  const model = aiTokens.findModel(raw.model) || aiTokens.findModel(aiTokens.DEFAULT_CLAUDE_MODEL);
+  const effort = model.effort ? (aiTokens.findEffort(raw.effort) || aiTokens.findEffort(aiTokens.DEFAULT_EFFORT)) : null;
+  return {
+    provider: 'claude',
+    model: model.id,
+    modelLabel: model.label,
+    effort: effort ? effort.id : null,
+    effortLabel: effort ? effort.label : null,
+    cost: aiTokens.tokenCost(model.id, effort ? effort.id : null),
+  };
 }
 
-async function refundPoints(userId, cost, detail) {
-  if (cost <= 0) return null;
-  try {
-    const updated = await LuckProfile.findOneAndUpdate({ userId }, { $inc: { points: cost } }, { new: true });
-    if (!updated) return null;
-    await recordPointChange({ userId, source: 'agent_bot', delta: cost, balanceAfter: updated.points, detail: `${detail} (환불)` });
-    return updated.points;
-  } catch (err) {
-    console.error('에이전트 봇 포인트 환불 실패:', err.message);
-    return null;
-  }
+// 화면에 내려 줄 요금표(모델별 effort 값까지 미리 계산해서 준다 — 화면이 계산식을 따로 갖지 않게)
+function pricing() {
+  return {
+    defaultTokens: aiTokens.DEFAULT_TOKENS,
+    freeDailyLimit: aiTokens.FREE_DAILY_LIMIT,
+    defaultModel: aiTokens.DEFAULT_CLAUDE_MODEL,
+    defaultEffort: aiTokens.DEFAULT_EFFORT,
+    efforts: aiTokens.EFFORTS.map((e) => ({ id: e.id, label: e.label, mult: e.mult })),
+    models: aiTokens.CLAUDE_MODELS.map((m) => ({
+      id: m.id,
+      family: m.family,
+      version: m.version,
+      label: m.label,
+      note: m.note,
+      base: m.base,
+      effort: m.effort,
+      costs: Object.fromEntries(aiTokens.EFFORTS.map((e) => [e.id, aiTokens.tokenCost(m.id, e.id)])),
+    })),
+    packs: aiTokens.TOKEN_PACKS,
+  };
 }
 
-// GET /api/ai/agent/info — 화면이 요금표·작업 목록·내 포인트·AI 서버 상태를 한 번에 받는다(로그인 없이도 요금표는 보인다)
+// GET /api/ai/agent/info — 화면이 엔진·요금표·작업 목록·내 휴버토큰·오늘 무료 횟수·AI 서버 상태를 한 번에 받는다(로그인 없이도 요금표는 보인다)
 const getInfo = async (req, res) => {
   const base = {
     ok: true,
-    costs: AGENT_COSTS,
     levelLabels: LEVEL_LABELS,
-    offCost: AGENT_COSTS.light,
     limit: { count: RUN_LIMIT, minutes: RUN_WINDOW_MS / 60000 },
     maxMessage: MAX_MESSAGE,
+    pricing: pricing(),
     member: false,
-    points: null,
+    tokens: null,
+    free: { limit: aiTokens.FREE_DAILY_LIMIT, used: 0, left: aiTokens.FREE_DAILY_LIMIT },
+    claude: false,
   };
   const userId = memberId(req);
   if (userId && isDbConnected()) {
     try {
-      const profile = await LuckProfile.findOne({ userId }).select('points').lean();
+      const wallet = await aiTokens.getWallet(userId);
+      const used = aiTokens.freeUsedToday(wallet);
       base.member = true;
-      base.points = Math.max(0, Number(profile && profile.points) || 0);
+      base.tokens = wallet.tokens;
+      base.free = { limit: aiTokens.FREE_DAILY_LIMIT, used, left: Math.max(0, aiTokens.FREE_DAILY_LIMIT - used) };
     } catch (err) {
-      console.error('에이전트 봇 포인트 조회 실패:', err.message);
+      console.error('에이전트 봇 지갑 조회 실패:', err.message);
     }
   }
   try {
@@ -192,22 +209,28 @@ const getInfo = async (req, res) => {
     const tasks = (Array.isArray(data.tasks) ? data.tasks : []).map((t) => ({
       task: String(t.task || ''),
       label: String(t.label || ''),
-      level: AGENT_COSTS[t.level] === undefined ? 'normal' : t.level,
-      cost: AGENT_COSTS[t.level] === undefined ? AGENT_COSTS.normal : AGENT_COSTS[t.level],
+      level: LEVEL_LABELS[t.level] === undefined ? 'normal' : t.level,
+      usesLlm: t.uses_llm !== false,
       description: String(t.description || ''),
       example: String(t.example || ''),
     }));
-    return res.json({ ...base, ai: data.ai === 'on' ? 'on' : 'off', model: data.model || null, tasks });
+    return res.json({
+      ...base,
+      ai: data.ai === 'on' ? 'on' : 'off',          // 무료 엔진(Ollama)의 AI 서버 상태
+      model: data.model || null,
+      claude: data.claude === true,                  // ai-service 에 Claude API 키가 있어 Claude 엔진을 쓸 수 있는지
+      tasks,
+    });
   } catch (err) {
     return res.json({ ...base, ai: 'down', tasks: [] });
   }
 };
 
-// POST /api/ai/agent/run — { message, history?, maker? } → NDJSON 이벤트 스트림
+// POST /api/ai/agent/run — { message, history?, maker?, engine?: { provider, model, effort } } → NDJSON 이벤트 스트림
 const runAgent = async (req, res) => {
   const userId = memberId(req);
   if (!userId) {
-    return res.status(403).json({ error: '에이전트 봇은 회원 계정으로 로그인해야 쓸 수 있어요. (관리자 계정은 포인트가 없어 쓸 수 없어요.)', code: 'MEMBER_ONLY' });
+    return res.status(403).json({ error: '에이전트 봇은 회원 계정으로 로그인해야 쓸 수 있어요. (관리자 계정은 쓸 수 없어요.)', code: 'MEMBER_ONLY' });
   }
   if (!isDbConnected()) return res.status(503).json({ error: '데이터베이스에 연결되지 않았습니다.' });
 
@@ -220,6 +243,7 @@ const runAgent = async (req, res) => {
     .slice(-MAX_HISTORY)
     .map((t) => ({ role: t.role, content: t.content.trim().slice(0, MAX_HISTORY_CHARS) }));
   const maker = cleanMaker(req.body?.maker);
+  const engine = readEngine(req.body?.engine);
 
   if (running.has(userId)) {
     return res.status(409).json({ error: '이전 작업이 아직 진행 중이에요. 끝난 뒤에 다시 요청해 주세요.', code: 'BUSY' });
@@ -233,12 +257,13 @@ const runAgent = async (req, res) => {
   const upstream = new AbortController();
   const timer = RUN_TIMEOUT_MS > 0 ? setTimeout(() => upstream.abort(), RUN_TIMEOUT_MS) : null;
   let clientGone = false;
-  let charged = 0;          // 이번 작업에서 차감한 포인트(환불 기준)
+  // 이번 작업에서 받은 값(환불 기준) — { kind: 'token', amount } | { kind: 'free' } | null
+  let taken = null;
   let chargeDetail = '';
   let finished = false;     // done 이벤트까지 정상으로 끝났는지
   let headersSent = false;
-  let stop = false;         // 스트림을 우리가 먼저 끝냈는지(포인트 부족·오류 이벤트) — 그 뒤의 끊김은 오류로 다시 알리지 않는다
-  // 브라우저가 연결을 끊으면(탭 닫기·중지) 위쪽 요청도 끊는다. 이미 차감한 포인트는 돌려주지 않는다(받을 만큼 받고 끊는 것 방지)
+  let stop = false;         // 스트림을 우리가 먼저 끝냈는지(잔액 부족·오류 이벤트) — 그 뒤의 끊김은 오류로 다시 알리지 않는다
+  // 브라우저가 연결을 끊으면(탭 닫기·중지) 위쪽 요청도 끊는다. 이미 받은 값은 돌려주지 않는다(받을 만큼 받고 끊는 것 방지)
   res.on('close', () => {
     if (!res.writableEnded) {
       clientGone = true;
@@ -264,34 +289,70 @@ const runAgent = async (req, res) => {
   // Cloudflare 100초)에서 연결을 끊으므로, 15초마다 빈 신호(ping)를 보낸다. 화면은 이 신호를 무시한다.
   const heartbeat = setInterval(() => { if (headersSent) send({ type: 'ping' }); }, 15000);
 
+  // 받은 값을 돌려준다 — 휴버토큰은 환불, 무료 엔진은 오늘 횟수를 되돌린다. 화면에 알릴 값을 돌려준다.
+  const giveBack = async () => {
+    if (!taken) return {};
+    const was = taken;
+    taken = null;
+    if (was.kind === 'token') {
+      let tokens = null;
+      try {
+        tokens = await aiTokens.addTokens(userId, was.amount, 'refund', `${chargeDetail} (환불)`);
+      } catch (err) {
+        console.error('휴버토큰 환불 실패:', err.message);
+      }
+      return { refunded: was.amount, unit: 'token', ...(tokens !== null ? { tokens } : {}) };
+    }
+    const freeLeft = await aiTokens.returnFreeRun(userId);
+    return { refunded: 1, unit: 'free', ...(freeLeft !== null ? { freeLeft } : {}) };
+  };
+
   const fail = async (text, extra = {}) => {
-    const points = charged ? await refundPoints(userId, charged, chargeDetail) : null;
-    const refunded = charged;
-    charged = 0;
-    send({ type: 'error', message: text, ...(refunded ? { refunded, points } : {}), ...extra });
+    const back = await giveBack();
+    send({ type: 'error', message: text, ...back, ...extra });
+  };
+
+  const cleanup = () => {
+    clearInterval(heartbeat);
+    running.delete(userId);
+    if (timer) clearTimeout(timer);
   };
 
   try {
-    const user = await loadUserContext(req);
-    if (user.points < AGENT_COSTS.light) {
-      running.delete(userId);
-      if (timer) clearTimeout(timer);
+    const [user, wallet] = await Promise.all([loadUserContext(req), aiTokens.getWallet(userId)]);
+    // 시작하기 전에 미리 걸러 준다(작업이 정해진 뒤에 한 번 더 조건부로 확인한다)
+    if (engine.provider === 'claude' && wallet.tokens < engine.cost) {
+      cleanup();
       return res.status(402).json({
-        error: `포인트가 부족해요. 에이전트 봇은 최소 ${AGENT_COSTS.light}P가 필요해요(보유 ${user.points}P). 오늘의 행운 티어나 출석체크로 포인트를 모아 보세요.`,
-        code: 'NO_POINTS',
-        points: user.points,
+        error: `휴버토큰이 부족해요. ${engine.modelLabel}${engine.effortLabel ? ` · ${engine.effortLabel}` : ''} 는 한 번에 ${engine.cost}토큰이 필요해요(보유 ${wallet.tokens}토큰). 무료 엔진을 쓰거나 휴버토큰을 충전해 주세요.`,
+        code: 'NO_TOKENS',
+        tokens: wallet.tokens,
+        need: engine.cost,
+      });
+    }
+    if (engine.provider === 'ollama' && aiTokens.freeUsedToday(wallet) >= aiTokens.FREE_DAILY_LIMIT) {
+      cleanup();
+      return res.status(429).json({
+        error: `오늘 무료 엔진 횟수(${aiTokens.FREE_DAILY_LIMIT}번)를 모두 썼어요. 내일 다시 쓰거나, 휴버토큰으로 Claude 모델을 써 보세요.`,
+        code: 'FREE_LIMIT',
+        freeLeft: 0,
       });
     }
 
     const r = await fetch(`${AI_URL}/agent/run`, {
       method: 'POST',
       headers: aiHeaders(),
-      body: JSON.stringify({ message, history, user, maker }),
+      body: JSON.stringify({
+        message,
+        history,
+        user,
+        maker,
+        engine: { provider: engine.provider, model: engine.model, effort: engine.effort },
+      }),
       signal: upstream.signal,
     });
     if (!r.ok || !r.body) {
-      running.delete(userId);
-      if (timer) clearTimeout(timer);
+      cleanup();
       if (r.status === 422 || r.status === 400) return res.status(400).json({ error: '요청 형식이 올바르지 않아요.' });
       return res.status(503).json({ error: '에이전트 봇이 잠시 쉬는 중이에요. 조금 뒤에 다시 시도해 주세요.', unavailable: true });
     }
@@ -305,29 +366,37 @@ const runAgent = async (req, res) => {
       if (!event || typeof event.type !== 'string') return;
 
       if (event.type === 'plan') {
-        const level = AGENT_COSTS[event.level] === undefined ? 'normal' : event.level;
-        // AI 서버가 꺼져 있으면 AI 해설 없이 결과만 나가므로 가벼움 요금까지만 받는다
-        const cost = event.ai === 'off' ? Math.min(AGENT_COSTS[level], AGENT_COSTS.light) : AGENT_COSTS[level];
-        chargeDetail = `에이전트 봇 · ${String(event.label || event.task || '작업').slice(0, 40)}`;
-        let points = user.points;
-        if (cost > 0) {
-          const result = await chargePoints(userId, cost, chargeDetail);
-          if (!result) {
-            stop = true;
-            upstream.abort();
-            send({
-              type: 'error',
-              code: 'NO_POINTS',
-              message: `포인트가 부족해요. "${event.label}" 작업은 ${cost}P가 필요해요(보유 ${user.points}P).`,
-              need: cost,
-              points: user.points,
-            });
-            return;
+        const level = LEVEL_LABELS[event.level] === undefined ? 'normal' : event.level;
+        const label = String(event.label || event.task || '작업').slice(0, 40);
+        const usesLlm = event.uses_llm !== false;
+        const bill = { engine: engine.provider, model: engine.model, modelLabel: engine.modelLabel || null, effort: engine.effort, effortLabel: engine.effortLabel || null, cost: 0, unit: 'none' };
+        if (level !== 'free') {
+          if (engine.provider === 'claude' && usesLlm) {
+            // Claude 엔진 — 휴버토큰 정액 차감
+            chargeDetail = `에이전트 봇 · ${label} · ${engine.modelLabel}${engine.effortLabel ? ` · ${engine.effortLabel}` : ''}`;
+            const result = await aiTokens.chargeTokens(userId, engine.cost, chargeDetail);
+            if (!result) {
+              stop = true;
+              upstream.abort();
+              send({ type: 'error', code: 'NO_TOKENS', message: `휴버토큰이 부족해요. 이 작업은 ${engine.cost}토큰이 필요해요.`, need: engine.cost });
+              return;
+            }
+            taken = { kind: 'token', amount: engine.cost };
+            Object.assign(bill, { cost: engine.cost, unit: 'token', tokens: result.tokens });
+          } else {
+            // 무료 엔진, 또는 LLM 을 쓰지 않는 작업(통합 검색) — 오늘 무료 횟수 1회
+            const result = await aiTokens.takeFreeRun(userId);
+            if (!result) {
+              stop = true;
+              upstream.abort();
+              send({ type: 'error', code: 'FREE_LIMIT', message: `오늘 무료 횟수(${aiTokens.FREE_DAILY_LIMIT}번)를 모두 썼어요. 내일 다시 쓰거나, 휴버토큰으로 Claude 모델을 써 보세요.`, freeLeft: 0 });
+              return;
+            }
+            taken = { kind: 'free' };
+            Object.assign(bill, { engine: usesLlm ? engine.provider : 'tool', unit: 'free', freeLeft: result.left, freeLimit: aiTokens.FREE_DAILY_LIMIT });
           }
-          charged = cost;
-          points = result.points;
         }
-        send({ ...event, level, levelLabel: LEVEL_LABELS[level], cost, points });
+        send({ ...event, level, levelLabel: LEVEL_LABELS[level], ...bill });
         return;
       }
       if (event.type === 'error') {
@@ -337,7 +406,14 @@ const runAgent = async (req, res) => {
       }
       if (event.type === 'done') {
         finished = true;
-        send(event);
+        // Claude 엔진인데 해설을 Claude 가 쓰지 못했다면(키 없음·API 오류 등) 받은 휴버토큰을 돌려준다.
+        // 작업 자체는 끊기지 않는다 — ai-service 가 무료 엔진이나 정해진 해설로 끝까지 답한다(engine_used 로 알려 준다).
+        if (taken && taken.kind === 'token' && event.engine_used !== 'claude') {
+          const back = await giveBack();
+          send({ ...event, ...back, refundReason: 'Claude 모델을 쓰지 못해 휴버토큰을 돌려드렸어요.' });
+        } else {
+          send(event);
+        }
         return;
       }
       send(event);
@@ -361,27 +437,22 @@ const runAgent = async (req, res) => {
     if (!clientGone && !stop) {
       console.error('에이전트 봇 실행 실패:', err.name || err.message);
       if (!headersSent) {
-        const points = charged ? await refundPoints(userId, charged, chargeDetail) : null;
-        charged = 0;
-        running.delete(userId);
-        if (timer) clearTimeout(timer);
+        const back = await giveBack();
+        cleanup();
         return res.status(503).json({
           error: '에이전트 봇이 잠시 쉬는 중이에요. 조금 뒤에 다시 시도해 주세요.',
           unavailable: true,
-          ...(points !== null ? { points } : {}),
+          ...back,
         });
       }
       await fail(err.name === 'AbortError' ? '작업 시간이 너무 길어져 중단했어요.' : '작업을 끝내지 못했어요. 잠시 뒤에 다시 시도해 주세요.');
     }
   } finally {
-    clearInterval(heartbeat);
-    running.delete(userId);
-    if (timer) clearTimeout(timer);
+    cleanup();
     if (headersSent && !res.writableEnded) res.end();
   }
   return undefined;
 };
-
 // ------------------------------------------------------------------
 // ai-service 전용 조회 API — 에이전트 봇 도구가 게시판·공지를 읽는다.
 // AI_SERVICE_KEY 가 있으면 X-AI-Key 가 같은 요청만, 없으면(로컬 개발) 이 서버 안에서 직접 온 요청만 받는다
@@ -478,7 +549,6 @@ module.exports = {
   internalOnly,
   dataPosts,
   dataNotices,
-  AGENT_COSTS,
   RUN_LIMIT,
   RUN_WINDOW_MS,
 };

@@ -24,6 +24,7 @@ const {
 const { getLuckUsers, getLuckUserDetail, getLuckUserPoints } = require('../controllers/adminLuckController');
 const { setSeasonalTheme } = require('../controllers/siteSettingController');
 const { requireAdmin } = require('../middleware/auth');
+const aiTokenController = require('../controllers/aiTokenController');
 
 // ====== 공개 ======
 // 관리자 아이디/비번 검증 후 관리자용 JWT 발급 (adminController.login).
@@ -57,5 +58,11 @@ router.get('/luck/users/:userId/points', requireAdmin, getLuckUserPoints);
 
 // 이벤트 디자인 적용 — 계절 배경(할로윈/크리스마스) 켜기·끄기. 값이 하나라 하나를 켜면 다른 것은 꺼진다(siteSettingController)
 router.post('/site/seasonal-theme', requireAdmin, setSeasonalTheme);
+
+// 휴버토큰(AI 전용 포인트) 충전 신청 승인·거절, 직접 지급 — controllers/aiTokenController.js
+router.get('/ai-tokens/orders', requireAdmin, aiTokenController.adminListOrders);
+router.post('/ai-tokens/orders/:id/approve', requireAdmin, aiTokenController.adminApproveOrder);
+router.post('/ai-tokens/orders/:id/reject', requireAdmin, aiTokenController.adminRejectOrder);
+router.post('/ai-tokens/grant', requireAdmin, aiTokenController.adminGrant);
 
 module.exports = router;
