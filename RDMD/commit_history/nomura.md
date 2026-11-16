@@ -450,7 +450,7 @@
 | 419 | 2026-11-12 | [`7ec4957`](#7ec4957) | docs(agent-bot): 에이전트 봇 문서화 — 기능 설명·기록 3종 신설, 스킬 정본+12종·README·가이드·작업 이력 갱신, 낡은 AI 배포 상태 표기 정정 |
 | 420 | 2026-11-12 | [`4b81199`](#4b81199) | docs(oracle): Autonomous DB ?? ?? ?? ?? |
 | 421 | 2026-11-12 | [`af20676`](#af20676) | fix(tier-class): 2티어 을급 코바야시 유키사다 누락 복원 |
-| 422 | 2026-11-17 | [`pending`](#pending) | feat(agent-bot): 엔진 선택 도입 — 무료 엔진(Ollama) 하루 횟수 제한, Claude 엔진(모델·effort)과 AI 전용 포인트 휴버토큰·충전 신청 |
+| 422 | 2026-11-17 | [`bb5a584`](#bb5a584) | feat(agent-bot): 엔진 선택 도입 — 무료 엔진(Ollama) 하루 횟수 제한, Claude 엔진(모델·effort)과 AI 전용 포인트 휴버토큰·충전 신청 |
 
 ---
 
@@ -8077,15 +8077,15 @@
 
 [▲ 목차로](#목차)
 
-<a id="pending"></a>
+<a id="bb5a584"></a>
 
-### 422. 2026-11-17 — `pending`
+### 422. 2026-11-17 — `bb5a584`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `bb5a584`
+- **hash (full)**: `bb5a5844f98eb055d6d9ab1bc8469c6dcac44366`
 - **author**: nomura
 - **message**: feat(agent-bot): 엔진 선택 도입 — 무료 엔진(Ollama) 하루 횟수 제한, Claude 엔진(모델·effort)과 AI 전용 포인트 휴버토큰·충전 신청
-- **git**: `git show pending`
+- **git**: `git show bb5a584`
 - **범위**: feat / backend(ai) · ai-service(Agent-Bot) · knowledge
 - **요약**: 에이전트 봇의 요금 체계를 바꿨다(창시자 지시). 행운 뽑기 포인트 차감(2·4·8P)을 없애고 엔진을 둘로 나눴다. ① 무료 엔진(서버 Ollama): 토큰 없이 하루(KST) 20번(`FREE_DAILY_LIMIT`), 실패하면 횟수를 되돌린다. ② Claude 엔진: 회원이 모델(Haiku 4.5·5.5, Sonnet 5.0·5.5, Opus 5.0·5.5, Fable 5.1·5.2)과 effort(small·medium·high·extra high = API 의 low·medium·high·xhigh)를 골라 쓰고 AI 전용 포인트 "휴버토큰"이 든다. 요금 정본 `backend/utils/aiTokens.js`: 1토큰≈$0.001, 평균 한 번(입력 2,500+출력 700토큰)을 모델 API 가격으로 계산한 평균값(Haiku 5.5 1 · Haiku 4.5 6 · Sonnet 12 · Opus 5.5 24 · Opus 5 30 · Fable 5.2 48 · Fable 5.1 60) × effort 배수(0.6·1·1.6·2.4, 올림)를 정액으로 받는다. 지갑 `AiTokenWallet`(처음 500 지급 + 무료 횟수), 원장 `AiTokenLog`, 충전 신청 `AiTokenOrder` 모델 신설. 결제 대행이 없어 충전은 묶음 구매 신청(1,000토큰 2,000원 · 3,000토큰 5,500원 · 10,000토큰 17,000원)·후원 확인 신청을 넣으면 관리자가 승인할 때 적립한다(`aiTokenController`: `GET /api/ai/tokens`, `POST /api/ai/tokens/orders`, 관리자 `GET /api/admin/ai-tokens/orders`·`POST …/approve|reject`·`POST /api/admin/ai-tokens/grant`, 승인은 pending 일 때만 한 번, 대기 3건 제한, 결제 정보는 받지 않음). `aiAgentController` 는 요청의 `engine`을 검사해 plan 이벤트에서 휴버토큰 차감 또는 무료 횟수 1회를 받고, 오류·끊김·시간 초과와 "Claude 가 답을 못 쓴 경우(engine_used≠claude)"에 환불한다. LLM 을 안 쓰는 통합 검색은 Claude 엔진을 골라도 토큰이 들지 않는다. ai-service: `service/claude.py` 신설(공식 `anthropic` SDK 스트리밍, `output_config.effort`, Haiku 4.5 는 effort 미전송, 거절 대비 서버 쪽 fallbacks — 받지 않으면 없이 재시도, thinking·temperature 미전송), 요청 스키마에 `engine`, plan 에 `uses_llm`·`engine`, done 에 `engine_used`. 작업이 끊기지 않게 해설은 고른 엔진 → 무료 엔진 → 정해진 해설 순으로 시도하고, 애매한 말의 작업 분류도 Claude 실패 시 무료 엔진으로 넘어간다. `/agent/info` 에 `claude`(키 유무)·`uses_llm`. `anthropic==1.15.0` 고정, `.env.example` 에 키 안내(`ANTHROPIC_API_KEY` 가 있으면 Claude 엔진이 켜진다), `AI_TOKEN_PAY_GUIDE`. 지식 문서(08·09·05·14·10·01)와 동기화 테스트를 새 요금으로 교체, 가짜 Claude 클라이언트 테스트 8개 추가 — pytest 93개 통과. 격리 서버 + 임시 회원 + 실제 gemma4:e4b 로 확인: 무료 실행 시 횟수 20→19, 키 없는 Claude 실행은 58토큰 차감 후 환불되고 답은 무료 엔진이 이어서 씀, 하루 한도 초과 429, 구매 신청 승인 +1,000·중복 승인 409, 후원 신청은 토큰 수를 정해야 승인(+2,500), 회원 토큰으로 관리자 API 403, 행운 포인트는 변화 없음. 임시 자료는 삭제. 실제 Claude API 호출은 키가 없어 확인하지 못했다.
 - **주요 파일**: `backend/utils/aiTokens.js`, `backend/controllers/aiAgentController.js`, `backend/controllers/aiTokenController.js`, `backend/models/AiTokenWallet.js`, `backend/models/AiTokenLog.js`, `backend/models/AiTokenOrder.js`, `backend/routes/aiRoutes.js`, `backend/routes/adminRoutes.js`, `ai-service/app/Agent-Bot/service/claude.py`, `ai-service/app/Agent-Bot/service/agent_service.py`, `ai-service/app/Agent-Bot/schema/agent.py`, `ai-service/knowledge/08-guide-and-ai.md`, `ai-service/tests/test_agent_bot.py`, `ai-service/tests/test_knowledge_sync.py`
