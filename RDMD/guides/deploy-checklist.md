@@ -61,15 +61,24 @@
 
 문제가 생기면 `deploy.sh logs ai` · `deploy.sh rollback`(이전 릴리스에 ai-service 가 없으면 `hbt-ai` 만 멈춘다).
 
-### 에이전트 봇 (2026-11-12 커밋 — 서버 반영 전)
+### 에이전트 봇 (2026-11-16 반영됨 — 아래는 처음 올릴 때의 순서)
 
 - [ ] `deploy.sh deploy` — 새 의존성 없음(`requirements-prod.txt` 그대로). 사이트·ai-service 가 함께 올라간다
 - [ ] 서버 nginx 설정에 `/api/ai/agent/run` location 추가(저장소 `backend/deploy/oracle/nginx-human-bug-tier.conf` 의 블록 — `proxy_buffering off`, `proxy_read_timeout 330s`). certbot 이 고친 설정을 덮어쓰지 않게 **손으로 추가** → `sudo nginx -t && sudo systemctl reload nginx`
 - [ ] (권장) `shared/ai.env` 에 `AGENT_SUMMARY_TOKENS=120` — 서버는 CPU(약 6토큰/초)라 해설이 길면 느리다. `AGENT_SITE_API_URL` 은 기본값(`http://127.0.0.1:5000`) 그대로
-- [ ] 회원 계정으로 오른쪽 아래 원형 버튼 → 검색(2P) → 티어표 초안(8P) → "커스텀 메이커에서 열기"
+- [ ] 회원 계정으로 오른쪽 아래 원형 버튼 → 검색 → 티어표 초안 → "커스텀 메이커에서 열기"
 - [ ] 글자가 조각조각 오는지(한꺼번에 몰려 오면 nginx location 누락), 작업 중 모달을 닫아도 계속되는지
-- [ ] 관리자 → 행운 뽑기 관리 → 포인트 내역에 "에이전트 봇"이 남는지
+- [ ] (2026-11-16 판까지) 관리자 → 행운 뽑기 관리 → 포인트 내역에 "에이전트 봇"이 남는지
 - [ ] 바깥에서 `/api/ai/agent/data/posts` 가 **401/403** 인지(ai-service 전용)
+
+### 엔진 선택 · 휴버토큰 (2026-11-17 커밋 — 서버 반영 전)
+
+- [ ] `deploy.sh deploy` — ai-service 의존성에 `anthropic==1.15.0` 이 고정으로 추가됐다(`requirements-prod.txt` 가 바뀌어 처음 한 번 설치 시간이 걸린다)
+- [ ] (Claude 엔진을 켤 때) 서버에서 직접 `shared/ai.env` 에 `ANTHROPIC_API_KEY=` 입력 → `pm2 restart hbt-ai`. 키는 채팅·명령줄·로그에 남기지 않는다. 없으면 Claude 를 골라도 무료 엔진으로 처리하고 토큰은 받지 않는다
+- [ ] (선택) `shared/.env` 에 `AI_TOKEN_PAY_GUIDE=` — 충전 신청 화면의 결제·후원 방법 안내 한 줄
+- [ ] `/api/ai/agent/info` 의 `claude`(키 유무)·`pricing`·`free` 확인, `/api/site/status` 200(모바일 앱이 쓴다)
+- [ ] 회원으로 무료 엔진 실행 → 오늘 남은 횟수가 줄어드는지, Claude 엔진 Haiku 5.5 · small(1토큰) 실행 → 휴버토큰이 1 줄어드는지
+- [ ] 관리자 → 🪙 휴버토큰 관리 → 시험 신청 승인·거절이 되는지
 
 상세: [`../features/ai-service.md`](../features/ai-service.md) · [`../../ai-service/README.md`](../../ai-service/README.md) · [`../ai/04-production-deploy-prep-record.md`](../ai/04-production-deploy-prep-record.md)
 

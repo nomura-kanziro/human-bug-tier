@@ -90,7 +90,7 @@ flowchart TD
 | [luck-draw.md](./features/luck-draw.md) | 행운 뽑기 3모드 · 포인트 · 출석체크 |
 | [my-page.md](./features/my-page.md) | 마이페이지 · 프로필 · 출석판 |
 | [ai-service.md](./features/ai-service.md) | **AI 도우미 · AI 전용 서비스**(`ai-service/`) |
-| [agent-bot.md](./features/agent-bot.md) | **휴버대 에이전트 봇** — 작업·요금·흐름·평가 |
+| [agent-bot.md](./features/agent-bot.md) | **휴버대 에이전트 봇** — 작업·엔진(무료 / Claude)·휴버토큰·흐름·평가 |
 | [backend-api.md](./features/backend-api.md) | API 그룹 · 모델 · 미들웨어 |
 | [react-rewrite.md](./features/react-rewrite.md) | 정식 버전 React 이식 현황 |
 
@@ -141,7 +141,8 @@ frontend/
 ├── 12-react/              정식 버전 React 이식
 ├── 13-event/              이벤트 페이지
 ├── 14-guide/              가이드 페이지 · 가이드 모드
-└── 15-ai/                 AI 도우미 화면 · 에이전트 봇 화면
+├── 15-ai/                 AI 도우미 화면 · 에이전트 봇 화면
+└── 16-mobile/             모바일 앱 뼈대(React Native · Expo)
 ```
 
 - 파일명: `{순서}-{키워드}-record.md`  

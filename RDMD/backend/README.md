@@ -141,7 +141,7 @@ AI 기능은 프론트·백엔드·AI 서비스에 걸쳐 있어 **세 곳에 �
 | 파일 | legacy | 요약 |
 |------|--------|------|
 | 기본 3분 타임아웃·장애 시 503, 대화 저장 안 함 |
-| [02-agent-bot-proxy-record.md](./10-ai/02-agent-bot-proxy-record.md) | — | 에이전트 봇 `/api/ai/agent` — `GET /info`(요금표·작업 목록·내 포인트) · `POST /run`(NDJSON 스트림, 회원 전용, 작업 강도별 2·4·8P 차감·실패 시 환불·원장 `agent_bot`, 10분 12회·동시 1건) · `GET /data/posts`·`/data/notices`(ai-service 전용 조회) |
+| [02-agent-bot-proxy-record.md](./10-ai/02-agent-bot-proxy-record.md) | — | 에이전트 봇 `/api/ai/agent` — `GET /info`(요금표·작업 목록·내 포인트) · `POST /run`(NDJSON 스트림, 회원 전용, 작업 강도별 2·4·8P 차감·실패 시 환불·원장 `agent_bot`, 10분 12회·동시 1건) · `GET /data/posts`·`/data/notices`(ai-service 전용 조회). **2026-11-17 변경**: 요금은 엔진별(무료 하루 20회 / Claude 휴버토큰) — `utils/aiTokens.js` · `controllers/aiTokenController.js`, 기록 [`../ai/07-agent-engines-hubertoken-record.md`](../ai/07-agent-engines-hubertoken-record.md) |
 
 ## legacy backend_N → 새 경로
 

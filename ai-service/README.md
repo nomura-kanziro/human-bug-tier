@@ -12,11 +12,14 @@
 - 답 아래에 참고한 문서를 보여 줍니다
 - 모델이 꺼져 있으면 문서 문장으로 답합니다
 - 대화를 저장하지 않습니다
-- **운영 서버에는 아직 올리지 않았습니다** (스크립트는 준비됨)
+- 운영 서버에서 동작합니다(2026-11-11~, 서버 안 Ollama `gemma4:e4b`)
+- 에이전트 봇은 무료 엔진(하루 20회)과 Claude 엔진(휴버토큰)을 고릅니다
 
 </td>
 </tr>
 </table>
+
+<img src="../docs/readme/diagrams/arch-ai.png" alt="AI 서비스 간편 구조: main.py, 휴버봇, 에이전트 봇, 답변 모델(Ollama·Claude), 저장(ChromaDB·Oracle)" width="100%" />
 
 <img src="../docs/readme/diagrams/ai-flow.png" alt="휴버봇 질문 처리 흐름" width="100%" />
 
@@ -114,7 +117,7 @@ ai-service/
 
 ## 에이전트 봇 (`app/Agent-Bot/`)
 
-가이드 챗봇이 "설명"을 한다면 에이전트 봇은 말로 시킨 "작업"을 한다. 사이트 오른쪽 아래 원형 버튼에서 쓰고, 회원 전용이며 작업 강도만큼 포인트를 쓴다(차감은 사이트 백엔드가 한다).
+가이드 챗봇이 "설명"을 한다면 에이전트 봇은 말로 시킨 "작업"을 한다. 사이트 오른쪽 아래 원형 버튼에서 쓰고, 회원 전용이다. 엔진을 고른다 — **무료 엔진**(이 서비스의 Ollama 모델, 하루 20회) 또는 **Claude 엔진**(모델·effort 선택, AI 전용 포인트 "휴버토큰"). 횟수·토큰은 사이트 백엔드(`backend/utils/aiTokens.js`)가 받는다.
 
 | 작업 | 강도 | 하는 일 |
 |---|---|---|
@@ -128,6 +131,7 @@ ai-service/
 - 작업 판별은 규칙이 먼저이고 애매한 말만 LLM 에 묻는다. **이름·배치·숫자는 도구가 계산**하고 LLM 은 해설만 쓴다. 결과물이 해설보다 먼저 나간다.
 - 모델은 가이드 챗봇과 같다(`AGENT_OLLAMA_MODEL` 을 비워 두면 `OLLAMA_MODEL`). 모델·`num_ctx` 를 다르게 두면 Ollama 가 다시 올려 느려진다.
 - 게시판·공지는 사이트 백엔드의 전용 조회 API(`AGENT_SITE_API_URL`, 기본 `http://127.0.0.1:5000`)로 읽는다. MongoDB·Oracle 에 직접 붙지 않고, 대화를 저장하지 않는다.
+- Claude 엔진은 `service/claude.py`(공식 `anthropic` SDK 스트리밍, `output_config.effort`, Haiku 4.5 는 effort 없음). 키 `ANTHROPIC_API_KEY` 가 없거나 호출이 실패하면 무료 엔진 → 정해진 해설로 이어서 끝까지 답한다(백엔드가 토큰을 돌려준다).
 - 설정: `AGENT_OLLAMA_MODEL` · `AGENT_SUMMARY_TOKENS`(해설 최대 토큰, 기본 260 — CPU 서버에서는 120 정도 권장) · `AGENT_SITE_API_URL` · `AGENT_SITE_API_TIMEOUT`.
 - 테스트: `tests/test_agent_bot.py`(가짜 LLM·가짜 조회 API). 폴더 설명은 [`app/Agent-Bot/README.md`](./app/Agent-Bot/README.md), 기능 설명은 [`../RDMD/features/agent-bot.md`](../RDMD/features/agent-bot.md).
 

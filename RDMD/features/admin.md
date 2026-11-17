@@ -47,6 +47,7 @@ root-cloudflare/src/
 | `admin-events` (`admin-memory-events`, `admin-showcase`) | 🃏 메모리 기록 이벤트 · 🖼️ 티어표 공개 | 이벤트 관리 |
 | `admin-season` | 🎨 이벤트 디자인 | 할로윈·크리스마스 사이트 배경 ON/OFF(한 번에 하나) |
 | `admin-luck` | 🍀 행운 뽑기 관리 | 회원별 뽑기 기록·포인트 내역(조회 전용) |
+| `admin-ai-tokens` | 🪙 휴버토큰 관리 | 에이전트 봇 Claude 엔진용 AI 포인트 — 충전 신청(구매·후원) 승인·거절, 닉네임으로 직접 지급·회수 (`AdminAiTokens.jsx`, `/api/admin/ai-tokens/*`) |
 | `admin-blocks` | 🚫 차단 | 회원 목록(인증·삭제)·닉네임/IP 차단 |
 
 ---

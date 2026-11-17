@@ -14,7 +14,7 @@ description: >
 ## When
 
 - `/ai` 화면(휴버봇), 추천 질문, AI 답변 내용·말투·정확도
-- **에이전트 봇** — 오른쪽 아래 원형 버튼·모달, 티어표 초안·분석·요약·브리핑·검색 작업, 작업 강도별 포인트 요금, `ai-service/app/Agent-Bot/`, `/api/ai/agent/*`
+- **에이전트 봇** — 오른쪽 아래 원형 버튼·모달, 티어표 초안·분석·요약·브리핑·검색 작업, 무료 엔진(하루 20회) / Claude 엔진(모델·effort, AI 전용 포인트 휴버토큰·충전 신청), `ai-service/app/Agent-Bot/`, `/api/ai/agent/*`
 - `ai-service/` 코드(FastAPI · LangGraph · 검색 · 프롬프트 · 모델), `ai-service/knowledge/*.md`
 - `backend/routes/aiRoutes.js`(`/api/ai`), `AI_SERVICE_URL`/`AI_SERVICE_KEY`/`ANTHROPIC_API_KEY`
 - **사이트 기능·규칙(포인트·확률·배수·횟수·메뉴 이름)을 바꾸는 모든 작업** → 지식 문서 동기화 필요
@@ -25,7 +25,7 @@ description: >
 - **챗봇은 종류별 폴더로 나누고, 폴더마다 같은 6개 층을 둔다**: `schema/`(요청·응답 pydantic) · `router/`(HTTP) · `service/`(업무 로직) · `models/`(Oracle 테이블 행 모양) · `repository/`(Oracle SQL) · `database/`(Oracle 연결). 호출은 router → service → repository → database 한 방향.
   - 가이드 전용 챗봇 = `ai-service/app/guidans_Chat/` — `service/` 에 `chat_service.py`(진입)·`knowledge.py`(문서·BM25·CharacterIndex)·`embeddings.py`(bge-m3)·`retrieval.py`(BM25+벡터 RRF)·`graph.py`(LangGraph)·`prompts.py`·`llm.py`(Ollama/Claude)·`questions.py`, `database/chroma.py`·`repository/knowledge_vector_repository.py`·`models/knowledge_chunk.py`(ChromaDB 벡터 저장), `router/chat_router.py`, `schema/chat.py`
   - 에이전트 봇 = `ai-service/app/Agent-Bot/`(2026-11-12 구현 — "설명"이 아니라 "작업"을 한다). 폴더 이름에 하이픈이 있어 `app/agent_loader.py` 가 `app.agent_bot` 패키지로 올린다(임포트는 `from app.agent_bot…`). `service/` 에 `agent_service.py`(진입·이벤트 스트림)·`planner.py`(작업 판별 — 규칙 먼저, 애매하면 LLM)·`graph.py`(LangGraph)·`tools/`(`tier_builder`·`tier_review`·`digest`·`briefing`·`site_search`)·`catalog.py`·`prompts.py`·`llm.py`, `repository/site_repository.py`·`database/site_api.py`(사이트 백엔드 조회 API 호출), `router/agent_router.py`(`GET /agent/info` · `POST /agent/run` NDJSON), `schema/agent.py`. 새 챗봇 코드를 다른 챗봇 폴더에 섞지 않는다
-  - 에이전트 봇 사이트 쪽: `backend/controllers/aiAgentController.js`(`/api/ai/agent/*` — 회원 확인·포인트 차감/환불·스트림 전달·전용 조회 API, 요금 `AGENT_COSTS`), 화면 `root-cloudflare/src/components/AgentBot.jsx`(오른쪽 아래 원형 버튼 + 모달)·`src/context/AgentBotContext.jsx`·`src/lib/agentApi.js`·`src/styles/agent-bot.css`
+  - 에이전트 봇 사이트 쪽: `backend/controllers/aiAgentController.js`(`/api/ai/agent/*` — 회원 확인·엔진 검사·휴버토큰/무료 횟수·환불·스트림 전달·전용 조회 API), 요금표·지갑 `backend/utils/aiTokens.js`, 충전 신청·관리자 승인 `backend/controllers/aiTokenController.js`(모델 `AiTokenWallet`·`AiTokenLog`·`AiTokenOrder`), 화면 `root-cloudflare/src/components/AgentBot.jsx`(오른쪽 아래 원형 버튼 + 모달)·`src/context/AgentBotContext.jsx`·`src/components/AgentBotPanels.jsx`(엔진 고르기·휴버토큰 충전)·`src/components/AdminAiTokens.jsx`(관리자)·`src/lib/agentApi.js`·`src/styles/agent-bot.css`; Claude 엔진 `ai-service/app/Agent-Bot/service/claude.py`(공식 anthropic SDK)
   - 공용: `app/main.py`(진입·라우터 연결), `config.py`, `deps.py`(X-AI-Key 검사)
 - 지식: `ai-service/knowledge/01~14-*.md`(사용자용 — 이용 안내 8개 + **FAQ·용어집·단계별 사용법·문제 해결·공지/문의/알림·업데이트 이력** 6개) + `root-cloudflare/src/data/tiers.json`(직접 읽음). **AI 서버(Ollama)가 꺼져도 이 문서에서 그대로 답한다**(`service/doc_answer.py`) — 그래서 지식 문서가 곧 "AI OFF 시의 답"이다
 - AI 서버 ON/OFF: `service/llm_status.py`(Ollama `/api/tags` 확인, 10초 기억), `GET /status`(ai-service) · `GET /api/ai/status`(Express) → `/ai` 화면 상단 알림("AI 서버 OFF 상태 (사이트의 정보내용을 끌어다 대답합니다.)")
@@ -70,11 +70,14 @@ description: >
   - 폴더 이름 `Agent-Bot` 을 바꾸지 않는다(창시자 지정). 임포트는 `agent_loader.load_agent_bot()` 뒤 `app.agent_bot` 로 한다.
   - 캐릭터 이름·배치·숫자는 **도구가 계산**한다. LLM 은 작업 분류(JSON)와 해설 글만 맡는다 — LLM 이 티어표 내용을 지어내게 하지 않는다.
   - 가이드 챗봇과 겹치는 일(이용법 설명)은 넣지 않고 `/ai` 로 안내한다(무료). 글·댓글 대리 작성, 행운 뽑기 대리 실행 같은 **쓰기 대행은 넣지 않는다**(사람과 먼저 정한다).
-  - 포인트 값은 `backend/controllers/aiAgentController.js` 의 `AGENT_COSTS` 한 곳에만 둔다. ai-service 는 강도(level)만 알린다. 요금·한도를 바꾸면 `knowledge/08·09·05` 와 화면 문구가 같이 바뀌는지 `pytest` 로 확인한다.
-  - 포인트는 `plan` 이벤트에서 차감하고 실패(오류 이벤트·끊김)하면 환불한다 — 이 순서를 바꾸지 않는다. 회원 전용(`requireAuth`, 관리자 계정 불가).
+  - **엔진 두 가지(2026-11-17~)**: 무료 엔진(Ollama, 하루 `FREE_DAILY_LIMIT`=20회) / Claude 엔진(모델·effort 선택, AI 전용 포인트 **휴버토큰**). 행운 뽑기 포인트는 에이전트 봇에 쓰지 않는다.
+  - 요금표(모델별 평균값·effort 배수·기본 지급 500·하루 횟수·충전 묶음)는 `backend/utils/aiTokens.js` 한 곳에만 둔다. ai-service 의 `service/claude.py` `CLAUDE_MODELS`·`EFFORTS` 는 같은 목록이어야 한다(`tests/test_agent_bot.py` 가 대조). 값을 바꾸면 `knowledge/08·09` 와 화면이 같이 바뀌는지 `pytest` 로 확인한다.
+  - 값은 `plan` 이벤트에서 받고(휴버토큰 차감 또는 무료 횟수 1회), 실패(오류 이벤트·끊김·시간 초과)하거나 Claude 가 해설을 못 쓰면(`engine_used ≠ claude`) 되돌린다 — 이 순서를 바꾸지 않는다. 회원 전용(`requireAuth`, 관리자 계정 불가).
+  - 작업이 끊기지 않게: 해설은 고른 엔진 → 무료 엔진 → 정해진 해설 순으로 시도한다. Claude 호출에 `thinking`·`budget_tokens`·`temperature` 를 보내지 않는다(최신 모델에서 400). effort 를 지원하지 않는 모델(Haiku 4.5)에는 effort 를 보내지 않는다.
+  - 휴버토큰 충전은 결제 대행 없이 "신청 → 관리자 승인 → 적립"이다. 카드·계좌 번호를 받거나 저장하지 않는다. 승인은 pending 일 때만 한 번(조건부 갱신).
   - 에이전트 봇은 MongoDB·Oracle 에 직접 붙지 않는다. 게시판·공지는 `/api/ai/agent/data/*`(ai-service 전용 — X-AI-Key 또는 서버 안쪽 요청만)로 읽고, 회원 정보는 백엔드가 요청과 함께 넘긴 값만 쓴다(토큰을 ai-service 로 넘기지 않는다).
   - 느려지지 않게: 에이전트 봇 모델을 가이드 챗봇과 다르게 두지 않는다(`AGENT_OLLAMA_MODEL` 비움 = `OLLAMA_MODEL`), `num_ctx` 를 다르게 주지 않는다(모델이 다시 올라간다), 결과물을 해설보다 먼저 보낸다, 화면은 글자를 프레임 단위로 모아 그린다.
-  - 에이전트 봇 대화도 저장하지 않는다(원장에는 "어떤 작업에 몇 포인트"만).
+  - 에이전트 봇 대화도 저장하지 않는다(원장에는 "어떤 작업 · 어떤 모델 · 몇 토큰"만).
 - LLM 키(`ANTHROPIC_API_KEY`)·`AI_SERVICE_KEY` 를 커밋·로그·응답에 넣지 않는다(`ai-service/.env` 는 gitignore — `.env` 패턴).
 - **대화 내용을 저장하지 않는다**(현재 정책). 저장하려면 보관 기간·탈퇴 시 삭제·별도 DB 를 먼저 사람과 정한다.
 - 관리자 기능·API 주소·서버 구조를 지식 문서에 넣지 않는다(사용자용).
@@ -87,9 +90,10 @@ description: >
 - `uvicorn app.main:app --port 8000` + `backend` :5000 → http://localhost:5000/ai
 - 한글 질문 시험은 Node `fetch`·브라우저로(Windows Git Bash `curl` 은 한글 JSON 이 깨진다)
 
-## 상태 (2026-11-12)
+## 상태 (2026-11-17)
 
 - **가이드 챗봇(휴버봇)은 운영 중** — 2026-11-11 새 Oracle VM 으로 옮기며 서버 안 Ollama(`gemma4:e4b`, CPU 약 6토큰/초)로 답한다. 벡터 검색은 서버에서 끔(BM25), 통계만 Oracle 에 저장(`AI_STORE_STATS`), 대화 원문은 저장하지 않는다(`RDMD/ai/05-oracle-storage-record.md`).
-- **에이전트 봇은 커밋 완료 · 서버 반영 전**(2026-11-12). 반영은 `deploy.sh deploy`. 서버 nginx 에는 `/api/ai/agent/run` 스트림용 location(버퍼링 끔, 330초)을 따로 넣어야 한다(`backend/deploy/oracle/nginx-human-bug-tier.conf` — certbot 이 고친 서버 설정을 덮어쓰지 않게 손으로 추가). 서버가 CPU 라 해설이 길면 느리므로 `AGENT_SUMMARY_TOKENS` 를 줄이는 것을 권한다(`RDMD/ai/06-agent-bot-record.md`).
+- **에이전트 봇은 운영 중**(2026-11-16 반영 — nginx `/api/ai/agent/run` location 추가, `AGENT_SUMMARY_TOKENS=120`).
+- **엔진 선택·휴버토큰(2026-11-17)은 커밋 완료 · 서버 반영 전.** 반영은 `deploy.sh deploy`(ai-service 에 `anthropic` SDK 고정 추가). Claude 엔진은 서버 `shared/ai.env` 에 `ANTHROPIC_API_KEY` 를 직접 넣어야 켜진다(없으면 Claude 를 골라도 무료 엔진으로 처리하고 토큰은 받지 않는다). 실제 Claude API 호출은 아직 확인하지 않았다(`RDMD/ai/07-agent-engines-hubertoken-record.md`).
 - 로컬 실측(RTX 4070 SUPER, gemma4:e4b): 결과물 0.1초 안, 해설 첫 글자 0.2~0.5초, 전체 3~5.5초. 실제 Claude 키로는 답 품질을 확인하지 않았다.
 - `shared/ai.env` 가 없으면 `deploy.sh` 는 ai-service 를 올리지 않는다(사이트 정상, `/api/ai` 만 503).

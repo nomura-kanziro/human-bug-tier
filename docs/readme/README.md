@@ -2,9 +2,11 @@
 
 저장소 README 들이 쓰는 이미지를 모아 둔 폴더입니다. 화면이 바뀌면 손으로 고치지 말고 여기 도구로 다시 만드세요.
 
+<img src="diagrams/arch-docs.png" alt="문서 간편 구조: README, .Agents 규칙, RDMD 기록, docs/readme 그림, ai-service 지식 문서" width="100%" />
+
 ```text
 docs/readme/
-├── diagrams/   히어로, 기술 스택, 아키텍처, AI 흐름, 기능 지도 (HTML 로 그려 PNG 로 렌더링)
+├── diagrams/   히어로, 기술 스택, 아키텍처, 간편 아키텍처, 폴더별 간편 구조(arch-*), AI 흐름, 기능 지도 (HTML 로 그려 PNG 로 렌더링)
 ├── screens/    사이트 정지 화면
 ├── gifs/       사이트 움직이는 장면
 ├── raw/        GIF 원본 프레임 (자동 생성, 커밋 안 함)
@@ -59,6 +61,9 @@ python docs/readme/tools/make_gifs.py
 # 5. 다이어그램 + 용량 줄이기
 node docs/readme/tools/render-diagrams.js
 python docs/readme/tools/optimize_images.py
+
+# (그림만 몇 장 고쳤을 때) 이름을 주면 그 그림만 다시 만든다 — DB·서버 없이 된다(hero 만 캐릭터 이미지 파일을 읽는다)
+node docs/readme/tools/render-diagrams.js architecture-simple arch-frontend arch-backend arch-ai arch-mobile arch-docs
 
 # 6. 정리
 docker stop hbt-readme-mongo

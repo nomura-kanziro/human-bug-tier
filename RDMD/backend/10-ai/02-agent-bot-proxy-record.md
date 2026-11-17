@@ -6,6 +6,7 @@ feature: ai
 # Express `/api/ai/agent` — 에이전트 봇 프록시 · 포인트 차감
 
 > 전체 그림은 [`../../features/agent-bot.md`](../../features/agent-bot.md) · ai-service 쪽은 [`../../ai/06-agent-bot-record.md`](../../ai/06-agent-bot-record.md).
+> ⚠ **2026-11-17 요금 변경** — 아래의 행운 포인트 차감(`AGENT_COSTS` 2·4·8P)은 11-16 판까지의 기록이다. 지금은 무료 엔진(하루 20회) / Claude 엔진(휴버토큰)으로 받는다: `utils/aiTokens.js` · `controllers/aiTokenController.js` · [`../../ai/07-agent-engines-hubertoken-record.md`](../../ai/07-agent-engines-hubertoken-record.md).
 > 이 문서는 **백엔드(Express)** 쪽 기록이다. 화면은 [`../../frontend/15-ai/02-agent-bot-ui-record.md`](../../frontend/15-ai/02-agent-bot-ui-record.md).
 
 ## 관련 커밋

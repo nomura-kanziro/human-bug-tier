@@ -5,6 +5,8 @@
 
 <img src="../docs/readme/diagrams/architecture.png" alt="시스템 아키텍처" width="100%" />
 
+<img src="../docs/readme/diagrams/arch-backend.png" alt="백엔드 간편 구조: server.js, routes 11개, middleware, controllers 18개, models 25개(MongoDB)" width="100%" />
+
 ### 로직 구조
 
 요청은 항상 **라우터 → 미들웨어 → 컨트롤러 → 모델** 순서로 내려갑니다. 라우터는 주소와 권한만 정하고, 판단은 컨트롤러가 합니다.

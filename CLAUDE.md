@@ -15,7 +15,8 @@
 휴먼버그대학교 캐릭터 **공식 티어표** + **커스텀 티어 제작/게시판** +  
 회원·공지·문의·관리자 기능을 갖춘 **Express/MongoDB** 사이트.  
 2026-10-18 부터 **AI 전용 서비스 `ai-service/`**(Python FastAPI · LangChain · LangGraph · RAG)가 `/ai` 휴버봇 답변을 맡는다 — Express 와 분리된 별도 프로세스.  
-2026-11-12 부터 같은 서비스의 **에이전트 봇**(`app/Agent-Bot`)이 오른쪽 아래 원형 버튼에서 티어표 초안·분석·요약·브리핑·검색 작업을 한다(회원 전용 · 작업 강도별 포인트).
+2026-11-12 부터 같은 서비스의 **에이전트 봇**(`app/Agent-Bot`)이 오른쪽 아래 원형 버튼에서 티어표 초안·분석·요약·브리핑·검색 작업을 한다(회원 전용 · 무료 엔진 하루 20회 / Claude 엔진은 AI 전용 포인트 "휴버토큰").  
+2026-11-17 부터 **모바일 앱 `mobile/`**(React Native · Expo, 뼈대 단계 — 서버 연결 확인)이 있다. 웹과 같은 `/api` 를 쓴다.
 
 > ⛔ **2026-09-19 창시자 지시 — 프론트 작업은 `root-cloudflare/`(React 정식 버전)에만 한다.**  
 > `root-render/`(바닐라, Render.com 배포)는 **베타 버전에서 업데이트 종료** — 기능 추가·버그 수정 포함 **모든 수정 금지**.  
@@ -95,7 +96,8 @@ env 로드: 루트 `.env` 후 `backend/.env` (동일 키는 backend 우선)
 | 주석 | **기존 주석 삭제 금지.** 코드가 바뀌면 주석 **문구만** 수정. 사람이 “지워”라고 하기 전엔 유지 |
 | 문서 | 큰 변경 → `RDMD/frontend|backend/<기능>/*-record.md` + features/guides (AI 서비스는 `RDMD/ai/`) |
 | AI 지식 | 사이트 기능·규칙(수치·메뉴 이름)을 바꾸면 `ai-service/knowledge/*.md` 도 같이 고친다. AI 키는 `ai-service/.env` 에만, 대화는 저장하지 않음 |
-| 에이전트 봇 | 요금은 `backend/controllers/aiAgentController.js` `AGENT_COSTS` 한 곳. 배치·숫자는 도구가 계산(LLM 은 해설만). 쓰기 대행(글 작성·뽑기 실행)은 넣지 않는다 |
+| 에이전트 봇 | 요금(Claude 모델별 휴버토큰·effort 배수·무료 하루 횟수·충전 묶음)은 `backend/utils/aiTokens.js` 한 곳. 배치·숫자는 도구가 계산(LLM 은 해설만). 쓰기 대행(글 작성·뽑기 실행)은 넣지 않는다 |
+| 모바일 | `mobile/`(Expo, JavaScript)도 웹과 같은 `/api` 만 쓴다(앱 전용 서버 없음). 가볍게 — 의존성을 늘리기 전에 꼭 필요한지 본다 |
 
 ## 문서 지도 (사람 + AI)
 
@@ -125,6 +127,7 @@ env 로드: 루트 `.env` 후 `backend/.env` (동일 키는 backend 우선)
 root-cloudflare/                       # ✅ React 정식 버전 (Vite) — 작업은 여기서만. npm run build → dist/ 를 backend 가 서빙
 root-render/                           # ⛔ Render.com 바닐라 프론트 — 베타 종료, 수정 금지(보관용)
 backend/                               # Express + Mongo + 정적 서빙 (공용, 작업 가능)
+mobile/                                # 모바일 앱 — React Native · Expo SDK 58 (뼈대 단계, 서버 연결 확인)
 ai-service/                            # AI 전용 서비스 — FastAPI · LangChain · LangGraph · RAG (/api/ai 뒤, 127.0.0.1:8000). 휴버봇 + 에이전트 봇
 RDMD/                                  # 기록·가이드
 docs/readme/                           # README 이미지 + 재생성 도구

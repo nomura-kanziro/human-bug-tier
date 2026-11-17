@@ -6,6 +6,7 @@ feature: ai
 # 휴버대 에이전트 봇 화면 — 오른쪽 아래 원형 버튼 + 대형 모달
 
 > 전체 그림은 [`../../features/agent-bot.md`](../../features/agent-bot.md) · ai-service 쪽은 [`../../ai/06-agent-bot-record.md`](../../ai/06-agent-bot-record.md).
+> 2026-11-17: 엔진 고르기·휴버토큰 충전 패널(`AgentBotPanels.jsx`)과 관리자 휴버토큰 관리(`AdminAiTokens.jsx`)가 더해졌다 — [`../../ai/07-agent-engines-hubertoken-record.md`](../../ai/07-agent-engines-hubertoken-record.md).
 > 이 문서는 **프론트(화면)** 기록이다. 서버 쪽은 [`../../backend/10-ai/02-agent-bot-proxy-record.md`](../../backend/10-ai/02-agent-bot-proxy-record.md).
 
 ## 관련 커밋

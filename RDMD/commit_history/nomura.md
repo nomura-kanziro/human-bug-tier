@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 424 |
+| **커밋 수** | 425 |
 | **기간** | 2026-03-20 ~ 2026-11-17 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -453,6 +453,7 @@
 | 422 | 2026-11-17 | [`bb5a584`](#bb5a584) | feat(agent-bot): 엔진 선택 도입 — 무료 엔진(Ollama) 하루 횟수 제한, Claude 엔진(모델·effort)과 AI 전용 포인트 휴버토큰·충전 신청 |
 | 423 | 2026-11-17 | [`dc9f084`](#dc9f084) | feat(agent-bot): 엔진·모델·effort 선택 UI, 휴버토큰 잔액·요금표·충전 신청 패널, 관리자 휴버토큰 관리 화면 |
 | 424 | 2026-11-17 | [`97e2372`](#97e2372) | feat(mobile): React Native(Expo SDK 58) 모바일 앱 뼈대 — 서버 연결 상태 확인 화면, Android·iOS 빌드 설정, /api/site/status |
+| 425 | 2026-11-17 | [`pending`](#pending) | docs(architecture): 아이콘형 간편 아키텍처·폴더별 간편 구조 그림 추가, 휴버토큰·모바일 반영 문서 전체 갱신 |
 
 ---
 
@@ -8124,5 +8125,21 @@
 - **요약**: 저장소 루트에 `mobile/`(React Native 0.88 + Expo SDK 58, JavaScript — 웹 프론트와 같은 언어·React 방식)을 만들었다. 창시자 지시대로 "뼈대 + 연결 + 상태 확인"만: `App.js` 한 화면이 사이트 API(`/api/site/status`)·공지(`/api/notices?limit=1`)·AI 도우미(`/api/ai/status`)·에이전트 봇(`/api/ai/agent/info`)을 동시에 확인해 초록/빨강과 응답 시간을 보여 주고, 서버 주소를 바꿔(로컬 `http://PC-IP:5000`) 다시 확인할 수 있다. 앱 전용 서버 없이 웹과 같은 `/api`(Cloudflare Pages 프록시 → Oracle 백엔드)를 쓴다. 경량화: 의존성은 expo·expo-constants·expo-status-bar·expo-build-properties·react·react-native 뿐(화면 이동·상태 라이브러리 없음), Hermes 번들, Android 릴리스 ProGuard·shrinkResources, 묶는 그림은 아이콘 하나, 요청 동시 전송·8초 제한·결과 한 번에 그리기. Android·iOS 통합 배포: `eas.json` 에 preview(바로 설치하는 APK)·production(AAB/IPA) 프로필, `npm run build:apk|build:android|build:ios`, 앱 ID `com.humanbugtier.app`, 서명 키·빌드 산출물은 gitignore. 백엔드에 모바일용 가벼운 상태 API `GET /api/site/status`(api·db 상태·시각, 시크릿 없음, no-store)를 추가 — `/health` 는 /api 밖이라 Pages 프록시를 지나지 못하기 때문. 확인: `npx expo install --check` 통과, `expo export` 로 Android(596개 모듈)·iOS 번들 생성(각 약 1.5MB Hermes), 확인 로직을 Node 로 운영 주소에 실행(공지·AI·에이전트 봇 OK, `/api/site/status` 는 미배포라 404). 실제 기기 실행·EAS 빌드는 Expo 계정이 필요해 하지 않았다.
 - **주요 파일**: `mobile/App.js`, `mobile/index.js`, `mobile/src/api.js`, `mobile/src/config.js`, `mobile/app.json`, `mobile/eas.json`, `mobile/package.json`, `mobile/package-lock.json`, `mobile/README.md`, `mobile/.gitignore`, `mobile/assets/icon.png`, `backend/routes/siteRoutes.js`
 - **관련 RDMD**: `mobile/README.md` · `RDMD/frontend/16-mobile/01-mobile-skeleton-record.md`
+
+[▲ 목차로](#목차)
+
+<a id="pending"></a>
+
+### 425. 2026-11-17 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: docs(architecture): 아이콘형 간편 아키텍처·폴더별 간편 구조 그림 추가, 휴버토큰·모바일 반영 문서 전체 갱신
+- **git**: `git show pending`
+- **범위**: docs / readme · diagrams · RDMD · 스킬(.Agents + 12종)
+- **요약**: 창시자가 보여 준 예시(로고로 서버·통신을 그린 그림)처럼 직관적인 간편 아키텍처 그림 `docs/readme/diagrams/architecture-simple.png`(클라이언트 웹·모바일 → Cloudflare Pages → Oracle VM 안 웹 서버 nginx·Node·Express / AI 서버 FastAPI·LangGraph·Ollama → MongoDB Atlas · Claude API · Oracle Autonomous DB · 외부 연동)을 만들어 루트 README "시스템 아키텍처" 바로 아래에 넣었다. 폴더별 간편 상세 구조 그림 5장(`arch-frontend`·`arch-backend`·`arch-ai`·`arch-mobile`·`arch-docs`)을 만들어 루트 README(접힘)와 `root-cloudflare/`·`backend/`·`ai-service/`·`mobile/`·`docs/readme/` README 맨 위에 넣었다. 기존 그림도 현재 상태로 고쳤다: 기술 스택(모바일 열 추가, 컬렉션 25개, Ollama·Claude 엔진), 시스템 아키텍처(ai-service "배포 준비 완료" → "운영 중", 브라우저·앱, Oracle Autonomous DB 상자, 답변 모델 설명). 그림 도구 `render-diagrams.js` 에 새 그림 6개와 "이름을 주면 그 그림만 다시 만들기"를 더했다(바뀐 8장만 256색으로 줄임). 문서 갱신: 루트 README(한눈에 숫자 25개·Claude 모델 8, Anthropic SDK·React Native 행, 에이전트 봇 절을 엔진·휴버토큰으로 교체, 모바일 절, 화면·API 표에 `/api/ai/tokens`·`/api/admin/ai-tokens`·`/api/site/status`, 폴더 트리·배포·문제 해결·문서 지도), 기능 설명 `RDMD/features/agent-bot.md`(요금 절을 "엔진과 요금"·"휴버토큰"으로 교체 — 모델×effort 요금표·근거·충전·관리자, 설정·운영 반영·확인), 새 기록 `RDMD/ai/07-agent-engines-hubertoken-record.md`, features(ai-service·README·overview·backend-api·luck-draw·admin), guides(security 휴버토큰 규칙 3줄, deploy-checklist 엔진·휴버토큰 반영 순서), 인덱스(RDMD·ai·frontend 16-mobile·backend), 작업 이력·타임라인(11-16·11-17), 옛 기록 02(백엔드·화면)에 요금 변경 안내. 스킬 정본 `.Agents/skills/ai-service/SKILL.md` 와 12종 복제본에 엔진·휴버토큰 규칙(요금표는 `utils/aiTokens.js` 한 곳, plan 에서 받고 실패·Claude 미사용 시 환불, thinking·temperature 미전송, 충전은 관리자 승인)과 상태를 반영, `CLAUDE.md`·`AGENTS.md` 에 모바일과 새 요금 규칙. `ai-service` 의 `Agent-Bot/README.md`·`planner.py` 주석 문구도 새 요금으로 고쳤다(코드 동작 변경 없음). pytest 93개 통과.
+- **주요 파일**: `docs/readme/diagrams/architecture-simple.png`, `docs/readme/diagrams/arch-frontend.png`, `docs/readme/diagrams/arch-backend.png`, `docs/readme/diagrams/arch-ai.png`, `docs/readme/diagrams/arch-mobile.png`, `docs/readme/diagrams/arch-docs.png`, `docs/readme/tools/render-diagrams.js`, `README.md`, `RDMD/features/agent-bot.md`, `RDMD/ai/07-agent-engines-hubertoken-record.md`, `.Agents/skills/ai-service/SKILL.md`, `CLAUDE.md`, `AGENTS.md`
+- **관련 RDMD**: `RDMD/ai/07-agent-engines-hubertoken-record.md` · `RDMD/features/agent-bot.md`
 
 [▲ 목차로](#목차)

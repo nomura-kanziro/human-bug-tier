@@ -42,8 +42,9 @@
 | **338** | 등록된 캐릭터 수 |
 | **25** | React 페이지 |
 | **11** | Express API 라우터 |
-| **22** | MongoDB 컬렉션 모델 |
+| **25** | MongoDB 컬렉션 모델 |
 | **14** | AI 도우미가 읽는 지식 문서 |
+| **8** | 에이전트 봇에서 고르는 Claude 모델 (Haiku · Sonnet · Opus · Fable) |
 
 <img src="docs/readme/diagrams/feature-map.png" alt="기능 지도: 공식 티어표, 커스텀 메이커, 게시판, 행운 뽑기, 이벤트, AI 도우미, 가이드 모드, 공지·알림, 회원, 관리자" width="100%" />
 
@@ -51,7 +52,7 @@
 
 ## 🧰 프레임워크
 
-<img src="docs/readme/diagrams/stack.png" alt="기술 스택: 프론트엔드, 백엔드, AI 서비스, 인프라" width="100%" />
+<img src="docs/readme/diagrams/stack.png" alt="기술 스택: 프론트엔드, 백엔드, AI 서비스, 모바일, 인프라" width="100%" />
 
 <details>
 <summary><b>각 프레임워크를 이 프로젝트에서 어떻게 쓰는지 자세히 보기</b></summary>
@@ -69,10 +70,12 @@
 | **FastAPI** | AI 전용 서비스 API. Express 와 별도 프로세스 | `ai-service/app/main.py` |
 | **LangGraph** | 질문을 분석해 검색·답변·거절로 나누는 흐름(휴버봇) · 요청을 작업으로 바꿔 도구를 실행하는 흐름(에이전트 봇) | `ai-service/app/guidans_Chat/service/graph.py` · `ai-service/app/Agent-Bot/service/graph.py` |
 | **LangChain** | 문서 분할, Ollama · Claude 모델 연결 | `service/knowledge.py`, `service/llm.py` |
+| **Anthropic SDK** | 에이전트 봇 Claude 엔진 — 회원이 고른 모델·effort 로 스트리밍(휴버토큰) | `ai-service/app/Agent-Bot/service/claude.py` |
 | **ChromaDB · BM25** | 벡터 + 키워드 하이브리드 검색 (운영 VM 은 BM25 만) | `service/retrieval.py` |
 | **Cloudflare Pages** | 프론트 호스팅, Pages Function 으로 `/api/*` 프록시 | `root-cloudflare/functions/api/[[path]].js` |
 | **Oracle Cloud · nginx · PM2** | 운영 서버, HTTPS, 프로세스 상시 실행 | `backend/deploy/oracle/` |
 | **GitHub Actions** | master 푸시 시 프론트 빌드·배포 워크플로 | `.github/workflows/` |
+| **React Native · Expo** | 모바일 앱(뼈대 단계 — 서버 연결 확인), Android·iOS 한 코드, EAS Build | `mobile/` |
 
 </details>
 
@@ -80,10 +83,31 @@
 
 ## 🏗 아키텍처
 
-<img src="docs/readme/diagrams/architecture.png" alt="시스템 아키텍처: 브라우저, Cloudflare Pages, Oracle VM의 nginx, Express, ai-service, MongoDB Atlas" width="100%" />
+<img src="docs/readme/diagrams/architecture.png" alt="시스템 아키텍처: 브라우저·앱, Cloudflare Pages, Oracle VM의 nginx, Express, ai-service, MongoDB Atlas, Oracle Autonomous DB" width="100%" />
+
+### 한눈에 보는 구조
+
+로고로 보는 간편 아키텍처입니다. 어떤 프로그램이 어디서 돌고, 누가 누구와 통신하는지만 남겼습니다.
+
+<img src="docs/readme/diagrams/architecture-simple.png" alt="간편 아키텍처: 클라이언트(웹 브라우저·모바일 앱) → Cloudflare Pages → Oracle VM 안의 웹 서버(nginx·Node.js·Express)와 AI 서버(FastAPI·LangGraph·Ollama), 사이트 DB MongoDB Atlas, AI 모델 Claude API, AI 전용 DB Oracle Autonomous DB" width="100%" />
+
+<details>
+<summary><b>폴더별 간편 상세 구조 보기 (프론트 · 백엔드 · AI · 모바일 · 문서)</b></summary>
+
+<img src="docs/readme/diagrams/arch-frontend.png" alt="프론트엔드 간편 구조: main.jsx, App.jsx 라우트, pages·components, lib/api.js, Vite 빌드와 Cloudflare Pages" width="100%" />
+
+<img src="docs/readme/diagrams/arch-backend.png" alt="백엔드 간편 구조: server.js, routes, middleware, controllers, models·MongoDB" width="100%" />
+
+<img src="docs/readme/diagrams/arch-ai.png" alt="AI 서비스 간편 구조: main.py, 휴버봇(guidans_Chat), 에이전트 봇(Agent-Bot), 답변 모델(Ollama·Claude), 저장(ChromaDB·Oracle)" width="100%" />
+
+<img src="docs/readme/diagrams/arch-mobile.png" alt="모바일 앱 간편 구조: App.js, src/api.js, 웹과 같은 /api, EAS 빌드" width="100%" />
+
+<img src="docs/readme/diagrams/arch-docs.png" alt="문서 간편 구조: README, .Agents 규칙, RDMD 기록, docs/readme 그림, ai-service 지식 문서" width="100%" />
+
+</details>
 
 > [!NOTE]
-> `ai-service`(휴버봇)는 2026-11-11 부터 운영 서버에서 동작합니다(서버 안 Ollama `gemma4:e4b`). **에이전트 봇**은 2026-11-12 에 커밋했고 운영 반영은 다음 배포 때입니다. 절차는 [`ai-service/README.md`](./ai-service/README.md) 를 보세요.
+> `ai-service`(휴버봇)는 2026-11-11 부터, **에이전트 봇**은 2026-11-16 부터 운영 서버에서 동작합니다(서버 안 Ollama `gemma4:e4b`). 2026-11-17 의 **엔진 선택·휴버토큰**과 **모바일 상태 API** 는 다음 배포 때 반영되고, Claude 엔진은 서버에 `ANTHROPIC_API_KEY` 를 넣어야 켜집니다. 절차는 [`ai-service/README.md`](./ai-service/README.md) 를 보세요.
 
 ---
 
@@ -200,18 +224,24 @@
 
 ### 🛠️ 휴버대 에이전트 봇 (오른쪽 아래 원형 버튼)
 
-휴버봇이 사이트를 **설명**한다면, 에이전트 봇은 말로 시킨 **작업**을 대신 합니다. 회원 전용이고 작업 강도만큼 포인트를 씁니다.
+휴버봇이 사이트를 **설명**한다면, 에이전트 봇은 말로 시킨 **작업**을 대신 합니다. 회원 전용이고, 엔진을 골라 씁니다.
 
-| 작업 | 강도 · 포인트 | 예시 |
-|---|---|---|
-| 티어표 초안 만들기 | 무거움 · 8P | "1~3티어 캐릭터로 티어표 만들어줘. 츠루기 시노부는 2티어로" → 커스텀 메이커에서 바로 열기 |
-| 내 티어표 분석 | 보통 · 4P | "지금 만들고 있는 티어표 공식이랑 비교해줘" |
-| 게시판 · 공지 요약 | 보통 · 4P | "요즘 인기 있는 티어표 정리해줘" |
-| 내 활동 브리핑 | 보통 · 4P | "내 포인트랑 출석 현황 브리핑해줘" |
-| 사이트 통합 검색 | 가벼움 · 2P | "이름에 '류'가 들어가는 캐릭터 찾아줘" |
+| 작업 | 예시 |
+|---|---|
+| 티어표 초안 만들기 | "1~3티어 캐릭터로 티어표 만들어줘. 츠루기 시노부는 2티어로" → 커스텀 메이커에서 바로 열기 |
+| 내 티어표 분석 | "지금 만들고 있는 티어표 공식이랑 비교해줘" |
+| 게시판 · 공지 요약 | "요즘 인기 있는 티어표 정리해줘" |
+| 내 활동 브리핑 | "내 포인트랑 출석 현황 브리핑해줘" |
+| 사이트 통합 검색 | "이름에 '류'가 들어가는 캐릭터 찾아줘" (토큰 0) |
 
+| 엔진 | 요금 |
+|---|---|
+| **무료 엔진** (서버의 Ollama `gemma4:e4b`) | 토큰 없이 **하루 20번** (한국 시간 자정 초기화) |
+| **Claude 엔진** (Haiku 4.5·5.5 · Sonnet 5.0·5.5 · Opus 5.0·5.5 · Fable 5.1·5.2) | **휴버토큰** — 모델 평균값 × effort 배수(small 0.6 · medium 1 · high 1.6 · extra high 2.4). 예) Sonnet 5.5 · medium 12토큰 |
+
+- **휴버토큰**은 AI 전용 포인트입니다(행운 뽑기 포인트와 다른 지갑). 처음 500을 주고, 더 필요하면 구매·후원 신청 → 운영자 승인으로 충전합니다.
 - 결과물이 먼저 나오고 해설이 타자 치듯 이어집니다. 창을 닫거나 다른 화면으로 가도 작업은 계속됩니다.
-- 이용법 질문은 무료로 휴버봇을 안내하고, 작업이 실패하면 포인트를 돌려줍니다.
+- 이용법 질문은 무료로 휴버봇을 안내합니다. 실패하면 받은 값을 돌려주고, Claude 가 답을 못 쓰면 무료 엔진이 이어서 끝까지 답합니다.
 - 캐릭터 이름·배치·숫자는 도구가 계산하고, LLM 은 해설만 씁니다. 자세히: [`RDMD/features/agent-bot.md`](./RDMD/features/agent-bot.md)
 
 <img src="docs/readme/diagrams/ai-flow.png" alt="휴버봇 질문 처리 흐름: analyze, retrieve, greet, refuse, generate, out_of_scope" width="100%" />
@@ -294,6 +324,10 @@
 <br />
 휴대폰에서도 같은 기능을 쓰고, 홈 화면에 추가(PWA)할 수 있습니다.
 </p>
+
+### 📱 모바일 앱 `mobile/` (뼈대 단계)
+
+React Native + Expo SDK 58 로 만든 Android·iOS 공용 앱입니다. 지금은 서버(사이트 API · 공지 · AI 도우미 · 에이전트 봇) 연결 상태를 확인하는 화면 하나이고, 기능 화면은 웹과 같은 `/api` 에 차례로 붙입니다. 의존성 6개 · Hermes 번들 약 1.5MB · Android 릴리스 축소 빌드로 가볍게 유지합니다. 자세히: [`mobile/README.md`](./mobile/README.md)
 
 ---
 
@@ -470,7 +504,7 @@ Ollama 가 꺼져 있으면 지식 문서 문장으로 답합니다. 자세한 �
 | `/luck-draw` | 행운 뽑기 · 포커 · 랜덤 뽑기 | 저장·배팅 시 |
 | `/event` | 퀴즈 · 메모리 게임 · 티어표 공개 | 참여 시 |
 | `/ai` · `/guide` | AI 도우미 · 가이드 | |
-| (모든 화면) 오른쪽 아래 원형 버튼 | 휴버대 에이전트 봇 — 티어표 초안·분석·요약·브리핑·검색 | 회원 · 포인트 |
+| (모든 화면) 오른쪽 아래 원형 버튼 | 휴버대 에이전트 봇 — 티어표 초안·분석·요약·브리핑·검색, 휴버토큰 충전 | 회원 |
 | `/notice` · `/notice/:id` | 공지 · 새 소식 | |
 | `/inquiry` | 문의하기 | 작성 시 |
 | `/my-page` · `/notifications` | 마이페이지 · 알림 | ✅ |
@@ -489,9 +523,11 @@ Ollama 가 꺼져 있으면 지식 문서 문장으로 답합니다. 자세한 �
 | `/api/luck-draw` | 뽑기, 포커, 사다리, 출석 | 일부 JWT |
 | `/api/profile` | 프로필 | JWT |
 | `/api/events` | 퀴즈, 메모리, 티어표 공개 | 일부 JWT · 관리자 |
-| `/api/site` | 사이트 설정 공개 조회 | 공개 |
+| `/api/site` | 사이트 설정 공개 조회 · 가벼운 상태 확인(`/status`, 모바일) | 공개 |
 | `/api/ai` | AI 도우미 프록시 | 공개(제한 있음) |
-| `/api/ai/agent` | 에이전트 봇 — 요금표 조회 · 실행(스트림) | 실행은 회원(포인트 차감) |
+| `/api/ai/agent` | 에이전트 봇 — 엔진·요금표 조회 · 실행(스트림) | 실행은 회원(무료 하루 20회 · 휴버토큰) |
+| `/api/ai/tokens` | 내 휴버토큰 지갑 · 충전 신청 | JWT(회원) |
+| `/api/admin/ai-tokens` | 휴버토큰 충전 신청 승인·거절 · 직접 지급 | 관리자 |
 | `/api/admin` | 관리 기능 | 관리자 |
 
 ---
@@ -514,6 +550,7 @@ human-bug-tier/
 │   ├── app/guidans_Chat/ 휴버봇 (6개 층)
 │   ├── app/Agent-Bot/    에이전트 봇 (6개 층 — 티어표 초안·분석·요약·브리핑·검색)
 │   └── knowledge/        지식 문서 14개
+├── mobile/               React Native · Expo 앱 (뼈대 — 서버 연결 확인)
 ├── root-render/          ⛔ 베타 종료 — 수정 금지 (보관용)
 ├── docs/readme/          README 이미지와 재생성 도구
 ├── RDMD/                 개발 기록 · 기능 설명 · 가이드
@@ -530,6 +567,7 @@ human-bug-tier/
 | **프론트** (Cloudflare Pages) | `root-cloudflare` 에서 `npx wrangler pages deploy dist --project-name=human-bug-tier` | [`CLOUDFLARE.md`](./CLOUDFLARE.md) |
 | **백엔드** (Oracle VM) | `bash backend/deploy/oracle/deploy.sh deploy` | [`backend/deploy/oracle/README.md`](./backend/deploy/oracle/README.md) |
 | **AI 서비스** (Oracle VM) | `deploy.sh ai-setup` → `ai-env` → `deploy` | [`ai-service/README.md`](./ai-service/README.md) |
+| **모바일 앱** (EAS Build) | `mobile` 에서 `npm run build:apk` · `build:android` · `build:ios` | [`mobile/README.md`](./mobile/README.md) |
 | 배포 전 확인 | 체크리스트 | [`RDMD/guides/deploy-checklist.md`](./RDMD/guides/deploy-checklist.md) |
 
 배포와 서버 변경은 **창시자의 지시가 있을 때만** 합니다. `root-render/`(Render.com)는 베타가 끝나 더 이상 고치지 않습니다.
@@ -547,6 +585,8 @@ human-bug-tier/
 | 회원가입 실패 | `EMAIL_*` 설정, 미설정이면 즉시 인증 |
 | 로그인·게시판이 안 됨 | `file://` 이나 정적 미리보기에서는 API 가 없음. `:5000` 으로 접속 |
 | AI 답이 문서 문장만 나옴 | Ollama 실행 여부, `/api/ai/status` |
+| 에이전트 봇 Claude 엔진이 꺼져 있음 | `ai-service/.env` 의 `ANTHROPIC_API_KEY`, `/api/ai/agent/info` 의 `claude` |
+| 모바일 앱이 서버에 못 붙음 | 로컬이면 `http://PC-IP:5000`(휴대폰의 localhost 는 PC 가 아님), `/api/site/status` |
 | 어느 DB 에 붙었는지 불확실 | `/health` 의 `db`, `backend/.env` 의 `MONGO_URI` |
 
 ---
@@ -561,6 +601,8 @@ human-bug-tier/
 | 프론트 | [root-cloudflare/README.md](./root-cloudflare/README.md) |
 | 백엔드 | [backend/README.md](./backend/README.md) |
 | AI 서비스 | [ai-service/README.md](./ai-service/README.md) |
+| 에이전트 봇 · 휴버토큰 | [RDMD/features/agent-bot.md](./RDMD/features/agent-bot.md) |
+| 모바일 앱 | [mobile/README.md](./mobile/README.md) |
 | 운영 서버 | [backend/deploy/oracle/README.md](./backend/deploy/oracle/README.md) |
 | 기능 설명 · 작업 이력 | [RDMD/README.md](./RDMD/README.md) |
 | 사람 작업 규칙 | [team/README.md](./team/README.md) |

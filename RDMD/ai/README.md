@@ -23,9 +23,10 @@ flowchart LR
 | 〃 (이어서) | [04-production-deploy-prep-record.md](./04-production-deploy-prep-record.md) | **운영 VM(1GB) 배포 준비** — 서버 조건 점검, 지연 import·`requirements-prod.txt`, `deploy.sh` `ai-setup`/`ai-env` · pm2 `hbt-ai`, 묶음을 풀어 띄운 검증(서버 반영 전) |
 | 〃 (이어서) | [05-oracle-storage-record.md](./05-oracle-storage-record.md) | **Oracle 저장(통계·대화 원문, 기본 꺼짐)** + 새 Oracle VM 전환 — 테이블·스위치·`deploy.sh` 새 명령·ACL/지갑/비밀번호 처리 · 확인 결과 |
 | 〃 (이어서) | [06-agent-bot-record.md](./06-agent-bot-record.md) | **에이전트 봇**(`app/Agent-Bot`) — 작업 5종(티어표 초안·분석·요약·브리핑·검색), 규칙 우선 판별 + LLM 보조, 도구가 계산·LLM 은 해설, NDJSON 스트리밍, 실측 속도, 넣은 기능·뺀 기능 |
+| 〃 (이어서) | [07-agent-engines-hubertoken-record.md](./07-agent-engines-hubertoken-record.md) | **엔진 선택 · 휴버토큰** — 무료 엔진(Ollama 하루 20회) / Claude 엔진(모델 8종·effort 4단계, anthropic SDK), AI 전용 포인트 휴버토큰(기본 500·충전 신청·관리자 승인), 끊기지 않는 해설 순서, 요금표 근거 |
 | Express 프록시(에이전트 봇) | [`../backend/10-ai/02-agent-bot-proxy-record.md`](../backend/10-ai/02-agent-bot-proxy-record.md) | `/api/ai/agent` — 회원 확인 · 작업 강도별 포인트 차감·환불 · 스트림 전달 · ai-service 전용 조회 API |
 | 화면(에이전트 봇) | [`../frontend/15-ai/02-agent-bot-ui-record.md`](../frontend/15-ai/02-agent-bot-ui-record.md) | 오른쪽 아래 원형 버튼 · 대형 모달 · 닫아도 계속되는 작업 · 초안을 커스텀 메이커로 |
-| 기능 설명(에이전트 봇) | [`../features/agent-bot.md`](../features/agent-bot.md) | 작업·요금·흐름·평가·운영 반영 방법 |
+| 기능 설명(에이전트 봇) | [`../features/agent-bot.md`](../features/agent-bot.md) | 작업·엔진과 요금·휴버토큰·흐름·평가·운영 반영 방법 |
 | Express 프록시 | [`../backend/10-ai/01-ai-proxy-record.md`](../backend/10-ai/01-ai-proxy-record.md) | `/api/ai` — 입력 검사 · IP당 요청 제한 · 공유 키 · 장애 시 503 |
 | 화면 | [`../frontend/15-ai/01-ai-helper-page-record.md`](../frontend/15-ai/01-ai-helper-page-record.md) | `/ai` 휴버봇 대화창 · 추천 질문 · 푸터/가이드 링크 |
 | 기능 설명(what) | [`../features/ai-service.md`](../features/ai-service.md) | 구조·흐름·지식·설정·운영 배포 상태 |

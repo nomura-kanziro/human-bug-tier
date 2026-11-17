@@ -62,9 +62,11 @@ backend/
 | `/api/luck-draw` | 오늘의 행운 티어 · 포커(`/poker/*`) · 랜덤 뽑기(`/ladder/*`) · 출석판(`/attendance`) | optionalAuth / requireAuth — [luck-draw.md](./luck-draw.md) |
 | `/api/profile` | 닉네임 변경(`POST /nickname`) | requireAuth |
 | `/api/events` | 매일 퀴즈(`/quiz/*`) · 메모리 게임(`/memory/*`) · 티어표 공개(`/showcase/*`) | requireAuth / optionalAuth, 관리 기능 requireAdmin |
-| `/api/site` | 사이트 운영 설정 조회 — 이벤트 디자인(`/settings`). 변경은 `/api/admin/site/seasonal-theme` | 공개 |
+| `/api/site` | 사이트 운영 설정 조회 — 이벤트 디자인(`/settings`). 변경은 `/api/admin/site/seasonal-theme` | 공개 | · `GET /status` 가벼운 상태(api·db·시각, 모바일 앱용 — `/health` 는 /api 밖이라 Pages 프록시를 지나지 못함)
 | `/api/ai` | AI 도우미 — `GET /questions`(추천 질문 3개) · `POST /chat`. **프록시**: `ai-service`(FastAPI, `AI_SERVICE_URL`)로 넘김, 입력 검사·IP당 10분 20회 제한, 대화 저장 안 함, AI 서비스 꺼짐 → 503 — [ai-service.md](./ai-service.md) | 공개 |
-| `/api/ai/agent` | **에이전트 봇** — `GET /info`(요금표·작업 목록·내 포인트·AI 상태) · `POST /run`(NDJSON 스트림, 작업 강도별 포인트 차감 2·4·8P, 실패 시 환불, 회원당 10분 12회·동시 1건) · `GET /data/posts`·`/data/notices`(ai-service 전용 조회). `controllers/aiAgentController.js` — [agent-bot.md](./agent-bot.md) | `/info` 공개 · `/run` 회원 · `/data/*` ai-service 전용 |
+| `/api/ai/agent` | **에이전트 봇** — `GET /info`(엔진·요금표·작업 목록·내 휴버토큰·오늘 무료 횟수·AI 상태·Claude 사용 가능 여부) · `POST /run`(`engine: { provider: ollama|claude, model, effort }`, NDJSON 스트림 — 무료 엔진은 하루 20회, Claude 엔진은 휴버토큰 정액 차감, 실패·Claude 미사용 시 환불, 회원당 10분 12회·동시 1건) · `GET /data/posts`·`/data/notices`(ai-service 전용 조회). `controllers/aiAgentController.js` · 요금표 `utils/aiTokens.js` — [agent-bot.md](./agent-bot.md) | `/info` 공개 · `/run` 회원 · `/data/*` ai-service 전용 |
+| `/api/ai/tokens` | **휴버토큰** — `GET /`(내 지갑·원장 12건·신청 8건·묶음·안내) · `POST /orders`(구매·후원 확인 신청, 대기 3건까지). `controllers/aiTokenController.js` | 회원 |
+| `/api/admin/ai-tokens` | 휴버토큰 충전 신청 목록 · `POST /orders/:id/approve`(대기일 때만 한 번 적립)·`/reject` · `POST /grant`(닉네임으로 지급·회수) | 관리자 |
 | `/api/ext` | 브라우저 확장이 치는 주소 — 204 만 돌려줌(우리 API 아님) | — |
 | `/health` | 헬스체크(DB·메일·APP_URL·유튜브 동기화 상태) | 공개 |
 

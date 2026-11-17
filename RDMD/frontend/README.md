@@ -41,7 +41,8 @@ RDMD/frontend/
 ├── 13-event/            # 이벤트 페이지 (퀴즈 · 티어표 공개 · 메모리 게임)
 ├── 14-guide/            # 가이드 페이지(/guide) + 게임식 가이드 모드
 ├── 15-ai/               # AI 도우미 화면(/ai) · 에이전트 봇 화면(원형 버튼·모달) — AI 전용 서비스의 프론트 조각
-└── 16-docs/             # README 개편 · 이미지 재생성 도구
+├── 16-docs/             # README 개편 · 이미지 재생성 도구
+└── 16-mobile/           # 모바일 앱 mobile/ (React Native · Expo) — 뼈대
 ```
 
 파일명 규칙: `{순서}-{기능키워드}-record.md`
@@ -212,6 +213,7 @@ AI 기능은 프론트·백엔드·AI 서비스에 걸쳐 있어 **세 곳에 �
 | 파일 | legacy | 요약 |
 |------|--------|------|
 | [01-ai-helper-page-record.md](./15-ai/01-ai-helper-page-record.md) | — | AI 도우미 화면(`/ai`) — 휴버봇 대화창·추천 질문 3개·출처/fallback 배지, 대화는 브라우저 탭에만 |
+| (이어서) [`../ai/07-agent-engines-hubertoken-record.md`](../ai/07-agent-engines-hubertoken-record.md) | `dc9f084` | 엔진 고르기(무료 / Claude 모델·effort)·휴버토큰 충전 패널(`AgentBotPanels.jsx`)·관리자 휴버토큰 관리(`AdminAiTokens.jsx`) |
 | [02-agent-bot-ui-record.md](./15-ai/02-agent-bot-ui-record.md) | `3559ed2` | 휴버대 에이전트 봇 화면 — 오른쪽 아래 원형 버튼·대형 모달, 라우트 바깥 상태(닫아도 작업 계속), 요금표 상시 표시, 결과 카드 5종, 초안을 커스텀 메이커로 열기, NDJSON 스트림(`apiStream`) |
 
 ---
@@ -274,3 +276,11 @@ area: frontend
 |------|------|------|
 | [01-readme-overhaul-record.md](./16-docs/01-readme-overhaul-record.md) | — | README 전면 개편 — 실제 화면 GIF · PNG, 프레임워크 그림, 전 README 로직 다이어그램, 격리 캡처 도구 |
 | [02-legal-docs-overhaul-record.md](./16-docs/02-legal-docs-overhaul-record.md) | — | LICENSE · SECURITY · CONTRIBUTING 고도화 — 라이선스 조항, 비공개 제보 채널, 적용된 보안 장치, 관리자 지정·오프보딩 |
+
+## 16-mobile
+
+모바일 앱(`mobile/`, React Native · Expo SDK 58)은 프론트의 한 갈래로 여기 기록한다. 사용법은 [`../../mobile/README.md`](../../mobile/README.md).
+
+| 파일 | legacy | 요약 |
+|------|--------|------|
+| [01-mobile-skeleton-record.md](./16-mobile/01-mobile-skeleton-record.md) | `97e2372` | 모바일 앱 뼈대 — 서버 연결 상태 확인 화면, Expo 선택 이유, 경량화(의존성 6개·Hermes 1.5MB·축소 빌드), EAS 빌드 프로필, `/api/site/status` |

@@ -14,7 +14,7 @@ flowchart LR
 <!-- /readme-overview -->
 
 가이드 챗봇([`../guidans_Chat/`](../guidans_Chat/__init__.py))이 사이트를 **설명**한다면, 에이전트 봇은 말로 시킨 **작업**을 대신 한다.
-화면은 사이트 오른쪽 아래 원형 버튼 "휴버대 에이전트 봇"이고, 회원 전용이며 작업 강도만큼 포인트를 쓴다.
+화면은 사이트 오른쪽 아래 원형 버튼 "휴버대 에이전트 봇"이고, 회원 전용이다. 엔진은 무료 엔진(Ollama, 하루 20회) 또는 Claude 엔진(모델·effort 선택, AI 전용 포인트 휴버토큰 — `service/claude.py`).
 
 ## 하는 일
 
@@ -40,7 +40,8 @@ POST /agent/run  →  plan(규칙 먼저, 애매하면 LLM JSON)  →  도구 �
 - 응답은 줄 단위 JSON(NDJSON) 스트림이다: `plan` · `step` · `result` · `token` · `reset` · `done` · `error`(형식은 `schema/agent.py`).
 - **캐릭터 이름·배치·숫자는 전부 도구가 계산한다.** LLM 은 작업 분류와 해설 글만 맡는다.
 - AI 서버(Ollama)가 꺼져 있거나 LLM 이 실패하면 도구가 만든 정해진 해설로 대신한다.
-- 포인트 차감·환불, 회원 확인, 요청 수 제한은 사이트 백엔드(`backend/controllers/aiAgentController.js`)가 한다. 이 서비스는 작업 강도(level)만 알린다.
+- 휴버토큰·무료 횟수·환불, 회원 확인, 요청 수 제한은 사이트 백엔드(`backend/controllers/aiAgentController.js` · `utils/aiTokens.js`)가 한다. 이 서비스는 작업 강도(level)·LLM 사용 여부(`uses_llm`)·실제 해설을 쓴 엔진(`engine_used`)만 알린다.
+- 해설은 고른 엔진 → 무료 엔진 → 정해진 해설 순으로 시도해 작업이 끊기지 않는다.
 
 ## 규칙
 

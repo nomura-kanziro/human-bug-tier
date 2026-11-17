@@ -3,7 +3,7 @@
 빠르게 답하려고 **규칙이 먼저**다. 뻔한 요청("1~3티어로 티어표 만들어줘", "내 포인트 알려줘")은 LLM 을 부르지 않고 바로 정한다(0초).
 규칙으로 못 정한 애매한 말만 LLM 에게 JSON 으로 물어본다(`service/agent_service.py` 가 부른다). LLM 이 꺼져 있으면 이용 안내로 보낸다.
 
-작업 강도(level)가 곧 요금 단계다 — 실제 포인트 값은 사이트 백엔드(`backend/routes/aiRoutes.js` AGENT_COSTS)가 갖고 있다.
+작업 강도(level)는 "얼마나 큰 일인지" 표시용이다 — 요금은 엔진(무료 하루 횟수 / Claude 휴버토큰)으로 정해지고 값은 사이트 백엔드(`backend/utils/aiTokens.js`)가 갖고 있다. free 작업은 횟수도 토큰도 들지 않는다.
   heavy  티어표 초안 만들기        normal  분석 · 요약 · 브리핑        light  통합 검색        free  이용 안내 · 거절
 """
 from __future__ import annotations

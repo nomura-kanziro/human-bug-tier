@@ -1,6 +1,8 @@
 # mobile — 휴버대 티어표 모바일 앱 (React Native · Expo)
 
 <!-- readme-overview -->
+<img src="../docs/readme/diagrams/arch-mobile.png" alt="모바일 앱 간편 구조" width="100%" />
+
 ### 로직 구조
 
 ```mermaid

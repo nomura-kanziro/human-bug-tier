@@ -5,6 +5,8 @@
 
 사이트의 **모든 화면**을 담당하는 React 앱입니다. 빌드 결과 `dist/` 를 Cloudflare Pages 와 backend 가 서빙합니다.
 
+<img src="../docs/readme/diagrams/arch-frontend.png" alt="프론트엔드 간편 구조: main.jsx(AuthProvider·AgentBotProvider), App.jsx 라우트, pages·components, lib/api.js(apiRequest·apiStream), Vite 빌드와 Cloudflare Pages" width="100%" />
+
 <table>
 <tr>
 <td width="50%"><img src="../docs/readme/gifs/maker.gif" alt="커스텀 메이커에서 캐릭터를 끌어다 놓는 장면" width="100%" /></td>
@@ -25,6 +27,8 @@ flowchart TD
     LIB --> API["lib/api.js<br/>apiRequest · getApiBase · 토큰 헤더"]
     API -->|"/api/*"| B[(backend)]
     AUTH["context/AuthContext<br/>localStorage 신원"] --> L
+    AGENT["context/AgentBotContext<br/>에이전트 봇(라우트 밖)"] --> BOT["components/AgentBot<br/>원형 버튼 · 모달 · 엔진 선택"]
+    BOT --> LIB
     AUTH --> P
     DATA[("data/tiers.json<br/>티어 정본")] --> T["data/tiers.js"]
     T --> P

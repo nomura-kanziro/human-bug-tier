@@ -3,7 +3,7 @@
 > 2026-10-18 신설. 사이트 지식으로 답하는 챗봇 **휴버봇**과 **랜덤 추천 질문 3개**.
 > AI 기능은 Express 와 분리된 **AI 전용 서비스**(저장소 루트 `ai-service/`, Python FastAPI)가 담당한다.
 > **운영 중**(2026-11-11 새 Oracle VM 전환 — 서버 안 Ollama `gemma4:e4b`, 벡터 검색은 끔, 통계만 Oracle 저장. [`../ai/05-oracle-storage-record.md`](../ai/05-oracle-storage-record.md)). 로컬 개발은 내 PC 의 Ollama(`gemma4:12b`) + ChromaDB + bge-m3(2026-10-18 적용).
-> 같은 서비스에 **에이전트 봇**(2026-11-12)이 추가됐다 — [agent-bot.md](./agent-bot.md).
+> 같은 서비스에 **에이전트 봇**(2026-11-12)이 추가됐다 — [agent-bot.md](./agent-bot.md). 2026-11-17 부터 에이전트 봇은 무료 엔진(Ollama) / Claude 엔진(공식 `anthropic` SDK, 휴버토큰)을 고른다.
 
 ## 관련 기록 (세 곳에 나눠 있다)
 
