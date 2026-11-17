@@ -453,7 +453,7 @@
 | 422 | 2026-11-17 | [`bb5a584`](#bb5a584) | feat(agent-bot): 엔진 선택 도입 — 무료 엔진(Ollama) 하루 횟수 제한, Claude 엔진(모델·effort)과 AI 전용 포인트 휴버토큰·충전 신청 |
 | 423 | 2026-11-17 | [`dc9f084`](#dc9f084) | feat(agent-bot): 엔진·모델·effort 선택 UI, 휴버토큰 잔액·요금표·충전 신청 패널, 관리자 휴버토큰 관리 화면 |
 | 424 | 2026-11-17 | [`97e2372`](#97e2372) | feat(mobile): React Native(Expo SDK 58) 모바일 앱 뼈대 — 서버 연결 상태 확인 화면, Android·iOS 빌드 설정, /api/site/status |
-| 425 | 2026-11-17 | [`pending`](#pending) | docs(architecture): 아이콘형 간편 아키텍처·폴더별 간편 구조 그림 추가, 휴버토큰·모바일 반영 문서 전체 갱신 |
+| 425 | 2026-11-17 | [`9e1bf3c`](#9e1bf3c) | docs(architecture): 아이콘형 간편 아키텍처·폴더별 간편 구조 그림 추가, 휴버토큰·모바일 반영 문서 전체 갱신 |
 
 ---
 
@@ -8128,15 +8128,15 @@
 
 [▲ 목차로](#목차)
 
-<a id="pending"></a>
+<a id="9e1bf3c"></a>
 
-### 425. 2026-11-17 — `pending`
+### 425. 2026-11-17 — `9e1bf3c`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `9e1bf3c`
+- **hash (full)**: `9e1bf3c96368a293f25a993d85d45d4e3676550a`
 - **author**: nomura
 - **message**: docs(architecture): 아이콘형 간편 아키텍처·폴더별 간편 구조 그림 추가, 휴버토큰·모바일 반영 문서 전체 갱신
-- **git**: `git show pending`
+- **git**: `git show 9e1bf3c`
 - **범위**: docs / readme · diagrams · RDMD · 스킬(.Agents + 12종)
 - **요약**: 창시자가 보여 준 예시(로고로 서버·통신을 그린 그림)처럼 직관적인 간편 아키텍처 그림 `docs/readme/diagrams/architecture-simple.png`(클라이언트 웹·모바일 → Cloudflare Pages → Oracle VM 안 웹 서버 nginx·Node·Express / AI 서버 FastAPI·LangGraph·Ollama → MongoDB Atlas · Claude API · Oracle Autonomous DB · 외부 연동)을 만들어 루트 README "시스템 아키텍처" 바로 아래에 넣었다. 폴더별 간편 상세 구조 그림 5장(`arch-frontend`·`arch-backend`·`arch-ai`·`arch-mobile`·`arch-docs`)을 만들어 루트 README(접힘)와 `root-cloudflare/`·`backend/`·`ai-service/`·`mobile/`·`docs/readme/` README 맨 위에 넣었다. 기존 그림도 현재 상태로 고쳤다: 기술 스택(모바일 열 추가, 컬렉션 25개, Ollama·Claude 엔진), 시스템 아키텍처(ai-service "배포 준비 완료" → "운영 중", 브라우저·앱, Oracle Autonomous DB 상자, 답변 모델 설명). 그림 도구 `render-diagrams.js` 에 새 그림 6개와 "이름을 주면 그 그림만 다시 만들기"를 더했다(바뀐 8장만 256색으로 줄임). 문서 갱신: 루트 README(한눈에 숫자 25개·Claude 모델 8, Anthropic SDK·React Native 행, 에이전트 봇 절을 엔진·휴버토큰으로 교체, 모바일 절, 화면·API 표에 `/api/ai/tokens`·`/api/admin/ai-tokens`·`/api/site/status`, 폴더 트리·배포·문제 해결·문서 지도), 기능 설명 `RDMD/features/agent-bot.md`(요금 절을 "엔진과 요금"·"휴버토큰"으로 교체 — 모델×effort 요금표·근거·충전·관리자, 설정·운영 반영·확인), 새 기록 `RDMD/ai/07-agent-engines-hubertoken-record.md`, features(ai-service·README·overview·backend-api·luck-draw·admin), guides(security 휴버토큰 규칙 3줄, deploy-checklist 엔진·휴버토큰 반영 순서), 인덱스(RDMD·ai·frontend 16-mobile·backend), 작업 이력·타임라인(11-16·11-17), 옛 기록 02(백엔드·화면)에 요금 변경 안내. 스킬 정본 `.Agents/skills/ai-service/SKILL.md` 와 12종 복제본에 엔진·휴버토큰 규칙(요금표는 `utils/aiTokens.js` 한 곳, plan 에서 받고 실패·Claude 미사용 시 환불, thinking·temperature 미전송, 충전은 관리자 승인)과 상태를 반영, `CLAUDE.md`·`AGENTS.md` 에 모바일과 새 요금 규칙. `ai-service` 의 `Agent-Bot/README.md`·`planner.py` 주석 문구도 새 요금으로 고쳤다(코드 동작 변경 없음). pytest 93개 통과.
 - **주요 파일**: `docs/readme/diagrams/architecture-simple.png`, `docs/readme/diagrams/arch-frontend.png`, `docs/readme/diagrams/arch-backend.png`, `docs/readme/diagrams/arch-ai.png`, `docs/readme/diagrams/arch-mobile.png`, `docs/readme/diagrams/arch-docs.png`, `docs/readme/tools/render-diagrams.js`, `README.md`, `RDMD/features/agent-bot.md`, `RDMD/ai/07-agent-engines-hubertoken-record.md`, `.Agents/skills/ai-service/SKILL.md`, `CLAUDE.md`, `AGENTS.md`
