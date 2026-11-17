@@ -1,0 +1,42 @@
+{
+  "expo": {
+    "name": "휴버대 티어표",
+    "slug": "hbt-mobile",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "automatic",
+    "backgroundColor": "#111111",
+    "assetBundlePatterns": ["assets/*"],
+    "ios": {
+      "bundleIdentifier": "com.humanbugtier.app",
+      "supportsTablet": false,
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.humanbugtier.app",
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#111111"
+      },
+      "edgeToEdgeEnabled": true
+    },
+    "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "enableProguardInReleaseBuilds": true,
+            "enableShrinkResourcesInReleaseBuilds": true
+          }
+        }
+      ]
+    ],
+    "extra": {
+      "apiBase": "https://human-bug-tier.com",
+      "siteUrl": "https://human-bug-tier.com"
+    }
+  }
+}

@@ -7,7 +7,7 @@
 | **git user** | nomura (일부 PR merge: nomura-kanziro) |
 | **저장소** | human-bug-tier |
 | **정렬** | **과거 → 현재** (위 = 오래됨, 아래 = 최신) |
-| **커밋 수** | 423 |
+| **커밋 수** | 424 |
 | **기간** | 2026-03-20 ~ 2026-11-17 |
 | **명세** | [README.md](./README.md) 필드·템플릿 준수 |
 
@@ -452,6 +452,7 @@
 | 421 | 2026-11-12 | [`af20676`](#af20676) | fix(tier-class): 2티어 을급 코바야시 유키사다 누락 복원 |
 | 422 | 2026-11-17 | [`bb5a584`](#bb5a584) | feat(agent-bot): 엔진 선택 도입 — 무료 엔진(Ollama) 하루 횟수 제한, Claude 엔진(모델·effort)과 AI 전용 포인트 휴버토큰·충전 신청 |
 | 423 | 2026-11-17 | [`dc9f084`](#dc9f084) | feat(agent-bot): 엔진·모델·effort 선택 UI, 휴버토큰 잔액·요금표·충전 신청 패널, 관리자 휴버토큰 관리 화면 |
+| 424 | 2026-11-17 | [`pending`](#pending) | feat(mobile): React Native(Expo SDK 58) 모바일 앱 뼈대 — 서버 연결 상태 확인 화면, Android·iOS 빌드 설정, /api/site/status |
 
 ---
 
@@ -8107,5 +8108,21 @@
 - **요약**: 에이전트 봇 모달 왼쪽에 "엔진 고르기"(`AgentBotPanels.jsx` EnginePicker)를 넣었다: 무료 엔진(오늘 남은 횟수) / Claude 엔진(휴버토큰 잔액) 탭, Claude 는 모델 select(Haiku·Sonnet·Opus·Fable 묶음, 평균 토큰 표시)와 effort 4단계(small·medium·high·extra high — effort 를 지원하지 않는 모델은 비활성), 한 번에 드는 휴버토큰을 실행 전에 보여 준다. 고른 엔진은 이 기기에 기억한다(localStorage `hbtAgentEngine`). 헤더의 토큰 버튼이나 "휴버토큰 충전 · 요금표"를 누르면 대화 자리에 충전 패널(TokenShop)이 뜬다: 잔액, 모델×effort 요금표, 묶음 구매 신청, 후원 페이지 링크 + 후원 확인 신청, 결제 정보를 적지 말라는 안내, 내 신청 상태, 최근 원장. 메시지의 작업 줄에 실제로 든 값(−N 휴버토큰 · 모델 · effort / 무료 엔진 · 오늘 N회 남음 / 무료)을, 환불되면 사유와 "답은 무료 엔진이 이어서 썼어요"를 표시한다. 작업 목록은 강도만 보이고 통합 검색에는 "토큰 0" 표시, 규칙 안내 문구를 새 요금으로 교체. `AgentBotContext` 는 tokens·free·engine 상태를 들고 plan/done/error 이벤트의 잔액·남은 횟수를 반영한다. `agentApi.js` 에 `fetchMyTokens`·`createTokenOrder`, runAgent 에 engine. 관리자 대시보드에 "🪙 휴버토큰 관리"(`AdminAiTokens.jsx`): 신청 목록(대기·승인·거절·전체), 적립 토큰 입력 후 승인/거절, 닉네임으로 직접 지급·회수. `npx vite build` 통과, 가짜 API + 헤드리스 크롬으로 엔진 선택 → Claude(Sonnet 5.5 · high = 20토큰) 실행 → 잔액 480 반영 → 충전 패널 화면을 확인했다.
 - **주요 파일**: `root-cloudflare/src/components/AgentBotPanels.jsx`, `root-cloudflare/src/components/AgentBot.jsx`, `root-cloudflare/src/context/AgentBotContext.jsx`, `root-cloudflare/src/lib/agentApi.js`, `root-cloudflare/src/components/AdminAiTokens.jsx`, `root-cloudflare/src/pages/AdminDashboard.jsx`, `root-cloudflare/src/styles/agent-bot.css`
 - **관련 RDMD**: `RDMD/ai/07-agent-engines-hubertoken-record.md`
+
+[▲ 목차로](#목차)
+
+<a id="pending"></a>
+
+### 424. 2026-11-17 — `pending`
+
+- **hash (short)**: `pending`
+- **hash (full)**: `pending`
+- **author**: nomura
+- **message**: feat(mobile): React Native(Expo SDK 58) 모바일 앱 뼈대 — 서버 연결 상태 확인 화면, Android·iOS 빌드 설정, /api/site/status
+- **git**: `git show pending`
+- **범위**: feat / mobile(신설) · backend(site)
+- **요약**: 저장소 루트에 `mobile/`(React Native 0.88 + Expo SDK 58, JavaScript — 웹 프론트와 같은 언어·React 방식)을 만들었다. 창시자 지시대로 "뼈대 + 연결 + 상태 확인"만: `App.js` 한 화면이 사이트 API(`/api/site/status`)·공지(`/api/notices?limit=1`)·AI 도우미(`/api/ai/status`)·에이전트 봇(`/api/ai/agent/info`)을 동시에 확인해 초록/빨강과 응답 시간을 보여 주고, 서버 주소를 바꿔(로컬 `http://PC-IP:5000`) 다시 확인할 수 있다. 앱 전용 서버 없이 웹과 같은 `/api`(Cloudflare Pages 프록시 → Oracle 백엔드)를 쓴다. 경량화: 의존성은 expo·expo-constants·expo-status-bar·expo-build-properties·react·react-native 뿐(화면 이동·상태 라이브러리 없음), Hermes 번들, Android 릴리스 ProGuard·shrinkResources, 묶는 그림은 아이콘 하나, 요청 동시 전송·8초 제한·결과 한 번에 그리기. Android·iOS 통합 배포: `eas.json` 에 preview(바로 설치하는 APK)·production(AAB/IPA) 프로필, `npm run build:apk|build:android|build:ios`, 앱 ID `com.humanbugtier.app`, 서명 키·빌드 산출물은 gitignore. 백엔드에 모바일용 가벼운 상태 API `GET /api/site/status`(api·db 상태·시각, 시크릿 없음, no-store)를 추가 — `/health` 는 /api 밖이라 Pages 프록시를 지나지 못하기 때문. 확인: `npx expo install --check` 통과, `expo export` 로 Android(596개 모듈)·iOS 번들 생성(각 약 1.5MB Hermes), 확인 로직을 Node 로 운영 주소에 실행(공지·AI·에이전트 봇 OK, `/api/site/status` 는 미배포라 404). 실제 기기 실행·EAS 빌드는 Expo 계정이 필요해 하지 않았다.
+- **주요 파일**: `mobile/App.js`, `mobile/index.js`, `mobile/src/api.js`, `mobile/src/config.js`, `mobile/app.json`, `mobile/eas.json`, `mobile/package.json`, `mobile/package-lock.json`, `mobile/README.md`, `mobile/.gitignore`, `mobile/assets/icon.png`, `backend/routes/siteRoutes.js`
+- **관련 RDMD**: `mobile/README.md` · `RDMD/frontend/16-mobile/01-mobile-skeleton-record.md`
 
 [▲ 목차로](#목차)
