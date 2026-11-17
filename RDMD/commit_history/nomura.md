@@ -452,7 +452,7 @@
 | 421 | 2026-11-12 | [`af20676`](#af20676) | fix(tier-class): 2티어 을급 코바야시 유키사다 누락 복원 |
 | 422 | 2026-11-17 | [`bb5a584`](#bb5a584) | feat(agent-bot): 엔진 선택 도입 — 무료 엔진(Ollama) 하루 횟수 제한, Claude 엔진(모델·effort)과 AI 전용 포인트 휴버토큰·충전 신청 |
 | 423 | 2026-11-17 | [`dc9f084`](#dc9f084) | feat(agent-bot): 엔진·모델·effort 선택 UI, 휴버토큰 잔액·요금표·충전 신청 패널, 관리자 휴버토큰 관리 화면 |
-| 424 | 2026-11-17 | [`pending`](#pending) | feat(mobile): React Native(Expo SDK 58) 모바일 앱 뼈대 — 서버 연결 상태 확인 화면, Android·iOS 빌드 설정, /api/site/status |
+| 424 | 2026-11-17 | [`97e2372`](#97e2372) | feat(mobile): React Native(Expo SDK 58) 모바일 앱 뼈대 — 서버 연결 상태 확인 화면, Android·iOS 빌드 설정, /api/site/status |
 
 ---
 
@@ -8111,15 +8111,15 @@
 
 [▲ 목차로](#목차)
 
-<a id="pending"></a>
+<a id="97e2372"></a>
 
-### 424. 2026-11-17 — `pending`
+### 424. 2026-11-17 — `97e2372`
 
-- **hash (short)**: `pending`
-- **hash (full)**: `pending`
+- **hash (short)**: `97e2372`
+- **hash (full)**: `97e2372c03ce4e826b3ae1cf5af712a1b1a7ff72`
 - **author**: nomura
 - **message**: feat(mobile): React Native(Expo SDK 58) 모바일 앱 뼈대 — 서버 연결 상태 확인 화면, Android·iOS 빌드 설정, /api/site/status
-- **git**: `git show pending`
+- **git**: `git show 97e2372`
 - **범위**: feat / mobile(신설) · backend(site)
 - **요약**: 저장소 루트에 `mobile/`(React Native 0.88 + Expo SDK 58, JavaScript — 웹 프론트와 같은 언어·React 방식)을 만들었다. 창시자 지시대로 "뼈대 + 연결 + 상태 확인"만: `App.js` 한 화면이 사이트 API(`/api/site/status`)·공지(`/api/notices?limit=1`)·AI 도우미(`/api/ai/status`)·에이전트 봇(`/api/ai/agent/info`)을 동시에 확인해 초록/빨강과 응답 시간을 보여 주고, 서버 주소를 바꿔(로컬 `http://PC-IP:5000`) 다시 확인할 수 있다. 앱 전용 서버 없이 웹과 같은 `/api`(Cloudflare Pages 프록시 → Oracle 백엔드)를 쓴다. 경량화: 의존성은 expo·expo-constants·expo-status-bar·expo-build-properties·react·react-native 뿐(화면 이동·상태 라이브러리 없음), Hermes 번들, Android 릴리스 ProGuard·shrinkResources, 묶는 그림은 아이콘 하나, 요청 동시 전송·8초 제한·결과 한 번에 그리기. Android·iOS 통합 배포: `eas.json` 에 preview(바로 설치하는 APK)·production(AAB/IPA) 프로필, `npm run build:apk|build:android|build:ios`, 앱 ID `com.humanbugtier.app`, 서명 키·빌드 산출물은 gitignore. 백엔드에 모바일용 가벼운 상태 API `GET /api/site/status`(api·db 상태·시각, 시크릿 없음, no-store)를 추가 — `/health` 는 /api 밖이라 Pages 프록시를 지나지 못하기 때문. 확인: `npx expo install --check` 통과, `expo export` 로 Android(596개 모듈)·iOS 번들 생성(각 약 1.5MB Hermes), 확인 로직을 Node 로 운영 주소에 실행(공지·AI·에이전트 봇 OK, `/api/site/status` 는 미배포라 404). 실제 기기 실행·EAS 빌드는 Expo 계정이 필요해 하지 않았다.
 - **주요 파일**: `mobile/App.js`, `mobile/index.js`, `mobile/src/api.js`, `mobile/src/config.js`, `mobile/app.json`, `mobile/eas.json`, `mobile/package.json`, `mobile/package-lock.json`, `mobile/README.md`, `mobile/.gitignore`, `mobile/assets/icon.png`, `backend/routes/siteRoutes.js`
